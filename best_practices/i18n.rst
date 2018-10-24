@@ -1,0 +1,72 @@
+国际化
+====================
+
+国际化（internationalization）和本地化（localization）都是为了令程序及其内容适合于用户的不同区域或语言。
+在Symfony中，这是个可选功能。需要在使用之前安装（``composer require symfony/translation``）。
+
+翻译源文件的位置
+--------------------------------
+
+.. best-practice::
+
+    将翻译文件存在项目根目录的 ``translations/`` 目录中。
+
+如果应用中所有的翻译都位于一个中心位置，翻译人员的生活将会更加轻松。
+
+翻译源文件的格式
+------------------------------
+
+Symfony翻译组件支持多种翻译格式：PHP, Qt, ``.po``, ``.mo``, JSON, CSV, INI,等等。
+
+.. best-practice::
+
+    使用 XLIFF 格式的翻译文件。
+
+在所有可用的翻译格式中，只有 XLIFF 和 gettext 在专业翻译人员使用的工具中得到广泛支持。
+由于它基于 XML ，因此你还可以在编写时验证 XLIFF 文件内容。
+
+Symfony支持 XLIFF 文件中的注释，使其对翻译人员更加用户友好。
+最后，良好的翻译都与上下文有关，这些 XLIFF 注释允许你定义该上下文。
+
+.. tip::
+
+    `PHP Translation Bundle`_ 包含可以读取项目并自动更新 XLIFF 文件的高级提取器。
+
+翻译的键
+----------------
+
+.. best-practice::
+
+    始终使用键进行翻译而不是内容字符串。
+
+使用键（keys）简化了翻译文件的管理，因为你可以更改原始内容，而无需更新所有翻译文件。
+
+键应该始终描述他们的*目的*而*不是*他们的位置。
+例如，如果表单有一个标签为 “Username” 的字段，则一个完美的翻译键是 ``label.username``，
+而*不是* ``edit_form.label.username``。
+
+翻译源文件示例
+------------------------
+
+应用前面所有的最佳实践，程序的英文版翻译文件例程是下面这样的：
+
+.. code-block:: xml
+
+    <!-- translations/messages.en.xlf -->
+    <?xml version="1.0"?>
+    <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+        <file source-language="en" target-language="en" datatype="plaintext" original="file.ext">
+            <body>
+                <trans-unit id="title_post_list">
+                    <source>title.post_list</source>
+                    <target>Post List</target>
+                </trans-unit>
+            </body>
+        </file>
+    </xliff>
+
+----
+
+下一章: :doc:`/best_practices/security`
+
+.. _`PHP Translation Bundle`: https://github.com/php-translation/symfony-bundle
