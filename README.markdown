@@ -35,7 +35,7 @@
 - `Query Builder `：查询生成器
 - `Wire`：自动装配
 - `Autowire`：自动装配
-- `override`：重写，覆盖
+- `Override`：重写，覆盖
 - `Public`：公有
 - `Private`：私有
 - `auto-tag`：自动标记
@@ -43,8 +43,18 @@
 - `resource`：资源
 - `Asset`：资源，特指CSS，JS等Web资源
 - `Authentication`：认证
+- `Authenticator`：认证器
 - `Authorization`：授权
+- `Role`：角色
 - `Firewall`：防火墙
+- `Provider`：提供者
+- `User Provider`：用户提供者
+- `Authentication Provider`：认证提供者
+- `Guard Authenticator`：安保认证器
+- `Remember Me`：保持登录
+- `Impersonation`：模拟
+- `Dummy`：虚拟
+- `Profiler`：调试器
 
 ## 语法问题
 
