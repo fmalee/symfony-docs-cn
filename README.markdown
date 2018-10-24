@@ -8,7 +8,6 @@
 
 - `master`：`b43a26fc1c8408de31e79f1abf91e0201e92e487`（2018-10-19）
 
-
 ## 汉化进展
 
 - [Quick Tour](https://symfony.com/doc/current/quick_tour/index.html)
@@ -27,7 +26,6 @@
 - `type-hint`：类型约束
 - `fully-qualified`：完全限定
 - `centralize`：集中化
-
 - `Recipes`：指令
 - `Meatdata`：元数据
 - `Schema`：模式
@@ -76,7 +74,6 @@
 ### 更新文档
 
 - 在仓库外建立一个临时目录：`update`。
-
 - 从 `symfony-docs` 拉取最新的 `master` 记录。
   - 导出 `master` 的全部文件到 `/update/master`。
   - 在文档说明中记录最后提交的UUID和时间。
@@ -105,7 +102,7 @@
   - 继续根据 `Beyond Compare` 在 `master-new` 分支中合并对应文件。
 - 直至 `Beyond Compare` 中两个目录没有差异，就表示合并已经全部完成。
 - 删除 `update` 目录
-- 合并 `master-new` 分支到 `master` 
+- 合并 `master-new` 分支到 `master`
 - 删除 `master-new` 分支
 - 更新完成
 
@@ -134,7 +131,6 @@
   - 导出该版本的全部文件到 `/update/4.1`
   - 在文档说明中记录最后提交的UUID和时间
 - 进入 `doc-cn` 仓库，从 `master` 分支创建并检出新分支：`4.1`
-
 - 用 `Beyond Compare`  比较 `master` 和 `4.1`
 - 先更新状态为 `新增`、`删除` 的文件
   - 具体操作参考 **更新文档** 的对应步骤
@@ -157,11 +153,16 @@
 
 2. Install [Sphinx](http://sphinx-doc.org/) and [Sphinx Extensions for PHP and Symfony](https://github.com/fabpot/sphinx-php) (depending on your system, you may need to execute this command as root user):
 
-   ` pip install sphinx~=1.3.0 git+https://github.com/fabpot/sphinx-php.git `
+```bash
+$ pip install sphinx~=1.3.0 git+https://github.com/fabpot/sphinx-php.git
+```
 
 3. Run the following command to build the documentation in HTML format:
 
-   ` cd _build/  make html `
+```bash
+$ cd _build/
+$ make html
+```
 
 The generated documentation is available in the `_build/html` directory.
 
@@ -210,4 +211,3 @@ Sphinx官方已经支持中文搜索。
 ## 文档主题
 
 - https://github.com/ryan-roemer/sphinx-bootstrap-theme
-
