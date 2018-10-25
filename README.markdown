@@ -94,33 +94,56 @@
 
 ### 更新文档
 
+#### 导出对比版本
+
 - 在仓库外建立一个临时目录：`update`。
 - 从 `symfony-docs` 拉取最新的 `master` 记录。
-  - 导出 `master` 的全部文件到 `/update/master`。
+  - 导出 `master` 的全部文件到 `/update/new`。
   - 在文档说明中记录最后提交的UUID和时间。
-- 从  `symfony-docs`  中检出 `doc-cn` 记录的最后同步的版本。
-  - 导出该版本的全部文件到 `/update/master-cn`。
+- 从  `symfony-docs`  中检出 `doc-cn` 仓库记录的最后同步的版本。
+  - 导出该版本的全部文件到 `/update/old`。
+- 从 `doc-cn` 导出 `master` 分支的全部文件到 `/update/doc`。
+- 用 `Beyond Compare`  比较 `doc` 和 `old`
+  - 导出差异文件(也就是已经汉化的文件)到 `/update/cn`。
+  - 删除 `/update/doc`。
+
+#### 更新未汉化文件
+
+- 删除  `doc-cn` 下 `master` 工作区的所有文件
+- 复制  `/update/new` 全部文件到 `doc-cn` 的 `master` 工作区，提交修改。
+- 合并  `/update/cn` 全部文件到 `doc-cn` 的 `master` 工作区，提交修改。
+
+- 删除 `/update/cn`。
+
+> 该步骤适合汉化文件不多，而官方更新又比较多的情况。
+> 这样就只需要用汉化文件和官方文件对比，工作量少了很多。
+>
+> 如果官方更新文件不多，则可略过此步骤
+
+#### 更新 `新增/删除` 文件
+
 - 进入 `doc-cn` 仓库，从 `master` 分支创建并检出新分支：`master-new`
-- 用 `Beyond Compare`  比较 `master` 和 `master-cn`
-- 先更新状态为 `新增`、`删除` 的文件
-  - 进入 `master-new` 分支
-    - 添加 `Beyond Comper` 中新增的文件
-    - 删除 `Beyond Comper` 中已删除的文件
-    - 用 `git status` 检查文件状态
-  - 在 `Beyond Compare` 中和  `git status` 比对
-    - 逐一对比两边文件变化
-      - 如果Git中已完成，则将 `/update/master` 同步(`复制/删除`)到 `/update/master-cn`。
-    - 提交  `doc-cn` 的 `master-new` 分支
-- 更新差异文件。
-  - 根据  `Beyond Compare` 在 `master-new` 分支中合并对应文件。
-    - 如果文件比较多，可以一次合并少量文件。
-  - 汉化合并的内容
+- 用 `Beyond Compare`  比较 `new` 和 `old`
+- 进入 `master-new` 分支
+  - 添加 `Beyond Comper` 中新增的文件
+  - 删除 `Beyond Comper` 中已删除的文件
   - 用 `git status` 检查文件状态
-  - 在 `Beyond Compare` 中和  `git status` 比对
-    - 从 `/update/master`  复制已经合并的文件到 `/update/master-cn`
-    - 直至 `git status` 的文件在 `Beyond Compare` 中没有差异
-  - 提交 `master-new` 分支
-  - 继续根据 `Beyond Compare` 在 `master-new` 分支中合并对应文件。
+- 在 `Beyond Compare` 中和  `git status` 比对
+  - 逐一对比两边文件变化
+    - 如果Git中已完成，则将 `/update/new` 同步(`复制/删除`)到 `/update/old`。
+  - 提交  `doc-cn` 的 `master-new` 分支
+
+#### 更新修改文件
+
+- 根据  `Beyond Compare` 在 `master-new` 分支中合并对应文件。
+  - 如果文件比较多，可以一次合并少量文件。
+- 汉化合并的内容
+- 用 `git status` 检查文件状态
+- 在 `Beyond Compare` 中和  `git status` 比对
+  - 从 `/update/new`  复制已经合并的文件到 `/update/old`
+  - 直至 `git status` 的文件在 `Beyond Compare` 中没有差异
+- 提交 `master-new` 分支
+- 继续根据 `Beyond Compare` 在 `master-new` 分支中合并对应文件。
 - 直至 `Beyond Compare` 中两个目录没有差异，就表示合并已经全部完成。
 - 删除 `update` 目录
 - 合并 `master-new` 分支到 `master`
@@ -136,7 +159,7 @@
 
 ### 添加版本
 
-首先，**更新现有文档**！
+首先，**更新现有中文文档**！
 
 其次，选择和需要添加的版本**比较相近**的已经汉化的版本。如已经汉化的 `master(4.2)` 和要添加的 `4.1`。
 
@@ -153,7 +176,7 @@
   - 在文档说明中记录最后提交的UUID和时间
 - 进入 `doc-cn` 仓库，从 `master` 分支创建并检出新分支：`4.1`
 - 用 `Beyond Compare`  比较 `master` 和 `4.1`
-- 先更新状态为 `新增`、`删除` 的文件
+- 先更新状态为 `新增/删除` 的文件
   - 具体操作参考 **更新文档** 的对应步骤
 - 更新差异文件
   - 具体操作参考 **更新文档** 的对应步骤
