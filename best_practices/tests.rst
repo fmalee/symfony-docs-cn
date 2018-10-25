@@ -1,34 +1,27 @@
-Tests
+测试
 =====
 
-Of all the different types of test available, these best practices focus solely
-on unit and functional tests. Unit testing allows you to test the input and
-output of specific functions. Functional testing allows you to command a
-"browser" where you browse to pages on your site, click links, fill out forms
-and assert that you see certain things on the page.
+在所有可用的不同类型的测试中，这些最佳实践仅关注单元和功能测试。
+单元测试允许你测试特定功能的输入和输出。
+功能测试允许你模拟“浏览器”浏览网站上的页面，单击链接，填写表单并断言你在页面上看到某些内容。
 
-Unit Tests
+单元测试
 ----------
 
-Unit tests are used to test your "business logic", which should live in classes
-that are independent of Symfony. For that reason, Symfony doesn't really
-have an opinion on what tools you use for unit testing. However, the most
-popular tools are `PHPUnit`_ and `PHPSpec`_.
+单元测试用于测试你的“业务逻辑”，它应该存在于独立的Symfony类中。
+出于这个原因，Symfony对用于单元测试的工具没有真正的意见。但是，最流行的工具是 `PHPUnit`_ 和 `PHPSpec`_。
 
-Functional Tests
+功能测试
 ----------------
 
-Creating really good functional tests can be tough so some developers skip
-these completely. Don't skip the functional tests! By defining some *simple*
-functional tests, you can quickly spot any big errors before you deploy them:
+创建真正好用的功能测试可能很难，所以一些开发人员完全跳过这些。
+不要跳过功能测试！通过定义一些简单的功能测试，你可以在部署之前快速发现一些重大错误：:
 
 .. best-practice::
 
-    Define a functional test that at least checks if your application pages
-    are successfully loading.
+    定义一个功能测试，至少检查你的应用页面是否成功加载。
 
-:ref:`PHPUnit data providers <testing-data-providers>` help you implement
-functional tests::
+由于 :ref:`PHPUnit data providers <testing-data-providers>` 程序，这样的功能测试很容易实现::
 
     // tests/ApplicationAvailabilityFunctionalTest.php
     namespace App\Tests;
@@ -59,31 +52,24 @@ functional tests::
         }
     }
 
-This code checks that all the given URLs load successfully, which means that
-their HTTP response status code is between ``200`` and ``299``. This may
-not look that useful, but given how little effort this took, it's worth
-having it in your application.
+此代码检查了所有给定的URL是否成功加载，这意味着它们的HTTP响应状态代码介于200和299之间。
+这可能看起来不那么有用，但考虑到它花费的精力很少，所以在你的应用中使用它是值得的。
 
-In computer software, this kind of test is called `smoke testing`_ and consists
-of *"preliminary testing to reveal simple failures severe enough to reject a
-prospective software release"*.
+在计算机软件领域，这种测试称为 `烟雾测试`_，包括*“初步测试，以揭示严重到足以拒绝预期软件发布的简单故障”*。
 
-Hardcode URLs in a Functional Test
+在功能测试中硬编码URL
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Some of you may be asking why the previous functional test doesn't use the URL
-generator service:
+有些人可能会问，为什么以前的功能测试不使用URL生成器的服务：
 
 .. best-practice::
 
-    Hardcode the URLs used in the functional tests instead of using the URL
-    generator.
+    在功能测试中使用硬编码的URL，而不是使用URL生成器来生成URL。
 
-Consider the following functional test that uses the ``router`` service to
-generate the URL of the tested page::
+思考下面的功能测试代码，使用了 ``router`` 服务来生成测试页面的URL::
 
     // ...
-    private $router; // consider that this holds the Symfony router service
+    private $router; // 假定它包含了 Symfony 路由服务
 
     public function testBlogArchives()
     {
@@ -94,30 +80,26 @@ generate the URL of the tested page::
         // ...
     }
 
-This will work, but it has one *huge* drawback. If a developer mistakenly
-changes the path of the ``blog_archives`` route, the test will still pass,
-but the original (old) URL won't work! This means that any bookmarks for
-that URL will be broken and you'll lose any search engine page ranking.
+代码执行正确，但却有一个*致命*缺陷。
+如果开发人员错误地更改了 ``blog_archives`` 路由的路径，虽然测试仍会通过，但原始（旧）的URL将无效！
+这意味着任何收藏该URL的书签都将被破坏，你也将失去任何搜索引擎的页面排名(page ranking)。
 
-Testing JavaScript Functionality
+测试JavaScript功能
 --------------------------------
 
-The built-in functional testing client is great, but it can't be used to
-test any JavaScript behavior on your pages. If you need to test this, consider
-using the `Mink`_ library from within PHPUnit.
+内置的功能测试客户端很棒，但它不能用于测试页面上的任何JavaScript行为。
+如果需要对此进行测试，请考虑在PHPUnit中使用 `Mink`_ 库。
 
-Of course, if you have a heavy JavaScript front-end, you should consider using
-pure JavaScript-based testing tools.
+当然，如果你有一个繁杂的JavaScript前端，你应该考虑使用纯基于JavaScript的测试工具。
 
-Learn More about Functional Tests
+深入学习功能测试
 ---------------------------------
 
-Consider using the `HautelookAliceBundle`_ to generate real-looking data for
-your test fixtures using `Faker`_ and `Alice`_.
+可以考虑在 `HautelookAliceBundle`_ 中使用 `Faker`_ 和 `Alice`_ 为你的测试装置生成真实(real-looking)的数据。
 
 .. _`PHPUnit`: https://phpunit.de/
 .. _`PHPSpec`: https://www.phpspec.net/
-.. _`smoke testing`: https://en.wikipedia.org/wiki/Smoke_testing_(software)
+.. _`烟雾测试`: https://en.wikipedia.org/wiki/Smoke_testing_(software)
 .. _`Mink`: http://mink.behat.org
 .. _`HautelookAliceBundle`: https://github.com/hautelook/AliceBundle
 .. _`Faker`: https://github.com/fzaninotto/Faker

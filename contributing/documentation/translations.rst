@@ -1,4 +1,4 @@
-Translations
+翻译
 ============
 
 The official Symfony documentation is published only in English. You can

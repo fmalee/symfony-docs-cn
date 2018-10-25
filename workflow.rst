@@ -1,4 +1,4 @@
-Workflow
+工作流
 ========
 
 A workflow is a model of a process in your application. It may be the process
@@ -20,7 +20,7 @@ The Workflow component does also support state machines. A state machine is a su
 of a workflow and its purpose is to hold a state of your model. Read more about the
 differences and specific features of state machine in :doc:`/workflow/state-machines`.
 
-Examples
+范例
 --------
 
 The simplest workflow looks like this. It contains two places and one transition.
@@ -41,7 +41,7 @@ By defining a workflow like this, there is an overview how the process looks lik
 logic is not mixed with the controllers, models or view. The order of the steps can be changed
 by changing the configuration only.
 
-Learn more
+其他参考
 ----------
 
 .. toctree::

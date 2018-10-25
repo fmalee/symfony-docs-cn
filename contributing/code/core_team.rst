@@ -1,4 +1,4 @@
-Symfony Core Team
+Symfony 核心团队
 =================
 
 The **Symfony Core** team is the group of developers that determine the
@@ -13,7 +13,7 @@ This document states the rules that govern the Symfony core team. These rules
 are effective upon publication of this document and all Symfony Core members
 must adhere to said rules and protocol.
 
-Core Organization
+核心机构
 -----------------
 
 Symfony Core members are divided into groups. Each member can only belong to one

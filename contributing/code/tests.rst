@@ -1,6 +1,6 @@
 .. _running-symfony2-tests:
 
-Running Symfony Tests
+运行 Symfony 测试
 =====================
 
 The Symfony project uses a third-party service which automatically runs tests
@@ -13,7 +13,7 @@ In any case, it's a good practice to run tests locally before submitting a
 .. _phpunit:
 .. _dependencies_optional:
 
-Before Running the Tests
+运行测试前
 ------------------------
 
 To run the Symfony test suite, install the external dependencies used during the
@@ -26,7 +26,7 @@ tests, such as Doctrine, Twig and Monolog. To do so,
 
 .. _running:
 
-Running the Tests
+运行测试
 -----------------
 
 Then, run the test suite from the Symfony root directory with the following

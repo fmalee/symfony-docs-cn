@@ -1,19 +1,17 @@
 .. index::
    single: Configuration
 
-Configuring Symfony (and Environments)
+配置 Symfony (以及环境)
 ======================================
 
-Symfony applications can install third-party packages (bundles, libraries, etc.)
-to bring in new features (:doc:`services </service_container>`) to your project.
-Each package can be customized via configuration files that live - by default -
-in the ``config/`` directory.
+Symfony应用可以安装第三方软件包（bundles，库等），为项目引入新功能（:doc:`服务 </service_container>`）。
+每个依赖包都可以通过配置文件进行自定义 - 默认情况下 - 在 ``config/``目录中。
 
-Configuration: config/packages/
+配置: config/packages/
 -------------------------------
 
-The configuration for each package can be found in ``config/packages/``. For
-instance, the framework bundle is configured in ``config/packages/framework.yaml``:
+每个依赖包的配置可以在 ``config/packages/`` 中找到。
+例如，framework bundle 在 ``config/packages/framework.yaml`` 中配置：
 
 .. configuration-block::
 
@@ -124,29 +122,27 @@ instance, the framework bundle is configured in ``config/packages/framework.yaml
             ],
         ]);
 
-The top-level key (here ``framework``) references configuration for a specific
-bundle (:doc:`FrameworkBundle </reference/configuration/framework>` in this case).
+顶级键（此处为 ``framework``）引用一个特定bundle的配置（在本例中为 :doc:`FrameworkBundle </reference/configuration/framework>`）。
 
-.. sidebar:: Configuration Formats
+.. sidebar:: 配置的格式
 
-    Throughout the documentation, all configuration examples will be shown in
-    three formats (YAML, XML and PHP). YAML is used by default, but you can
-    choose whatever you like best. There is no performance difference:
+    在整个文档中，所有配置示例将以三种格式（YAML，XML和PHP）显示。
+    默认情况下使用YAML，但你可以选择你最喜欢的格式。它们之间没有性能差异：
 
-    * :doc:`/components/yaml/yaml_format`: Simple, clean and readable;
-    * *XML*: More powerful than YAML at times & supports IDE autocompletion;
-    * *PHP*: Very powerful but less readable than standard configuration formats.
+    * :doc:`/components/yaml/yaml_format`: 简单、清楚、可读性强;
+    * *XML*: 某些时候比YAML威力强大，而且支持IDE的代码自动完成。
+    * *PHP*: 非常强大，但相比标准配置格式缺乏可读性。
 
-Configuration Reference & Dumping
+配置的参考和展示
 ---------------------------------
 
-There are *two* ways to know *what* keys you can configure:
+有*两*种方法可以知道你可以配置哪些键：
 
-#. Use the :doc:`Reference Section </reference/index>`;
-#. Use the ``config:dump-reference`` command.
+#. 阅读 :doc:`参考章节 </reference/index>`;
+#. 使用 ``config:dump-reference`` 命令.
 
-For example, if you want to configure something related to the framework bundle,
-you can see an example dump of all available configuration options by running:
+例如，如果要配置与framework bundle相关的内容，
+可以通过运行以下命令查看所有可用配置选项的示例展示(dump)：
 
 .. code-block:: terminal
 
@@ -160,13 +156,12 @@ you can see an example dump of all available configuration options by running:
 
 .. _config-parameter-intro:
 
-The parameters Key: Parameters (Variables)
+参数键: 参数(变量)
 ------------------------------------------
 
-The configuration has some special top-level keys. One of them is called
-``parameters``: it's used to define *variables* that can be referenced in *any*
-other configuration file. For example, when you install the *translation*
-package, a ``locale`` parameter is added  to ``config/services.yaml``:
+配置有一些特殊的顶级(top-level)键。
+其中一个叫做 ``parameters``：它用于定义可以在任何其他配置文件中引用的 *变量*。
+例如，安装 *translation* 依赖包后，会在 ``config/services.yaml`` 中添加一个 ``locale`` 参数：
 
 .. configuration-block::
 
@@ -203,8 +198,7 @@ package, a ``locale`` parameter is added  to ``config/services.yaml``:
         $container->setParameter('locale', 'en');
         // ...
 
-This parameter is then referenced in the framework config in
-``config/packages/translation.yaml``:
+然后在 ``config/packages/translation.yaml`` 中的 ``framework`` 配置中引用此参数：
 
 .. configuration-block::
 
@@ -245,33 +239,29 @@ This parameter is then referenced in the framework config in
             // ...
         ));
 
-You can define whatever parameter names you want under the ``parameters`` key of
-any configuration file. To reference a parameter, surround its name with two
-percent signs - e.g. ``%locale%``.
+您可以在任何配置文件的 ``parameters`` 键下定义所需的任何参数名称。
+要引用参数，请用两个 ``%`` 包裹该名称 - 例如 ``%locale%``。
 
 .. seealso::
 
-    You can also set parameters dynamically, like from environment variables.
-    See :doc:`/configuration/external_parameters`.
+    你还可以动态设置参数，例如环境变量。请参见 :doc:`/configuration/external_parameters`。
 
-For more information about parameters - including how to reference them from inside
-a controller - see :ref:`service-container-parameters`.
+有关参数的更多信息 - 包括如何在控制器内部引用它们 - 请参阅 :ref:`service-container-parameters`。
 
 .. _config-dot-env:
 .. _config-parameters-yml:
 
-The .env File & Environment Variables
+.env 文件 & 环境变量
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-There is also a ``.env`` file which is loaded. Its contents become environment
-variables in the dev environment, making it easier to reference environment
-variables in your code. When you install packages, more environment variables are
-added to this file. But you can also add your own variables.
+还有一个已经加载的配置是 ``.env`` 文件。
+其内容成为开发环境中的环境变量，使你更容易在代码中引用环境变量。
+当你安装依赖包时，会向此文件添加更多环境变量。
+当然，你也可以添加自己的变量。
 
-Environment variables can be referenced in any other configuration files by using
-a special syntax. For example, if you install the ``doctrine`` package, then you
-will have an environment variable called ``DATABASE_URL`` in your ``.env`` file.
-This is referenced inside ``config/packages/doctrine.yaml``:
+可以使用特殊语法在任何其他配置文件中引用。
+例如，如果你安装了 ``doctrine`` 依赖包，那么你的 ``.env`` 文件中将有一个名为 ``DATABASE_URL`` 的环境变量。
+该变量已经在 ``config/packages/doctrine.yaml`` 中被引用：
 
 .. code-block:: yaml
 
@@ -283,47 +273,36 @@ This is referenced inside ``config/packages/doctrine.yaml``:
             # The `resolve:` prefix replaces container params by their values inside the env variable:
             # url: '%env(resolve:DATABASE_URL)%'
 
-For more details about environment variables, see :ref:`config-env-vars`.
+有关环境变量的更多详细信息，请参阅 :ref:`config-env-vars`。
 
-The ``.env`` file is special, because it defines the values that usually change
-on each server. For example, the database credentials on your local development
-machine might be different from your workmates. That's why this file is **not
-committed to the shared repository** and is only stored on your machine. In
-fact, the ``.gitignore`` file that comes with Symfony prevents it from being
-committed.
+``.env`` 文件很特殊，因为它定义了通常在每台服务器上都会变动的值。
+例如，你的本地计算机上的数据库凭据可能与你的同事不同。
+这就是为什么此文件 *不提交到共享仓库库* 并且仅存储在你的计算机上的原因。
+事实上，Symfony附带的 ``.gitignore`` 文件阻止了它的提交。
 
-However, a ``.env.dist`` file *is* committed (with dummy values). This file
-isn't read by Symfony: it's just a reference so that Symfony knows which
-variables need to be defined in the ``.env`` file. If you add or remove keys to
-``.env``, add or remove them from ``.env.dist`` too, so both files are always
-in sync.
+但是，一个 ``.env.dist`` 文件*正常*提交了（该文件带有示例(dummy)值）。
+Symfony不读取此文件：它只是一个引用，以便Symfony知道需要在 ``.env`` 文件中定义哪些变量。
+如果你在 ``.env` 添加或删除了键，也应该在 ``.env.dist`` 中添加或删除它们，因此两个文件始终保持同步。
 
-Environments & the Other Config Files
+环境 & 其他配置文件
 -------------------------------------
 
-You have just *one* app, but whether you realize it or not, you need it to
-behave *differently* at different times:
+你可能只有*一个*应用，但无论你是否意识到，你需要它在不同的时间有*不同*的行为(behave)：
 
-* While **developing**, you want your app to log everything and expose nice
-  debugging tools;
+* 在 **开发** 时，你希望您的应用记录所有内容并使用不错的调试工具;
 
-* After deploying to **production**, you want that *same* app to be optimized
-  for speed and only log errors.
+* 部署到 **生产** 后，你希望该应用能针对速度进行优化并仅记录错误。
 
-How can you make *one* application behave in two different ways? With
-*environments*.
+如何使*一个*应用以两种不同的方式运行？根据*环境*。
 
-You've probably already been using the ``dev`` environment without even knowing
-it. After you deploy, you'll use the ``prod`` environment.
+你可能已经在不知道的情况下使用了 ``dev`` 环境。在应用部署后，你将使用 ``prod`` 环境。
 
-To learn more about *how* to execute and control each environment, see
-:doc:`/configuration/environments`.
+要了解有关*如何*执行和控制每个环境的更多信息，请参阅 :doc:`/configuration/environments`。
 
-Keep Going!
+继续阅读
 -----------
 
-Congratulations! You've tackled the basics in Symfony. Next, learn about *each*
-part of Symfony individually by following the guides. Check out:
+恭喜！你已经了解了Symfony的基础知识。接下来，按照指南了解Symfony的每个部分。阅读：
 
 * :doc:`/forms`
 * :doc:`/doctrine`
@@ -332,10 +311,10 @@ part of Symfony individually by following the guides. Check out:
 * :doc:`/email`
 * :doc:`/logging`
 
-And the many other topics.
+还有很多其他主题。
 
-Learn more
-----------
+更多关于配置的内容
+-------------------
 
 .. toctree::
     :maxdepth: 1

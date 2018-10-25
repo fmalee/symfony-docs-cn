@@ -1,4 +1,4 @@
-Managing CSS and JavaScript
+管理 CSS 和 JavaScript
 ===========================
 
 .. admonition:: Screencast
@@ -27,21 +27,21 @@ to solve the most common Webpack use cases.
 
 .. tip::
 
-    Encore is made by `Symfony`_ and works *beautifully* in Symfony applications.
-    But it can easily be used in any application... in any language!
+    Encore由 `Symfony`_ 发行，能*完美*\集成到Symfony应用中。
+    但它可以很容易地用于任何语言的任何应用！
 
 .. _encore-toc:
 
-Encore Documentation
+Encore 文档
 --------------------
 
-Getting Started
+快速上手
 ...............
 
 * :doc:`Installation </frontend/encore/installation>`
 * :doc:`First Example </frontend/encore/simple-example>`
 
-Adding more Features
+添加更多功能
 ....................
 
 * :doc:`CSS Preprocessors: Sass, LESS, etc </frontend/encore/css-preprocessors>`
@@ -52,7 +52,7 @@ Adding more Features
 * :doc:`Source maps </frontend/encore/sourcemaps>`
 * :doc:`Enabling TypeScript (ts-loader) </frontend/encore/typescript>`
 
-Optimizing
+优化
 ..........
 
 * :doc:`Versioning (and the manifest.json file) </frontend/encore/versioning>`
@@ -60,7 +60,7 @@ Optimizing
 * :doc:`Creating a "Shared" entry for re-used modules </frontend/encore/shared-entry>`
 * :doc:`/frontend/encore/url-loader`
 
-Guides
+指南
 ......
 
 * :doc:`Using Bootstrap CSS & JS </frontend/encore/bootstrap>`
@@ -71,7 +71,7 @@ Guides
 * :doc:`Adding custom loaders & plugins </frontend/encore/custom-loaders-plugins>`
 * :doc:`Advanced Webpack Configuration </frontend/encore/advanced-config>`
 
-Issues & Questions
+问 & 答
 ..................
 
 * :doc:`FAQ & Common Issues </frontend/encore/faq>`
@@ -82,7 +82,7 @@ Full API
 
 * `Full API`_: https://github.com/symfony/webpack-encore/blob/master/index.js
 
-Other Front-End Articles
+扩展阅读
 ------------------------
 
 .. toctree::

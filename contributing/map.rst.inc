@@ -5,7 +5,7 @@
   * :doc:`/contributing/code_of_conduct/care_team`
   * :doc:`/contributing/code_of_conduct/concrete_example_document`
 
-* **Code**
+* **代码**
 
   * :doc:`Bugs </contributing/code/bugs>`
   * :doc:`Patches </contributing/code/patches>`
@@ -20,14 +20,14 @@
   * :doc:`Git</contributing/code/git>`
   * :doc:`License </contributing/code/license>`
 
-* **Documentation**
+* **文档**
 
   * :doc:`Overview </contributing/documentation/overview>`
   * :doc:`Format </contributing/documentation/format>`
   * :doc:`Documentation Standards </contributing/documentation/standards>`
   * :doc:`License </contributing/documentation/license>`
 
-* **Community**
+* **社区**
 
   * :doc:`Release Process </contributing/community/releases>`
   * :doc:`Respectful Review comments </contributing/community/review-comments>`

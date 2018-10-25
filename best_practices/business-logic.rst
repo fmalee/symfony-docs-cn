@@ -1,17 +1,12 @@
-Organizing Your Business Logic
+组织你的业务逻辑
 ==============================
 
-In computer software, **business logic** or domain logic is "the part of the
-program that encodes the real-world business rules that determine how data can
-be created, displayed, stored, and changed" (read `full definition`_).
+在计算机软件领域， **业务逻辑** 或域逻辑（domain logic）指的是“程序中用于处理现实世界中决定数据被创建、显示、存储和改变的业务规则那部分内容”。（参考 `full definition`_）
 
-In Symfony applications, business logic is all the custom code you write for
-your app that's not specific to the framework (e.g. routing and controllers).
-Domain classes, Doctrine entities and regular PHP classes that are used as
-services are good examples of business logic.
+Symfony程序中，业务逻辑是指你为自己的不与框架本身重合（比如路由或控制器）的程序所写的全部定制代码。
+域类(Domain classes)，Doctrine 实体以及被当作服务来使用的常规PHP类，都是业务逻辑的好样板。
 
-For most projects, you should store all your code inside the ``src/`` directory.
-Inside here, you can create whatever directories you want to organize things:
+对于多数项目来说，你应该把所有代码放到 ``src/`` 中。在这里，你可以创建任意目录，用来组织内容：
 
 .. code-block:: text
 
@@ -27,23 +22,20 @@ Inside here, you can create whatever directories you want to organize things:
 
 .. _services-naming-and-format:
 
-Services: Naming and Configuration
+服务: 命名和配置
 ----------------------------------
 
 .. best-practice::
 
-    Use autowiring to automate the configuration of application services.
+    使用自动装配来自动配置应用的服务。
 
-:doc:`Service autowiring </service_container/autowiring>` is a feature provided
-by Symfony's Service Container to manage services with minimal configuration. It
-reads the type-hints on your constructor (or other methods) and automatically
-passes the correct services to each method. It can also add
-:doc:`service tags </service_container/tags>` to the services needing them, such
-as Twig extensions, event subscribers, etc.
+:doc:`Service autowiring </service_container/autowiring>` 是Symfony的服务容器提供的一项功能，
+用于以最少的配置来管理服务。
+它读取构造函数（或其他方法）上的类型提示，并自动将正确的服务传递给每个方法。
+它还可以向需要它们的服务添加 :doc:`service tags </service_container/tags>`，例如Twig扩展，事件订阅者等。
 
-The blog application needs a utility that can transform a post title (e.g.
-"Hello World") into a slug (e.g. "hello-world") to include it as part of the
-post URL. Let's create a new ``Slugger`` class inside ``src/Utils/``::
+博客应用需要一个工具，该工具可以将帖子标题（例如“Hello World”）转换为slug（例如“hello-world”）以将其作为帖子URL的一部分。
+让我们在 ``src/Utils/`` 中创建一个新的 ``Slugger`` 类::
 
     // src/Utils/Slugger.php
     namespace App\Utils;
@@ -56,18 +48,14 @@ post URL. Let's create a new ``Slugger`` class inside ``src/Utils/``::
         }
     }
 
-If you're using the :ref:`default services.yaml configuration <service-container-services-load-example>`,
-this class is auto-registered as a service whose ID is ``App\Utils\Slugger`` (or
-simply ``Slugger::class`` if the class is already imported in your code).
+如果你使用的是默认的 :ref:`default services.yaml configuration <service-container-services-load-example>`，
+则此类将自动注册为ID为 ``App\Utils\Slugger`` 的服务（如果已在你的代码中导入该类，则只需简介的 ``Slugger::class``）。
 
 .. best-practice::
 
-    The id of your application's services should be equal to their class name,
-    except when you have multiple services configured for the same class (in that
-    case, use a snake case id).
+    应用的服务id应该等于它们的类名，除非你为同一个类配置了多个服务（在这种情况下，使用蛇形命名(snake case)id）。
 
-Now you can use the custom slugger in any other service or controller class,
-such as the ``AdminController``::
+现在，你可以在任何其他服务或控制器类中使用自定义的slugger，例如 ``AdminController`` ::
 
     use App\Utils\Slugger;
 
@@ -83,49 +71,41 @@ such as the ``AdminController``::
         }
     }
 
-Services can also be :ref:`public or private <container-public>`. If you use the
-:ref:`default services.yaml configuration <service-container-services-load-example>`,
-all services are private by default.
+服务也可以是 :ref:`public or private <container-public>`。
+如果使用 :ref:`default services.yaml configuration <service-container-services-load-example>`，
+则默认情况下所有服务都是私有的。
 
 .. best-practice::
 
-    Services should be ``private`` whenever possible. This will prevent you from
-    accessing that service via ``$container->get()``. Instead, you will need to use
-    dependency injection.
+    服务应尽可能是 ``private``。这可以阻止通过 ``$container->get()`` 来访问该服务。
+    取而代之的是你必须使用依赖注入。
 
-Service Format: YAML
+服务的格式：YAML
 --------------------
 
-If you use the :ref:`default services.yaml configuration <service-container-services-load-example>`,
-most services will be configured automatically. However, in some edge cases
-you'll need to configure services (or parts of them) manually.
+如果使用 :ref:`default services.yaml configuration <service-container-services-load-example>`，
+则将自动配置大多数服务。但是，在某些边缘情况下，你需要手动配置服务（或其中的一部分）。
 
 .. best-practice::
 
-    Use the YAML format to configure your own services.
+    使用 YAML 格式来配置你的服务。
 
-This is controversial, and in our experience, YAML and XML usage is evenly
-distributed among developers, with a slight preference towards YAML.
-Both formats have the same performance, so this is ultimately a matter of
-personal taste.
+这是有争议的，而且在我们的实验中，YAML 和 XML 的使用即便在开发者中亦存在争议，YAML略微占先。
+两种格式拥有相同的性能，所以使用谁最终取决于个人口味。
 
-We recommend YAML because it's friendly to newcomers and concise. You can
-use any of the other formats if you prefer another format.
+我们推荐 YAML 是因为它对初学者友好且简洁。你当然可以选择你喜欢的格式。
 
-Using a Persistence Layer
+使用持久层
 -------------------------
 
-Symfony is an HTTP framework that only cares about generating an HTTP response
-for each HTTP request. That's why Symfony doesn't provide a way to talk to
-a persistence layer (e.g. database, external API). You can choose whatever
-library or strategy you want for this.
+Symfony 是一个HTTP框架，它只关心为每一个HTTP请求生成一个HTTP响应。
+这就是为何 Symfony 不提供用于持久层（如数据库，外部API）通信的方法的原因。
+对此，你可以选择自己的类库或策略来达到目的。
 
-In practice, many Symfony applications rely on the independent
-`Doctrine project`_ to define their model using entities and repositories.
-Just like with business logic, we recommend storing Doctrine entities in the
-``src/Entity/`` directory.
+实际上，很多 Symfony 程序使用依赖于独立的 `Doctrine project`_ 的实体和仓库来定义其模型。
+就像在业务逻辑中建议的那样，我们推荐把 Doctrine 实体存放在 ``src/Entity/`` 目录下。
 
-The three entities defined by our sample blog application are a good example:
+我们的示例博客应用中定义的三个实体就是一个很好的例子：
 
 .. code-block:: text
 
@@ -137,20 +117,17 @@ The three entities defined by our sample blog application are a good example:
           ├─ Post.php
           └─ User.php
 
-Doctrine Mapping Information
+Doctrine映射信息
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Doctrine entities are plain PHP objects that you store in some "database".
-Doctrine only knows about your entities through the mapping metadata configured
-for your model classes. Doctrine supports four metadata formats: YAML, XML,
-PHP and annotations.
+Doctrine实体是你存储在某个“数据库”中的原生PHP对象。
+Doctrine只能通过你配置在模型类中元数据（metadata）来获知这个实体。Doctrine支持四种元数据格式：YAML，XML，PHP和注释。
 
 .. best-practice::
 
-    Use annotations to define the mapping information of the Doctrine entities.
+    使用注释来定义 Doctrine 实体的映射信息。
 
-Annotations are by far the most convenient and agile way of setting up and
-looking for mapping information::
+到目前为止，注释是设置和查找映射信息最方便，最敏捷的方法::
 
     namespace App\Entity;
 
@@ -215,21 +192,18 @@ looking for mapping information::
         // getters and setters ...
     }
 
-All formats have the same performance, so this is once again ultimately a
-matter of taste.
+所有格式都具有相同的性能，因此这再一次最终成为品味问题。
 
 Data Fixtures
 ~~~~~~~~~~~~~
 
-As fixtures support is not enabled by default in Symfony, you should execute
-the following command to install the Doctrine fixtures bundle:
+由于 fixtures 功能并未在Symfony中默认开启，你应该执行下述命令来安装 Doctrine fixtures bundle：
 
 .. code-block:: terminal
 
     $ composer require "doctrine/doctrine-fixtures-bundle"
 
-Then, this bundle is enabled automatically, but only for the ``dev`` and
-``test`` environments::
+然后，该 bundle 会自动启用，但仅适用于 ``dev`` 和 ``test`` 环境::
 
     // config/bundles.php
 
@@ -238,12 +212,9 @@ Then, this bundle is enabled automatically, but only for the ``dev`` and
         Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle::class => ['dev' => true, 'test' => true],
     ];
 
-We recommend creating just *one* `fixture class`_ for simplicity, though
-you're welcome to have more if that class gets quite large.
+为了简化操作，我们推荐仅创建*一个* `fixture class`_，但如果类中的内容过长的话你也可以创建更多类。
 
-Assuming you have at least one fixtures class and that the database access
-is configured properly, you can load your fixtures by executing the following
-command:
+假设你至少有一个 fixtures 类，而且数据库连接信息已被正确配置，通过以下命令即可加载你的 fixtures：:
 
 .. code-block:: terminal
 
@@ -253,18 +224,19 @@ command:
       > purging database
       > loading App\DataFixtures\ORM\LoadFixtures
 
-Coding Standards
+编码标准
 ----------------
 
-The Symfony source code follows the `PSR-1`_ and `PSR-2`_ coding standards that
-were defined by the PHP community. You can learn more about
-:doc:`the Symfony Coding standards </contributing/code/standards>` and even
-use the `PHP-CS-Fixer`_, which is a command-line utility that can fix the
-coding standards of an entire codebase in a matter of seconds.
+Symfony源代码遵循 `PSR-1`_ 和 `PSR-2`_ 代码书写规范，它们是由PHP社区制定的。
+你可以从 :doc:`the Symfony Coding standards </contributing/code/standards>` 了解更多，
+甚至使用`PHP-CS-Fixer`_，这是一个命令行工具，它可以“秒完成”地修复整个代码库的编码标准。
+Symfony源代码遵循PHP社区定义的 `PSR-1`_ 和 `PSR-2`_ 编码标准。
+你可以了解 :doc:`the Symfony Coding standards </contributing/code/standards>` 的更多信息，
+甚至可以使用 `PHP-CS-Fixer`_，它是一个命令行工具，可以在几秒钟内修复整个代码库的编码标准。
 
 ----
 
-Next: :doc:`/best_practices/controllers`
+下一章: :doc:`/best_practices/controllers`
 
 .. _`full definition`: https://en.wikipedia.org/wiki/Business_logic
 .. _`Doctrine project`: http://www.doctrine-project.org/

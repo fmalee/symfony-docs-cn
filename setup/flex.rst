@@ -1,6 +1,6 @@
 .. index:: Flex
 
-Using Symfony Flex to Manage Symfony Applications
+使用 Symfony Flex 管理应用
 =================================================
 
 `Symfony Flex`_ is the new way to install and manage Symfony applications. Flex
@@ -12,7 +12,7 @@ installing and removing bundles and other Composer dependencies. Symfony
 Flex works for Symfony 3.3 and higher. Starting from Symfony 4.0, Flex
 should be used by default, but it is still optional.
 
-How Does Flex Work
+Flex 如何工作
 ------------------
 
 Symfony Flex is a Composer plugin that modifies the behavior of the
@@ -198,10 +198,10 @@ manual steps:
          logger mailer form security translation validator
        $ composer require --dev dotenv maker-bundle orm-fixtures profiler
 
-#. If the project's ``composer.json`` file doesn't contain the ``symfony/symfony``
+#. If the project's ``composer.json`` file doesn't contain ``symfony/symfony``
    dependency, it already defines its dependencies explicitly, as required by
-   Flex. Reinstall all dependencies to force Flex to generate the
-   configuration files in ``config/``, which is the most tedious part of the upgrade
+   Flex. You just need to reinstall all dependencies to force Flex generate the
+   config files in ``config/``, which is the most tedious part of the upgrade
    process:
 
    .. code-block:: terminal

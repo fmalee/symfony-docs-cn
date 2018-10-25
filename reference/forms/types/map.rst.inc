@@ -1,4 +1,4 @@
-Text Fields
+文本字段
 ~~~~~~~~~~~
 
 * :doc:`TextType </reference/forms/types/text>`
@@ -15,7 +15,7 @@ Text Fields
 * :doc:`TelType </reference/forms/types/tel>`
 * :doc:`ColorType </reference/forms/types/color>`
 
-Choice Fields
+选择型字段
 ~~~~~~~~~~~~~
 
 * :doc:`ChoiceType </reference/forms/types/choice>`
@@ -26,7 +26,7 @@ Choice Fields
 * :doc:`TimezoneType </reference/forms/types/timezone>`
 * :doc:`CurrencyType </reference/forms/types/currency>`
 
-Date and Time Fields
+日期和时间字段
 ~~~~~~~~~~~~~~~~~~~~
 
 * :doc:`DateType </reference/forms/types/date>`
@@ -35,32 +35,32 @@ Date and Time Fields
 * :doc:`TimeType </reference/forms/types/time>`
 * :doc:`BirthdayType </reference/forms/types/birthday>`
 
-Other Fields
+其他字段
 ~~~~~~~~~~~~
 
 * :doc:`CheckboxType </reference/forms/types/checkbox>`
 * :doc:`FileType </reference/forms/types/file>`
 * :doc:`RadioType </reference/forms/types/radio>`
 
-Field Groups
+字段组
 ~~~~~~~~~~~~
 
 * :doc:`CollectionType </reference/forms/types/collection>`
 * :doc:`RepeatedType </reference/forms/types/repeated>`
 
-Hidden Fields
+隐藏字段
 ~~~~~~~~~~~~~
 
 * :doc:`HiddenType </reference/forms/types/hidden>`
 
-Buttons
+按钮
 ~~~~~~~
 
 * :doc:`ButtonType </reference/forms/types/button>`
 * :doc:`ResetType </reference/forms/types/reset>`
 * :doc:`SubmitType </reference/forms/types/submit>`
 
-Base Fields
-~~~~~~~~~~~
+表单字段基类
+~~~~~~~~~~~~~~~~~
 
 * :doc:`FormType </reference/forms/types/form>`

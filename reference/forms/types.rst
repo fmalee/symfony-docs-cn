@@ -1,7 +1,7 @@
 .. index::
    single: Forms; Types Reference
 
-Form Types Reference
+表单类型参考
 ====================
 
 .. toctree::
@@ -51,13 +51,12 @@ Form Types Reference
 
    types/form
 
-A form is composed of *fields*, each of which are built with the help of
-a field *type* (e.g. ``TextType``, ``ChoiceType``, etc). Symfony comes
-standard with a large list of field types that can be used in your application.
+表单由 *字段* 组成，每个字段都是在字段 *类型* 的帮助下构建的（例如 ``TextType``、``ChoiceType`` 等）。 
+Symfony标配了可在你的应用中直接使用的大量字段类型。
 
-Supported Field Types
+支持的表单类型
 ---------------------
 
-The following field types are natively available in Symfony:
+以下字段类型在Symfony中是直接可用的：
 
 .. include:: /reference/forms/types/map.rst.inc

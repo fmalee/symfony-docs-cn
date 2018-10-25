@@ -3,152 +3,126 @@
 
 .. _how-to-deploy-a-symfony2-application:
 
-How to Deploy a Symfony Application
-===================================
+部署
+=============
 
-Deploying a Symfony application can be a complex and varied task depending on
-the setup and the requirements of your application. This article is not a step-
-by-step guide, but is a general list of the most common requirements and ideas
-for deployment.
+部署Symfony可能是一个复杂和多样的任务，取决于你的程序的设置和需求。
+本文并非手把手的指南，而是罗列了部署时的常见需求和建议。
 
 .. _symfony2-deployment-basics:
 
-Symfony Deployment Basics
+部署基础
 -------------------------
 
-The typical steps taken while deploying a Symfony application include:
+发生在部署Symfony时的典型步骤包括：
 
-#. Upload your code to the production server;
-#. Install your vendor dependencies (typically done via Composer and may be done
-   before uploading);
-#. Running database migrations or similar tasks to update any changed data structures;
-#. Clearing (and optionally, warming up) your cache.
+#. 把你的代码上传到生产服务器;
+#. 安装第三方依赖 (通常透过Composer完成，并且可以在上传程序之前完成);
+#. 运行数据库迁移或类似任务，以更新“已改变的”数据结构;
+#. 清除（并可选择预热）缓存。
 
-A deployment may also include other tasks, such as:
+部署过程还包括其他任务，诸如：
 
-* Tagging a particular version of your code as a release in your source control
-  repository;
-* Creating a temporary staging area to build your updated setup "offline";
-* Running any tests available to ensure code and/or server stability;
-* Removal of any unnecessary files from the ``public/`` directory to keep your
-  production environment clean;
-* Clearing of external cache systems (like `Memcached`_ or `Redis`_).
+* 将特定版本的代码标记为源代码控制仓库中的发行版;
+* 创建临时暂存区域，方便以“离线”的方式构建你已更新的设置;
+* 运行任何可用的测试，以确保代码和/或服务器的稳定性;
+* 从 ``public/`` 目录删除任何不必要的文件以保持生产环境干净;
+* 清理外部缓存系统 (像是 `Memcached`_ 或 `Redis`_)。
 
-How to Deploy a Symfony Application
+如何部署Symfony应用
 -----------------------------------
 
-There are several ways you can deploy a Symfony application. Start with a few
-basic deployment strategies and build up from there.
+部署Symfony应用时有几种方式。从一些基本的部署策略开始，然后从那里构建。
 
-Basic File Transfer
+基本文件传输
 ~~~~~~~~~~~~~~~~~~~
 
-The most basic way of deploying an application is copying the files manually
-via FTP/SCP (or similar method). This has its disadvantages as you lack control
-over the system as the upgrade progresses. This method also requires you
-to take some manual steps after transferring the files (see `Common Post-Deployment Tasks`_)
+部署一套应用最基本的方式是通过FTP/SCP（或类似方法）手动拷贝文件。
+其欠点是，比如在升级过程中，你缺少对系统的控制。
+这种方法也需要你在文传输之后执行一些手动步骤（参考 `常见部署后任务`_）。
 
-Using Source Control
+使用版本控制
 ~~~~~~~~~~~~~~~~~~~~
 
-If you're using source control (e.g. Git or SVN), you can simplify by having
-your live installation also be a copy of your repository. When you're ready to
-upgrade it is as simple as fetching the latest updates from your source control
-system. When using Git, a common approach is to create a tag for each release
-and check out the appropriate tag on deployment (see `Git Tagging`_).
+如果你使用了版本控制（比如Git或SVN），则可以通过将实时安装(live installation)也作为仓库的副本来简化。
+当你准备升级时，简单到如同从版本控制系统中获取最新更新一样。
+使用Git时，常见的方法是为每个版本创建一个标签，然后在部署时检出相应的标签（请参阅 `Git标签`_）。
 
-This makes updating your files *easier*, but you still need to worry about
-manually taking other steps (see `Common Post-Deployment Tasks`_).
+这令你的文件更新变得\* 更容易*\，但你仍然需要考虑手动执行其他步骤（参考 `常见部署后任务`_）。
 
-Using Platforms as a Service
+使用平台服务
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Using a Platform as a Service (PaaS) can be a great way to deploy your Symfony app
-quickly and easily. There are many PaaS - below are a few that work well with Symfony:
+使用平台服务（PaaS）可以快速轻松地部署Symfony应用。
+有很多PaaS  - 下面有一些与Symfony配合得更好：
 
 * `Heroku`_
 * `Platform.sh`_
 * `Azure`_
 * `fortrabbit`_
 
-Using Build Scripts and other Tools
+使用构建脚本和其他工具
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-There are also tools to help ease the pain of deployment. Some of them have been
-specifically tailored to the requirements of Symfony.
+有几种工具可以帮助减轻部署时的痛苦。其中的一些几乎是为Symfony的需求而量身定制的：
 
 `EasyDeployBundle`_
-    A Symfony bundle that adds easy deploy tools to your application.
+    一个Symfony bundle，可为你的应用添加简单的部署工具。
 
 `Deployer`_
-    This is another native PHP rewrite of Capistrano, with some ready recipes for
-    Symfony.
+    这是Capistrano的另一个原生PHP重写，为Symfony提供了一些现成的指令。
 
 `Ansistrano`_
-    An Ansible role that allows you to configure a powerful deploy via YAML files.
+    一个 Ansible 角色，允许你通过YAML文件配置强大的部署。
 
 `Magallanes`_
-    This Capistrano-like deployment tool is built in PHP, and may be easier
-    for PHP developers to extend for their needs.
+    这种类似Capistrano的部署工具是用PHP构建的，PHP开发人员可以更轻松地扩展以满足他们的需求。
 
 `Fabric`_
-    This Python-based library provides a basic suite of operations for executing
-    local or remote shell commands and uploading/downloading files.
+    这个基于Python的库提供了一组基本操作，用于执行本地或远程shell命令以及上载/下载文件。
 
-`Capistrano`_ with `Symfony plugin`_
-    `Capistrano`_ is a remote server automation and deployment tool written in Ruby.
-    `Symfony plugin`_ is a plugin to ease Symfony related tasks, inspired by `Capifony`_
-    (which works only with Capistrano 2).
+`Capistrano`_ 与 `Symfony plugin`_
+    `Capistrano`_ 是一个用Ruby编写的远程服务器自动化和部署工具。
+    `Symfony plugin`_ 是一个简化Symfony相关任务的插件，灵感来自 `Capifony`_（仅适用于Capistrano 2）。
 
 `sf2debpkg`_
-    Helps you build a native Debian package for your Symfony project.
+    帮助你为Symfony项目构建一个原生(native)Debian软件包。
 
 Basic scripting
-    You can of course use shell, `Ant`_ or any other build tool to script
-    the deploying of your project.
+    你当然可以使用shell、`Ant`_ 或任何其他构建工具来编写项目的部署脚本。
 
-Common Post-Deployment Tasks
+常见部署后任务
 ----------------------------
 
-After deploying your actual source code, there are a number of common things
-you'll need to do:
+在部署了你的真正源代码之后，有一些常见事项需要你来做：
 
-A) Check Requirements
+A) 需求检查
 ~~~~~~~~~~~~~~~~~~~~~
 
-Use the :doc:`Symfony Requirements Checker </reference/requirements>` to check
-if your server meets the technical requirements to run Symfony applications.
+使用 :doc:`Symfony 运行环境检测 </reference/requirements>`
+检查你的服务器是否满足运行Symfony应用的技术要求。
 
 .. _b-configure-your-app-config-parameters-yml-file:
 
-B) Configure your Environment Variables
+B) 配置你的环境变量
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+大多数Symfony应用程序从环境变量中读取其配置。在本地开发时，您通常会将它们存储在.env文件中。在制作时，您有两种选择：
 Most Symfony applications read their configuration from environment variables.
-While developing locally, you'll usually store these in a ``.env`` file. On production,
-you have two options:
+While developing locally, you'll usually store these in a ``.env`` file. But on
+production, instead of creating this file, you should set *real* environment variables.
 
-1. Create "real" environment variables. How you set environment variables, depends
-   on your setup: they can be set at the command line, in your Nginx configuration,
-   or via other methods provided by your hosting service.
+How you set environment variables, depends on your setup: they can be set at the
+command line, in your Nginx configuration, or via other methods provided by your
+hosting service.
 
-2. Or, create a ``.env`` file just like your local development (see note below)
+At the very least you need to define the ``APP_ENV=prod`` environment variable
+to run the application in ``prod`` mode, but depending on your application you
+may need to define other env vars too.
 
-There is no significant advantage to either of the two options: use whatever is
-most natural in your hosting environment.
-
-.. note::
-
-    If you use the ``.env`` file on production, you may need to move your
-    ``symfony/dotenv`` dependency from ``require-dev`` to ``require`` in ``composer.json``:
-
-    .. code-block:: terminal
-
-        $ composer remove symfony/dotenv
-        $ composer require symfony/dotenv
-
-C) Install/Update your Vendors
+C) 安装/更新依赖
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 
 Your vendors can be updated before transferring your source code (i.e.
 update the ``vendor/`` directory, then transfer that with your source
@@ -164,6 +138,7 @@ as you normally do:
     The ``--optimize-autoloader`` flag improves Composer's autoloader performance
     significantly by building a "class map". The ``--no-dev`` flag ensures that
     development packages are not installed in the production environment.
+    通过构建一个 "class map" 类映射，--optimize-autoloader 旗标大幅改进了Composer的自动加载性能。--no-dev 旗标可确保开发环境的包不被安装到生产环境。
 
 .. caution::
 
@@ -171,17 +146,19 @@ as you normally do:
     run ``export APP_ENV=prod`` (or ``export SYMFONY_ENV=prod`` if you're not
     using :doc:`Symfony Flex </setup/flex>`) before running this command so
     that the ``post-install-cmd`` scripts run in the ``prod`` environment.
+    如果在这一步你得到 "class not found" 错误，你可能需要在执行前述命令之前先运行 export SYMFONY_ENV=prod 以便 post-install-cmd 脚本运行在 prod 环境下。
 
-D) Clear your Symfony Cache
+D) 清除Symfony缓存
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+确保清除（以及warm-up）了你的Symfony缓存。
 Make sure you clear and warm-up your Symfony cache:
 
 .. code-block:: terminal
 
     $ APP_ENV=prod APP_DEBUG=0 php bin/console cache:clear
 
-E) Other Things!
+E) 其他任务！
 ~~~~~~~~~~~~~~~~
 
 There may be lots of other things that you need to do, depending on your
@@ -194,18 +171,21 @@ setup:
 * Pushing assets to a CDN
 * ...
 
-Application Lifecycle: Continuous Integration, QA, etc.
+程序生命周期：持续整合，质量保证等
 -------------------------------------------------------
 
+虽然本文覆盖了部署过程的技术细节，但是代码从开发到生产时的完整生命周期可能需要更多步骤（考虑staging部署，QA[Quality Assurance/质量保证]，运行测试，等等）
 While this article covers the technical details of deploying, the full lifecycle
 of taking code from development up to production may have more steps:
 deploying to staging, QA (Quality Assurance), running tests, etc.
 
+staging、测试、QA、持续整合（continuous integration），数据库迁移以及失败时的向下兼容，统统被强烈建议。有各种简单或复杂的工具，其中的某一款会令你的部署在满足环境需求的过程变得容易（或老练）。
 The use of staging, testing, QA, continuous integration, database migrations
 and the capability to roll back in case of failure are all strongly advised. There
 are simple and more complex tools and one can make the deployment as easy
 (or sophisticated) as your environment requires.
 
+别忘了在部署过程中也牵扯到更新依赖（一般通过Composer），迁移数据库，清除缓存以及其他潜在事项，诸如将资源发布到CDN（参考 常见的后部署任务）。
 Don't forget that deploying your application also involves updating any dependency
 (typically via Composer), migrating your database, clearing your cache and
 other potential things like pushing assets to a CDN (see `Common Post-Deployment Tasks`_).
@@ -239,7 +219,7 @@ kernel and return your project's root directory::
         }
     }
 
-Learn More
+扩展阅读
 ----------
 
 .. toctree::
@@ -258,7 +238,7 @@ Learn More
 .. _`Redis`: http://redis.io/
 .. _`Symfony plugin`: https://github.com/capistrano/symfony/
 .. _`Deployer`: http://deployer.org/
-.. _`Git Tagging`: https://git-scm.com/book/en/v2/Git-Basics-Tagging
+.. _`Git标签`: https://git-scm.com/book/en/v2/Git-Basics-Tagging
 .. _`Heroku`: https://devcenter.heroku.com/articles/getting-started-with-symfony
 .. _`platform.sh`: https://docs.platform.sh/frameworks/symfony.html
 .. _`Azure`: https://azure.microsoft.com/en-us/develop/php/

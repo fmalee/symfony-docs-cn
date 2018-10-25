@@ -1,12 +1,12 @@
 .. index::
     single: Upgrading; Patch Version
 
-Upgrading a Patch Version (e.g. 4.1.0 to 4.1.1)
+更新补丁版本 (比如从 4.1.0 到 4.1.1)
 ===============================================
 
 When a new patch version is released (only the last number changed), it is a
 release that only contains bug fixes. This means that upgrading to a new patch
-version should not cause any problems.
+version is *really* easy.
 
 To upgrade to a new "patch" release, read the
 :doc:`Upgrading a Minor Version </setup/upgrade_minor>` article. Thanks to

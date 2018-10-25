@@ -1,7 +1,7 @@
 .. index::
    single: Performance; Byte code cache; OPcache; APC
 
-Performance
+性能
 ===========
 
 Symfony is fast, right out of the box. However, you can make it faster if you
@@ -105,7 +105,7 @@ such as Symfony projects, should use at least these values:
 
 .. _performance-optimize-composer-autoloader:
 
-Optimize Composer Autoloader
+优化 Composer 的自动加载
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The class loader used while developing the application is optimized to find
@@ -129,7 +129,7 @@ deployment process too):
 * ``--classmap-authoritative`` prevents Composer from scanning the file
   system for classes that are not found in the class map.
 
-Learn more
+更多资料
 ----------
 
 * :doc:`/http_cache/varnish`

@@ -1,17 +1,14 @@
-Profiler
+分析器
 ========
 
-The profiler is a powerful **development tool** that gives detailed information
-about the execution of any request.
+分析器是一个强大的 **开发工具**，它能将任何请求的执行结果详细的展示出来。
 
-**Never** enable the profiler in production environments as it will lead to
-major security vulnerabilities in your project.
+**不要**在生产环境启用分析器，它会让你的项目出现一些安全隐患。
 
-Installation
+安装
 ------------
 
-In applications using :doc:`Symfony Flex </setup/flex>`, run this command to
-install the profiler before using it:
+在应用中使用 :doc:`Symfony Flex </setup/flex>`，在使用前运行该命令安装分析器：
 
 .. code-block:: terminal
 

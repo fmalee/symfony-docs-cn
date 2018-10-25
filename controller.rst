@@ -1,29 +1,24 @@
 .. index::
    single: Controller
 
-Controller
+控制器
 ==========
 
-A controller is a PHP function you create that reads information from the
-``Request`` object and creates and returns a ``Response`` object. The response could
-be an HTML page, JSON, XML, a file download, a redirect, a 404 error or anything
-else you can dream up. The controller executes whatever arbitrary logic
-*your application* needs to render the content of a page.
+控制器是你创建的一个PHP函数，它从 ``Request`` 对象读取信息并创建和返回一个 ``Response`` 对象。
+响应可能是HTML页面，JSON，XML，文件下载，重定向，404错误或你可以想到的任何其他内容。
+控制器负责实施你的应用渲染页面内容所需的任意逻辑。
 
 .. tip::
 
-    If you haven't already created your first working page, check out
-    :doc:`/page_creation` and then come back!
+    如果你尚未创建第一个页面，请查看 :doc:`/page_creation`，然后再回来！
 
 .. index::
    single: Controller; Simple example
 
-A Simple Controller
+一个简单的控制器
 -------------------
 
-While a controller can be any PHP callable (a function, method on an object,
-or a ``Closure``), a controller is usually a method inside a controller
-class::
+虽然控制器可以是任何PHP的callable（函数，对象上的方法或 ``Closure``），但一个控制器通常是控制器类中的一个方法::
 
     // src/Controller/LuckyController.php
     namespace App\Controller;
@@ -46,41 +41,34 @@ class::
         }
     }
 
-The controller is the ``number()`` method, which lives inside a
-controller class ``LuckyController``.
+控制器就是该 ``number()`` 方法，它位于控制器类 ``LuckyController`` 中。
 
-This controller is pretty straightforward:
+这个控制器非常简单：
 
-* *line 2*: Symfony takes advantage of PHP's namespace functionality to
-  namespace the entire controller class.
+* *line 2*: Symfony利用PHP的命名空间函数来命名整个控制器类。
 
-* *line 4*: Symfony again takes advantage of PHP's namespace functionality:
-  the ``use`` keyword imports the ``Response`` class, which the controller
-  must return.
+* *line 4*: Symfony再次利用PHP的命名空间函数：使用 ``use`` 关键字导入了控制器必须返回的 ``Response`` 类。
 
-* *line 7*: The class can technically be called anything, but it's suffixed
-  with ``Controller`` by convention.
+* *line 7*: 从技术上讲，该类可以被命名为任何东西，但它按照惯例以 ``Controller`` 为后缀。
 
-* *line 12*: The action method is allowed to have a ``$max`` argument thanks to the
-  ``{max}`` :doc:`wildcard in the route </routing>`.
+* *line 12*: 得益于 :doc:`路由通配符 </routing>` ``{max}`` ，该动作(action)方法可以增加一个 ``$max`` 参数。
 
-* *line 16*: The controller creates and returns a ``Response`` object.
+* *line 16*: 控制器创建并返回一个 ``Response`` 对象。
 
 .. index::
    single: Controller; Routes and controllers
 
-Mapping a URL to a Controller
+将URI映射到控制器
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In order to *view* the result of this controller, you need to map a URL to it via
-a route. This was done above with the ``@Route("/lucky/number/{max}")``
-:ref:`route annotation <annotation-routes>`.
+为了能*浏览*此控制器的输出，你需要通过路由将URL映射到该控制器。
+这是通过 ``@Route("/lucky/number/{max}")`` :ref:`路由注释 <annotation-routes>`完成的。
 
-To see your page, go to this URL in your browser:
+要查看页面，请在浏览器中打开此URL:
 
     http://localhost:8000/lucky/number/100
 
-For more information on routing, see :doc:`/routing`.
+有关路由的更多信息，请参阅 :doc:`/routing`。
 
 .. index::
    single: Controller; Base controller class
@@ -88,15 +76,12 @@ For more information on routing, see :doc:`/routing`.
 .. _the-base-controller-class-services:
 .. _the-base-controller-classes-services:
 
-The Base Controller Class & Services
+控制器基类 & 服务
 ------------------------------------
 
-To make life nicer, Symfony comes with an optional base controller class called
-:class:`Symfony\\Bundle\\FrameworkBundle\\Controller\\AbstractController`.
-You can extend it to get access to some `helper methods`_.
+为了让生活更美好，Symfony附带了一个名为 :class:`Symfony\\Bundle\\FrameworkBundle\\Controller\\AbstractController` 的可选控制器基类。你可以继承它以访问一些 `辅助方法`_。
 
-Add the ``use`` statement atop your controller class and then modify
-``LuckyController`` to extend it:
+在控制器类的顶部添加 ``use`` 语句，然后修改 ``LuckyController`` 以继承它：
 
 .. code-block:: diff
 
@@ -111,73 +96,67 @@ Add the ``use`` statement atop your controller class and then modify
         // ...
     }
 
-That's it! You now have access to methods like :ref:`$this->render() <controller-rendering-templates>`
-and many others that you'll learn about next.
+仅此而已！你现在可以访问诸如 :ref:`$this->render() <controller-rendering-templates>` 之类的方法以及你接下来将学习的更多其他方法。
 
 .. index::
    single: Controller; Redirecting
 
-Generating URLs
+生成URL
 ~~~~~~~~~~~~~~~
 
-The :method:`Symfony\\Bundle\\FrameworkBundle\\Controller\\AbstractController::generateUrl`
-method is just a helper method that generates the URL for a given route::
+:method:`Symfony\\Bundle\\FrameworkBundle\\Controller\\AbstractController::generateUrl` 方法只是一个生成给定路由的URL的辅助方法::
 
     $url = $this->generateUrl('app_lucky_number', array('max' => 10));
 
-Redirecting
+重定向
 ~~~~~~~~~~~
 
-If you want to redirect the user to another page, use the ``redirectToRoute()``
-and ``redirect()`` methods::
+如果要将用户重定向到另一个页面，请使用 ``redirectToRoute()`` 和  ``redirect()`` 方法::
 
     use Symfony\Component\HttpFoundation\RedirectResponse;
 
     // ...
     public function index()
     {
-        // redirects to the "homepage" route
+        // 重定向到 "homepage" 路由
         return $this->redirectToRoute('homepage');
 
-        // redirectToRoute is a shortcut for:
+        // redirectToRoute 只是一个快捷方式:
         // return new RedirectResponse($this->generateUrl('homepage'));
 
-        // does a permanent - 301 redirect
+        // 永久性 - 301 重定向
         return $this->redirectToRoute('homepage', array(), 301);
 
-        // redirect to a route with parameters
+        // 重定向到带参数的路由
         return $this->redirectToRoute('app_lucky_number', array('max' => 10));
 
-        // redirects to a route and mantains the original query string parameters
+        // 重定向到路由并维持原有的查询字符串参数
         return $this->redirectToRoute('blog_show', $request->query->all());
 
-        // redirects externally
+        // 重定向到外部
         return $this->redirect('http://symfony.com/doc');
     }
 
 .. caution::
 
-    The ``redirect()`` method does not check its destination in any way. If you
-    redirect to a URL provided by end-users, your application may be open
-    to the `unvalidated redirects security vulnerability`_.
+    ``redirect()`` 方法不以任何方式检查其目的地URL。
+    如果你重定向到最终用户提供的URL，你的应用会遭遇 `未经验证的重定向安全漏洞`_。
 
 .. index::
    single: Controller; Rendering templates
 
 .. _controller-rendering-templates:
 
-Rendering Templates
+渲染模板
 ~~~~~~~~~~~~~~~~~~~
 
-If you're serving HTML, you'll want to render a template. The ``render()``
-method renders a template **and** puts that content into a ``Response``
-object for you::
+如果你要提供HTML服务，则需要渲染一个模板。
+``render()`` 方法会渲染模板**并**将该内容放入到一个 ``Response``对象中::
 
-    // renders templates/lucky/number.html.twig
+    // 渲染 templates/lucky/number.html.twig
     return $this->render('lucky/number.html.twig', array('number' => $number));
 
-Templating and Twig are explained more in the
-:doc:`Creating and Using Templates article </templating>`.
+可以在 :doc:`创建和使用模板 </templating>` 章节中了解更多关于模板和Twig的内容。
 
 .. index::
    single: Controller; Accessing services
@@ -185,15 +164,14 @@ Templating and Twig are explained more in the
 .. _controller-accessing-services:
 .. _accessing-other-services:
 
-Fetching Services
+获取服务
 ~~~~~~~~~~~~~~~~~
 
-Symfony comes *packed* with a lot of useful objects, called :doc:`services </service_container>`.
-These are used for rendering templates, sending emails, querying the database and
-any other "work" you can think of.
+Symfony开箱即拥有许多有用的对象，称为 :doc:`服务 </service_container>`。
+它们用于渲染模板，发送电子邮件，查询数据库以及你可以想到的任何其他“工作”。
 
-If you need a service in a controller, type-hint an argument with its class
-(or interface) name. Symfony will automatically pass you the service you need::
+如果你在控制器中的需要一个服务，只需用该服务的类（或接口）作为一个带类型约束(type-hint)的参数。
+Symfony会自动给你传递所需的服务::
 
     use Psr\Log\LoggerInterface
     // ...
@@ -207,17 +185,15 @@ If you need a service in a controller, type-hint an argument with its class
         // ...
     }
 
-Awesome!
+真是神奇!
 
-What other services can you type-hint? To see them, use the ``debug:autowiring`` console
-command:
+你可以获取到哪些其他服务？要查看它们，请使用 ``debug:autowiring`` console命令：
 
 .. code-block:: terminal
 
     $ php bin/console debug:autowiring
 
-If you need control over the *exact* value of an argument, you can :ref:`bind <services-binding>`
-the argument by its name:
+如果需要控制一个参数的*确切*(exact)值，可以使用其名称来 :ref:`绑定 <services-binding>` 该参数：
 
 .. configuration-block::
 
@@ -227,13 +203,13 @@ the argument by its name:
         services:
             # ...
 
-            # explicitly configure the service
+            # 明确的配置服务
             App\Controller\LuckyController:
                 public: true
                 bind:
-                    # for any $logger argument, pass this specific service
+                    # 对于任何 $logger 参数，传递此特定服务
                     $logger: '@monolog.logger.doctrine'
-                    # for any $projectDir argument, pass this parameter value
+                    # 对于任何 $projectDir 参数(argument)，传递此参数(parameter)值
                     $projectDir: '%kernel.project_dir%'
 
     .. code-block:: xml
@@ -273,20 +249,17 @@ the argument by its name:
             ))
         ;
 
-Like with all services, you can also use regular :ref:`constructor injection <services-constructor-injection>`
-in your controllers.
+你当然也可以在控制器中使用常规的 :ref:`构造函数注入 <services-constructor-injection>`。
 
 .. versionadded:: 4.1
-    The ability to bind scalar values to controller arguments was introduced in
-    Symfony 4.1. Previously you could only bind services.
+    Symfony 4.1中引入了将标量值(scalar values)绑定到控制器参数的功能。以前只能绑定服务。
 
-For more information about services, see the :doc:`/service_container` article.
+有关服务的更多信息，请参阅 :doc:`/service_container` 章节。
 
-Generating Controllers
+生成控制器
 ----------------------
 
-To save time, you can install `Symfony Maker`_ and tell Symfony to generate a
-new controller class:
+为了节省时间，你可以安装 `Symfony Maker`_ 并让Symfony生成一个新的控制器类：
 
 .. code-block:: terminal
 
@@ -294,72 +267,60 @@ new controller class:
 
     created: src/Controller/BrandNewController.php
 
-If you want to generate an entire CRUD from a Doctrine :doc:`entity </doctrine>`,
-use:
+如果要从一个 Doctrine :doc:`实体 </doctrine>` 中生成整个CRUD，请使用：
 
 .. code-block:: terminal
 
     $ php bin/console make:crud Product
 
 .. versionadded:: 1.2
-    The ``make:crud`` command was introduced in MakerBundle 1.2.
+    ``make:crud`` 命令是在MakerBundle 1.2中引入的。
 
 .. index::
    single: Controller; Managing errors
    single: Controller; 404 pages
 
-Managing Errors and 404 Pages
+管理错误和404页面
 -----------------------------
 
-When things are not found, you should return a 404 response. To do this, throw a
-special type of exception::
+如果找不到内容，你应该返回404响应。要达到目的，需要抛出一种特殊类型的异常::
 
     use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
     // ...
     public function index()
     {
-        // retrieve the object from database
+        // 从数据库中检索对象
         $product = ...;
         if (!$product) {
-            throw $this->createNotFoundException('The product does not exist');
+            throw $this->createNotFoundException('该产品不存在');
 
-            // the above is just a shortcut for:
-            // throw new NotFoundHttpException('The product does not exist');
+            // 上面只是一个快捷方式:
+            // throw new NotFoundHttpException('该产品不存在');
         }
 
         return $this->render(...);
     }
 
-The :method:`Symfony\\Bundle\\FrameworkBundle\\Controller\\AbstractController::createNotFoundException`
-method is just a shortcut to create a special
-:class:`Symfony\\Component\\HttpKernel\\Exception\\NotFoundHttpException`
-object, which ultimately triggers a 404 HTTP response inside Symfony.
+:method:`Symfony\\Bundle\\FrameworkBundle\\Controller\\AbstractController::createNotFoundException` 方法只是创建一个特殊的 :class:`Symfony\\Component\\HttpKernel\\Exception\\NotFoundHttpException` 对象的快捷方式，它最终会在Symfony中触发一个404 HTTP响应。
 
-If you throw an exception that extends or is an instance of
-:class:`Symfony\\Component\\HttpKernel\\Exception\\HttpException`, Symfony will
-use the appropriate HTTP status code. Otherwise, the response will have a 500
-HTTP status code::
+如果抛出的异常继承自 :class:`Symfony\\Component\\HttpKernel\\Exception\\HttpException` 或是其实例，Symfony将使用适当的HTTP状态代码。否则，响应将会使用500 HTTP状态代码::
 
-    // this exception ultimately generates a 500 status error
+    // 此异常最终会生成 500 错误
     throw new \Exception('Something went wrong!');
 
-In every case, an error page is shown to the end user and a full debug
-error page is shown to the developer (i.e. when you're in "Debug" mode - see
-:ref:`page-creation-environments`).
+无论什么案例，都应该向最终用户显示错误页面，而向开发人员显示完整的调试错误页面（比如当你处于“调试”模式时 - 请参阅 :ref:`page-creation-environments`）。
 
-To customize the error page that's shown to the user, see the
-:doc:`/controller/error_pages` article.
+要自定义向用户展示的错误页面，请参阅 :doc:`/controller/error_pages` 章节。
 
 .. _controller-request-argument:
 
-The Request object as a Controller Argument
+将Request对象作为控制器参数
 -------------------------------------------
 
-What if you need to read query parameters, grab a request header or get access
-to an uploaded file? All of that information is stored in Symfony's ``Request``
-object. To get it in your controller, add it as an argument and
-**type-hint it with the Request class**::
+如果你需要读取查询参数、获取请求标头或访问上传的文件，该怎么办？
+所有这些信息都存储在Symfony的 ``Request``对象中。
+要在控制器中获取它，只需将Request添加为参数并对其该类进行类类型约束::
 
     use Symfony\Component\HttpFoundation\Request;
 
@@ -370,8 +331,7 @@ object. To get it in your controller, add it as an argument and
         // ...
     }
 
-:ref:`Keep reading <request-object-info>` for more information about using the
-Request object.
+:ref:`继续阅读 <request-object-info>` 有关使用 Request 对象的更多信息。
 
 .. index::
    single: Controller; The session
@@ -379,55 +339,50 @@ Request object.
 
 .. _session-intro:
 
-Managing the Session
+管理会话
 --------------------
 
-Symfony provides a session service that you can use to store information
-about the user between requests. Session is enabled by default, but will only be
-started if you read or write from it.
+Symfony支持会话服务，你可以使用该服务在各请求之间存储有关用户的信息。会话默认启用，但只有在你读取或写入时才会启动。
 
-Session storage and other configuration can be controlled under the
-:ref:`framework.session configuration <config-framework-session>` in
-``config/packages/framework.yaml``.
+会话存储和其他配置可以在 ``config/packages/framework.yaml`` 文件中的
+:ref:`framework.session 配置 <config-framework-session>` 下进行控制。
 
-To get the session, add an argument and type-hint it with
-:class:`Symfony\\Component\\HttpFoundation\\Session\\SessionInterface`::
+要获取会话，请添加一个参数并使用 :class:`Symfony\\Component\\HttpFoundation\\Session\\SessionInterface`
+对其进行类型约束::
 
     use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
     public function index(SessionInterface $session)
     {
-        // stores an attribute for reuse during a later user request
+        // 存储一个属性，以便在以后的用户请求中重用
         $session->set('foo', 'bar');
 
-        // gets the attribute set by another controller in another request
+        // 获取另一个请求中另一个控制器设置的属性
         $foobar = $session->get('foobar');
 
-        // uses a default value if the attribute doesn't exist
+        // 如果该属性不存在，则使用默认值
         $filters = $session->get('filters', array());
     }
 
-Stored attributes remain in the session for the remainder of that user's session.
+这些储存的属性将会在用户会话的有效期内保留。
 
 .. tip::
 
-    Every ``SessionInterface`` implementation is supported. If you have your
-    own implementation, type-hint this in the argument instead.
+    每个 ``SessionInterface`` 的实现都受支持。如果你有自己的实现，请在参数中使用类型约束。
 
-For more info, see :doc:`/session`.
+有关的详细信息，请参阅 :doc:`/session`。
 
 .. index::
    single: Session; Flash messages
 
-Flash Messages
+Flash消息
 ~~~~~~~~~~~~~~
 
-You can also store special messages, called "flash" messages, on the user's
-session. By design, flash messages are meant to be used exactly once: they vanish
-from the session automatically as soon as you retrieve them. This feature makes
-"flash" messages particularly great for storing user notifications.
+你还可以在用户的​​会话中存储称为“flash”消息的特殊消息。
+根据设计，闪存消息只能使用一次：一旦你取出(retrieve)它们，它们就会自动从会话中消失。
+此功能使“闪存”消息特别适合存储用户通知。
 
-For example, imagine you're processing a :doc:`form </forms>` submission::
+例如，假设你正在处理一个 :doc:`表单 </forms>` 提交::
 
     use Symfony\Component\HttpFoundation\Request;
 
@@ -436,13 +391,13 @@ For example, imagine you're processing a :doc:`form </forms>` submission::
         // ...
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // do some sort of processing
+            // 做某种处理
 
             $this->addFlash(
                 'notice',
-                'Your changes were saved!'
+                '你的更改已保存!'
             );
-            // $this->addFlash() is equivalent to $request->getSession()->getFlashBag()->add()
+            // $this->addFlash() 等同于 $request->getSession()->getFlashBag()->add()
 
             return $this->redirectToRoute(...);
         }
@@ -450,25 +405,23 @@ For example, imagine you're processing a :doc:`form </forms>` submission::
         return $this->render(...);
     }
 
-After processing the request, the controller sets a flash message in the session
-and then redirects. The message key (``notice`` in this example) can be anything:
-you'll use this key to retrieve the message.
+处理完请求后，控制器在会话中保存一个闪存消息，然后重定向。
+消息的键（在此示例中为 ``notice``）可以是任何内容：你将使用此键来检索消息。
 
-In the template of the next page (or even better, in your base layout template),
-read any flash messages from the session using ``app.flashes()``:
+在下一个页面的的模板中（可以使用基本布局模板做到更好），使用 ``app.flashes()`` 从会话中读取任何闪存消息：
 
 .. code-block:: html+twig
 
     {# templates/base.html.twig #}
 
-    {# you can read and display just one flash message type... #}
+    {# 你可以只读取和显示一种闪存消息类型... #}
     {% for message in app.flashes('notice') %}
         <div class="flash-notice">
             {{ message }}
         </div>
     {% endfor %}
 
-    {# ...or you can read and display every flash message available #}
+    {# ...或者你可以阅读并显示每个可用的闪存消息 #}
     {% for label, messages in app.flashes %}
         {% for message in messages %}
             <div class="flash-{{ label }}">
@@ -477,150 +430,139 @@ read any flash messages from the session using ``app.flashes()``:
         {% endfor %}
     {% endfor %}
 
-It's common to use ``notice``, ``warning`` and ``error`` as the keys of the
-different types of flash messages, but you can use any key that fits your
-needs.
+将 ``notice``，``warning`` 和 ``error`` 用作不同类型的闪存消息的键是很常见的，
+但你可以使用任何符合你需求的键。
 
 .. tip::
 
-    You can use the
-    :method:`Symfony\\Component\\HttpFoundation\\Session\\Flash\\FlashBagInterface::peek`
-    method instead to retrieve the message while keeping it in the bag.
+    你可以使用 :method:`Symfony\\Component\\HttpFoundation\\Session\\Flash\\FlashBagInterface::peek` 方法来取出消息，同时将其保留在包(bag)中。
 
 .. index::
    single: Controller; Response object
 
 .. _request-object-info:
 
-The Request and Response Object
+请求和响应对象
 -------------------------------
 
-As mentioned :ref:`earlier <controller-request-argument>`, Symfony will
-pass the ``Request`` object to any controller argument that is type-hinted with
-the ``Request`` class::
+如 :ref:`前面 <controller-request-argument>` 所述，
+Symfony会将 ``Request`` 对象传递给任何使用 ``Request`` 类进行类型约束的控制器参数::
 
     use Symfony\Component\HttpFoundation\Request;
 
     public function index(Request $request)
     {
-        $request->isXmlHttpRequest(); // is it an Ajax request?
+        $request->isXmlHttpRequest(); // 这是一个Ajax请求吗？
 
         $request->getPreferredLanguage(array('en', 'fr'));
 
-        // retrieves GET and POST variables respectively
+        // 分别检索 GET 和 POST 变量
         $request->query->get('page');
         $request->request->get('page');
 
-        // retrieves SERVER variables
+        // 检索 SERVER 变量
         $request->server->get('HTTP_HOST');
 
-        // retrieves an instance of UploadedFile identified by foo
+        // 检索一个有 foo 标识的 UploadedFile 实例
         $request->files->get('foo');
 
-        // retrieves a COOKIE value
+        // 检索一个 COOKIE 值
         $request->cookies->get('PHPSESSID');
 
-        // retrieves an HTTP request header, with normalized, lowercase keys
+        // 使用规范化的小写键来检索HTTP请求标头
         $request->headers->get('host');
         $request->headers->get('content_type');
     }
 
-The ``Request`` class has several public properties and methods that return any
-information you need about the request.
+``Request`` 类有几个公共属性和方法，可返回有关请求的所有信息。
 
-Like the ``Request``, the ``Response`` object has also a public ``headers`` property.
-This is a :class:`Symfony\\Component\\HttpFoundation\\ResponseHeaderBag` that has
-some nice methods for getting and setting response headers. The header names are
-normalized so that using ``Content-Type`` is equivalent to ``content-type`` or even
-``content_type``.
+与 ``Request``类似，``Response`` 对象也有一个公共 ``headers`` 属性。
+这是一个 :class:`Symfony\\Component\\HttpFoundation\\ResponseHeaderBag`，
+它有一些很好的方法来获取和设置响应头。
+标头(header)已经被规范化，因此使用 ``Content-Type`` 等同于 ``content-type`` 或甚至 ``content_type``。
 
-The only requirement for a controller is to return a ``Response`` object::
+对一个控制器的唯一要求是返回一个 ``Response`` 对象::
 
     use Symfony\Component\HttpFoundation\Response;
 
-    // creates a simple Response with a 200 status code (the default)
+    // 使用200状态代码（默认值）创建一个简单的响应
     $response = new Response('Hello '.$name, Response::HTTP_OK);
 
-    // creates a CSS-response with a 200 status code
+    // 使用200状态代码创建一个CSS响应
     $response = new Response('<style> ... </style>');
     $response->headers->set('Content-Type', 'text/css');
 
-There are special classes that make certain kinds of responses easier. Some of these
-are mentioned below. To learn more about the ``Request`` and ``Response`` (and special
-``Response`` classes), see the :ref:`HttpFoundation component documentation <component-http-foundation-request>`.
+有一些特殊的类可以使设置某些类型的响应更容易。
+其中一些在下面提到。要了解有关 ``Request`` 和 ``Response``（以及特殊 ``Response`` 类）的更多信息，
+请参阅 :ref:`HttpFoundation组件文档 <component-http-foundation-request>`。
 
-Returning JSON Response
+返回JSON响应
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-To return JSON from a controller, use the ``json()`` helper method. This returns a
-special ``JsonResponse`` object that encodes the data automatically::
+要从控制器返回JSON，请使用 ``json()`` 辅助方法。
+这将返回一个特殊的 ``JsonResponse`` 对象，该对象自动对数据进行编码::
 
     // ...
     public function index()
     {
-        // returns '{"username":"jane.doe"}' and sets the proper Content-Type header
+        // 返回 '{"username":"jane.doe"}' 并设置合适的 Content-Type 标头
         return $this->json(array('username' => 'jane.doe'));
 
-        // the shortcut defines three optional arguments
+        // 该快捷方式同时定义了三个可选参数
         // return $this->json($data, $status = 200, $headers = array(), $context = array());
     }
 
-If the :doc:`serializer service </serializer>` is enabled in your
-application, it will be used to serialize the data to JSON. Otherwise,
-the :phpfunction:`json_encode` function is used.
+如果在你的应用中启用了 :doc:`serializer 服务 </serializer>`，它将被用于将数据序列化为JSON。
+否则，请使用 :phpfunction:`json_encode` 函数。
 
-Streaming File Responses
+流文件响应
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-You can use the :method:`Symfony\\Bundle\\FrameworkBundle\\Controller\\AbstractController::file`
-helper to serve a file from inside a controller::
+你可以使用 :method:`Symfony\\Bundle\\FrameworkBundle\\Controller\\AbstractController::file` 辅助方法
+来在控制器内部提供(serve)一个文件::
 
     public function download()
     {
-        // send the file contents and force the browser to download it
+        // 发送文件内容并强制浏览器下载
         return $this->file('/path/to/some_file.pdf');
     }
 
-The ``file()`` helper provides some arguments to configure its behavior::
+``file()`` 辅助方法提供了一些参数来配置其行为::
 
     use Symfony\Component\HttpFoundation\File\File;
     use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
     public function download()
     {
-        // load the file from the filesystem
+        // 从文件系统加载一个文件
         $file = new File('/path/to/some_file.pdf');
 
         return $this->file($file);
 
-        // rename the downloaded file
+        // 对下载的文件进行重命名
         return $this->file($file, 'custom_name.pdf');
 
-        // display the file contents in the browser instead of downloading it
+        // 在浏览器中显示文件内容而不是下载它
         return $this->file('invoice_3241.pdf', 'my_invoice.pdf', ResponseHeaderBag::DISPOSITION_INLINE);
     }
 
-Final Thoughts
+总结
 --------------
 
-Whenever you create a page, you'll ultimately need to write some code that
-contains the logic for that page. In Symfony, this is called a controller,
-and it's a PHP function where you can do anything in order to return the
-final ``Response`` object that will be returned to the user.
+当你创建了一个页面，你需要在页面中编写一些业务逻辑的代码。
+在symfony中，这些就是控制器，它是一个能够做任何事情的PHP函数，目的是把最终的 ``Response`` 对象返回给用户。
 
-To make life easier, you'll probably extend the base ``AbstractController`` class because
-this gives access to shortcut methods (like ``render()`` and ``redirectToRoute()``).
+为了简化操作，你可以会继承 ``AbstractController`` 基类，
+因为这样可以快捷的访问一些方法（如 ``render()`` 和 ``redirectToRoute()``）。
 
-In other articles, you'll learn how to use specific services from inside your controller
-that will help you persist and fetch objects from a database, process form submissions,
-handle caching and more.
+在其他文章中，你将学习如何使用控制器内部的特定服务，这些服务将帮助你持久化并从数据库中获取对象，处理表单提交，处理缓存等。
 
-Keep Going!
+继续阅读
 -----------
 
-Next, learn all about :doc:`rendering templates with Twig </templating>`.
+接下来，了解有关 :doc:`使用 Twig 渲染模板 </templating>` 的所有信息。
 
-Learn more about Controllers
+更多关于控制器的内容
 ----------------------------
 
 .. toctree::
@@ -634,6 +576,6 @@ Learn more about Controllers
 
     controller/*
 
-.. _`helper methods`: https://github.com/symfony/symfony/blob/master/src/Symfony/Bundle/FrameworkBundle/Controller/ControllerTrait.php
+.. _`辅助方法`: https://github.com/symfony/symfony/blob/master/src/Symfony/Bundle/FrameworkBundle/Controller/ControllerTrait.php
 .. _`Symfony Maker`: https://symfony.com/doc/current/bundles/SymfonyMakerBundle/index.html
-.. _`unvalidated redirects security vulnerability`: https://www.owasp.org/index.php/Open_redirect
+.. _`未经验证的重定向安全漏洞`: https://www.owasp.org/index.php/Open_redirect

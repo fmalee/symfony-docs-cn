@@ -1,4 +1,4 @@
-Dependency Errors
+依赖错误
 ~~~~~~~~~~~~~~~~~
 
 If you get a dependency error, it may simply mean that you need to upgrade

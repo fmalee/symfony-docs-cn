@@ -1,12 +1,11 @@
-Sessions
+会话
 ========
 
-Symfony provides a nice session object that you can use to store information
-about the user between requests.
+Symfony 提供了一个优良的会话对象用来让你在请求之间存储关于用户的信息。
 
-To see how to use the session, read :ref:`session-intro`.
+查看如何使用会话： :ref:`session-intro`。
 
-More about Sessions
+其他关于会话的资料
 -------------------
 
 .. toctree::

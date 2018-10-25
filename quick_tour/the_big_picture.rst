@@ -1,29 +1,26 @@
-The Big Picture
+Symfony 基本面
 ===============
 
-Start using Symfony in 10 minutes! Really! That's all you need to understand the
-most important concepts and start building a real project!
+从零学习Symfony，只要10分钟！本文将带你贯穿框架中的一些重要概念，并通过简单的小项目来解释如何快速上手。
 
-If you've used a web framework before, you should feel right at home with
-Symfony. If not, welcome to a whole new way of developing web applications. Symfony
-*embraces* best practices, keeps backwards compatibility (Yes! Upgrading is always
-safe & easy!) and offers long-term support.
+如果你以前用过web开发框架，你对symfony的感觉会像“在家里”一样自然。如果没有，欢迎来到web开发的全新方式。
+
+Symfony*拥抱*最佳实践，保持着向后兼容（是的，更新总是一个安全又简单的操作！）并提供官方的长期维护支持。
 
 .. _installing-symfony2:
 
-Downloading Symfony
+下载 Symfony
 -------------------
 
-First, make sure you've installed `Composer`_ and have PHP 7.1.3 or higher.
+首先，确保你已经安装了 `Composer`_ 和 PHP 7.1.3(或是更高版本)。
 
-Ready? In a terminal, run:
+准备好了吗? 在终端中运行:
 
 .. code-block:: terminal
 
     $ composer create-project symfony/skeleton quick_tour
 
-This creates a new ``quick_tour/`` directory with a small, but powerful new
-Symfony application:
+该命令创建了一个  ``quick_tour/``  目录，并在里面安装好了精巧但强大的 Symfony 应用：
 
 .. code-block:: text
 
@@ -40,32 +37,31 @@ Symfony application:
     ├─ var/
     └─ vendor/
 
-Can we already load the project in a browser? Of course! You can setup
-:doc:`Nginx or Apache </setup/web_server_configuration>` and configure their document
-root to be the ``public/`` directory. But, for development, Symfony has its own server.
-Install and run it with:
+我们现在可以在浏览器中运行项目了吗？当然！
+你可以安装 :doc:`Nginx or Apache </setup/web_server_configuration>` 并配置他们的文档根目录到 ``public/`` 目录。
+但是，为了便于开发，Symfony 配有自己的服务器。
+安装和运行方式：
 
 .. code-block:: terminal
 
     $ composer require server --dev
     $ php bin/console server:start
 
-Try your new app by going to ``http://localhost:8000`` in a browser!
+在浏览器中打开 ``http://localhost:8000`` 试试你的新应用吧！
 
 .. image:: /_images/quick_tour/no_routes_page.png
    :align: center
    :class: with-browser
 
-Fundamentals: Route, Controller, Response
+基本原理: 路由, 控制器, 响应
 -----------------------------------------
 
-Our project only has about 15 files, but it's ready to become a sleek API, a robust
-web app, or a microservice. Symfony starts small, but scales with you.
+我们的项目只有大约15个文件，但是已经可以当做一个优美的 API、一个强壮的web应用、甚至于一个微型服务器(microservice)。
+Symfony 以小开局，但却可以成规模扩大。
 
-But before we go too far, let's dig into the fundamentals by building our first page.
+但是在这之前，让我们通过构建第一个页面来挖掘基础知识。
 
-Start in ``config/routes.yaml``: this is where *we* can define the URL to our new
-page. Uncomment the example that already lives in the file:
+从 ``config/routes.yaml`` 开始：*我们*能在这里定义第一个页面的 URL。解开已经存在于文件中的例子：
 
 .. code-block:: yaml
 
@@ -74,12 +70,10 @@ page. Uncomment the example that already lives in the file:
         path: /
         controller: 'App\Controller\DefaultController::index'
 
-This is called a *route*: it defines the URL to your page (``/``) and the "controller":
-the *function* that will be called whenever anyone goes to this URL. That function
-doesn't exist yet, so let's create it!
+这就是一个 *路由*：它定义了页面的URL(``/``)和 “controller”：
+该*函数*会在任何人访问这个URL的时候被调用。不过现在这个函数还不存在，让我们创建它！
 
-In ``src/Controller``, create a new ``DefaultController`` class and an ``index``
-method inside::
+在 ``src/Controller`` 里，创建一个新的 ``DefaultController`` 类以及一个 ``index`` 方法::
 
     // src/Controller/DefaultController.php
     namespace App\Controller;
@@ -94,14 +88,13 @@ method inside::
         }
     }
 
-That's it! Try going to the homepage: ``http://localhost:8000/``. Symfony sees
-that the URL matches our route and then executes the new ``index()`` method.
+就是这样！现在访问 ``http://localhost:8000/``。Symfony发现该URL和我们的路由匹配，
+然后执行新增的 ``index()`` 方法。
 
-A controller is just a normal function with *one* rule: it must return a Symfony
-``Response`` object. But that response can contain anything: simple text, JSON or
-a full HTML page.
+一个路由器就是一个包含*一个*路由的正常的函数：它必须返回一个 Symfony ``Response`` 对象。
+但是该响应可以包含任何东西：简单文本、JSON，或是一个完整的HTML页面。
 
-But the routing system is *much* more powerful. So let's make the route more interesting:
+但是路由系统已经*足够*强大。所以让我们创建一个更有趣的路由：
 
 .. code-block:: diff
 
@@ -111,8 +104,8 @@ But the routing system is *much* more powerful. So let's make the route more int
     +     path: /hello/{name}
         controller: 'App\Controller\DefaultController::index'
 
-The URL to this page has changed: it is *now* ``/hello/*``: the ``{name}`` acts
-like a wildcard that matches anything. And it gets better! Update the controller too:
+该 URL 已经改变：*现在*是 ``/hello/*``：``{name}`` 字符就像一个匹配任何东西的通配符。
+它变得更强了！同时我们也要更新一下控制器：
 
 .. code-block:: diff
 
@@ -131,17 +124,16 @@ like a wildcard that matches anything. And it gets better! Update the controller
         }
     }
 
-Try the page out by going to ``http://localhost:8000/hello/Symfony``. You should
-see: Hello Symfony! The value of the ``{name}`` in the URL is available as a ``$name``
-argument in your controller.
+现在访问 ``http://localhost:8000/hello/Symfony``，你会看见：Hello Symfony!
+URL 中的 ``{name}`` 的值变成了控制器中的参数。
 
-But this can be even simpler! So let's install annotations support:
+但是我们可以更简洁一些！所以让我们按照 注释(annotations) 扩展：
 
 .. code-block:: terminal
 
     $ composer require annotations
 
-Now, comment-out the YAML route by adding the ``#`` character:
+现在，使用 ``#`` 注释掉 YAML 里的路由：
 
 .. code-block:: yaml
 
@@ -150,7 +142,7 @@ Now, comment-out the YAML route by adding the ``#`` character:
     #     path: /hello/{name}
     #     controller: 'App\Controller\DefaultController::index'
 
-Instead, add the route *right above* the controller method:
+取而代之，我们在控制器的方法*上方*添加路由：
 
 .. code-block:: diff
 
@@ -170,9 +162,8 @@ Instead, add the route *right above* the controller method:
          }
     }
 
-This works just like before! But by using annotations, the route and controller
-live right next to each other. Need another page? Add another route and method
-in ``DefaultController``::
+它会像之前一样工作！但是通过使用注释，路由和控制器就能放置在一起。
+需要另一个页面？只要再在 ``DefaultController`` 里添加一个路由和方法::
 
     // src/Controller/DefaultController.php
     namespace App\Controller;
@@ -193,9 +184,9 @@ in ``DefaultController``::
         }
     }
 
-Routing can do *even* more, but we'll save that for another time! Right now, our
-app needs more features! Like a template engine, logging, debugging tools and more.
+路由还可以*再*继续添加，但是我们将在下次再进行！现在，我们的应用需要更多的功能！比如模板引擎、日志记录、调试工具以及其他。
 
-Keep reading with :doc:`/quick_tour/flex_recipes`.
+
+请阅读 :doc:`/quick_tour/flex_recipes` 以继续下去。
 
 .. _`Composer`: https://getcomposer.org/

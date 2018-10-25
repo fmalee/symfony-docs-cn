@@ -1,6 +1,6 @@
 .. index:: Vagrant, Homestead
 
-Using Symfony with Homestead/Vagrant
+在 Homestead/Vagrant 中使用 Symfony
 ====================================
 
 In order to develop a Symfony application, you might want to use a virtual
@@ -17,7 +17,7 @@ quickly.
     :phpfunction:`sys_get_temp_dir`). You can read `this blog post`_ for more
     tips to speed up Symfony on Vagrant.
 
-Install Vagrant and Homestead
+安装 Vagrant 和 Homestead
 -----------------------------
 
 Before you can use Homestead, you need to install and configure Vagrant and

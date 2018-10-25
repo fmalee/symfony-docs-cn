@@ -1,11 +1,11 @@
-Security Issues
+安全隐患
 ===============
 
 This document explains how Symfony security issues are handled by the Symfony
 core team (Symfony being the code hosted on the main ``symfony/symfony`` `Git
 repository`_).
 
-Reporting a Security Issue
+汇报安全隐患
 --------------------------
 
 If you think that you have found a security issue in Symfony, don't use the

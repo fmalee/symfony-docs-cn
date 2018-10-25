@@ -1,4 +1,4 @@
-Documentation Format
+文档格式
 ====================
 
 The Symfony documentation uses `reStructuredText`_ as its markup language and
@@ -31,7 +31,7 @@ Sphinx_ is a build system that provides tools to create documentation from
 reStructuredText documents. As such, it adds new directives and interpreted text
 roles to the standard reST markup. Read more about the `Sphinx Markup Constructs`_.
 
-Syntax Highlighting
+Syntax 高亮
 ~~~~~~~~~~~~~~~~~~~
 
 PHP is the default syntax highlighter applied to all code blocks. You can
@@ -106,7 +106,7 @@ Markup Format        Use It to Display
 ``php-annotations``  PHP Annotations
 ===================  ======================================
 
-Adding Links
+添加链接
 ~~~~~~~~~~~~
 
 The most common type of links are **internal links** to other documentation pages,

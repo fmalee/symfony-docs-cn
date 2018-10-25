@@ -1,21 +1,18 @@
-Forms
+表单
 =====
 
-Forms are one of the most misused Symfony components due to its vast scope and
-endless list of features. In this chapter we'll show you some of the best
-practices so you can leverage forms but get work done quickly.
+由于其广泛的范围和无穷无尽的功能列表，表单是最被滥用的Symfony组件之一。
+在本章中，我们将向您展示一些最佳实践，以便你可以快速而有效的使用表单。
 
-Building Forms
+创建表单
 --------------
 
 .. best-practice::
 
-    Define your forms as PHP classes.
+    将表单定义为PHP类。
 
-The Form component allows you to build forms right inside your controller code.
-This is perfectly fine if you don't need to reuse the form somewhere else. But
-for organization and reuse, we recommend that you define each form in its own
-PHP class::
+Form组件允许你在控制器代码中构建表单。当你不需要在别处复用表单时这是很好用的。
+但是为了组织代码和可复用，我们推荐你把每一个表单定义在它们自己的PHP类中::
 
     namespace App\Form;
 
@@ -50,10 +47,10 @@ PHP class::
 
 .. best-practice::
 
-    Put the form type classes in the ``App\Form`` namespace, unless you
-    use other custom form classes like data transformers.
+    把表单类型（form type）类放到 ``App\Form`` 命名空间下，
+    除非你使用了其他的表单定制类，比如数据转换器。
 
-To use the class, use ``createForm()`` and pass the fully qualified class name::
+要使用该类，使用 ``createForm()`` 并传递进完全限定(fully qualified)的类名::
 
     // ...
     use App\Form\PostType;
@@ -67,20 +64,17 @@ To use the class, use ``createForm()`` and pass the fully qualified class name::
         // ...
     }
 
-Form Button Configuration
+表单按钮配置
 -------------------------
 
-Form classes should try to be agnostic to *where* they will be used. This
-makes them easier to re-use later.
+表单类应该尝试与它们的使用位置无关。这使它们以后更容易重复使用。
 
 .. best-practice::
 
-    Add buttons in the templates, not in the form classes or the controllers.
+    在模板中添加表单按钮，而不是在表单类或控制器中。
 
-The Symfony Form component allows you to add buttons as fields on your form.
-This is a nice way to simplify the template that renders your form. But if you
-add the buttons directly in your form class, this would effectively limit the
-scope of that form::
+Symfony表单组件允许你在表单类中把按钮作为字段来添加。这是一种简化渲染表单模板的好方法。
+但是，如果直接在表单类中添加按钮，这将会实质上影响该表单的使用范围::
 
     class PostType extends AbstractType
     {
@@ -95,9 +89,8 @@ scope of that form::
         // ...
     }
 
-This form *may* have been designed for creating posts, but if you wanted
-to reuse it for editing posts, the button label would be wrong. Instead,
-some developers configure form buttons in the controller::
+这个表单*也许*被设计为创建贴子用，但如果你希望复用它来编辑贴子，那么按钮标签就会出错。
+取而代之，一些开发者在控制器中配置按钮::
 
     namespace App\Controller\Admin;
 
@@ -124,10 +117,9 @@ some developers configure form buttons in the controller::
         }
     }
 
-This is also an important error, because you are mixing presentation markup
-(labels, CSS classes, etc.) with pure PHP code. Separation of concerns is
-always a good practice to follow, so put all the view-related things in the
-view layer:
+这也是一个重要的错误，因为你将表示标记（标签，CSS类等）与纯PHP代码混合在一起。
+关注点分离(seperation of concern)永远是值得遵循的最佳实践，
+所以应该把这些与视图相关的东西，移动到视图层::
 
 .. code-block:: html+twig
 
@@ -137,21 +129,18 @@ view layer:
         <input type="submit" class="btn" value="Create" />
     {{ form_end(form) }}
 
-Validation
+验证
 ----------
 
-The :ref:`constraints <reference-form-option-constraints>` option allows you to
-attach :doc:`validation constraints </reference/constraints>` to any form field.
-However, doing that prevents the validation from being reused in other forms or
-other places where the mapped object is used.
+:ref:`constraints <reference-form-option-constraints>` 选项
+允许你将 :doc:`validation constraints </reference/constraints>` 附加到任何表单字段上。
+但是，这样做会限制表单验证在其他表单或其映射的对象上的重用。
 
 .. best-practice::
 
-    Do not define your validation constraints in the form but on the object the
-    form is mapped to.
+    不要在表单中定义验证约束，而是在表单映射到的对象上定义验证约束。
 
-For example, to validate that the title of the post edited with a form is not
-blank, add the following in the ``Post`` object::
+例如，要验证使用表单编辑的帖子的标题不为空，请在 ``Post`` 对象中添加以下内容::
 
     // src/Entity/Post.php
 
@@ -166,16 +155,13 @@ blank, add the following in the ``Post`` object::
         public $title;
     }
 
-Rendering the Form
+渲染表单
 ------------------
 
-There are a lot of ways to render your form, ranging from rendering the entire
-thing in one line to rendering each part of each field independently. The
-best way depends on how much customization you need.
+有很多方式可以渲染你的表单，比如用一行代码渲出整个表单，或是独立渲染每一个表单字段。
+哪种更合适取决于你所需要的表单自定义程度。
 
-One of the simplest ways - which is especially useful during development -
-is to render the form tags and use the ``form_widget()`` function to render
-all of the fields:
+最简单的方法之一——在开发过程中特别有用——就是渲染表单标签并使用 ``form_widget()`` 函数函数来渲染出所有字段：
 
 .. code-block:: html+twig
 
@@ -183,19 +169,17 @@ all of the fields:
         {{ form_widget(form) }}
     {{ form_end(form) }}
 
-If you need more control over how your fields are rendered, then you should
-remove the ``form_widget(form)`` function and render your fields individually.
-See :doc:`/form/form_customization` for more information on this and how you
-can control *how* the form renders at a global level using form theming.
+如果你需要精细控制字段的渲染，那么你应去除 ``form_widget(form)`` 函数并手动逐个渲染字段。
+参考 :doc:`/form/form_customization` 来了解具体办法，以及*如何*能够使用全局主题来控制表单渲染。
 
-Handling Form Submits
+处理表单提交
 ---------------------
 
-Handling a form submit usually follows a similar template::
+在处理表单的提交时，通常遵循着相似的模式::
 
     public function new(Request $request)
     {
-        // build the form ...
+        // 创建表单 ...
 
         $form->handleRequest($request);
 
@@ -209,13 +193,11 @@ Handling a form submit usually follows a similar template::
             ]);
         }
 
-        // render the template
+        // 渲染模板
     }
 
-We recommend that you use a single action for both rendering the form and
-handling the form submit. For example, you *could* have a ``new()`` action that
-*only* renders the form and a ``create()`` action that *only* processes the form
-submit. Both those actions will be almost identical. So it's much simpler to let
-``new()`` handle everything.
+我们建议你使用单个方法(action)来完成渲染表单和处理表单提交两件事。
+例如，你*可以*使用*仅*生成表单的 ``new()`` 方法和*仅*处理表单提交的 ``create()`` 方法。
+这两个方法几乎是完全相同的。所以更省力的办法是让 ``new()`` 处理所有事。
 
-Next: :doc:`/best_practices/i18n`
+下一章: :doc:`/best_practices/i18n`

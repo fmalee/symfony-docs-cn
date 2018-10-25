@@ -1,4 +1,4 @@
-Other Resources
+其他资源
 ===============
 
 In order to follow what is happening in the community you might find helpful

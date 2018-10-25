@@ -1,23 +1,20 @@
-Flex: Compose your Application
+Flex: 管理你的应用
 ==============================
 
-After reading the first part of this tutorial, you have decided that Symfony was
-worth another 10 minutes. Great choice! In this second part, you'll learn about
-Symfony Flex: the amazing tool that makes adding new features as simple as running
-one command. It's also the reason why Symfony is ideal for a small micro-service
-or a huge application. Curious? Perfect!
+阅读本教程的第一部分后，您已经确定了 Symfony 值得再花费10分钟。 正确的选择！
+在第二部分中，您将了解到 Symfony Flex：一个令人惊奇的工具，它使得添加新功能变得像运行一个命令一样简单。
+这也是为什么 Symfony 会同时是小型微服务和大型应用的理想选择的原因。好奇吗？ 很好！
 
-Symfony: Start Micro!
+
+Symfony: 以精巧开局!
 ---------------------
 
-Unless you're building a pure API (more on that soon!), you'll probably want to
-render HTML. To do that, you'll use `Twig`_. Twig is a flexible, fast, and secure
-template engine for PHP. It makes your templates more readable and concise; it also
-makes them more friendly for web designers.
+除非你正在构建一个纯API（很快就会有更多内容！），否则你可能会需要渲染HTML。
+要做到这一点，你可以使用 `Twig`_。 Twig是一款灵活，快速，安全的PHP模板引擎。
+它使您的模板更具可读性和简洁性; 它也对网页设计师更友好。
 
-Is Twig already installed in our application? Actually, not yet! And that's great!
-When you start a new Symfony project, it's *small*:  only the most critical dependencies
-are included in your ``composer.json`` file:
+Twig已经安装在我们的应用中了吗？ 其实还没有！这其实是一个好主意！当你开启一个新的 Symfony 项目时，它很*精巧*：
+只在你的 ``composer.json`` 文件中包含了最关键的依赖项：
 
 .. code-block:: text
 
@@ -29,49 +26,44 @@ are included in your ``composer.json`` file:
         "symfony/yaml": "^4.1"
     }
 
-This makes Symfony different than any other PHP framework! Instead of starting with
-a *bulky* app with *every* possible feature you might ever need, a Symfony app is
-small, simple and *fast*. And you're in total control of what you add.
+这使得Symfony不同于任何其他PHP框架！ 它不是一个*巨大*的应用，带有你*可能*需要的*每个*功能，
+一个 Symfony 应用小巧，简单，*快速*。 而且你可以完全控制需要添加的内容。
 
-Flex Recipes and Aliases
+Flex 食谱(Recipes)和别名
 ------------------------
 
-So how can we install and configure Twig? By running one single command:
+所以我们应该如何安装和配置 Twig？只要运行一个命令：
 
 .. code-block:: terminal
 
     $ composer require twig
 
-Two *very* interesting things happen behind the scenes thanks to Symfony Flex: a
-Composer plugin that is already installed in our project.
+Symfony Flex在幕后做了两件*非常*有趣的事情：一个 Composer 插件已经安装到了我们的项目中。
 
-First, ``twig`` is not the name of a Composer package: it's a Flex *alias* that
-points to ``symfony/twig-bundle``. Flex resolves that alias for Composer.
+首先，``twig`` 不是 Composer 包的名称：它是一个指向``symfony/twig-bundle`` 的 Flex *别名*
+。 Flex 为 Composer 解析了该别名。
 
-And second, Flex installs a *recipe* for ``symfony/twig-bundle``. What's a recipe?
-It's a way for a library to automatically configure itself by adding and modifying
-files. Thanks to recipes, adding features is seamless and automated: install a package
-and you're done!
+第二，Flex为 ``symfony/twig-bundle`` 安装了一个*食谱*。
+什么是食谱？这是一种通过添加和修改文件来让一个仓库实现自动配置自身的方式。
+得益于食谱，添加功能是无缝和自动化的：安装一个包，然后你就完成了所有工作！
 
-You can find a full list of recipes and aliases by going to `https://flex.symfony.com`_.
+你可以在 `https://flex.symfony.com`_ 上找到完整的食谱和别名。
 
-What did this recipe do? In addition to automatically enabling the feature in
-``config/bundles.php``, it added 3 things:
+这个食谱都做了什么？ 除了自动在 ``config/bundles.php`` 中启用该功能包外，它增加了三件事：
 
 ``config/packages/twig.yaml``
-    A configuration file that sets up Twig with sensible defaults.
+    一个用于设置具有合理默认值的 Twig 配置文件。
 
 ``config/routes/dev/twig.yaml``
-    A route that helps you debug your error pages.
+    一个帮助你调试错误页面的路由。
 
 ``templates/``
-    This is the directory where template files will live. The recipe also added
-    a ``base.html.twig`` layout file.
+    一个用于存放模板文件的目录。食谱同样添加了一个 ``base.html.twig`` 布局文件。
 
-Twig: Rendering a Template
+Twig: 渲染一个模板
 --------------------------
 
-Thanks to Flex, after one command, you can start using Twig immediately:
+感谢 Flex，一个命令，就能让你立刻使用 Twig：
 
 .. code-block:: diff
 
@@ -96,20 +88,18 @@ Thanks to Flex, after one command, you can start using Twig immediately:
     +        ]);
          }
 
-By extending ``AbstractController``, you now have access to a number of shortcut
-methods and tools, like ``render()``. Create the new template:
+通过继承 ``AbstractController``，你可以访问许多的快捷方法和工具，比如 ``render()``。
+创建新模板：
 
 .. code-block:: twig
 
     {# templates/default/index.html.twig #}
     <h1>Hello {{ name }}</h1>
 
-That's it! The ``{{ name }}`` syntax will print the ``name`` variable that's passed
-in from the controller. If you're new to Twig, welcome! You'll learn more about
-its syntax and power later.
+只是这样就足够！``{{name}}`` 语法将输出通过控制器传递过来的``name``变量。
+如果你是 Twig 的新手，欢迎！ 你会在以后了解更多 Twig 的语法和能力。
 
-But, right now, the page *only* contains the ``h1`` tag. To give it an HTML layout,
-extend ``base.html.twig``:
+但是，现在该页面*只*包含 ``h1`` 标签。 通过继承 ``base.html.twig`` 来给它一个HTML布局：
 
 .. code-block:: twig
 
@@ -120,37 +110,34 @@ extend ``base.html.twig``:
         <h1>Hello {{ name }}</h1>
     {% endblock %}
 
-This is called template inheritance: our page now inherits the HTML structure from
-``base.html.twig``.
+这称为模板继承：我们的页面现在从 ``base.html.twig`` 继承了HTML结构。
 
-Profiler: Debugging Paradise
+分析器: 调试的天堂
 ----------------------------
 
-One of the *coolest* features of Symfony isn't even installed yet! Let's fix that:
+Symfony *最酷*的一个功能现在还没有安装，我们来解决这个问题：
 
 .. code-block:: terminal
 
     $ composer require profiler
 
-Yes! This is another alias! And Flex *also* installs another recipe, which automates
-the configuration of Symfony's Profiler. What's the result? Refresh!
+是的! 这是另一个别名！ Flex *同样*通过食谱自动化安装了Symfony的Profiler。
+结果是什么？刷新一下！
 
-See that black bar on the bottom? That's the web debug toolbar, and it's your new
-best friend. By hovering over each icon, you can get information about what controller
-was executed, performance information, cache hits & misses and a lot more. Click
-any icon to go into the *profiler* where you have even *more* detailed debugging
-and performance data!
+看到底部的黑条了？ 那是网页调试工具栏，它是你最好的朋友。通过将鼠标悬停在每个图标上，您可以获得有关控制器的执行信息
+，性能信息，缓存命中和未命中等等。点击任何图标进入 *调试器*，你就可以获取*更*详细的调试
+和性能数据！
 
-Oh, and as you install more libraries, you'll get more tools (like a web debug toolbar
-icon that shows database queries).
+哦，当您安装更多库时，您将获得更多调试工具（如一个显示数据查询的工具栏图标）。
 
-You can now directly use the profiler because it configured *itself* thanks to the recipe.
-What else can we install this easily?
+使用分析器非常简单，因为它配置了*自身*，这要归功于 Flex 的食谱。
+还有什么可以轻松安装的吗？
 
-Rich API Support
+
+富 API 支持
 ----------------
 
-Are you building an API? You can already return JSON easily from any controller::
+你在构建API吗？ 你可以从任何控制器轻松的返回JSON::
 
     // src/Controller/DefaultController.php
     namespace App\Controller;
@@ -174,19 +161,18 @@ Are you building an API? You can already return JSON easily from any controller:
         }
     }
 
-But for a *truly* rich API, try installing `Api Platform`_:
+但是对于一个*真正*全功能(rich) API，请尝试安装 `Api Platform`_：
 
 .. code-block:: terminal
 
     $ composer require api
 
-This is an alias to ``api-platform/api-pack``, which has dependencies on several
-other packages, like Symfony's Validator and Security components, as well as the Doctrine
-ORM. In fact, Flex installed *5* recipes!
+这是一个 ``api-platform/api-pack`` 的别名，它依赖于几个其他软件包，
+如 Symfony 的 Validator 和 Security 组件，以及 Doctrine ORM。
+事实上，Flex安装了*5*个食谱！
 
-But like usual, we can immediately start using the new library. Want to create a
-rich API for a ``product`` table? Create a ``Product`` entity and give it the
-``@ApiResource()`` annotation::
+但和往常一样，我们可以立即开始使用新库。 想要创建一个用于 ``product`` 表的丰富API？
+创建一个 ``Product`` 实体并给它 ``@ApiResource()`` 注释::
 
     // src/Entity/Product.php
     namespace App\Entity;
@@ -220,8 +206,7 @@ rich API for a ``product`` table? Create a ``Product`` entity and give it the
         // ...
     }
 
-Done! You now have endpoints to list, add, update and delete products! Don't believe
-me? List your routes by running:
+完工！你现在拥有列出、添加、更新和删除产品的端点(endpoints)！不相信我？ 试试列出你的的路由：
 
 .. code-block:: terminal
 
@@ -238,25 +223,24 @@ me? List your routes by running:
      ...
     ------------------------------ -------- -------------------------------------
 
-Easily Remove Recipes
+轻松删除食谱
 ---------------------
 
-Not convinced yet? No problem: remove the library:
+还不确定吗？ 没问题：那现在就删除它：
 
 .. code-block:: terminal
 
     $ composer remove api
 
-Flex will *uninstall* the recipes: removing files and un-doing changes to put your
-app back in its original state. Experiment without worry.
+Flex 将*卸载*该食谱：删除对应文件并取消更改对你的应用的更改，让其恢复原始状态。你可以随意实验！
 
-More Features, Architecture and Speed
+更多功能，架构和速度
 -------------------------------------
 
-I hope you're as excited about Flex as I am! But we still have *one* more chapter,
-and it's the most important yet. I want to show you how Symfony empowers you to quickly
-build features *without* sacrificing code quality or performance. It's all about
-the service container, and it's Symfony's super power. Read on: about :doc:`/quick_tour/the_architecture`.
+我希望你和我一样对 Flex 感到兴奋！ 但是我们还有*一个*章节，它是最重要的部分。
+我想告诉你 Symfony 如何快速授权你构建功能而*不*牺牲代码质量或性能。
+这全都和服务容器有关，它是Symfony的超能力。
+请阅读 :doc:`/quick_tour/the_architecture` 以继续下去。
 
 .. _`https://flex.symfony.com`: https://flex.symfony.com
 .. _`Api Platform`: https://api-platform.com/

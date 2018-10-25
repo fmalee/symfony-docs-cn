@@ -1,4 +1,4 @@
-The Quick Tour
+快速上手
 ==============
 
 .. toctree::

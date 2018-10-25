@@ -1,31 +1,26 @@
 .. index::
    single: Templating
 
-Creating and Using Templates
+创建和使用模板
 ============================
 
-As explained in :doc:`the previous article </controller>`, controllers are
-responsible for handling each request that comes into a Symfony application and
-they usually end up rendering a template to generate the response contents.
+如同  :doc:`前文 </controller>` 所述，
+控制器负责处理每一个进入symfony程序的请求，通常以渲染一个模板来生成响应内容作为结束。
 
-In reality, the controller delegates most of the heavy work to other places so
-that code can be tested and reused. When a controller needs to generate HTML,
-CSS or any other content, it hands the work off to the templating engine.
+现实中，控制器把大部分的繁重工作都委托给了其他地方，以令代码能够被测试和复用。
+当一个控制器需要生成HTML、CSS或者其他内容时，它把这些工作给了一个模板引擎。
 
-In this article, you'll learn how to write powerful templates that can be
-used to return content to the user, populate email bodies, and more. You'll
-learn shortcuts, clever ways to extend templates and how to reuse template
-code.
+在本文中，你将学习如何编写功能强大的模板，用于把内容返回给用户、填充email，等等。
+你还将学会快捷方法，用聪明的方式来扩展模板，以及如何复用模板代码。
 
 .. index::
    single: Templating; What is a template?
 
-Templates
+模板
 ---------
 
-A template is simply a text file that can generate any text-based format
-(HTML, XML, CSV, LaTeX ...). The most familiar type of template is a *PHP*
-template - a text file parsed by PHP that contains a mix of text and PHP code:
+模板就是生成基于文本格式（HTML, XML, CSV, LaTeX ...）的任何文本文件。
+我们最熟悉的模板类型就是 *PHP* 模板——一个包含文字和PHP代码的被PHP引擎解析的文本文件：
 
 .. code-block:: html+php
 
@@ -51,9 +46,8 @@ template - a text file parsed by PHP that contains a mix of text and PHP code:
 
 .. index:: Twig; Introduction
 
-But Symfony packages an even more powerful templating language called `Twig`_.
-Twig allows you to write concise, readable templates that are more friendly
-to web designers and, in several ways, more powerful than PHP templates:
+但是，Symfony 框架中有一个更强大的模板语言叫作 `Twig`_。
+Twig可令你写出简明易读且对设计师友好的模板，在几个方面比PHP模板强大许多：
 
 .. code-block:: html+twig
 
@@ -73,36 +67,28 @@ to web designers and, in several ways, more powerful than PHP templates:
         </body>
     </html>
 
-Twig defines three types of special syntax:
+Twig定义了三种特殊的语法：
 
 ``{{ ... }}``
-    "Says something": prints a variable or the result of an expression to the
-    template.
+    “说些什么”：输出一个变量值或者一个表达式的结果到模板。
 
 ``{% ... %}``
-    "Does something": a **tag** that controls the logic of the template; it is
-    used to execute statements such as for-loops for example.
+    “做些什么”：控制模板逻辑的一个 **标签**，用于执行声明，如for循环语句等。
 
 ``{# ... #}``
-    "Comment something": it's the equivalent of the PHP ``/* comment */`` syntax.
-    It's used to add single or multi-line comments. The content of the comments
-    isn't included in the rendered pages.
+    “进行注释”：它相当于PHP的 ``/* comment */`` 语法。它用于注释单行和多行。注释的内容不作为页面输出。
 
-Twig also contains **filters**, which modify content before being rendered.
-The following makes the ``title`` variable all uppercase before rendering
-it:
+Twig也包含 **过滤器**，它可以在模板输出之前改变输出内容。下例让 ``title`` 变量在被输出之前全部大写：
 
 .. code-block:: twig
 
     {{ title|upper }}
 
-Twig comes with a long list of `tags`_, `filters`_ and `functions`_ that are available
-by default. You can even add your own *custom* filters, functions (and more) via
-a :doc:`Twig Extension </templating/twig_extension>`.
+Twig 内置了大量的 `标签`_，`过滤器`_ 和 `函数`_ ，默认就可以使用。
+你甚至可以利用 :doc:`Twig 扩展 </templating/twig_extension>` 来 *自定义* 你自己的过滤器和函数（乃至更多）。
 
-Twig code will look similar to PHP code, with subtle, nice differences. The following
-example uses a standard ``for`` tag and the ``cycle()`` function to print ten div tags,
-with alternating ``odd``, ``even`` classes:
+Twig代码很像PHP代码，但两者有微妙的区别。
+下例使用了一个标准的 ``for`` 标签和 ``cycle()`` 函数来输出10个div标签，并用 ``odd``、``even`` css类交替显示。
 
 .. code-block:: html+twig
 
@@ -112,22 +98,16 @@ with alternating ``odd``, ``even`` classes:
         </div>
     {% endfor %}
 
-Throughout this article, template examples will be shown in both Twig and PHP.
+本章的模板示例，将同时使用Twig和PHP来展示。
 
 .. sidebar:: Why Twig?
 
-    Twig templates are meant to be simple and won't process PHP tags. This
-    is by design: the Twig template system is meant to express presentation,
-    not program logic. The more you use Twig, the more you'll appreciate
-    and benefit from this distinction. And of course, you'll be loved by
-    web designers everywhere.
+    Twig模板就是为了简单而不去处理PHP标签。设计上即是如此：Twig模板只负责呈现，而不去考虑逻辑。
+    你用Twig越多，你就越会欣赏它，并从它的特性中受益。当然，你也会被普天下的网页设计者喜欢。
 
-    Twig can also do things that PHP can't, such as whitespace control,
-    sandboxing, automatic HTML escaping, manual contextual output escaping,
-    and the inclusion of custom functions and filters that only affect templates.
-    Twig contains little features that make writing templates easier and more concise.
-    Take the following example, which combines a loop with a logical ``if``
-    statement:
+    还有很多Twig可以做但是PHP不可以的事，如空格控制、沙盒、自动转码HTML、手动上下文输出转义，
+    以及包容“只会影响模板”的自定义函数和过滤器。
+    Twig包含一些小功能，使得写模板时更加方便快捷。请看下例，它结合了循环和 ``if`` 逻辑语句：
 
     .. code-block:: html+twig
 
@@ -142,33 +122,29 @@ Throughout this article, template examples will be shown in both Twig and PHP.
 .. index::
    pair: Twig; Cache
 
-Twig Template Caching
+Twig 模板缓存
 ~~~~~~~~~~~~~~~~~~~~~
 
-Twig is fast because each template is compiled to a native PHP class and cached.
-But don't worry: this happens automatically and doesn't require *you* to do anything.
-And while you're developing, Twig is smart enough to re-compile your templates after
-you make any changes. That means Twig is fast in production, but convenient to use
-while developing.
+Twig超快的原因是，Twig模板被编译成原生PHP类并且缓存起来。
+不用担心，这一切自动完成，毋须你做任何事。
+而且在开发时，当你做出任何修改时，Twig足够智能地重新编译你的模板。
+这意味着，Twig在产品环境下极快，在开发环境却极易使用。
 
 .. index::
    single: Templating; Inheritance
 
 .. _twig-inheritance:
 
-Template Inheritance and Layouts
+模板继承和布局
 --------------------------------
 
-More often than not, templates in a project share common elements, like the
-header, footer, sidebar or more. In Symfony, this problem is thought about
-differently: a template can be decorated by another one. This works
-exactly the same as PHP classes: template inheritance allows you to build
-a base "layout" template that contains all the common elements of your site
-defined as **blocks** (think "PHP class with base methods"). A child template
-can extend the base layout and override any of its blocks (think "PHP subclass
-that overrides certain methods of its parent class").
+大多数的时候，模板在项目中都有通用的元素，比如页眉、页脚、侧边栏等等。
+在Symfony中，我们将采用不同的思考角度来对待这个问题：一个模板可以被另外的模板装饰(decorated)。
+这个的工作原理跟PHP类非常像，模板继承让你可以创建一个基础“布局”模板，
+它包含你的站点所有通用元素，并被定义成 **区块(blocks)** （如同一个“包含基础方法的PHP基类”）。
+一个子模板可以继承基础布局并覆写它的任何一个区块（就像“PHP子类覆写父类中的特定方法”）。
 
-First, build a base layout file:
+首先创建一个基础布局文件：
 
 .. code-block:: html+twig
 
@@ -197,17 +173,15 @@ First, build a base layout file:
 
 .. note::
 
-    Though the discussion about template inheritance will be in terms of Twig,
-    the philosophy is the same between Twig and PHP templates.
+    虽然讨论的是关于Twig的模板继承，但在思维方式上Twig和PHP模板之间是相同的。
 
-This template defines the base HTML skeleton document of a two-column
-page. In this example, three ``{% block %}`` areas are defined (``title``,
-``sidebar`` and ``body``). Each block may be overridden by a child template
-or left with its default implementation. This template could also be rendered
-directly. In that case the ``title``, ``sidebar`` and ``body`` blocks would
-retain the default values used in this template.
+该模板定义了一个简单的两列式HTML框架页面。
+在本例中，三处 ``{% block %}`` 区域被定义了（``title``、``sidebar`` 和 ``body``）。
+每个区块都可以被继承它的子模板覆写，或者保留现在这种默认实现。这些模板也能被直接渲染。
+只不过此时只是显示基础模板所定义的内容。
+在该示例中，该模板都将简单的使用 ``title``、 ``sidebar`` 和 ``body`` 等区块的默认值。
 
-A child template might look like this:
+一个子模板看起来是这样的：
 
 .. code-block:: html+twig
 
@@ -225,16 +199,12 @@ A child template might look like this:
 
 .. note::
 
-    The parent template is stored in ``templates/``, so its path is
-    ``base.html.twig``. The template naming conventions are explained
-    fully in :ref:`template-naming-locations`.
+    父模板被存放在 ``templates/`` 目录，因此其路径是最简单的 ``base.html.twig``。模板命名约定可参考下文的 :ref:`template-naming-locations`。
 
-The key to template inheritance is the ``{% extends %}`` tag. This tells
-the templating engine to first evaluate the base template, which sets up
-the layout and defines several blocks. The child template is then rendered,
-at which point the ``title`` and ``body`` blocks of the parent are replaced
-by those from the child. Depending on the value of ``blog_entries``, the
-output might look like this:
+模板继承的关键是 ``{% extends %}`` 标签。
+该标签告诉模板引擎首先评估父模板，它设置了布局并定义了若干区块。
+然后子模板被渲染，上例中父模板中定义的 ``title`` 和 ``body`` 两个区块将会被子模板中的同名区块内容所取代。
+根据 ``blog_entries``的取值，输出的内容可能像下面这样：
 
 .. code-block:: html
 
@@ -262,34 +232,22 @@ output might look like this:
         </body>
     </html>
 
-Notice that since the child template didn't define a ``sidebar`` block, the
-value from the parent template is used instead. Content within a ``{% block %}``
-tag in a parent template is always used by default.
+注意，由于子模板中没有定义 ``sidebar`` 这个区块，来自父模板的内容将被显示出来。
+父模板中的 ``{% block %}`` 标签内的内容，始终作为默认值来用。
 
 .. tip::
 
-    You can use as many levels of inheritance as you want! See :doc:`/templating/inheritance`
-    for more info.
+    你可以进行任意多个层级的模板继承。，参考 :doc:`/templating/inheritance`。
 
-When working with template inheritance, here are some tips to keep in mind:
+使用模板继承时，需要注意：
 
-* If you use ``{% extends %}`` in a template, it must be the first tag in
-  that template;
+* 如果在模板中使用 ``{% extends %}`` ，它必须是模板中的第一个标签；
 
-* The more ``{% block %}`` tags you have in your base templates, the better.
-  Remember, child templates don't have to define all parent blocks, so create
-  as many blocks in your base templates as you want and give each a sensible
-  default. The more blocks your base templates have, the more flexible your
-  layout will be;
+* 你的基础模板中的 ``{% block %}`` 标签越多越好。记住，子模板不需要定义父模板中的所有区块。因此可以根据需要在基础模板中创建多个区块，并为每个区块提供合理的默认值。基础模板中的区块定义得愈多，你的布局就愈灵活；
 
-* If you find yourself duplicating content in a number of templates, it probably
-  means you should move that content to a ``{% block %}`` in a parent template.
-  In some cases, a better solution may be to move the content to a new template
-  and ``include`` it (see :ref:`including-templates`);
+* 如果你发现在多个模板中有重复的内容，这可能意味着你需要为该内容在父模板中定义一个 ``{% block %}`` 了。某些情况下，更好的解决方案可能是把这些内容放到一个新模板中，然后在该模板中 ``include`` 它(查看下文的：:ref:`including-templates`)；
 
-* If you need to get the content of a block from the parent template, you
-  can use the ``{{ parent() }}`` function. This is useful if you want to add
-  to the contents of a parent block instead of completely overriding it:
+* 如果你需要从父模板中获取一个区块的内容，可以使用 ``{{ parent() }}`` 函数。如果你只是想在父级块上添加新内容，而不是完全覆盖它，这很有用：
 
   .. code-block:: html+twig
 
@@ -307,105 +265,77 @@ When working with template inheritance, here are some tips to keep in mind:
 
 .. _template-naming-locations:
 
-Template Naming and Locations
+模板的命名和存放位置
 -----------------------------
 
-By default, templates can live in two different locations:
+默认情况下，模板可以存放在两个不同的位置：
 
 ``templates/``
-    The application's ``views`` directory can contain application-wide base templates
-    (i.e. your application's layouts and templates of the application bundle) as
-    well as templates that :ref:`override third party bundle templates <override-templates>`.
+    程序级的 ``views`` 目录可以存放整个程序的基础模板（程序布局和bundle模板），以及那些 :ref:`覆盖第三方软件包模板 <override-templates>` 的模板。
 
 ``vendor/path/to/CoolBundle/Resources/views/``
-    Each third party bundle houses its templates in its ``Resources/views/``
-    directory (and subdirectories). When you plan to share your bundle, you should
-    put the templates in the bundle instead of the ``templates/`` directory.
+    每个第三方bundle的模板都会存放于它自己的 ``Resources/views/`` 目录（或者子目录）下。当你打算共享你的bundle时，你应该把它放在bundle中，而不是 ``templates/`` 目录。
 
-Most of the templates you'll use live in the ``templates/``
-directory. The path you'll use will be relative to this directory. For example,
-to render/extend ``templates/base.html.twig``, you'll use the
-``base.html.twig`` path and to render/extend
-``templates/blog/index.html.twig``, you'll use the
-``blog/index.html.twig`` path.
+更多时候你要用到的模板是在 ``templates/`` 目录下。你需要的模板路径是相对于这个目录的。
+例如，去输出/继承 ``templates/base.html.twig``，你需要使用 `base.html.twig`` 的路径，
+而要输出 ``templates/blog/index.html.twig`` 时，你需要使用 ``blog/index.html.twig`` 路径。
 
 .. _template-referencing-in-bundle:
 
-Referencing Templates in a Bundle
+引用Bundle中的模板
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-*If* you need to refer to a template that lives in a bundle, Symfony uses the
-Twig namespaced syntax (``@BundleName/directory/filename.html.twig``). This allows
-for several types of templates, each which lives in a specific location:
+*如果* 你需要引入一个位于bundle中的模板，
+Symfony使用Twig的命名空间语法（``@BundleName/directory/filename.html.twig``）来表示。
+这可以表示多种类型的模板，每种都存放在一个特定路径下：
 
-* ``@AcmeBlog/Blog/index.html.twig``: This syntax is used to specify a
-  template for a specific page. The three parts of the string, each separated
-  by a slash (``/``), mean the following:
+* ``@AcmeBlog/Blog/index.html.twig``: 用于指定一个特定页面的模板。字符串分为三个部分，每个部分由斜杆（``/``）隔开，含义如下：
 
-  * ``@AcmeBlog``: is the bundle name without the ``Bundle`` suffix. This template
-    lives in the AcmeBlogBundle (e.g. ``src/Acme/BlogBundle``);
+  * ``@AcmeBlog``: 就是去掉了 ``Bundle`` 后缀的bundle名称。该模板位于 AcmeBlogBundle (即 ``src/Acme/BlogBundle``) 中;
 
-  * ``Blog``: (*directory*) indicates that the template lives inside the
-    ``Blog`` subdirectory of ``Resources/views/``;
+  * ``Blog``: (*目录*) 指示了模板位于 ``Resources/views/`` 的 ``Blog`` 子目录中;
 
-  * ``index.html.twig``: (*filename*) the actual name of the file is
-    ``index.html.twig``.
+  * ``index.html.twig``: (*文件名*) 文件的真实名称是 ``index.html.twig``。
 
-  Assuming that the AcmeBlogBundle lives at ``src/Acme/BlogBundle``, the
-  final path to the layout would be ``src/Acme/BlogBundle/Resources/views/Blog/index.html.twig``.
+  假设 AcmeBlogBundle 位于 ``src/Acme/BlogBundle``, 最终的路径将是： ``src/Acme/BlogBundle/Resources/views/Blog/index.html.twig``。
 
-* ``@AcmeBlog/layout.html.twig``: This syntax refers to a base template
-  that's specific to the AcmeBlogBundle. Since the middle, "directory", portion
-  is missing (e.g. ``Blog``), the template lives at
-  ``Resources/views/layout.html.twig`` inside AcmeBlogBundle.
+* ``@AcmeBlog/layout.html.twig``: 这种语法指向了 AcmeBlogBundle 的父模板。由于没有了中间的“目录”部分（即 ``Blog``），模板应该位于 AcmeBlogBundle 的 ``Resources/views/layout.html.twig``。
 
-Using this namespaced syntax instead of the real file paths allows applications
-to :ref:`override templates that live inside any bundle <override-templates>`.
+使用此命名空间语法而不是真实文件路径，是因为该语法允许应用 :ref:`覆盖任何bundle内的模板 <override-templates>`。
 
-Template Suffix
+模版后缀
 ~~~~~~~~~~~~~~~
 
-Every template name also has two extensions that specify the *format* and
-*engine* for that template.
+每个模版都有两个扩展名，用来指定模板的 *格式* 和 *渲染引擎*。
 
 ========================  ======  ======
-Filename                  Format  Engine
+文件名称                    格式    引擎
 ========================  ======  ======
 ``blog/index.html.twig``  HTML    Twig
 ``blog/index.html.php``   HTML    PHP
 ``blog/index.css.twig``   CSS     Twig
 ========================  ======  ======
 
-By default, any Symfony template can be written in either Twig or PHP, and
-the last part of the extension (e.g. ``.twig`` or ``.php``) specifies which
-of these two *engines* should be used. The first part of the extension,
-(e.g. ``.html``, ``.css``, etc) is the final format that the template will
-generate. Unlike the engine, which determines how Symfony parses the template,
-this is simply an organizational tactic used in case the same resource needs
-to be rendered as HTML (``index.html.twig``), XML (``index.xml.twig``),
-or any other format. For more information, read the :doc:`/templating/formats`
-section.
+默认情况下，任何Symfony模板都可以用Twig或PHP编写，而后缀的最后一部分（``.twig`` 或 ``.php``）指明了应该使用这两个*引擎*中的哪一个。
+后缀的第一部分（``.html``, ``.css``）是模板最终将生成的格式。
+与决定Symfony如何解析模板的引擎不同，这只是一种组织策略，
+用于需要将相同的资源渲染为HTML（``index.html.twig``），XML（``index.xml.twig``）或任何其他格式的情况。
+参考 :doc:`/templating/formats` 以了解更多。
 
 .. index::
    single: Templating; Tags and helpers
    single: Templating; Helpers
 
-Tags and Helpers
+标签和辅助工具
 ----------------
 
-You already understand the basics of templates, how they're named and how
-to use template inheritance. The hardest parts are already behind you. In
-this section, you'll learn about a large group of tools available to help
-perform the most common template tasks such as including other templates,
-linking to pages and including images.
+你已经了解了模板基础，它们是如何命名的，以及如何使用模板继承等基础知识。最难的部分已经过去。
+接下来，我们将了解大量的可用工具，来帮我们完成常见的模板任务，比如包含其他模板，链接到一个页面或者引入图片。
 
-Symfony comes bundled with several specialized Twig tags and functions that
-ease the work of the template designer. In PHP, the templating system provides
-an extensible *helper* system that provides useful features in a template
-context.
+Symfony内置了几个特殊的Twig标签和函数，来帮助模板设计者简化工作。
+在PHP中，模板系统提供了一个可扩展的 *辅助(helper)* 系统用于在模板上下文中提供有用的功能。
 
-You've already seen a few built-in Twig tags like ``{% block %}`` and
-``{% extends %}``. Here you will learn a few more.
+你已经看到了一些内置的Twig标签，比如 ``{% block %}`` 和 ``{% extends %}``等，现在，你将会学到更多。
 
 .. index::
    single: Templating; Including other templates
@@ -413,19 +343,16 @@ You've already seen a few built-in Twig tags like ``{% block %}`` and
 .. _including-templates:
 .. _including-other-templates:
 
-Including other Templates
+引用其他模版
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You'll often want to include the same template or code fragment on several
-pages. For example, in an application with "news articles", the
-template code displaying an article might be used on the article detail page,
-on a page displaying the most popular articles, or in a list of the latest
-articles.
+你经常需要在多个不同的页面中包含同一个模板或者代码片段。
+比如在一个“新闻文章”程序中，
+用于显示文章的模板代码可能会被用到正文页，或者用到一个显示“人气文章”的页面，乃至一个“最新文章”的列表页等。
 
-When you need to reuse a chunk of PHP code, you typically move the code to
-a new PHP class or function. The same is true for templates. By moving the
-reused template code into its own template, it can be included from any other
-template. First, create the template that you'll need to reuse.
+当你需要复用一些PHP代码块时，通常都是把这些代码放到一个PHP类或者函数中。
+同样在模板中你也可以这么做。通过把可复用的代码放到一个它自己的模板中，然后从其他模板中引用这个模板。
+首先，创建一个可复用模板如下。
 
 .. code-block:: html+twig
 
@@ -437,8 +364,7 @@ template. First, create the template that you'll need to reuse.
         {{ article.body }}
     </p>
 
-Including this template from any other template is achieved with the
-``{{ include() }}`` function:
+在其他任何模板中引用这个模板很简单：
 
 .. code-block:: html+twig
 
@@ -453,35 +379,29 @@ Including this template from any other template is achieved with the
         {% endfor %}
     {% endblock %}
 
-Notice that the template name follows the same typical convention. The
-``article_details.html.twig`` template uses an ``article`` variable, which we
-pass to it. In this case, you could avoid doing this entirely, as all of the
-variables available in ``list.html.twig`` are also available in
-``article_details.html.twig`` (unless you set `with_context`_ to false).
+上例中，使用了 ``{{ include() }}`` 函数来引用一个模板。
+注意，模板命名要遵循相同的典型约定。
+在 ``article_details.html.twig`` 模板中使用 ``article`` 变量，这是我们传入模板的。
+本例中，你也可以完全不这样做，因为在 ``list.html.twig`` 模板中所有可用的变量也都可以在 ``article_details.html.twig`` 中使用（除非你设置了 `with_context`_ 为 false）。
 
 .. tip::
 
-    The ``{'article': article}`` syntax is the standard Twig syntax for hash
-    maps (i.e. an array with named keys). If you needed to pass in multiple
-    elements, it would look like this: ``{'foo': foo, 'bar': bar}``.
+    ``{'article': article}`` 语法是Twig哈希映射（hash maps）的标准写法（即是一个键值对数组）。
+    如果你需要传递多个元素，可以写成 ``{'foo': foo, 'bar': bar}``。
 
 .. index::
    single: Templating; Linking to pages
 
 .. _templating-pages:
 
-Linking to Pages
+链接到页面
 ~~~~~~~~~~~~~~~~
 
-Creating links to other pages in your application is one of the most common
-jobs for a template. Instead of hardcoding URLs in templates, use the ``path``
-Twig function (or the ``router`` helper in PHP) to generate URLs based on
-the routing configuration. Later, if you want to modify the URL of a particular
-page, all you'll need to do is change the routing configuration: the templates
-will automatically generate the new URL.
+在你的程序中创建一个链接到其他页面，对于模板来说是再普通不过的事情了。
+使用 ``path`` Twig函数（或者PHP中的 ``router`` 辅助函数）基于路由配置来生成URL而非在模板中写死URL。
+以后，如果你想修改一个特定页面的链接，你只需要改变路由配置即可；模板将自动生成新的URL。
 
-First, link to the "welcome" page, which is accessible via the following routing
-configuration:
+比如我们打算链接到“welcome”页面，首先定义其路由配置：
 
 .. configuration-block::
 
@@ -537,14 +457,13 @@ configuration:
 
         return $routes;
 
-To link to the page, use the ``path()`` Twig function and refer to the route:
+要链到该页面，只需使用Twig的 ``path()`` 函数来指定这个路由即可：
 
 .. code-block:: html+twig
 
     <a href="{{ path('welcome') }}">Home</a>
 
-As expected, this will generate the URL ``/``. Now, for a more complicated
-route:
+正如预期的那样，它生成了URL ``/``。现在，处理一个更复杂的路由：
 
 .. configuration-block::
 
@@ -600,10 +519,8 @@ route:
 
         return $routes;
 
-In this case, you need to specify both the route name (``article_show``) and
-a value for the ``{slug}`` parameter. Using this route, revisit the
-``recent_list.html.twig`` template from the previous section and link to the articles
-correctly:
+这种情况下，你需要同时指定路由名称(``article_show``)和一个 ``{slug}`` 参数的值。
+使用这个路由重新访问前面提到的 ``recent_list.html.twig`` 模板，即可正确地链接到该文章。
 
 .. code-block:: html+twig
 
@@ -616,7 +533,7 @@ correctly:
 
 .. tip::
 
-    You can also generate an absolute URL by using the ``url()`` Twig function:
+    你可以通过Twig的 ``url()`` 函数来生成绝对URL：
 
 .. code-block:: html+twig
 
@@ -627,20 +544,20 @@ correctly:
 
 .. _templating-assets:
 
-Linking to Assets
+链接到资源文件
 ~~~~~~~~~~~~~~~~~
 
-Templates also commonly refer to images, JavaScript, stylesheets and other
-assets. You could hard-code the web path to these assets (e.g. ``/images/logo.png``),
-but Symfony provides a more dynamic option via the ``asset()`` Twig function.
+模板通常也需要一些图片、Javascript、样式文件和其他web资源。
+当然你可以写死它们的路径，比如 ``/images/logo.png``。
+但是Symfony通过Twig函数 ``asset()`` ，提供了一个更加动态的选择。
 
-To use this function, install the *asset* package:
+要使用该函数，先安装 *asset* 包：
 
 .. code-block:: terminal
 
     $ composer require symfony/asset
 
-You can now use the ``asset()`` function:
+现在你可以使用 ``asset()`` 函数了:
 
 .. code-block:: html+twig
 
@@ -648,23 +565,21 @@ You can now use the ``asset()`` function:
 
     <link href="{{ asset('css/blog.css') }}" rel="stylesheet" />
 
-The ``asset()`` function's main purpose is to make your application more portable.
-If your application lives at the root of your host (e.g. ``http://example.com``),
-then the rendered paths should be ``/images/logo.png``. But if your application
-lives in a subdirectory (e.g. ``http://example.com/my_app``), each asset path
-should render with the subdirectory (e.g. ``/my_app/images/logo.png``). The
-``asset()`` function takes care of this by determining how your application is
-being used and generating the correct paths accordingly.
+``asset()`` 函数的主要目的，是让你的程序更加portable（可移动）。
+如果你的程序在主机根目录下(如 ``http://example.com``)，生成的路径应该是 ``/images/logo.png``。
+但是如果你的程序位于一个子目录中(如 ``http://example.com/my_app``），
+那么每个资源路径在生成时应该带有子目录（如 ``/my_app/images/logo.png``）。
+``asset()`` 函数负责打点这些，它根据你的程序 “是如何使用的” 而生成相应的正确路径。
 
 .. tip::
 
-    The ``asset()`` function supports various cache busting techniques via the
-    :ref:`version <reference-framework-assets-version>`,
-    :ref:`version_format <reference-assets-version-format>`, and
-    :ref:`json_manifest_path <reference-assets-json-manifest-path>` configuration options.
+    ``asset()`` 函数通过
+    :ref:`version <reference-framework-assets-version>`，
+    :ref:`version_format <reference-assets-version-format>` 和
+    :ref:`json_manifest_path <reference-assets-json-manifest-path>`
+    配置选项来支持各种缓存清除策略。
 
-If you need absolute URLs for assets, use the ``absolute_url()`` Twig function
-as follows:
+如果你需要资源的绝对URL，可以使用 ``absolute_url()`` Twig函数：
 
 .. code-block:: html+jinja
 
@@ -675,25 +590,20 @@ as follows:
    single: Stylesheets; Including stylesheets
    single: JavaScript; Including JavaScripts
 
-Including Stylesheets and JavaScripts in Twig
+在Twig中引用样式表和Javascript
 ---------------------------------------------
 
-No site would be complete without including JavaScript files and stylesheets.
-In Symfony, the inclusion of these assets is handled elegantly by taking
-advantage of Symfony's template inheritance.
+每个网站中都不能完全没有样式表和javascript文件。
+在Symfony中，这些内容可以利用模板继承来优雅地处理。
 
 .. tip::
 
-    This section will teach you the philosophy behind including stylesheet
-    and JavaScript assets in Symfony. If you are interested in compiling and
-    creating those assets, check out the :doc:`Webpack Encore documentation </frontend>`
-    a tool that seamlessly integrates Webpack and other modern JavaScript tools
-    into Symfony applications.
+    本节将教你如何在Symfony中引用样式表和JavaScript资源。如果你有兴趣编译和创建这些资源，请查看 :doc:`Webpack Encore 文档 </frontend>`，该工具可将 Webpack 和其他现代JavaScript工具无缝集成到Symfony应用中。
 
-Start by adding two blocks to your base template that will hold your assets:
-one called ``stylesheets`` inside the ``head`` tag and another called ``javascripts``
-just above the closing ``body`` tag. These blocks will contain all of the
-stylesheets and JavaScripts that you'll need throughout your site:
+首先在你的基础布局模板中添加两个区块来保存你的资源：
+一个叫 ``stylesheets`` ，放在 ``head`` 标签里，
+另一个叫 ``javascripts``，放在 ``body`` 结束标签上面一行。
+这些区块将包含你整个站点所需的全部CSS样式和Javascript脚本：
 
 .. code-block:: html+twig
 
@@ -715,11 +625,10 @@ stylesheets and JavaScripts that you'll need throughout your site:
         </body>
     </html>
 
-This looks almost like regular HTML, but with the addition of the
-``{% block %}``. Those are useful when you need to include an extra stylesheet
-or JavaScript from a child template. For example, suppose you have a contact
-page and you need to include a ``contact.css`` stylesheet *just* on that
-page. From inside that contact page's template, do the following:
+这也太简单了！
+但如果你想从子模板中引用一个额外的样式或者javascript进来该怎么办呢？
+比如，假设你有一个联系页面需要应用一个 ``contact.css`` 样式，*仅* 用在该页面上。
+在联系人页面的模板中，你可以这样实现：
 
 .. code-block:: html+twig
 
@@ -734,68 +643,61 @@ page. From inside that contact page's template, do the following:
 
     {# ... #}
 
-In the child template, you override the ``stylesheets`` block and put your new
-stylesheet tag inside of that block. Since you want to add to the parent
-block's content (and not actually *replace* it), you also use the ``parent()``
-Twig function to include everything from the ``stylesheets`` block of the base
-template.
+在子模板中，你只需要覆写 ``stylesheets`` 区块并把你新样式表标签放到该区块里。
+当然，由于你只是想把它添加到父区块的内容中（而不是真的 *替代* 它们），
+所以你需要先用 ``parent()`` 函数来获取基础模板中的所有 ``stylesheets`` 区块中的内容。
 
-You can also include assets located in your bundles' ``Resources/public/`` folder.
-You will need to run the ``php bin/console assets:install target [--symlink]``
-command, which copies (or symlinks) files into the correct location. (target
-is by default the "public/" directory of your application).
+你也可以引用位于你bundle的 ``Resources/public/`` 文件夹下的资源。
+你需要运行 ``php bin/console assets:install target [--symlink]`` 命令，
+它会把文件复制（或符号链接）到正确的位置（默认目标位置是应用的 "public/" 目录）。
 
 .. code-block:: html+twig
 
     <link href="{{ asset('bundles/acmedemo/css/contact.css') }}" rel="stylesheet" />
 
-The end result is a page that includes ``main.js`` and both the ``main.css`` and ``contact.css``
-stylesheets.
+最终结果是，该页面同时引用了 ``main.js`` 以及 ``main.css`` 和 ``contact.css`` 两个样式表。
 
-Referencing the Request, User or Session
+引用请求、用户或会话
 ----------------------------------------
 
-Symfony also gives you a global ``app`` variable in Twig that can be used to access
-the current user, the Request and more.
+Symfony同样在Twig中给了你一个全局的 ``app`` 变量，可以用于访问当前用户、请求以及更多对象。
 
-See :doc:`/templating/app_variable` for details.
+参考 :doc:`/templating/app_variable` 以了解细节。
 
-Output Escaping
+输出转义
 ---------------
 
-Twig performs automatic "output escaping" when rendering any content in order to
-protect you from Cross Site Scripting (XSS) attacks.
+在输出任意内容时，Twig自动进行“输出转义（output escaping）”，为的是保护你免受跨站攻击(XSS)。
 
-Suppose ``description`` equals ``I <3 this product``:
+假设 ``description`` 是 ``I <3 this product``：
 
 .. code-block:: twig
 
-    <!-- output escaping is on automatically -->
+    <!-- 输出转义自动启用 -->
     {{ description }} <!-- I &lt;3 this product -->
 
-    <!-- disable output escaping with the raw filter -->
+    <!-- 使用 raw 过滤器禁用输出转义 -->
     {{ description|raw }} <!-- I <3 this product -->
 
 .. caution::
 
-    PHP templates do not automatically escape content.
+    PHP模板不对内容进行自动转义。
 
-For more details, see :doc:`/templating/escaping`.
+更多细节，参考 :doc:`/templating/escaping`。
 
-Final Thoughts
+总结
 --------------
 
-The templating system is just *one* of the many tools in Symfony. And its job is
-simple: allow us to render dynamic & complex HTML output so that this can ultimately
-be returned to the user, sent in an email or something else.
+模板系统仅仅是Symfony诸多工具中的*一个*。
+它的工作很简单：方便我们渲染动态的、复杂的HTML输出，以便最终将其返回给用户，通过电子邮件或其他方式发送。
 
-Keep Going!
+继续阅读
 -----------
 
-Before diving into the rest of Symfony, check out the :doc:`configuration system </configuration>`.
+在深入了解Symfony的其他部分之前，请查看 :doc:`配置系统 </configuration>`。
 
-Learn more
-----------
+更多关于模板的内容
+----------------------
 
 .. toctree::
     :hidden:
@@ -809,9 +711,9 @@ Learn more
     /templating/*
 
 .. _`Twig`: https://twig.symfony.com
-.. _`tags`: https://twig.symfony.com/doc/2.x/tags/index.html
-.. _`filters`: https://twig.symfony.com/doc/2.x/filters/index.html
-.. _`functions`: https://twig.symfony.com/doc/2.x/functions/index.html
+.. _`标签`: https://twig.symfony.com/doc/2.x/tags/index.html
+.. _`过滤器`: https://twig.symfony.com/doc/2.x/filters/index.html
+.. _`函数`: https://twig.symfony.com/doc/2.x/functions/index.html
 .. _`add your own extensions`: https://twig.symfony.com/doc/2.x/advanced.html#creating-an-extension
 .. _`with_context`: https://twig.symfony.com/doc/2.x/functions/include.html
 .. _`include() function`: https://twig.symfony.com/doc/2.x/functions/include.html
