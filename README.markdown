@@ -6,7 +6,9 @@
 
 ## 同步记录
 
-- `master`：`b43a26fc1c8408de31e79f1abf91e0201e92e487`（2018-10-19）
+- `master`
+  - `df318b284e22352b7678daeaa32ab06eb0fbcc0c`（2018-10-25）
+  - `b43a26fc1c8408de31e79f1abf91e0201e92e487`（2018-10-19）
 
 ## 汉化进展
 
@@ -63,6 +65,7 @@
 - `Channel`：通道
 - `Helper`：辅助函数，辅助程序
 - `Section`：切片
+- `Migration`：迁移
 
 ## 语法问题
 
