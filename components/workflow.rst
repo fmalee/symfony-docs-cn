@@ -2,13 +2,13 @@
    single: Workflow
    single: Components; Workflow
 
-Workflow组件
+The Workflow Component
 ======================
 
     The Workflow component provides tools for managing a workflow or finite
     state machine.
 
-安装
+Installation
 ------------
 
 .. code-block:: terminal
@@ -74,12 +74,12 @@ are trying to use it with::
     $registry = new Registry();
     $registry->addWorkflow($blogWorkflow, new InstanceOfSupportStrategy(BlogPost::class));
     $registry->addWorkflow($newsletterWorkflow, new InstanceOfSupportStrategy(Newsletter::class));
-
+    
 .. versionadded:: 4.1
     The ``addWorkflow()`` method was introduced in Symfony 4.1. In previous
     Symfony versions it was called ``add()``.
 
-用法
+Usage
 -----
 
 When you have configured a ``Registry`` with your workflows, you may use it as follows::
@@ -95,7 +95,7 @@ When you have configured a ``Registry`` with your workflows, you may use it as f
     $workflow->can($post, 'publish'); // True
     $workflow->getEnabledTransitions($post); // ['publish', 'reject']
 
-了解更多
+Learn more
 ----------
 
 .. toctree::

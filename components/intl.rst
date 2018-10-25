@@ -2,7 +2,7 @@
    single: Intl
    single: Components; Intl
 
-Intl组件
+The Intl Component
 ==================
 
     A PHP replacement layer for the C `intl extension`_ that also provides
@@ -19,7 +19,7 @@ Intl组件
     in any PHP application. Read the :doc:`/translation` article to learn about
     how to internationalize and manage the user locale in Symfony applications.
 
-安装
+Installation
 ------------
 
 .. code-block:: terminal
@@ -331,7 +331,7 @@ to the current default locale::
 
 That's all you need to know for now. Have fun coding!
 
-了解更多
+Learn more
 ----------
 
 .. toctree::

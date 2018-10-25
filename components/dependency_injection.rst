@@ -2,7 +2,7 @@
     single: DependencyInjection
     single: Components; DependencyInjection
 
-DependencyInjection组件
+The DependencyInjection Component
 =================================
 
     The DependencyInjection component implements a `PSR-11`_ compatible service
@@ -12,7 +12,7 @@ DependencyInjection组件
 For an introduction to Dependency Injection and service containers see
 :doc:`/service_container`.
 
-安装
+Installation
 ------------
 
 .. code-block:: terminal
@@ -23,7 +23,7 @@ Alternatively, you can clone the `<https://github.com/symfony/dependency-injecti
 
 .. include:: /components/require_autoload.rst.inc
 
-Basic 用法
+Basic Usage
 -----------
 
 .. seealso::
@@ -302,7 +302,7 @@ config files:
             ->register('newsletter_manager', 'NewsletterManager')
             ->addMethodCall('setMailer', array(new Reference('mailer')));
 
-了解更多
+Learn More
 ----------
 
 .. toctree::

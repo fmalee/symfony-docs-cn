@@ -19,7 +19,7 @@ than another value, see :doc:`/reference/constraints/LessThan`.
 | Validator      | :class:`Symfony\\Component\\Validator\\Constraints\\GreaterThanValidator` |
 +----------------+---------------------------------------------------------------------------+
 
-Basic 用法
+Basic Usage
 -----------
 
 The following constraints ensure that:

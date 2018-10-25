@@ -15,7 +15,7 @@ Validates that a value is a valid language *Unicode language identifier*
 | Validator      | :class:`Symfony\\Component\\Validator\\Constraints\\LanguageValidator` |
 +----------------+------------------------------------------------------------------------+
 
-Basic 用法
+Basic Usage
 -----------
 
 .. configuration-block::

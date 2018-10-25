@@ -18,7 +18,7 @@ Validates that a given number is *between* some minimum and maximum number.
 | Validator      | :class:`Symfony\\Component\\Validator\\Constraints\\RangeValidator` |
 +----------------+---------------------------------------------------------------------+
 
-Basic 用法
+Basic Usage
 -----------
 
 To verify that the "height" field of a class is between "120" and "180",

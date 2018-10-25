@@ -3,13 +3,13 @@
     single: Normalizer
     single: Components; Polyfill
 
-Symfony Polyfill / Intl Normalizer 组件
+The Symfony Polyfill / Intl Normalizer Component
 ================================================
 
     This component provides a fallback implementation for the ``Normalizer``
     class to users who run PHP versions without the ``intl`` extension.
 
-安装
+Installation
 ------------
 
 .. code-block:: terminal
@@ -20,7 +20,7 @@ Alternatively, you can clone the `<https://github.com/symfony/polyfill-intl-norm
 
 .. include:: /components/require_autoload.rst.inc
 
-用法
+Usage
 -----
 
 Once this component is installed in your application, you can use the following

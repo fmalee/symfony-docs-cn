@@ -21,7 +21,7 @@ password, but needs to enter their old password for security.
 | Validator      | :class:`Symfony\\Component\\Security\\Core\\Validator\\Constraints\\UserPasswordValidator` |
 +----------------+--------------------------------------------------------------------------------------------+
 
-Basic 用法
+Basic Usage
 -----------
 
 Suppose you have a ``ChangePassword`` class, that's used in a form where

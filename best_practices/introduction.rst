@@ -1,85 +1,106 @@
 .. index::
    single: Symfony Framework Best Practices
 
-Symfony 框架最佳实践
+The Symfony Framework Best Practices
 ====================================
 
-Symfony框架因具备*相当的*弹性而广为人知，进而被用于构建从小网站，到处理十亿连接的企业级程序，甚至被当作*其他*框架的底层。
-由于Symfony是2011年7月发布，sf社区已经透知其可能性，以及如何把事情做到*最好*。
+The Symfony Framework is well-known for being *really* flexible and is used
+to build micro-sites, enterprise applications that handle billions of connections
+and even as the basis for *other* frameworks. Since its release in July 2011,
+the community has learned a lot about what's possible and how to do things *best*.
 
-这些社区资源——例如博客或PPT——已经演变成一套非官方的推荐材料，用于开发Symfony应用。
-不幸的是，这些文章中的许多内容，并非web开发实际所需。
-更多时候，它们非必要地将事情复杂化了，而且没有遵循 Symfony 原本的编程哲学。
+These community resources - like blog posts or presentations - have created
+an unofficial set of recommendations for developing Symfony applications.
+Unfortunately, a lot of these recommendations are unneeded for web applications.
+Much of the time, they unnecessarily overcomplicate things and don't follow the
+original pragmatic philosophy of Symfony.
 
-本文讲的是什么?
+What is this Guide About?
 -------------------------
 
-这篇向导文字的目标即是修补上述欠点，描述了**用 Symfony 全栈框架开发web程序时的最佳实践**。
-这些最佳实践，契合了框架创始人 `Fabien Potencier`_ 所设想的哲学体系。
+This guide aims to fix that by describing the **best practices for developing
+web apps with the Symfony full-stack Framework**. These are best practices that
+fit the philosophy of the framework as envisioned by its original creator
+`Fabien Potencier`_.
 
 .. note::
 
-    **Best Practice** 这个名词的意思是 *“用来产生‘接近最优’结果的经过有序组织的流程”*。
-    而这恰好是本文所希望提供的。
-    就算你不能同意每条建议，我们仍坚信它们能够帮你在构建强大的程序时降低复杂度。
+    **Best practice** is a noun that means *"a well defined procedure that is
+    known to produce near-optimum results"*. And that's exactly what this
+    guide aims to provide. Even if you don't agree with every recommendation,
+    we believe these will help you build great applications with less complexity.
 
-本系列**格外适合**：
+This guide is **specially suited** for:
 
-* 用 Symfony 全栈框架开发的网站和网络程序。
+* Websites and web applications developed with the full-stack Symfony Framework.
 
-对于其他需求，本文可以做为一个 **起始点**，然后你 **可扩展它至符合你的特殊需求**：
+For other situations, this guide might be a good **starting point** that you can
+then **extend and fit to your specific needs**:
 
-* 那些对 Symfony 社区公开分享的 bundles；
-* 那些已经创建了自己的标准的高级开发者或团队；
-* 那些拥有高度定制需求的复杂程序；
-* 那些在公司内部共享的bundles。
+* Bundles shared publicly to the Symfony community;
+* Advanced developers or teams who have created their own standards;
+* Some complex applications that have highly customized requirements;
+* Bundles that may be shared internally within a company.
 
-我们都知道，旧习难改，这些最佳实践很可能令你感到震撼。
-但是遵循它们，你的程序开发将会更快，而复杂度却更低，程序的质量甚至更高。
-这是个向前推进的目标，应被持续改进。
+We know that old habits die hard and some of you will be shocked by some
+of these best practices. But by following these, you'll be able to develop
+apps faster, with less complexity and with the same or even higher quality.
+It's also a moving target that will continue to improve.
 
-牢记这些都是**可选建议**（optional recommendations），你和你的团队在开发Symfony程序时可以遵守或不予采纳。
-你当然可以维持自己旧有的实践和方法体系。Symfony 有足够大的弹性能够适合你的需求。这一点永远不会变。
+Keep in mind that these are **optional recommendations** that you and your
+team may or may not follow to develop Symfony applications. If you want to
+continue using your own best practices and methodologies, you can still do
+that. Symfony is flexible enough to adapt to your needs. That will never
+change.
 
-本文适合谁读（提示：它并非入门教程）
+Who this Book Is for (Hint: It's not a Tutorial)
 ------------------------------------------------
 
-任何一个Symfony开发者，不管你是专家还是新人，都可以阅读本文。
-但因为这并非入门教程，你需要一些背景知识以便跟得上行文。
-如果你是纯全新的 Symfony 用户，欢迎你！请先转向 :doc:`Getting Started guides </setup>`。
+Any Symfony developer, whether you are an expert or a newcomer, can read this
+guide. But since this isn't a tutorial, you'll need some basic knowledge of
+Symfony to follow everything. If you are totally new to Symfony, welcome! and
+read the :doc:`Getting Started guides </setup>` first.
 
-我们有意地控制了文章长度。
-我们不希望重复地解释那些你已经在海量 Symfony 文档中找到的东西，比如去讨论依赖注入或前端控制器这些。
-我们专注于解释“如何把你已经知道的付诸实践”。
+We've deliberately kept this guide short. We won't repeat explanations that
+you can find in the vast Symfony documentation, like discussions about Dependency
+Injection or front controllers. We'll solely focus on explaining how to do
+what you already know.
 
-应用
+The Application
 ---------------
 
-除了文字之外，我们还为最佳实践开发了实例程序。
-这个项目被称为 `Symfony Demo`_ ，可以通过 Symfony 安装器获取。
-首先，执行以下命令即可下载demo程序：
+In addition to this guide, a sample application called `Symfony Demo`_ has been
+developed with all these best practices in mind. Execute this command to download
+the demo application:
 
 .. code-block:: terminal
 
     $ composer create-project symfony/symfony-demo
 
-**DEMO程序是一个简单的博客系统**，这有助于让我们集中精力到 Symfony 概念和功能上，而不至被复杂实现的细节淹没。
-本文并不是掰开揉碎地讲解DEMO程序的代码，你看到的将是被筛选出来的码段。
+**The demo application is a simple blog engine**, because that will allow us to
+focus on the Symfony concepts and features without getting buried in difficult
+implementation details. Instead of developing the application step by step in
+this guide, you'll find selected snippets of code through the chapters.
 
-不要更新你的既有应用
+Don't Update Your Existing Applications
 ---------------------------------------
 
-读完本文之后，一些人可能认为，需要重构自己的 Symfony 程序代码。
-对此，我们的态度十分明确：你可以在**新应用**中应用这些最佳实践，但**你不应该重构你的既有程序令其遵循这些最佳实践**。
-不这样做的原因有很多：
+After reading this handbook, some of you may be considering refactoring your
+existing Symfony applications. Our recommendation is sound and clear: you may
+use these best practices for **new applications** but **you should not refactor
+your existing applications to comply with these best practices**. The reasons
+for not doing it are various:
 
-* 你的程序并没有错，只是遵循着其他指导原则；
-* 对代码库进行完整重构很有可能向程序中引入错误；
-* 花时间去重构，不如进行单元测试，或添加功能以提高用户体验来得值。
+* Your existing applications are not wrong, they just follow another set of
+  guidelines;
+* A full codebase refactorization is prone to introduce errors in your
+  applications;
+* The amount of work spent on this could be better dedicated to improving
+  your tests or adding features that provide real value to the end users.
 
 ----
 
-下一章: :doc:`/best_practices/creating-the-project`
+Next: :doc:`/best_practices/creating-the-project`
 
 .. _`Fabien Potencier`: https://connect.sensiolabs.com/profile/fabpot
 .. _`Symfony Demo`: https://github.com/symfony/demo

@@ -2,14 +2,14 @@
    single: VarDumper
    single: Components; VarDumper
 
-VarDumper组件
+The VarDumper Component
 =======================
 
     The VarDumper component provides mechanisms for extracting the state out of
     any PHP variables. Built on top, it provides a better ``dump()`` function
     that you can use instead of :phpfunction:`var_dump`.
 
-安装
+Installation
 ------------
 
 .. code-block:: terminal
@@ -412,7 +412,7 @@ then its dump representation::
 
 .. image:: /_images/components/var_dumper/09-cut.png
 
-了解更多
+Learn More
 ----------
 
 .. toctree::

@@ -1,4 +1,4 @@
-Symfony 内置的服务标签
+Built-in Symfony Service Tags
 =============================
 
 :doc:`Service tags </service_container/tags>` are the mechanism used by the
@@ -9,7 +9,7 @@ These are the most common tags provided by Symfony components, but in your
 application there could be more tags available provided by third-party bundles:
 
 ========================================  ========================================================================
-标签名称                                    用法
+Tag Name                                  Usage
 ========================================  ========================================================================
 `auto_alias`_                             Define aliases based on the value of container parameters
 `console.command`_                        Add a command

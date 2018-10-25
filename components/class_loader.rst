@@ -1,7 +1,7 @@
 .. index::
     single: Components; ClassLoader
 
-ClassLoader组件
+The ClassLoader Component
 =========================
 
 .. caution::

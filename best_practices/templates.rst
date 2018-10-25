@@ -1,50 +1,65 @@
-模板
+Templates
 =========
 
-当PHP于20年前被创建的时候，开发者喜欢它的简洁以及可以混同HTML生成动态内容。时过境迁，其他模板语言 - 比如 `Twig`_ - 正令模板创建过程变得更好。
+When PHP was created 20 years ago, developers loved its simplicity and how
+well it blended HTML and dynamic code. But as time passed, other template
+languages - like `Twig`_ - were created to make templating even better.
 
 .. best-practice::
 
-    使用Twig格式的模板作为你的模板引擎。
+    Use Twig templating format for your templates.
 
-一般来说，PHP模板比Twig模板更冗长，因为它们缺少对模板所需的大量现代功能的原生支持，如继承，自动转义和过滤器和函数的命名参数。
+Generally speaking, PHP templates are more verbose than Twig templates because
+they lack native support for lots of modern features needed by templates,
+like inheritance, automatic escaping and named arguments for filters and
+functions.
 
-Twig是Symfony中的默认模板格式，并且拥有所有非PHP模板引擎的最大社区支持（它被用于高级项目，如Drupal 8）。
+Twig is the default templating format in Symfony and has the largest community
+support of all non-PHP template engines (it's used in high profile projects
+such as Drupal 8).
 
-模板位置
+Template Locations
 ------------------
 
 .. best-practice::
 
-    将应用模板存储在项目根目录的 ``templates/`` 目录中。
+    Store the application templates in the ``templates/`` directory at the root
+    of your project.
 
-将模板集中在一个位置可以简化设计人员的工作。
-此外，使用此目录简化了引用模板时使用的符号（例如 ``$this->render('admin/post/show.html.twig')``，而不是 ``$this->render('@SomeTwigNamespace/Admin/Posts/show.html.twig')``）。
-
-.. best-practice::
-
-    对目录和模板名称，使用蛇型命名(snake_case)的小写格式。
-
-此建议与Twig最佳实践一致，其中变量和模板名称也使用小写的snake_case
-（例如使用``user_profile`` 替代 ``userProfile``，使用 ``edit_form.html.twig`` 替代 ``EditForm.html.twig``）。
+Centralizing your templates in a single location simplifies the work of your
+designers. In addition, using this directory simplifies the notation used when
+referring to templates (e.g. ``$this->render('admin/post/show.html.twig')``
+instead of ``$this->render('@SomeTwigNamespace/Admin/Posts/show.html.twig')``).
 
 .. best-practice::
 
-    对模板名称中的部分模板使用带前缀的下划线。
+    Use lowercased snake_case for directory and template names.
 
-您经常希望使用 ``include`` 函数重用模板代码以避免冗余代码。
-要在文件系统中轻松确定这些部分，您应该为部分和任何其他模板添加前缀，而不使用HTML正文或​​使用单个下划线的 ``extends`` 标记。
+This recommendation aligns with Twig best practices, where variables and template
+names use lowercased snake_case too (e.g. ``user_profile`` instead of ``userProfile``
+and ``edit_form.html.twig`` instead of ``EditForm.html.twig``).
 
-Twig 扩展
+.. best-practice::
+
+    Use a prefixed underscore for partial templates in template names.
+
+You often want to reuse template code using the ``include`` function to avoid
+redundant code. To determine those partials easily in the filesystem you should
+prefix partials and any other template without HTML body or ``extends`` tag
+with a single underscore.
+
+Twig Extensions
 ---------------
 
 .. best-practice::
 
-    在 ``src/Twig/`` 目录中定义Twig扩展。你的应用将自动检测并配置它们。
+    Define your Twig extensions in the ``src/Twig/`` directory. Your
+    application will automatically detect them and configure them.
 
-我们的应用需要自定义一个 ``md2html`` Twig过滤器，以便我们可以将每个帖子的Markdown内容转换为HTML。
-为此，请创建一个新的 ``Markdown`` 类，稍后将由Twig扩展使用。
-它只需要定义一个方法来将Markdown内容转换为HTML::
+Our application needs a custom ``md2html`` Twig filter so that we can transform
+the Markdown contents of each post into HTML. To do this, create a new
+``Markdown`` class that will be used later by the Twig extension. It needs
+to define one single method to transform Markdown content into HTML::
 
     namespace App\Utils;
 
@@ -58,8 +73,9 @@ Twig 扩展
         }
     }
 
-接下来，创建一个新的Twig扩展，并使用 ``Twig\TwigFilter`` 类定义一个名为 ``md2html`` 的过滤器。
-在Twig扩展的构造函数中注入新定义的 ``Markdown`` 类::
+Next, create a new Twig extension and define a filter called ``md2html`` using
+the ``Twig\TwigFilter`` class. Inject the newly defined ``Markdown`` class in the
+constructor of the Twig extension::
 
     namespace App\Twig;
 
@@ -92,14 +108,15 @@ Twig 扩展
         }
     }
 
-就是这些!
+And that's it!
 
-如果你使用 :ref:`default services.yaml configuration <service-container-services-load-example>`，
-那么这就完工了！Symfony将自动探知你的新服务并将其标记为一个Twig扩展。
+If you're using the :ref:`default services.yaml configuration <service-container-services-load-example>`,
+you're done! Symfony will automatically know about your new service and tag it to
+be used as a Twig extension.
 
 ----
 
-下一章: :doc:`/best_practices/forms`
+Next: :doc:`/best_practices/forms`
 
 .. _`Twig`: https://twig.symfony.com/
 .. _`Parsedown`: http://parsedown.org/

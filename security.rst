@@ -4,32 +4,34 @@
 Security
 ========
 
-.. admonition:: 教学视频
-   :class: screencast
+.. admonition:: Screencast
+    :class: screencast
 
-   更喜欢视频教程? 可以观看 `Symfony Security screencast series`_ 系列录像.
+    Do you prefer video tutorials? Check out the `Symfony Security screencast series`_.
 
-Symfony的安全系统是非常强大的，但在设置它时也可能令人迷惑。
-在本大章中，你将学会如何一步步地设置程序的安全：
+Symfony's security system is incredibly powerful, but it can also be confusing
+to set up. Don't worry! In this article, you'll learn how to set up your app's
+security system step-by-step:
 
-#. :ref:`安装安全扩展 <security-installation>`;
+#. :ref:`Installing security support <security-installation>`;
 
-#. :ref:`创建用户类 <create-user-class>`;
+#. :ref:`Create your User Class <create-user-class>`;
 
-#. :ref:`认证和防火墙 <security-yaml-firewalls>`;
+#. :ref:`Authentication & Firewalls <security-yaml-firewalls>`;
 
-#. :ref:`拒绝访问你的应用（授权） <security-authorization>`;
+#. :ref:`Denying access to your app (authorization) <security-authorization>`;
 
-#. :ref:`获取当前的用户对象 <retrieving-the-user-object>`.
+#. :ref:`Fetching the current User object <retrieving-the-user-object>`.
 
-之后讨论了一些其他重要的主题。
+A few other important topics are discussed after.
 
 .. _security-installation:
 
-1) 安装
+1) Installation
 ---------------
 
-在使用 :doc:`Symfony Flex </setup/flex>` 的应用中，运行此命令以在使用之前安装安全功能：
+In applications using :doc:`Symfony Flex </setup/flex>`, run this command to
+install the security feature before using it:
 
 .. code-block:: terminal
 
@@ -39,13 +41,14 @@ Symfony的安全系统是非常强大的，但在设置它时也可能令人迷�
 .. _initial-security-yaml-setup-authentication:
 .. _create-user-class:
 
-2a) 创建用户类
+2a) Create your User Class
 --------------------------
 
-无论你将 *如何* 进行身份认证（例如登录表单或API令​​牌）或将用户数据存储的在*哪里*（数据库，单点登录），
-下一步始终是相同的：创建“用户”类。最简单的方法是使用 `MakerBundle`_。
+No matter *how* you will authenticate (e.g. login form or API tokens) or *where*
+your user data will be stored (database, single sign-on), the next step is always the same:
+create a "User" class. The easiest way is to use the `MakerBundle`_.
 
-假设你希望使用Doctrine将用户数据存储在数据库中：
+Let's assume that you want to store your user data in the database with Doctrine:
 
 .. code-block:: terminal
 
@@ -69,12 +72,12 @@ Symfony的安全系统是非常强大的，但在设置它时也可能令人迷�
     updated: src/Entity/User.php
     updated: config/packages/security.yaml
 
-仅此而已！该命令会询问几个问题，以便它可以准确生成你需要的内容。
-最重要的是 ``User.php`` 文件本身。
-关于 ``User`` 类的唯一规则是它 *必须* 实现 :class:`Symfony\\Component\\Security\\Core\\User\\UserInterface`。
-然后你可以随意添加你需要的任何其他字段或逻辑。
-如果你的 ``User`` 类是实体（如本例所示），则可以使用 :ref:`make:entity命令 <doctrine-add-more-fields>` 添加更多字段。
-此外，请确保为新实体创建并运行迁移：
+That's it! The command asks several questions so that it can generate exactly what
+you need. The most important is the ``User.php`` file itself. The *only* rule about
+your ``User`` class is that it *must* implement :class:`Symfony\\Component\\Security\\Core\\User\\UserInterface`.
+Feel free to add *any* other fields or logic you need. If your ``User`` class is
+an entity (like in this example), you can use the :ref:`make:entity command <doctrine-add-more-fields>`
+to add more fields. Also, make sure to make and run a migration for the new entity:
 
 .. code-block:: terminal
 
@@ -84,28 +87,31 @@ Symfony的安全系统是非常强大的，但在设置它时也可能令人迷�
 .. _security-user-providers:
 .. _where-do-users-come-from-user-providers:
 
-2b) "User Provider"
+2b) The "User Provider"
 -----------------------
 
-除了你的 ``User`` 类之外，你还需要一个“用户提供者”：一个帮助处理一些事情的类，
-比如从会话中重新加载用户数据和一些可选功能，
-比如 :doc:`保持登录 </security/remember_me>` 和 :doc:`模拟 </security/impersonating_user>`。
+In addition to your ``User`` class, you also need a "User provider": a class that
+helps with a few things, like reloading the User data from the session and some
+optional features, like :doc:`remember me </security/remember_me>` and
+:doc:`impersonation </security/impersonating_user>`.
 
-幸运的是，``make:user`` 命令已经在 ``security.yaml`` 文件的 ``providers`` 键下的为你配置了一个。
+Fortunately, the ``make:user`` command already configured one for you in your
+``security.yaml`` file under the ``providers`` key.
 
-如果你的 ``User`` 类是实体，则无需执行任何其他操作。
-但是如果你的类不是实体，那么 ``make:user`` 也会生成一个你需要加工的 ``UserProvider`` 类。
-在此处详细了解用户提供商： :doc:`用户提供者 </security/user_provider>`。
+If your ``User`` class is an entity, you don't need to do anything else. But if
+your class is *not* an entity, then ``make:user`` will also have generated a
+``UserProvider`` class that you need to finish. Learn more about user providers
+here: :doc:`User Providers </security/user_provider>`.
 
 .. _security-encoding-user-password:
 .. _encoding-the-user-s-password:
 
-2c) 加密密码
+2c) Encoding Passwords
 ----------------------
 
-并非所有应用都有需要密码的“用户”。
-*如果*\你的用户有密码，你可以在 ``security.yaml`` 中控制这些密码的加密方式。
-``make:user`` 命令将为你预先做了配置：
+Not all apps have "users" that need passwords. *If* your users have passwords,
+you can control how those passwords are encoded in ``security.yaml``. The ``make:user``
+command will pre-configure this for you:
 
 .. configuration-block::
 
@@ -116,10 +122,10 @@ Symfony的安全系统是非常强大的，但在设置它时也可能令人迷�
             # ...
 
             encoders:
-                # 在这里用你的用户类名称
+                # use your user class name here
                 App\Entity\User:
-                    # 推荐使用 bcrypt 和 argon21
-                    # argon21 更加可靠，但是需要PHP 7.2 或 Sodium 扩展
+                    # bcrypt or argon21 are recommended
+                    # argon21 is more secure, but requires PHP 7.2 or the Sodium extension
                     algorithm: bcrypt
                     cost: 12
 
@@ -159,10 +165,12 @@ Symfony的安全系统是非常强大的，但在设置它时也可能令人迷�
             // ...
         ));
 
-既然Symfony知道你想 *如何* 编码密码，
-你可以在将用户保存到数据库之前，使用 ``UserPasswordEncoderInterface`` 服务执行加密操作。
+Now that Symfony knows *how* you want to encode the passwords, you can use the
+``UserPasswordEncoderInterface`` service to do this before saving your users to
+the database.
 
-例如，通过使用 :ref:`DoctrineFixturesBundle <doctrine-fixtures>`，你可以创建虚拟的数据库用户：
+For example, by using :ref:`DoctrineFixturesBundle <doctrine-fixtures>`, you can
+create dummy database users:
 
 .. code-block:: terminal
 
@@ -171,7 +179,7 @@ Symfony的安全系统是非常强大的，但在设置它时也可能令人迷�
     The class name of the fixtures to create (e.g. AppFixtures):
     > UserFixture
 
-使用此服务对密码进行加密：
+Use this service to encode the passwords:
 
 .. code-block:: diff
 
@@ -203,7 +211,7 @@ Symfony的安全系统是非常强大的，但在设置它时也可能令人迷�
         }
     }
 
-你可以通过运行以下命令手动加密密码：
+You can manually encode a password by running:
 
 .. code-block:: terminal
 
@@ -213,11 +221,11 @@ Symfony的安全系统是非常强大的，但在设置它时也可能令人迷�
 .. _security-firewalls:
 .. _firewalls-authentication:
 
-3a) 认证 & 防火墙
+3a) Authentication & Firewalls
 ------------------------------
 
-安全系统在 ``config/packages/security.yaml`` 中配置。
-最重要的部分是 ``firewalls``：
+The security system is configured in ``config/packages/security.yaml``. The *most*
+important section is ``firewalls``:
 
 .. configuration-block::
 
@@ -268,86 +276,99 @@ Symfony的安全系统是非常强大的，但在设置它时也可能令人迷�
             ),
         ));
 
-“防火墙”是你的身份验证系统：它下面的配置定义了你的用户将 *如何* 进行身份验证（例如登录表单，API令牌等）。
+A "firewall" is your authentication system: the configuration below it defines
+*how* your users will be able to authenticate (e.g. login form, API token, etc).
 
-每个请求只会有一个防火墙处于激活状态：
-Symfony使用 ``pattern`` 键查找第一个匹配项
-（你也可以 :doc:`匹配主机或其他内容 </security/firewall_restriction>`）。
-``dev`` 防火墙实际上是一个虚假的防火墙：
-它只是确保你不会意外阻止Symfony的开发工具 - 它们存在于 ``/_profiler``、``/_wdt`` 之类的URL下。
+Only one firewall is active on each request: Symfony uses the ``pattern`` key
+to find the first match (you can also :doc:`match by host or other things </security/firewall_restriction>`).
+The ``dev`` firewall is really a fake firewall: it just makes sure that you don't
+accidentally block Symfony's dev tools - which live under URLs like ``/_profiler``
+and ``/_wdt``.
 
-所有真实的URL都由 ``main`` 防火墙处理（没有 ``pattern`` 键意味着它匹配 *所有* URL）。
-但这并 *不* 意味着每个URL都需要身份验证。
-如果添加了 ``anonymous`` 键，这个防火墙就允许匿名访问。
+All *real* URLs are handled by the ``main`` firewall (no ``pattern`` key means
+it matches *all* URLs). But this does *not* mean that every URL requires authentication.
+Nope, thanks to the ``anonymous`` key, this firewall *is* accessible anonymously.
 
-事实上，如果现在打开主页，你 *是* 有权访问的，你会看到你被“认证”为 ``anon.``，不要被"已认证"旁边的“是”所欺骗。
-防火墙认证的结果是：未知身份的身份。因此，你是匿名的：
+In fact, if you go to the homepage right now, you *will* have access and you'll see
+that you're "authenticated" as ``anon.``. Don't be fooled by the "Yes" next to
+Authenticated. The firewall verified that it does not know your identity, and so,
+you are anonymous:
 
 .. image:: /_images/security/anonymous_wdt.png
    :align: center
 
-稍后你将了解如何拒绝访问某些URL或控制器。
+You'll learn later how to deny access to certain URLs or controllers.
 
 .. note::
 
-    如果没有看到工具栏，请安装 :doc:`调试器 </profiler>`：
+    If you do not see the toolbar, install the :doc:`profiler </profiler>` with:
 
     .. code-block:: terminal
 
         $ composer require --dev symfony/profiler-pack
 
-现在我们了解了防火墙，下一步是为用户创建一种进行身份认证的方法！
+Now that we understand our firewall, the next step is to create a way for your
+users to authenticate!
 
 .. _security-form-login:
 
-3b) 认证你的用户
+3b) Authenticating your Users
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Symfony中的身份认证起初可能会感觉有些“神奇”。
-这是因为，你不会通过构建路由和控制器来处理登录，而是激\ *认证提供程序*：在调用控制器\ *之前*\自动运行的某些代码。
+Authentication in Symfony can feel a bit "magic" at first. That's because, instead
+of building a route & controller to handle login, you'll activate an
+*authentication provider*: some code that runs automatically *before* your controller
+is called.
 
-Symfony有几个 :doc:`内置的认证提供者 </security/auth_providers>`。
-如果你的用例 *完全* 符合其中一个，那就太好了！
-但是，在大多数情况下 - 包括登录表单 - *我们建议构建一个安保认证器*：
-一个允许你控制身份验证过程的\ *每个*\部分的类（请参阅下一节）。
+Symfony has several :doc:`built-in authentication providers </security/auth_providers>`.
+If your use-case matches one of these *exactly*, great! But, in most cases - including
+a login form - *we recommend building a Guard Authenticator*: a class that allows
+you to control *every* part of the authentication process (see the next section).
 
 .. tip::
 
-    如果你的应用程序通过第三方服务（如Google，Facebook或Twitter）登录用户（社交登录），
-    请查看 `HWIOAuthBundle`_ 社区bundle。
+    If your application logs users in via a third-party service such as Google,
+    Facebook or Twitter (social login), check out the `HWIOAuthBundle`_ community
+    bundle.
 
-安保认证器
+Guard Authenticators
 ....................
 
-安保认证器(Guard authenticator)是一个类，可让你\ *完全*\控制身份认证的过程。
-有\ *许多*\不同的方法来构建认证器，因此这里有一些常见的用例：
+A Guard authenticator is a class that gives you *complete* control over your
+authentication process. There are *many* different ways to build an authenticator,
+so here are a few common use-cases:
 
 * :doc:`/security/form_login_setup`
 * :doc:`/security/guard_authentication`
 
-有关认证器及其工作方式的最详细说明，请参阅 :doc:`/security/guard_authentication`。
+For the most detailed description of authenticators and how they work, see
+:doc:`/security/guard_authentication`.
 
 .. _`security-authorization`:
 .. _denying-access-roles-and-other-authorization:
 
-4) 拒绝访问，角色和其他授权
+4) Denying Access, Roles and other Authorization
 ------------------------------------------------
 
-用户现在可以使用登录表单登录你的应用。真是太好了！
-现在，你需要了解如何拒绝访问并使用用户对象。
-这称为\ **授权**，其作用是决定用户是否可以访问某些资源（URL，模型对象，方法调用......）。
+Users can now log in to your app using your login form. Great! Now, you need to learn
+how to deny access and work with the User object. This is called **authorization**,
+and its job is to decide if a user can access some resource (a URL, a model object,
+a method call, ...).
 
-授权过程有两个不同的方面：
+The process of authorization has two different sides:
 
-#. 用户在登录时会获得一组特定的角色（例如 ``ROLE_ADMIN``）。
-#. 你添加代码以便确定一个资源（例如URL，控制器）需要特定的“属性”（最常见的是像 ``ROLE_ADMIN`` 的一个角色）才能被访问。
+#. The user receives a specific set of roles when logging in (e.g. ``ROLE_ADMIN``).
+#. You add code so that a resource (e.g. URL, controller) requires a specific
+   "attribute" (most commonly a role like ``ROLE_ADMIN``) in order to be
+   accessed.
 
-角色
+Roles
 ~~~~~
 
-当用户登录时，Symfony会调用 ``User`` 对象上的 ``getRoles()`` 方法来确定此用户具有哪些角色。
-在我们之前生成的 ``User`` 类中，角色是存储在数据库中的一个数组，
-并且每个用户\ *始终*\至少有一个角色--``ROLE_USER``::
+When a user logs in, Symfony calls the ``getRoles()`` method on your ``User``
+object to determine which roles this user has. In the ``User`` class that we
+generated earlier, the roles are an array that's stored in the database, and
+every user is *always* given at least one role: ``ROLE_USER``::
 
     // src/Entity/User.php
     // ...
@@ -360,40 +381,45 @@ Symfony有几个 :doc:`内置的认证提供者 </security/auth_providers>`。
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // 保证每个用户至少拥有 ROLE_USER
+        // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
 
         return array_unique($roles);
     }
 
-这是一个不错的默认设置，但你可以执行\ *任何*\操作以决定用户应具有的角色。以下是一些指导原则：
+This is a nice default, but you can do *whatever* you want to determine which roles
+a user should have. Here are a few guidelines:
 
-* 每个角色都必须以 ``ROLE_`` 开头（否则，认证器将无法按预期工作）
+* Every role **must start with** ``ROLE_`` (otherwise, things won't work as expected)
 
-* 除了上述规则，角色只是一个字符串，你可以创造你需要的东西（例如 ``ROLE_PRODUCT_ADMIN``）。
+* Other than the above rule, a role is just a string and you can invent what you
+  need (e.g. ``ROLE_PRODUCT_ADMIN``).
 
-你将使用这些角色来授予对你网站特定部分的访问权限。
-你还可以使用 :ref:`角色层级 <security-role-hierarchy>` 结构，其中某些角色会自动为你提供其他角色。
+You'll use these roles next to grant access to specific sections of your site.
+You can also use a :ref:`role hierarchy <security-role-hierarchy>` where having
+some roles automatically give you other roles.
 
 .. _security-role-authorization:
 
-添加代码以拒绝访问
+Add Code to Deny Access
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-有\ **两种**\方法可以拒绝访问某些内容：
+There are **two** ways to deny access to something:
 
-#. :ref:`yaml中的access_control <security-authorization-access-control>` 允许你保护URL模式
-（例如 ``/admin/*``）。这很容易配置，但不太灵活;
+#. :ref:`access_control in security.yaml <security-authorization-access-control>`
+   allows you to protect URL patterns (e.g. ``/admin/*``). This is easy,
+   but less flexible;
 
-#. :ref:`在你的控制器（或其他代码）中 <security-securing-controller>`。
+#. :ref:`in your controller (or other code) <security-securing-controller>`.
 
 .. _security-authorization-access-control:
 
-保护之URL模式（access_control）
+Securing URL patterns (access_control)
 ......................................
 
-保护应用的部分安全的最基本方法是在 ``security.yaml`` 中保护整个URL模式。
-例如，要为以 ``/admin`` 开头的所有网址要求 ``ROLE_ADMIN``，你可以：
+The most basic way to secure part of your app is to secure an entire URL pattern
+in ``security.yaml``. For example, to require ``ROLE_ADMIN`` for all URLs that
+start with ``/admin``, you can:
 
 .. configuration-block::
 
@@ -409,7 +435,7 @@ Symfony有几个 :doc:`内置的认证提供者 </security/auth_providers>`。
                     # ...
 
             access_control:
-                # /admin* 必须是 ROLE_ADMIN 角色
+                # require ROLE_ADMIN for /admin*
                 - { path: ^/admin, roles: ROLE_ADMIN }
 
     .. code-block:: xml
@@ -452,8 +478,9 @@ Symfony有几个 :doc:`内置的认证提供者 </security/auth_providers>`。
             ),
         ));
 
-你可以根据需要定义任意数量的URL模式 - 每个模式都是正则表达式。
-**但是**，每个请求仅匹配一\ **个**：Symfony从列表顶部开始，并在找到第一个匹配时停止：
+You can define as many URL patterns as you need - each is a regular expression.
+**BUT**, only **one** will be matched per request: Symfony starts at the top of
+the list and stops when it finds the first match:
 
 .. configuration-block::
 
@@ -464,10 +491,10 @@ Symfony有几个 :doc:`内置的认证提供者 </security/auth_providers>`。
             # ...
 
             access_control:
-                # 匹配 /admin/users/*
+                # matches /admin/users/*
                 - { path: ^/admin/users, roles: ROLE_SUPER_ADMIN }
 
-                # 匹配 /admin/* 中除了符合上述规则的任何内容
+                # matches /admin/* except for anything matching the above rule
                 - { path: ^/admin, roles: ROLE_ADMIN }
 
     .. code-block:: xml
@@ -500,20 +527,20 @@ Symfony有几个 :doc:`内置的认证提供者 </security/auth_providers>`。
             ),
         ));
 
-使用 ``^`` 添加到路径之前意味着只匹配以该模式\ *开头*\的URL。
-例如，一个简单的 ``/admin`` （没有 ``^``）的路径将匹配 ``/admin/foo``，
-但也会匹配 ``/foo/admin`` 之类的URL。
+Prepending the path with ``^`` means that only URLs *beginning* with the
+pattern are matched. For example, a path of simply ``/admin`` (without
+the ``^``) would match ``/admin/foo`` but would also match URLs like ``/foo/admin``.
 
-每个 ``access_control`` 也可以匹配IP地址，主机名和HTTP方法。
-它还可用于将用户重定向到URL模式的 ``https`` 版本。
-请参阅 :doc:`/security/access_control`。
+Each ``access_control`` can also match on IP address, hostname and HTTP methods.
+It can also be used to redirect a user to the ``https`` version of a URL pattern.
+See :doc:`/security/access_control`.
 
 .. _security-securing-controller:
 
-保护之控制器和其他代码
+Securing Controllers and other Code
 ...................................
 
-你可以轻松的在控制器内部使用拒绝访问::
+You can easily deny access from inside a controller::
 
     // src/Controller/AdminController.php
     // ...
@@ -522,22 +549,26 @@ Symfony有几个 :doc:`内置的认证提供者 </security/auth_providers>`。
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
-        // 或则添加一个可选消息 - 可被开发者看见
+        // or add an optional message - seen by developers
         $this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'User tried to access a page without having ROLE_ADMIN');
     }
 
-仅此而已！如果没有访问权限，
-则抛出一个特殊的 :class:`Symfony\\Component\\Security\\Core\\Exception\\AccessDeniedException`，
-并且不再执行控制器中的代码。
-然后，将触发以下两件事中的一件：
+That's it! If access is not granted, a special
+:class:`Symfony\\Component\\Security\\Core\\Exception\\AccessDeniedException`
+is thrown and no more code in your controller is executed. Then, one of two things
+will happen:
 
-1) 如果用户尚未登录，则会要求他们登录（例如，重定向到登录页面）。
+1) If the user isn't logged in yet, they will be asked to log in (e.g. redirected
+   to the login page).
 
-2) 如果用户\* 已*\登录，但\* 没有*\ ``ROLE_ADMIN`` 角色，则会显示403拒绝访问页面（你可以 :ref:`自定义 <controller-error-pages-by-status-code>`）。
+2) If the user *is* logged in, but does *not* have the ``ROLE_ADMIN`` role, they'll
+   be shown the 403 access denied page (which you can
+   :ref:`customize <controller-error-pages-by-status-code>`).
 
 .. _security-securing-controller-annotations:
 
-得益于 SensioFrameworkExtraBundle，你还可以使用注释来保护你的控制器：
+Thanks to the SensioFrameworkExtraBundle, you can also secure your controller
+using annotations:
 
 .. code-block:: diff
 
@@ -554,7 +585,7 @@ Symfony有几个 :doc:`内置的认证提供者 </security/auth_providers>`。
     class AdminController extends AbstractController
     {
     +     /**
-    +      * 仅对此控制器方法要求 ROLE_ADMIN
+    +      * Require ROLE_ADMIN for only this controller method.
     +      *
     +      * @IsGranted("ROLE_ADMIN")
     +      */
@@ -564,14 +595,15 @@ Symfony有几个 :doc:`内置的认证提供者 </security/auth_providers>`。
         }
     }
 
-有关更多信息，请参阅 `FrameworkExtraBundle 文档`_。
+For more information, see the `FrameworkExtraBundle documentation`_.
 
 .. _security-template:
 
-模板中的访问控制
+Access Control in Templates
 ...........................
 
-如果要在模板中检查当前的访问权限，请使用内置的 ``is_granted()`` 辅助函数：
+If you want to check if the current access inside a template, use
+the built-in ``is_granted()`` helper function:
 
 .. code-block:: html+twig
 
@@ -579,17 +611,18 @@ Symfony有几个 :doc:`内置的认证提供者 </security/auth_providers>`。
         <a href="...">Delete</a>
     {% endif %}
 
-保护其他服务
+Securing other Services
 .......................
 
-参阅 :doc:`/security/securing_services`.
+See :doc:`/security/securing_services`.
 
-检查用户是否登录（IS_AUTHENTICATED_FULLY）
+Checking to see if a User is Logged In (IS_AUTHENTICATED_FULLY)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-如果你\ *只*\想检查用户是否只是登录（你不关心角色），则有两种选择。
-首先，如果你已经为\* 每个*\用户提供了 ``ROLE_USER``，那么你可以检查该角色。
-要不然，你可以使用特殊的“属性”代替角色::
+If you *only* want to check if a user is simply logged in (you don't care about roles),
+you have two options. First, if you've given *every* user ``ROLE_USER``, you can
+just check for that role. Otherwise, you can use a special "attribute" in place
+of a role::
 
     // ...
 
@@ -600,62 +633,70 @@ Symfony有几个 :doc:`内置的认证提供者 </security/auth_providers>`。
         // ...
     }
 
-你可以在任何使用角色的地方使用 ``IS_AUTHENTICATED_FULLY``：例如 ``access_control`` 或在Twig中。
+You can use ``IS_AUTHENTICATED_FULLY`` anywhere roles are used: like ``access_control``
+or in Twig.
 
-``IS_AUTHENTICATED_FULLY`` 不是一个角色，但它有点像一个角色，每个已登录的用户都会拥有此角色。
-实际上，有3个这样的特殊属性：
+``IS_AUTHENTICATED_FULLY`` isn't a role, but it kind of acts like one, and every
+user that has logged in will have this. Actually, there are 3 special attributes
+like this:
 
-* ``IS_AUTHENTICATED_REMEMBERED``：\* 所有*\登录的用户都有这个属性，即使他们通过“记住我的cookie”而登录。
-  即使你不使用 :doc:`保持登录 </security/remember_me>`，也可以使用此功能检查用户是否已登录。
+* ``IS_AUTHENTICATED_REMEMBERED``: *All* logged in users have this, even
+  if they are logged in because of a "remember me cookie". Even if you don't
+  use the :doc:`remember me functionality </security/remember_me>`,
+  you can use this to check if the user is logged in.
 
-* ``IS_AUTHENTICATED_FULLY``：这类似于 ``IS_AUTHENTICATED_REMEMBERED``，
-  但更严格。仅通过“记住我的cookie”登录的用户将拥有 ``IS_AUTHENTICATED_REMEMBERED``，
-  但不会有 ``IS_AUTHENTICATED_FULLY``。
+* ``IS_AUTHENTICATED_FULLY``: This is similar to ``IS_AUTHENTICATED_REMEMBERED``,
+  but stronger. Users who are logged in only because of a "remember me cookie"
+  will have ``IS_AUTHENTICATED_REMEMBERED`` but will not have ``IS_AUTHENTICATED_FULLY``.
 
-* ``IS_AUTHENTICATED_ANONYMOUSLY``：\* 所有*\用户（甚至是匿名用户）都有此属性 -
-  这在将URL列入\* 白名单*\以保障正常访问时非常有用 - 一些详细信息在 :doc:`/security/access_control`
+* ``IS_AUTHENTICATED_ANONYMOUSLY``: *All* users (even anonymous ones) have
+  this - this is useful when *whitelisting* URLs to guarantee access - some
+  details are in :doc:`/security/access_control`.
 
 .. _security-secure-objects:
 
-访问控制列表（ACL）：保护单个数据库对象
+Access Control Lists (ACLs): Securing individual Database Objects
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-想象一下，你正在设计一个博客，用户可以对你的帖子发表评论。
-你还希望用户能够编辑自己的评论，但不能编辑其他用户的评论。
-此外，作为管理员用户，你希望能够编辑\* 所有*\评论。
+Imagine you are designing a blog where users can comment on your posts. You
+also want a user to be able to edit their own comments, but not those of
+other users. Also, as the admin user, you want to be able to edit *all* comments.
 
-:doc:`表决器 </security/voters>` 允许你编写所需的\ *任何*\业务逻辑
-（例如，用户可以编辑此帖子，是因为他们是创建者）来确定访问权限。
-这就是为什么Symfony正式推荐使用表决器来创建类似ACL的安全系统的原因。
+:doc:`Voters </security/voters>` allow you to write *whatever* business logic you
+need (e.g. the user can edit this post because they are the creator) to determine
+access. That's why voters are officially recommended by Symfony to create ACL-like
+security systems.
 
-如果你仍然喜欢使用传统的ACL，请参阅 `Symfony ACL bundle`_。
+If you still prefer to use traditional ACLs, refer to the `Symfony ACL bundle`_.
 
 .. _retrieving-the-user-object:
 
-5a) 获取用户对象
+5a) Fetching the User Object
 ----------------------------
 
-认证之后，可以通过 ``getUser()`` 快捷方式访问当前用户的 ``User`` 对象::
+After authentication, the ``User`` object of the current user can be accessed
+via the ``getUser()`` shortcut::
 
     public function index()
     {
-        // 通常，你首先需要确保用户已经认证
+        // usually you'll want to make sure the user is authenticated first
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
-        // 返回用户对象，如果用户未认证，则返回null
-        // 使用内联文档告诉码农你确切的用户类
+        // returns your User object, or null if the user is not authenticated
+        // use inline documentation to tell your editor your exact User class
         /** @var \App\Entity\User $user */
         $user = $this->getUser();
 
-        // 调用你添加到用户类的任何方法
-        // 例如，如果添加了一个 getFirstName() 方法，则可以使用该方法。
+        // Call whatever methods you've added to your User class
+        // For example, if you added a getFirstName() method, you can use that.
         return new Response('Well hi there '.$user->getFirstName());
     }
 
-5b) 在服务中获取用户
+5b) Fetching the User from a Service
 ------------------------------------
 
-如果你需要在服务中获取登录用户，可以使用 :class:`Symfony\\Component\\Security\\Core\\Security` 服务::
+If you need to get the logged in user from a service, use the
+:class:`Symfony\\Component\\Security\\Core\\Security` service::
 
     // src/Service/ExampleService.php
     // ...
@@ -668,22 +709,23 @@ Symfony有几个 :doc:`内置的认证提供者 </security/auth_providers>`。
 
         public function __construct(Security $security)
         {
-            // 要避免在构造函数中调用 getUser()：认证可能尚未完成。
-            // 取而代之，应该存储整个Security对象。
+            // Avoid calling getUser() in the constructor: auth may not
+            // be complete yet. Instead, store the entire Security object.
             $this->security = $security;
         }
 
         public function someMethod()
         {
-            // 返回用户对象，如果未登录则返回 null
+            // returns User object or null if not authenticated
             $user = $this->security->getUser();
         }
     }
 
-在模板中获取用户
+Fetch the User in a Template
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-在Twig模板中，可以通过 :ref:`app.user <reference-twig-global-app>` 键访问用户对象：
+In a Twig Template the user object can be accessed via the :ref:`app.user <reference-twig-global-app>`
+key:
 
 .. code-block:: html+twig
 
@@ -693,10 +735,10 @@ Symfony有几个 :doc:`内置的认证提供者 </security/auth_providers>`。
 
 .. _security-logging-out:
 
-注销登录
+Logging Out
 -----------
 
-要启用注销，请激活防火墙下的 ``logout`` 配置参数：
+To enable logging out, activate the  ``logout`` config parameter under your firewall:
 
 .. configuration-block::
 
@@ -712,7 +754,7 @@ Symfony有几个 :doc:`内置的认证提供者 </security/auth_providers>`。
                     logout:
                         path:   app_logout
 
-                        # 注销后的重定向目标
+                        # where to redirect after logout
                         # target: app_any_route
 
     .. code-block:: xml
@@ -749,7 +791,7 @@ Symfony有几个 :doc:`内置的认证提供者 </security/auth_providers>`。
             ),
         ));
 
-接下来，你需要为此改URL创建路由（但不是控制器）：
+Next, you'll need to create a route for this URL (but not a controller):
 
 .. configuration-block::
 
@@ -774,7 +816,7 @@ Symfony有几个 :doc:`内置的认证提供者 </security/auth_providers>`。
              */
             public function logout()
             {
-                // 控制器可以为空: 因为它永远不会执行！
+                // controller can be blank: it will never be executed!
                 throw new \Exception('Don\'t forget to activate logout in security.yaml');
             }
         }
@@ -802,20 +844,22 @@ Symfony有几个 :doc:`内置的认证提供者 </security/auth_providers>`。
 
         return $routes;
 
-就是这样！通过将用户发送到 ``app_logout`` 路由（即 ``/logout``），
-Symfony将取消对当前用户的认证并重定向它们。
+And that's it! By sending a user to the ``app_logout`` route (i.e. to ``/logout``)
+Symfony will un-authenticate the current user and redirect them.
 
 .. tip::
 
-    需要在注销后控制一些事情？在 ``logout`` 下添加 ``success_handler`` 键并将其指向实现
-    :class:`Symfony\\Component\\Security\\Http\\Logout\\LogoutSuccessHandlerInterface` 的类的服务ID。
+    Need more control of what happens after logout? Add a ``success_handler`` key
+    under ``logout`` and point it to a service id of a class that implements
+    :class:`Symfony\\Component\\Security\\Http\\Logout\\LogoutSuccessHandlerInterface`.
 
 .. _security-role-hierarchy:
 
-角色层级
+Hierarchical Roles
 ------------------
 
-你可以通过创建角色层级来定义角色继承规则，而不是为每个用户分配许多角色：
+Instead of giving many roles to each user, you can define role inheritance
+rules by creating a role hierarchy:
 
 .. configuration-block::
 
@@ -862,63 +906,72 @@ Symfony将取消对当前用户的认证并重定向它们。
             ),
         ));
 
-具有 ``ROLE_ADMIN`` 角色的用户也将具有 ``ROLE_USER`` 角色。
-使用 ``ROLE_SUPER_ADMIN`` 的用户将自动拥有 ``ROLE_ADMIN``，
-``ROLE_ALLOWED_TO_SWITCH`` 和 ``ROLE_USER``（继承自 ``ROLE_ADMIN``）。
+Users with the ``ROLE_ADMIN`` role will also have the
+``ROLE_USER`` role. And users with ``ROLE_SUPER_ADMIN``, will automatically have
+``ROLE_ADMIN``, ``ROLE_ALLOWED_TO_SWITCH`` and ``ROLE_USER`` (inherited from ``ROLE_ADMIN``).
 
-要使角色层级起作用，请不要尝试手动调用 ``$user->getRoles()``::
+For role hierarchy to work, do not try to call ``$user->getRoles()`` manually::
 
-    // 错误 - $user->getRoles() 将不知道角色的层级
+    // BAD - $user->getRoles() will not know about the role hierarchy
     $hasAccess = in_array('ROLE_ADMIN', $user->getRoles());
 
-    // 正确 - 使用正常的安全方法
+    // GOOD - use of the normal security methods
     $hasAccess = $this->isGranted('ROLE_ADMIN');
     $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
 .. note::
 
-    ``role_hierarchy`` 值是静态的 - 例如，你不能将角色层级存储在数据库中。
-    如果有需要，请创建一个自定义 :doc:`安全表决器 </security/voters>` 来查找数据库中的用户角色。
+    The ``role_hierarchy`` values are static - you can't, for example, store the
+    role hierarchy in a database. If you need that, create a custom
+    :doc:`security voter </security/voters>` that looks for the user roles
+    in the database.
 
-检查依赖中的安全漏洞
+Checking for Security Vulnerabilities in your Dependences
 ---------------------------------------------------------
 
-参阅 :doc:`/security/security_checker`.
+See :doc:`/security/security_checker`.
 
-常见问题
+Frequently Asked Questions
 --------------------------
 
-**我可以有多个防火墙吗？**
-    没问题!但通常没有必要。每个防火墙就像一个单独的安全系统。
-    因此，除非你有\* 非常*\不同的认证需求，否则一个防火墙通常表现良好。
-    使用 :doc:`安保认证器 </security/guard_authentication>`，
-    你可以在同一防火墙下创建各种认证（例如表单登录，API令牌和LDAP）方式。
+**Can I have Multiple Firewalls?**
+    Yes! But it's usually not necessary. Each firewall is like a separate security
+    system. And so, unless you have *very* different authentication needs, one
+    firewall usually works well. With :doc:`Guard authentication </security/guard_authentication>`,
+    you can create various, diverse ways of allowing authentication (e.g. form login,
+    API key authentication and LDAP) all under the same firewall.
 
-**我能在防火墙之间共享身份验证吗？**
-    可以，但只有些许配置项。如果你使用多个防火墙，且只对一个防火墙进行身份验证，则\* 不会*\自动对任何其他防火墙进行认证。
-    不同的防火墙就像不同的安全系统。
-    为此，你必须为不同的防火墙明确指定相同的 :ref:`reference-security-firewall-context`。
-    但对于大多数应用程序，通常拥有一个主防火墙就足够了。
+**Can I Share Authentication Between Firewalls?**
+    Yes, but only with some configuration. If you're using multiple firewalls and
+    you authenticate against one firewall, you will *not* be authenticated against
+    any other firewalls automatically. Different firewalls are like different security
+    systems. To do this you have to explicitly specify the same
+    :ref:`reference-security-firewall-context` for different firewalls. But usually
+    for most applications, having one main firewall is enough.
 
-**安全似乎不适用于我的错误页面**
-    由于路由在安全\ *之前*\完成，因此任何防火墙都不会覆盖404错误页面。
-    这意味着你无法在这些页面上检查安全性，甚至无法访问用户对象。
-    有关更多详细信息，请参阅 :doc:`/controller/error_pages`。
+**Security doesn't seem to work on my Error Pages**
+    As routing is done *before* security, 404 error pages are not covered by
+    any firewall. This means you can't check for security or even access the
+    user object on these pages. See :doc:`/controller/error_pages`
+    for more details.
 
-**我的身份认证似乎不起作用：没有错误，但我从未登录过**
-    有时认证可能成功了，但重定向后，由于从会话中加载 ``User`` 时出现问题，认证会被立即注销。
-    要查看是否是这个问题，请检查日志文件（``var/log/dev.log``）以获取日志消息：
+**My Authentication Doesn't Seem to Work: No Errors, but I'm Never Logged In**
+    Sometimes authentication may be successful, but after redirecting, you're
+    logged out immediately due to a problem loading the ``User`` from the session.
+    To see if this is an issue, check your log file (``var/log/dev.log``) for
+    the log message:
 
     > Cannot refresh token because user has changed.
 
-    如果你看到了这个，有两个可能的原因。
-    首先，从会话中加载用户可能会出现问题，详情请参阅 :ref:`user_session_refresh`。
-    其次，如果自上次刷新页面后数据库中的某些用户信息发生了变化，Symfony会出于安全原因故意注销用户。
+    If you see this, there are two possible causes. First, there may be a problem
+    loading your User from the session. See :ref:`user_session_refresh`. Second,
+    if certain user information was changed in the database since the last page
+    refresh, Symfony will purposely log out the user for security reasons.
 
-扩展阅读
+Learn More
 ----------
 
-认证（识别/登录用户）
+Authentication (Identifying/Logging in the User)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. toctree::
@@ -938,7 +991,7 @@ Symfony将取消对当前用户的认证并重定向它们。
     security/csrf
     security/custom_authentication_provider
 
-授权 (拒绝访问)
+Authorization (Denying Access)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. toctree::
@@ -952,7 +1005,7 @@ Symfony将取消对当前用户的认证并重定向它们。
     security/force_https
     security/security_checker
 
-.. _`Frameworkextrabundle 文档`: https://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/index.html
+.. _`frameworkextrabundle documentation`: https://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/index.html
 .. _`HWIOAuthBundle`: https://github.com/hwi/HWIOAuthBundle
 .. _`Symfony ACL bundle`: https://github.com/symfony/acl-bundle
 .. _`Symfony Security screencast series`: https://symfonycasts.com/screencast/symfony-security

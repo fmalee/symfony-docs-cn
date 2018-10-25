@@ -2,12 +2,12 @@
    single: Stopwatch
    single: Components; Stopwatch
 
-Stopwatch组件
+The Stopwatch Component
 =======================
 
     The Stopwatch component provides a way to profile code.
 
-安装
+Installation
 ------------
 
 .. code-block:: terminal
@@ -18,7 +18,7 @@ Alternatively, you can clone the `<https://github.com/symfony/stopwatch>`_ repos
 
 .. include:: /components/require_autoload.rst.inc
 
-用法
+Usage
 -----
 
 The Stopwatch component provides an easy and consistent way to measure execution

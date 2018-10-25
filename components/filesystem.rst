@@ -1,12 +1,12 @@
 .. index::
    single: Filesystem
 
-Filesystem组件
+The Filesystem Component
 ========================
 
     The Filesystem component provides basic utilities for the filesystem.
 
-安装
+Installation
 ------------
 
 .. code-block:: terminal
@@ -17,7 +17,7 @@ Alternatively, you can clone the `<https://github.com/symfony/filesystem>`_ repo
 
 .. include:: /components/require_autoload.rst.inc
 
-用法
+Usage
 -----
 
 The :class:`Symfony\\Component\\Filesystem\\Filesystem` class is the unique
@@ -303,7 +303,7 @@ contents at the end of some file::
 If either the file or its containing directory doesn't exist, this method
 creates them before appending the contents.
 
-错误处理
+Error Handling
 --------------
 
 Whenever something wrong happens, an exception implementing

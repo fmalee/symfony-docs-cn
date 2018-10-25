@@ -1,21 +1,28 @@
-配置
+Configuration
 =============
 
-配置信息通常被细分到程序的不同部分（比如基本信息和安全凭证）和不同的环境（开发环境、生产环境）。
-这就是为何Symfony推荐你将程序配置分为三部分的原因。
+Configuration usually involves different application parts (such as infrastructure
+and security credentials) and different environments (development, production).
+That's why Symfony recommends that you split the application configuration into
+three parts.
 
 .. _config-parameters.yml:
 
-基础架构相关配置
+Infrastructure-Related Configuration
 ------------------------------------
 
-这些是从一台计算机更改为另一台计算机的选项（例如，从您的开发计算机更改为生产服务器），但不会更改应用程序行为。
+These are the options that change from one machine to another (e.g. from your
+development machine to the production server) but which don't change the
+application behavior.
 
 .. best-practice::
 
-    将基础结构相关的配置选项定义为 :doc:`environment variables </configuration/external_parameters>`。在开发过程中，使用项目根目录下的 ``.env`` 文件来设置它们。
+    Define the infrastructure-related configuration options as
+    :doc:`environment variables </configuration/external_parameters>`. During
+    development, use the ``.env`` file at the root of your project to set these.
 
-默认情况下，在应用中安装新的依赖项时，Symfony会将这些类型的选项添加到 ``.env`` 文件中：
+By default, Symfony adds these types of options to the ``.env`` file when
+installing new dependencies in the app:
 
 .. code-block:: bash
 
@@ -30,50 +37,67 @@
 
     # ...
 
-这些选项未在 ``config/services.yaml`` 文件中定义，因为它们与应用程序的行为无关。
-换句话说，只要数据库配置正确，您的应用程序就不关心数据库的位置或访问它的凭据。
+These options aren't defined inside the ``config/services.yaml`` file because
+they have nothing to do with the application's behavior. In other words, your
+application doesn't care about the location of your database or the credentials
+to access to it, as long as the database is correctly configured.
 
 .. caution::
 
-    请注意，打印(dumping) ``$ _SERVER`` 和 ``$ _ENV`` 变量的内容或输出 ``phpinfo（）`` 内容将显示环境变量的值，
-    从而暴露敏感信息，如数据库凭据。
+    Beware that dumping the contents of the ``$_SERVER`` and ``$_ENV`` variables
+    or outputting the ``phpinfo()`` contents will display the values of the
+    environment variables, exposing sensitive information such as the database
+    credentials.
 
 .. _best-practices-canonical-parameters:
 
-规范参数
+Canonical Parameters
 ~~~~~~~~~~~~~~~~~~~~
 
 .. best-practice::
 
-    在 ``.env.dist`` 文件中定义应用的所有环境变量。
+    Define all your application's env vars in the ``.env.dist`` file.
 
-Symfony在项目根目录中包含一个名为 ``.env.dist`` 的配置文件，它存储这应用的环境变量的规范(Canonical)列表。
+Symfony includes a configuration file called ``.env.dist`` at the project root,
+which stores the canonical list of environment variables for the application.
 
-每当为应用程序定义新的环境变量时，你还应将其添加到此文件并将更改提交到版本控制系统，以便你的同事可以更新他的 ``.env`` 文件。
+Whenever a new env var is defined for the application, you should also add it to
+this file and submit the changes to your version control system so your
+workmates can update their ``.env`` files.
 
-应用相关的配置
+Application-Related Configuration
 ---------------------------------
 
 .. best-practice::
 
-    在 ``config/services.yaml`` 文件中定义与应用行为相关的配置选项。
+    Define the application behavior related configuration options in the
+    ``config/services.yaml`` file.
 
-``services.yaml`` 文件包含应用用于修改其行为的选项，例如电子邮件通知的发件人或启用 `功能切换`_。
-将这些配置值定义在 ``.env`` 是不必要的，因为这将增加一个额外的配置层，而你不需要或不希望在每个服务器上更改这些配置值。
+The ``services.yaml`` file contains the options used by the application to
+modify its behavior, such as the sender of email notifications, or the enabled
+`feature toggles`_. Defining these values in ``.env`` file would add an extra
+layer of configuration that's not needed because you don't need or want these
+configuration values to change on each server.
 
-``services.yaml`` 中定义的配置选项可能因 :doc:`environment </configuration/environments>` 而异。
-这也能解释为什么Symfony还自带了 ``config/services_dev.yaml`` 和 ``config/services_prod.yaml`` 文件，它们能让你覆写针对不同环境的特定的选项值。
+The configuration options defined in the ``services.yaml`` may vary from one
+:doc:`environment </configuration/environments>` to another. That's why Symfony
+supports defining ``config/services_dev.yaml`` and ``config/services_prod.yaml``
+files so that you can override specific values for each environment.
 
-常量 v.s. 配置选项
+Constants vs Configuration Options
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-一个常见的错误是，在定义程序级别的配置时去新建一个“永远不变”的全新选项，比如分页中所显示的条目数。
+One of the most common errors when defining application configuration is to
+create new options for values that never change, such as the number of items for
+paginated results.
 
 .. best-practice::
 
-    使用常量来定义很少更改的配置选项。
+    Use constants to define configuration options that rarely change.
 
-定义配置选项的传统方法已导致许多Symfony应用包含如下选项，用于控制要在博客主页上显示的帖子数量：
+The traditional approach for defining configuration options has caused many
+Symfony apps to include an option like the following, which would be used
+to control the number of posts to display on the blog homepage:
 
 .. code-block:: yaml
 
@@ -81,9 +105,11 @@ Symfony在项目根目录中包含一个名为 ``.env.dist`` 的配置文件，�
     parameters:
         homepage.number_of_items: 10
 
-如果你已经这样做了，实际上你可能*很少*去改变这些值。
-创建一个配置选项然后从不去改变它，那就是不必要。
-我们推荐你将这些值定义为常量，比如你可以在 ``Post`` 实体中定义一个 ``NUMBER_OF_ITEMS`` 常量::
+If you've done something like this in the past, it's likely that you've in fact
+*never* actually needed to change that value. Creating a configuration
+option for a value that you are never going to configure just isn't necessary.
+Our recommendation is to define these values as constants in your application.
+You could, for example, define a ``NUMBER_OF_ITEMS`` constant in the ``Post`` entity::
 
     // src/Entity/Post.php
     namespace App\Entity;
@@ -95,9 +121,12 @@ Symfony在项目根目录中包含一个名为 ``.env.dist`` 的配置文件，�
         // ...
     }
 
-这样做的好处是你可以在程序中的任何地方使用这个值。而使用参数时，你只能通过使用容器来访问它们。
+The main advantage of defining constants is that you can use their values
+everywhere in your application. When using parameters, they are only available
+from places with access to the Symfony container.
 
-常量可以在Twig模板中使用，多亏了 `constant() 函数`_：
+Constants can be used for example in your Twig templates thanks to the
+`constant() function`_:
 
 .. code-block:: html+twig
 
@@ -105,7 +134,8 @@ Symfony在项目根目录中包含一个名为 ``.env.dist`` 的配置文件，�
         Displaying the {{ constant('NUMBER_OF_ITEMS', post) }} most recent results.
     </p>
 
-而且，Doctrine 实体和仓库(repository)现在可以轻松访问这些值，而它们无法访问容器参数::
+And Doctrine entities and repositories can now easily access these values,
+whereas they cannot access the container parameters::
 
     namespace App\Repository;
 
@@ -120,33 +150,37 @@ Symfony在项目根目录中包含一个名为 ``.env.dist`` 的配置文件，�
         }
     }
 
-使用常量作为配置值的唯一显着缺点是，你无法在测试中轻松地重新定义它们。
+The only notable disadvantage of using constants for this kind of configuration
+values is that you cannot redefine them easily in your tests.
 
-参数命名
+Parameter Naming
 ----------------
 
 .. best-practice::
 
-    配置参数的名称应尽可能短，并且应包含整个应用的公共前缀。
+    The name of your configuration parameters should be as short as possible and
+    should include a common prefix for the entire application.
 
-使用 ``app.`` 作为参数前缀是避免Symfony和第三方bundles/库的参数冲突的常见做法。
-然后，只用一两个词来描述参数的用途：
+Using ``app.`` as the prefix of your parameters is a common practice to avoid
+collisions with Symfony and third-party bundles/libraries parameters. Then, use
+just one or two words to describe the purpose of the parameter:
 
 .. code-block:: yaml
 
     # config/services.yaml
     parameters:
-        # 不要这样做：'dir' 太通用了，它没有任何意义
+        # don't do this: 'dir' is too generic and it doesn't convey any meaning
         app.dir: '...'
-        # 这样做：简短而易懂的名字
+        # do this: short but easy to understand names
         app.contents_dir: '...'
-        # 可以使用点号、下划线、短划线或任何内容，但应该始终保持一致并对所有参数使用相同的格式
+        # it's OK to use dots, underscores, dashes or nothing, but always
+        # be consistent and use the same format for all the parameters
         app.dir.contents: '...'
         app.contents-dir: '...'
 
 ----
 
-下一章: :doc:`/best_practices/business-logic`
+Next: :doc:`/best_practices/business-logic`
 
-.. _`功能切换`: https://en.wikipedia.org/wiki/Feature_toggle
-.. _`constant() 函数`: https://twig.symfony.com/doc/2.x/functions/constant.html
+.. _`feature toggles`: https://en.wikipedia.org/wiki/Feature_toggle
+.. _`constant() function`: https://twig.symfony.com/doc/2.x/functions/constant.html

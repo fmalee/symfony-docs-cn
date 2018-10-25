@@ -1,51 +1,57 @@
 .. index::
    single: Emails
 
-如何发送邮件
+How to Send an Email
 ====================
 
-Symfony通过 `SwiftMailerBundle`_ 提供基于流行的 `Swift Mailer`_ 库的邮件发送功能。
-此邮件程序支持使用你自己的邮件服务器发送邮件，
-同样支持 `Mandrill`_，`SendGrid`_ 和 `Amazon SES`_ 等流行的电子邮件提供商。
+Symfony provides a mailer feature based on the popular `Swift Mailer`_ library
+via the `SwiftMailerBundle`_. This mailer supports sending messages with your
+own mail servers as well as using popular email providers like `Mandrill`_,
+`SendGrid`_, and `Amazon SES`_.
 
-安装
+Installation
 ------------
 
-在使用 :doc:`Symfony Flex </setup/flex>` 的应用中，运行此命令以在使用之前安装基于 Swift Mailer 的邮件服务：
+In applications using :doc:`Symfony Flex </setup/flex>`, run this command to
+install the Swift Mailer based mailer before using it:
 
 .. code-block:: terminal
 
     $ composer require symfony/swiftmailer-bundle
 
-如果你的应用程序未使用Symfony Flex，请按照 `SwiftMailerBundle`_ 上的安装说明进行操作。
+If your application doesn't use Symfony Flex, follow the installation
+instructions on `SwiftMailerBundle`_.
 
 .. _swift-mailer-configuration:
 
-配置
+Configuration
 -------------
 
-安装邮件程序时创建的 ``config/packages/swiftmailer.yaml`` 文件提供了发送电子邮件所需的所有初始配置，
-但邮件服务器连接信息除外。
-这些参数在 ``.env`` 文件的 ``MAILER_URL`` 环境变量中定义：
+The ``config/packages/swiftmailer.yaml`` file that's created when installing the
+mailer provides all the initial config needed to send emails, except your mail
+server connection details. Those parameters are defined in the ``MAILER_URL``
+environment variable in the ``.env`` file:
 
 .. code-block:: bash
 
-    # 用此来禁用邮件发送
+    # use this to disable email delivery
     MAILER_URL=null://localhost
 
-    # 使用它来配置传统的SMTP服务器
-    # 如果用户名和密码包含非字母数字(non-alphanumeric)字符，请确保对其进行URL编码
-    # 例如 '+'，'@'，'：'和'*'，它们都是URL的保留字符
+    # use this to configure a traditional SMTP server (make sure to URL-encode the
+    # values of the username and password if they contain non-alphanumeric characters
+    # such as '+', '@', ':' and '*', which are reserved in URLs)
     MAILER_URL=smtp://localhost:25?encryption=ssl&auth_mode=login&username=&password=
 
-有关所有可用配置选项的详细说明，请参阅 :doc:`SwiftMailer配置参考 </reference/configuration/swiftmailer>`。
+Refer to the :doc:`SwiftMailer configuration reference </reference/configuration/swiftmailer>`
+for the detailed explanation of all the available config options.
 
-发送邮件
+Sending Emails
 --------------
 
-Swift Mailer库通过创建、配置然后发送 ``Swift_Message`` 对象来工作。
-“mailer”负责邮件的实际传递，可通过 ``Swift_Mailer`` 服务访问。
-总的来说，发送电子邮件非常简单::
+The Swift Mailer library works by creating, configuring and then sending
+``Swift_Message`` objects. The "mailer" is responsible for the actual delivery
+of the message and is accessible via the ``Swift_Mailer`` service. Overall,
+sending an email is pretty straightforward::
 
     public function index($name, \Swift_Mailer $mailer)
     {
@@ -61,7 +67,7 @@ Swift Mailer库通过创建、配置然后发送 ``Swift_Message`` 对象来工�
                 'text/html'
             )
             /*
-             * 如果你还想要包含一个纯文本版本的信息
+             * If you also want to include a plaintext version of the message
             ->addPart(
                 $this->renderView(
                     'emails/registration.txt.twig',
@@ -77,8 +83,9 @@ Swift Mailer库通过创建、配置然后发送 ``Swift_Message`` 对象来工�
         return $this->render(...);
     }
 
-为了保持解耦，邮件正文已存储在模板中并使用 ``renderView()`` 方法渲染。
-``registration.html.twig`` 模板可能像这样：
+To keep things decoupled, the email body has been stored in a template and
+rendered with the ``renderView()`` method. The ``registration.html.twig``
+template might look something like this:
 
 .. code-block:: html+jinja
 
@@ -87,59 +94,64 @@ Swift Mailer库通过创建、配置然后发送 ``Swift_Message`` 对象来工�
 
     Hi {{ name }}! You're successfully registered.
 
-    {# 只是个例子, 假定你有一个名为 "login" 的路由 #}
+    {# example, assuming you have a route named "login" #}
     To login, go to: <a href="{{ url('login') }}">...</a>.
 
     Thanks!
 
-    {# 为 /images/logo.png 文件生成一个绝对URL #}
+    {# Makes an absolute URL to the /images/logo.png file #}
     <img src="{{ absolute_url(asset('images/logo.png')) }}">
 
-``$message`` 对象支持更多选项，例如包含附件，添加HTML内容等等。
-有关更多详细信息，请参阅Swift Mailer文档的 `创建消息`_ 章节。
+The ``$message`` object supports many more options, such as including attachments,
+adding HTML content, and much more. Refer to the `Creating Messages`_ section
+of the Swift Mailer documentation for more details.
 
 .. _email-using-gmail:
 
-使用 Gmail 发送邮件
+Using Gmail to Send Emails
 --------------------------
 
-在开发过程中，你可能更愿意使用Gmail发送电子邮件，而不是设置常规的SMTP服务器。
-为此，请将 ``.env`` 文件的 ``MAILER_URL`` 更新为：
+During development, you might prefer to send emails using Gmail instead of
+setting up a regular SMTP server. To do that, update the ``MAILER_URL`` of your
+``.env`` file to this:
 
 .. code-block:: bash
 
-    # 用户名是完整的 Gmail 或 Google Apps 邮件地址
+    # username is your full Gmail or Google Apps email address
     MAILER_URL=gmail://username:password@localhost
 
-``gmail`` 传输只是一个使用 ``smtp`` 传输、``ssl`` 加密，``login`` 认证模式和 ``smtp.gmail.com`` 主机的快捷方式。
-如果你的应用使用其他加密或认证模式，则必须覆盖这些值
-（请参阅 :doc:`邮件程序配置参考 </reference/configuration/swiftmailer>`）。
+The ``gmail`` transport is simply a shortcut that uses the ``smtp`` transport,
+``ssl`` encryption, ``login`` auth mode and ``smtp.gmail.com`` host. If your app
+uses other encryption or auth mode, you must override those values
+(:doc:`see mailer config reference </reference/configuration/swiftmailer>`):
 
 .. code-block:: bash
 
-    # 用户名是完整的 Gmail 或 Google Apps 邮件地址
+    # username is your full Gmail or Google Apps email address
     MAILER_URL=gmail://username:password@localhost?encryption=tls&auth_mode=oauth
 
-如果你的Gmail帐户使用两步验证(2-Step-Verification)，则必须 `生成应用密码`_ 并将其用作邮件程序密码的值。
-你还必须确保 `允许安全性较低的应用访问您的Gmail帐户`_。
+If your Gmail account uses 2-Step-Verification, you must `generate an App password`_
+and use it as the value of the mailer password. You must also ensure that you
+`allow less secure apps to access your Gmail account`_.
 
-
-使用云服务发送邮件
+Using Cloud Services to Send Emails
 -----------------------------------
 
-对于不想设置和维护自己的可靠邮件服务器的公司，云邮件服务是一种流行的选择。
-在Symfony应用中，使用这些服务就像更新 ``.env`` 文件中 ``MAILER_URL`` 的值一样简单。
-例如，对于 `Amazon SES`_ （Simple Email Service）：
+Cloud mailing services are a popular option for companies that don't want to set
+up and maintain their own reliable mail servers. In Symfony apps, using these
+services is as simple as updating the value of ``MAILER_URL`` in the ``.env``
+file. For example, for `Amazon SES`_ (Simple Email Service):
 
 .. code-block:: bash
 
-    # 主机会根据你的AWS区域而有所不同
-    # 用户名/密码凭据是从Amazon SES控制台获取的
+    # The host will be different depending on your AWS zone
+    # The username/password credentials are obtained from the Amazon SES console
     MAILER_URL=smtp://email-smtp.us-east-1.amazonaws.com:587?encryption=tls&username=YOUR_SES_USERNAME&password=YOUR_SES_PASSWORD
 
-对其他邮件服务使用相同的技巧，因为大多数情况下除了配置SMTP端点之外没有其他任何内容。
+Use the same technique for other mail services, as most of the time there is
+nothing more to it than configuring an SMTP endpoint.
 
-扩展阅读
+Learn more
 ----------
 
 .. toctree::
@@ -151,9 +163,9 @@ Swift Mailer库通过创建、配置然后发送 ``Swift_Message`` 对象来工�
 
 .. _`Swift Mailer`: http://swiftmailer.org/
 .. _`SwiftMailerBundle`: https://github.com/symfony/swiftmailer-bundle
-.. _`创建消息`: https://swiftmailer.symfony.com/docs/messages.html
+.. _`Creating Messages`: https://swiftmailer.symfony.com/docs/messages.html
 .. _`Mandrill`: https://mandrill.com/
 .. _`SendGrid`: https://sendgrid.com/
 .. _`Amazon SES`: http://aws.amazon.com/ses/
-.. _`生成应用密码`: https://support.google.com/accounts/answer/185833
-.. _`允许安全性较低的应用访问您的Gmail帐户`: https://support.google.com/accounts/answer/6010255
+.. _`generate an App password`: https://support.google.com/accounts/answer/185833
+.. _`allow less secure apps to access your Gmail account`: https://support.google.com/accounts/answer/6010255

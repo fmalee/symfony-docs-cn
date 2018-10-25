@@ -7,7 +7,7 @@ coding standards and conventions used in the core framework to make it more
 consistent and predictable. You are encouraged to follow them in your own
 code, but you don't need to.
 
-方法名称
+Method Names
 ------------
 
 When an object has a "main" many relation with related "things"

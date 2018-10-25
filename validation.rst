@@ -1,7 +1,7 @@
 .. index::
    single: Validation
 
-验证
+Validation
 ==========
 
 Validation is a very common task in web applications. Data entered in forms
@@ -11,7 +11,7 @@ into a database or passed to a web service.
 Symfony provides a `Validator`_ component that makes this task easy and
 transparent. This component is based on the `JSR303 Bean Validation specification`_.
 
-安装
+Installation
 ------------
 
 In applications using :doc:`Symfony Flex </setup/flex>`, run this command to
@@ -24,7 +24,7 @@ install the validator before using it:
 .. index::
    single: Validation; The basics
 
-基础的验证
+The Basics of Validation
 ------------------------
 
 The best way to understand validation is to see it in action. To start, suppose
@@ -117,7 +117,7 @@ following:
 .. index::
    single: Validation; Using the validator
 
-使用 ``validator`` 服务
+Using the ``validator`` Service
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Next, to actually validate an ``Author`` object, use the ``validate()`` method
@@ -202,7 +202,7 @@ Inside the template, you can output the list of errors exactly as needed:
 .. index::
    pair: Validation; Configuration
 
-配置
+Configuration
 -------------
 
 Before using the Symfony validator, make sure it's enabled in the main config
@@ -714,7 +714,7 @@ getter methods of your object. And while you'll most commonly use the validation
 framework indirectly when using forms, remember that it can be used anywhere
 to validate any object.
 
-了解更多
+Learn more
 ----------
 
 .. toctree::

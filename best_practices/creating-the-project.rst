@@ -1,49 +1,54 @@
-创建项目
+Creating the Project
 ====================
 
-安装 Symfony
+Installing Symfony
 ------------------
 
 .. best-practice::
 
-    使用 Composer 和 Symfony Flex 来创建和管理 Symfony 应用。
+    Use Composer and Symfony Flex to create and manage Symfony applications.
 
-`Composer`_ 是个依赖管理器，被现代php程序广泛使用。`Symfony Flex`_ 是一个 Composer 插件
-`Symfony Flex`_ 是一个Composer插件，旨在自动执行 Symfony 应用中的一些最常见的任务。
-使用 Flex 是可选的，但建议使用，因为它可以显著的提高您的生产效率。
+`Composer`_ is the package manager used by modern PHP applications to manage
+their dependencies. `Symfony Flex`_ is a Composer plugin designed to automate
+some of the most common tasks performed in Symfony applications. Using Flex is
+optional but recommended because it improves your productivity significantly.
 
 .. best-practice::
 
-    使用 Symfony Skeleton 来创建基于Symfon的新项目。
+    Use the Symfony Skeleton to create new Symfony-based projects.
 
-`Symfony Skeleton`_ 是一个最简化的Symfony项目，你可以基于它来创建你新项目。
-与过去的 Symfony 版本不同，这个骨架(skeleton)安装了绝对最少量的依赖项，以构建一个完全正常运行的Symfony项目。
-阅读 :doc:`/setup` 文章，了解有关安装Symfony的更多信息。
+The `Symfony Skeleton`_ is a minimal and empty Symfony project which you can
+base your new projects on. Unlike past Symfony versions, this skeleton installs
+the absolute bare minimum amount of dependencies to make a fully working Symfony
+project. Read the :doc:`/setup` article to learn more about installing Symfony.
 
 .. _linux-and-mac-os-x-systems:
 .. _windows-systems:
 
-创建博客程序
+Creating the Blog Application
 -----------------------------
 
-在命令控制台中，进入到你有权创建文件的目录并执行以下命令：
+In your command console, browse to a directory where you have permission to
+create files and execute the following commands:
 
 .. code-block:: terminal
 
     $ cd projects/
     $ composer create-project symfony/skeleton blog
 
-上面的命令，创建了一个名为 ``blog`` 的新目录，里面是一个基于Symfony最新稳定版的全新项目。
-除此之外，安装器还会检查你的操作系统是否满足了运行Symfony所需之环境。如果不满足，你会看到一个列表，上面有你需要修复的信息。
+This command creates a new directory called ``blog`` that contains a fresh new
+project based on the most recent stable Symfony version available.
 
 .. tip::
-    运行 Symfony 的所需的环境要求很简单。
-    如果要检查系统是否满足这些要求，请阅读：:doc:`/reference/requirements`。
 
-令程序结构化
+    The technical requirements to run Symfony are simple. If you want to check
+    if your system meets those requirements, read :doc:`/reference/requirements`.
+
+Structuring the Application
 ---------------------------
 
-创建完程序之后，进入 ``blog/`` 目录，你会发现有一堆文件和文件夹被自动生成了：
+After creating the application, enter the ``blog/`` directory and you'll see a
+number of files and directories generated automatically:
 
 .. code-block:: text
 
@@ -60,31 +65,35 @@
     │  └─ log/
     └─ vendor/
 
-这种层级式的文件和目录是符合Symfony推荐的命名约定的，可以令你的程序结构化。每个目录的推荐用法如下：
-这些文件和目录的层次结构是Symfony为构建应用程序而提出的约定。
-建议保留这种结构，因为它是易于导航，大多数目录名称都是不言自明的，
-但你可以：:doc:`override the location of any Symfony directory </configuration/override_dir_structure>`：
+This file and directory hierarchy is the convention proposed by Symfony to
+structure your applications. It's recommended to keep this structure because it's
+easy to navigate and most directory names are self-explanatory, but you can
+:doc:`override the location of any Symfony directory </configuration/override_dir_structure>`:
 
-程序的bundles
+Application Bundles
 ~~~~~~~~~~~~~~~~~~~
 
-Symfony 2.0推出之后，多数开发者很自然地用Symfony 1.x的方式去划分程序的逻辑模块。
-这就是为何很多Symfony应用都把它们的代码按逻辑功能进行拆分的原因：UserBundle、ProductBundle、InvoiceBundle等等。
-当Symfony 2.0发布时，大多数开发人员自然采用了将应用程序划分为逻辑模块的symfony 1.x方式。
+When Symfony 2.0 was released, most developers naturally adopted the symfony
+1.x way of dividing applications into logical modules. That's why many Symfony
+apps used bundles to divide their code into logical features: UserBundle,
+ProductBundle, InvoiceBundle, etc.
 
-但bundle的真义在于，它是作为软件的一个“可被复用”的独立构成而存在。
-如果UserBundle不能*“原封不动地”*使用在别的Symfony程序中，它不应该成为bundle。
-另外，如果InvoiceBundle依赖于ProductBundle，那便没有任何必要将它们分成两个bundle。
+But a bundle is *meant* to be something that can be reused as a stand-alone
+piece of software. If UserBundle cannot be used *"as is"* in other Symfony
+apps, then it shouldn't be its own bundle. Moreover, if InvoiceBundle depends on
+ProductBundle, then there's no advantage to having two separate bundles.
 
 .. best-practice::
 
-    不要创建任何 bundle 来组织应用的逻辑。
+    Don't create any bundle to organize your application logic.
 
-Symfony应用仍然可以使用第三方软件包（安装在 ``vendor/`` 中）来添加功能，但是你应该使用PHP命名空间而不是bundle来组织自己的代码。
+Symfony applications can still use third-party bundles (installed in ``vendor/``)
+to add features, but you should use PHP namespaces instead of bundles to organize
+your own code.
 
 ----
 
-下一章: :doc:`/best_practices/configuration`
+Next: :doc:`/best_practices/configuration`
 
 .. _`Composer`: https://getcomposer.org/
 .. _`Symfony Flex`: https://github.com/symfony/flex

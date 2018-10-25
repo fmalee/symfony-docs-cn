@@ -24,7 +24,7 @@ the options. To force that a value is identical, see
 | Validator      | :class:`Symfony\\Component\\Validator\\Constraints\\NotIdenticalToValidator`|
 +----------------+-----------------------------------------------------------------------------+
 
-Basic 用法
+Basic Usage
 -----------
 
 The following constraints ensure that:

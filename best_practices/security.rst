@@ -1,40 +1,51 @@
-安全
+Security
 ========
 
-认证和防火墙 (如获取用户凭据)
+Authentication and Firewalls (i.e. Getting the User's Credentials)
 ------------------------------------------------------------------
 
-你可以配置Symfony以使用你想要的任何方法对用户进行身份认证，并从任何数据来源加载用户信息。
-这是一个复杂的主题，但 :doc:`Security guide </security>` 中有很多相关信息。
+You can configure Symfony to authenticate your users using any method you
+want and to load user information from any source. This is a complex topic, but
+the :doc:`Security guide </security>` has a lot of information about this.
 
-不管你的需求是什么，认证都要在 ``security.yaml`` 中进行配置，主要在 ``firewalls`` 键下进行。
-
-.. best-practice::
-
-    除非你有两个合理的不同认证系统及其用户（比如一个是主站的表单登陆系统，还有一个是基于API的令牌系统），
-    我们推荐只使用一个防火墙入口 ，并且开启其下的 ``anonymous`` 选项。、
-
-大多数应用只有一个身份验证系统和一组用户。
-因此，你只需要*一个*防火墙项。
-当然也有例外，特别是如果你的网站上有网页和API部分。但关键是要保持简单。
-
-此外，你应该使用防火墙下的 ``anonymous`` 键。
-如果你需要要求用户登录站点的不同部分（或几乎*所有*部分），请使用``access_control`` 区域。
+Regardless of your needs, authentication is configured in ``security.yaml``,
+primarily under the ``firewalls`` key.
 
 .. best-practice::
 
-    使用 ``bcrypt`` 编码器对用户密码进行哈希处理。
+    Unless you have two legitimately different authentication systems and
+    users (e.g. form login for the main site and a token system for your
+    API only), we recommend having only *one* firewall entry with the ``anonymous``
+    key enabled.
 
-如果您的用户使用密码，我们建议使用 ``bcrypt``编码器对其进行散列，而不是传统的 SHA-512 散列编码器。
-``bcrypt`` 的主要优点是包含一个*salt*值来防止彩虹表攻击，以及它的自适应性，能令暴力破解的过程变得愈发之长。
+Most applications only have one authentication system and one set of users.
+For this reason, you only need *one* firewall entry. There are exceptions
+of course, especially if you have separated web and API sections on your
+site. But the point is to keep things simple.
+
+Additionally, you should use the ``anonymous`` key under your firewall. If
+you need to require users to be logged in for different sections of your
+site (or maybe nearly *all* sections), use the ``access_control`` area.
+
+.. best-practice::
+
+    Use the ``bcrypt`` encoder for hashing your users' passwords.
+
+If your users have a password, then we recommend hashing it using the ``bcrypt``
+encoder, instead of the traditional SHA-512 hashing encoder. The main advantages
+of ``bcrypt`` are the inclusion of a *salt* value to protect against rainbow
+table attacks, and its adaptive nature, which allows to make it slower to
+remain resistant to brute-force search attacks.
 
 .. note::
 
-    :ref:`Argon2i <reference-security-argon2i>` 是行业标准推荐的散列算法，
-    但除非你使用的是PHP 7.2+或安装了 `libsodium`_ 扩展，否则将无法使用此算法。
-    ``bcrypt`` 足以满足大多数应用程序的需求。
+    :ref:`Argon2i <reference-security-argon2i>` is the hashing algorithm as
+    recommended by industry standards, but this won't be available to you unless
+    you are using PHP 7.2+ or have the `libsodium`_ extension installed.
+    ``bcrypt`` is sufficient for most applications.
 
-基于这种考虑，下面是我们的程序和验证有关的配置，使用了表单登陆，并且从数据库中取得用户：
+With this in mind, here is the authentication setup from our application,
+which uses a login form to load users from the database:
 
 .. code-block:: yaml
 
@@ -63,34 +74,42 @@
 
 .. tip::
 
-    我们这个项目的源代码中包含了注释在内，用于解释每一部分。
+    The source code for our project contains comments that explain each part.
 
-授权 (如拒绝访问)
+Authorization (i.e. Denying Access)
 -----------------------------------
 
-Symfony为你提供了几种实施授权的方法，包括 :doc:`security.yaml </reference/configuration/security>` 中的 ``access_control``配置，:ref:`@Security annotation <best-practices-security-annotation>` 以及直接在 ``security.authorization_checker`` 服务上使用 :ref:`isGranted <best-practices-directly-isGranted>`。
+Symfony gives you several ways to enforce authorization, including the ``access_control``
+configuration in :doc:`security.yaml </reference/configuration/security>`, the
+:ref:`@Security annotation <best-practices-security-annotation>` and using
+:ref:`isGranted <best-practices-directly-isGranted>` on the ``security.authorization_checker``
+service directly.
 
 .. best-practice::
 
-    * 为了保护泛URL内容，在 ``access_control`` 中使用正则匹配；
-    * 尽最大可能使用 ``@Security`` 注释；
-    * 一旦遇到复杂状况，直接利用 ``security.authorization_checker`` 服务来检查安全性。
+    * For protecting broad URL patterns, use ``access_control``;
+    * Whenever possible, use the ``@Security`` annotation;
+    * Check security directly on the ``security.authorization_checker`` service
+      whenever you have a more complex situation.
 
-还有不同的方法可以集中管理授权逻辑，例如自定义安全选民(security voter)：
+There are also different ways to centralize your authorization logic, like
+with a custom security voter:
 
 .. best-practice::
 
-    定义一个自定义安全选民以实现精细化（fine-grained）的访问控制。
+    Define a custom security voter to implement fine-grained restrictions.
 
 .. _best-practices-security-annotation:
 
-@Security 注释
+The @Security Annotation
 ------------------------
 
-在控制器里，实施访问控制时，尽量使用@Security注释。位于动作上方的它们，不光容易理解，还容易替换。
+For controlling access on a controller-by-controller basis, use the ``@Security``
+annotation whenever possible. It's easy to read and is placed consistently
+above each action.
 
-在我们这个程序中，你需要使用 ``ROLE_ADMIN`` 授权，才能创建一个新贴子。
-使用 ``@Security``时，代码会像下面这样：
+In our application, you need the ``ROLE_ADMIN`` in order to create a new post.
+Using ``@Security``, this looks like:
 
 .. code-block:: php
 
@@ -99,7 +118,7 @@ Symfony为你提供了几种实施授权的方法，包括 :doc:`security.yaml <
     // ...
 
     /**
-     * 显示一个表单以创建新的Post实体。
+     * Displays a form to create a new Post entity.
      *
      * @Route("/new", name="admin_post_new")
      * @Security("is_granted('ROLE_ADMIN')")
@@ -109,11 +128,13 @@ Symfony为你提供了几种实施授权的方法，包括 :doc:`security.yaml <
         // ...
     }
 
-在复杂安全限制中使用表达式
+Using Expressions for Complex Security Restrictions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-如果您的安全逻辑稍微复杂一些，可以在 ``@Security``中使用 :doc:`expression </components/expression_language>`。
-在以下示例中，如果用户的电子邮件与 ``Post`` 对象上的 ``getAuthorEmail()`` 方法返回的值匹配，则用户才能访问控制器::
+If your security logic is a little bit more complex, you can use an :doc:`expression </components/expression_language>`
+inside ``@Security``. In the following example, a user can only access the
+controller if their email matches the value returned by the ``getAuthorEmail()``
+method on the ``Post`` object::
 
     use App\Entity\Post;
     use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -128,13 +149,14 @@ Symfony为你提供了几种实施授权的方法，包括 :doc:`security.yaml <
         // ...
     }
 
-请注意，这里我们使用了 `ParamConverter`_，
-它会自动查询所需的 ``Post`` 对象并将其作为 ``$post`` 参数传递给控制器。
-这使得在表达式中使用 ``post`` 变量成为可能。
+Notice that this requires the use of the `ParamConverter`_, which automatically
+queries for the ``Post`` object and puts it on the ``$post`` argument. This
+is what makes it possible to use the ``post`` variable in the expression.
 
-这有一个主要缺点：注释中的表达式不能轻易地在应用的其他部分中重用。
-想象一下，你想在模板中添加一个只有作者才能看到的链接。
-现在，你需要使用Twig语法重复表达式代码：
+This has one major drawback: an expression in an annotation cannot easily
+be reused in other parts of the application. Imagine that you want to add
+a link in a template that will only be seen by authors. Right now you'll
+need to repeat the expression code using Twig syntax:
 
 .. code-block:: html+jinja
 
@@ -142,7 +164,8 @@ Symfony为你提供了几种实施授权的方法，包括 :doc:`security.yaml <
         <a href=""> ... </a>
     {% endif %}
 
-最简单的解决方案 - 如果您的逻辑足够简单 - 就是在 ``Post`` 实体中添加一个新方法，检查给定用户是否是其作者::
+The easiest solution - if your logic is simple enough - is to add a new method
+to the ``Post`` entity that checks if a given user is its author::
 
     // src/Entity/Post.php
     // ...
@@ -152,7 +175,7 @@ Symfony为你提供了几种实施授权的方法，包括 :doc:`security.yaml <
         // ...
 
         /**
-         * 给定的用户是否是本帖子的作者？
+         * Is the given User the author of this Post?
          *
          * @return bool
          */
@@ -162,7 +185,7 @@ Symfony为你提供了几种实施授权的方法，包括 :doc:`security.yaml <
         }
     }
 
-现在，你可以在模板和安全表达式中重用此方法::
+Now you can reuse this method both in the template and in the security expression::
 
     use App\Entity\Post;
     use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -187,12 +210,13 @@ Symfony为你提供了几种实施授权的方法，包括 :doc:`security.yaml <
 .. _checking-permissions-without-security:
 .. _manually-checking-permissions:
 
-不使用@Security来检查权限
+Checking Permissions without @Security
 --------------------------------------
 
-上面用到 ``@Security`` 的例子，仅在我们使用 :ref:`ParamConverter <best-practices-paramconverter>` 时才能工作，
-是它让表达式能够访问 ``post`` 变量。
-如果你不使用它，或者使用其他更高级的用例，那么你始终可以在PHP中执行相同的安全检查::
+The above example with ``@Security`` only works because we're using the
+:ref:`ParamConverter <best-practices-paramconverter>`, which gives the expression
+access to the ``post`` variable. If you don't use this, or have some other
+more advanced use-case, you can always do the same security check in PHP::
 
     /**
      * @Route("/{id}/edit", name="admin_post_edit")
@@ -210,7 +234,7 @@ Symfony为你提供了几种实施授权的方法，包括 :doc:`security.yaml <
         if (!$post->isAuthor($this->getUser())) {
             $this->denyAccessUnlessGranted('edit', $post);
         }
-        // 不使用 “denyAccessUnlessGranted（）” 快捷方式的等效代码：
+        // equivalent code without using the "denyAccessUnlessGranted()" shortcut:
         //
         // use Symfony\Component\Security\Core\Exception\AccessDeniedException;
         // use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface
@@ -233,10 +257,13 @@ Symfony为你提供了几种实施授权的方法，包括 :doc:`security.yaml <
 Security Voters
 ---------------
 
-如果你的安全逻辑很复杂并且无法集中到像 ``isAuthor()`` 这样的方法中，那么你应该利用自定义选民(voter)。
-这些比 :doc:`ACLs </security/acl>` 更容易，并且几乎在所有情况下都能为你提供所需的灵活性。
+If your security logic is complex and can't be centralized into a method like
+``isAuthor()``, you should leverage custom voters. These are much easier than
+:doc:`ACLs </security/acl>` and will give you the flexibility you need in almost
+all cases.
 
-首先，要创建一个voter类。以下示例展示了与前例用过的 ``getAuthorEmail()`` 相同的逻辑::
+First, create a voter class. The following example shows a voter that implements
+the same ``getAuthorEmail()`` logic you used above::
 
     namespace App\Security;
 
@@ -303,10 +330,12 @@ Security Voters
         }
     }
 
-如果你使用 :ref:`default services.yaml configuration <service-container-services-load-example>`配置，
-你的应用将自动配置你的安全选民，并通过 :ref:`autoconfigure <services-autoconfigure>` 将 ``AccessDecisionManagerInterface`` 实例注入其中。
+If you're using the :ref:`default services.yaml configuration <service-container-services-load-example>`,
+your application will :ref:`autoconfigure <services-autoconfigure>` your security
+voter and inject an ``AccessDecisionManagerInterface`` instance into it thanks to
+:doc:`autowiring </service_container/autowiring>`.
 
-现在，你可以在 ``@Security`` 注释中使用这个选民了::
+Now, you can use the voter with the ``@Security`` annotation::
 
     /**
      * @Route("/{id}/edit", name="admin_post_edit")
@@ -317,7 +346,8 @@ Security Voters
         // ...
     }
 
-你也可以直接使用 ``security.authorization_checker`` 服务或更简单的通过控制器中的快捷方式使用它::
+You can also use this directly with the ``security.authorization_checker`` service or
+via the even easier shortcut in a controller::
 
     /**
      * @Route("/{id}/edit", name="admin_post_edit")
@@ -346,7 +376,7 @@ Security Voters
         // ...
     }
 
-下一章: :doc:`/best_practices/web-assets`
+Next: :doc:`/best_practices/web-assets`
 
 .. _`ParamConverter`: https://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/annotations/converters.html
 .. _`@Security annotation`: https://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/annotations/security.html

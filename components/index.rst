@@ -1,4 +1,4 @@
-组件
+The Components
 ==============
 
 .. toctree::

@@ -3,13 +3,13 @@
     single: Mbstring
     single: Components; Polyfill
 
-Symfony Polyfill / Mbstring 组件
+The Symfony Polyfill / Mbstring Component
 =========================================
 
     This component provides a partial, native PHP implementation for the
     ``mbstring`` PHP extension.
 
-安装
+Installation
 ------------
 
 .. code-block:: terminal
@@ -20,7 +20,7 @@ Alternatively, you can clone the `<https://github.com/symfony/polyfill-mbstring>
 
 .. include:: /components/require_autoload.rst.inc
 
-用法
+Usage
 -----
 
 Once this component is installed in your application, you can use the following

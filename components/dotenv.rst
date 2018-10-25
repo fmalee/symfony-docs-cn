@@ -2,13 +2,13 @@
    single: Dotenv
    single: Components; Dotenv
 
-Dotenv组件
+The Dotenv Component
 ====================
 
     The Dotenv Component parses ``.env`` files to make environment variables
     stored in them accessible via ``getenv()``, ``$_ENV`` or ``$_SERVER``.
 
-安装
+Installation
 ------------
 
 .. code-block:: terminal
@@ -19,7 +19,7 @@ Alternatively, you can clone the `<https://github.com/symfony/dotenv>`_ reposito
 
 .. include:: /components/require_autoload.rst.inc
 
-用法
+Usage
 -----
 
 Sensitive information and environment-dependent settings should be defined as

@@ -3,14 +3,14 @@
     single: Intl
     single: Components; Polyfill
 
-Symfony Polyfill / Intl Grapheme 组件
+The Symfony Polyfill / Intl Grapheme Component
 ==============================================
 
     This component provides a partial, native PHP implementation of the
     ``grapheme_*`` functions to users who run PHP versions without the ``intl``
     extension.
 
-安装
+Installation
 ------------
 
 .. code-block:: terminal
@@ -21,7 +21,7 @@ Alternatively, you can clone the `<https://github.com/symfony/polyfill-intl-grap
 
 .. include:: /components/require_autoload.rst.inc
 
-用法
+Usage
 -----
 
 Once this component is installed in your application, you can use the following

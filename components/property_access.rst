@@ -2,13 +2,13 @@
     single: PropertyAccess
     single: Components; PropertyAccess
 
-PropertyAccess组件
+The PropertyAccess Component
 ============================
 
     The PropertyAccess component provides function to read and write from/to an
     object or array using a simple string notation.
 
-安装
+Installation
 ------------
 
 .. code-block:: terminal
@@ -19,7 +19,7 @@ Alternatively, you can clone the `<https://github.com/symfony/property-access>`_
 
 .. include:: /components/require_autoload.rst.inc
 
-用法
+Usage
 -----
 
 The entry point of this component is the

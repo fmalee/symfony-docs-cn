@@ -17,7 +17,7 @@ define arbitrary matching logic, use the ``conditions`` routing option:
             path:       /contact
             controller: 'App\Controller\DefaultController::contact'
             condition:  "context.getMethod() in ['GET', 'HEAD'] and request.headers.get('User-Agent') matches '/firefox/i'"
-            # expressions can also include config parameters
+            # expressions can also include config parameters 
             # condition: "request.headers.get('User-Agent') matches '%app.allowed_browsers%'"
 
     .. code-block:: xml

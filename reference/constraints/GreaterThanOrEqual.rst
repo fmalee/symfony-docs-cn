@@ -18,7 +18,7 @@ the options. To force that a value is greater than another value, see
 | Validator      | :class:`Symfony\\Component\\Validator\\Constraints\\GreaterThanOrEqualValidator` |
 +----------------+----------------------------------------------------------------------------------+
 
-Basic 用法
+Basic Usage
 -----------
 
 The following constraints ensure that:

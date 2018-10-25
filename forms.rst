@@ -1,22 +1,24 @@
 .. index::
    single: Forms
 
-表单
+Forms
 =====
 
 .. admonition:: Screencast
     :class: screencast
 
-    更喜欢视频教程? 可以观看 `Symfony Forms screencast series`_ 系列录像.
+    Do you prefer video tutorials? Check out the `Symfony Forms screencast series`_.
 
-对一个Web开发者来说，处理HTML表单是一个最为普通又极具挑战的任务。
-Symfony整合了一个Form组件，让处理表单变得容易起来。
-在本章，你将从零开始创建一个复杂的表单，学习表单类库中的重要功能。
+Dealing with HTML forms is one of the most common - and challenging - tasks for
+a web developer. Symfony integrates a Form component that makes dealing with
+forms easy. In this article, you'll build a complex form from the ground up,
+learning the most important features of the form library along the way.
 
-安装
+Installation
 ------------
 
-在使用 :doc:`Symfony Flex </setup/flex>` 的应用中，运行此命令以在使用表单功能之前安装它：
+In applications using :doc:`Symfony Flex </setup/flex>`, run this command to
+install the form feature before using it:
 
 .. code-block:: terminal
 
@@ -24,18 +26,20 @@ Symfony整合了一个Form组件，让处理表单变得容易起来。
 
 .. note::
 
-    Symfony的Form组件是一个独立的类库，你可以在Symfony项目之外使用它。
-    参考 :doc:`Form组件文档 </components/form>` 以了解更多。
+    The Symfony Form component is a standalone library that can be used outside
+    of Symfony projects. For more information, see the
+    :doc:`Form component documentation </components/form>` on GitHub.
 
 .. index::
    single: Forms; Create a simple form
 
-创建一个简单的表单
+Creating a Simple Form
 ----------------------
 
-假设你正在构建一个简单的待办事项列表，来显示一些“任务”。
-你需要创建一个表单来让你的用户编辑和创建任务。
-在这之前，先来看看 ``Task`` 类，它可呈现和存储一个单一任务的数据::
+Suppose you're building a simple todo list application that will need to
+display "tasks". Because your users will need to edit and create tasks, you're
+going to need to build a form. But before you begin, first focus on the generic
+``Task`` class that represents and stores the data for a single task::
 
     // src/Entity/Task.php
     namespace App\Entity;
@@ -66,19 +70,23 @@ Symfony整合了一个Form组件，让处理表单变得容易起来。
         }
     }
 
-这个类是一个“普通的PHP对象”，因为到目前为止，它没有和Symfony互动也没有引用其它类库。
-它只是一个普通的PHP对象，直接解决了*你*的应用内部的问题（即需要在应用中代表(represent)任务）。
-当然，到本文结束时，你将能够将数据提交到一个 ``Task`` 实例（通过HTML表单），验证其数据并将其持久花到数据库中。
+This class is a "plain-old-PHP-object" because, so far, it has nothing
+to do with Symfony or any other library. It's quite simply a normal PHP object
+that directly solves a problem inside *your* application (i.e. the need to
+represent a task in your application). Of course, by the end of this article,
+you'll be able to submit data to a ``Task`` instance (via an HTML form), validate
+its data and persist it to the database.
 
 .. index::
    single: Forms; Create a form in a controller
 
-构建表单
+Building the Form
 ~~~~~~~~~~~~~~~~~
 
-现在你已经创建了一个 ``Task`` 类，下一步就是创建和渲染一个真正的HTML表单了。
-在Symfony中，这是通过构建一个表单对象并将其渲染到模版来完成的。
-现在，在控制器里即可完成所有这些::
+Now that you've created a ``Task`` class, the next step is to create and
+render the actual HTML form. In Symfony, this is done by building a form
+object and then rendering it in a template. For now, this can all be done
+from inside a controller::
 
     // src/Controller/DefaultController.php
     namespace App\Controller;
@@ -94,7 +102,7 @@ Symfony整合了一个Form组件，让处理表单变得容易起来。
     {
         public function new(Request $request)
         {
-            // 创建一个task对象，为了方便演示，同时赋予它一些虚拟数据
+            // creates a task and gives it some dummy data for this example
             $task = new Task();
             $task->setTask('Write a blog post');
             $task->setDueDate(new \DateTime('tomorrow'));
@@ -113,31 +121,38 @@ Symfony整合了一个Form组件，让处理表单变得容易起来。
 
 .. tip::
 
-    这个例子展示了如何直接在控制器中构建你的表单。
-    后面的  ":ref:`form-creating-form-classes`" 中，
-    你将使用一个独立的类来构建表单，建议在表单可重用时使用该方法。
+    This example shows you how to build your form directly in the controller.
+    Later, in the ":ref:`form-creating-form-classes`" section, you'll learn
+    how to build your form in a standalone class, which is recommended as
+    your form becomes reusable.
 
-创建表单需要相对较少的代码，因为Symfony表单对象是使用“表单构建器”构建的。
-表单构建器的目的是允许你编写简单的表单“指令(recipes)”，并让它完成实际构建表单的所有繁重工作。
+Creating a form requires relatively little code because Symfony form objects
+are built with a "form builder". The form builder's purpose is to allow you
+to write simple form "recipes" and have it do all the heavy-lifting of actually
+building the form.
 
-在此示例中，你已向表单添加了两个字段 -- ``task`` 和 ``dueDate`` -- 对应于 ``Task`` 类中的 ``task`` 和 ``dueDate`` 属性。
-你还为每个字段分配了一个“类型”（例如``TextType`` 和 ``DateType``），用其完全限定(fully qualified)的类名表示。
-除此之外，它还决定为该字段渲染哪个HTML表单标记。
+In this example, you've added two fields to your form - ``task`` and ``dueDate`` -
+corresponding to the ``task`` and ``dueDate`` properties of the ``Task`` class.
+You've also assigned each a "type" (e.g. ``TextType`` and ``DateType``),
+represented by its fully qualified class name. Among other things, it determines
+which HTML form tag(s) is rendered for that field.
 
-最后，你添加了一个带有自定义标签的提交按钮以向服务器提交表单。
+Finally, you added a submit button with a custom label for submitting the form to
+the server.
 
-Symfony​​附带了许多内置类型，它们将被简短地介绍（见下面的内置表单类型）。
-Symfony开箱附带许多内置类型，它们将在稍后讨论（参见 :ref:`forms-type-reference`）。
+Symfony comes with many built-in types that will be discussed shortly
+(see :ref:`forms-type-reference`).
 
 .. index::
   single: Forms; Basic template rendering
 
-渲染表单
+Rendering the Form
 ~~~~~~~~~~~~~~~~~~
 
-表单创建之后，下一步就是渲染它。
-这是通过传递一个特殊的表单“视图”对象（注意上例控制器中的 ``$form->createView()`` 方法）到你的模板，
-并通过一系列的表单辅助函数来实现的：
+Now that the form has been created, the next step is to render it. This is
+done by passing a special form "view" object to your template (notice the
+``$form->createView()`` in the controller above) and using a set of form
+helper functions:
 
 .. code-block:: html+twig
 
@@ -151,53 +166,69 @@ Symfony开箱附带许多内置类型，它们将在稍后讨论（参见 :ref:`
 
 .. note::
 
-    本例假设你以"POST"请求提交表单，并且和表单展示页使用相同的URL。
-    后面你将学习如何改变表单的请求方法和目标URL。
+    This example assumes that you submit the form in a "POST" request and to
+    the same URL that it was displayed in. You will learn later how to
+    change the request method and the target URL of the form.
 
-就是这样！只需要三行就可以渲染出完整的表单：
+That's it! Just three lines are needed to render the complete form:
 
 ``form_start(form)``
-    渲染表单的开始标签，包括在使用文件上传时的正确enctype属性。
+    Renders the start tag of the form, including the correct enctype attribute
+    when using file uploads.
 
 ``form_widget(form)``
-    渲染出全部字段，包含字段元素本身，字段标签以及字段验证的任何错误信息。
+    Renders all the fields, which includes the field element itself, a label
+    and any validation error messages for the field.
 
 ``form_end(form)``
-    当你手动生成每个字段时，它可以渲染表单结束标签以及表单中所有尚未渲染的字段。这在渲染隐藏字段以及利用自动的 :doc:`CSRF 保护 </security/csrf>` 机制时非常有用。
-
+    Renders the end tag of the form and any fields that have not
+    yet been rendered, in case you rendered each field yourself. This is useful
+    for rendering hidden fields and taking advantage of the automatic
+    :doc:`CSRF Protection </security/csrf>`.
 
 .. seealso::
 
-    就是这么简单，但不太灵活（暂时）。通常情况下，你希望单独渲染出表单中的每一个字段，以便控制表单的样式。你将在 :doc:`/form/rendering` 文档中掌握这种方法。
+    As easy as this is, it's not very flexible (yet). Usually, you'll want to
+    render each form field individually so you can control how the form looks.
+    You'll learn how to do that in the ":doc:`/form/rendering`" section.
 
-在继续下去之前，请注意，为什么渲染出来的 ``task`` 输入框中有一个来自 ``$task`` 对象的 ``task`` 属性值（即“Write a blog post”）。
-这是表单的第一个任务：从一个对象中获取数据并把它转换成一种适当的格式，以便在HTML表单中被渲染。
+Before moving on, notice how the rendered ``task`` input field has the value
+of the ``task`` property from the ``$task`` object (i.e. "Write a blog post").
+This is the first job of a form: to take data from an object and translate
+it into a format that's suitable for being rendered in an HTML form.
 
 .. tip::
 
-    表单系统足够智能，它们通过 ``getTask()`` 和 ``setTask()`` 方法来访问 ``Task`` 类中受保护的 ``task`` 属性。
-    除非是公共属性，否则 *必须* 有一个 "getter" 和 "setter" 方法被定义，以便表单组件能从这些属性中获取和写入数据。
-    对于布尔型的属性，你可以使用一个 "isser" 和 "hasser" 方法（如 ``isPublished()`` 和 ``hasReminder()`` 来替代getter方法（``getPublished()`` 和 ``getReminder()``）。
+    The form system is smart enough to access the value of the protected
+    ``task`` property via the ``getTask()`` and ``setTask()`` methods on the
+    ``Task`` class. Unless a property is public, it *must* have a "getter" and
+    "setter" method so that the Form component can get and put data onto the
+    property. For a boolean property, you can use an "isser" or "hasser" method
+    (e.g. ``isPublished()`` or ``hasReminder()``) instead of a getter (e.g.
+    ``getPublished()`` or ``getReminder()``).
 
 .. index::
   single: Forms; Handling form submissions
 
 .. _form-handling-form-submissions:
 
-处理表单提交
+Handling Form Submissions
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-默认情况下，表单会将POST请求提交回渲染它的同一个控制器。
+By default, the form will submit a POST request back to the same controller that
+renders it.
 
-此处，表单的第二个任务就是把用户提交的数据传回到一个对象的属性之中。
-要做到这一点，用户提交的数据必须写入表单对象才行。向控制器中添加以下功能::
+Here, the second job of a form is to translate user-submitted data back to the
+properties of an object. To make this happen, the submitted data from the
+user must be written into the Form object. Add the following functionality to
+your controller::
 
     // ...
     use Symfony\Component\HttpFoundation\Request;
 
     public function new(Request $request)
     {
-        // 直接设置一个全新v$taskv对象（删除了虚拟数据）
+        // just setup a fresh $task object (remove the dummy data)
         $task = new Task();
 
         $form = $this->createFormBuilder($task)
@@ -209,12 +240,12 @@ Symfony开箱附带许多内置类型，它们将在稍后讨论（参见 :ref:`
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // $form->getData() 持有提交过来的值
-            // 但是，原始的 `$task` 变量也已被更新了
+            // $form->getData() holds the submitted values
+            // but, the original `$task` variable has also been updated
             $task = $form->getData();
 
-            // ... 一些操作，比如把任务存到数据库中
-            // 例如，如果Tast对象是一个Doctrine实体，保存它！
+            // ... perform some action, such as saving the task to the database
+            // for example, if Task is a Doctrine entity, save it!
             // $entityManager = $this->getDoctrine()->getManager();
             // $entityManager->persist($task);
             // $entityManager->flush();
@@ -229,56 +260,69 @@ Symfony开箱附带许多内置类型，它们将在稍后讨论（参见 :ref:`
 
 .. caution::
 
-    注意 ``createView()`` 方法应该在 ``handleRequest()`` 被调用 *之后* 再调用。
-    否则，针对 ``*_SUBMIT`` 表单事件的修改，将不会应用到视图层(比如验证的错误信息)。
+    Be aware that the ``createView()`` method should be called *after* ``handleRequest()``
+    is called. Otherwise, changes done in the ``*_SUBMIT`` events aren't applied to the
+    view (like validation errors).
 
-控制器在处理表单时遵循的是一个通用模式（common pattern），它有三个可能的途径：
+This controller follows a common pattern for handling forms and has three
+possible paths:
 
-#. 当浏览器初始加载一个页面时，表单被创建和渲染。
-   :method:`Symfony\\Component\\Form\\FormInterface::handleRequest` 意识到表单没有被提交进而什么都不做。
-   如果表单未被提交，:method:`Symfony\\Component\\Form\\FormInterface::isSubmitted` 返回 ``false``;
+#. When initially loading the page in a browser, the form is created and
+   rendered. :method:`Symfony\\Component\\Form\\FormInterface::handleRequest`
+   recognizes that the form was not submitted and does nothing.
+   :method:`Symfony\\Component\\Form\\FormInterface::isSubmitted` returns ``false``
+   if the form was not submitted.
 
-#. 当用户提交表单时，:method:`Symfony\\Component\\Form\\FormInterface::handleRequest`
-   会识别这个动作并立即将提交的数据写入到 ``$task`` 对象的 `task`` and ``dueDate`` 属性。
-   然后该对象被验证。如果它是无效的（验证在下一章），
-   :method:`Symfony\\Component\\Form\\FormInterface::isValid` 会返回 ``false``，
-   进而表单被再次渲染，只是这次有验证错误;
+#. When the user submits the form, :method:`Symfony\\Component\\Form\\FormInterface::handleRequest`
+   recognizes this and immediately writes the submitted data back into the
+   ``task`` and ``dueDate`` properties of the ``$task`` object. Then this object
+   is validated. If it is invalid (validation is covered in the next section),
+   :method:`Symfony\\Component\\Form\\FormInterface::isValid` returns
+   ``false`` and the form is rendered again, but now with validation errors;
 
-#. 当用户以合法数据提交表单的时，提交的数据会被再次写入到表单，但这一次
-   :method:`Symfony\\Component\\Form\\FormInterface::isValid` 返回 ``true``。
-   在把用户重定向到其他一些页面之前（如一个“谢谢”或“成功”的页面），
-   你有机会用 ``$task`` 对象来进行某些操作（比如把它持久化到数据库）。
+#. When the user submits the form with valid data, the submitted data is again
+   written into the form, but this time :method:`Symfony\\Component\\Form\\FormInterface::isValid`
+   returns ``true``. Now you have the opportunity to perform some actions using
+   the ``$task`` object (e.g. persisting it to the database) before redirecting
+   the user to some other page (e.g. a "thank you" or "success" page).
 
    .. note::
 
-      表单成功提交之后的将用户重定向，是为了防止用户通过浏览器“刷新”按钮重复提交数据。
+      Redirecting a user after a successful form submission prevents the user
+      from being able to hit the "Refresh" button of their browser and re-post
+      the data.
 
 .. seealso::
 
-    如果你需要精确地控制何时表单被提交，或哪些数据被传给表单，你可以使用 :method:`Symfony\\Component\\Form\\FormInterface::submit`。更多信息请参考
-    :ref:`form-call-submit-directly`。
+    If you need more control over exactly when your form is submitted or which
+    data is passed to it, you can use the :method:`Symfony\\Component\\Form\\FormInterface::submit`
+    method. Read more about it :ref:`form-call-submit-directly`.
 
 .. index::
    single: Forms; Validation
 
 .. _forms-form-validation:
 
-表单验证
+Form Validation
 ---------------
 
-在上一节中，你了解了附带了有效或无效数据的表单是如何被提交的。
-在Symfony中，验证环节是在底层对象中进行的（例如 ``Task``）。
-换句话说，问题不在于“表单”是否有效，而是在表单将提交的数据应用于 ``$task`` 对象后，该对象是否有效。
-调用 ``$form->isValid()`` 是一个快捷方式，它询问 ``$task`` 对象是否获得了合法数据。
+In the previous section, you learned how a form can be submitted with valid
+or invalid data. In Symfony, validation is applied to the underlying object
+(e.g. ``Task``). In other words, the question isn't whether the "form" is
+valid, but whether or not the ``$task`` object is valid after the form has
+applied the submitted data to it. Calling ``$form->isValid()`` is a shortcut
+that asks the ``$task`` object whether or not it has valid data.
 
-在使用验证之前，请在应用中添加对它的支持：
+Before using validation, add support for it in your application:
 
 .. code-block:: terminal
 
     $ composer require symfony/validator
 
-验证是通过把一组规则（称之为“约束(constraints)”）添加到一个类中来完成的。
-我们给 ``Task`` 类添加约束，使 ``task`` 属性不能为空，  ``dueDate`` 字段不为空且必须是一个有效的 \DateTime 对象。
+Validation is done by adding a set of rules (called constraints) to a class. To
+see this in action, add validation constraints so that the ``task`` field cannot
+be empty and the ``dueDate`` field cannot be empty and must be a valid \DateTime
+object.
 
 .. configuration-block::
 
@@ -357,21 +401,29 @@ Symfony开箱附带许多内置类型，它们将在稍后讨论（参见 :ref:`
             }
         }
 
-就是这样！如果你现在重新以非法数据提交表单，你将会看到相应的错误被输出到表单。
+That's it! If you re-submit the form with invalid data, you'll see the
+corresponding errors printed out with the form.
 
-验证是Symfony一个非常强大的功能，它拥有自己的 :doc:`专属文档 </validation>`。
+Validation is a very powerful feature of Symfony and has its own
+:doc:`dedicated article </validation>`.
 
 .. _forms-html5-validation-disable:
 
-.. sidebar:: HTML5 验证
+.. sidebar:: HTML5 Validation
 
-    自HTML5诞生后，许多浏览器都原生支持了客户端的验证约束。
-    最常用的验证之激活方式，是在一个必填字段上渲染一个 ``required`` 属性。
-    对于支持HTML5的浏览器来说，如果用户尝试提交一个空字段到表单时，会有一条浏览器原生信息显示出来。
+    Thanks to HTML5, many browsers can natively enforce certain validation constraints
+    on the client side. The most common validation is activated by rendering
+    a ``required`` attribute on fields that are required. For browsers that
+    support HTML5, this will result in a native browser message being displayed
+    if the user tries to submit the form with that field blank.
 
-    生成出来的表单充分利用了这个新功能，通过添加一些有意义的HTML属性来触发验证。
-    客户端验证，也可通过把 ``novalidate`` 属性添加到 ``form`` 标签，或是把 ``formnovalidate`` 添加到提交标签来关闭之。
-    这在你想要测试服务器端的验证规则却被浏览器端阻止，例如，在提交空白字段时，就非常有用。
+    Generated forms take full advantage of this new feature by adding sensible
+    HTML attributes that trigger the validation. The client-side validation,
+    however, can be disabled by adding the ``novalidate`` attribute to the
+    ``form`` tag or ``formnovalidate`` to the submit tag. This is especially
+    useful when you want to test your server-side validation constraints,
+    but are being prevented by your browser from, for example, submitting
+    blank fields.
 
     .. code-block:: html+twig
 
@@ -385,76 +437,88 @@ Symfony开箱附带许多内置类型，它们将在稍后讨论（参见 :ref:`
 
 .. _forms-type-reference:
 
-内置的字段类型
+Built-in Field Types
 --------------------
 
-Symfony标配了大量的字段类型，涵盖了你所能遇到的全部常规表单字段和数据类型：
+Symfony comes standard with a large group of field types that cover all of
+the common form fields and data types you'll encounter:
 
 .. include:: /reference/forms/types/map.rst.inc
 
-你也可以定义自己的字段类型。参考 :doc:`/form/create_custom_field_type`。
+You can also create your own custom field types. See
+:doc:`/form/create_custom_field_type` for info.
 
 .. index::
    single: Forms; Field type options
 
-字段类型选项
+Field Type Options
 ~~~~~~~~~~~~~~~~~~
 
-每一种字段类型都有一定数量的选项用于配置。
-比如， ``dueDate`` 字段当前被渲染成3个选择框。
-而 :doc:`DateType </reference/forms/types/date>` 字段可以被配置渲染成一个单一的文本框
-（用户可以输入字符串作为日期）::
+Each field type has a number of options that can be used to configure it.
+For example, the ``dueDate`` field is currently being rendered as 3 select
+boxes. However, the :doc:`DateType </reference/forms/types/date>` can be
+configured to be rendered as a single text box (where the user would enter
+the date as a string in the box)::
 
     ->add('dueDate', DateType::class, array('widget' => 'single_text'))
 
 .. image:: /_images/form/simple-form-2.png
     :align: center
 
-每一种字段类型都有一系列不同的选项用于个性配置。
-关于字段类型的细节都可以在每种类型的文档中找到。
+Each field type has a number of different options that can be passed to it.
+Many of these are specific to the field type and details can be found in
+the documentation for each type.
 
-.. sidebar:: ``required`` 选项
+.. sidebar:: The ``required`` Option
 
-    最常用的是 ``required`` 选项，它可以应用于任何字段。默认情况下它被设置为 ``true``。
-    这就意味着支持HTML5的浏览器会使用客户端验证来判断字段是否为空。
-    如果你不想需要这种行为，要么 :ref:`关闭 HTML5 验证 <forms-html5-validation-disable>`，
-    要么把字段的 ``required`` 选项设置为 ``false``::
+    The most common option is the ``required`` option, which can be applied to
+    any field. By default, the ``required`` option is set to ``true``, meaning
+    that HTML5-ready browsers will apply client-side validation if the field
+    is left blank. If you don't want this behavior, either
+    :ref:`disable HTML5 validation <forms-html5-validation-disable>`
+    or set the ``required`` option on your field to ``false``::
 
         ->add('dueDate', DateType::class, array(
             'widget' => 'single_text',
             'required' => false
         ))
 
-    要注意设置 ``required`` 为 ``true`` 并 *不* 意味着服务器端验证会被使用。
-    换句话说，如果用户提交一个空值（blank）到该字段（比如在老旧浏览器中，或是使用web service时），
-    这个空值当被作为有效值予以采纳，除非你使用了Symfony的 ``NotBlank`` 或者 ``NotNull`` 验证约束。
+    Also note that setting the ``required`` option to ``true`` will **not**
+    result in server-side validation to be applied. In other words, if a
+    user submits a blank value for the field (either with an old browser
+    or web service, for example), it will be accepted as a valid value unless
+    you use Symfony's ``NotBlank`` or ``NotNull`` validation constraint.
 
-    也就是说，``required`` 选项是很 "nice"，但是服务端验证却应该 *始终* 使用。
+    In other words, the ``required`` option is "nice", but true server-side
+    validation should *always* be used.
 
-.. sidebar:: ``label`` 选项
+.. sidebar:: The ``label`` Option
 
-    表单字段可以使用``label``选项来设置表单字段的标签，它适用于任何字段::
+    The label for the form field can be set using the ``label`` option,
+    which can be applied to any field::
 
         ->add('dueDate', DateType::class, array(
             'widget' => 'single_text',
             'label'  => 'Due Date',
         ))
 
-    字段的标签也可以在模版渲染表单时进行设置，详情见下文。
-    如果你不需要把标签关联到你的输入框，你可以设置该选项值为 ``false``。
+    The label for a field can also be set in the template rendering the
+    form, see below. If you don't need a label associated to your input,
+    you can disable it by setting its value to ``false``.
 
 .. index::
    single: Forms; Field type guessing
 
 .. _forms-field-guessing:
 
-字段类型猜测
+Field Type Guessing
 -------------------
 
-现在你已经添加了验证元数据到 ``Task`` 类，Symfony对于你的字段已有所了解。
-如果你允许，Symfony可以“猜到”你的字段类型并帮你设置好。
-在下面的例子中，Symfony可以根据验证规则猜测到 ``task`` 字段是一个标准的 ``TextType`` 字段，
-``dueDate`` 是 ``DateType`` 字段::
+Now that you've added validation metadata to the ``Task`` class, Symfony
+already knows a bit about your fields. If you allow it, Symfony can "guess"
+the type of your field and set it up for you. In this example, Symfony can
+guess from the validation rules that both the ``task`` field is a normal
+``TextType`` field and the ``dueDate`` field is a ``DateType`` field::
 
     public function new()
     {
@@ -467,42 +531,53 @@ Symfony标配了大量的字段类型，涵盖了你所能遇到的全部常规�
             ->getForm();
     }
 
-当你省略了 ``add()`` 方法的第二个参数（或者你输入 ``null``)时，“猜测”机制会被激活。
-如果你输入一个选项数组作为第三个参数（比如上面的 ``dueDate``），这些选项将应用于被猜测的字段。
+The "guessing" is activated when you omit the second argument to the ``add()``
+method (or if you pass ``null`` to it). If you pass an options array as the
+third argument (done for ``dueDate`` above), these options are applied to
+the guessed field.
 
 .. caution::
 
-    如果你的表单使用了一个特定的验证组，则字段类型“guesser”在猜测字段类型时仍将考虑 *所有* 验证约束
-    （包括不属于正在使用的验证组的约束）。
+    If your form uses a specific validation group, the field type guesser
+    will still consider *all* validation constraints when guessing your
+    field types (including constraints that are not part of the validation
+    group(s) being used).
 
 .. index::
    single: Forms; Field type guessing
 
-字段类型选的猜测
+Field Type Options Guessing
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-除了猜测字段类型，Symfony还可尝试猜出字段选项的正确值。
+In addition to guessing the "type" for a field, Symfony can also try to guess
+the correct values of a number of field options.
 
 .. tip::
 
-    当这些选项被设置时，字段将以特殊的HTML属性进行渲染，以用于HTML5的客户端验证。
-    但是，它们不会在服务端生成等效的验证规则（如 ``Assert\Length``）。
-    所以你需要手动地添加这些服务器端的规则，然后这些字段类型的选项接下来可以根据这些规则被猜出来。
+    When these options are set, the field will be rendered with special HTML
+    attributes that provide for HTML5 client-side validation. However, it
+    doesn't generate the equivalent server-side constraints (e.g. ``Assert\Length``).
+    And though you'll need to manually add your server-side validation, these
+    field type options can then be guessed from that information.
 
 ``required``
-    `required`` 选项可以基于验证规则 (如，该字段是否为 ``NotBlank`` 或 ``NotNull``)
-    或者是Doctrine的元数据 (如，该字段是否为 ``nullable``)而被猜出来。
-    这非常有用，因为你的客户端验证将自动匹配到你的验证规则。
+    The ``required`` option can be guessed based on the validation rules (i.e. is
+    the field ``NotBlank`` or ``NotNull``) or the Doctrine metadata (i.e. is the
+    field ``nullable``). This is very useful, as your client-side validation will
+    automatically match your validation rules.
 
 ``maxlength``
-    如果字段是某些列文本型字段，那么 ``maxlength`` 选项可以基于验证约束 (字段是否应用了 ``Length`` 或 ``Range``) 或者是Doctrine元数据 (通过该字段的长度) 而被猜出来。
+    If the field is some sort of text field, then the ``maxlength`` option attribute
+    can be guessed from the validation constraints (if ``Length`` or ``Range`` is used)
+    or from the Doctrine metadata (via the field's length).
 
 .. caution::
 
-  这些字段选项 *仅* 在你使用Symfony进行类型猜测时
-  （即，传入 ``null`` 作为 ``add()`` 方法的第二个参数或忽略该参数）才会进行猜测。
+  These field options are *only* guessed if you're using Symfony to guess
+  the field type (i.e. omit or pass ``null`` as the second argument to ``add()``).
 
-如果你希望改变某个被猜出来的值，可以在字段类型的选项数组中传入此项进行覆写::
+If you'd like to change one of the guessed values, you can override it by
+passing the option in the options field array::
 
     ->add('task', null, array('attr' => array('maxlength' => 4)))
 
@@ -511,13 +586,13 @@ Symfony标配了大量的字段类型，涵盖了你所能遇到的全部常规�
 
 .. _form-creating-form-classes:
 
-创建表单类
+Creating Form Classes
 ---------------------
 
-正如你看到的，表单可以直接在控制器中被创建和使用。
-然而，一个更好的做法，是在一个单独的PHP类中创建表单。
-它能在你程序中的任何地方复用。
-创建一个新类，它将包含构建任务表单的逻辑::
+As you've seen, a form can be created and used directly in a controller.
+However, a better practice is to build the form in a separate, standalone PHP
+class, which can then be reused anywhere in your application. Create a new class
+that will house the logic for building the task form::
 
     // src/Form/TaskType.php
     namespace App\Form;
@@ -538,7 +613,8 @@ Symfony标配了大量的字段类型，涵盖了你所能遇到的全部常规�
         }
     }
 
-这个新类包含了创建任务表单所需要的方方面面。它可用于在控制器中快速创建表单::
+This new class contains all the directions needed to create the task form. It can
+be used to quickly build a form object in the controller::
 
     // src/Controller/DefaultController.php
     use App\Form\TaskType;
@@ -551,17 +627,21 @@ Symfony标配了大量的字段类型，涵盖了你所能遇到的全部常规�
         // ...
     }
 
-把表单逻辑置于它自己的类中，可以让表单很容易地在你的项目任何地方复用。
-这是创建表单最好的方式，但是决定权在你。
+Placing the form logic into its own class means that the form can be easily
+reused elsewhere in your project. This is the best way to create forms, but
+the choice is ultimately up to you.
 
 .. _form-data-class:
 
-.. sidebar:: 设置 ``data_class``
+.. sidebar:: Setting the ``data_class``
 
-    每个表单都需要知道“持有底层数据的类”的名称（如 ``App\Entity\Task`` )。
-    通常情况下，这是根据传入 ``createForm()`` 方法的第二个参数来猜测的（例如 ``$task``）。
-    以后，当你开始嵌入表单时，这便不再够用。
-    因此，虽然并非总是必要，但通过添加下面代码到你的表单类型类中，以显式地指定 ``data_class`` 选项是一个好办法::
+    Every form needs to know the name of the class that holds the underlying
+    data (e.g. ``App\Entity\Task``). Usually, this is just guessed
+    based off of the object passed to the second argument to ``createForm()``
+    (i.e. ``$task``). Later, when you begin embedding forms, this will no
+    longer be sufficient. So, while not always necessary, it's generally a
+    good idea to explicitly specify the ``data_class`` option by adding the
+    following to your form type class::
 
         // src/Form/TaskType.php
         use App\Entity\Task;
@@ -577,10 +657,13 @@ Symfony标配了大量的字段类型，涵盖了你所能遇到的全部常规�
 
 .. tip::
 
-    当把表单映射成对象时，所有的字段都将被映射。表单中的任何字段如果在映射对象上“不存在”，都会抛出异常。
+    When mapping forms to objects, all fields are mapped. Any fields on the
+    form that do not exist on the mapped object will cause an exception to
+    be thrown.
 
-    当你需要在表单中使用附加字段（如，一个 “你是否同意这些声明？”的复选框）
-    而这个字段不需要被映射到底层对象时，你需要设置 ``mapped`` 选项为 ``false``::``false``::
+    In cases where you need extra fields in the form (for example: a "do you
+    agree with these terms" checkbox) that will not be mapped to the underlying
+    object, you need to set the ``mapped`` option to ``false``::
 
         use Symfony\Component\Form\FormBuilderInterface;
 
@@ -594,33 +677,36 @@ Symfony标配了大量的字段类型，涵盖了你所能遇到的全部常规�
             ;
         }
 
-    另外，若表单的任何字段未包含在提交过来的数据中，那么这些字段将被显式设置为 ``null``。
+    Additionally, if there are any fields on the form that aren't included in
+    the submitted data, those fields will be explicitly set to ``null``.
 
-    我们可以在控制器中访问字段数据::
+    The field data can be accessed in a controller with::
 
         $form->get('agreeTerms')->getData();
 
-    此外，还可以直接修改未映射的字段的数据::
+    In addition, the data of an unmapped field can also be modified directly::
 
         $form->get('agreeTerms')->setData(true);
 
 
 .. note::
 
-    表单名称是从类型类名称自动生成的。
-    如果要修改它，请使用 :method:`Symfony\\Component\\Form\\FormFactoryInterface::createNamed` 方法。
-    你甚至可以通过将名称设置为空字符串来完全取消名称。
+    The form name is automatically generated from the type class name. If you want
+    to modify it, use the :method:`Symfony\\Component\\Form\\FormFactoryInterface::createNamed` method.
+    You can even suppress the name completely by setting it to an empty string.
 
-总结
--------
+Final Thoughts
+--------------
 
-构建表单时，请记住表单的第一个目标是将数据从对象（``Task``）转换为HTML表单，以便用户可以修改该数据。
-表单的第二个目标是获取用户提交的数据并将其重新应用于该对象。
+When building forms, keep in mind that the first goal of a form is to translate data
+from an object (``Task``) to an HTML form so that the user can modify that data.
+The second goal of a form is to take the data submitted by the user and to re-apply
+it to the object.
 
-在表单系统中还有很多东西需要学习，它还有很多 *强大* 的技巧。
+There's a lot more to learn and a lot of *powerful* tricks in the form system.
 
-更多关于表单的内容
-------------------------
+Learn more
+----------
 .. toctree::
     :maxdepth: 1
     :glob:

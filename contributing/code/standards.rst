@@ -1,4 +1,4 @@
-代码标准
+Coding Standards
 ================
 
 Symfony code is contributed by thousands of developers around the world. To make
@@ -8,7 +8,7 @@ that all contributions must follow.
 These Symfony coding standards are based on the `PSR-1`_, `PSR-2`_ and `PSR-4`_
 standards, so you may already know most of them.
 
-让你的代码遵循以下代码标准
+Making your Code Follow the Coding Standards
 --------------------------------------------
 
 Instead of reviewing your code manually, Symfony makes it simple to ensure that
@@ -23,7 +23,7 @@ your contributed code matches the expected code syntax. First, install the
 If you forget to run this command and make a pull request with any syntax issue,
 our automated tools will warn you about that and will provide the solution.
 
-Symfony 代码标准的细节
+Symfony Coding Standards in Detail
 ----------------------------------
 
 If you want to learn about the Symfony coding standards in detail, here's a
@@ -135,7 +135,7 @@ short example containing most features described below:
         }
     }
 
-结构
+Structure
 ~~~~~~~~~
 
 * Add a single space after each comma delimiter;
@@ -249,7 +249,7 @@ Service Naming Conventions
 * Add class aliases for public services (e.g. alias ``Symfony\Component\Something\ClassName``
   to ``something.service_name``).
 
-文档
+Documentation
 ~~~~~~~~~~~~~
 
 * Add PHPDoc blocks for all classes, methods, and functions (though you may
@@ -271,7 +271,7 @@ Service Naming Conventions
   Please note it is possible to have the personal contact information updated or
   removed per request to the doc:`core team </contributing/code/core_team>`.
 
-许可
+License
 ~~~~~~~
 
 * Symfony is released under the MIT license, and the license block has to be

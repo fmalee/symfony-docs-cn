@@ -23,7 +23,7 @@ To force that a value is *not* equal, see :doc:`/reference/constraints/NotEqualT
 | Validator      | :class:`Symfony\\Component\\Validator\\Constraints\\EqualToValidator` |
 +----------------+-----------------------------------------------------------------------+
 
-Basic 用法
+Basic Usage
 -----------
 
 If you want to ensure that the ``firstName`` of a ``Person`` class is equal to ``Mary``

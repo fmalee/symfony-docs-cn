@@ -2,12 +2,12 @@
    single: CssSelector
    single: Components; CssSelector
 
-CssSelector组件
+The CssSelector Component
 =========================
 
     The CssSelector component converts CSS selectors to XPath expressions.
 
-安装
+Installation
 ------------
 
 .. code-block:: terminal
@@ -18,7 +18,7 @@ Alternatively, you can clone the `<https://github.com/symfony/css-selector>`_ re
 
 .. include:: /components/require_autoload.rst.inc
 
-用法
+Usage
 -----
 
 .. seealso::
@@ -101,7 +101,7 @@ Several pseudo-classes are not yet supported:
 
 .. _Packagist: https://packagist.org/packages/symfony/css-selector
 
-了解更多
+Learn more
 ----------
 
 * :doc:`/testing`

@@ -1,4 +1,4 @@
-管理 CSS 和 JavaScript
+Managing CSS and JavaScript
 ===========================
 
 .. admonition:: Screencast
@@ -32,16 +32,16 @@ to solve the most common Webpack use cases.
 
 .. _encore-toc:
 
-Encore 文档
+Encore Documentation
 --------------------
 
-快速上手
+Getting Started
 ...............
 
 * :doc:`Installation </frontend/encore/installation>`
 * :doc:`First Example </frontend/encore/simple-example>`
 
-添加更多功能
+Adding more Features
 ....................
 
 * :doc:`CSS Preprocessors: Sass, LESS, etc </frontend/encore/css-preprocessors>`
@@ -52,7 +52,7 @@ Encore 文档
 * :doc:`Source maps </frontend/encore/sourcemaps>`
 * :doc:`Enabling TypeScript (ts-loader) </frontend/encore/typescript>`
 
-优化
+Optimizing
 ..........
 
 * :doc:`Versioning (and the manifest.json file) </frontend/encore/versioning>`
@@ -60,7 +60,7 @@ Encore 文档
 * :doc:`Creating a "Shared" entry for re-used modules </frontend/encore/shared-entry>`
 * :doc:`/frontend/encore/url-loader`
 
-指南
+Guides
 ......
 
 * :doc:`Using Bootstrap CSS & JS </frontend/encore/bootstrap>`
@@ -71,7 +71,7 @@ Encore 文档
 * :doc:`Adding custom loaders & plugins </frontend/encore/custom-loaders-plugins>`
 * :doc:`Advanced Webpack Configuration </frontend/encore/advanced-config>`
 
-问 & 答
+Issues & Questions
 ..................
 
 * :doc:`FAQ & Common Issues </frontend/encore/faq>`

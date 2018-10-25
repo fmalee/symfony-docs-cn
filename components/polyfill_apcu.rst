@@ -3,13 +3,13 @@
     single: APC
     single: Components; Polyfill
 
-Symfony Polyfill / APCu 组件
+The Symfony Polyfill / APCu Component
 =====================================
 
     This component provides ``apcu_*`` functions and the ``APCUIterator`` class
     to users of the legacy APC extension.
 
-安装
+Installation
 ------------
 
 .. code-block:: terminal
@@ -20,7 +20,7 @@ Alternatively, you can clone the `<https://github.com/symfony/polyfill-apcu>`_ r
 
 .. include:: /components/require_autoload.rst.inc
 
-用法
+Usage
 -----
 
 Once this component is installed in your application, you can use the following

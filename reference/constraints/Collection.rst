@@ -26,7 +26,7 @@ and that extra keys are not present.
 | Validator      | :class:`Symfony\\Component\\Validator\\Constraints\\CollectionValidator` |
 +----------------+--------------------------------------------------------------------------+
 
-Basic 用法
+Basic Usage
 -----------
 
 The ``Collection`` constraint allows you to validate the different keys

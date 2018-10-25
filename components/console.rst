@@ -2,7 +2,7 @@
     single: Console; CLI
     single: Components; Console
 
-控制台组件
+The Console Component
 =====================
 
     The Console component eases the creation of beautiful and testable command
@@ -12,7 +12,7 @@ The Console component allows you to create command-line commands. Your console
 commands can be used for any recurring task, such as cronjobs, imports, or
 other batch jobs.
 
-安装
+Installation
 ------------
 
 .. code-block:: terminal
@@ -56,7 +56,7 @@ Then, you can register the commands using
 
 See the :doc:`/console` article for information about how to create commands.
 
-了解更多
+Learn more
 ----------
 
 .. toctree::

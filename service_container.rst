@@ -2,28 +2,31 @@
    single: Service Container
    single: DependencyInjection; Container
 
-服务容器
+Service Container
 =================
 
 .. admonition:: Screencast
     :class: screencast
 
-    更喜欢视频教程? 可以观看 `Symfony Fundamentals screencast series`_ 系列录像.
+    Do you prefer video tutorials? Check out the `Symfony Fundamentals screencast series`_.
 
-你的程序 *全部是* 各有用途的对象: 一个 "Mailer" 对象可以帮助你发送邮件，而另一个对象可以帮你把数据入库。
-你程序中的几乎 *所有* 事都是由这些对象中的某一个来完成的。每当你安装一个新bundle，你就拥有了更多的对象！
+Your application is *full* of useful objects: a "Mailer" object might help you
+send emails while another object might help you save things to the database.
+Almost *everything* that your app "does" is actually done by one of these objects.
+And each time you install a new bundle, you get access to even more!
 
-在Symfony中，这些有用的对象被称为 **服务**，每个服务都存在于一个称为 **服务容器** 的非常特殊的对象中。
-如果你有服务容器，那么你可以使用服务的id来取出服务：
+In Symfony, these useful objects are called **services** and each service lives
+inside a very special object called the **service container**. The container
+allows you to centralize the way objects are constructed. It makes your life
+easier, promotes a strong architecture and is super fast!
 
-容器允许你以集中化化的方式构造对象。它让你的生活更轻松，构筑强大的架构，并且超级快！
+Fetching and using Services
+---------------------------
 
-取得和使用服务
-----------------------
-
-从你开启 Symfony 程序那一刻起，你的容器 *已经* 包含了许多服务。很像是 *工具* : 等待着你使用它们。
-在控制器中，你可以通过使用服务的类或接口名称对一个参数进行类型约束来“请求”容器中的服务。
-想要 :doc:`记录 </logging>` 一些东西？没有问题::
+The moment you start a Symfony app, your container *already* contains many services.
+These are like *tools*: waiting for you to take advantage of them. In your controller,
+you can "ask" for a service from the container by type-hinting an argument with the
+service's class or interface name. Want to :doc:`log </logging>` something? No problem::
 
     // src/Controller/ProductController.php
     // ...
@@ -40,13 +43,13 @@
         // ...
     }
 
-还有哪些其他服务？可以通过运行命令找出来：
+What other services are available? Find out by running:
 
 .. code-block:: terminal
 
     $ php bin/console debug:autowiring
 
-    # 这只是输出的一个*小*样本......
+    # this is just a *small* sample of the output...
     ==========================================================  ==================================
     Class/Interface Type                                        Alias Service ID
     ==========================================================  ==================================
@@ -58,18 +61,20 @@
     Symfony\Component\Routing\RouterInterface                   alias for "router.default"
     ==========================================================  ==================================
 
-当你在控制器方法或 :ref:`自己的服务 <service-container-creating-service>` 中使用这些类型约束时，
-Symfony将自动传递与该类型相匹配的服务对象。
+When you use these type-hints in your controller methods or inside your
+:ref:`own services <service-container-creating-service>`, Symfony will automatically
+pass you the service object matching that type.
 
-在整个文档中，你将看到如何使用容器中的许多不同服务。
+Throughout the docs, you'll see how to use the many different services that live
+in the container.
 
 .. tip::
 
-    容器中实际上有 *非常多* 的服务，每个服务在容器中都有唯一的id，如 ``session`` 和 ``router.default``。
-    要获取有关的完整列表，你可以运行 ``php bin/console debug:container``。
-    但大多数时候，你不必担心这一点。
-    请参阅 :ref:`services-wire-specific-service`。
-    请参见 :doc:`/service_container/debug`。
+    There are actually *many* more services in the container, and each service has
+    a unique id in the container, like ``session`` or ``router.default``. For a full
+    list, you can run ``php bin/console debug:container``. But most of the time,
+    you won't need to worry about this. See :ref:`services-wire-specific-service`.
+    See :doc:`/service_container/debug`.
 
 .. index::
    single: Service Container; Configuring services
@@ -77,13 +82,11 @@ Symfony将自动传递与该类型相匹配的服务对象。
 .. _service-container-creating-service:
 
 Creating/Configuring Services in the Container
-在容器中创建/配置服务
 ----------------------------------------------
 
-你还可以将 *自己* 的代码组织到服务中。
-例如，假设你需要向用户显示随机、快乐的消息。
-如果将此代码放在控制器中，则无法重复使用。
-取而代之，你决定创建一个新类::
+You can also organize your *own* code into services. For example, suppose you need
+to show your users a random, happy message. If you put this code in your controller,
+it can't be re-used. Instead, you decide to create a new class::
 
     // src/Service/MessageGenerator.php
     namespace App\Service;
@@ -104,13 +107,15 @@ Creating/Configuring Services in the Container
         }
     }
 
-恭喜！你刚刚创建了第一个服务类！你可以立即在控制器内使用它::
+Congratulations! You've just created your first service class! You can use it immediately
+inside your controller::
 
     use App\Service\MessageGenerator;
 
     public function new(MessageGenerator $messageGenerator)
     {
-        // 得益于类型约束，容器将实例化一个新的 MessageGenerator 并将其传递给你！
+        // thanks to the type-hint, the container will instantiate a
+        // new MessageGenerator and pass it to you!
         // ...
 
         $message = $messageGenerator->getHappyMessage();
@@ -118,15 +123,18 @@ Creating/Configuring Services in the Container
         // ...
     }
 
-当你请求 ``MessageGenerator`` 服务时，容器构造一个新的 ``MessageGenerator`` 对象并返回它（参见下面的侧栏）。
-但是如果你从未请求这项服务，它就 *永远不会* 构建：优化内存和速度。
-作为回报，``MessageGenerator`` 服务仅创建 *一次*：每次请求时都返回相同的实例。
+When you ask for the ``MessageGenerator`` service, the container constructs a new
+``MessageGenerator`` object and returns it (see sidebar below). But if you never ask
+for the service, it's *never* constructed: saving memory and speed. As a bonus, the
+``MessageGenerator`` service is only created *once*: the same instance is returned
+each time you ask for it.
 
 .. _service-container-services-load-example:
 
-.. sidebar:: 在 services.yaml 中自动加载服务
+.. sidebar:: Automatic Service Loading in services.yaml
 
-    本文档假定你使用以下服务配置，这是新项目的默认配置：
+    The documentation assumes you're using the following service configuration,
+    which is the default config for a new project:
 
     .. configuration-block::
 
@@ -134,17 +142,16 @@ Creating/Configuring Services in the Container
 
             # config/services.yaml
             services:
-                # 此文件中的服务的默认配置
+                # default configuration for services in *this* file
                 _defaults:
-                    autowire: true      # 自动注入服务中的依赖项。
-                    autoconfigure: true # 自动将你的服务注册为命令、事件订阅者等等。
-                    public: false       # 允许通过删除未使用的服务来优化容器；
-                                        # 这也意味着将无法通过 $container->get() 直接从容器中获取服务。
-                                        # 最好的做法是明确你的依赖关系。
+                    autowire: true      # Automatically injects dependencies in your services.
+                    autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+                    public: false       # Allows optimizing the container by removing unused services; this also means
+                                        # fetching services directly from the container via $container->get() won't work.
+                                        # The best practice is to be explicit about your dependencies anyway.
 
-
-                # 使 src/ 中的类可作为服务
-                # 这会为每个类创建一个服务，其id是完全限定的类名
+                # makes classes in src/ available to be used as services
+                # this creates a service per class whose id is the fully-qualified class name
                 App\:
                     resource: '../src/*'
                     exclude: '../src/{Entity,Migrations,Tests,Kernel.php}'
@@ -187,26 +194,30 @@ Creating/Configuring Services in the Container
 
     .. tip::
 
-        ``resource`` 和 ``exclude``选项的值可以是任何有效的 `glob模式`_。
-        ``exclude`` 选项的值也可以是glob模式的数组。
+        The value of the ``resource`` and ``exclude`` options can be any valid
+        `glob pattern`_. The value of the ``exclude`` option can also be an
+        array of glob patterns.
 
         .. versionadded:: 4.2
-            在Symfony 4.2中引入了将glob模式的数组传递给 ``exclude`` 选项的功能。
+            The feature to pass arrays of glob patterns to the ``exclude``
+            option was introduced in Symfony 4.2.
 
-    由于这种配置，你可以自动使用 ``src/`` 目录中的任何类作为服务，而无需手动配置它。
-    稍后，你将在 :ref:`service-psr4-loader` 中了解更多相关信息。
+    Thanks to this configuration, you can automatically use any classes from the
+    ``src/`` directory as a service, without needing to manually configure
+    it. Later, you'll learn more about this in :ref:`service-psr4-loader`.
 
-    如果你更愿意手动连接(wire)你的服务，那也是完全可能的：
-    请参阅 :ref:`services-explicitly-configure-wire-services`。
+    If you'd prefer to manually wire your service, that's totally possible: see
+    :ref:`services-explicitly-configure-wire-services`.
 
 .. _services-constructor-injection:
 
-将服务/配置注入服务
+Injecting Services/Config into a Service
 ----------------------------------------
 
-如果你需要在 ``MessageGenerator`` 中访问 ``logger`` 服务怎么办？
-没问题！使用具有 ``LoggerInterface`` 类型约束的 ``$logger`` 参数创建一个 ``__construct()`` 方法。
-在新的 ``$logger`` 属性上赋值并稍后使用它::
+What if you need to access the ``logger`` service from within ``MessageGenerator``?
+No problem! Create a ``__construct()`` method with a ``$logger`` argument that has
+the ``LoggerInterface`` type-hint. Set this on a new ``$logger`` property
+and use it later::
 
     // src/Service/MessageGenerator.php
     // ...
@@ -229,29 +240,31 @@ Creating/Configuring Services in the Container
         }
     }
 
-仅此而已！在实例化 ``MessageGenerator`` 时，容器将自动感知并传递 ``logger`` 服务。
-这是怎么做到的？靠 :ref:`自动装配 <services-autowire>`。
-关键是 ``__construct()`` 方法中的 ``LoggerInterface`` 类型约束和
-``services.yaml`` 中的 ``autowire: true`` 配置。
-当你类型约束一个参数时，容器将自动查找匹配的服务。
-如果未匹配，你会看到一个明确的附带有用建议的的异常。
+That's it! The container will *automatically* know to pass the ``logger`` service
+when instantiating the ``MessageGenerator``. How does it know to do this?
+:ref:`Autowiring <services-autowire>`. The key is the ``LoggerInterface``
+type-hint in your ``__construct()`` method and the ``autowire: true`` config in
+``services.yaml``. When you type-hint an argument, the container will automatically
+find the matching service. If it can't, you'll see a clear exception with a helpful
+suggestion.
 
-顺便说一句，这种向 ``__construct()`` 方法添加依赖项的方法称为 *依赖注入*。
-对于一个简单的概念来说，这是一个可怕的术语。
+By the way, this method of adding dependencies to your ``__construct()`` method is
+called *dependency injection*. It's a scary term for a simple concept.
 
 .. _services-debug-container-types:
 
-你怎么会知道使用 ``LoggerInterface`` 作为类型约束？
-你可以阅读你正在使用的任何功能的文档，也可以通过运行命令来获取可自动装配的类型约束列表：
+How should you know to use ``LoggerInterface`` for the type-hint? You can either
+read the docs for whatever feature you're using, or get a list of autowireable
+type-hints by running:
 
 .. code-block:: terminal
 
     $ php bin/console debug:autowiring
 
-这个命令是你最好的朋友。但这只是输出的一小部分：
+This command is your best friend.  This is a small subset of the output:
 
 =============================================================== =====================================
-类/接口的类型                                                     服务ID的别名
+Class/Interface Type                                            Alias Service ID
 =============================================================== =====================================
 ``Psr\Cache\CacheItemPoolInterface``                            alias for "cache.app.recorder"
 ``Psr\Log\LoggerInterface``                                     alias for "monolog.logger"
@@ -261,11 +274,11 @@ Creating/Configuring Services in the Container
 ``Symfony\Component\Routing\RouterInterface``                   alias for "router.default"
 =============================================================== =====================================
 
-处理多个服务
+Handling Multiple Services
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-假设你还希望每次进行站点更新时向站点管理员发送电子邮件。
-为此，你需要创建一个新类::
+Suppose you also want to email a site administrator each time a site update is
+made. To do that, you create a new class::
 
     // src/Updates/SiteUpdateManager.php
     namespace App\Updates;
@@ -298,8 +311,9 @@ Creating/Configuring Services in the Container
         }
     }
 
-同时需要 ``MessageGenerator`` *和* ``Swift_Mailer`` 服务。那也没问题！
-事实上，这项新服务已经可以使用了。例如，在控制器中，你可以类型约束新的 ``SiteUpdateManager`` 类并使用它::
+This needs the ``MessageGenerator`` *and* the ``Swift_Mailer`` service. That's no
+problem! In fact, this new service is ready to be used. In a controller, for example,
+you can type-hint the new ``SiteUpdateManager`` class and use it::
 
     // src/Controller/SiteController.php
 
@@ -317,16 +331,17 @@ Creating/Configuring Services in the Container
         // ...
     }
 
-由于自动装配和 你在 ``__construct()`` 中的类型约束，容器会创建 ``SiteUpdateManager`` 对象并将其传递到正确的参数。
-在大多数情况下，这非常有效。
+Thanks to autowiring and your type-hints in ``__construct()``, the container creates
+the ``SiteUpdateManager`` object and passes it the correct argument. In most cases,
+this works perfectly.
 
 .. _services-manually-wire-args:
 
-手动装配参数
+Manually Wiring Arguments
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-但是有一些案例是服务的参数无法自动装配。
-例如，假设你要使管理员的电子邮件可配置：
+But there are a few cases when an argument to a service cannot be autowired. For
+example, suppose you want to make the admin email configurable:
 
 .. code-block:: diff
 
@@ -359,13 +374,13 @@ Creating/Configuring Services in the Container
         }
     }
 
-如果你如此修改后刷新页面，则会看到一个错误:
+If you make this change and refresh, you'll see an error:
 
     Cannot autowire service "App\Updates\SiteUpdateManager": argument "$adminEmail"
     of method "__construct()" must have a type-hint or be given a value explicitly.
 
-这讲得通！因为容器无从得知你想要传递的值是什么。
-不过没关系！在你的配置中，你可以显式的设置此参数：
+That makes sense! There is no way that the container knows what value you want to
+pass here. No problem! In your configuration, you can explicitly set this argument:
 
 .. configuration-block::
 
@@ -375,12 +390,12 @@ Creating/Configuring Services in the Container
         services:
             # ...
 
-            # 和之前的一样
+            # same as before
             App\:
                 resource: '../src/*'
                 exclude: '../src/{Entity,Migrations,Tests}'
 
-            # 显式的配置服务
+            # explicitly configure the service
             App\Updates\SiteUpdateManager:
                 arguments:
                     $adminEmail: 'manager@example.com'
@@ -428,20 +443,22 @@ Creating/Configuring Services in the Container
         $container->getDefinition(SiteUpdateManager::class)
             ->setArgument('$adminEmail', 'manager@example.com');
 
-有了这个配置，在创建 ``SiteUpdateManager`` 服务时，
-容器会将 ``manager@example.com`` 传递给 ``__construct`` 的 ``$adminEmail`` 参数。
-而其他参数仍然是自动装配的。
+Thanks to this, the container will pass ``manager@example.com`` to the ``$adminEmail``
+argument of ``__construct`` when creating the ``SiteUpdateManager`` service. The
+other arguments will still be autowired.
 
-但是，这不会很脆弱吗？幸运的是，没有！
-如果你将 `$adminEmail`` 参数重命名为其他内容 -- 例如 ``$mainEmail``-- 当你重新加载下一个页面时，你将获得明确的异常（即使该页面不使用此服务）。
+But, isn't this fragile? Fortunately, no! If you rename the ``$adminEmail`` argument
+to something else - e.g. ``$mainEmail`` - you will get a clear exception when you
+reload the next page (even if that page doesn't use this service).
 
 .. _service-container-parameters:
 
-服务参数
+Service Parameters
 ------------------
 
-除了拥有(holding)服务对象之外，容器还包含称为 ``参数(parameters)`` 的配置。
-要创建一个参数，请将其添加到 ``parameters`` 键下，并使用 ``%parameter_name%`` 语法引用它：
+In addition to holding service objects, the container also holds configuration,
+called ``parameters``. To create a parameter, add it under the ``parameters`` key
+and reference it with the ``%parameter_name%`` syntax:
 
 .. configuration-block::
 
@@ -490,10 +507,11 @@ Creating/Configuring Services in the Container
             // ...
             ->setArgument('$adminEmail', '%admin_email%');
 
-实际上，一旦定义了参数，就可以在 *任何* 其他配置文件中用 ``%parameter_name%`` 语法来引用它。
-``config/services.yaml`` 文件中定义了许多参数。
+Actually, once you define a parameter, it can be referenced via the
+``%parameter_name%`` syntax in *any* other configuration file. Many parameters
+are defined in the ``config/services.yaml`` file.
 
-然后，你就可以在服务中获取该参数::
+You can then fetch the parameter in the service::
 
     class SiteUpdateManager
     {
@@ -507,27 +525,27 @@ Creating/Configuring Services in the Container
         }
     }
 
-你还可以直接从容器中获取参数::
+You can also fetch parameters directly from the container::
 
     public function new()
     {
         // ...
 
-        // 只有在继承了控制器基类的控制器中才有效
+        // this ONLY works if you extend the base Controller
         $adminEmail = $this->container->getParameter('admin_email');
 
-        // 也可以用快捷方式!
+        // or a shorter way!
         // $adminEmail = $this->getParameter('admin_email');
     }
 
-有关参数的详细信息，请参阅 :doc:`/service_container/parameters`。
+For more info about parameters, see :doc:`/service_container/parameters`.
 
 .. _services-wire-specific-service:
 
-选择特定服务
+Choose a Specific Service
 -------------------------
 
-之前创建的 ``MessageGenerator`` 服务需要一个 ``LoggerInterface`` 参数::
+The ``MessageGenerator`` service created earlier requires a ``LoggerInterface`` argument::
 
     // src/Service/MessageGenerator.php
     // ...
@@ -545,13 +563,13 @@ Creating/Configuring Services in the Container
         // ...
     }
 
-但是，容器中有*多个*服务实现 ``LoggerInterface``，
-例如 ``logger``、``monolog.logger.request``、``monolog.logger.php`` 等等。
-容器如何知道要使用哪个服务？
+However, there are *multiple* services in the container that implement ``LoggerInterface``,
+such as ``logger``, ``monolog.logger.request``, ``monolog.logger.php``, etc. How
+does the container know which one to use?
 
-在这些情况下，容器通常配置为自动选择其中一个服务 - 在这个例子中是 ``logger``
-（详细情况请参阅  :ref:`service-autowiring-alias`）。
-但是，你可以控制它并传入另一个logger：
+In these situations, the container is usually configured to automatically choose
+one of the services - ``logger`` in this case (read more about why in :ref:`service-autowiring-alias`).
+But, you can control this and pass in a different logger:
 
 .. configuration-block::
 
@@ -564,9 +582,9 @@ Creating/Configuring Services in the Container
             # explicitly configure the service
             App\Service\MessageGenerator:
                 arguments:
-                    # '@'符号很重要：这就是告诉容器要
-                    # 传递id为 'monolog.logger.request'的 *服务*，
-                    # 而不是内容为 'monolog.logger.request' 的*字符串*
+                    # the '@' symbol is important: that's what tells the container
+                    # you want to pass the *service* whose id is 'monolog.logger.request',
+                    # and not just the *string* 'monolog.logger.request'
                     $logger: '@monolog.logger.request'
 
     .. code-block:: xml
@@ -599,11 +617,12 @@ Creating/Configuring Services in the Container
             ->setPublic(false)
             ->setArgument('$logger', new Reference('monolog.logger.request'));
 
-该配置告诉容器 ``__construct`` 的 ``$logger`` 参数应该使用id为 ``monolog.logger.request`` 的服务。
+This tells the container that the ``$logger`` argument to ``__construct`` should use
+service whose id is ``monolog.logger.request``.
 
 .. _container-debug-container:
 
-有关容器中所有可用服务的完整列表，请运行：
+For a full list of *all* possible services in the container, run:
 
 .. code-block:: terminal
 
@@ -611,10 +630,10 @@ Creating/Configuring Services in the Container
 
 .. _services-binding:
 
-按名称或类型绑定参数
---------------------------------------
+Binding Arguments by Name or Type
+---------------------------------
 
-你还可以使用 ``bind`` 关键字按名称或类型绑定特定参数：
+You can also use the ``bind`` keyword to bind specific arguments by name or type:
 
 .. configuration-block::
 
@@ -624,16 +643,19 @@ Creating/Configuring Services in the Container
         services:
             _defaults:
                 bind:
-                    # 将此值传递给在此文件中定义的任意服务的任何 $adminEmail 参数（包括控制器参数）
+                    # pass this value to any $adminEmail argument for any service
+                    # that's defined in this file (including controller arguments)
                     $adminEmail: 'manager@example.com'
 
-                    # 将此服务传递给在此文件中定义的任意服务的任何 $requestLogger 参数
+                    # pass this service to any $requestLogger argument for any
+                    # service that's defined in this file
                     $requestLogger: '@monolog.logger.request'
 
-                    # 将此服务传递给在此文件中定义的任意服务的任何 LoggerInterface 类型约束
+                    # pass this service for any LoggerInterface type-hint for any
+                    # service that's defined in this file
                     Psr\Log\LoggerInterface: '@monolog.logger.request'
 
-                    # 你可以同时定义要匹配的参数的名称和类型
+                    # optionally you can define both the name and type of the argument to match
                     string $adminEmail: 'manager@example.com'
                     Psr\Log\LoggerInterface $requestLogger: '@monolog.logger.request'
 
@@ -691,28 +713,30 @@ Creating/Configuring Services in the Container
             ))
         ;
 
-通过将 ``bind`` 键放在 ``_defaults`` 下，你可以为在此文件中定义的 *任何* 服务指定 *任意* 参数的值！
-你可以按名称（例如 ``$adminEmail``），按类型（例如 ``Psr\Log\LoggerInterface``）
-或两者（例如 ``Psr\Log\LoggerInterface $requestLogger``）来绑定参数。
+By putting the ``bind`` key under ``_defaults``, you can specify the value of *any*
+argument for *any* service defined in this file! You can bind arguments by name
+(e.g. ``$adminEmail``), by type (e.g. ``Psr\Log\LoggerInterface``) or both
+(e.g. ``Psr\Log\LoggerInterface $requestLogger``).
 
 .. versionadded:: 4.2
-    在Symfony 4.2中引入了按名称和类型绑定参数的功能。
+    The feature to bind arguments by name and type was introduced in Symfony 4.2.
 
-``bind`` 配置也可以应用于特定服务或一次加载多个服务（即 :ref:`service-psr4-loader`）。
+The ``bind`` config can also be applied to specific services or when loading many
+services at once (i.e. :ref:`service-psr4-loader`).
 
-将容器参数作为服务获取
+Getting Container Parameters as a Service
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. versionadded:: 4.1
-    Symfony 4.1中引入了将容器参数作为服务获取的功能。
+    The feature to get container parameters as a service was introduced in Symfony 4.1.
 
-如果某些服务或控制器需要大量容器参数，
-有比使用 ``services._defaults.bind`` 选项绑定所有这些参数更容易的替代方法：
-使用 :class:`Symfony\\Component\\DependencyInjection\\ParameterBag\\ParameterBagInterface`
-或新的 :class:`Symfony\\Component\\DependencyInjection\\ParameterBag\\ContainerBagInterface`
-对该类的构造函数的任意参数进行类型约束，
-该服务将可以从 :class:`Symfony\\Component\\DependencyInjection\\ParameterBag\\ParameterBag`
-对象中获取所有的容器参数::
+If some service or controller needs lots of container parameters, there's an
+easier alternative to binding all of them with the ``services._defaults.bind``
+option. Type-hint any of its constructor arguments with the
+:class:`Symfony\\Component\\DependencyInjection\\ParameterBag\\ParameterBagInterface`
+or the new :class:`Symfony\\Component\\DependencyInjection\\ParameterBag\\ContainerBagInterface`
+and the service will get all container parameters in a
+:class:`Symfony\\Component\\DependencyInjection\\ParameterBag\\ParameterBag` object::
 
     // src/Service/MessageGenerator.php
     // ...
@@ -730,7 +754,7 @@ Creating/Configuring Services in the Container
 
         public function someMethod()
         {
-            // 可以从 $this->params 获取任何参数，它保存着所有的容器参数
+            // get any param from $this->params, which stores all container parameters
             $sender = $this->params->get('mailer_sender');
             // ...
         }
@@ -738,62 +762,66 @@ Creating/Configuring Services in the Container
 
 .. _services-autowire:
 
-自动装配选项
+The autowire Option
 -------------------
 
-在上面，``services.yaml`` 文件的 ``_defaults`` 部分中具有 ``autowire: true`` 配置，
-以便它适用于该文件中定义的所有服务。
-使用此设置，你可以在自己的服务的 ``__construct()`` 方法中对参数进行类型约束，容器将自动传递正确的参数。
-整个条目都是围绕自动装配编写的。
+Above, the ``services.yaml`` file has ``autowire: true`` in the ``_defaults`` section
+so that it applies to all services defined in that file. With this setting, you're
+able to type-hint arguments in the ``__construct()`` method of your services and
+the container will automatically pass you the correct arguments. This entire entry
+has been written around autowiring.
 
-有关自动装配的更多详细信息，请查看 :doc:`/service_container/autowiring`。
+For more details about autowiring, check out :doc:`/service_container/autowiring`.
 
 .. _services-autoconfigure:
 
-自动配置选项
+The autoconfigure Option
 ------------------------
 
-在上面，``services.yaml`` 文件的 ``_defaults`` 部分中具有 ``autoconfigure: true`` 配置，
-以便它适用于该文件中定义的所有服务。
-使用此设置，容器将根据你的服务的 *类* 自动将某些配置应用于你的服务。
-这主要用于自动标记(auto-tag)你的服务。
+Above, the ``services.yaml`` file has ``autoconfigure: true`` in the ``_defaults``
+section so that it applies to all services defined in that file. With this setting,
+the container will automatically apply certain configuration to your services, based
+on your service's *class*. This is mostly used to *auto-tag* your services.
 
-例如，要创建一个Twig扩展，你需要创建一个类，将其注册为服务，
-并使用 ``twig.extension`` 作为它的 :doc:`标签 </service_container/tags>`。
+For example, to create a Twig extension, you need to create a class, register it
+as a service, and :doc:`tag </service_container/tags>` it with ``twig.extension``.
 
-但是，使用 ``autoconfigure: true``，你将不需要手动标记标签。
-实际上，如果你使用 :ref:`默认的services.yaml配置 <service-container-services-load-example>`，
-则无需执行 *任何* 操作：该服务将自动加载。
-然后，``autoconfigure`` 将 *为* 你的服务添加 ``twig.extension`` 标签，
-因为你的服务类继承了 ``Twig\Extension\ExtensionInterface``。
-并且得益于 ``autowire``，你甚至可以直接添加构造函数参数而无需任何配置。
+But, with ``autoconfigure: true``, you don't need the tag. In fact, if you're using
+the :ref:`default services.yaml config <service-container-services-load-example>`,
+you don't need to do *anything*: the service will be automatically loaded. Then,
+``autoconfigure`` will add the ``twig.extension`` tag *for* you, because your class
+implements ``Twig\Extension\ExtensionInterface``. And thanks to ``autowire``, you can even add
+constructor arguments without any configuration.
 
 .. _container-public:
 
-共有与私有服务
+Public Versus Private Services
 ------------------------------
 
-得益于 ``services.yaml`` 中的 ``_defaults`` 部分，此文件中定义的每个服务默认都是 ``public: false``。
+Thanks to the ``_defaults`` section in ``services.yaml``, every service defined in
+this file is ``public: false`` by default.
 
-这是什么意思？当服务 *是* 共有时，你可以直接从容器对象中访问它，
-该容器对象可以从任何继承了 ``Controller`` 的控制器中访问::
+What does this mean? When a service **is** public, you can access it directly
+from the container object, which is accessible from any controller that extends
+``Controller``::
 
     use App\Service\MessageGenerator;
 
     // ...
     public function new()
     {
-        // 容器中有一个共有属性的 "logger" 服务
+        // there IS a public "logger" service in the container
         $logger = $this->container->get('logger');
 
-        // 这将不起作用：MessageGenerator 是一个私有服务
+        // this will NOT work: MessageGenerator is a private service
         $generator = $this->container->get(MessageGenerator::class);
     }
 
-作为最佳实践，你应该只创建 *私有* 服务(私有为默认属性)。
-而且，你 *不* 应该使用 ``$container->get()`` 方法来获取公有服务。
+As a best practice, you should only create *private* services, which will happen
+automatically. And also, you should *not* use the ``$container->get()`` method to
+fetch public services.
 
-但是，如果你确实需要共有服务，请覆盖 ``public`` 设置：
+But, if you *do* need to make a service public, just override the ``public`` setting:
 
 .. configuration-block::
 
@@ -801,9 +829,9 @@ Creating/Configuring Services in the Container
 
         # config/services.yaml
         services:
-            # ... 和之前一样的代码
+            # ... same code as before
 
-            # 显式的配置服务
+            # explicitly configure the service
             App\Service\MessageGenerator:
                 public: true
 
@@ -826,11 +854,11 @@ Creating/Configuring Services in the Container
 
 .. _service-psr4-loader:
 
-使用资源键一次导入多个服务
+Importing Many Services at once with resource
 ---------------------------------------------
 
-你之前就已经知道可以使用 ``resource`` 键一次导入许多服务。
-例如，默认的Symfony配置包含以下内容：
+You've already seen that you can import many services at once by using the ``resource``
+key. For example, the default Symfony configuration contains this:
 
 .. configuration-block::
 
@@ -840,8 +868,8 @@ Creating/Configuring Services in the Container
         services:
             # ...
 
-            # 使 src/ 中的类可作为服务
-            # 这会为每个类创建一个服务，其id是完全限定的类名
+            # makes classes in src/ available to be used as services
+            # this creates a service per class whose id is the fully-qualified class name
             App\:
                 resource: '../src/*'
                 exclude: '../src/{Entity,Migrations,Tests}'
@@ -880,30 +908,37 @@ Creating/Configuring Services in the Container
 
 .. tip::
 
-    ``resource`` 和 ``exclude`` 选项的值可以是任何有效的 `glob模式`_ 。
+    The value of the ``resource`` and ``exclude`` options can be any valid
+    `glob pattern`_.
 
-该配置可用于快速让许多类可以作为服务并应用一些默认配置。
-每个服务的 ``id`` 是其完全限定的类名。
-你可以在该配置下面的位置，通过使用相应的ID(类名称)重写任何已经导入的服务（请参阅 :ref:`services-manually-wire-args`）。
-如果重写一个服务，则该服务不再从“导入配置”那里继承任何选项（例如 ``public``）
-（但重写的服务仍然 *会* 从 ``_defaults`` 继承选项）。
+This can be used to quickly make many classes available as services and apply some
+default configuration. The ``id`` of each service is its fully-qualified class name.
+You can override any service that's imported by using its id (class name) below
+(e.g. see :ref:`services-manually-wire-args`). If you override a service, none of
+the options (e.g. ``public``) are inherited from the import (but the overridden
+service *does* still inherit from ``_defaults``).
 
-你也可以用 ``exclude`` 排除某些路径。
-这是可选项，但会稍微提高 ``dev`` 环境下的性能：排除的路径不再跟踪，因此修改它们不会触发容器重建。
+You can also ``exclude`` certain paths. This is optional, but will slightly increase
+performance in the ``dev`` environment: excluded paths are not tracked and so modifying
+them will not cause the container to be rebuilt.
 
 .. note::
 
-    等等，这是否意味着 ``src/`` 中的 *每个* 类都被注册为服务？甚至包括模型类？实际上并没有。
-    只要你在 ``_defaults`` 键下有 ``public: false`` （或者你可以在特定的导入中下添加它），
-    那么所有导入的服务都是 *私有* 的。
-    基于这个原因，``src/`` 中 *未* 明确用作服务的所有类都会自动从最终容器中删除。
-    实际上，导入仅仅意味着所有类都无需手动配置而“可以当做服务”。
+    Wait, does this mean that *every* class in ``src/`` is registered as
+    a service? Even model classes? Actually, no. As long as you have
+    ``public: false`` under your ``_defaults`` key (or you can add it under the
+    specific import), all the imported services are *private*. Thanks to this, all
+    classes in ``src/`` that are *not* explicitly used as services are
+    automatically removed from the final container. In reality, the import
+    means that all classes are "available to be *used* as services" without needing
+    to be manually configured.
 
-相同命名空间下的多个服务定义
+Multiple Service Definitions Using the Same Namespace
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-如果使用YAML配置格式定义服务，则PHP命名空间将用作每个配置的键，
-因此你无法为同一命名空间下的类定义不同的服务配置：
+If you define services using the YAML config format, the PHP namespace is used
+as the key of each configuration, so you can't define different service configs
+for classes under the same namespace:
 
 .. code-block:: yaml
 
@@ -913,7 +948,8 @@ Creating/Configuring Services in the Container
             resource: '../src/Domain/*'
             # ...
 
-要获得多个定义，请添加``namespace`` 选项并使用任何的唯一字符串作为每个服务配置的键：
+In order to have multiple definitions, add the ``namespace`` option and use any
+unique string as the key of each service config:
 
 .. code-block:: yaml
 
@@ -931,14 +967,17 @@ Creating/Configuring Services in the Container
 
 .. _services-explicitly-configure-wire-services:
 
-显式的配置服务和参数
+Explicitly Configuring Services and Arguments
 ---------------------------------------------
 
-在Symfony 3.3之前，所有服务和（通常）参数都是显式配置的：无法 :ref:`自动加载服务 <service-container-services-load-example>`，:ref:`autowiring <services-autowire>` 也不常见。
+Prior to Symfony 3.3, all services and (typically) arguments were explicitly configured:
+it was not possible to :ref:`load services automatically <service-container-services-load-example>`
+and :ref:`autowiring <services-autowire>` was much less common.
 
-这两个功能都是可选的。即使你使用它们，也可能在某些情况下需要手动装配服务。
-例如，假设你要为 ``SiteUpdateManager`` 类注册 *2* 个服务 - 每个服务都有不同的管理员电子邮件。
-在这种情况下，每个都需要具有唯一的服务ID：
+Both of these features are optional. And even if you use them, there may be some
+cases where you want to manually wire a service. For example, suppose that you want
+to register *2* services for the ``SiteUpdateManager`` class - each with a different
+admin email. In this case, each needs to have a unique service id:
 
 .. configuration-block::
 
@@ -948,12 +987,12 @@ Creating/Configuring Services in the Container
         services:
             # ...
 
-            # 这是服务的ID
+            # this is the service's id
             site_update_manager.superadmin:
                 class: App\Updates\SiteUpdateManager
-                # 你仍然可以使用自动装配：我们只想展示没有自动装配是什么样子
+                # you CAN still use autowiring: we just want to show what it looks like without
                 autowire: false
-                # 手动装配所有参数
+                # manually wire all arguments
                 arguments:
                     - '@App\Service\MessageGenerator'
                     - '@mailer'
@@ -967,8 +1006,8 @@ Creating/Configuring Services in the Container
                     - '@mailer'
                     - 'contact@example.com'
 
-            # 创建一个别名，这样的话 - 默认情况下 - 如果你类型约束 SiteUpdateManager，
-            # 将使用 site_update_manager.superadmin
+            # Create an alias, so that - by default - if you type-hint SiteUpdateManager,
+            # the site_update_manager.superadmin will be used
             App\Updates\SiteUpdateManager: '@site_update_manager.superadmin'
 
     .. code-block:: xml
@@ -1024,20 +1063,20 @@ Creating/Configuring Services in the Container
 
         $container->setAlias(SiteUpdateManager::class, 'site_update_manager.superadmin')
 
-在这个示例中，注册了 *两个* 服务：
-``site_update_manager.superadmin`` 和 ``site_update_manager.normal_users``。
-得益于别名，如果你类型约束 ``SiteUpdateManager``，
-将传递第一个服务（``site_update_manager.superadmin``）。
+In this case, *two* services are registered: ``site_update_manager.superadmin``
+and ``site_update_manager.normal_users``. Thanks to the alias, if you type-hint
+``SiteUpdateManager`` the first (``site_update_manager.superadmin``) will be passed.
+If you want to pass the second, you'll need to :ref:`manually wire the service <services-wire-specific-service>`.
 
 .. caution::
 
-    如果你 *没有* 创建别名并且是 :ref:`从 src/ 加载所有服务<service-container-services-load-example>`，
-    那么当你类型约束 ``SiteUpdateManager`` 时，将会创建三个服务（自动服务 + 你的两个服务），
-    而且，默认情况下将会传递自动加载的那个服务。
-    这就是为什么说创建别名是个好主意的原因。
+    If you do *not* create the alias and are :ref:`loading all services from src/ <service-container-services-load-example>`,
+    then *three* services have been created (the automatic service + your two services)
+    and the automatically loaded service will be passed - by default - when you type-hint
+    ``SiteUpdateManager``. That's why creating the alias is a good idea.
 
-更多关于服务容器的内容
-----------------------
+Learn more
+----------
 
 .. toctree::
     :maxdepth: 1
@@ -1047,5 +1086,5 @@ Creating/Configuring Services in the Container
 
 .. _`service-oriented architecture`: https://en.wikipedia.org/wiki/Service-oriented_architecture
 .. _`Symfony Standard Edition (version 3.3) services.yaml`: https://github.com/symfony/symfony-standard/blob/3.3/app/config/services.yml
-.. _`glob模式`: https://en.wikipedia.org/wiki/Glob_(programming)
+.. _`glob pattern`: https://en.wikipedia.org/wiki/Glob_(programming)
 .. _`Symfony Fundamentals screencast series`: https://symfonycasts.com/screencast/symfony-fundamentals

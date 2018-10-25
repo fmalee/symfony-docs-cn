@@ -2,13 +2,13 @@
    single: Routing
    single: Components; Routing
 
-Routing组件
+The Routing Component
 =====================
 
     The Routing component maps an HTTP request to a set of configuration
     variables.
 
-安装
+Installation
 ------------
 
 .. code-block:: terminal
@@ -19,7 +19,7 @@ Alternatively, you can clone the `<https://github.com/symfony/routing>`_ reposit
 
 .. include:: /components/require_autoload.rst.inc
 
-用法
+Usage
 -----
 
 .. seealso::
@@ -535,7 +535,7 @@ You can also include UTF-8 strings as routing requirements:
     character in any language, ``\p{Greek}`` matches any Greek character,
     ``\P{Han}`` matches any character not included in the Chinese Han script.
 
-了解更多
+Learn more
 ----------
 
 .. toctree::

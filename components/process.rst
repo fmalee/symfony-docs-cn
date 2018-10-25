@@ -2,12 +2,12 @@
    single: Process
    single: Components; Process
 
-Process组件
+The Process Component
 =====================
 
     The Process component executes commands in sub-processes.
 
-安装
+Installation
 ------------
 
 .. code-block:: terminal
@@ -18,7 +18,7 @@ Alternatively, you can clone the `<https://github.com/symfony/process>`_ reposit
 
 .. include:: /components/require_autoload.rst.inc
 
-用法
+Usage
 -----
 
 The :class:`Symfony\\Component\\Process\\Process` class executes a command in a

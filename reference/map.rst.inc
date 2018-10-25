@@ -1,4 +1,4 @@
-* **配置选项**
+* **Configuration Options**
 
   Ever wondered what configuration options you have available to you in
   ``config/packages/*.yaml`` files? In this section, all the available
@@ -16,7 +16,7 @@
 
 * :doc:`Configuring the Kernel </reference/configuration/kernel>`
 
-* **表单和验证**
+* **Forms and Validation**
 
   * :doc:`Form Field Type Reference </reference/forms/types>`
   * :doc:`Validation Constraints Reference </reference/constraints>`

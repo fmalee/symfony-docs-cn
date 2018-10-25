@@ -14,7 +14,7 @@ Validates that a value is a valid `3-letter ISO 4217`_ currency name.
 | Validator      | :class:`Symfony\\Component\\Validator\\Constraints\\CurrencyValidator`    |
 +----------------+---------------------------------------------------------------------------+
 
-Basic 用法
+Basic Usage
 -----------
 
 If you want to ensure that the ``currency`` property of an ``Order`` is

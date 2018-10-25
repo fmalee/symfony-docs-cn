@@ -15,7 +15,7 @@ be cast into a string) that follows a valid ``YYYY-MM-DD`` format.
 | Validator      | :class:`Symfony\\Component\\Validator\\Constraints\\DateValidator` |
 +----------------+--------------------------------------------------------------------+
 
-Basic 用法
+Basic Usage
 -----------
 
 .. configuration-block::

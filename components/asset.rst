@@ -2,7 +2,7 @@
    single: Asset
    single: Components; Asset
 
-Asset组件
+The Asset Component
 ===================
 
     The Asset component manages URL generation and versioning of web assets such
@@ -39,7 +39,7 @@ simple. Hardcoding URLs can be a disadvantage because:
   provides out-of-the-box support for any number of multiple CDNs, both regular
   (``http://``) and secure (``https://``).
 
-安装
+Installation
 ------------
 
 .. code-block:: terminal
@@ -50,7 +50,7 @@ Alternatively, you can clone the `<https://github.com/symfony/asset>`_ repositor
 
 .. include:: /components/require_autoload.rst.inc
 
-用法
+Usage
 -----
 
 Asset Packages
@@ -372,7 +372,36 @@ document inside a template::
     echo $packages->getUrl('resume.pdf', 'doc');
     // result: /somewhere/deep/for/documents/resume.pdf?v1
 
-了解更多
+Local Files and Other Protocols
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. versionadded:: 4.2
+    The support for other protocols was introduced in Symfony 4.2.
+
+In addition to HTTP this component supports other protocols (such as ``file://``
+and ``ftp://``). This allows for example to serve local files in order to
+improve performance::
+
+    use Symfony\Component\Asset\UrlPackage;
+    // ...
+
+    $localPackage = new UrlPackage(
+        'file:///path/to/images/',
+        new EmptyVersionStrategy()
+    );
+
+    $ftpPackage = new UrlPackage(
+        'ftp://example.com/images/',
+        new EmptyVersionStrategy()
+    );
+
+    echo $localPackage->getUrl('/logo.png');
+    // result: file:///path/to/images/logo.png
+
+    echo $ftpPackage->getUrl('/logo.png');
+    // result: ftp://example.com/images/logo.png
+
+Learn more
 ----------
 
 .. _Packagist: https://packagist.org/packages/symfony/asset

@@ -85,7 +85,7 @@ backward compatibility promise:
 | Add a return type to an implemented method    | Yes                         |
 +-----------------------------------------------+-----------------------------+
 
-使用我们的类
+Using our Classes
 ~~~~~~~~~~~~~~~~~
 
 All classes provided by Symfony may be instantiated and accessed through their
@@ -143,8 +143,8 @@ covered by our backward compatibility promise:
 | Access a private property (via Reflection)    | No                          |
 +-----------------------------------------------+-----------------------------+
 
-使用我们的 Traits
-~~~~~~~~~~~~~~~~~~~~~~~~
+Using our Traits
+~~~~~~~~~~~~~~~~
 
 All traits provided by Symfony may be used in your classes.
 
@@ -184,7 +184,7 @@ Working on Symfony Code
 Do you want to help us improve Symfony? That's great! However, please stick
 to the rules listed below in order to ensure smooth upgrades for our users.
 
-修改接口
+Changing Interfaces
 ~~~~~~~~~~~~~~~~~~~
 
 This table tells you which changes you are allowed to do when working on
@@ -222,7 +222,7 @@ Remove constant                                 No
 Change value of a constant                      Yes [1]_ [5]_
 ==============================================  ==============
 
-修改类
+Changing Classes
 ~~~~~~~~~~~~~~~~
 
 This table tells you which changes you are allowed to do when working on
@@ -325,7 +325,7 @@ Remove constant                                     No
 Change value of a constant                          Yes [1]_ [5]_
 ==================================================  ==============
 
-修改 Traits
+Changing Traits
 ~~~~~~~~~~~~~~~
 
 This table tells you which changes you are allowed to do when working on

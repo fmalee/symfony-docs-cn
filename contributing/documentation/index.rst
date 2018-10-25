@@ -1,4 +1,4 @@
-书写文档
+Contributing Documentation
 ==========================
 
 These short articles explain everything you need to contribute to the Symfony

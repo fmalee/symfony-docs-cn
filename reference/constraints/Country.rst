@@ -14,7 +14,7 @@ Validates that a value is a valid `ISO 3166-1 alpha-2`_ country code.
 | Validator      | :class:`Symfony\\Component\\Validator\\Constraints\\CountryValidator`  |
 +----------------+------------------------------------------------------------------------+
 
-Basic 用法
+Basic Usage
 -----------
 
 .. configuration-block::

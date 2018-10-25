@@ -22,7 +22,7 @@ using an email address that already exists in the system.
 | Validator      | :class:`Symfony\\Bridge\\Doctrine\\Validator\\Constraints\\UniqueEntityValidator`   |
 +----------------+-------------------------------------------------------------------------------------+
 
-Basic 用法
+Basic Usage
 -----------
 
 Suppose you have a ``User`` entity that has an ``email`` field. You can use the

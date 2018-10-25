@@ -17,7 +17,7 @@ option to validate this.
 | Validator      | :class:`Symfony\\Component\\Validator\\Constraints\\TypeValidator`  |
 +----------------+---------------------------------------------------------------------+
 
-Basic 用法
+Basic Usage
 -----------
 
 This will check if ``firstName`` is of type ``string`` and that ``age`` is an

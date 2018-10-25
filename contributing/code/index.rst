@@ -1,4 +1,4 @@
-编写代码
+Contributing Code
 =================
 
 .. toctree::

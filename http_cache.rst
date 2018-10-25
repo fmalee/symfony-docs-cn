@@ -1,7 +1,7 @@
 .. index::
    single: Cache
 
-HTTP 缓存
+HTTP Cache
 ==========
 
 The nature of rich web applications means that they're dynamic. No matter
@@ -66,7 +66,7 @@ as `Varnish`_, `Squid in reverse proxy mode`_, and the Symfony reverse proxy.
 .. _`symfony-gateway-cache`:
 .. _symfony2-reverse-proxy:
 
-Symfony 反向代理
+Symfony Reverse Proxy
 ~~~~~~~~~~~~~~~~~~~~~
 
 Symfony comes with a reverse proxy (i.e. gateway cache) written in PHP.
@@ -393,7 +393,7 @@ of relying only on Symfony documentation and code examples, you have access
 to a world of knowledge related to HTTP caching and gateway caches such as
 Varnish.
 
-了解更多
+Learn more
 ----------
 
 .. toctree::

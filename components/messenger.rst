@@ -2,7 +2,7 @@
    single: Messenger
    single: Components; Messenger
 
-Messenger组件
+The Messenger Component
 =======================
 
     The Messenger component helps applications send and receive messages to/from
@@ -17,7 +17,7 @@ Messenger组件
     component in any PHP application. Read the :doc:`/messenger` article to
     learn about how to use it in Symfony applications.
 
-安装
+Installation
 ------------
 
 .. code-block:: terminal
@@ -70,7 +70,7 @@ Example::
         ])),
     ]);
 
-    $result = $bus->dispatch(new MyMessage(/* ... */));
+    $bus->dispatch(new MyMessage(/* ... */));
 
 .. note::
 

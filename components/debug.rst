@@ -2,12 +2,12 @@
    single: Debug
    single: Components; Debug
 
-Debug组件
+The Debug Component
 ===================
 
     The Debug component provides tools to ease debugging PHP code.
 
-安装
+Installation
 ------------
 
 .. code-block:: terminal
@@ -18,7 +18,7 @@ Alternatively, you can clone the `<https://github.com/symfony/debug>`_ repositor
 
 .. include:: /components/require_autoload.rst.inc
 
-用法
+Usage
 -----
 
 The Debug component provides several tools to help you debug PHP code.

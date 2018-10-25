@@ -18,7 +18,7 @@ cast to a string before being validated.
 | Validator      | :class:`Symfony\\Component\\Validator\\Constraints\\EmailValidator` |
 +----------------+---------------------------------------------------------------------+
 
-Basic 用法
+Basic Usage
 -----------
 
 .. configuration-block::

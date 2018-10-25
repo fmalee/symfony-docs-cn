@@ -3,24 +3,27 @@
 
 .. _page-creation-bundles:
 
-Bundle系统
+The Bundle System
 =================
 
 .. caution::
 
-    在4.0之前的Symfony版本中，建议使用bundle来组织你自己的应用代码。
-    现在不再推荐此选项，bundle只应该用来在多个应用之间共享代码和功能。
+    In Symfony versions prior to 4.0, it was recommended to organize your own
+    application code using bundles. This is no longer recommended and bundles
+    should only be used to share code and features between multiple applications.
 
-bundle类似于其他软件中的插件，但却更好。
-Symfony框架的核心功能是使用bundle（FrameworkBundle，SecurityBundle，DebugBundle等）实现的。
-它们还用于通过 `第三方bundle`_ 在应用程序中添加新功能。
+A bundle is similar to a plugin in other software, but even better. The core
+features of Symfony framework are implemented with bundles (FrameworkBundle,
+SecurityBundle, DebugBundle, etc.) They are also used to add new features in
+your application via `third-party bundles`_.
 
-在应用中使用bundel，必须在 ``config/bundles.php`` 文件中的每个 :doc:`环境 </configuration/environments>`
-中启用它::
+Bundles used in your applications must be enabled per
+:doc:`environment </configuration/environments>` in the ``config/bundles.php``
+file::
 
     // config/bundles.php
     return [
-        // 'all' 意味着该bundle会在任何环境中使用
+        // 'all' means that the bundle is enabled for any Symfony environment
         Symfony\Bundle\FrameworkBundle\FrameworkBundle::class => ['all' => true],
         Symfony\Bundle\SecurityBundle\SecurityBundle::class => ['all' => true],
         Symfony\Bundle\TwigBundle\TwigBundle::class => ['all' => true],
@@ -28,24 +31,26 @@ Symfony框架的核心功能是使用bundle（FrameworkBundle，SecurityBundle�
         Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle::class => ['all' => true],
         Doctrine\Bundle\DoctrineBundle\DoctrineBundle::class => ['all' => true],
         Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle::class => ['all' => true],
-        // 该bundle在 'dev' 和 'test' 环境下启用, 所以你无法再 'prod' 环境下使用它
+        // this bundle is enabled only in 'dev'  and 'test', so you can't use it in 'prod'
         Symfony\Bundle\WebProfilerBundle\WebProfilerBundle::class => ['dev' => true, 'test' => true],
     ];
 
 .. tip::
 
-    在使用 :doc:`Symfony Flex </setup/flex>` 的默认的Symfony应用中，
-    在安装/删除bundle时会自动启用/禁用它们，因此你无需查看或编辑 ``bundles.php`` 文件。
+    In a default Symfony application that uses :doc:`Symfony Flex </setup/flex>`,
+    bundles are enabled/disabled automatically for you when installing/removing
+    them, so you don't need to look at or edit this ``bundles.php`` file.
 
-创建Bundle
+Creating a Bundle
 -----------------
 
-此部分创建并启用新的bundle以显示执行此操作的简单程度。
-新的bundle称为 AcmeTestBundle，其中 ``Acme`` 部分只是一个虚拟名称，
-应该用代表你或你的组织的某个“vendor”名称来替换
-（例如某个名为 ``ABC`` 的公司的ABCTestBundle）。
+This section creates and enables a new bundle to show how simple it is to do it.
+The new bundle is called AcmeTestBundle, where the ``Acme`` portion is just a
+dummy name that should be replaced by some "vendor" name that represents you or
+your organization (e.g. ABCTestBundle for some company named ``ABC``).
 
-首先，创建一个 ``src/Acme/TestBundle/`` 目录并添加一个名为 ``AcmeTestBundle.php`` 的新文件::
+Start by creating a ``src/Acme/TestBundle/`` directory and adding a new file
+called ``AcmeTestBundle.php``::
 
     // src/Acme/TestBundle/AcmeTestBundle.php
     namespace App\Acme\TestBundle;
@@ -58,12 +63,14 @@ Symfony框架的核心功能是使用bundle（FrameworkBundle，SecurityBundle�
 
 .. tip::
 
-    AcmeTestBundle命名遵循标准的 :ref:`Bundle命名约定 <bundles-naming-conventions>`。
-    你还可以通过命名此类为TestBundle（并命名文件 ``TestBundle.php``）来选择将bundle的名称简化为 TestBundle。
+    The name AcmeTestBundle follows the standard
+    :ref:`Bundle naming conventions <bundles-naming-conventions>`. You could
+    also choose to shorten the name of the bundle to simply TestBundle by naming
+    this class TestBundle (and naming the file ``TestBundle.php``).
 
-这个空类是创建新bundle所需的唯一部分。
-虽然通常为空，但此类功能强大，可用于自定义bundle的行为。
-现在你已经创建了bundle，启用它::
+This empty class is the only piece you need to create the new bundle. Though
+commonly empty, this class is powerful and can be used to customize the behavior
+of the bundle. Now that you've created the bundle, enable it::
 
     // config/bundles.php
     return [
@@ -71,40 +78,47 @@ Symfony框架的核心功能是使用bundle（FrameworkBundle，SecurityBundle�
         App\Acme\TestBundle\AcmeTestBundle::class => ['all' => true],
     ];
 
-虽然它还没有做任何事情，但现在可以使用AcmeTestBundle了。
+And while it doesn't do anything yet, AcmeTestBundle is now ready to be used.
 
-Bundle目录结构
+Bundle Directory Structure
 --------------------------
 
-bundle目录是简单而有弹性的。
-默认条件下，bundle系统遵循着一组命名约定，以保持所有Symfony bundle的代码一致性。
-看一眼AcmeDemoBundle，它包括了一个bundle最常见的某些元素：
+The directory structure of a bundle is simple and flexible. By default, the
+bundle system follows a set of conventions that help to keep code consistent
+between all Symfony bundles. Take a look at AcmeDemoBundle, as it contains some
+of the most common elements of a bundle:
 
 ``Controller/``
-    里面有该bundle的控制器（如 ``RandomController.php``）。
+    Contains the controllers of the bundle (e.g. ``RandomController.php``).
 
 ``DependencyInjection/``
-    里面有特定的依赖注入扩展类，用来导入服务配置信息，注册compiler passes，以及更多内容（这个目录并非必需）。
+    Holds certain Dependency Injection Extension classes, which may import service
+    configuration, register compiler passes or more (this directory is not
+    necessary).
 
 ``Resources/config/``
-    存放配置信息，包括路由配置（如 ``routing.yaml``）。
+    Houses configuration, including routing configuration (e.g. ``routing.yaml``).
 
 ``Resources/views/``
-    存放模板。依控制器名字来组织子文件夹（如 ``Random/index.html.twig``）。
+    Holds templates organized by controller name (e.g. ``Random/index.html.twig``).
 
 ``Resources/public/``
-    存放web资源（图片，样式表等），通过console命令 ``assets:install``
-    以复制或符号链接的方式导入到项目的 ``public/`` 目录。
+    Contains web assets (images, stylesheets, etc) and is copied or symbolically
+    linked into the project ``public/`` directory via the ``assets:install`` console
+    command.
 
 ``Tests/``
-    存放bundle的所有测试类。
+    Holds all tests for the bundle.
 
-一个bundle依其实现的功能而或小或大。它只包含你需要的文件，再无其他。
+A bundle can be as small or large as the feature it implements. It contains
+only the files you need and nothing else.
 
-在你通读指南的过程中，你将学到如何持久化对象到数据库中，创建和验证表单，为程序增加翻译功能，编写测试，以及更多内容。
-这些中的每一个在bundel中都有自己的位置和角色。
+As you move through the guides, you'll learn how to persist objects to a
+database, create and validate forms, create translations for your application,
+write tests and much more. Each of these has their own place and role within
+the bundle.
 
-扩展阅读
+Learn more
 ----------
 
 * :doc:`/bundles/override`
@@ -113,4 +127,4 @@ bundle目录是简单而有弹性的。
 * :doc:`/bundles/extension`
 * :doc:`/bundles/prepend_extension`
 
-.. _`第三方bundle`: https://github.com/search?q=topic%3Asymfony-bundle&type=Repositories
+.. _`third-party bundles`: https://github.com/search?q=topic%3Asymfony-bundle&type=Repositories

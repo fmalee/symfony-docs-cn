@@ -16,7 +16,7 @@ constraint.
 | Validator      | :class:`Symfony\\Component\\Validator\\Constraints\\NotNullValidator` |
 +----------------+-----------------------------------------------------------------------+
 
-Basic 用法
+Basic Usage
 -----------
 
 If you wanted to ensure that the ``firstName`` property of an ``Author``

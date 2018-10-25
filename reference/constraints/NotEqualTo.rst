@@ -24,7 +24,7 @@ options. To force that a value is equal, see
 | Validator      | :class:`Symfony\\Component\\Validator\\Constraints\\NotEqualToValidator`|
 +----------------+-------------------------------------------------------------------------+
 
-Basic 用法
+Basic Usage
 -----------
 
 If you want to ensure that the ``firstName`` of a ``Person`` is not equal to

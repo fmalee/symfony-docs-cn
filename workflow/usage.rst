@@ -4,7 +4,7 @@
 How to Create and Use Workflows
 ===============================
 
-安装
+Installation
 ------------
 
 In applications using :doc:`Symfony Flex </setup/flex>`, run this command to

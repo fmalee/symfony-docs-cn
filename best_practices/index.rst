@@ -1,4 +1,4 @@
-Symfony 最佳实践
+Official Symfony Best Practices
 ===============================
 
 .. toctree::

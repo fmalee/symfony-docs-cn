@@ -3,13 +3,13 @@
     single: PHP
     single: Components; Polyfill
 
-Symfony Polyfill / PHP 7.0 组件
+The Symfony Polyfill / PHP 7.0 Component
 ========================================
 
     This component provides some PHP 7.0 features to applications using earlier
     PHP versions.
 
-安装
+Installation
 ------------
 
 .. code-block:: terminal
@@ -20,7 +20,7 @@ Alternatively, you can clone the `<https://github.com/symfony/polyfill-php70>`_ 
 
 .. include:: /components/require_autoload.rst.inc
 
-用法
+Usage
 -----
 
 Once this component is installed in your application, you can use the following

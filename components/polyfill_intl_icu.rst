@@ -3,14 +3,14 @@
     single: ICU
     single: Components; Polyfill
 
-Symfony Polyfill / Intl ICU 组件
+The Symfony Polyfill / Intl ICU Component
 =========================================
 
     This component provides a native PHP implementation of several Intl
     functions and classes to users who run PHP versions without the ``intl``
     extension.
 
-安装
+Installation
 ------------
 
 .. code-block:: terminal
@@ -21,7 +21,7 @@ Alternatively, you can clone the `<https://github.com/symfony/polyfill-intl-icu>
 
 .. include:: /components/require_autoload.rst.inc
 
-用法
+Usage
 -----
 
 Once this component is installed in your application, you can use the following

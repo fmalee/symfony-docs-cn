@@ -23,7 +23,7 @@ vendor segment, followed by zero or more category segments, and it ends with the
 namespace short name, which must end with ``Bundle``.
 
 A namespace becomes a bundle as soon as you add a bundle class to it. The
-bundle class name must follow these simple rules:
+bundle class name must follow these rules:
 
 * Use only alphanumeric characters and underscores;
 * Use a StudlyCaps name (i.e. camelCase with the first letter uppercased);
@@ -242,7 +242,7 @@ of Symfony and the latest beta release:
 Consider using the `Travis cron`_ tool to make sure your project is built even if
 there are no new pull requests or commits.
 
-安装
+Installation
 ------------
 
 Bundles should set ``"type": "symfony-bundle"`` in their ``composer.json`` file.
@@ -467,8 +467,9 @@ Retrieve the configuration parameters in your code from the container::
 
     $container->getParameter('acme_blog.author.email');
 
-Even if this mechanism is simple enough, you should consider using the more
-advanced :doc:`semantic bundle configuration </bundles/configuration>`.
+While this mechanism requires the least effort, you should consider using the
+more advanced :doc:`semantic bundle configuration </bundles/configuration>` to
+make your configuration more robust.
 
 Versioning
 ----------
@@ -540,7 +541,7 @@ Beware that templates use a simplified version of the logical path shown above.
 For example, an ``index.html.twig`` template located in the ``Resources/views/Default/``
 directory of the FooBundle, is referenced as ``@Foo/Default/index.html.twig``.
 
-了解更多
+Learn more
 ----------
 
 * :doc:`/bundles/extension`

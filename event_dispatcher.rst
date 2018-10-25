@@ -2,7 +2,7 @@
    single: Events; Create listener
    single: Create subscriber
 
-事件和事件监听器
+Events and Event Listeners
 ==========================
 
 During the execution of a Symfony application, lots of event notifications are
@@ -18,7 +18,7 @@ All the examples shown in this article use the same ``KernelEvents::EXCEPTION``
 event for consistency purposes. In your own application, you can use any event
 and even mix several of them in the same subscriber.
 
-创建一个事件监听器
+Creating an Event Listener
 --------------------------
 
 The most common way to listen to an event is to register an **event listener**::
@@ -135,7 +135,7 @@ listener class:
 
 .. _events-subscriber:
 
-创建一个事件订阅器
+Creating an Event Subscriber
 ----------------------------
 
 Another way to listen to events is via an **event subscriber**, which is a class
@@ -200,7 +200,7 @@ the ``EventSubscriber`` directory. Symfony takes care of the rest.
     the ``EventSubscriber`` directory and have :ref:`autoconfigure <services-autoconfigure>`
     enabled. You can also manually add the ``kernel.event_subscriber`` tag.
 
-请求事件, 检查类型
+Request Events, Checking Types
 ------------------------------
 
 A single page can make several requests (one master request, and then multiple
@@ -233,7 +233,7 @@ be done on the sub-request listeners.
 
 .. _events-or-subscribers:
 
-监听器 VS 订阅器
+Listeners or Subscribers
 ------------------------
 
 Listeners and subscribers can be used in the same application indistinctly. The
@@ -246,7 +246,7 @@ there are some minor advantages for each of them:
 * **Listeners are more flexible** because bundles can enable or disable each of
   them conditionally depending on some configuration value.
 
-调试事件监听器
+Debugging Event Listeners
 -------------------------
 
 You can find out what listeners are registered in the event dispatcher
@@ -263,7 +263,7 @@ its name:
 
     $ php bin/console debug:event-dispatcher kernel.exception
 
-其他资料
+Learn more
 ----------
 
 .. toctree::

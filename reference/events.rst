@@ -1,4 +1,4 @@
-Symfony 内置事件
+Built-in Symfony Events
 =======================
 
 During the handling of an HTTP request, the Symfony framework (or any
@@ -6,7 +6,7 @@ application using the :doc:`HttpKernel component </components/http_kernel>`)
 dispatches some :doc:`events </event_dispatcher>` which you can use to modify
 how the request is handled.
 
-内核事件
+Kernel Events
 -------------
 
 Each event dispatched by the HttpKernel component is a subclass of

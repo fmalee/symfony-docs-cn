@@ -2,7 +2,7 @@
     single: PropertyInfo
     single: Components; PropertyInfo
 
-PropertyInfo组件
+The PropertyInfo Component
 ==========================
 
     The PropertyInfo component allows you to get information
@@ -16,7 +16,7 @@ within that class.
 
 .. _`components-property-information-installation`:
 
-安装
+Installation
 ------------
 
 .. code-block:: terminal
@@ -32,7 +32,7 @@ Additional dependencies may be required for some of the
 
 .. _`components-property-information-usage`:
 
-用法
+Usage
 -----
 
 To use this component, create a new

@@ -2,13 +2,13 @@
    single: Validator
    single: Components; Validator
 
-Validator组件
+The Validator Component
 =======================
 
     The Validator component provides tools to validate values following the
     `JSR-303 Bean Validation specification`_.
 
-安装
+Installation
 ------------
 
 .. code-block:: terminal
@@ -19,7 +19,7 @@ Alternatively, you can clone the `<https://github.com/symfony/validator>`_ repos
 
 .. include:: /components/require_autoload.rst.inc
 
-用法
+Usage
 -----
 
 .. seealso::
@@ -82,7 +82,7 @@ This ``$validator`` object can validate simple variables such as strings, number
 and arrays, but it can't validate objects. To do so, configure the
 ``Validator`` class as explained in the next sections.
 
-了解更多
+Learn More
 ----------
 
 .. toctree::

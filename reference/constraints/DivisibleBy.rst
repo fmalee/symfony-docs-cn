@@ -16,7 +16,7 @@ Validates that a value is divisible by another value, defined in the options.
 | Validator      | :class:`Symfony\\Component\\Validator\\Constraints\\DivisibleByValidator` |
 +----------------+---------------------------------------------------------------------------+
 
-Basic 用法
+Basic Usage
 -----------
 
 The following constraints ensure that:

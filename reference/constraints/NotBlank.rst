@@ -22,7 +22,7 @@ To force that a value is simply not equal to ``null``, see the
 | Validator      | :class:`Symfony\\Component\\Validator\\Constraints\\NotBlankValidator` |
 +----------------+------------------------------------------------------------------------+
 
-Basic 用法
+Basic Usage
 -----------
 
 If you wanted to ensure that the ``firstName`` property of an ``Author``

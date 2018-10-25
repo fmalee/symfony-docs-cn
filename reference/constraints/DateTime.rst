@@ -16,7 +16,7 @@ that can be cast into a string) that follows a specific format.
 | Validator      | :class:`Symfony\\Component\\Validator\\Constraints\\DateTimeValidator` |
 +----------------+------------------------------------------------------------------------+
 
-Basic 用法
+Basic Usage
 -----------
 
 .. configuration-block::

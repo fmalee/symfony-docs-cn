@@ -1,7 +1,7 @@
 .. index::
    single: Serializer
 
-如何使用序列化
+How to Use the Serializer
 =========================
 
 Symfony provides a serializer to serialize/deserialize to and from objects and
@@ -11,7 +11,7 @@ its philosophy and the normalizers and encoders terminology.
 
 .. _activating_the_serializer:
 
-安装
+Installation
 ------------
 
 In applications using :doc:`Symfony Flex </setup/flex>`, run this command to
@@ -138,7 +138,7 @@ to your class and choose which groups to use when serializing::
 .. tip::
 
     The value of the ``groups`` key can be a single string, or an array of strings.
-
+    
     .. versionadded:: 4.2
         The option to pass a single string to ``groups`` was introduced in Symfony 4.2.
 
@@ -216,7 +216,9 @@ take a look at how this bundle works.
 .. toctree::
     :maxdepth: 1
 
+    serializer/normalizers
     serializer/custom_encoders
+    serializer/custom_normalizer
 
 .. _`APCu`: https://github.com/krakjoe/apcu
 .. _`ApiPlatform`: https://github.com/api-platform/core

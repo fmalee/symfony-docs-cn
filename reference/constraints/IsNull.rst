@@ -18,7 +18,7 @@ Also see :doc:`NotNull <NotNull>`.
 | Validator      | :class:`Symfony\\Component\\Validator\\Constraints\\IsNullValidator`  |
 +----------------+-----------------------------------------------------------------------+
 
-Basic 用法
+Basic Usage
 -----------
 
 If, for some reason, you wanted to ensure that the ``firstName`` property

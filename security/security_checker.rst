@@ -1,122 +1,43 @@
 .. index::
-    single: Security; Creating and Enabling Custom User Checkers
+    single: Security; Vulnerability Checker
 
-How to Create and Enable Custom User Checkers
-=============================================
+How to Check for Known Security Vulnerabilities in Your Dependencies
+====================================================================
 
-During the authentication of a user, additional checks might be required to verify
-if the identified user is allowed to log in. By defining a custom user checker, you
-can define per firewall which checker should be used.
+When using lots of dependencies in your Symfony projects, some of them may
+contain security vulnerabilities. That's why Symfony provides a command called
+``security:check`` that checks your ``composer.lock`` file to find any known
+security vulnerability in your installed dependencies.
 
-Creating a Custom User Checker
-------------------------------
+First, install the security checker in your project:
 
-User checkers are classes that must implement the
-:class:`Symfony\\Component\\Security\\Core\\User\\UserCheckerInterface`. This interface
-defines two methods called ``checkPreAuth()`` and ``checkPostAuth()`` to
-perform checks before and after user authentication. If one or more conditions
-are not met, an exception should be thrown which extends the
-:class:`Symfony\\Component\\Security\\Core\\Exception\\AccountStatusException`.
+.. code-block:: terminal
 
-.. code-block:: php
+    $ composer require sensiolabs/security-checker
 
-    namespace App\Security;
+Then run this command:
 
-    use App\Exception\AccountDeletedException;
-    use App\Security\User as AppUser;
-    use Symfony\Component\Security\Core\Exception\AccountExpiredException;
-    use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
-    use Symfony\Component\Security\Core\User\UserCheckerInterface;
-    use Symfony\Component\Security\Core\User\UserInterface;
+.. code-block:: terminal
 
-    class UserChecker implements UserCheckerInterface
-    {
-        public function checkPreAuth(UserInterface $user)
-        {
-            if (!$user instanceof AppUser) {
-                return;
-            }
+    $ php bin/console security:check
 
-            // user is deleted, show a generic Account Not Found message.
-            if ($user->isDeleted()) {
-                throw new AccountDeletedException('...');
+A good security practice is to execute this command regularly to be able to
+update or replace compromised dependencies as soon as possible. Internally,
+this command uses the public `security advisories database`_ published by the
+FriendsOfPHP organization.
 
-                // or to customize the message shown
-                throw new CustomUserMessageAuthenticationException(
-                    'Your account was deleted. Sorry about that!'
-                );
-            }
-        }
+.. tip::
 
-        public function checkPostAuth(UserInterface $user)
-        {
-            if (!$user instanceof AppUser) {
-                return;
-            }
+    The ``security:check`` command terminates with a non-zero exit code if
+    any of your dependencies is affected by a known security vulnerability.
+    This allows you to add it to your project build process and your continuous
+    integration workflows.
 
-            // user account is expired, the user may be notified
-            if ($user->isExpired()) {
-                throw new AccountExpiredException('...');
-            }
-        }
-    }
+.. tip::
 
-Enabling the Custom User Checker
---------------------------------
+    The security checker is also available as an independent console application
+    and distributed as a PHAR file so you can use it in any PHP application.
+    Check out the `Security Checker repository`_ for more details.
 
-Next, make sure your user checker is registered as a service. If you're using the
-:ref:`default services.yaml configuration <service-container-services-load-example>`,
-the service is registered automatically.
-
-All that's left to do is add the checker to the desired firewall where the value
-is the service id of your user checker:
-
-.. configuration-block::
-
-    .. code-block:: yaml
-
-        # config/packages/security.yaml
-
-        # ...
-        security:
-            firewalls:
-                main:
-                    pattern: ^/
-                    user_checker: App\Security\UserChecker
-                    # ...
-
-    .. code-block:: xml
-
-        <!-- config/packages/security.xml -->
-        <?xml version="1.0" encoding="UTF-8"?>
-        <srv:container xmlns="http://symfony.com/schema/dic/security"
-            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xmlns:srv="http://symfony.com/schema/dic/services"
-            xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
-
-            <config>
-                <!-- ... -->
-                <firewall name="main" pattern="^/">
-                    <user-checker>App\Security\UserChecker</user-checker>
-                    <!-- ... -->
-                </firewall>
-            </config>
-        </srv:container>
-
-    .. code-block:: php
-
-        // config/packages/security.php
-
-        // ...
-        use App\Security\UserChecker;
-
-        $container->loadFromExtension('security', array(
-            'firewalls' => array(
-                'main' => array(
-                    'pattern' => '^/',
-                    'user_checker' => UserChecker::class,
-                    // ...
-                ),
-            ),
-        ));
+.. _`security advisories database`: https://github.com/FriendsOfPHP/security-advisories
+.. _`Security Checker repository`: https://github.com/sensiolabs/security-checker

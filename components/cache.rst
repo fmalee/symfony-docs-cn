@@ -5,7 +5,7 @@
 
 .. _`cache-component`:
 
-Cache组件
+The Cache Component
 ===================
 
     The Cache component provides an extended `PSR-6`_ implementation as well as
@@ -14,7 +14,7 @@ Cache组件
     adapters for the most common caching backends, including proxies for adapting
     from/to `Doctrine Cache`_.
 
-安装
+Installation
 ------------
 
 .. code-block:: terminal

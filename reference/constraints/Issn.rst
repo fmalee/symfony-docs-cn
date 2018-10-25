@@ -17,7 +17,7 @@ Validates that a value is a valid
 | Validator      | :class:`Symfony\\Component\\Validator\\Constraints\\IssnValidator`    |
 +----------------+-----------------------------------------------------------------------+
 
-Basic 用法
+Basic Usage
 -----------
 
 .. configuration-block::

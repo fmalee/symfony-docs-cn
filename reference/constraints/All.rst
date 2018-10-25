@@ -15,7 +15,7 @@ you to apply a collection of constraints to each element of the array.
 | Validator      | :class:`Symfony\\Component\\Validator\\Constraints\\AllValidator` |
 +----------------+-------------------------------------------------------------------+
 
-Basic 用法
+Basic Usage
 -----------
 
 Suppose that you have an array of strings and you want to validate each

@@ -17,7 +17,7 @@ Validates that a value matches a regular expression.
 | Validator      | :class:`Symfony\\Component\\Validator\\Constraints\\RegexValidator`   |
 +----------------+-----------------------------------------------------------------------+
 
-Basic 用法
+Basic Usage
 -----------
 
 Suppose you have a ``description`` field and you want to verify that it

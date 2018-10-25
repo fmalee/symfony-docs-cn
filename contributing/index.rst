@@ -1,4 +1,4 @@
-贡献
+Contributing
 ============
 
 .. toctree::

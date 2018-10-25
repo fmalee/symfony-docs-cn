@@ -3,7 +3,7 @@
    single: HttpKernel
    single: Components; HttpKernel
 
-HttpKernel组件
+The HttpKernel Component
 ========================
 
     The HttpKernel component provides a structured process for converting
@@ -11,7 +11,7 @@ HttpKernel组件
     component. It's flexible enough to create a full-stack framework (Symfony),
     a micro-framework (Silex) or an advanced CMS system (Drupal).
 
-安装
+Installation
 ------------
 
 .. code-block:: terminal
@@ -749,7 +749,7 @@ which can be used to transform logical paths into physical paths::
     $kernel = new HttpKernel($dispatcher, $resolver);
     $path = $kernel->locateResource('@FooBundle/Resources/config/services.xml');
 
-了解更多
+Learn more
 ----------
 
 .. toctree::

@@ -1,6 +1,6 @@
 .. _symfony2-license:
 
-Symfony 代码许可
+Symfony Code License
 ====================
 
 Symfony code is released under `the MIT license`_:
@@ -25,7 +25,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
-其他 Symfony 许可
+Other Symfony Licenses
 ----------------------
 
 Check out the :doc:`license of the Symfony documentation </contributing/documentation/license>`

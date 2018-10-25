@@ -44,7 +44,7 @@ of the documentation on this constraint.
 | Validator      | :class:`Symfony\\Component\\Validator\\Constraints\\ImageValidator`   |
 +----------------+-----------------------------------------------------------------------+
 
-Basic 用法
+Basic Usage
 -----------
 
 This constraint is most commonly used on a property that will be rendered

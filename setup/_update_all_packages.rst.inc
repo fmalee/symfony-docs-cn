@@ -1,4 +1,4 @@
-更新其他包
+Upgrading other Packages
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 You may also want to upgrade the rest of your libraries. If you've done a

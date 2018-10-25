@@ -18,7 +18,7 @@ Also see :doc:`IsFalse <IsFalse>`.
 | Validator      | :class:`Symfony\\Component\\Validator\\Constraints\\TrueValidator`  |
 +----------------+---------------------------------------------------------------------+
 
-Basic 用法
+Basic Usage
 -----------
 
 This constraint can be applied to properties (e.g. a ``termsAccepted`` property

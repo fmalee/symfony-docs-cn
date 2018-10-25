@@ -19,7 +19,7 @@ Countable) element count is *between* some minimum and maximum value.
 | Validator      | :class:`Symfony\\Component\\Validator\\Constraints\\CountValidator` |
 +----------------+---------------------------------------------------------------------+
 
-Basic 用法
+Basic Usage
 -----------
 
 To verify that the ``emails`` array field contains between 1 and 5 elements

@@ -2,7 +2,7 @@
    single: Yaml
    single: Components; Yaml
 
-Yaml组件
+The Yaml Component
 ==================
 
     The Yaml component loads and dumps YAML files.
@@ -26,7 +26,7 @@ the `YAML 1.2 version specification`_.
     Learn more about the Yaml component in the
     :doc:`/components/yaml/yaml_format` article.
 
-安装
+Installation
 ------------
 
 .. code-block:: terminal
@@ -410,13 +410,13 @@ Then, execute the script for validating contents:
 
     # validates a single file
     $ php lint.php path/to/file.yaml
-
+    
     # or validates multiple files
-    $ php lint.php path/to/file1.yaml path/to/file2.yaml
+    $ php lint.php path/to/file1.yaml path/to/file2.yaml 
 
     # or all the files in a directory
     $ php lint.php path/to/directory
-
+    
     # or all the files in multiple directories
     $ php lint.php path/to/directory1 path/to/directory2
 
@@ -439,7 +439,7 @@ Add the ``--format`` option to get the output in JSON format:
     YAML files. This may for example be useful for recognizing deprecations of
     contents of YAML files during automated tests.
 
-了解更多
+Learn More
 ----------
 
 .. toctree::

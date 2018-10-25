@@ -1,14 +1,14 @@
 .. index::
    single: PSR-7
 
-PSR-7 Bridge
+The PSR-7 Bridge
 ================
 
     The PSR-7 bridge converts :doc:`HttpFoundation </components/http_foundation>`
     objects from and to objects implementing HTTP message interfaces defined
     by the `PSR-7`_.
 
-安装
+Installation
 ------------
 
 .. code-block:: terminal
@@ -24,7 +24,7 @@ objects to PSR-7 objects. It provides native support for `Zend Diactoros`_.
 Use Composer (`zendframework/zend-diactoros on Packagist <https://packagist.org/packages/zendframework/zend-diactoros>`_)
 or refer to the project documentation to install it.
 
-用法
+Usage
 -----
 
 Converting from HttpFoundation Objects to PSR-7

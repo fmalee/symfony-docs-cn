@@ -19,7 +19,7 @@ UUID versions can also be restricted using a whitelist.
 | Validator      | :class:`Symfony\\Component\\Validator\\Constraints\\UuidValidator`  |
 +----------------+---------------------------------------------------------------------+
 
-Basic 用法
+Basic Usage
 -----------
 
 .. configuration-block::

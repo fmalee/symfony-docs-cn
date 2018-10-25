@@ -17,7 +17,7 @@ IPv6 and many other combinations.
 | Validator      | :class:`Symfony\\Component\\Validator\\Constraints\\IpValidator`    |
 +----------------+---------------------------------------------------------------------+
 
-Basic 用法
+Basic Usage
 -----------
 
 .. configuration-block::

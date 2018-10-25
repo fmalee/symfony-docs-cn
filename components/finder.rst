@@ -2,13 +2,13 @@
    single: Finder
    single: Components; Finder
 
-Finder组件
+The Finder Component
 ====================
 
     The Finder component finds files and directories via an intuitive fluent
     interface.
 
-安装
+Installation
 ------------
 
 .. code-block:: terminal
@@ -19,7 +19,7 @@ Alternatively, you can clone the `<https://github.com/symfony/finder>`_ reposito
 
 .. include:: /components/require_autoload.rst.inc
 
-用法
+Usage
 -----
 
 The :class:`Symfony\\Component\\Finder\\Finder` class finds files and/or
@@ -139,7 +139,7 @@ And it also works with user-defined streams::
 
     Read the `Streams`_ documentation to learn how to create your own streams.
 
-文件和目录
+Files or Directories
 ~~~~~~~~~~~~~~~~~~~~
 
 By default, the Finder returns files and directories; but the
@@ -159,7 +159,7 @@ the ``ignoreVCS()`` method::
 
     $finder->ignoreVCS(false);
 
-排序
+Sorting
 ~~~~~~~
 
 Sort the result by name or by type (directories first, then files)::
@@ -197,7 +197,7 @@ You can also define your own sorting algorithm with ``sort()`` method::
     Notice that the ``sort*`` methods need to get all matching elements to do
     their jobs. For large iterators, it is slow.
 
-文件名称
+File Name
 ~~~~~~~~~
 
 Restrict files by name with the
@@ -232,7 +232,7 @@ Multiple filenames can be excluded by chaining calls or passing an array::
     Support for passing arrays to ``name()`` and ``notName()`` was introduced
     in Symfony 4.2
 
-文件内容
+File Contents
 ~~~~~~~~~~~~~
 
 Restrict files by contents with the
@@ -248,7 +248,7 @@ The ``notContains()`` method excludes files containing given pattern::
 
     $finder->files()->notContains('dolor sit amet');
 
-路径
+Path
 ~~~~
 
 Restrict files and directories by path with the
@@ -300,7 +300,7 @@ Multiple paths can be excluded by chaining calls or passing an array::
     Support for passing arrays to ``notPath()`` was introduced in Symfony
     4.2
 
-文件大小
+File Size
 ~~~~~~~~~
 
 Restrict files by size with the
@@ -349,7 +349,7 @@ The comparison operator can be any of the following: ``>``, ``>=``, ``<``, ``<=`
 
 The target value can be any date supported by the `strtotime`_ function.
 
-目录深度
+Directory Depth
 ~~~~~~~~~~~~~~~
 
 By default, the Finder recursively traverse directories. Restrict the depth of
@@ -368,7 +368,7 @@ Restrict by a depth range by chaining calls or passing an array::
 .. versionadded:: 4.2
     Support for passing arrays to ``depth()`` was introduced in Symfony 4.2
 
-自定义过滤
+Custom Filtering
 ~~~~~~~~~~~~~~~~
 
 To restrict the matching file with your own strategy, use

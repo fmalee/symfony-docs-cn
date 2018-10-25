@@ -2,13 +2,13 @@
     single: Translation
     single: Components; Translation
 
-Translation组件
+The Translation Component
 =========================
 
     The Translation component provides tools to internationalize your
     application.
 
-安装
+Installation
 ------------
 
 .. code-block:: terminal
@@ -220,12 +220,12 @@ you must specify the domain as the third argument of ``trans()``::
 Symfony will now look for the message in the ``admin`` domain of the
 specified locale.
 
-用法
+Usage
 -----
 
 Read how to use the Translation component in :doc:`/components/translation/usage`.
 
-了解更多
+Learn More
 ----------
 
 .. toctree::

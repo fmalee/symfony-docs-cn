@@ -17,7 +17,7 @@ a payment through a payment gateway.
 | Validator      | :class:`Symfony\\Component\\Validator\\Constraints\\CardSchemeValidator` |
 +----------------+--------------------------------------------------------------------------+
 
-Basic 用法
+Basic Usage
 -----------
 
 To use the ``CardScheme`` validator, simply apply it to a property or method

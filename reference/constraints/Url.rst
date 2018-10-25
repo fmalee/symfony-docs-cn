@@ -18,7 +18,7 @@ Validates that a value is a valid URL string.
 | Validator      | :class:`Symfony\\Component\\Validator\\Constraints\\UrlValidator`   |
 +----------------+---------------------------------------------------------------------+
 
-Basic 用法
+Basic Usage
 -----------
 
 .. configuration-block::

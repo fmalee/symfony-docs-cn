@@ -2,7 +2,7 @@
    single: Serializer
    single: Components; Serializer
 
-Serializer组件
+The Serializer Component
 ========================
 
     The Serializer component is meant to be used to turn objects into a
@@ -21,7 +21,7 @@ will deal with turning specific **objects** into **arrays** and vice versa.
 Serialization is a complex topic. This component may not cover all your use cases out of the box,
 but it can be useful for developing tools to serialize and deserialize your objects.
 
-安装
+Installation
 ------------
 
 .. code-block:: terminal
@@ -35,7 +35,7 @@ Alternatively, you can clone the `<https://github.com/symfony/serializer>`_ repo
 To use the ``ObjectNormalizer``, the :doc:`PropertyAccess component </components/property_access>`
 must also be installed.
 
-用法
+Usage
 -----
 
 .. seealso::
@@ -530,6 +530,80 @@ processes::
 
     $anne = $normalizer->denormalize(array('first_name' => 'Anne'), 'Person');
     // Person object with firstName: 'Anne'
+
+Configure name conversion using metadata
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+When using this component inside a Symfony application and the class metadata
+factory is enabled as explained in the :ref:`Attributes Groups section <component-serializer-attributes-groups>`,
+this is already set up and you only need to provide the configuration. Otherwise::
+
+    // ...
+    use Symfony\Component\Serializer\Encoder\JsonEncoder;
+    use Symfony\Component\Serializer\NameConverter\MetadataAwareNameConverter;
+    use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+    use Symfony\Component\Serializer\Serializer;
+
+    $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
+
+    $metadataAwareNameConverter = new MetadataAwareNameConverter($classMetadataFactory);
+
+    $serializer = new Serializer(
+        array(new ObjectNormalizer($classMetadataFactory, $metadataAwareNameConverter)),
+        array('json' => new JsonEncoder())
+    );
+
+Now configure your name conversion mapping. Consider an application that
+defines a ``Person`` entity with a ``firstName`` property:
+
+.. configuration-block::
+
+    .. code-block:: php-annotations
+
+        namespace App\Entity;
+
+        use Symfony\Component\Serializer\Annotation\SerializedName;
+
+        class Person
+        {
+            /**
+             * @SerializedName("customer_name")
+             */
+            private $firstName;
+
+            public function __construct($firstName)
+            {
+                $this->firstName = $firstName;
+            }
+
+            // ...
+        }
+
+    .. code-block:: yaml
+
+        App\Entity\Person:
+            attributes:
+                firstName:
+                    serialized_name: customer_name
+
+    .. code-block:: xml
+
+        <?xml version="1.0" ?>
+        <serializer xmlns="http://symfony.com/schema/dic/serializer-mapping"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://symfony.com/schema/dic/serializer-mapping
+                http://symfony.com/schema/dic/serializer-mapping/serializer-mapping-1.0.xsd"
+        >
+            <class name="App\Entity\Person">
+                <attribute name="firstName" serialized-name="customer_name" />
+            </class>
+        </serializer>
+
+This custom mapping is used to convert property names when serializing and
+deserializing objects::
+
+    $serialized = $serializer->serialize(new Person("Kévin"));
+    // {"customer_name": "Kévin"}
 
 Serializing Boolean Attributes
 ------------------------------
@@ -1365,7 +1439,7 @@ is called.
     All built-in :ref:`normalizers and denormalizers <component-serializer-normalizers>`
     as well the ones included in `API Platform`_ natively implement this interface.
 
-了解更多
+Learn more
 ----------
 
 .. toctree::

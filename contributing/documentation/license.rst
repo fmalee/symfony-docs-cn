@@ -1,6 +1,6 @@
 .. _symfony2-documentation-license:
 
-Symfony 文档许可
+Symfony Documentation License
 =============================
 
 The Symfony documentation is licensed under a Creative Commons

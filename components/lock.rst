@@ -2,13 +2,13 @@
    single: Lock
    single: Components; Lock
 
-Lock组件
+The Lock Component
 ==================
 
     The Lock Component creates and manages `locks`_, a mechanism to provide
     exclusive access to a shared resource.
 
-安装
+Installation
 ------------
 
 .. code-block:: terminal
@@ -19,7 +19,7 @@ Alternatively, you can clone the `<https://github.com/symfony/lock>`_ repository
 
 .. include:: /components/require_autoload.rst.inc
 
-用法
+Usage
 -----
 
 Locks are used to guarantee exclusive access to some shared resource. In

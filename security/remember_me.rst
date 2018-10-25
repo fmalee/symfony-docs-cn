@@ -177,7 +177,7 @@ users to change their password. You can do this by leveraing a few special "role
 
     // src/Controller/AccountController.php
     // ...
-
+    
     public function accountInfo()
     {
         // allow any authenticated user - we don't care if they just

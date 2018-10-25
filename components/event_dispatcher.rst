@@ -2,7 +2,7 @@
    single: EventDispatcher
    single: Components; EventDispatcher
 
-EventDispatcher组件
+The EventDispatcher Component
 =============================
 
     The EventDispatcher component provides tools that allow your application
@@ -49,7 +49,7 @@ event - ``kernel.response``. Here's how it works:
 .. index::
    single: EventDispatcher; Events
 
-安装
+Installation
 ------------
 
 .. code-block:: terminal
@@ -60,7 +60,7 @@ Alternatively, you can clone the `<https://github.com/symfony/event-dispatcher>`
 
 .. include:: /components/require_autoload.rst.inc
 
-用法
+Usage
 -----
 
 .. seealso::
@@ -505,7 +505,7 @@ with some other dispatchers:
 * :doc:`/components/event_dispatcher/immutable_dispatcher`
 * :doc:`/components/event_dispatcher/traceable_dispatcher`
 
-了解更多
+Learn More
 ----------
 
 .. toctree::

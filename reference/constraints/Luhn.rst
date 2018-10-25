@@ -16,7 +16,7 @@ card: before communicating with a payment gateway.
 | Validator      | :class:`Symfony\\Component\\Validator\\Constraints\\LuhnValidator`    |
 +----------------+-----------------------------------------------------------------------+
 
-Basic 用法
+Basic Usage
 -----------
 
 To use the Luhn validator, simply apply it to a property on an object that

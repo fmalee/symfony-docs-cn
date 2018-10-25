@@ -1,7 +1,7 @@
 .. index::
    single: Translations
 
-翻译
+Translations
 ============
 
 The term "internationalization" (often abbreviated `i18n`_) refers to the
@@ -48,7 +48,7 @@ to learn even more. Overall, the process has several steps:
 
 .. _translation-configuration:
 
-安装
+Installation
 ------------
 
 First, run this command to install the translator before using it:
@@ -57,7 +57,7 @@ First, run this command to install the translator before using it:
 
     $ composer require symfony/translation
 
-配置
+Configuration
 -------------
 
 The previous command creates an initial config file where you can define the
@@ -540,8 +540,8 @@ steps:
 * Manage the user's locale, which is stored on the request, but can also
   be set on the user's session.
 
-更多关于翻译的内容
--------------------
+Learn more
+----------
 
 .. toctree::
     :maxdepth: 1

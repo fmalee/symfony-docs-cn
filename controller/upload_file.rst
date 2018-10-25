@@ -1,7 +1,7 @@
 .. index::
    single: Controller; Upload; File
 
-如果上传文件
+How to Upload Files
 ===================
 
 .. note::

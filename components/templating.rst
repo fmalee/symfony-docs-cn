@@ -2,7 +2,7 @@
    single: Templating
    single: Components; Templating
 
-Templating组件
+The Templating Component
 ========================
 
     The Templating component provides all the tools needed to build any kind
@@ -13,7 +13,7 @@ Templating组件
     implementation using PHP with additional tools for escaping and separating
     templates into blocks and layouts.
 
-安装
+Installation
 ------------
 
 .. code-block:: terminal
@@ -24,7 +24,7 @@ Alternatively, you can clone the `<https://github.com/symfony/templating>`_ repo
 
 .. include:: /components/require_autoload.rst.inc
 
-用法
+Usage
 -----
 
 .. seealso::
@@ -205,7 +205,7 @@ method is used::
         new CustomEngine(...),
     ));
 
-了解更多
+Learn More
 ----------
 
 .. toctree::

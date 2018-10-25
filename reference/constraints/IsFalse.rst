@@ -18,7 +18,7 @@ Also see :doc:`IsTrue <IsTrue>`.
 | Validator      | :class:`Symfony\\Component\\Validator\\Constraints\\IsFalseValidator` |
 +----------------+-----------------------------------------------------------------------+
 
-Basic 用法
+Basic Usage
 -----------
 
 The ``IsFalse`` constraint can be applied to a property or a "getter" method,

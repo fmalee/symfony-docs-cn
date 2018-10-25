@@ -42,7 +42,7 @@ In order to reduce that boilerplate code, Symfony commands can optionally use th
 **Symfony Style Guide**. These styles are implemented as a set of helper methods
 which allow to create *semantic* commands and forget about their styling.
 
-Basic 用法
+Basic Usage
 -----------
 
 In your command, instantiate the :class:`Symfony\\Component\\Console\\Style\\SymfonyStyle`
@@ -336,7 +336,7 @@ Defining your Own Styles
 ------------------------
 
 If you don't like the design of the commands that use the Symfony Style, you can
-define your own set of console styles. Just create a class that implements the
+define your own set of console styles. Create a class that implements the
 :class:`Symfony\\Component\\Console\\Style\\StyleInterface`::
 
     namespace App\Console;

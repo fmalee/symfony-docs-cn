@@ -1,12 +1,12 @@
 .. _symfony2-documentation:
 
-Symfony中文文档
+Symfony Documentation
 =====================
 
-快速上手
+Quick Tour
 ----------
 
-从这里开始学习用Symfony开发web程序的 :doc:`要领 <quick_tour/index>`:
+Get started fast with the Symfony :doc:`Quick Tour <quick_tour/index>`:
 
 .. toctree::
     :hidden:
@@ -17,7 +17,7 @@ Symfony中文文档
 * :doc:`quick_tour/flex_recipes`
 * :doc:`quick_tour/the_architecture`
 
-起步
+Getting Started
 ---------------
 
 .. toctree::
@@ -25,7 +25,7 @@ Symfony中文文档
 
     getting_started/index
 
-主题
+Topics
 ------
 
 .. toctree::
@@ -55,7 +55,7 @@ Symfony中文文档
     validation
     workflow
 
-最佳实践
+Best Practices
 --------------
 
 .. toctree::
@@ -63,9 +63,9 @@ Symfony中文文档
 
     best_practices/index
 
-阅读 :doc:`官方的最佳实践 </best_practices/index>`.
+Read the :doc:`Official Best Practices </best_practices/index>`.
 
-组件
+Components
 ----------
 
 .. toctree::
@@ -73,12 +73,12 @@ Symfony中文文档
 
     components/index
 
-阅读 :doc:`组件 </components/index>` 文档.
+Read the :doc:`Components </components/index>` documentation.
 
-参考文档
+Reference Documents
 -------------------
 
-使用参考文档快速获取答案:
+Get answers quickly with reference documents:
 
 .. toctree::
     :hidden:
@@ -87,10 +87,10 @@ Symfony中文文档
 
 .. include:: /reference/map.rst.inc
 
-贡献
+Contributing
 ------------
 
-向 Symfony 投稿:
+Contribute to Symfony:
 
 .. toctree::
     :hidden:
@@ -99,10 +99,10 @@ Symfony中文文档
 
 .. include:: /contributing/map.rst.inc
 
-创建框架
+Create your Own Framework
 -------------------------
 
-需要基于 Symofny 来创建自己的框架?
+Want to create your own framework based on Symfony?
 
 .. toctree::
     :hidden:

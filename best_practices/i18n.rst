@@ -1,54 +1,64 @@
-国际化
+Internationalization
 ====================
 
-国际化（internationalization）和本地化（localization）都是为了令程序及其内容适合于用户的不同区域或语言。
-在Symfony中，这是个可选功能。需要在使用之前安装（``composer require symfony/translation``）。
+Internationalization and localization adapt the applications and their contents
+to the specific region or language of the users. In Symfony this is an opt-in
+feature that needs to be installed before using it (``composer require symfony/translation``).
 
-翻译源文件的位置
+Translation Source File Location
 --------------------------------
 
 .. best-practice::
 
-    将翻译文件存在项目根目录的 ``translations/`` 目录中。
+    Store the translation files in the ``translations/`` directory at the root
+    of your project.
 
-如果应用中所有的翻译都位于一个中心位置，翻译人员的生活将会更加轻松。
+Your translators' lives will be much easier if all the application translations
+are in one central location.
 
-翻译源文件的格式
+Translation Source File Format
 ------------------------------
 
-Symfony翻译组件支持多种翻译格式：PHP, Qt, ``.po``, ``.mo``, JSON, CSV, INI,等等。
+The Symfony Translation component supports lots of different translation
+formats: PHP, Qt, ``.po``, ``.mo``, JSON, CSV, INI, etc.
 
 .. best-practice::
 
-    使用 XLIFF 格式的翻译文件。
+    Use the XLIFF format for your translation files.
 
-在所有可用的翻译格式中，只有 XLIFF 和 gettext 在专业翻译人员使用的工具中得到广泛支持。
-由于它基于 XML ，因此你还可以在编写时验证 XLIFF 文件内容。
+Of all the available translation formats, only XLIFF and gettext have broad
+support in the tools used by professional translators. And since it's based
+on XML, you can validate XLIFF file contents as you write them.
 
-Symfony支持 XLIFF 文件中的注释，使其对翻译人员更加用户友好。
-最后，良好的翻译都与上下文有关，这些 XLIFF 注释允许你定义该上下文。
+Symfony supports notes in XLIFF files, making them more user-friendly for
+translators. At the end, good translations are all about context, and these
+XLIFF notes allow you to define that context.
 
 .. tip::
 
-    `PHP Translation Bundle`_ 包含可以读取项目并自动更新 XLIFF 文件的高级提取器。
+    The `PHP Translation Bundle`_ includes advanced extractors that can read
+    your project and automatically update the XLIFF files.
 
-翻译的键
+Translation Keys
 ----------------
 
 .. best-practice::
 
-    始终使用键进行翻译而不是内容字符串。
+    Always use keys for translations instead of content strings.
 
-使用键（keys）简化了翻译文件的管理，因为你可以更改原始内容，而无需更新所有翻译文件。
+Using keys simplifies the management of the translation files because you can
+change the original contents without having to update all of the translation
+files.
 
-键应该始终描述他们的*目的*而*不是*他们的位置。
-例如，如果表单有一个标签为 “Username” 的字段，则一个完美的翻译键是 ``label.username``，
-而*不是* ``edit_form.label.username``。
+Keys should always describe their *purpose* and *not* their location. For
+example, if a form has a field with the label "Username", then a nice key
+would be ``label.username``, *not* ``edit_form.label.username``.
 
-翻译源文件示例
+Example Translation File
 ------------------------
 
-应用前面所有的最佳实践，程序的英文版翻译文件例程是下面这样的：
+Applying all the previous best practices, the sample translation file for
+English in the application would be:
 
 .. code-block:: xml
 
@@ -67,6 +77,6 @@ Symfony支持 XLIFF 文件中的注释，使其对翻译人员更加用户友好
 
 ----
 
-下一章: :doc:`/best_practices/security`
+Next: :doc:`/best_practices/security`
 
 .. _`PHP Translation Bundle`: https://github.com/php-translation/symfony-bundle

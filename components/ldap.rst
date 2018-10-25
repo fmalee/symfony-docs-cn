@@ -2,12 +2,12 @@
    single: Ldap
    single: Components; Ldap
 
-Ldap组件
+The Ldap Component
 ==================
 
     The Ldap component provides a means to connect to an LDAP server (OpenLDAP or Active Directory).
 
-安装
+Installation
 ------------
 
 .. code-block:: terminal
@@ -168,7 +168,7 @@ operation type.
 
 .. versionadded:: 4.2
     The ``applyOperations()`` method was introduced in Symfony 4.2.
-
+    
 .. versionadded:: 4.1
     The ``addAttributeValues()`` and ``removeAttributeValues()`` methods
     were introduced in Symfony 4.1.

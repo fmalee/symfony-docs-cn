@@ -1,7 +1,7 @@
 .. index::
     single: Web Server; Built-in Web Server
 
-如何使用 PHP 内置的服务器
+How to Use PHP's built-in Web Server
 ====================================
 
 Since PHP 5.4 the CLI SAPI comes with a `built-in web server`_. It can be used
@@ -32,8 +32,8 @@ Move into your project directory and run this command:
 Starting the Web Server
 -----------------------
 
-Running a Symfony application using PHP's built-in web server is as easy as
-executing the ``server:start`` command:
+To run a Symfony application using PHP's built-in web server, execute the
+``server:start`` command:
 
 .. code-block:: terminal
 
@@ -109,7 +109,7 @@ you have to pass the correct location using the ``--docroot`` option:
 Stopping the Server
 -------------------
 
-When you are finished, you can simply stop the web server using the ``server:stop``
+When you are finished, you can stop the web server using the ``server:stop``
 command:
 
 .. code-block:: terminal

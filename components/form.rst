@@ -2,7 +2,7 @@
     single: Forms
     single: Components; Form
 
-Form组件
+The Form Component
 ==================
 
     The Form component allows you to easily create, process and reuse forms.
@@ -13,7 +13,7 @@ traditionally this has been through HTML forms, the component focuses on
 processing data to and from your client and application, whether that data
 be from a normal form post or from an API.
 
-安装
+Installation
 ------------
 
 .. code-block:: terminal
@@ -107,7 +107,7 @@ object to read data off of the correct PHP superglobals (i.e. ``$_POST`` or
         For more information about the HttpFoundation component or how to
         install it, see :doc:`/components/http_foundation`.
 
-CSRF 保护
+CSRF Protection
 ~~~~~~~~~~~~~~~
 
 Protection against CSRF attacks is built into the Form component, but you need
@@ -154,7 +154,7 @@ the CSRF generator and validated when binding the form.
         $csrfStorage = new NativeSessionTokenStorage();
         // ...
 
-Twig 模板
+Twig Templating
 ~~~~~~~~~~~~~~~
 
 If you're using the Form component to process HTML forms, you'll need a way
@@ -234,7 +234,7 @@ For general details on rendering forms, see :doc:`/form/form_customization`.
 
 .. _component-form-intro-install-translation:
 
-翻译
+Translation
 ~~~~~~~~~~~
 
 If you're using the Twig integration with one of the default form theme files
@@ -285,7 +285,7 @@ keys, such as field labels, and their translations to your translation files.
 
 For more details on translations, see :doc:`/translation`.
 
-验证
+Validation
 ~~~~~~~~~~
 
 The Form component comes with tight (but optional) integration with Symfony's
@@ -762,7 +762,7 @@ validation errors to the user (i.e. during a partial AJAX submission or
 Because clearing the errors makes the form valid, ``clearErrors()`` should only
 be called after testing whether the form is valid.
 
-了解更多
+Learn more
 ----------
 
 .. toctree::

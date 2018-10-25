@@ -16,7 +16,7 @@ uniquely identify both financial and non-financial institutions.
 | Validator      | :class:`Symfony\\Component\\Validator\\Constraints\\BicValidator`     |
 +----------------+-----------------------------------------------------------------------+
 
-Basic 用法
+Basic Usage
 -----------
 
 To use the Bic validator, simply apply it to a property on an object that

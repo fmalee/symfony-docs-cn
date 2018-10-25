@@ -1,4 +1,4 @@
-文档的标准
+Documentation Standards
 =======================
 
 Contributions must follow these standards to match the style and tone of the
@@ -19,7 +19,7 @@ Sphinx
   definition, which you add on the bottom of the page;
 * Inline markup should be closed on the same line as the open-string;
 
-范例
+Example
 ~~~~~~~
 
 .. code-block:: text
@@ -46,7 +46,7 @@ Sphinx
 
     .. _`Symfony Documentation`: https://symfony.com/doc
 
-代码范例
+Code Examples
 -------------
 
 * The code follows the :doc:`Symfony Coding Standards </contributing/code/standards>`
@@ -80,7 +80,7 @@ Sphinx
   unless the next line is also a comment;
 * You should put a ``$`` in front of every bash line.
 
-格式
+Formats
 ~~~~~~~
 
 Configuration examples should show all supported formats using
@@ -93,7 +93,7 @@ Configuration examples should show all supported formats using
 * **Doctrine Mapping**: Annotations, YAML, XML, PHP
 * **Translation**: XML, YAML, PHP
 
-范例
+Example
 ~~~~~~~
 
 .. code-block:: php
@@ -126,7 +126,7 @@ Configuration examples should show all supported formats using
     In YAML you should put a space after ``{`` and before ``}`` (e.g. ``{ _controller: ... }``),
     but this should not be done in Twig (e.g.  ``{'hello' : 'value'}``).
 
-文件和目录
+Files and Directories
 ---------------------
 
 * When referencing directories, always add a trailing slash to avoid confusions

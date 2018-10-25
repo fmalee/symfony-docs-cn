@@ -1,4 +1,4 @@
-起步
+Getting Started
 ---------------
 
 .. toctree::

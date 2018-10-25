@@ -2,14 +2,14 @@
     single: Expressions
     Single: Components; Expression Language
 
-ExpressionLanguage组件
+The ExpressionLanguage Component
 ================================
 
     The ExpressionLanguage component provides an engine that can compile and
     evaluate expressions. An expression is a one-liner that returns a value
     (mostly, but not limited to, Booleans).
 
-安装
+Installation
 ------------
 
 .. code-block:: terminal
@@ -49,7 +49,7 @@ Expressions can be seen as a very restricted PHP sandbox and are immune to
 external injections as you must explicitly declare which variables are available
 in an expression.
 
-用法
+Usage
 -----
 
 The ExpressionLanguage component can compile and evaluate expressions.
@@ -121,7 +121,7 @@ AST Dumping and Editing
 The AST (*Abstract Syntax Tree*) of expressions can be dumped and manipulated
 as explained in :doc:`/components/expression_language/ast`.
 
-了解更多
+Learn More
 ----------
 
 .. toctree::

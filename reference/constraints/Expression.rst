@@ -19,7 +19,7 @@ gives you similar flexibility.
 | Validator      | :class:`Symfony\\Component\\Validator\\Constraints\\ExpressionValidator`                      |
 +----------------+-----------------------------------------------------------------------------------------------+
 
-Basic 用法
+Basic Usage
 -----------
 
 Imagine you have a class ``BlogPost`` with ``category`` and ``isTechnicalPost``

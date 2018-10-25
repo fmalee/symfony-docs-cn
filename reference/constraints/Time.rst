@@ -15,7 +15,7 @@ be cast into a string) that follows a valid ``HH:MM:SS`` format.
 | Validator      | :class:`Symfony\\Component\\Validator\\Constraints\\TimeValidator`     |
 +----------------+------------------------------------------------------------------------+
 
-Basic 用法
+Basic Usage
 -----------
 
 Suppose you have an Event class, with a ``startAt`` field that is the time

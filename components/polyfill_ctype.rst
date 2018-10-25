@@ -3,13 +3,13 @@
     single: Ctype
     single: Components; Polyfill
 
-Symfony Polyfill / Ctype 组件
+The Symfony Polyfill / Ctype Component
 ======================================
 
     This component provides ``ctype_*`` functions to users who run PHP versions
     without the ctype extension.
 
-安装
+Installation
 ------------
 
 .. code-block:: terminal
@@ -20,7 +20,7 @@ Alternatively, you can clone the `<https://github.com/symfony/polyfill-ctype>`_ 
 
 .. include:: /components/require_autoload.rst.inc
 
-用法
+Usage
 -----
 
 Once this component is installed in your application, you can use the following

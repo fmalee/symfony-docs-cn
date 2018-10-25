@@ -1,13 +1,13 @@
-提交补丁
+Submitting a Patch
 ==================
 
 Patches are the best way to provide a bug fix or to propose enhancements to
 Symfony.
 
-Step 1: 配置环境
+Step 1: Setup your Environment
 ------------------------------
 
-安装软件
+Install the Software Stack
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Before working on Symfony, setup a friendly environment with the following
@@ -16,7 +16,7 @@ software:
 * Git;
 * PHP version 5.5.9 or above.
 
-配置 Git
+Configure Git
 ~~~~~~~~~~~~~
 
 Set up your user information with your real name and a working email address:
@@ -61,7 +61,7 @@ Set up your user information with your real name and a working email address:
     Replace --global by --local if you want to set it only for the active
     repository
 
-获取 Symfony 源代码
+Get the Symfony Source Code
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Get the Symfony source code:
@@ -93,14 +93,14 @@ environment as explained in the dedicated :doc:`document <tests>`.
 Step 2: Work on your Patch
 --------------------------
 
-许可
+The License
 ~~~~~~~~~~~
 
 Before you start, you must know that all the patches you are going to submit
 must be released under the *MIT license*, unless explicitly specified in your
 commits.
 
-选择正确的分支
+Choose the right Branch
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 Before working on a patch, you must determine on which branch you need to
@@ -223,7 +223,7 @@ an existing one for instance), it must also include the following:
   ``UPGRADE`` file(s) if the changes break backward compatibility or if you
   deprecate something that will ultimately break backward compatibility.
 
-Step 3: 提交分支
+Step 3: Submit your Patch
 -------------------------
 
 Whenever you feel that your patch is ready for submission, follow the
@@ -265,7 +265,7 @@ Check that all tests still pass and push your branch remotely:
 
 .. _contributing-code-pull-request:
 
-创建拉取请求
+Make a Pull Request
 ~~~~~~~~~~~~~~~~~~~
 
 You can now make a pull request on the ``symfony/symfony`` GitHub repository.
@@ -339,7 +339,7 @@ commit message).
 In addition to this "code" pull request, you must also send a pull request to
 the `documentation repository`_ to update the documentation when appropriate.
 
-修订补丁
+Rework your Patch
 ~~~~~~~~~~~~~~~~~
 
 Based on the feedback on the pull request, you might need to rework your

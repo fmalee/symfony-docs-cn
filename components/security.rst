@@ -1,7 +1,7 @@
 .. index::
    single: Security
 
-Security组件
+The Security Component
 ======================
 
     The Security component provides a complete security system for your web
@@ -11,7 +11,7 @@ Security组件
     component provides ways to authorize authenticated users based on their
     roles.
 
-安装
+Installation
 ------------
 
 .. code-block:: terminal
@@ -42,7 +42,7 @@ used separately:
     component in any PHP application. Read the :doc:`/security` article to learn
     about how to use it in Symfony applications.
 
-了解更多
+Learn More
 ----------
 
 .. toctree::

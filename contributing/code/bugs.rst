@@ -1,4 +1,4 @@
-汇报 Bug
+Reporting a Bug
 ===============
 
 Whenever you find a bug in Symfony, we kindly ask you to report it. It helps

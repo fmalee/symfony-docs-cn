@@ -17,7 +17,7 @@ borders with a reduced risk of propagating transcription errors.
 | Validator      | :class:`Symfony\\Component\\Validator\\Constraints\\IbanValidator`    |
 +----------------+-----------------------------------------------------------------------+
 
-Basic 用法
+Basic Usage
 -----------
 
 To use the Iban validator, simply apply it to a property on an object that

@@ -2,7 +2,7 @@
    single: BrowserKit
    single: Components; BrowserKit
 
-BrowserKit组件
+The BrowserKit Component
 ========================
 
     The BrowserKit component simulates the behavior of a web browser, allowing
@@ -14,7 +14,7 @@ BrowserKit组件
     If you need to make requests to external sites and applications, consider
     using `Goutte`_, a simple web scraper based on Symfony Components.
 
-安装
+Installation
 ------------
 
 .. code-block:: terminal
@@ -25,7 +25,7 @@ Alternatively, you can clone the `<https://github.com/symfony/browser-kit>`_ rep
 
 .. include:: /components/require_autoload.rst.inc
 
-基本用法
+Basic Usage
 -----------
 
 .. seealso::
@@ -34,7 +34,7 @@ Alternatively, you can clone the `<https://github.com/symfony/browser-kit>`_ rep
     component in any PHP application. Read the :ref:`Symfony Functional Tests <functional-tests>`
     article to learn about how to use it in Symfony applications.
 
-创建客户端
+Creating a Client
 ~~~~~~~~~~~~~~~~~
 
 The component only provides an abstract client and does not provide any backend
@@ -64,7 +64,7 @@ at `Goutte`_. For an implementation based on ``HttpKernelInterface``, have
 a look at the :class:`Symfony\\Component\\HttpKernel\\Client` provided by
 the :doc:`HttpKernel component </components/http_kernel>`.
 
-创建请求
+Making Requests
 ~~~~~~~~~~~~~~~
 
 Use the :method:`Symfony\\Component\\BrowserKit\\Client::request` method to
@@ -94,7 +94,7 @@ make AJAX requests::
 .. versionadded:: 4.1
     The ``xmlHttpRequest()`` method was introduced in Symfony 4.1.
 
-点击链接
+Clicking Links
 ~~~~~~~~~~~~~~
 
 The ``Client`` object is capable of simulating link clicks. Pass the text
@@ -120,7 +120,7 @@ provides access to the link properties (e.g. ``$link->getMethod()``,
     $link = $crawler->selectLink('Go elsewhere...')->link();
     $client->click($link);
 
-提交表单
+Submitting Forms
 ~~~~~~~~~~~~~~~~
 
 The ``Client`` object is also capable of submitting forms. First, select the
@@ -241,7 +241,7 @@ Looping Through Cookies
         // ...
     }
 
-设置 Cookies
+Setting Cookies
 ~~~~~~~~~~~~~~~
 
 You can also create cookies and add them to a cookie jar that can be injected
@@ -290,7 +290,7 @@ also delete all the cookies::
     // reset the client (history and cookies are cleared too)
     $client->restart();
 
-了解更多
+Learn more
 ----------
 
 * :doc:`/testing`

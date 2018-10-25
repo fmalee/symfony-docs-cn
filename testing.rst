@@ -1,14 +1,14 @@
 .. index::
    single: Tests
 
-测试
+Testing
 =======
 
 Whenever you write a new line of code, you also potentially add new bugs.
 To build better and more reliable applications, you should test your code
 using both functional and unit tests.
 
-PHPUnit 测试框架
+The PHPUnit Testing Framework
 -----------------------------
 
 Symfony integrates with an independent library called `PHPUnit`_ to give you a
@@ -50,7 +50,7 @@ Symfony application.
 .. index::
    single: Tests; Unit tests
 
-单元测试
+Unit Tests
 ----------
 
 A unit test is a test against a single PHP class, also called a *unit*. If you
@@ -122,7 +122,7 @@ Running tests for a given file or directory is also very easy:
 
 .. _functional-tests:
 
-功能测试
+Functional Tests
 ----------------
 
 Functional tests check the integration of the different layers of an
@@ -141,7 +141,7 @@ utilities used in the functional tests:
 
     $ composer require --dev symfony/browser-kit symfony/css-selector
 
-第一个功能测试
+Your First Functional Test
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 First, install the BrowserKit component in your project:
@@ -1031,7 +1031,7 @@ section:
         <!-- ... -->
     </phpunit>
 
-了解更多
+Learn more
 ----------
 
 .. toctree::

@@ -3,13 +3,13 @@
     single: Iconv
     single: Components; Polyfill
 
-Symfony Polyfill / Iconv 组件
+The Symfony Polyfill / Iconv Component
 ======================================
 
     This component provides a native PHP implementation of the ``iconv_*``
     functions to users who run PHP versions without the ``iconv`` extension.
 
-安装
+Installation
 ------------
 
 .. code-block:: terminal
@@ -20,7 +20,7 @@ Alternatively, you can clone the `<https://github.com/symfony/polyfill-iconv>`_ 
 
 .. include:: /components/require_autoload.rst.inc
 
-用法
+Usage
 -----
 
 Once this component is installed in your application, you can use the following

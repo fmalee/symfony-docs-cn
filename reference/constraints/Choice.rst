@@ -24,7 +24,7 @@ an array of items is one of those valid choices.
 | Validator      | :class:`Symfony\\Component\\Validator\\Constraints\\ChoiceValidator` |
 +----------------+----------------------------------------------------------------------+
 
-Basic 用法
+Basic Usage
 -----------
 
 The basic idea of this constraint is that you supply it with an array of

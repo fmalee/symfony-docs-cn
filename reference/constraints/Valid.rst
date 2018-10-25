@@ -16,7 +16,7 @@ an object and all sub-objects associated with it.
 
 .. include:: /reference/forms/types/options/_error_bubbling_hint.rst.inc
 
-Basic 用法
+Basic Usage
 -----------
 
 In the following example, create two classes ``Author`` and ``Address``

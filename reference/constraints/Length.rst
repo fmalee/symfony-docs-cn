@@ -25,7 +25,7 @@ Validates that a given string length is *between* some minimum and maximum value
 | Validator      | :class:`Symfony\\Component\\Validator\\Constraints\\LengthValidator` |
 +----------------+----------------------------------------------------------------------+
 
-Basic 用法
+Basic Usage
 -----------
 
 To verify that the ``firstName`` field length of a class is between "2"
