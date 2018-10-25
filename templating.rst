@@ -128,7 +128,7 @@ Twig 模板缓存
 Twig超快的原因是，Twig模板被编译成原生PHP类并且缓存起来。
 不用担心，这一切自动完成，毋须你做任何事。
 而且在开发时，当你做出任何修改时，Twig足够智能地重新编译你的模板。
-这意味着，Twig在产品环境下极快，在开发环境却极易使用。
+这意味着，Twig在生产环境下极快，而在开发时很方便使用。
 
 .. index::
    single: Templating; Inheritance
@@ -175,11 +175,11 @@ Twig超快的原因是，Twig模板被编译成原生PHP类并且缓存起来。
 
     虽然讨论的是关于Twig的模板继承，但在思维方式上Twig和PHP模板之间是相同的。
 
-该模板定义了一个简单的两列式HTML框架页面。
+该模板定义了一个两列式HTML框架页面。
 在本例中，三处 ``{% block %}`` 区域被定义了（``title``、``sidebar`` 和 ``body``）。
 每个区块都可以被继承它的子模板覆写，或者保留现在这种默认实现。这些模板也能被直接渲染。
 只不过此时只是显示基础模板所定义的内容。
-在该示例中，该模板都将简单的使用 ``title``、 ``sidebar`` 和 ``body`` 等区块的默认值。
+在该示例中，该模板都将使用 ``title``、 ``sidebar`` 和 ``body`` 等区块的默认值。
 
 一个子模板看起来是这样的：
 
@@ -199,12 +199,12 @@ Twig超快的原因是，Twig模板被编译成原生PHP类并且缓存起来。
 
 .. note::
 
-    父模板被存放在 ``templates/`` 目录，因此其路径是最简单的 ``base.html.twig``。模板命名约定可参考下文的 :ref:`template-naming-locations`。
+    父模板被存放在 ``templates/`` 目录，因此其路径是 ``base.html.twig``。模板命名约定可参考下文的 :ref:`template-naming-locations`。
 
 模板继承的关键是 ``{% extends %}`` 标签。
 该标签告诉模板引擎首先评估父模板，它设置了布局并定义了若干区块。
 然后子模板被渲染，上例中父模板中定义的 ``title`` 和 ``body`` 两个区块将会被子模板中的同名区块内容所取代。
-根据 ``blog_entries``的取值，输出的内容可能像下面这样：
+根据 ``blog_entries`` 的取值，输出的内容可能像下面这样：
 
 .. code-block:: html
 
@@ -335,7 +335,7 @@ Symfony使用Twig的命名空间语法（``@BundleName/directory/filename.html.t
 Symfony内置了几个特殊的Twig标签和函数，来帮助模板设计者简化工作。
 在PHP中，模板系统提供了一个可扩展的 *辅助(helper)* 系统用于在模板上下文中提供有用的功能。
 
-你已经看到了一些内置的Twig标签，比如 ``{% block %}`` 和 ``{% extends %}``等，现在，你将会学到更多。
+你已经看到了一些内置的Twig标签，比如 ``{% block %}`` 和 ``{% extends %}`` 等，现在，你将会学到更多。
 
 .. index::
    single: Templating; Including other templates
@@ -364,7 +364,7 @@ Symfony内置了几个特殊的Twig标签和函数，来帮助模板设计者简
         {{ article.body }}
     </p>
 
-在其他任何模板中引用这个模板很简单：
+使用 ``{{ include() }}`` 函数实现从任何其他模板中引用此模板：
 
 .. code-block:: html+twig
 
@@ -379,10 +379,11 @@ Symfony内置了几个特殊的Twig标签和函数，来帮助模板设计者简
         {% endfor %}
     {% endblock %}
 
-上例中，使用了 ``{{ include() }}`` 函数来引用一个模板。
 注意，模板命名要遵循相同的典型约定。
-在 ``article_details.html.twig`` 模板中使用 ``article`` 变量，这是我们传入模板的。
-本例中，你也可以完全不这样做，因为在 ``list.html.twig`` 模板中所有可用的变量也都可以在 ``article_details.html.twig`` 中使用（除非你设置了 `with_context`_ 为 false）。
+在 ``article_details.html.twig`` 模板中使用了 ``article`` 变量，这是我们传入模板的。
+本例中，你也可以完全不这样做，
+因为在 ``list.html.twig``模板中所有可用的变量也都可以在 ``article_details.html.twig`` 中使用
+（除非你设置了 `with_context`_ 为 false）。
 
 .. tip::
 
@@ -457,7 +458,7 @@ Symfony内置了几个特殊的Twig标签和函数，来帮助模板设计者简
 
         return $routes;
 
-要链到该页面，只需使用Twig的 ``path()`` 函数来指定这个路由即可：
+要链到该页面，需使用Twig的 ``path()`` 函数来指定这个路由即可：
 
 .. code-block:: html+twig
 
@@ -548,7 +549,7 @@ Symfony内置了几个特殊的Twig标签和函数，来帮助模板设计者简
 ~~~~~~~~~~~~~~~~~
 
 模板通常也需要一些图片、Javascript、样式文件和其他web资源。
-当然你可以写死它们的路径，比如 ``/images/logo.png``。
+你可以写死它们的路径，比如 ``/images/logo.png``。
 但是Symfony通过Twig函数 ``asset()`` ，提供了一个更加动态的选择。
 
 要使用该函数，先安装 *asset* 包：
@@ -625,8 +626,8 @@ Symfony内置了几个特殊的Twig标签和函数，来帮助模板设计者简
         </body>
     </html>
 
-这也太简单了！
-但如果你想从子模板中引用一个额外的样式或者javascript进来该怎么办呢？
+这看起来几乎像普通的HTML，但添加了 ``{% block %}``。
+当你需要在子模板中包含额外的样式表或JavaScript时，这些非常有用。
 比如，假设你有一个联系页面需要应用一个 ``contact.css`` 样式，*仅* 用在该页面上。
 在联系人页面的模板中，你可以这样实现：
 
@@ -643,8 +644,8 @@ Symfony内置了几个特殊的Twig标签和函数，来帮助模板设计者简
 
     {# ... #}
 
-在子模板中，你只需要覆写 ``stylesheets`` 区块并把你新样式表标签放到该区块里。
-当然，由于你只是想把它添加到父区块的内容中（而不是真的 *替代* 它们），
+在子模板中，你需要覆写 ``stylesheets`` 区块并把你新样式表标签放到该区块里。
+由于你只是想把它添加到父区块的内容中（而不是真的 *替代* 它们），
 所以你需要先用 ``parent()`` 函数来获取基础模板中的所有 ``stylesheets`` 区块中的内容。
 
 你也可以引用位于你bundle的 ``Resources/public/`` 文件夹下的资源。

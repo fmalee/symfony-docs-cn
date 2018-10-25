@@ -21,7 +21,7 @@
 
     定义一个功能测试，至少检查你的应用页面是否成功加载。
 
-由于 :ref:`PHPUnit data providers <testing-data-providers>` 程序，这样的功能测试很容易实现::
+:ref:`PHPUnit数据提供程序 <testing-data-providers>` 帮助你实现功能测试::
 
     // tests/ApplicationAvailabilityFunctionalTest.php
     namespace App\Tests;

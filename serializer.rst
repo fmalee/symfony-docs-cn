@@ -11,7 +11,7 @@ its philosophy and the normalizers and encoders terminology.
 
 .. _activating_the_serializer:
 
-Installation
+安装
 ------------
 
 In applications using :doc:`Symfony Flex </setup/flex>`, run this command to
@@ -138,7 +138,7 @@ to your class and choose which groups to use when serializing::
 .. tip::
 
     The value of the ``groups`` key can be a single string, or an array of strings.
-    
+
     .. versionadded:: 4.2
         The option to pass a single string to ``groups`` was introduced in Symfony 4.2.
 

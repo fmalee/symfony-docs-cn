@@ -40,7 +40,7 @@
 
 在生成环境下，你应该使用 Nginx 或 Apache 等Web服务器
 （请参阅 :doc:`配置一个Web服务器来运行Symfony </setup/web_server_configuration>`）。
-但是对于开发来说，使用 :doc:`Symfony的内置服务器 <setup/built_in_web_server>` 会更容易。
+但是对于开发来说，使用 :doc:`Symfony的内置服务器 <setup/built_in_web_server>` 会更方便。
 
 进入你的新项目并且运行内置服务器：
 
@@ -71,7 +71,7 @@
 使用 Git 保存项目
 ---------------------------
 
-将你的项目存储在GitHub，GitLab和Bitbucket等服务中非常简单！
+在GitHub，GitLab和Bitbucket等服务中存储你的项目与任何其他代码项目一样！
 用 ``Git`` 初始化一个新的仓库，你就可以推送代码到你的远程服务器了：
 
 .. code-block:: terminal
@@ -88,8 +88,8 @@
 设置现有的Symfony项目
 --------------------------------------
 
-如果你正在使用现有的Symfony应用，那么你只需要做一些事情来完成项目设置。
-假设你的团队使用Git，你可以使用以下命令来设置项目：
+如果你正在使用现有的Symfony应用，则只需获取项目代码并使用Composer安装依赖项。
+假设你的团队使用Git，请使用以下命令设置项目：
 
 .. code-block:: terminal
 

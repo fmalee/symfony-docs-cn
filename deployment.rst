@@ -107,18 +107,28 @@ A) 需求检查
 B) 配置你的环境变量
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-大多数Symfony应用程序从环境变量中读取其配置。在本地开发时，您通常会将它们存储在.env文件中。在制作时，您有两种选择：
 Most Symfony applications read their configuration from environment variables.
-While developing locally, you'll usually store these in a ``.env`` file. But on
-production, instead of creating this file, you should set *real* environment variables.
+While developing locally, you'll usually store these in a ``.env`` file. On production,
+you have two options:
 
-How you set environment variables, depends on your setup: they can be set at the
-command line, in your Nginx configuration, or via other methods provided by your
-hosting service.
+1. Create "real" environment variables. How you set environment variables, depends
+   on your setup: they can be set at the command line, in your Nginx configuration,
+   or via other methods provided by your hosting service.
 
-At the very least you need to define the ``APP_ENV=prod`` environment variable
-to run the application in ``prod`` mode, but depending on your application you
-may need to define other env vars too.
+2. Or, create a ``.env`` file just like your local development (see note below)
+
+There is no significant advantage to either of the two options: use whatever is
+most natural in your hosting environment.
+
+.. note::
+
+    If you use the ``.env`` file on production, you may need to move your
+    ``symfony/dotenv`` dependency from ``require-dev`` to ``require`` in ``composer.json``:
+
+    .. code-block:: terminal
+
+        $ composer remove symfony/dotenv
+        $ composer require symfony/dotenv
 
 C) 安装/更新依赖
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

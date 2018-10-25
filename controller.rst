@@ -249,7 +249,7 @@ Symfony会自动给你传递所需的服务::
             ))
         ;
 
-你当然也可以在控制器中使用常规的 :ref:`构造函数注入 <services-constructor-injection>`。
+与所有服务一样，你也可以在控制器中使用常规的 :ref:`构造函数注入 <services-constructor-injection>`。
 
 .. versionadded:: 4.1
     Symfony 4.1中引入了将标量值(scalar values)绑定到控制器参数的功能。以前只能绑定服务。
@@ -319,7 +319,7 @@ Symfony会自动给你传递所需的服务::
 -------------------------------------------
 
 如果你需要读取查询参数、获取请求标头或访问上传的文件，该怎么办？
-所有这些信息都存储在Symfony的 ``Request``对象中。
+所有这些信息都存储在Symfony的 ``Request`` 对象中。
 要在控制器中获取它，只需将Request添加为参数并对其该类进行类类型约束::
 
     use Symfony\Component\HttpFoundation\Request;

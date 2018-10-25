@@ -44,7 +44,7 @@ Twig 扩展
 
 我们的应用需要自定义一个 ``md2html`` Twig过滤器，以便我们可以将每个帖子的Markdown内容转换为HTML。
 为此，请创建一个新的 ``Markdown`` 类，稍后将由Twig扩展使用。
-它只需要定义一个方法来将Markdown内容转换为HTML::
+它需要定义一个方法来将Markdown内容转换为HTML::
 
     namespace App\Utils;
 

@@ -186,7 +186,6 @@ URL 中的 ``{name}`` 的值变成了控制器中的参数。
 
 路由还可以*再*继续添加，但是我们将在下次再进行！现在，我们的应用需要更多的功能！比如模板引擎、日志记录、调试工具以及其他。
 
-
 请阅读 :doc:`/quick_tour/flex_recipes` 以继续下去。
 
 .. _`Composer`: https://getcomposer.org/

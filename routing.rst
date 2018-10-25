@@ -723,7 +723,7 @@ Symfony遵循这个逻辑，在带有和不带尾部斜杠的URL之间重定向�
     则不会发生此自动重定向，并且始终匹配正确的路由。
 
 .. versionadded:: 4.1
-    在Symfony 4.1中引入了从 ``/foo/`` 到 ``/foo`` 的``301``自动重定向。在之前的Symfony版本中，则是产生``404``响应。
+    在Symfony 4.1中引入了从 ``/foo/`` 到 ``/foo`` 的 ``301`` 自动重定向。在之前的Symfony版本中，则是产生 ``404`` 响应。
 
 .. index::
    single: Routing; Controllers
@@ -734,7 +734,7 @@ Symfony遵循这个逻辑，在带有和不带尾部斜杠的URL之间重定向�
 控制器命名模式
 -------------------------
 
-路由中的 ``controller`` 值具有一个非常简单的格式 ``CONTROLLER_CLASS::METHOD``。
+路由中的 ``controller`` 值具有一个格式 ``CONTROLLER_CLASS::METHOD``。
 
 .. tip::
 
@@ -751,8 +751,9 @@ Symfony遵循这个逻辑，在带有和不带尾部斜杠的URL之间重定向�
 
 路由系统也可以生成URL。实际上，路由是双向系统：将URL映射到一个控制器以及一个路由对应一个URL。
 
-要生成URL，你需要指定路由的名称（例如 ``blog_show``）以及该路由路径中使用的任何通配符（例如 ``slug = my-blog-post``）。
-有了这些信息，就可以轻松生成任何URL::
+要生成URL，你需要指定路由的名称（例如 ``blog_show``）以及该路由路径中使用的任何通配符
+（例如 ``slug = my-blog-post``）。
+有了这些信息，就可以在控制器中生成一个URL::
 
     class MainController extends AbstractController
     {
