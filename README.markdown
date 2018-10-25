@@ -23,9 +23,9 @@
 - `Services`：服务
 - `Service Container`：服务容器
 - `Dependency Injection`：依赖注入
-- `type-hint`：类型约束
-- `fully-qualified`：完全限定
-- `centralize`：集中化
+- `Type-Hint`：类型约束
+- `Fully-Qualified`：完全限定
+- `Centralize`：集中化
 - `Recipes`：指令
 - `Meatdata`：元数据
 - `Schema`：模式
@@ -38,9 +38,10 @@
 - `Override`：重写，覆盖
 - `Public`：公有
 - `Private`：私有
-- `auto-tag`：自动标记
-- `tags`：标签
-- `resource`：资源
+- `Auto-Tag`：自动标记
+- `Tag`：标签
+- `Tagged`：标记
+- `Resource`：资源
 - `Asset`：资源，特指CSS，JS等Web资源
 - `Authentication`：认证
 - `Authenticator`：认证器
@@ -55,6 +56,13 @@
 - `Impersonation`：模拟
 - `Dummy`：虚拟
 - `Profiler`：调试器
+- `Voter`：表决器
+- `Hierarchy`：层级
+- `Logger`：日志器
+- `Handler`：处理器
+- `Channel`：通道
+- `Helper`：辅助函数，辅助程序
+- `Section`：切片
 
 ## 语法问题
 
