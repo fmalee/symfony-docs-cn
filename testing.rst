@@ -516,24 +516,17 @@ AJAX请求
 
 .. tip::
 
-    If the information you need to check is available from the profiler, use
-    it instead.
     如果你需要检查的信息可以从分析器获得，请改用它。
 
-访问Profiler数据
+访问分析器数据
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-在每个请求上，您都可以启用Symfony探查器来收集有关该请求的内部处理的数据。例如，可以使用分析器来验证给定页面在加载时执行少于一定数量的数据库查询。
-On each request, you can enable the Symfony profiler to collect data about the
-internal handling of that request. For example, the profiler could be used to
-verify that a given page executes less than a certain number of database
-queries when loading.
+在每个请求上，你都可以启用Symfony分析器来收集有关该请求的内部处理的数据。
+例如，可以使用分析器来验证给定页面在加载时执行少于一定数量的数据库查询。
 
-要获取上次请求的Profiler，请执行以下操作：
-To get the Profiler for the last request, do the following::
+要获取最后一次请求的分析器，请执行以下操作::
 
-    // enables the profiler for the very next request
-    // 启用探查器以进行下一个请求
+    // 启用分析器以进行下一个请求
     $client->enableProfiler();
 
     $crawler = $client->request('GET', '/profiler');
@@ -541,29 +534,21 @@ To get the Profiler for the last request, do the following::
     // gets the profile
     $profile = $client->getProfile();
 
-有关在测试中使用探查器的具体详细信息，请参阅“功能测试”中的“如何使用探查器”一文。
-For specific details on using the profiler inside a test, see the
-:doc:`/testing/profiling` article.
+有关在测试中使用分析器的具体详细信息，请参阅 :doc:`/testing/profiling` 文档。
 
 重定向
 ~~~~~~~~~~~
 
-当请求返回重定向响应时，客户端不会自动跟踪它。您可以使用followRedirect（）方法检查响应并强制重定向：
-When a request returns a redirect response, the client does not follow
-it automatically. You can examine the response and force a redirection
-afterwards with the ``followRedirect()`` method::
+当请求返回重定向响应时，客户端并不会自动跟踪它。
+你可以使用 ``followRedirect()`` 方法检查响应并强制重定向::
 
     $crawler = $client->followRedirect();
 
-如果您希望客户端自动遵循所有重定向，您可以在执行请求之前通过调用followRedirects（）方法强制它们：
-If you want the client to automatically follow all redirects, you can
-force them by calling the ``followRedirects()`` method before performing the request::
+如果你希望客户端自动遵循所有重定向，你可以在执行请求之前通过调用 ``followRedirects()`` 方法强制启动::
 
     $client->followRedirects();
 
-如果将false传递给followRedirects（）方法，则将不再遵循重定向：
-If you pass ``false`` to the ``followRedirects()`` method, the redirects
-will no longer be followed::
+如果将 ``false`` 传递给 ``followRedirects()`` 方法，则将不再遵循重定向::
 
     $client->followRedirects(false);
 
@@ -573,12 +558,8 @@ will no longer be followed::
 .. versionadded:: 3.4
     ``catchExceptions()`` 方法是在Symfony 3.4中引入的。
 
-在功能测试中调试异常可能很困难，因为默认情况下它们被捕获，您需要查看日志以查看抛出的异常。
-禁用在测试客户端中捕获异常允许PHPUnit报告异常：
-Debugging exceptions in functional tests may be difficult because by default
-they are caught and you need to look at the logs to see which exception was
-thrown. Disabling catching of exceptions in the test client allows the exception
-to be reported by PHPUnit::
+在功能测试中调试异常可能很困难，因为默认情况下它们会被捕获，你需要检查日志以查看抛出的异常。
+禁用在测试客户端中捕获异常，以允许PHPUnit报告异常::
 
     $client->catchExceptions(false);
 
@@ -590,17 +571,13 @@ to be reported by PHPUnit::
 Crawler
 -----------
 
-每次向客户发出请求时，都会返回一个Crawler实例。它允许您遍历HTML文档，选择节点，查找链接和表单。
-A Crawler instance is returned each time you make a request with the Client.
-It allows you to traverse HTML documents, select nodes, find links and forms.
+每次向客户端发出请求时，都会返回一个Crawler实例。它允许你遍历HTML文档、选择节点、查找链接和表单。
 
 遍历
 ~~~~~~~~~~
 
-与jQuery一样，Crawler具有遍历HTML / XML文档的DOM的方法。例如，以下内容查找所有input [type = submit]元素，选择页面上的最后一个元素，然后选择其直接父元素：
-Like jQuery, the Crawler has methods to traverse the DOM of an HTML/XML
-document. For example, the following finds all ``input[type=submit]`` elements,
-selects the last one on the page, and then selects its immediate parent element::
+与jQuery一样，Crawler具有遍历HTML/XML文档的DOM的方法。
+例如，以下内容查找所有 ``input[type=submit]`` 元素，选择页面上的最后一个元素，然后选择其直接父元素::
 
     $newCrawler = $crawler->filter('input[type=submit]')
         ->last()
@@ -611,28 +588,29 @@ selects the last one on the page, and then selects its immediate parent element:
 还有许多其他方法：
 
 ``filter('h1.title')``
-    与CSS选择器匹配的节点。
+    与CSS选择器匹配的节点
 ``filterXpath('h1')``
-    与XPath表达式匹配的节点。
+    与XPath表达式匹配的节点
 ``eq(1)``
-    指定索引的节点。
+    指定索引的节点
 ``first()``
-    第一个节点。
+    第一个节点
 ``last()``
-    最后一个节点。
+    最后一个节点
 ``siblings()``
-    Siblings.
+    相邻同胞
 ``nextAll()``
-    All following siblings.
+    后面的所有相邻同胞
 ``previousAll()``
-    All preceding siblings.
+    前面的所有相邻同胞
 ``parents()``
-    Returns the parent nodes.
+    返回父节点
 ``children()``
-    Returns children nodes.
+    返回子节点
 ``reduce($lambda)``
-    Nodes for which the callable does not return false.
+    可调用对象不返回false的节点
 
+由于这些方法中的每一个都返回一个新的Crawler实例，因此您可以通过链接方法调用来缩小节点选择范围：
 Since each of these methods returns a new ``Crawler`` instance, you can
 narrow down your node selection by chaining the method calls::
 
@@ -648,34 +626,35 @@ narrow down your node selection by chaining the method calls::
 
 .. tip::
 
-    Use the ``count()`` function to get the number of nodes stored in a Crawler:
-    ``count($crawler)``
+    使用 ``count()`` 函数获取Crawler中存储的节点总数：``count($crawler)``
 
-Extracting Information
+提取信息
 ~~~~~~~~~~~~~~~~~~~~~~
 
-The Crawler can extract information from the nodes::
+Crawler可以从节点中提取信息::
 
-    // returns the attribute value for the first node
+    // returns the attribute value for the first node返回第一个节点的属性值
     $crawler->attr('class');
 
-    // returns the node value for the first node
+    // returns the node value for the first node返回第一个节点的节点值
     $crawler->text();
 
     // extracts an array of attributes for all nodes
     // (_text returns the node value)
     // returns an array for each element in crawler,
     // each with the value and href
+    // 为所有节点提取属性数组（_text返回节点值）为crawler中的每个元素返回一个数组，每个元素都带有值和href
     $info = $crawler->extract(array('_text', 'href'));
 
-    // executes a lambda for each node and return an array of results
+    // executes a lambda for each node and return an array of results为每个节点执行一个lambda并返回一个结果数组
     $data = $crawler->each(function ($node, $i) {
         return $node->attr('href');
     });
 
-Links
+链接
 ~~~~~
 
+使用``clickLink（）``方法单击包含给定文本的第一个链接（或带有``alt``属性的第一个可点击图像）::
 Use the ``clickLink()`` method to click on the first link that contains the
 given text (or the first clickable image with that ``alt`` attribute)::
 
@@ -684,6 +663,8 @@ given text (or the first clickable image with that ``alt`` attribute)::
 
     $client->clickLink('Click here');
 
+如果需要访问 :class:`Symfony\\Component\\DomCrawler\\Link` 对象，它提供了特定于链接的有用方法
+（例如``getMethod（）``和``getUri（）``），请使用 相反，``selectLink（）``方法：
 If you need access to the :class:`Symfony\\Component\\DomCrawler\\Link` object
 that provides helpful methods specific to links (such as ``getMethod()`` and
 ``getUri()``), use the ``selectLink()`` method instead:
@@ -694,7 +675,7 @@ that provides helpful methods specific to links (such as ``getMethod()`` and
     $link = $crawler->selectLink('Click here')->link();
     $client->click($link);
 
-Forms
+表单
 ~~~~~
 
 Use the ``submitForm()`` method to submit the form that contains the given button::
