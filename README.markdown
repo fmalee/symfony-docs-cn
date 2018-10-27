@@ -66,6 +66,23 @@
 - `Helper`：辅助函数，辅助程序
 - `Section`：切片
 - `Migration`：迁移
+- `Event`：事件
+- `Subscriber`：订阅器
+- `Listener`：监听器
+- `Dispatch`：调度
+- `Exception`：异常
+- `Workflow`：工作流
+- `Serializer`：序列化器
+- `Normalizer`：规范化器
+- `Locale`：语言环境，表示语言和国家/地区
+- `Translator`：翻译器
+- `Filter`：过滤器
+- `Flash Message`：闪存消息
+- `Loader`：加载器
+- `Constraint`：约束
+- `Assert`：断言
+- `Validator`：验证器
+- `Messenger`：信使
 
 ## 语法问题
 

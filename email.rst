@@ -1,7 +1,7 @@
 .. index::
    single: Emails
 
-如何发送邮件
+邮件
 ====================
 
 Symfony通过 `SwiftMailerBundle`_ 提供基于流行的 `Swift Mailer`_ 库的邮件发送功能。

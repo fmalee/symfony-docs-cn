@@ -1,10 +1,10 @@
 .. index::
    single: Installing and Setting up Symfony
 
-安装和设置 Symfony 框架
+安装
 =============================================
 
-.. admonition:: Screencast
+.. admonition:: 教学视频
     :class: screencast
 
     更喜欢视频教程? 可以观看 `Stellar Development with Symfony`_ 系列录像.
@@ -130,7 +130,7 @@ Symfony 演示程序
 
 完成这些配置后，是时候 :doc:`在Symfony中创建第一个页面 </page_creation>`。
 
-更深入的了解安装相关的知识
+扩展阅读
 ------------------------------------------
 
 .. toctree::

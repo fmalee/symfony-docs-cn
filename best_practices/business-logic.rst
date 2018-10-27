@@ -48,7 +48,7 @@ Symfony程序中，业务逻辑是指你为自己的不与框架本身重合（�
         }
     }
 
-如果你使用的是默认的 :ref:`default services.yaml configuration <service-container-services-load-example>`，
+如果你使用的是默认的 :ref:`默认的services.yaml配置 <service-container-services-load-example>`，
 则此类将自动注册为ID为 ``App\Utils\Slugger`` 的服务（如果已在你的代码中导入该类，则只需简介的 ``Slugger::class``）。
 
 .. best-practice::
@@ -71,8 +71,8 @@ Symfony程序中，业务逻辑是指你为自己的不与框架本身重合（�
         }
     }
 
-服务也可以是 :ref:`public or private <container-public>`。
-如果使用 :ref:`default services.yaml configuration <service-container-services-load-example>`，
+服务也可以是 :ref:`共有 或 私有 <container-public>`。
+如果使用 :ref:`默认的services.yaml配置 <service-container-services-load-example>`，
 则默认情况下所有服务都是私有的。
 
 .. best-practice::

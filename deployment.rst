@@ -83,7 +83,7 @@
 
 `Capistrano`_ 与 `Symfony plugin`_
     `Capistrano`_ 是一个用Ruby编写的远程服务器自动化和部署工具。
-    `Symfony plugin`_ 是一个简化Symfony相关任务的插件，灵感来自 `Capifony`_（仅适用于Capistrano 2）。
+    `Symfony plugin`_ 是一个简化Symfony相关任务的插件，灵感来自 `Capifony`_ （仅适用于Capistrano 2）。
 
 `sf2debpkg`_
     帮助你为Symfony项目构建一个原生(native)Debian软件包。
@@ -107,23 +107,21 @@ A) 需求检查
 B) 配置你的环境变量
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Most Symfony applications read their configuration from environment variables.
-While developing locally, you'll usually store these in a ``.env`` file. On production,
-you have two options:
+大多数Symfony应用从环境变量中读取其配置。
+在本地开发时，你通常会将它们存储在 ``.env`` 文件中。
+在部署时，你有两种选择：
 
-1. Create "real" environment variables. How you set environment variables, depends
-   on your setup: they can be set at the command line, in your Nginx configuration,
-   or via other methods provided by your hosting service.
+1. 创建“真实”的环境变量。如何设置环境变量取决于你的设置：
+   可以在命令行，Nginx配置中或通过托管服务提供的其他方法设置它们。
 
-2. Or, create a ``.env`` file just like your local development (see note below)
+2. 或者，像本地开发时一样创建一个 ``.env`` 文件（参见下面的注释）
 
-There is no significant advantage to either of the two options: use whatever is
-most natural in your hosting environment.
+这两种方案中的任何一种都没有明显的优势：使用托管环境中最自然的东西。
 
 .. note::
 
-    If you use the ``.env`` file on production, you may need to move your
-    ``symfony/dotenv`` dependency from ``require-dev`` to ``require`` in ``composer.json``:
+    如果在生产中使用 ``.env`` 文件，
+    则可能需要在 ``composer.json`` 中将你的 ``symfony/dotenv`` 依赖项从 ``require-dev`` 移至 ``require``：
 
     .. code-block:: terminal
 
@@ -133,11 +131,8 @@ most natural in your hosting environment.
 C) 安装/更新依赖
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-
-Your vendors can be updated before transferring your source code (i.e.
-update the ``vendor/`` directory, then transfer that with your source
-code) or afterwards on the server. Either way, just update your vendors
-as you normally do:
+你可以在传输源代码之前进行更新（如更新 ``vendor/`` 目录，然后和源代码一个传输），或之后在服务器上进行。
+无论哪种方式，只需像往常一样更新你的依赖(vendor)：
 
 .. code-block:: terminal
 
@@ -145,24 +140,19 @@ as you normally do:
 
 .. tip::
 
-    The ``--optimize-autoloader`` flag improves Composer's autoloader performance
-    significantly by building a "class map". The ``--no-dev`` flag ensures that
-    development packages are not installed in the production environment.
-    通过构建一个 "class map" 类映射，--optimize-autoloader 旗标大幅改进了Composer的自动加载性能。--no-dev 旗标可确保开发环境的包不被安装到生产环境。
+    ``--optimize-autoloader`` 参数通过构建一个 "类映射" ，大幅改进了Composer的自动加载性能。
+    ``--no-dev`` 参数可确保开发环境的软件包不被安装到生产环境。
 
 .. caution::
 
-    If you get a "class not found" error during this step, you may need to
-    run ``export APP_ENV=prod`` (or ``export SYMFONY_ENV=prod`` if you're not
-    using :doc:`Symfony Flex </setup/flex>`) before running this command so
-    that the ``post-install-cmd`` scripts run in the ``prod`` environment.
-    如果在这一步你得到 "class not found" 错误，你可能需要在执行前述命令之前先运行 export SYMFONY_ENV=prod 以便 post-install-cmd 脚本运行在 prod 环境下。
+    如果在这一步你得到 "class not found" 错误，你可能需要在执行前述命令之前先运行 ``export APP_ENV=prod``
+    (或 ``export SYMFONY_ENV=prod`` 如果你没有使用 :doc:`Symfony Flex </setup/flex>` 的话)
+    以便在 ``prod`` 环境下运行 ``post-install-cmd`` 脚本。
 
 D) 清除Symfony缓存
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-确保清除（以及warm-up）了你的Symfony缓存。
-Make sure you clear and warm-up your Symfony cache:
+确保清除并预热(warm-up) Symfony缓存：
 
 .. code-block:: terminal
 
@@ -171,51 +161,40 @@ Make sure you clear and warm-up your Symfony cache:
 E) 其他任务！
 ~~~~~~~~~~~~~~~~
 
-There may be lots of other things that you need to do, depending on your
-setup:
+根据你的设置，你可能还需要做很多其他事情：
 
-* Running any database migrations
-* Clearing your APC cache
-* Add/edit CRON jobs
-* :ref:`Building and minifying your assets <how-do-i-deploy-my-encore-assets>` with Webpack Encore
-* Pushing assets to a CDN
+* 运行任何数据库迁移
+* 清除APC缓存
+* 添加/编辑 CRON 任务
+* 使用Webpack Encore :ref:`建立和压缩你的资源 <how-do-i-deploy-my-encore-assets>`
+* 发布资源到一个 CDN
 * ...
 
 程序生命周期：持续整合，质量保证等
 -------------------------------------------------------
 
-虽然本文覆盖了部署过程的技术细节，但是代码从开发到生产时的完整生命周期可能需要更多步骤（考虑staging部署，QA[Quality Assurance/质量保证]，运行测试，等等）
-While this article covers the technical details of deploying, the full lifecycle
-of taking code from development up to production may have more steps:
-deploying to staging, QA (Quality Assurance), running tests, etc.
+虽然本文覆盖了部署过程的技术细节，但是代码从开发到生产时的完整生命周期可能需要更多步骤：
+部署到模拟环境(staging)，QA(质量保证)，运行测试，等等。
 
-staging、测试、QA、持续整合（continuous integration），数据库迁移以及失败时的向下兼容，统统被强烈建议。有各种简单或复杂的工具，其中的某一款会令你的部署在满足环境需求的过程变得容易（或老练）。
-The use of staging, testing, QA, continuous integration, database migrations
-and the capability to roll back in case of failure are all strongly advised. There
-are simple and more complex tools and one can make the deployment as easy
-(or sophisticated) as your environment requires.
+强烈建议使用模拟，测试，QA，持续集成(continuous integration)，数据库迁移以及在发生故障时回滚的能力。
+有简单和更复杂的工具，可以使部署与你的环境一样简单（或复杂）。
 
-别忘了在部署过程中也牵扯到更新依赖（一般通过Composer），迁移数据库，清除缓存以及其他潜在事项，诸如将资源发布到CDN（参考 常见的后部署任务）。
-Don't forget that deploying your application also involves updating any dependency
-(typically via Composer), migrating your database, clearing your cache and
-other potential things like pushing assets to a CDN (see `Common Post-Deployment Tasks`_).
+别忘了在部署过程中也牵扯到更新依赖（一般通过Composer），迁移数据库，清除缓存以及其他潜在事项，
+诸如将资源发布到CDN（参考 `常见部署后任务`_）。
 
-Troubleshooting
+故障排除
 ---------------
 
-Deployments not Using the ``composer.json`` File
+不使用 ``composer.json`` 文件部署
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Symfony applications provide a ``kernel.project_dir`` parameter and a related
-:method:`Symfony\\Component\\HttpKernel\\Kernel::getProjectDir` method.
-You can use this method to perform operations with file paths relative to your
-project's root directory. The logic to find that project root directory is based
-on the location of the main ``composer.json`` file.
+Symfony应用程序提供了 ``kernel.project_dir`` 参数和相关的
+:method:`Symfony\\Component\\HttpKernel\\Kernel::getProjectDir` 方法。
+你可以使用此方法对文件路径执行相对于项目根目录的操作。
+查找项目根目录的逻辑基于主 ``composer.json`` 文件的位置。
 
-If your deployment method doesn't use Composer, you may have removed the
-``composer.json`` file and the application won't work on the production server.
-The solution is to override the ``getProjectDir()`` method in the application
-kernel and return your project's root directory::
+如果部署的方式不使用Composer，你可能已经了删除 ``composer.json`` 文件，那么该应用将无法在生产服务器上运行。
+解决方案是覆盖应用程序内核中的 ``getProjectDir()``  方法并返回项目的根目录::
 
     // src/Kernel.php
     // ...

@@ -1,68 +1,56 @@
 .. index::
    single: Translations
 
-Translations
+翻译
 ============
 
-The term "internationalization" (often abbreviated `i18n`_) refers to the
-process of abstracting strings and other locale-specific pieces out of your
-application into a layer where they can be translated and converted based
-on the user's locale (i.e. language and country). For text, this means
-wrapping each with a function capable of translating the text (or "message")
-into the language of the user::
+术语“国际化”（通常缩写为i18n）是指将应用中的字符串和其他特定于语言环境的部分抽象到一个层中的过程，在该层中可以根据用户的语言环境（即语言和国家/地区）对它们进行翻译和转换。
+对于文本，这意味着使用能够将文本（或“消息”）翻译成用户语言的函数来包装每个文本::
 
-    // text will *always* print out in English
+    // 文本始终以英语输出
     dump('Hello World');
     die();
 
-    // text can be translated into the end-user's language or
-    // default to English
+    // 文本将以用户指定语言或默认英语输出
     dump($translator->trans('Hello World'));
     die();
 
 .. note::
 
-    The term *locale* refers roughly to the user's language and country. It
-    can be any string that your application uses to manage translations and
-    other format differences (e.g. currency format). The `ISO 639-1`_
-    *language* code, an underscore (``_``), then the `ISO 3166-1 alpha-2`_
-    *country* code (e.g. ``fr_FR`` for French/France) is recommended.
+    术语 *locale* 译为语言环境，大致指用户的语言和国家/地区。
+    在程序中，它可以是用于管理翻译和其他格式差异（例如货币格式）的任何字符串。
+    建议使用 `ISO 639-1`_ *语言* 代码，下划线（``_``），然后是 `ISO 3166-1 alpha-2`_ *国家* 代码
+    （例如表示法语/法国的 ``fr_FR``）。
 
-In this article, you'll learn how to use the Translation component in the
-Symfony Framework. You can read the
-:doc:`Translation component documentation </components/translation/usage>`
-to learn even more. Overall, the process has several steps:
+在本章，你将学习如何使用Symfony框架中的翻译组件。
+你可以阅读 :doc:`Translation组件文档 </components/translation/usage>` 来了解更多。
+整体上，翻译的过程有如下几步：
 
-#. :ref:`Enable and configure <translation-configuration>` Symfony's
-   translation service;
+#. :ref:`开启和配置 <translation-configuration>` Symfony的翻译服务；
 
-#. Abstract strings (i.e. "messages") by wrapping them in calls to the
-   ``Translator`` (":ref:`translation-basic`");
+#. 将字符串（即“消息”）抽象出来，封装在对 ``Translator`` 的调用中（":ref:`translation-basic`"）；
 
-#. :ref:`Create translation resources/files <translation-resources>`
-   for each supported locale that translate each message in the application;
+#. 为每个支持的语言环境 :ref:`创建翻译的资源/文件 <translation-resources>`，以翻译应用中的每条消息；
 
-#. Determine, :doc:`set and manage the user's locale </translation/locale>`
-   for the request and optionally
-   :doc:`on the user's entire session </session/locale_sticky_session>`.
+#. 做个决定，为请求 :doc:`设置和管理用户的语言环境 </translation/locale>`，
+   也可以选择 :doc:`在用户的整个会话中 </session/locale_sticky_session>`。
 
 .. _translation-configuration:
 
-Installation
+安装
 ------------
 
-First, run this command to install the translator before using it:
+首先，运行此命令以在使用之前安装翻译器：
 
 .. code-block:: terminal
 
     $ composer require symfony/translation
 
-Configuration
+配置
 -------------
 
-The previous command creates an initial config file where you can define the
-default locale of the app and the :ref:`fallback locales <translation-fallback>`
-that will be used if Symfony can't find some translation:
+上一个命令创建了一个初始配置文件，
+你可以在其中定义应用的默认语言环境以及Symfony无法找到某些翻译时将使用的 :ref:`后备语言环境 <translation-fallback>`：
 
 .. configuration-block::
 
@@ -104,19 +92,17 @@ that will be used if Symfony can't find some translation:
             // ...
         ));
 
-The locale used in translations is the one stored on the request. This is
-typically set via a ``_locale`` attribute on your routes (see :ref:`translation-locale-url`).
+翻译中使用的语言环境是存储在请求中的。这通常通过路由上的 ``_locale`` 属性来设置
+（请参 :ref:`translation-locale-url`）。
 
 .. _translation-basic:
 
-Basic Translation
+基本翻译
 -----------------
 
-Translation of text is done through the  ``translator`` service
-(:class:`Symfony\\Component\\Translation\\Translator`). To translate a block
-of text (called a *message*), use the
-:method:`Symfony\\Component\\Translation\\Translator::trans` method. Suppose,
-for example, that you're translating a simple message from inside a controller::
+文本的翻译是通过 ``translator`` 服务（:class:`Symfony\\Component\\Translation\\Translator`）完成的。
+要翻译文本块（称为 *消息*），请使用 :method:`Symfony\\Component\\Translation\\Translator::trans` 方法。
+例如，假设你正在从控制器内部翻译一个简单消息::
 
     // ...
     use Symfony\Component\HttpFoundation\Response;
@@ -131,12 +117,9 @@ for example, that you're translating a simple message from inside a controller::
 
 .. _translation-resources:
 
-When this code is executed, Symfony will attempt to translate the message
-"Symfony is great" based on the ``locale`` of the user. For this to work,
-you need to tell Symfony how to translate the message via a "translation
-resource", which is usually a file that contains a collection of translations
-for a given locale. This "dictionary" of translations can be created in several
-different formats, XLIFF being the recommended format:
+执行此代码时，Symfony将尝试根据用户的 ``locale`` 翻译 “Symfony is great” 消息。
+为此，你需要告诉Symfony如何通过“翻译资源”来翻译消息，“翻译资源”通常是包含给定语言环境的翻译集合的文件。
+翻译的“词典”可以用几种不同的格式创建，XLIFF 是推荐的格式：
 
 .. configuration-block::
 
@@ -167,36 +150,30 @@ different formats, XLIFF being the recommended format:
             'Symfony is great' => 'J\'aime Symfony',
         );
 
-For information on where these files should be located, see
-:ref:`translation-resource-locations`.
+有关这些文件的位置信息，请参阅 :ref:`translation-resource-locations`。
 
-Now, if the language of the user's locale is French (e.g. ``fr_FR`` or ``fr_BE``),
-the message will be translated into ``J'aime Symfony``. You can also translate
-the message inside your :ref:`templates <translation-tags>`.
+现在，如果用户语言环境的语言是法语（例如 ``fr_FR`` 或 ``fr_BE``），则该消息将被翻译成 ``J'aime Symfony``。
+你还可以在 :ref:`模板 <translation-tags>` 中翻译消息。
 
-The Translation Process
+翻译流程
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-To actually translate the message, Symfony uses a simple process:
+为了能翻译一条信息，Symfony执行以下简明流程：
 
-* The ``locale`` of the current user, which is stored on the request is determined;
+* 确定存储在请求中的当前用户的 ``locale``;
 
-* A catalog (e.g. big collection) of translated messages is loaded from translation
-  resources defined for the ``locale`` (e.g. ``fr_FR``). Messages from the
-  :ref:`fallback locale <translation-fallback>` are also loaded and
-  added to the catalog if they don't already exist. The end result is a large
-  "dictionary" of translations.
+* 从为 ``locale`` 定义的翻译资源（例如 ``fr_FR``）加载一个翻译消息的目录（例如，大集合）。
+  来自 :ref:`后备语言环境 <translation-fallback>` 的消息也会加载并添加到该目录（如果它们尚不存在）。
+  最终结果是生成了一个“翻译大词典”。
 
-* If the message is located in the catalog, the translation is returned. If
-  not, the translator returns the original message.
+* 如果该消息位于目录中，则返回翻译消息。如果不存在，则翻译器返回原始消息。
 
-When using the ``trans()`` method, Symfony looks for the exact string inside
-the appropriate message catalog and returns it (if it exists).
+使用 ``trans()`` 方法时，Symfony会在相应的消息目录中查找确切的字符串并返回它（如果存在）。
 
-Message Placeholders
+消息占位符
 --------------------
 
-Sometimes, a message containing a variable needs to be translated::
+有时，需要翻译包含一个变量的消息::
 
     use Symfony\Component\HttpFoundation\Response;
     use Symfony\Component\Translation\TranslatorInterface;
@@ -208,43 +185,37 @@ Sometimes, a message containing a variable needs to be translated::
         // ...
     }
 
-However, creating a translation for this string is impossible since the translator
-will try to look up the exact message, including the variable portions
-(e.g. *"Hello Ryan"* or *"Hello Fabien"*).
+但是，为此字符串创建翻译是不可能的，因为翻译器将尝试查找确切的消息，包括变量部分（例如 *"Hello Ryan"* 或 *"Hello Fabien"*）。
 
-For details on how to handle this situation, see :ref:`component-translation-placeholders`
-in the components documentation. For how to do this in templates, see :ref:`translation-tags`.
+有关如何处理此情况的详细信息，请参阅组件文档中的 :ref:`component-translation-placeholders`。
+有关如何在模板中执行此操作，请参阅 :ref:`translation-tags`。
 
-Pluralization
+复数
 -------------
 
-Another complication is when you have translations that may or may not be
-plural, based on some variable:
+另一个复杂因素是，可能你的翻译基于某些变量会在单复数之间变化：
 
 .. code-block:: text
 
     There is one apple.
     There are 5 apples.
 
-To handle this, use the :method:`Symfony\\Component\\Translation\\Translator::transChoice`
-method or the ``transchoice`` tag/filter in your :ref:`template <translation-tags>`.
+要处理这个问题，使用 :method:`Symfony\\Component\\Translation\\Translator::transChoice`
+方法或在 :ref:`模板 <translation-tags>` 中使用``transchoice`` 标签/过滤器。
 
-For much more information, see :ref:`component-translation-pluralization`
-in the Translation component documentation.
+有关更多信息，请参阅翻译组件文档中的 :ref:`component-translation-pluralization`。
 
-Translations in Templates
+模板中的翻译
 -------------------------
 
-Most of the time, translation occurs in templates. Symfony provides native
-support for both Twig and PHP templates.
+大多数情况下，翻译发生在模板中。Symfony为Twig和PHP模板提供原生支持。
 
 .. _translation-tags:
 
-Twig Templates
+Twig模板
 ~~~~~~~~~~~~~~
 
-Symfony provides specialized Twig tags (``trans`` and ``transchoice``) to
-help with message translation of *static blocks of text*:
+Symfony提供专门的Twig标签（``trans`` 和 ``transchoice``）来帮助 *静态文本块* 的消息翻译：
 
 .. code-block:: twig
 
@@ -254,21 +225,18 @@ help with message translation of *static blocks of text*:
         {0} There are no apples|{1} There is one apple|]1,Inf[ There are %count% apples
     {% endtranschoice %}
 
-The ``transchoice`` tag automatically gets the ``%count%`` variable from
-the current context and passes it to the translator. This mechanism only
-works when you use a placeholder following the ``%var%`` pattern.
+``transchoice`` 标签自动从当前上下文获取 ``%count%`` 变量并将其传递给翻译器。
+只有在 ``%var%`` 模式后使用一个占位符时，此机制才有效。
 
 .. caution::
 
-    The ``%var%`` notation of placeholders is required when translating in
-    Twig templates using the tag.
+    使用标签在Twig模板中进行翻译时，需要占位符的 ``%var%`` 表示法。
 
 .. tip::
 
-    If you need to use the percent character (``%``) in a string, escape it by
-    doubling it: ``{% trans %}Percent: %percent%%%{% endtrans %}``
+    如果你需要在字符串中使用百分比字符（``%``），请将其翻倍：``{% trans %}Percent: %percent%%%{% endtrans %}``
 
-You can also specify the message domain and pass some additional variables:
+你还可以指定消息域并传递一些额外的变量：
 
 .. code-block:: twig
 
@@ -282,8 +250,7 @@ You can also specify the message domain and pass some additional variables:
 
 .. _translation-filters:
 
-The ``trans`` and ``transchoice`` filters can be used to translate *variable
-texts* and complex expressions:
+``trans`` 和 ``transchoice`` 过滤器可用于翻译 *变量文本* 和复杂表达式：
 
 .. code-block:: twig
 
@@ -297,41 +264,36 @@ texts* and complex expressions:
 
 .. tip::
 
-    Using the translation tags or filters have the same effect, but with
-    one subtle difference: automatic output escaping is only applied to
-    translations using a filter. In other words, if you need to be sure
-    that your translated message is *not* output escaped, you must apply
-    the ``raw`` filter after the translation filter:
+    使用翻译标签或过滤器具有相同的效果，但有一个细微差别：自动输出转义仅适用于使用过滤器的翻译。
+    换句话说，如果你需要确保翻译消息 *未* 输出转义，则必须在翻译过滤器后应用 ``raw`` 过滤器：
 
     .. code-block:: twig
 
-            {# text translated between tags is never escaped #}
+            {# 标签之间翻译的文本永远不会被转义 #}
             {% trans %}
                 <h3>foo</h3>
             {% endtrans %}
 
             {% set message = '<h3>foo</h3>' %}
 
-            {# strings and variables translated via a filter are escaped by default #}
+            {# 默认情况下，通过过滤器翻译的字符串和变量将被转义 #}
             {{ message|trans|raw }}
             {{ '<h3>bar</h3>'|trans|raw }}
 
 .. tip::
 
-    You can set the translation domain for an entire Twig template with a single tag:
+    你可以使用单个标签为整个Twig模板设置翻译域：
 
     .. code-block:: twig
 
            {% trans_default_domain 'app' %}
 
-    Note that this only influences the current template, not any "included"
-    template (in order to avoid side effects).
+    请注意，这仅影响当前模板，而不影响任何“引用”模板（为了避免副作用）。
 
-PHP Templates
+PHP模板
 ~~~~~~~~~~~~~
 
-The translator service is accessible in PHP templates through the
-``translator`` helper:
+可以通过 ``translator`` 助手在PHP模板中访问翻译服务：
 
 .. code-block:: html+php
 
@@ -343,80 +305,67 @@ The translator service is accessible in PHP templates through the
         array('%count%' => 10)
     ) ?>
 
-Extracting Translation Contents and Updating Catalogs Automatically
+自动提取翻译内容和更新目录
 -------------------------------------------------------------------
 
-The most time-consuming tasks when translating an application is to extract all
-the template contents to be translated and to keep all the translation files in
-sync. Symfony includes a command called ``translation:update`` that helps you
-with these tasks:
+翻译应用时最耗时的任务是提取要翻译的所有模板内容并保持所有翻译文件的同步。
+Symfony包含一个名为 ``translation:update`` 的命令，可以帮助你完成这些任务：
 
 .. code-block:: terminal
 
-    # updates the French translation file with the missing strings found in app/Resources/ templates
+    # 使用在 app/Resources/ 模板中找到的缺失字符串来更新法语翻译文件
     $ ./bin/console translation:update --dump-messages --force fr
 
-    # updates the English translation file with the missing strings found in AppBundle
+    # 使用AppBundle中找到的缺失字符串更新英文翻译文件
     $ ./bin/console translation:update --dump-messages --force en AppBundle
 
 .. note::
 
-    If you want to see the missing translation strings without actually updating
-    the translation files, remove the ``--force`` option from the command above.
+    如果要查看缺少的翻译字符串而不实际更新翻译文件，请从上面的命令中删除 ``--force`` 选项。
 
 .. tip::
 
-    If you need to extract translation strings from other sources, such as
-    controllers, forms and flash messages, consider using the more advanced
-    third-party `TranslationBundle`_.
+    如果你需要从其他来源（例如控制器，表单和闪存消息）中提取翻译字符串，请考虑使用更高级的第三方 `TranslationBundle`_。
 
 .. _translation-resource-locations:
 
-Translation Resource/File Names and Locations
+翻译资源/文件的名称和位置
 ---------------------------------------------
 
-Symfony looks for message files (i.e. translations) in the following default locations:
+Symfony在以下默认位置查找消息文件（即翻译）：
 
-* the ``translations/`` directory (at the root of the project);
+* ``translations/`` 目录 (在项目的根目录);
 
-* the ``src/Resources/<bundle name>/translations/`` directory;
+* ``src/Resources/<bundle name>/translations/`` 目录;
 
-* the ``Resources/translations/`` directory inside of any bundle.
+* ``Resources/translations/`` 目录（任何bundle中）.
 
-The locations are listed here with the highest priority first. That is, you can
-override the translation messages of a bundle in any of the top two directories.
+此处列出的位置按照优先级排序。也就是说，你可以在前两个目录中的任何一个中覆盖bundle的翻译消息。
 
-The override mechanism works at a key level: only the overridden keys need
-to be listed in a higher priority message file. When a key is not found
-in a message file, the translator will automatically fall back to the lower
-priority message files.
+覆盖机制工作在键级别(key level)：只有被覆盖的键才需要列在更高优先级的消息文件中。
+如果在一个消息文件中找不到键，则翻译器将自动回退到优先级较低的消息文件中。
 
-The filename of the translation files is also important: each message file
-must be named according to the following path: ``domain.locale.loader``:
+翻译文件的文件名也很重要：每个消息文件必须根据以下路径命名：``domain.locale.loader``:
 
-* **domain**: An optional way to organize messages into groups (e.g. ``admin``,
-  ``navigation`` or the default ``messages``) - see :ref:`using-message-domains`;
+* **domain**: 将消息组织到群组中的可选方法（例如， ``admin``、``navigation`` 或默认 ``messages``）
+  - 请参阅 :ref:`using-message-domains`;
 
-* **locale**: The locale that the translations are for (e.g. ``en_GB``, ``en``, etc);
+* **locale**: 翻译所针对的语言环境（例如 ``en_GB``, ``en`` 等）;
 
-* **loader**: How Symfony should load and parse the file (e.g. ``xlf``,
-  ``php``, ``yaml``, etc).
+* **loader**: Symfony应如何加载和解析文件（例如 ``xlf``, ``php``, ``yaml`` 等）。
 
-The loader can be the name of any registered loader. By default, Symfony
-provides many loaders, including:
+加载器可以是任何已注册的加载器的名称。默认情况下，Symfony提供了许多加载器，包括：
 
-* ``xlf``: XLIFF file;
-* ``php``: PHP file;
-* ``yaml``: YAML file.
+* ``xlf``: XLIFF文件;
+* ``php``: PHP文件;
+* ``yaml``: YAML文件.
 
-The choice of which loader to use is entirely up to you and is a matter of
-taste. The recommended option is to use ``xlf`` for translations.
-For more options, see :ref:`component-translator-message-catalogs`.
+选择使用哪种加载器完全取决于你，这是一个品味问题。推荐的选项是使用 ``xlf`` 进行翻译。
+有关更多选项，请参阅 :ref:`component-translator-message-catalogs`。
 
 .. note::
 
-    You can add other directories with the :ref:`paths <reference-translator-paths>`
-    option in the configuration:
+    你可以在配置中使用 :ref:`paths <reference-translator-paths>` 选项添加其他翻译目录：
 
     .. configuration-block::
 
@@ -461,16 +410,13 @@ For more options, see :ref:`component-translator-message-catalogs`.
 
 .. note::
 
-    You can also store translations in a database, or any other storage by
-    providing a custom class implementing the
-    :class:`Symfony\\Component\\Translation\\Loader\\LoaderInterface` interface.
-    See the :ref:`dic-tags-translation-loader` tag for more information.
+    你还可以通过实现 :class:`Symfony\\Component\\Translation\\Loader\\LoaderInterface`
+    接口的自定义类来将翻译存储在数据库或任何其他存储中。
+    有关更多信息，请参阅 :ref:`dic-tags-translation-loader` 标签。
 
 .. caution::
 
-    Each time you create a *new* translation resource (or install a bundle
-    that includes a translation resource), be sure to clear your cache so
-    that Symfony can discover the new translation resources:
+    每次创建 *新* 的翻译资源（或安装包含翻译资源的bundle）时，请务必清除缓存，以便Symfony可以发现新的翻译资源：
 
     .. code-block:: terminal
 
@@ -478,69 +424,54 @@ For more options, see :ref:`component-translator-message-catalogs`.
 
 .. _translation-fallback:
 
-Fallback Translation Locales
+后备翻译语言环境
 ----------------------------
 
-Imagine that the user's locale is ``fr_FR`` and that you're translating the
-key ``Symfony is great``. To find the French translation, Symfony actually
-checks translation resources for several locales:
+想象一下，用户的语言环境是 ``fr_FR`` ，并且你正在翻译 ``Symfony is great`` 键。
+要查找法语翻译，Symfony实际上会检查多个语言环境的翻译资源：
 
-#. First, Symfony looks for the translation in a ``fr_FR`` translation resource
-   (e.g. ``messages.fr_FR.xlf``);
+#. 首先，Symfony在 ``fr_FR`` 翻译资源中查找翻译（例如 ``messages.fr_FR.xlf``）;
 
-#. If it wasn't found, Symfony looks for the translation in a ``fr`` translation
-   resource (e.g. ``messages.fr.xlf``);
+#. 如果找不到，Symfony会在 ``fr`` 翻译资源中查找翻译（例如 ``messages.fr.xlf``）;
 
-#. If the translation still isn't found, Symfony uses the ``fallbacks`` configuration
-   parameter, which defaults to ``en`` (see `Configuration`_).
+#. 如果仍未找到翻译，Symfony将使用默认为 ``en`` 的 ``fallbacks`` 配置参数（请参阅 `配置`_）。
 
 .. note::
 
-    When Symfony can't find a translation in the given locale, it will
-    add the missing translation to the log file. For details,
-    see :ref:`reference-framework-translator-logging`.
+    有关详细信息，请参阅 :ref:`reference-framework-translator-logging`.
 
-Handling the User's Locale
+处理用户的语言环境
 --------------------------
 
-Translating happens based on the user's locale. Read :doc:`/translation/locale`
-to learn more about how to handle it.
+翻译根据用户的语言环境进行。阅读 :doc:`/translation/locale` 以了解有关如何处理它的更多信息。
 
-Translating Database Content
+翻译数据库内容
 ----------------------------
 
-The translation of database content should be handled by Doctrine through
-the `Translatable Extension`_ or the `Translatable Behavior`_ (PHP 5.4+).
-For more information, see the documentation for these libraries.
+数据库内容的翻译应由Doctrine通过可 `Translatable Extension`_ 或可 `Translatable Behavior`_ （PHP 5.4+）来处理。
+有关更多信息，请参阅这些库的文档。
 
-Debugging Translations
+调试翻译
 ----------------------
 
-When you work with many translation messages in different languages, it can
-be hard to keep track which translations are missing and which are not used
-anymore. Read :doc:`/translation/debug` to find out how to identify these
-messages.
+当你使用不同语言处理许多翻译消息时，可能很难跟踪哪些翻译缺失以及哪些翻译不再使用。
+阅读 :doc:`/translation/debug`，以了解如何识别这些消息。
 
-Summary
+总结
 -------
 
-With the Symfony Translation component, creating an internationalized application
-no longer needs to be a painful process and boils down to just a few basic
-steps:
+使用Symfony翻译组件，创建国际化应用不再是一个痛苦的过程，并归结为几个基本步骤：
 
-* Abstract messages in your application by wrapping each in either the
-  :method:`Symfony\\Component\\Translation\\Translator::trans` or
-  :method:`Symfony\\Component\\Translation\\Translator::transChoice` methods
-  (learn about this in :doc:`/components/translation/usage`);
+* 通过在 :method:`Symfony\\Component\\Translation\\Translator::trans`
+  或 :method:`Symfony\\Component\\Translation\\Translator::transChoice`
+  方法中封装每个消息，在应用中抽象消息
+  （在 :doc:`/components/translation/usage` 中了解这一点）;
 
-* Translate each message into multiple locales by creating translation message
-  files. Symfony discovers and processes each file because its name follows
-  a specific convention;
+* 通过创建翻译消息文件将每个消息翻译成多个语言环境。Symfony发现并处理每个文件，因为它的名称遵循特定的约定;
 
-* Manage the user's locale, which is stored on the request, but can also
-  be set on the user's session.
+* 管理用户的语言环境，该语言环境存储在请求中，但也可以在用户的​​会话中设置。
 
-Learn more
+扩展阅读
 ----------
 
 .. toctree::

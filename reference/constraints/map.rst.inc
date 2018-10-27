@@ -1,8 +1,7 @@
-Basic Constraints
+基本约束
 ~~~~~~~~~~~~~~~~~
 
-These are the basic constraints: use them to assert very basic things about
-the value of properties or the return value of methods on your object.
+这些是基本约束：使用它们来断言关于属性值或对象上方法的返回值的非常基本的东西。
 
 * :doc:`NotBlank </reference/constraints/NotBlank>`
 * :doc:`Blank </reference/constraints/Blank>`
@@ -12,7 +11,7 @@ the value of properties or the return value of methods on your object.
 * :doc:`IsFalse </reference/constraints/IsFalse>`
 * :doc:`Type </reference/constraints/Type>`
 
-String Constraints
+字符串约束
 ~~~~~~~~~~~~~~~~~~
 
 * :doc:`Email </reference/constraints/Email>`
@@ -22,7 +21,7 @@ String Constraints
 * :doc:`Ip </reference/constraints/Ip>`
 * :doc:`Uuid</reference/constraints/Uuid>`
 
-Comparison Constraints
+比较约束
 ~~~~~~~~~~~~~~~~~~~~~~
 
 * :doc:`EqualTo </reference/constraints/EqualTo>`
@@ -36,14 +35,14 @@ Comparison Constraints
 * :doc:`Range </reference/constraints/Range>`
 * :doc:`DivisibleBy </reference/constraints/DivisibleBy>`
 
-Date Constraints
+日期约束
 ~~~~~~~~~~~~~~~~
 
 * :doc:`Date </reference/constraints/Date>`
 * :doc:`DateTime </reference/constraints/DateTime>`
 * :doc:`Time </reference/constraints/Time>`
 
-Collection Constraints
+集合约束
 ~~~~~~~~~~~~~~~~~~~~~~
 
 * :doc:`Choice </reference/constraints/Choice>`
@@ -54,13 +53,13 @@ Collection Constraints
 * :doc:`Locale </reference/constraints/Locale>`
 * :doc:`Country </reference/constraints/Country>`
 
-File Constraints
+文件约束
 ~~~~~~~~~~~~~~~~
 
 * :doc:`File </reference/constraints/File>`
 * :doc:`Image </reference/constraints/Image>`
 
-Financial and other Number Constraints
+财务和其他数字约束
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 * :doc:`Bic </reference/constraints/Bic>`
@@ -71,7 +70,7 @@ Financial and other Number Constraints
 * :doc:`Isbn </reference/constraints/Isbn>`
 * :doc:`Issn </reference/constraints/Issn>`
 
-Other Constraints
+其他约束
 ~~~~~~~~~~~~~~~~~
 
 * :doc:`Callback </reference/constraints/Callback>`

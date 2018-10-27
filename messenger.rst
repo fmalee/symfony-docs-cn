@@ -1,17 +1,19 @@
 .. index::
    single: Messenger
 
-How to Use the Messenger
+消息
 ========================
 
+Symfony的Messenger提供消息总线和一些路由功能，以便在您的应用程序内以及通过消息队列等传输方式发送消息。在使用它之前，请阅读Messenger组件文档以熟悉其概念。
 Symfony's Messenger provides a message bus and some routing capabilities to send
 messages within your application and through transports such as message queues.
 Before using it, read the :doc:`Messenger component docs </components/messenger>`
 to get familiar with its concepts.
 
-Installation
+安装
 ------------
 
+在使用Symfony Flex的应用程序中，运行此命令以在使用之前安装messenger：
 In applications using :doc:`Symfony Flex </setup/flex>`, run this command to
 install messenger before using it:
 
@@ -19,9 +21,10 @@ install messenger before using it:
 
     $ composer require messenger
 
-Using the Messenger Service
+使用Messenger服务
 ---------------------------
 
+启用后，message_bus服务可以在您需要的任何服务中注入，例如在控制器中：
 Once enabled, the ``message_bus`` service can be injected in any service where
 you need it, like in a controller::
 
@@ -40,9 +43,10 @@ you need it, like in a controller::
         }
     }
 
-Registering Handlers
+注册处理器
 --------------------
 
+为了在分派消息时执行某些操作，您需要创建消息处理程序。它是一个带__invoke方法的类：
 In order to do something when your message is dispatched, you need to create a
 message handler. It's a class with an ``__invoke`` method::
 
@@ -59,11 +63,13 @@ message handler. It's a class with an ``__invoke`` method::
         }
     }
 
+消息处理程序必须注册为服务并使用messenger.message_handler标记进行标记。如果您使用默认的services.yaml配置，由于自动配置，已经为您完成了。
 Message handlers must be registered as services and :doc:`tagged </service_container/tags>`
 with the ``messenger.message_handler`` tag. If you're using the
 :ref:`default services.yaml configuration <service-container-services-load-example>`,
 this is already done for you, thanks to :ref:`autoconfiguration <services-autoconfigure>`.
 
+如果您没有使用服务自动配置，那么您需要添加此配置：
 If you're not using service autoconfiguration, then you need to add this config:
 
 .. configuration-block::
@@ -103,10 +109,12 @@ If you're not using service autoconfiguration, then you need to add this config:
 
     If the message cannot be guessed from the handler's type-hint, use the
     ``handles`` attribute on the tag.
+    如果无法从处理程序的type-hint中猜出消息，请使用标记上的handles属性。
 
 Transports
 ----------
 
+默认情况下，消息在分派后立即处理。如果您希望异步处理消息，则必须配置传输。这些传输通过排队系统或第三方与您的应用程序通信。内置的AMQP传输允许您与大多数AMQP代理（如RabbitMQ）进行通信。
 By default, messages are processed as soon as they are dispatched. If you prefer
 to process messages asynchronously, you must configure a transport. These
 transports communicate with your application via queuing systems or third parties.
@@ -117,7 +125,9 @@ brokers such as RabbitMQ.
 
     If you need more message brokers, you should have a look at `Enqueue's transport`_
     which supports things like Kafka, Amazon SQS or Google Pub/Sub.
+    如果您需要更多的消息代理，您应该查看Enqueue的传输，它支持Kafka，Amazon SQS或Google Pub / Sub等内容。
 
+使用“DSN”注册传输，“DSN”是表示连接凭据和配置的字符串。默认情况下，当您安装了Messenger组件时，应该已创建以下配置：
 A transport is registered using a "DSN", which is a string that represents the
 connection credentials and configuration. By default, when you've installed
 the messenger component, the following configuration should have been created:
@@ -169,24 +179,27 @@ the messenger component, the following configuration should have been created:
     MESSENGER_TRANSPORT_DSN=amqp://guest:guest@localhost:5672/%2f/messages
     ###< symfony/messenger ###
 
+这足以让您将邮件路由到amqp传输。这还将为您配置以下服务：
 This is enough to allow you to route your message to the ``amqp`` transport.
 This will also configure the following services for you:
 
-#. A ``messenger.sender.amqp`` sender to be used when routing messages;
-#. A ``messenger.receiver.amqp`` receiver to be used when consuming messages.
+#. A ``messenger.sender.amqp`` sender to be used when routing messages;路由消息时使用的messenger.sender.amqp发送方;
+#. A ``messenger.receiver.amqp`` receiver to be used when consuming messages.消费消息时使用的messenger.receiver.amqp接收器。
 
 .. note::
 
     In order to use Symfony's built-in AMQP transport, you will need the Serializer
     Component. Ensure that it is installed with:
+    为了使用Symfony的内置AMQP传输，您将需要Serializer组件。确保安装时使用：
 
     .. code-block:: terminal
 
         $ composer require symfony/serializer-pack
 
-Routing
+路由
 -------
 
+您可以选择将邮件路由到发件人，而不是调用处理程序。作为传输的一部分，它负责在某处发送您的消息。您可以使用以下配置配置将哪条消息路由到哪个发件人：
 Instead of calling a handler, you have the option to route your message(s) to a
 sender. Part of a transport, it is responsible for sending your message somewhere.
 You can configure which message is routed to which sender with the following
@@ -234,9 +247,11 @@ configuration:
             ),
         ));
 
+此类配置仅将My \ Message \ Message消息路由为异步，其余消息仍将直接处理。
 Such configuration would only route the ``My\Message\Message`` message to be
 asynchronous, the rest of the messages would still be directly handled.
 
+您可以使用星号而不是类名将所有类别的邮件路由到同一发件人：
 You can route all classes of messages to the same sender using an asterisk
 instead of a class name:
 
@@ -287,6 +302,7 @@ instead of a class name:
             ),
         ));
 
+通过指定列表，还可以将一类消息路由到多个发件人：
 A class of messages can also be routed to multiple senders by specifying a list:
 
 .. configuration-block::
@@ -331,6 +347,7 @@ A class of messages can also be routed to multiple senders by specifying a list:
                 ),
             ),
         ));
+
 
 By specifying the ``send_and_handle`` option, you can also route a class of messages to a sender
 while still having them passed to their respective handler:

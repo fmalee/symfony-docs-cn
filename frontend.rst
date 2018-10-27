@@ -1,29 +1,26 @@
-管理 CSS 和 JavaScript
+前端
 ===========================
 
-.. admonition:: Screencast
+.. admonition:: 教学视频
     :class: screencast
 
-    Do you prefer video tutorials? Check out the `Webpack Encore screencast series`_.
+    更喜欢视频教程? 可以观看 `Webpack Encore screencast series`_ 系列录像.
 
-Symfony ships with a pure-JavaScript library - called Webpack Encore - that makes
-working with CSS and JavaScript a joy. You can use it, use something else, or just
-create static CSS and JS files in your ``public/`` directory and include them in your
-templates.
+Symfony附带了一个纯JavaScript库 - 名为 Webpack Encore -- 这使得使用CSS和JavaScript变得更加快乐。
+你可以选择使用它，或是其他东西，或者只在 ``public/`` 目录中创建静态CSS和JS文件，并将它们包含在模板中。
 
 .. _frontend-webpack-encore:
 
 Webpack Encore
 --------------
 
-`Webpack Encore`_ is a simpler way to integrate `Webpack`_ into your application.
-It *wraps* Webpack, giving you a clean & powerful API for bundling JavaScript modules,
-pre-processing CSS & JS and compiling and minifying assets. Encore gives you professional
-asset system that's a *delight* to use.
+`Webpack Encore`_ 是一种将 `Webpack`_ 集成到应用中的简单方法。
+它 *封装* 了Webpack，为你提供了一个干净而强大的API，用于捆绑JavaScript模块，预处理CSS和JS以及编译和压缩资产。
+Encore为能让你愉快的使用专业的资源系统。
 
-Encore is inspired by `Webpacker`_ and `Mix`_, but stays in the spirit of Webpack:
-using its features, concepts and naming conventions for a familiar feel. It aims
-to solve the most common Webpack use cases.
+Encore的灵感来自 `Webpacker`_ 和 `Mix`_，但仍然保持Webpack的精髓：
+使用其功能，概念和命名约定来获得熟悉的感觉。
+它旨在解决最常见的Webpack用例。
 
 .. tip::
 
@@ -72,15 +69,15 @@ Encore 文档
 * :doc:`Advanced Webpack Configuration </frontend/encore/advanced-config>`
 
 问 & 答
-..................
+............
 
 * :doc:`FAQ & Common Issues </frontend/encore/faq>`
 * :doc:`/frontend/encore/versus-assetic`
 
-Full API
-........
+完整的API
+.............
 
-* `Full API`_: https://github.com/symfony/webpack-encore/blob/master/index.js
+* `完整的API`_: https://github.com/symfony/webpack-encore/blob/master/index.js
 
 扩展阅读
 ------------------------
@@ -105,5 +102,5 @@ Full API
 .. _`Webpacker`: https://github.com/rails/webpacker
 .. _`Mix`: https://laravel.com/docs/mix
 .. _`Symfony`: http://symfony.com/
-.. _`Full API`: https://github.com/symfony/webpack-encore/blob/master/index.js
+.. _`完整的API`: https://github.com/symfony/webpack-encore/blob/master/index.js
 .. _`Webpack Encore screencast series`: https://symfonycasts.com/screencast/webpack-encore

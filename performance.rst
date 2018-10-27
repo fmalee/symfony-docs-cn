@@ -4,51 +4,46 @@
 性能
 ===========
 
-Symfony is fast, right out of the box. However, you can make it faster if you
-optimize your servers and your applications as explained in the following
-performance checklists.
+Symfony很快，开箱即用。但是，如果你按照以下性能检查表中的说明优化服务器和应用，则可以加快速度。
 
-Symfony Application Checklist
+应用的清单
 -----------------------------
 
-#. :ref:`Install APCu Polyfill if your server uses APC <performance-install-apcu-polyfill>`
+#. :ref:`如果您的服务器使用APC，请安装APCu Polyfill <performance-install-apcu-polyfill>`
 
-Production Server Checklist
+生产服务器的清单
 ---------------------------
 
-#. :ref:`Use the OPcache byte code cache <performance-use-opcache>`
-#. :ref:`Configure OPcache for maximum performance <performance-configure-opcache>`
-#. :ref:`Don't check PHP files timestamps <performance-dont-check-timestamps>`
-#. :ref:`Configure the PHP realpath Cache <performance-configure-realpath-cache>`
-#. :ref:`Optimize Composer Autoloader <performance-optimize-composer-autoloader>`
+#. :ref:`使用OPcache缓存 <performance-use-opcache>`
+#. :ref:`配置OPcache以获得最佳性能 <performance-configure-opcache>`
+#. :ref:`不要检查PHP文件的时间戳 <performance-dont-check-timestamps>`
+#. :ref:`配置PHP实际路径缓存 <performance-configure-realpath-cache>`
+#. :ref:`优化Composer Autoloader <performance-optimize-composer-autoloader>`
 
 .. _performance-install-apcu-polyfill:
 
-Install APCu Polyfill if your Server Uses APC
+如果您的服务器使用APC，请安装APCu Polyfill
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If your production server still uses the legacy APC PHP extension instead of
-OPcache, install the `APCu Polyfill component`_ in your application to enable
-compatibility with `APCu PHP functions`_ and unlock support for advanced Symfony
-features, such as the APCu Cache adapter.
+如果你的生产服务器仍使用旧版APC PHP扩展而不是OPcache，
+请在应用中安装 `APCu Polyfill component`_ 以启用与 `APCu PHP functions`_ 的兼容性，
+并解锁对Symfony高级功能的支持，例如APCu缓存适配器。
 
 .. _performance-use-opcache:
 
-Use the OPcache Byte Code Cache
+使用 OPcache 字节码缓存
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-OPcache stores the compiled PHP files to avoid having to recompile them for
-every request. There are some `byte code caches`_ available, but as of PHP
-5.5, PHP comes with `OPcache`_ built-in. For older versions, the most widely
-used byte code cache is `APC`_.
+OPcache存储已编译的PHP文件，以避免为每个请求重新编译它们。
+有一些 `字节码缓存`_ 可用，但从PHP 5.5开始，PHP内置了 `OPcache`_。
+对于旧版本，最广泛使用的字节码缓存是 `APC`_。
 
 .. _performance-configure-opcache:
 
-Configure OPcache for Maximum Performance
+配置OPcache以获得最佳性能
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The default OPcache configuration is not suited for Symfony applications, so
-it's recommended to change these settings as follows:
+默认的OPcache配置不适用于Symfony应用，因此建议更改这些设置，如下所示：】
 
 .. code-block:: ini
 
@@ -61,38 +56,34 @@ it's recommended to change these settings as follows:
 
 .. _performance-dont-check-timestamps:
 
-Don't Check PHP Files Timestamps
+不要检查PHP文件的时间戳
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In production servers, PHP files should never change, unless a new application
-version is deployed. However, by default OPcache checks if cached files have
-changed their contents since they were cached. This check introduces some
-overhead that can be avoided as follows:
+在生产服务器中，除非部署新的应用版本，否则PHP文件永远不会变化。
+但是，默认情况下，OPcache会检查已缓存的文件是否已发生变化。
+此检查修改了一些可以避免的开销，如下所示：
 
 .. code-block:: ini
 
     ; php.ini
     opcache.validate_timestamps=0
 
-After each deploy, you must empty and regenerate the cache of OPcache. Otherwise
-you won't see the updates made in the application. Given than in PHP, the CLI
-and the web processes don't share the same OPcache, you cannot clear the web
-server OPcache by executing some command in your terminal. These are some of the
-possible solutions:
+每次部署后，你必须清空并重新生成OPcache的缓存。否则，你将看不到应用中所做的更新。
+由于在PHP中CLI和Web进程不共享相同的OPcache，你无法通过在终端中执行某些命令来清除Web服务器OPcache。
+以下是一些可能的解决方案：
 
-1. Restart the web server;
-2. Call the ``apc_clear_cache()`` or ``opcache_reset()`` functions via the
-   web server (i.e. by having these in a script that you execute over the web);
-3. Use the `cachetool`_ utility to control APC and OPcache from the CLI.
+1. 重启Web服务器;
+2. 通过Web服务器调用 ``apc_clear_cache()`` 或 ``opcache_reset()`` 函数
+   （即，在你通过Web执行的脚本中使用这些函数）;
+3. 使用 `cachetool`_ 工具从CLI控制APC和OPcache。
 
 .. _performance-configure-realpath-cache:
 
-Configure the PHP realpath Cache
+配置PHP实际路径缓存
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-When a relative path is transformed into its real and absolute path, PHP
-caches the result to improve performance. Applications that open many PHP files,
-such as Symfony projects, should use at least these values:
+当相对路径转换为其实际的绝对路径时，PHP会缓存结果以提高性能。
+会打开许多PHP文件的应用（例如Symfony项目），应至少使用以下值：
 
 .. code-block:: ini
 
@@ -108,36 +99,29 @@ such as Symfony projects, should use at least these values:
 优化 Composer 的自动加载
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The class loader used while developing the application is optimized to find
-new and changed classes. In production servers, PHP files should never change,
-unless a new application version is deployed. That's why you can optimize
-Composer's autoloader to scan the entire application once and build a "class map",
-which is a big array of the locations of all the classes and it's stored
-in ``vendor/composer/autoload_classmap.php``.
+在开发应用时使用的类加载器是为查找新的和更改的类做优化的。
+在生产服务器中，除非部署新的应用版本，否则PHP文件不会变化。
+这就是为什么你可以优化Composer的自动加载器来一次性扫描整个应用并构建一个“类映射”，它是所有类的位置的一个大数组，它存储在 ``vendor/composer/autoload_classmap.php`` 中。
 
-Execute this command to generate the class map (and make it part of your
-deployment process too):
+执行此命令以生成类映射（并使其成为部署过程的一部分）：
 
 .. code-block:: bash
 
     $ composer dump-autoload --optimize --no-dev --classmap-authoritative
 
-* ``--optimize`` dumps every PSR-0 and PSR-4 compatible class used in your
-  application;
-* ``--no-dev`` excludes the classes that are only needed in the development
-  environment (e.g. tests);
-* ``--classmap-authoritative`` prevents Composer from scanning the file
-  system for classes that are not found in the class map.
+* ``--optimize`` 转储(dump)你的应用中使用的每个PSR-0和PSR-4兼容类;
+* ``--no-dev`` 排除仅在开发环境中需要的类（例如测试）;
+* ``--classmap-authoritative`` 阻止Composer在文件系统中寻找那些没有出现在类映射中的类。
 
-更多资料
+扩展阅读
 ----------
 
 * :doc:`/http_cache/varnish`
 * :doc:`/http_cache/form_csrf_caching`
 
-.. _`byte code caches`: https://en.wikipedia.org/wiki/List_of_PHP_accelerators
+.. _`字节码缓存`: https://en.wikipedia.org/wiki/List_of_PHP_accelerators
 .. _`OPcache`: https://php.net/manual/en/book.opcache.php
-.. _`bootstrap file`: https://github.com/sensiolabs/SensioDistributionBundle/blob/master/Composer/ScriptHandler.php
+.. _`bootstrap文件`: https://github.com/sensiolabs/SensioDistributionBundle/blob/master/Composer/ScriptHandler.php
 .. _`Composer's autoloader optimization`: https://getcomposer.org/doc/articles/autoloader-optimization.md
 .. _`APC`: https://php.net/manual/en/book.apc.php
 .. _`APCu Polyfill component`: https://github.com/symfony/polyfill-apcu

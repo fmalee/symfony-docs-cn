@@ -1,31 +1,26 @@
 .. index::
    single: Tests
 
-Testing
+测试
 =======
 
-Whenever you write a new line of code, you also potentially add new bugs.
-To build better and more reliable applications, you should test your code
-using both functional and unit tests.
+每当你多写一行代码，你都在增加潜在的新bug。
+为了打造更好、更好可靠的程序，你需要对代码使用功能测试和单元测试。
 
-The PHPUnit Testing Framework
+PHPUnit测试框架
 -----------------------------
 
-Symfony integrates with an independent library called `PHPUnit`_ to give you a
-rich testing framework. This article won't cover PHPUnit itself, which has its
-own excellent `documentation`_.
+Symfony与一个名为 `PHPUnit`_ 的独立库集成，为你提供丰富的测试框架。
+本文不会介绍PHPUnit本身，它有自己的优秀 `文档`_。
 
-Before creating your first test, install the `PHPUnit Bridge component`_, which
-wraps the original PHPUnit binary to provide additional features:
+在创建第一个测试之前，先安装 `PHPUnit Bridge组件`_，该组件包装原始PHPUnit二进制文件以提供额外功能：
 
 .. code-block:: terminal
 
     $ composer require --dev symfony/phpunit-bridge
 
-Each test - whether it's a unit test or a functional test - is a PHP class
-that should live in the ``tests/`` directory of your application. If you follow
-this rule, then you can run all of your application's tests with the following
-command:
+每个测试 - 无论是单元测试还是功能测试 - 都是一个PHP类，应该存在于应用程序的 ``tests/`` 目录中。
+如果遵循此规则，则可以使用以下命令运行应用的所有测试：
 
 .. code-block:: terminal
 
@@ -33,33 +28,27 @@ command:
 
 .. note::
 
-    The ``./bin/phpunit`` command is created by :doc:`Symfony Flex </setup/flex>`
-    when installing the ``phpunit-bridge`` package. If the command is missing, you
-    can remove the package (``composer remove symfony/phpunit-bridge``) and install
-    it again. Another solution is to remove the project's ``symfony.lock`` file and
-    run ``composer install`` to force the execution of all Symfony Flex recipes.
+    安装 ``phpunit-bridge`` 软件包时，:doc:`Symfony Flex </setup/flex>` 会创建 ``./bin/phpunit`` 命令。
+    如果缺少该命令，则可以删除该包（``composer remove symfony/phpunit-bridge``）并重新安装。
+    另一种解决方案是删除项目的 ``symfony.lock`` 文件并运行 ``composer install`` 以强制执行Symfony Flex的所有指令。
 
-PHPUnit is configured by the ``phpunit.xml.dist`` file in the root of your
-Symfony application.
+PHPUnit由Symfony应用的根目录中的 ``phpunit.xml.dist`` 文件配置。
 
 .. tip::
 
-    Code coverage can be generated with the ``--coverage-*`` options, see the
-    help information that is shown when using ``--help`` for more information.
+    可以使用 ``--coverage-*`` 选项生成代码覆盖率，有关详细信息，请参阅使用 ``--help`` 时显示的帮助信息。
 
 .. index::
    single: Tests; Unit tests
 
-Unit Tests
+单元测试
 ----------
 
-A unit test is a test against a single PHP class, also called a *unit*. If you
-want to test the overall behavior of your application, see the section about
-:ref:`Functional Tests <functional-tests>`.
+单元测试是针对单个PHP类的测试，也称为 *单元*。
+如果要测试应用程序的整体行为，请参阅有关功 :ref:`功能测试 <functional-tests>` 的章节。
 
-Writing Symfony unit tests is no different from writing standard PHPUnit
-unit tests. Suppose, for example, that you have an *incredibly* simple class
-called ``Calculator`` in the ``Util/`` directory of the app bundle::
+编写Symfony单元测试与编写标准PHPUnit单元测试没有什么不同。
+例如，假设你在app bundle的 ``Util/`` 目录中有一个名为 ``Calculator`` 的非常简单的类::
 
     // src/Util/Calculator.php
     namespace App\Util;
@@ -72,8 +61,7 @@ called ``Calculator`` in the ``Util/`` directory of the app bundle::
         }
     }
 
-To test this, create a ``CalculatorTest`` file in the ``tests/Util`` directory
-of your application::
+为了测试它，创建一个 ``CalculatorTest`` 文件到应用的 ``tests/Util`` 目录下::
 
     // tests/Util/CalculatorTest.php
     namespace App\Tests\Util;
@@ -88,33 +76,30 @@ of your application::
             $calculator = new Calculator();
             $result = $calculator->add(30, 12);
 
-            // assert that your calculator added the numbers correctly!
+            // 断言你的计算器正确添加了数字！
             $this->assertEquals(42, $result);
         }
     }
 
 .. note::
 
-    By convention, the ``tests/`` directory should replicate the directory
-    of your bundle for unit tests. So, if you're testing a class in the
-    ``src/Util/`` directory, put the test in the ``tests/Util/``
-    directory.
+    按照惯例，``tests/`` 目录应该复制bundle的目录以进行单元测试。
+    因此，如果你正在测试 ``src/Util/`` 目录中的类，请将测试放在 ``tests/Util/`` 目录中。
 
-Just like in your real application - autoloading is automatically enabled
-via the ``vendor/autoload.php`` file (as configured by default in the
-``phpunit.xml.dist`` file).
+就像在你的实际应用中一样 - 通过 ``vendor/autoload.php`` 文件自动启用自动加载
+（默认情况下在``phpunit.xml.dist`` 文件中配置）。
 
-Running tests for a given file or directory is also very easy:
+针对指定文件或目录的测试也很简单：
 
 .. code-block:: terminal
 
-    # run all tests of the application
+    # 运行应用的所有测试
     $ ./bin/phpunit
 
-    # run all tests in the Util/ directory
+    # 运行 Util/ 目录的所有测试
     $ ./bin/phpunit tests/Util
 
-    # run tests for the Calculator class
+    # 运行 Calculator 类的测试
     $ ./bin/phpunit tests/Util/CalculatorTest.php
 
 .. index::
@@ -122,40 +107,37 @@ Running tests for a given file or directory is also very easy:
 
 .. _functional-tests:
 
-Functional Tests
+功能测试
 ----------------
 
-Functional tests check the integration of the different layers of an
-application (from the routing to the views). They are no different from unit
-tests as far as PHPUnit is concerned, but they have a very specific workflow:
+功能测试检查应用的不同层的集成（从路由到视图）。
+就PHPUnit而言，它们与单元测试没有什么不同，但它们具有非常特定的工作流程：
 
-* Make a request;
-* Click on a link or submit a form;
-* Test the response;
-* Rinse and repeat.
+* 发出请求；
+* 点击链接或提交表单；
+* 测试响应；
+* 清洗并重复。
 
-Before creating your first test, install these packages that provide some of the
-utilities used in the functional tests:
+在创建第一个测试之前，请安装这些包，这些包提供了功能测试中使用的一些实用工具：
 
 .. code-block:: terminal
 
     $ composer require --dev symfony/browser-kit symfony/css-selector
 
-Your First Functional Test
+你的第一个功能测试
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-First, install the BrowserKit component in your project:
+首先，在项目中安装BrowserKit组件：
 
 .. code-block:: terminal
 
     $ composer require --dev symfony/browser-kit
 
-Functional tests are simple PHP files that typically live in the ``tests/Controller``
-directory for your bundle. If you want to test the pages handled by your
-``PostController`` class, start by creating a new ``PostControllerTest.php``
-file that extends a special ``WebTestCase`` class.
+功能测试是PHP文件，通常位于bundle的 ``tests/Controller`` 目录中。
+如果要测试由 ``PostController`` 类处理的页面，
+首先要创建一个继承特殊 ``WebTestCase`` 类的新 ``PostControllerTest.php`` 文件。
 
-As an example, a test could look like this::
+例如，一个测试可能如下所示::
 
     // tests/Controller/PostControllerTest.php
     namespace App\Tests\Controller;
@@ -176,10 +158,8 @@ As an example, a test could look like this::
 
 .. tip::
 
-    To run your functional tests, the ``WebTestCase`` class needs to know which
-    is the application kernel to bootstrap it. The kernel class is usually
-    defined in the ``KERNEL_CLASS`` environment variable (included in the
-    default ``phpunit.xml.dist`` file provided by Symfony):
+    要运行功能测试，``WebTestCase`` 类需要知道引导它的应用内核。
+    内核类通常在 ``KERNEL_CLASS`` 环境变量中定义（包含在Symfony提供的默认 ``phpunit.xml.dist`` 文件中）：
 
     .. code-block:: xml
 
@@ -192,84 +172,70 @@ As an example, a test could look like this::
             <!-- ... -->
         </phpunit>
 
-    If your use case is more complex, you can also override the
-    ``createKernel()`` or ``getKernelClass()`` methods of your functional test,
-    which take precedence over the ``KERNEL_CLASS`` env var.
+    如果你的用例更复杂，你还可以覆盖功能测试的 ``createKernel()``
+    或 ``getKernelClass()`` 方法，这些方法优先于 ``KERNEL_CLASS`` 环境变量。
 
-In the above example, you validated that the HTTP response was successful. The
-next step is to validate that the page actually contains the expected content.
-The ``createClient()`` method returns a client, which is like a browser that
-you'll use to crawl your site::
+在上面的示例中，你验证了HTTP响应是否成功。下一步是验证页面实际上是否包含预期的内容。
+``createClient()`` 方法返回一个客户端，就像将用于抓取你的网站的浏览器::
 
     $crawler = $client->request('GET', '/post/hello-world');
 
-The ``request()`` method (read
-:ref:`more about the request method <testing-request-method-sidebar>`)
-returns a :class:`Symfony\\Component\\DomCrawler\\Crawler` object which can
-be used to select elements in the response, click on links and submit forms.
+``request()`` 方法（阅读 :ref:`有关请求方法的更多信息 <testing-request-method-sidebar>`）返回一个
+:class:`Symfony\\Component\\DomCrawler\\Crawler` 对象，该对象可用于选择响应中的元素，单击链接并提交表单。
 
 .. tip::
 
-    The ``Crawler`` only works when the response is an XML or an HTML document.
-    To get the raw content response, call ``$client->getResponse()->getContent()``.
+    只有当响应是XML或HTML文档时，``Crawler`` 才有效。
+    要获取原始内容响应，请调用 ``$client->getResponse()->getContent()``。
 
-The crawler integrates with the ``symfony/css-selector`` component to give you the
-power of CSS selectors to find content in a page. To install the CSS selector
-component, run:
+Crawler与 ``symfony/css-selector`` 组件集成，为你提供CSS选择器的功能，以查找页面中的内容。
+要安装CSS选择器组件，请运行：
 
 .. code-block:: terminal
 
     $ composer require --dev symfony/css-selector
 
-Now you can use CSS selectors with the crawler. To assert that the phrase
-"Hello World" is on the page at least once, you can use this assertion::
+现在，你可以将CSS选择器与Crawler一起使用。要断言短语“Hello World”至少在页面显示上一次，你可以使用此断言：
 
     $this->assertGreaterThan(
         0,
         $crawler->filter('html:contains("Hello World")')->count()
     );
 
-The crawler can also be used to interact with the page. Click on a link by first
-selecting it with the crawler using either an XPath expression or a CSS selector,
-then use the client to click on it::
+Crawler也可用于与页面交互。首先使用Crawler配合XPath表达式或CSS选择器选择链接，然后使用客户端点击它::
 
     $link = $crawler
-        ->filter('a:contains("Greet")') // find all links with the text "Greet"
-        ->eq(1) // select the second link in the list
+        ->filter('a:contains("Greet")') // 查找所有带有"Greet"文本的链接
+        ->eq(1) // 选择列表的第二个链接
         ->link()
     ;
 
-    // and click it
+    // 然后点击它
     $crawler = $client->click($link);
 
-Submitting a form is very similar: select a form button, optionally override
-some form values and submit the corresponding form::
+提交表单非常相似：选择一个表单按钮，可选择覆盖某些表单值并提交相应的表单::
 
     $form = $crawler->selectButton('submit')->form();
 
-    // set some values
+    // 设置一些值
     $form['name'] = 'Lucas';
     $form['form_name[subject]'] = 'Hey there!';
 
-    // submit the form
+    // 提交表单
     $crawler = $client->submit($form);
 
 .. tip::
 
-    The form can also handle uploads and contains methods to fill in different types
-    of form fields (e.g. ``select()`` and ``tick()``). For details, see the
-    `Forms`_ section below.
+    表单还可以处理上传，并包含填写不同类型的表单字段的方法（例如 ``select()`` 和 ``tick()``）。
+    有关详细信息，请参阅下面的 `表单`_ 章节。
 
-Now that you can easily navigate through an application, use assertions to test
-that it actually does what you expect it to. Use the Crawler to make assertions
-on the DOM::
+现在你可以轻松浏览一个应用，使用断言来测试它实际上是否符合你的预期。
+使用Crawler在DOM上进行断言：
 
-    // asserts that the response matches a given CSS selector.
+    // 断言响应与给定的CSS选择器匹配。
     $this->assertGreaterThan(0, $crawler->filter('h1')->count());
 
-Or test against the response content directly if you just want to assert that
-the content contains some text or in case that the response is not an XML/HTML
-document::
+如果你只想断言内容包含某些文本，或者如果响应不是XML/HTML文档，则直接对响应内容进行测试::
 
     $this->assertContains(
         'Hello World',
@@ -278,8 +244,7 @@ document::
 
 .. tip::
 
-    Instead of installing each testing dependency individually, you can use the
-    Symfony Test pack to install all those dependencies at once:
+    你可以使用Symfony Test Pack立即安装所有这些依赖项，而不是单独安装每个测试依赖项：
 
     .. code-block:: terminal
 
@@ -288,71 +253,67 @@ document::
 .. index::
    single: Tests; Assertions
 
-.. sidebar:: Useful Assertions
+.. sidebar:: 有用的断言
 
-    To get you started faster, here is a list of the most common and
-    useful test assertions::
+    为了更快地开始，这里列出了最常见和最有用的测试断言::
 
         use Symfony\Component\HttpFoundation\Response;
 
         // ...
 
-        // asserts that there is at least one h2 tag
-        // with the class "subtitle"
+        // 断言至少有一个带有“副标题”类的h2标签
         $this->assertGreaterThan(
             0,
             $crawler->filter('h2.subtitle')->count()
         );
 
-        // asserts that there are exactly 4 h2 tags on the page
+        // 断言页面上只有4个h2标签
         $this->assertCount(4, $crawler->filter('h2'));
 
-        // asserts that the "Content-Type" header is "application/json"
+        // 断言“Content-Type”标头是“application / json”
         $this->assertTrue(
             $client->getResponse()->headers->contains(
                 'Content-Type',
                 'application/json'
             ),
-            'the "Content-Type" header is "application/json"' // optional message shown on failure
+            'the "Content-Type" header is "application/json"' // 失败时显示的可选消息
         );
 
-        // asserts that the response content contains a string
+        // 断言响应内容包含一个字符串
         $this->assertContains('foo', $client->getResponse()->getContent());
-        // ...or matches a regex
+        // ...或匹配一个表达式
         $this->assertRegExp('/foo(bar)?/', $client->getResponse()->getContent());
 
-        // asserts that the response status code is 2xx
+        // 断言响应状态代码是2xx
         $this->assertTrue($client->getResponse()->isSuccessful(), 'response status is 2xx');
-        // asserts that the response status code is 404
+        // 断言响应状态代码是404
         $this->assertTrue($client->getResponse()->isNotFound());
-        // asserts a specific 200 status code
+        // 断言特定的200状态代码
         $this->assertEquals(
-            200, // or Symfony\Component\HttpFoundation\Response::HTTP_OK
+            200, // 或 Symfony\Component\HttpFoundation\Response::HTTP_OK
             $client->getResponse()->getStatusCode()
         );
 
-        // asserts that the response is a redirect to /demo/contact
+        // 断言响应是重定向到 /demo/contact
         $this->assertTrue(
             $client->getResponse()->isRedirect('/demo/contact')
-            // if the redirection URL was generated as an absolute URL
+            // 如果重定向URL是作为绝对URL生成的
             // $client->getResponse()->isRedirect('http://localhost/demo/contact')
         );
-        // ...or simply check that the response is a redirect to any URL
+        // ...或者只是检查响应是否重定向到任何URL
         $this->assertTrue($client->getResponse()->isRedirect());
 
 .. _testing-data-providers:
 
-Testing against Different Sets of Data
+针对不同数据集的测试
 --------------------------------------
 
-It's common to have to execute the same test against different sets of data to
-check the multiple conditions code must handle. This is solved with PHPUnit's
-`data providers`_, which work both for unit and functional tests.
+必须针对不同的数据集执行相同的测试以检查代码必须处理的多个条件。
+这可以通过PHPUnit的 `data providers`_ 解决，它们可用于单元和功能测试。
 
-First, add one or more arguments to your test method and use them inside the
-test code. Then, define another method which returns a nested array with the
-arguments to use on each test run. Lastly, add the ``@dataProvider`` annotation
-to associate both methods::
+首先，在测试方法中添加一个或多个参数，并在测试代码中使用它们。
+然后，定义另一个方法，该方法返回一个嵌套数组，其中包含在每次测试运行时使用的参数。
+最后，添加 ``@dataProvider`` 注释以关联两个方法::
 
     /**
      * @dataProvider provideUrls
@@ -378,28 +339,25 @@ to associate both methods::
 .. index::
    single: Tests; Client
 
-Working with the Test Client
+使用测试客户端
 ----------------------------
 
-The test client simulates an HTTP client like a browser and makes requests
-into your Symfony application::
+测试客户端像浏览器一样模拟HTTP客户端，并向Symfony应用发出请求::
 
     $crawler = $client->request('GET', '/post/hello-world');
 
-The ``request()`` method takes the HTTP method and a URL as arguments and
-returns a ``Crawler`` instance.
+``request()`` 方法将HTTP方法和URL作为参数，并返回一个 ``Crawler`` 实例。
 
 .. tip::
 
-    Hardcoding the request URLs is a best practice for functional tests. If the
-    test generates URLs using the Symfony router, it won't detect any change
-    made to the application URLs which may impact the end users.
+    对请求URL进行硬编码是功能测试的最佳实践。
+    如果测试使用Symfony路由生成的URL，则不会检测到可能影响最终用户的应用URL所做的任何更改。
 
 .. _testing-request-method-sidebar:
 
-.. sidebar:: More about the ``request()`` Method:
+.. sidebar:: ``request()`` 方法的更多信息：
 
-    The full signature of the ``request()`` method is::
+    ``request()`` 方法的完整签名是::
 
         request(
             $method,
@@ -411,10 +369,10 @@ returns a ``Crawler`` instance.
             $changeHistory = true
         )
 
-    The ``server`` array is the raw values that you'd expect to normally
-    find in the PHP `$_SERVER`_ superglobal. For example, to set the
-    ``Content-Type`` and ``Referer`` HTTP headers, you'd pass the following (mind
-    the ``HTTP_`` prefix for non standard headers)::
+    ``server`` 数组是你通常在PHP $_SERVER`_ 超全局中找到的原始值。
+    例如，要设置 ``Content-Type`` 和 ``Referer`` HTTP标头，
+    你将传递以下内容（请注意非标准标头的 ``HTTP_`` 前缀）::
+
 
         $client->request(
             'GET',
@@ -427,28 +385,25 @@ returns a ``Crawler`` instance.
             )
         );
 
-Use the crawler to find DOM elements in the response. These elements can then
-be used to click on links and submit forms::
+使用Crawler在响应中查找DOM元素。然后可以使用这些元素单击链接并提交表单::
 
     $crawler = $client->clickLink('Go elsewhere...');
 
     $crawler = $client->submitForm('validate', array('name' => 'Fabien'));
 
-The ``clickLink()`` and ``submitForm()`` methods both return a ``Crawler`` object.
-These methods are the best way to browse your application as it takes care
-of a lot of things for you, like detecting the HTTP method from a form and
-giving you a nice API for uploading files.
+``clickLink()`` 和 ``submitForm()`` 方法都返回一个 ``Crawler`` 对象。
+这些方法是浏览应用的最佳方式，因为它可以为你处理很多事情，
+例如从表单中检测HTTP方法并为你提供良好的API用于上传文件。
 
 .. versionadded:: 4.2
-    The ``clickLink()`` and ``submitForm()`` methods were introduced in Symfony 4.2.
+    ``clickLink()`` 和 ``submitForm()`` 方法是在Symfony 4.2中引入的。
 
-The ``request()`` method can also be used to simulate form submissions directly
-or perform more complex requests. Some useful examples::
+``request()`` 方法还可用于直接模拟表单提交或执行更复杂的请求。一些有用的例子::
 
-    // submits a form directly (but using the Crawler is easier!)
+    // 直接提交表单（但使用Crawler更容易！）
     $client->request('POST', '/submit', array('name' => 'Fabien'));
 
-    // submits a raw JSON string in the request body
+    // 在请求正文中提交原始JSON字符串
     $client->request(
         'POST',
         '/submit',
@@ -458,7 +413,7 @@ or perform more complex requests. Some useful examples::
         '{"name":"Fabien"}'
     );
 
-    // Form submission with a file upload
+    // 带有文件上传的表单提交
     use Symfony\Component\HttpFoundation\File\UploadedFile;
 
     $photo = new UploadedFile(
@@ -474,7 +429,7 @@ or perform more complex requests. Some useful examples::
         array('photo' => $photo)
     );
 
-    // Perform a DELETE request and pass HTTP headers
+    // 执行DELETE请求并传递HTTP标头
     $client->request(
         'DELETE',
         '/post/12',
@@ -483,108 +438,102 @@ or perform more complex requests. Some useful examples::
         array('PHP_AUTH_USER' => 'username', 'PHP_AUTH_PW' => 'pa$$word')
     );
 
-Last but not least, you can force each request to be executed in its own PHP
-process to avoid any side-effects when working with several clients in the same
-script::
+最后但同样重要的是，你可以强制每个请求在其自己的PHP进程中执行，以避免在同一脚本中使用多个客户端时出现任何副作用::
 
     $client->insulate();
 
-AJAX Requests
+AJAX请求
 ~~~~~~~~~~~~~
 
-The Client provides a :method:`Symfony\\Component\\BrowserKit\\Client::xmlHttpRequest`
-method, which has the same arguments as the ``request()`` method, and it's a
-shortcut to make AJAX requests::
+客户端提供了一个 :method:`Symfony\\Component\\BrowserKit\\Client::xmlHttpRequest`方法，
+该方法与 ``request()`` 方法具有相同的参数，但它是生成AJAX请求的快捷方式::
 
     // the required HTTP_X_REQUESTED_WITH header is added automatically
     $client->xmlHttpRequest('POST', '/submit', array('name' => 'Fabien'));
 
 .. versionadded:: 4.1
-    The ``xmlHttpRequest()`` method was introduced in Symfony 4.1.
+    ``xmlHttpRequest()`` 方法是在Symfony 4.2中引入的。
 
-Browsing
+浏览
 ~~~~~~~~
 
-The Client supports many operations that can be done in a real browser::
+客户端支持许多可以在真实浏览器中完成的操作::
 
     $client->back();
     $client->forward();
     $client->reload();
 
-    // clears all cookies and the history
+    // 清除所有cookie和历史记录
     $client->restart();
 
 .. note::
 
-    The ``back()`` and ``forward()`` methods skip the redirects that may have
-    occurred when requesting a URL, as normal browsers do.
+    ``back()`` 和 ``forward()`` 方法就像普通浏览器那样，跳过请求URL时可能发生的重定向。
 
-Accessing Internal Objects
+访问内部对象
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you use the client to test your application, you might want to access the
-client's internal objects::
+如果使用客户端测试应用，则可能需要访问客户端的内部对象::
 
     $history = $client->getHistory();
     $cookieJar = $client->getCookieJar();
 
-You can also get the objects related to the latest request::
+你还可以获取与最后一个请求相关的对象::
 
-    // the HttpKernel request instance
+    // HttpKernel 请求实例
     $request = $client->getRequest();
 
-    // the BrowserKit request instance
+    // BrowserKit 请求实例
     $request = $client->getInternalRequest();
 
-    // the HttpKernel response instance
+    // HttpKernel 响应实例
     $response = $client->getResponse();
 
-    // the BrowserKit response instance
+    // BrowserKit 响应实例
     $response = $client->getInternalResponse();
 
     $crawler = $client->getCrawler();
 
-Accessing the Container
+访问容器
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 .. versionadded:: 4.1
-    The ``self::$container`` property was introduced in Symfony 4.1.
+    ``self::$container`` 属性是在Symfony 4.1中引入的。
 
-It's highly recommended that a functional test only tests the response. But
-under certain very rare circumstances, you might want to access some services
-to write assertions. Given that services are private by default, test classes
-define a property that stores a special container created by Symfony which
-allows fetching both public and all non-removed private services::
+强烈建议功能测试仅测试响应。但在某些极少数情况下，你可能希望访问某些服务来编写断言。
+鉴于默认情况下服务是私有的，测试类定义了一个属性，该属性存储着由Symfony创建的特殊容器，该容器允许获取公共和所有未删除的私有服务::
 
-    // gives access to the same services used in your test, unless you're using
-    // $client->insulate() or using real HTTP requests to test your application
+    // 要访问测试中的同一个的服务，除非你使用 $client->insulate()
+    // 或使用真实的HTTP请求来测试你的应用
     $container = self::$container;
 
-For a list of services available in your application, use the ``debug:container``
-command.
+有关应用中可用服务的列表，请使用 ``debug:container`` 命令。
 
 .. tip::
 
-    The special container that gives access to private services exists only in
-    the ``test`` environment and is itself a service that you can get from the
-    real container using the ``test.service_container`` id.
+    提供对私有服务的访问的特殊容器仅存在于 ``test`` 环境中，并且本身是一个可以使用 ``test.service_container`` id
+    从真实容器获取的服务。
 
 .. tip::
 
     If the information you need to check is available from the profiler, use
     it instead.
+    如果你需要检查的信息可以从分析器获得，请改用它。
 
-Accessing the Profiler Data
+访问Profiler数据
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+在每个请求上，您都可以启用Symfony探查器来收集有关该请求的内部处理的数据。例如，可以使用分析器来验证给定页面在加载时执行少于一定数量的数据库查询。
 On each request, you can enable the Symfony profiler to collect data about the
 internal handling of that request. For example, the profiler could be used to
 verify that a given page executes less than a certain number of database
 queries when loading.
 
+要获取上次请求的Profiler，请执行以下操作：
 To get the Profiler for the last request, do the following::
 
     // enables the profiler for the very next request
+    // 启用探查器以进行下一个请求
     $client->enableProfiler();
 
     $crawler = $client->request('GET', '/profiler');
@@ -592,34 +541,40 @@ To get the Profiler for the last request, do the following::
     // gets the profile
     $profile = $client->getProfile();
 
+有关在测试中使用探查器的具体详细信息，请参阅“功能测试”中的“如何使用探查器”一文。
 For specific details on using the profiler inside a test, see the
 :doc:`/testing/profiling` article.
 
-Redirecting
+重定向
 ~~~~~~~~~~~
 
+当请求返回重定向响应时，客户端不会自动跟踪它。您可以使用followRedirect（）方法检查响应并强制重定向：
 When a request returns a redirect response, the client does not follow
 it automatically. You can examine the response and force a redirection
 afterwards with the ``followRedirect()`` method::
 
     $crawler = $client->followRedirect();
 
+如果您希望客户端自动遵循所有重定向，您可以在执行请求之前通过调用followRedirects（）方法强制它们：
 If you want the client to automatically follow all redirects, you can
 force them by calling the ``followRedirects()`` method before performing the request::
 
     $client->followRedirects();
 
+如果将false传递给followRedirects（）方法，则将不再遵循重定向：
 If you pass ``false`` to the ``followRedirects()`` method, the redirects
 will no longer be followed::
 
     $client->followRedirects(false);
 
-Reporting Exceptions
+报告异常
 ~~~~~~~~~~~~~~~~~~~~
 
 .. versionadded:: 3.4
-    The ``catchExceptions()`` method was introduced in Symfony 3.4.
+    ``catchExceptions()`` 方法是在Symfony 3.4中引入的。
 
+在功能测试中调试异常可能很困难，因为默认情况下它们被捕获，您需要查看日志以查看抛出的异常。
+禁用在测试客户端中捕获异常允许PHPUnit报告异常：
 Debugging exceptions in functional tests may be difficult because by default
 they are caught and you need to look at the logs to see which exception was
 thrown. Disabling catching of exceptions in the test client allows the exception
@@ -632,15 +587,17 @@ to be reported by PHPUnit::
 
 .. _testing-crawler:
 
-The Crawler
+Crawler
 -----------
 
+每次向客户发出请求时，都会返回一个Crawler实例。它允许您遍历HTML文档，选择节点，查找链接和表单。
 A Crawler instance is returned each time you make a request with the Client.
 It allows you to traverse HTML documents, select nodes, find links and forms.
 
-Traversing
+遍历
 ~~~~~~~~~~
 
+与jQuery一样，Crawler具有遍历HTML / XML文档的DOM的方法。例如，以下内容查找所有input [type = submit]元素，选择页面上的最后一个元素，然后选择其直接父元素：
 Like jQuery, the Crawler has methods to traverse the DOM of an HTML/XML
 document. For example, the following finds all ``input[type=submit]`` elements,
 selects the last one on the page, and then selects its immediate parent element::
@@ -651,18 +608,18 @@ selects the last one on the page, and then selects its immediate parent element:
         ->first()
     ;
 
-Many other methods are also available:
+还有许多其他方法：
 
 ``filter('h1.title')``
-    Nodes that match the CSS selector.
+    与CSS选择器匹配的节点。
 ``filterXpath('h1')``
-    Nodes that match the XPath expression.
+    与XPath表达式匹配的节点。
 ``eq(1)``
-    Node for the specified index.
+    指定索引的节点。
 ``first()``
-    First node.
+    第一个节点。
 ``last()``
-    Last node.
+    最后一个节点。
 ``siblings()``
     Siblings.
 ``nextAll()``
@@ -1046,7 +1003,7 @@ Learn more
 * :doc:`/components/css_selector`
 
 .. _`PHPUnit`: https://phpunit.de/
-.. _`documentation`: https://phpunit.readthedocs.io/
-.. _`PHPUnit Bridge component`: https://symfony.com/components/PHPUnit%20Bridge
+.. _`文档`: https://phpunit.readthedocs.io/
+.. _`PHPUnit Bridge组件`: https://symfony.com/components/PHPUnit%20Bridge
 .. _`$_SERVER`: https://php.net/manual/en/reserved.variables.server.php
 .. _`data providers`: https://phpunit.de/manual/current/en/writing-tests-for-phpunit.html#writing-tests-for-phpunit.data-providers

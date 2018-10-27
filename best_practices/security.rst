@@ -90,7 +90,7 @@ Symfony为你提供了几种实施授权的方法，包括 :doc:`security.yaml <
 在控制器里，实施访问控制时，尽量使用@Security注释。位于动作上方的它们，不光容易理解，还容易替换。
 
 在我们这个程序中，你需要使用 ``ROLE_ADMIN`` 授权，才能创建一个新贴子。
-使用 ``@Security``时，代码会像下面这样：
+使用 ``@Security`` 时，代码会像下面这样：
 
 .. code-block:: php
 
@@ -230,10 +230,10 @@ Symfony为你提供了几种实施授权的方法，包括 :doc:`security.yaml <
         // ...
     }
 
-Security Voters
+安全表决器
 ---------------
 
-如果你的安全逻辑很复杂并且无法集中到像 ``isAuthor()`` 这样的方法中，那么你应该利用自定义选民(voter)。
+如果你的安全逻辑很复杂并且无法集中到像 ``isAuthor()`` 这样的方法中，那么你应该利用自定义表决器。
 这些比 :doc:`ACLs </security/acl>` 更容易，并且几乎在所有情况下都能为你提供所需的灵活性。
 
 首先，要创建一个voter类。以下示例展示了与前例用过的 ``getAuthorEmail()`` 相同的逻辑::
@@ -303,8 +303,9 @@ Security Voters
         }
     }
 
-如果你使用 :ref:`default services.yaml configuration <service-container-services-load-example>`配置，
-你的应用将自动配置你的安全选民，并通过 :ref:`autoconfigure <services-autoconfigure>` 将 ``AccessDecisionManagerInterface`` 实例注入其中。
+如果你使用 :ref:`默认的services.yaml配置 <service-container-services-load-example>` 配置，
+你的应用将自动配置你的安全表决器，并通过 :ref:`自定配置 <services-autoconfigure>` 将
+``AccessDecisionManagerInterface`` 实例注入其中。
 
 现在，你可以在 ``@Security`` 注释中使用这个选民了::
 

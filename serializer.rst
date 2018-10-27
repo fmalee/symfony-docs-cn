@@ -1,31 +1,27 @@
 .. index::
    single: Serializer
 
-How to Use the Serializer
+序列化
 =========================
 
-Symfony provides a serializer to serialize/deserialize to and from objects and
-different formats (e.g. JSON or XML). Before using it, read the
-:doc:`Serializer component docs </components/serializer>` to get familiar with
-its philosophy and the normalizers and encoders terminology.
+Symfony提供了一个序列化器，用于序列化/反序列化对象和不同格式（例如JSON或XML）。
+在使用它之前，请阅读 :doc:`Serializer组件文档 </components/serializer>` 以熟悉其理念以及规范化器和编码器术语。
 
 .. _activating_the_serializer:
 
 安装
 ------------
 
-In applications using :doc:`Symfony Flex </setup/flex>`, run this command to
-install the serializer before using it:
+在使用 :doc:`Symfony Flex </setup/flex>` 的应用中，运行此命令以在使用之前安装序列化支持：
 
 .. code-block:: terminal
 
     $ composer require symfony/serializer
 
-Using the Serializer Service
+使用序列化服务
 ----------------------------
 
-Once enabled, the serializer service can be injected in any service where
-you need it or it can be used in a controller::
+启用后，序列化器服务可以在你需要的任何服务中注入，也可以在控制器中使用::
 
     // src/Controller/DefaultController.php
     namespace App\Controller;
@@ -37,47 +33,44 @@ you need it or it can be used in a controller::
     {
         public function index(SerializerInterface $serializer)
         {
-            // keep reading for usage examples
+            // 继续阅读用法示例
         }
     }
 
-Adding Normalizers and Encoders
+添加规范化器和编码器
 -------------------------------
 
-Once enabled, the ``serializer`` service will be available in the container.
-It comes with a set of useful :ref:`encoders <component-serializer-encoders>`
-and :ref:`normalizers <component-serializer-normalizers>`.
+启用后，``serializer`` 服务将在容器中可用。
+它配备了一组有用的 :ref:`编码器 <component-serializer-encoders>` 和
+:ref:`规范器 <component-serializer-normalizers>`。
 
-Encoders supporting the following formats are enabled:
+支持以下格式的编码器已启用：
 
 * JSON: :class:`Symfony\\Component\\Serializer\\Encoder\\JsonEncoder`
 * XML: :class:`Symfony\\Component\\Serializer\\Encoder\\XmlEncoder`
 * CSV: :class:`Symfony\\Component\\Serializer\\Encoder\\CsvEncoder`
 * YAML: :class:`Symfony\\Component\\Serializer\\Encoder\\YamlEncoder`
 
-As well as the following normalizers:
+以及以下的规范化器：
 
-* :class:`Symfony\\Component\\Serializer\\Normalizer\\ObjectNormalizer` to
-  handle typical data objects
-* :class:`Symfony\\Component\\Serializer\\Normalizer\\DateTimeNormalizer` for
-  objects implementing the :phpclass:`DateTimeInterface` interface
-* :class:`Symfony\\Component\\Serializer\\Normalizer\\DataUriNormalizer` to
-  transform :phpclass:`SplFileInfo` objects in `Data URIs`_
+* :class:`Symfony\\Component\\Serializer\\Normalizer\\ObjectNormalizer` 处理典型的数据对象
+* :class:`Symfony\\Component\\Serializer\\Normalizer\\DateTimeNormalizer` 处理
+  实现了 :phpclass:`DateTimeInterface` 接口的对象
+* :class:`Symfony\\Component\\Serializer\\Normalizer\\DataUriNormalizer` 可以
+  在 `Data URIs`_ 中转换 :phpclass:`SplFileInfo` 对象
 * :class:`Symfony\\Component\\Serializer\\Normalizer\\JsonSerializableNormalizer`
-  to deal with objects implementing the :phpclass:`JsonSerializable` interface
-* :class:`Symfony\\Component\\Serializer\\Normalizer\\ArrayDenormalizer` to
-  denormalize arrays of objects using a format like `MyObject[]` (note the `[]` suffix)
+  处理实现了 :phpclass:`JsonSerializable` 接口的对象
+* :class:`Symfony\\Component\\Serializer\\Normalizer\\ArrayDenormalizer` 使用
+  像 `MyObject[]` （注意 `[]` 后缀）这样的格式来反规范化对象的数组
 
-Custom normalizers and/or encoders can also be loaded by tagging them as
-:ref:`serializer.normalizer <reference-dic-tags-serializer-normalizer>` and
-:ref:`serializer.encoder <reference-dic-tags-serializer-encoder>`. It's also
-possible to set the priority of the tag in order to decide the matching order.
+自定义 规范化器 和/或 编码器 也可以通过将它们标记为
+:ref:`serializer.normalizer <reference-dic-tags-serializer-normalizer>` 和
+:ref:`serializer.encoder <reference-dic-tags-serializer-encoder>` 来加载。
+也可以设置标签的优先级以决定匹配顺序。
 
-Here is an example on how to load the
-:class:`Symfony\\Component\\Serializer\\Normalizer\\GetSetMethodNormalizer`, a
-faster alternative to the `ObjectNormalizer` when data objects always use
-getters (``getXxx()``), issers (``isXxx()``) or hassers (``hasXxx()``) to read
-properties and setters (``setXxx()``) to change properties:
+下面是一个关于如何加载 :class:`Symfony\\Component\\Serializer\\Normalizer\\GetSetMethodNormalizer` 的示例，
+当数据对象总是使用getter（``getXxx()``）、issers（``isXxx()``）或hassers（``hasXxx()``）来读取属性和
+用setter（``setXxx()``）来改变属性时，它是 `ObjectNormalizer` 的更快替代品：
 
 .. configuration-block::
 
@@ -118,17 +111,17 @@ properties and setters (``setXxx()``) to change properties:
 
 .. _serializer-using-serialization-groups-annotations:
 
-Using Serialization Groups Annotations
+使用序列化组注释
 --------------------------------------
 
-To use annotations, first add support for them via the SensioFrameworkExtraBundle:
+要使用注释，首先通过 SensioFrameworkExtraBundle 添加对它们的支持：
 
 .. code-block:: terminal
 
     $ composer require sensio/framework-extra-bundle
 
-Next, add the :ref:`@Groups annotations <component-serializer-attributes-groups-annotations>`
-to your class and choose which groups to use when serializing::
+接下来，将 :ref:`@Groups 注释 <component-serializer-attributes-groups-annotations>`
+添加到你的类中，并选择序列化时要使用的组::
 
     $json = $serializer->serialize(
         $someObject,
@@ -137,42 +130,35 @@ to your class and choose which groups to use when serializing::
 
 .. tip::
 
-    The value of the ``groups`` key can be a single string, or an array of strings.
+    ``groups`` 键的值可以是单个字符串，也可以是字符串数组。
 
     .. versionadded:: 4.2
-        The option to pass a single string to ``groups`` was introduced in Symfony 4.2.
+        在Symfony 4.2中引入了将单个字符串传递给 ``groups`` 的选项。
 
-In addition to the ``@Groups`` annotation, the Serializer component also
-supports YAML or XML files. These files are automatically loaded when being
-stored in one of the following locations:
+除 ``@Groups`` 注释外，Serializer组件还支持YAML或XML文件。
+存储在以下位置之一的这些文件会自动加载：
 
-* All ``*.yaml`` and ``*.xml`` files in the ``config/serializer/``
-  directory.
-* The ``serialization.yaml`` or ``serialization.xml`` file in
-  the ``Resources/config/`` directory of a bundle;
-* All ``*.yaml`` and ``*.xml`` files in the ``Resources/config/serialization/``
-  directory of a bundle.
+* 在 ``config/serializer/`` 目录中的所有 ``*.yaml`` 和 ``*.xml`` 文件。
+* Bundle 的 ``Resources/config/`` 目录中的 ``serialization.yaml`` 或 ``serialization.xml`` 文件;
+* Bundle 的 ``Resources/config/serialization/`` 目录中的所有 ``*.yaml`` 和 ``*.xml`` 文件。
 
 .. _serializer-enabling-metadata-cache:
 
-Configuring the Metadata Cache
+配置元数据缓存
 ------------------------------
 
-The metadata for the serializer is automatically cached to enhance application
-performance. By default, the serializer uses the ``cache.system`` cache pool
-which is configured using the :ref:`cache.system <reference-cache-systen>`
-option.
+序列化器的元数据会被自动缓存，以提高应用的性能。
+默认情况下，序列化器使用 ``cache.system`` 缓存池，
+该缓存池使用 :ref:`cache.system <reference-cache-systen>` 选项配置。
 
-Enabling a Name Converter
+启用名称转换器
 -------------------------
 
-The use of a :ref:`name converter <component-serializer-converting-property-names-when-serializing-and-deserializing>`
-service can be defined in the configuration using the :ref:`name_converter <reference-serializer-name_converter>`
-option.
+可以使用 :ref:`name_converter <reference-serializer-name_converter>` 选项在配置中定义
+:ref:`名称转换器 <component-serializer-converting-property-names-when-serializing-and-deserializing>` 服务的使用。
 
-The built-in :ref:`CamelCase to snake_case name converter <using-camelized-method-names-for-underscored-attributes>`
-can be enabled by using the ``serializer.name_converter.camel_case_to_snake_case``
-value:
+可以使用 ``serializer.name_converter.camel_case_to_snake_case`` 值启用内置的
+:ref:`CamelCase 到 snake_case 名称转换器 <using-camelized-method-names-for-underscored-attributes>`：
 
 .. configuration-block::
 
@@ -202,16 +188,14 @@ value:
             ),
         ));
 
-Going Further with the Serializer
+扩展阅读
 ---------------------------------
 
-`ApiPlatform`_ provides an API system supporting `JSON-LD`_ and `Hydra Core Vocabulary`_
-hypermedia formats. It is built on top of the Symfony Framework and its Serializer
-component. It provides custom normalizers and a custom encoder, custom metadata
-and a caching system.
+`ApiPlatform`_ 提供支持 `JSON-LD`_ 和 `Hydra Core Vocabulary`_ 超媒体格式的API系统。
+它构建于Symfony Framework及其Serializer组件之上。
+它提供自定义规范化器和自定义编码器，自定义元数据和缓存系统。
 
-If you want to leverage the full power of the Symfony Serializer component,
-take a look at how this bundle works.
+如果你想充分利用Symfony Serializer组件的全部功能，请参阅该Bundle的工作原理。
 
 .. toctree::
     :maxdepth: 1

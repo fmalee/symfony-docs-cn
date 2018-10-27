@@ -2,26 +2,21 @@
    single: Events; Create listener
    single: Create subscriber
 
-事件和事件监听器
+事件
 ==========================
 
-During the execution of a Symfony application, lots of event notifications are
-triggered. Your application can listen to these notifications and respond to
-them by executing any piece of code.
+在symfony程序执行期间，大量的事件通知会被触发。你的程序可以监听这些通知，并执行任意代码作为回应。
 
-Symfony triggers several :doc:`events related to the kernel </reference/events>`
-while processing the HTTP Request. Third-party bundles may also dispatch events, and
-you can even dispatch :doc:`custom events </components/event_dispatcher>` from your
-own code.
+Symfony在处理HTTP请求时触发多个与 :doc:`内核相关的事件 </reference/events>`。
+第三方Bundle也可以调度事件，甚你至可以从自己的代码中调度 :doc:`自定义事件 </components/event_dispatcher>` 。
 
-All the examples shown in this article use the same ``KernelEvents::EXCEPTION``
-event for consistency purposes. In your own application, you can use any event
-and even mix several of them in the same subscriber.
+本文展示的所有例子，考虑到一致性，使用了相同的 ``KernelEvents::EXCEPTION`` 事件。
+在你自己的程序中，你可以使用任何事件，甚至在同一订阅器中混合若干事件。
 
 创建一个事件监听器
 --------------------------
 
-The most common way to listen to an event is to register an **event listener**::
+监听一个事件最常用的方式是注册一个 **事件监听器**::
 
     // src/EventListener/ExceptionListener.php
     namespace App\EventListener;
@@ -34,7 +29,7 @@ The most common way to listen to an event is to register an **event listener**::
     {
         public function onKernelException(GetResponseForExceptionEvent $event)
         {
-            // You get the exception object from the received event
+            // 你可以从接收到的事件中，取得异常对象
             $exception = $event->getException();
             $message = sprintf(
                 'My Error says: %s with code: %s',
@@ -42,12 +37,11 @@ The most common way to listen to an event is to register an **event listener**::
                 $exception->getCode()
             );
 
-            // Customize your response object to display the exception details
+            // 自定义响应对象，来显示该异常的细节
             $response = new Response();
             $response->setContent($message);
 
-            // HttpExceptionInterface is a special type of exception that
-            // holds status code and header details
+            // HttpExceptionInterface 是一个特殊类型的异常，持有状态码和标头的细节
             if ($exception instanceof HttpExceptionInterface) {
                 $response->setStatusCode($exception->getStatusCode());
                 $response->headers->replace($exception->getHeaders());
@@ -55,21 +49,20 @@ The most common way to listen to an event is to register an **event listener**::
                 $response->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR);
             }
 
-            // sends the modified response object to the event
+            // 发送修改后的响应对象到事件中
             $event->setResponse($response);
         }
     }
 
 .. tip::
 
-    Each event receives a slightly different type of ``$event`` object. For
-    the ``kernel.exception`` event, it is :class:`Symfony\\Component\\HttpKernel\\Event\\GetResponseForExceptionEvent`.
-    Check out the :doc:`Symfony events reference </reference/events>` to see
-    what type of object each event provides.
+    每一个事件，都要接收“类型略有不同”的 ``$event`` 对象。
+    对于 ``kernel.exception`` 事件，这个对象是
+    :class:`Symfony\\Component\\HttpKernel\\Event\\GetResponseForExceptionEvent`。
+    查看 :doc:`Symfony事件参考 </reference/events>`，了解每个事件提供的对象类型。
 
-Now that the class is created, you just need to register it as a service and
-notify Symfony that it is a "listener" on the ``kernel.exception`` event by
-using a special "tag":
+现在，类被创建了，你只需把它注册成服务，然后通过使用一个特殊的“标签”，
+告诉Symfony这是一个针对 ``kernel.exception`` 事件的“监听器”：
 
 .. configuration-block::
 
@@ -107,49 +100,38 @@ using a special "tag":
             ->addTag('kernel.event_listener', array('event' => 'kernel.exception'))
         ;
 
-Symfony follows this logic to decide which method to execute inside the event
-listener class:
+Symfony遵循以下逻辑来决定在事件监听器类中执行哪个方法：
 
-#. If the ``kernel.event_listener`` tag defines the ``method`` attribute, that's
-   the name of the method to be executed;
-#. If no ``method`` attribute is defined, try to execute the method whose name
-   is ``on`` + "camel-cased event name" (e.g. ``onKernelException()`` method for
-   the ``kernel.exception`` event);
-#. If that method is not defined either, try to execute the ``__invoke()`` magic
-   method (which makes event listeners invokable);
-#. If the ``_invoke()`` method is not defined either, throw an exception.
+#. 如果 ``kernel.event_listener`` 标签定义了 ``method`` 属性，那就执行该方法的名称;
+#. 如果没有定义 ``method`` 属性，则尝试执行名称为 ``on`` + “驼峰式命名的事件名称”的方法
+   （例如， ``kernel.exception`` 事件的 ``onKernelException()`` 方法）;
+#. 如果该方法没有定义，请尝试执行 ``__invoke()`` 魔术方法（这使得事件监听器器可调用）;
+#. 如果连 ``_invoke()`` 方法都没有定义，则抛出异常。
 
 .. versionadded:: 4.1
-    The support of the ``__invoke()`` method to create invokable event listeners
-    was introduced in Symfony 4.1.
+    Symfony 4.1中引入了 ``__invoke()`` 方法对创建可调用事件监听器的支持。
 
 .. note::
 
-    There is an optional attribute for the ``kernel.event_listener`` tag called
-    ``priority``, which defaults to ``0`` and it controls the order in which
-    listeners are executed (the higher the priority, the earlier a listener is
-    executed). This is useful when you need to guarantee that one listener is
-    executed before another. The priorities of the internal Symfony listeners
-    usually range from ``-255`` to ``255`` but your own listeners can use any
-    positive or negative integer.
+    ``kernel.event_listener`` 标签有一个名为 ``priority`` 的可选属性，默认为 ``0``，
+    它控制执行监听器的顺序（优先级越高，执行者越早执行）。
+    当你需要保证一个侦听器在另一个侦听器之前执行时，这非常有用。
+    Symfony内部的监听器的优先级通常在 ``-255`` 到 ``255`` 之间，
+    但你自己的监听器可以使用任何正整数或负整数。
 
 .. _events-subscriber:
 
 创建一个事件订阅器
 ----------------------------
 
-Another way to listen to events is via an **event subscriber**, which is a class
-that defines one or more methods that listen to one or various events. The main
-difference with the event listeners is that subscribers always know which events
-they are listening to.
+另一种监听事件的方式是通过 **事件订阅器**，它是一个定义了一或多个方法的类，用于监听一或多个事件。
+它同事件监听器的主要区别在于，订阅器始终知道它们正在监听的事件是哪一个。
 
-In a given subscriber, different methods can listen to the same event. The order
-in which methods are executed is defined by the ``priority`` parameter of each
-method (the higher the priority the earlier the method is called). To learn more
-about event subscribers, read :doc:`/components/event_dispatcher`.
+在一个给定的订阅器中，不同的方法可以监听同一个事件。
+方法被执行时的顺序，通过每一个方法中的 ``priority`` 参数来定义（优先级愈高则方法愈早被调用）。
+要了解更多关于订阅器的内容，参考 :doc:`/components/event_dispatcher`。
 
-The following example shows an event subscriber that defines several methods which
-listen to the same ``kernel.exception`` event::
+下例展示了一个定义了若干方法的事件订阅器，它监听的是同一个 ``kernel.exception`` 事件::
 
     // src/EventSubscriber/ExceptionSubscriber.php
     namespace App\EventSubscriber;
@@ -162,7 +144,7 @@ listen to the same ``kernel.exception`` event::
     {
         public static function getSubscribedEvents()
         {
-            // return the subscribed events, their methods and priorities
+            // 返回被订阅的事件，以及它们的方法和属性
             return array(
                KernelEvents::EXCEPTION => array(
                    array('processException', 10),
@@ -188,25 +170,23 @@ listen to the same ``kernel.exception`` event::
         }
     }
 
-That's it! Your ``services.yaml`` file should already be setup to load services from
-the ``EventSubscriber`` directory. Symfony takes care of the rest.
+仅此而已！你的 ``services.yaml`` 文件应该已经配置为从 ``EventSubscriber`` 目录中加载服务。
+Symfony会负责其余的工作。
 
 .. _ref-event-subscriber-configuration:
 
 .. tip::
 
-    If your methods are *not* called when an exception is thrown, double-check that
-    you're :ref:`loading services <service-container-services-load-example>` from
-    the ``EventSubscriber`` directory and have :ref:`autoconfigure <services-autoconfigure>`
-    enabled. You can also manually add the ``kernel.event_subscriber`` tag.
+    如果在抛出异常时\ *没有*\调用你的方法，请仔细检查你是否启用了 :ref:`自动配置 <services-autoconfigure>`，
+    并有从 ``EventSubscriber`` 目录 :ref:`加载服务 <service-container-services-load-example>`。
+    你也可以手动添加 ``kernel.event_subscriber`` 标签。
 
 请求事件, 检查类型
 ------------------------------
 
-A single page can make several requests (one master request, and then multiple
-sub-requests - typically by :doc:`/templating/embedding_controllers`). For the core
-Symfony events, you might need to check to see if the event is for a "master" request
-or a "sub request"::
+一个单一页面，可以产生若干次请求（一个主请求[master request]，然后是多个子请求[sub-requests]，
+典型的像是 :doc:`/templating/embedding_controllers`）。
+对于Symfony核心事件，你可能需要检查一下，看这个事件是一个“主”请求还是一个“子”请求::
 
     // src/EventListener/RequestListener.php
     namespace App\EventListener;
@@ -220,7 +200,7 @@ or a "sub request"::
         public function onKernelRequest(GetResponseEvent $event)
         {
             if (!$event->isMasterRequest()) {
-                // don't do anything if it's not the master request
+                // 如果不是主请求，就什么也不做
                 return;
             }
 
@@ -228,42 +208,37 @@ or a "sub request"::
         }
     }
 
-Certain things, like checking information on the *real* request, may not need to
-be done on the sub-request listeners.
+某些特定的行为，例如检查\ *真实*\请求的信息，可能不需要在子请求减去器上完成。
 
 .. _events-or-subscribers:
 
 监听器 VS 订阅器
 ------------------------
 
-Listeners and subscribers can be used in the same application indistinctly. The
-decision to use either of them is usually a matter of personal taste. However,
-there are some minor advantages for each of them:
+监听器和订阅器可以在同一个应用中模糊地使用。
+决定使用哪一种，通常由个人口味决定。但是，每种都有各自的优点：
 
-* **Subscribers are easier to reuse** because the knowledge of the events is kept
-  in the class rather than in the service definition. This is the reason why
-  Symfony uses subscribers internally;
-* **Listeners are more flexible** because bundles can enable or disable each of
-  them conditionally depending on some configuration value.
+* **订阅器易于复用**，因为与事件有关的内容存在于类中，而不是存在于服务定义中。
+  这就是Symfony内部使用订阅器的原因；
+* **监听器更灵活**，因为Bundle可以基于配置中的某些“选项值”有条件地开启或关闭它们。
 
 调试事件监听器
 -------------------------
 
-You can find out what listeners are registered in the event dispatcher
-using the console. To show all events and their listeners, run:
+你可以使用控制台找出在事件调度器中注册的监听器。
+要显示所有事件及其监听器，请运行：
 
 .. code-block:: terminal
 
     $ php bin/console debug:event-dispatcher
 
-You can get registered listeners for a particular event by specifying
-its name:
+通过指定事件名称，你可以得到针对此特定事件进行注册的监听器：
 
 .. code-block:: terminal
 
     $ php bin/console debug:event-dispatcher kernel.exception
 
-其他资料
+扩展阅读
 ----------
 
 .. toctree::

@@ -1,15 +1,13 @@
 .. index::
    single: Cache
 
-HTTP Cache
+HTTP缓存
 ==========
 
-The nature of rich web applications means that they're dynamic. No matter
-how efficient your application, each request will always contain more overhead
-than serving a static file. Usually, that's fine. But when you need your requests
-to be lightning fast, you need HTTP caching.
+富Web应用的本质意味着它们是动态的。无论你的应用效率如何，每个请求总是会比提供静态文件包含更多的开销。
+通常，这没关系。但是当你需要快速请求时，你需要HTTP缓存。
 
-Caching on the Shoulders of Giants
+缓存在巨人的肩膀上
 ----------------------------------
 
 With HTTP Caching, you cache the full output of a page (i.e. the response) and bypass

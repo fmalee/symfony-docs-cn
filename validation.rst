@@ -1,21 +1,19 @@
 .. index::
    single: Validation
 
-Validation
+验证
 ==========
 
-Validation is a very common task in web applications. Data entered in forms
-needs to be validated. Data also needs to be validated before it is written
-into a database or passed to a web service.
+验证是Web应用中非常常见的任务。在表单中输入的数据需要进行验证。
+在将数据写入数据库或传递给Web服务之前，还需要验证数据。
 
-Symfony provides a `Validator`_ component that makes this task easy and
-transparent. This component is based on the `JSR303 Bean Validation specification`_.
+Symfony提供了一个 `Validator`_ 组件，使该任务变得简单透明。
+该组件基于 `JSR303 Bean Validation specification`_。
 
-Installation
+安装
 ------------
 
-In applications using :doc:`Symfony Flex </setup/flex>`, run this command to
-install the validator before using it:
+在使用 :doc:`Symfony Flex </setup/flex>` 的应用中，运行此命令以在使用之前安装验证器：
 
 .. code-block:: terminal
 
@@ -24,12 +22,10 @@ install the validator before using it:
 .. index::
    single: Validation; The basics
 
-The Basics of Validation
+基础验证
 ------------------------
 
-The best way to understand validation is to see it in action. To start, suppose
-you've created a plain-old-PHP object that you need to use somewhere in
-your application::
+理解验证的最佳方法是看它的实际效果。首先，假设你已经创建了一个普通的PHP对象，你需要在应用中的某个位置使用它::
 
     // src/Entity/Author.php
     namespace App\Entity;
@@ -39,16 +35,12 @@ your application::
         public $name;
     }
 
-So far, this is just an ordinary class that serves some purpose inside your
-application. The goal of validation is to tell you if the data
-of an object is valid. For this to work, you'll configure a list of rules
-(called :ref:`constraints <validation-constraints>`) that the object must
-follow in order to be valid. These rules are usually defined using PHP code or
-annotations but they can also be defined as a ``validation.yaml`` or
-``validation.xml`` file inside the ``config/validator/`` directory:
+到目前为止，这只是一个普通的类，在你的应用中有一些用途。验证的目的是告诉你对象的数据是否有效。
+为此，你将配置对象必须遵循的规则列表（称为 :ref:`约束 <validation-constraints>`）才能生效。
+这些规则通常使用PHP代码或注释定义，但它们也可以在 ``config/validator/``
+目录中定义为 ``validation.yaml`` 或 ``validation.xml`` 文件：
 
-For example, to guarantee that the ``$name`` property is not empty, add the
-following:
+例如，要保证 ``$name`` 属性不为空，请添加以下内容：
 
 .. configuration-block::
 
@@ -111,22 +103,19 @@ following:
 
 .. tip::
 
-    Protected and private properties can also be validated, as well as "getter"
-    methods (see :ref:`validator-constraint-targets`).
+    还可以验证受保护的属性和私有属性，以及“getter”方法（请参阅 :ref:`validator-constraint-targets`）。
 
 .. index::
    single: Validation; Using the validator
 
-Using the ``validator`` Service
+使用 ``validator`` 服务
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Next, to actually validate an ``Author`` object, use the ``validate()`` method
-on the ``validator`` service (class :class:`Symfony\\Component\\Validator\\Validator`).
-The job of the ``validator`` is easy: to read the constraints (i.e. rules)
-of a class and verify if the data on the object satisfies those
-constraints. If validation fails, a non-empty list of errors
-(class :class:`Symfony\\Component\\Validator\\ConstraintViolationList`) is
-returned. Take this simple example from inside a controller::
+接下来，要实际验证 ``Author`` 对象，请在 ``validator`` 服务
+（类 :class:`Symfony\\Component\\Validator\\Validator`）上使用 ``validate()`` 方法。
+``validator`` 的工作很简单：读取类的约束（即规则）并验证对象上的数据是否满足这些约束。
+如果验证失败，则返回非空的错误列表（类 :class:`Symfony\\Component\\Validator\\ConstraintViolationList`）。
+从控制器内部获取这个简单示例::
 
     // ...
     use Symfony\Component\HttpFoundation\Response;
@@ -138,15 +127,14 @@ returned. Take this simple example from inside a controller::
     {
         $author = new Author();
 
-        // ... do something to the $author object
+        // ... 对 $author 对象执行某些操作
 
         $errors = $validator->validate($author);
 
         if (count($errors) > 0) {
             /*
-             * Uses a __toString method on the $errors variable which is a
-             * ConstraintViolationList object. This gives us a nice string
-             * for debugging.
+             * 在 $errors 变量上使用 __toString 方法，该变量是 ConstraintViolationList 对象。
+             * 这为我们提供了一个很好的调试字符串。
              */
             $errorsString = (string) $errors;
 
@@ -156,25 +144,22 @@ returned. Take this simple example from inside a controller::
         return new Response('The author is valid! Yes!');
     }
 
-If the ``$name`` property is empty, you will see the following error
-message:
+如果 ``$name`` 属性为空，你将看到以下错误消息：
 
 .. code-block:: text
 
     App\Entity\Author.name:
         This value should not be blank
 
-If you insert a value into the ``name`` property, the happy success message
-will appear.
+如果在 ``name`` 属性中插入值，则会显示愉快的成功消息。
 
 .. tip::
 
-    Most of the time, you won't interact directly with the ``validator``
-    service or need to worry about printing out the errors. Most of the time,
-    you'll use validation indirectly when handling submitted form data. For
-    more information, see the :ref:`forms-form-validation`.
+    大多数情况下，你不会直接与 ``validator`` 服务交互，也不必担心打印出错误。
+    大多数情况下，你在处理提交的表单数据时会间接使用验证。
+    有关更多信息，请参阅 :ref:`forms-form-validation`。
 
-You could also pass the collection of errors into a template::
+你还可以将错误集合传递到模板中::
 
     if (count($errors) > 0) {
         return $this->render('author/validation.html.twig', array(
@@ -182,7 +167,7 @@ You could also pass the collection of errors into a template::
         ));
     }
 
-Inside the template, you can output the list of errors exactly as needed:
+在模板内部，你可以根据需要输出错误列表：
 
 .. code-block:: html+twig
 
@@ -196,17 +181,15 @@ Inside the template, you can output the list of errors exactly as needed:
 
 .. note::
 
-    Each validation error (called a "constraint violation"), is represented by
-    a :class:`Symfony\\Component\\Validator\\ConstraintViolation` object.
+    每个验证错误（称为“约束违规”）由 :class:`Symfony\\Component\\Validator\\ConstraintViolation` 对象表示。
 
 .. index::
    pair: Validation; Configuration
 
-Configuration
+配置
 -------------
 
-Before using the Symfony validator, make sure it's enabled in the main config
-file:
+在使用Symfony验证器之前，请确保在主配置文件中启用它：
 
 .. configuration-block::
 
@@ -241,8 +224,7 @@ file:
             ),
         ));
 
-Besides, if you plan to use annotations to configure validation, replace the
-previous configuration by the following:
+此外，如果你计划使用注释来配置验证，请使用以下内容替换以前的配置：
 
 .. configuration-block::
 
@@ -282,43 +264,35 @@ previous configuration by the following:
 
 .. _validation-constraints:
 
-Constraints
+约束
 -----------
 
-The ``validator`` is designed to validate objects against *constraints* (i.e.
-rules). In order to validate an object, simply map one or more constraints
-to its class and then pass it to the ``validator`` service.
+``validator`` 旨在根据 *约束* （即规则）验证对象。
+为了验证一个对象，只需将一个或多个约束映射到其类，然后将其传递给 ``validator`` 服务。
 
-Behind the scenes, a constraint is simply a PHP object that makes an assertive
-statement. In real life, a constraint could be: 'The cake must not be burned'.
-In Symfony, constraints are similar: they are assertions that a condition
-is true. Given a value, a constraint will tell you if that value
-adheres to the rules of the constraint.
+在幕后，约束只是一个PHP对象，它产生一个断言语句。在现实生活中，一个约束可能是：'蛋糕不能被烧掉'。
+在Symfony中，约束类似：它们是条件为真的断言。给定一个值，约束将告诉你该值是否符合约束规则。
 
-Supported Constraints
+支持的约束
 ~~~~~~~~~~~~~~~~~~~~~
 
-Symfony packages many of the most commonly-needed constraints:
+Symfony封装了很多最常用的约束：
 
 .. include:: /reference/constraints/map.rst.inc
 
-You can also create your own custom constraints. This topic is covered in
-the :doc:`/validation/custom_constraint` article.
+您还可以创建自己的自定义约束。:doc:`/validation/custom_constraint` 文档中介绍了此主题。
 
 .. index::
    single: Validation; Constraints configuration
 
 .. _validation-constraint-configuration:
 
-Constraint Configuration
+约束配置
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Some constraints, like :doc:`NotBlank </reference/constraints/NotBlank>`,
-are simple whereas others, like the :doc:`Choice </reference/constraints/Choice>`
-constraint, have several configuration options available. Suppose that the
-``Author`` class has another property called ``genre`` that defines the
-literature genre mostly associated with the author, which can be set to either
-"fiction" or "non-fiction":
+一些约束（如 :doc:`NotBlank </reference/constraints/NotBlank>`）很简单，而其他约束
+（如 :doc:`Choice </reference/constraints/Choice>` 约束）有几个可用的配置选项。
+假设 ``Author`` 类有另一个名为 ``genre`` 的属性，它定义了与作者相关的主要文学类型，可以设置为“小说”或“非小说”：
 
 .. configuration-block::
 
@@ -402,10 +376,8 @@ literature genre mostly associated with the author, which can be set to either
 
 .. _validation-default-option:
 
-The options of a constraint can always be passed in as an array. Some constraints,
-however, also allow you to pass the value of one, "*default*", option in place
-of the array. In the case of the ``Choice`` constraint, the ``choices``
-options can be specified in this way.
+约束的选项始终可以作为数组传递。但是，某些约束还允许你传递一个 “*default*” 选项的值来代替数组。
+在本例中的 ``Choice`` 约束， ``choices`` 可以以这种方式指定：
 
 .. configuration-block::
 
@@ -479,18 +451,15 @@ options can be specified in this way.
             }
         }
 
-This is purely meant to make the configuration of the most common option of
-a constraint shorter and quicker.
+这纯粹是为了使约束的最常见选项的配置更短更快。
 
-If you're ever unsure of how to specify an option, either check :namespace:`Symfony\\Component\\Validator\\Constraints`
-for the constraint or play it safe by always passing in an array of options
-(the first method shown above).
+如果你不确定如何指定选项，请检查约束的 :namespace:`Symfony\\Component\\Validator\\Constraints`
+或通过传入一个选项数组（上面显示的第一种方法）来安全地使用它。
 
-Constraints in Form Classes
+表单类中的约束
 ---------------------------
 
-Constraints can be defined while building the form via the ``constraints`` option
-of the form fields::
+通过表单字段的 ``constraints`` 选项构建表单时可以定义约束::
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -507,27 +476,22 @@ of the form fields::
 
 .. _validator-constraint-targets:
 
-Constraint Targets
+约束目标
 ------------------
 
-Constraints can be applied to a class property (e.g. ``name``), a public
-getter method (e.g. ``getFullName()``) or an entire class. Property constraints
-are the most common and easy to use. Getter constraints allow you to specify
-more complex validation rules. Finally, class constraints are intended
-for scenarios where you want to validate a class as a whole.
+约束可以应用于类属性（例如 ``name``）、公共getter方法（例如 ``getFullName()``）或整个类。
+属性约束是最常见且易于使用的。Getter约束允许你指定更复杂的验证规则。最后，类约束适用于要将类作为整体进行验证的场景。
 
 .. index::
    single: Validation; Property constraints
 
 .. _validation-property-target:
 
-Properties
+属性
 ~~~~~~~~~~
 
-Validating class properties is the most basic validation technique. Symfony
-allows you to validate private, protected or public properties. The next
-listing shows you how to configure the ``$firstName`` property of an ``Author``
-class to have at least 3 characters.
+验证类属性是最基本的验证技术。Symfony允许你验证私有，受保护或公共属性。
+下一个清单显示如何将 ``Author`` 类的 ``$firstName`` 属性配置为至少包含3个字符。
 
 .. configuration-block::
 
@@ -601,19 +565,14 @@ class to have at least 3 characters.
 .. index::
    single: Validation; Getter constraints
 
-Getters
+Getter
 ~~~~~~~
 
-Constraints can also be applied to the return value of a method. Symfony
-allows you to add a constraint to any public method whose name starts with
-"get", "is" or "has". In this guide, these types of methods are referred to
-as "getters".
+约束也可以应用于一个方法的返回值。Symfony允许你向名称以“get”，“is”或“has”开头的任何公有方法添加约束。
+在本指南中，这些类型的方法称为“getters”。
 
-The benefit of this technique is that it allows you to validate your object
-dynamically. For example, suppose you want to make sure that a password field
-doesn't match the first name of the user (for security reasons). You can
-do this by creating an ``isPasswordSafe()`` method, and then asserting that
-this method must return ``true``:
+这种技术的好处是它允许你动态验证你的对象。例如，假设你要确保密码字段与用户的名字不匹配（出于安全原因）。
+你可以通过创建 ``isPasswordSafe()`` 方法，然后断言此方法必须返回 ``true`` 来执行此操作：
 
 .. configuration-block::
 
@@ -631,7 +590,7 @@ this method must return ``true``:
              */
             public function isPasswordSafe()
             {
-                // ... return true or false
+                // ... 返回 true 或 false
             }
         }
 
@@ -679,7 +638,7 @@ this method must return ``true``:
             }
         }
 
-Now, create the ``isPasswordSafe()`` method and include the logic you need::
+现在，创建 ``isPasswordSafe()`` 方法并包含你需要的逻辑::
 
     public function isPasswordSafe()
     {
@@ -688,33 +647,25 @@ Now, create the ``isPasswordSafe()`` method and include the logic you need::
 
 .. note::
 
-    The keen-eyed among you will have noticed that the prefix of the getter
-    ("get", "is" or "has") is omitted in the mappings for the YAML, XML and PHP
-    formats. This allows you to move the constraint to a property with the same
-    name later (or vice versa) without changing your validation logic.
+    你们中的敏锐眼睛会注意到在YAML，XML和PHP格式的映射中省略了getter的前缀（“get”，“is”或“has”）。
+    这允许你稍后将约束移动到具有相同名称的属性上（反之亦然），而无需更改验证逻辑。
 
 .. _validation-class-target:
 
-Classes
+类
 ~~~~~~~
 
-Some constraints apply to the entire class being validated. For example,
-the :doc:`Callback </reference/constraints/Callback>` constraint is a generic
-constraint that's applied to the class itself. When that class is validated,
-methods specified by that constraint are simply executed so that each can
-provide more custom validation.
+某些约束适用于要验证的整个类。例如，:doc:`Callback </reference/constraints/Callback>`
+约束是一个应用于类本身的泛型约束。验证该类时，将简单地执行该约束指定的方法，以便每个方法都可以提供更多的自定义验证。
 
-Final Thoughts
+总结
 --------------
 
-The Symfony ``validator`` is a powerful tool that can be leveraged to
-guarantee that the data of any object is "valid". The power behind validation
-lies in "constraints", which are rules that you can apply to properties or
-getter methods of your object. And while you'll most commonly use the validation
-framework indirectly when using forms, remember that it can be used anywhere
-to validate any object.
+Symfony ``validator`` 是一个功能强大的工具，可用于保证任何对象的数据“有效”。
+验证背后的力量在于“约束”，这些规则可以应用于对象的属性或getter方法。
+虽然你在使用表单时最常间接使用验证框架，但请记住，它可以用于在任何地方验证任何对象。
 
-Learn more
+扩展阅读
 ----------
 
 .. toctree::

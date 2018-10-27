@@ -1,47 +1,42 @@
 工作流
 ========
 
-A workflow is a model of a process in your application. It may be the process
-of how a blog post goes from draft, review and publish. Another example is when
-a user submits a series of different forms to complete a task. Such processes are
-best kept away from your models and should be defined in configuration.
+一个工作流，是你应用中一个流程(process)的一个模型。
+它可能是博客文章从草稿、审核到发布的过程。
+另一个例子是，当一位用户提交一系列不同的表单以完成一个任务时。
+类似的进程最好从你的模型中脱离，而且应该在配置信息中进行定义。
 
-A **definition** of a workflow consist of places and actions to get from one
-place to another. The actions are called **transitions**. A workflow does also
-need to know each object's position in the workflow. That **marking store** writes
-to a property of the object to remember the current place.
+一个工作流的 **定义** 包括位置和动作，以从一个位置来到另一个位置。这些动作被称为 **过渡**。
+工作流还需要知道每个对象在工作流中的位置。
+那个 **marking store(标记存储区)** 写入了对象的一个属性来记住当前位置。
 
 .. note::
 
-    The terminology above is commonly used when discussing workflows and
-    `Petri nets`_
+    上面的专有名词一般被用于讨论工作流和 `Petri nets`_
 
-The Workflow component does also support state machines. A state machine is a subset
-of a workflow and its purpose is to hold a state of your model. Read more about the
-differences and specific features of state machine in :doc:`/workflow/state-machines`.
+工作流组件支持状态机（state machines）。
+状态机是一个工作流的子集（subset），其目的是持有你的模型的一个状态。
+在 :doc:`/workflow/state-machines` 一文可以读到更多的关于状态机的差异和特定的功能。
 
-范例
+示例
 --------
 
-The simplest workflow looks like this. It contains two places and one transition.
+最简单的工作流是下面这种。它包括两个位置和一个过渡。
 
 .. image:: /_images/components/workflow/simple.png
 
-Workflows could be more complicated when they describe a real business case. The
-workflow below describes the process to fill in a job application.
+当用来描述一个真实业务时，工作流可以是更复杂的。下面的工作流描述了在一个应聘应用中进行应聘的流程。
 
 .. image:: /_images/components/workflow/job_application.png
 
-When you fill in a job application in this example there are 4 to 7 steps depending
-on the what job you are applying for. Some jobs require personality tests, logic tests
-and/or formal requirements to be answered by the user. Some jobs don't. The
-``GuardEvent`` is used to decide what next steps are allowed for a specific application.
+在此示例中填写应聘应用时，根据你申请的工作，有4到7个步骤。
+一些工作需要用户回答性格测试，逻辑测试和/或形式要求。有些则工作没有。
+``GuardEvent`` 用于确定一个特定应用被许可的后续步骤。
 
-By defining a workflow like this, there is an overview how the process looks like. The process
-logic is not mixed with the controllers, models or view. The order of the steps can be changed
-by changing the configuration only.
+通过像这样定义一个工作流，流程如何被展现就能知其大概。
+流程的逻辑并不与控制器、模型或视图混为一谈。只需更改配置即可更改步骤的顺序。
 
-其他参考
+扩展阅读
 ----------
 
 .. toctree::

@@ -94,7 +94,7 @@ Twig 扩展
 
 就是这些!
 
-如果你使用 :ref:`default services.yaml configuration <service-container-services-load-example>`，
+如果你使用 :ref:`默认的services.yaml配置 <service-container-services-load-example>`，
 那么这就完工了！Symfony将自动探知你的新服务并将其标记为一个Twig扩展。
 
 ----
