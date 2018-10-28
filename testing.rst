@@ -87,7 +87,7 @@ PHPUnit由Symfony应用的根目录中的 ``phpunit.xml.dist`` 文件配置。
     因此，如果你正在测试 ``src/Util/`` 目录中的类，请将测试放在 ``tests/Util/`` 目录中。
 
 就像在你的实际应用中一样 - 通过 ``vendor/autoload.php`` 文件自动启用自动加载
-（默认情况下在``phpunit.xml.dist`` 文件中配置）。
+（默认情况下在 ``phpunit.xml.dist`` 文件中配置）。
 
 针对指定文件或目录的测试也很简单：
 
@@ -195,7 +195,7 @@ Crawler与 ``symfony/css-selector`` 组件集成，为你提供CSS选择器的�
 
     $ composer require --dev symfony/css-selector
 
-现在，你可以将CSS选择器与Crawler一起使用。要断言短语“Hello World”至少在页面显示上一次，你可以使用此断言：
+现在，你可以将CSS选择器与Crawler一起使用。要断言短语“Hello World”至少在页面显示上一次，你可以使用此断言::
 
     $this->assertGreaterThan(
         0,
@@ -230,7 +230,7 @@ Crawler也可用于与页面交互。首先使用Crawler配合XPath表达式或C
     有关详细信息，请参阅下面的 `表单`_ 章节。
 
 现在你可以轻松浏览一个应用，使用断言来测试它实际上是否符合你的预期。
-使用Crawler在DOM上进行断言：
+使用Crawler在DOM上进行断言::
 
     // 断言响应与给定的CSS选择器匹配。
     $this->assertGreaterThan(0, $crawler->filter('h1')->count());
@@ -445,7 +445,7 @@ Crawler也可用于与页面交互。首先使用Crawler配合XPath表达式或C
 AJAX请求
 ~~~~~~~~~~~~~
 
-客户端提供了一个 :method:`Symfony\\Component\\BrowserKit\\Client::xmlHttpRequest`方法，
+客户端提供了一个 :method:`Symfony\\Component\\BrowserKit\\Client::xmlHttpRequest` 方法，
 该方法与 ``request()`` 方法具有相同的参数，但它是生成AJAX请求的快捷方式::
 
     // the required HTTP_X_REQUESTED_WITH header is added automatically
@@ -610,9 +610,7 @@ Crawler
 ``reduce($lambda)``
     可调用对象不返回false的节点
 
-由于这些方法中的每一个都返回一个新的Crawler实例，因此您可以通过链接方法调用来缩小节点选择范围：
-Since each of these methods returns a new ``Crawler`` instance, you can
-narrow down your node selection by chaining the method calls::
+由于这些方法中的每一个都返回一个新的Crawler实例，因此你可以通过方法链调用来缩小节点的选择范围::
 
     $crawler
         ->filter('h1')
@@ -633,20 +631,18 @@ narrow down your node selection by chaining the method calls::
 
 Crawler可以从节点中提取信息::
 
-    // returns the attribute value for the first node返回第一个节点的属性值
+    // 返回第一个节点的属性值
     $crawler->attr('class');
 
-    // returns the node value for the first node返回第一个节点的节点值
+    // 返回第一个节点的节点值
     $crawler->text();
 
-    // extracts an array of attributes for all nodes
-    // (_text returns the node value)
-    // returns an array for each element in crawler,
-    // each with the value and href
-    // 为所有节点提取属性数组（_text返回节点值）为crawler中的每个元素返回一个数组，每个元素都带有值和href
+    // 提取所有节点的属性数组
+    // （_text返回节点值）
+    // 为crawler中的每个元素返回一个数组，每个元素都带有值和href
     $info = $crawler->extract(array('_text', 'href'));
 
-    // executes a lambda for each node and return an array of results为每个节点执行一个lambda并返回一个结果数组
+    // 为每个节点执行一个lambda并返回一个结果数组
     $data = $crawler->each(function ($node, $i) {
         return $node->attr('href');
     });
@@ -654,9 +650,7 @@ Crawler可以从节点中提取信息::
 链接
 ~~~~~
 
-使用``clickLink（）``方法单击包含给定文本的第一个链接（或带有``alt``属性的第一个可点击图像）::
-Use the ``clickLink()`` method to click on the first link that contains the
-given text (or the first clickable image with that ``alt`` attribute)::
+使用 ``clickLink（）`` 方法点击包含给定文本的第一个链接（或带有 ``alt`` 属性的第一个可点击图像）::
 
     $client = static::createClient();
     $client->request('GET', '/post/hello-world');
@@ -664,10 +658,7 @@ given text (or the first clickable image with that ``alt`` attribute)::
     $client->clickLink('Click here');
 
 如果需要访问 :class:`Symfony\\Component\\DomCrawler\\Link` 对象，它提供了特定于链接的有用方法
-（例如``getMethod（）``和``getUri（）``），请使用 相反，``selectLink（）``方法：
-If you need access to the :class:`Symfony\\Component\\DomCrawler\\Link` object
-that provides helpful methods specific to links (such as ``getMethod()`` and
-``getUri()``), use the ``selectLink()`` method instead:
+（例如 ``getMethod()`` 和 ``getUri()``），请使用 ``selectLink()`` 方法::
 
     $client = static::createClient();
     $crawler = $client->request('GET', '/post/hello-world');
@@ -678,7 +669,7 @@ that provides helpful methods specific to links (such as ``getMethod()`` and
 表单
 ~~~~~
 
-Use the ``submitForm()`` method to submit the form that contains the given button::
+使用 ``submitForm()`` 方法提交包含给定按钮的表单::
 
     $client = static::createClient();
     $client->request('GET', '/post/hello-world');
@@ -687,151 +678,136 @@ Use the ``submitForm()`` method to submit the form that contains the given butto
        'comment_form[content]' => '...',
     ));
 
-The first argument of ``submitForm()`` is the text content, ``id``, ``value`` or
-``name`` of any ``<button>`` or ``<input type="submit">`` included in the form.
-The second optional argument is used to override the default form field values.
+``submitForm()`` 的第一个参数是表单中任何 ``<button>`` 或 ``<input type="submit">`` 的
+``id``、``value``、``name`` 等属性的值。
+第二个可选参数用于覆盖表单默认的字段值。
 
 .. note::
 
-    Notice that you select form buttons and not forms as a form can have several
-    buttons; if you use the traversing API, keep in mind that you must look for a
-    button.
+    请注意选择表单按钮而不是表单，因为表单可以有多个按钮;如果你使用遍历(traversing)API，请记住你必须查找按钮。
 
-If you need access to the :class:`Symfony\\Component\\DomCrawler\\Form` object
-that provides helpful methods specific to forms (such as ``getUri()``,
-``getValues()`` and ``getFields()``) use the ``selectButton()`` method instead::
+如果需要访问提供特定于表单的诸如 ``getUri()``、``getValues()``、``getFields()`` 等有用方法的
+:class:`Symfony\\Component\\DomCrawler\\Form` 对象，请使用 ``selectButton()`` 方法::
 
     $client = static::createClient();
     $crawler = $client->request('GET', '/post/hello-world');
 
     $buttonCrawlerNode = $crawler->selectButton('submit');
 
-    // select the form that contains this button
+    // 选择包含此按钮的表单
     $form = $buttonCrawlerNode->form();
 
-    // you can also pass an array of field values that overrides the default ones
+    // 你还可以传递一组用来覆盖默认值的字段值
     $form = $buttonCrawlerNode->form(array(
         'my_form[name]'    => 'Fabien',
         'my_form[subject]' => 'Symfony rocks!',
     ));
 
-    // you can pass a second argument to override the form HTTP method
+    // 你可以传递第二个参数来覆盖表单的HTTP方法
     $form = $buttonCrawlerNode->form(array(), 'DELETE');
 
-    // submit the Form object
+    // 提交表单对象
     $client->submit($form);
 
-The field values can also be passed as a second argument of the ``submit()``
-method::
+字段值也可以作为 ``submit()`` 方法的第二个参数传递::
 
     $client->submit($form, array(
         'my_form[name]'    => 'Fabien',
         'my_form[subject]' => 'Symfony rocks!',
     ));
 
-For more complex situations, use the ``Form`` instance as an array to set the
-value of each field individually::
+对于更复杂的情况，使用 ``Form`` 实例作为数组来单独设置每个字段的值::
 
-    // changes the value of a field
+    // 更改字段的值
     $form['my_form[name]'] = 'Fabien';
     $form['my_form[subject]'] = 'Symfony rocks!';
 
-There is also a nice API to manipulate the values of the fields according to
-their type::
+还有一个很好的API可以根据字段类型来操作字段的值::
 
-    // selects an option or a radio
+    // 选择一个选项或 radio
     $form['country']->select('France');
 
-    // ticks a checkbox
+    // 勾选一个复选框
     $form['like_symfony']->tick();
 
-    // uploads a file
+    // 上传文件
     $form['photo']->upload('/path/to/lucas.jpg');
 
 .. tip::
 
-    If you purposefully want to select "invalid" select/radio values, see
-    :ref:`components-dom-crawler-invalid`.
+    如果你特意要选择“无效”的选择框和单选框，请参阅 :ref:`components-dom-crawler-invalid`。
 
 .. tip::
 
-    You can get the values that will be submitted by calling the ``getValues()``
-    method on the ``Form`` object. The uploaded files are available in a
-    separate array returned by ``getFiles()``. The ``getPhpValues()`` and
-    ``getPhpFiles()`` methods also return the submitted values, but in the
-    PHP format (it converts the keys with square brackets notation - e.g.
-    ``my_form[subject]`` - to PHP arrays).
+    你可以通过在 ``Form`` 对象上调用 ``getValues()`` 方法来获取将要提交的值。
+    上传的文件在 ``getFiles()`` 方法返回的单独数组中。
+    ``getPhpValues()`` 和 ``getPhpFiles()`` 方法也可返回提交的值，但是以PHP格式
+    （它将带有方括号表示法的键 - 例如 ``my_form[subject]`` - 转换为PHP数组）返回。
 
 .. tip::
 
-    The ``submit()`` and ``submitForm()`` methods define optional arguments to
-    add custom server parameters and HTTP headers when submitting the form::
+    ``submit()`` 和 ``submitForm()`` 方法可以通过定义可选参数，在提交表单时添加自定义服务器参数和HTTP标头::
 
         $client->submit($form, array(), array('HTTP_ACCEPT_LANGUAGE' => 'es'));
         $client->submitForm($button, array(), 'POST', array('HTTP_ACCEPT_LANGUAGE' => 'es'));
 
     .. versionadded:: 4.1
-        The feature to add custom HTTP headers was introduced in Symfony 4.1.
+        Symfony 4.1中引入了添加自定义HTTP标头的功能。
 
-Adding and Removing Forms to a Collection
+添加/删​​除表单到一个集合
 .........................................
 
-If you use a :doc:`Collection of Forms </form/form_collections>`,
-you can't add fields to an existing form with
-``$form['task[tags][0][name]'] = 'foo';``. This results in an error
-``Unreachable field "…"`` because ``$form`` can only be used in order to
-set values of existing fields. In order to add new fields, you have to
-add the values to the raw data array::
+如果你使用一个 :doc:`表单集合 </form/form_collections>`，则无法使用
+``$form['task[tags][0][name]'] = 'foo';`` 将字段添加到现有表单中。
+这会导致 ``Unreachable field "…"`` 错误，因为 ``$form`` 只能用于设置现有字段的值。
+要添加新字段，你必须将值添加到原始数据数组::
 
-    // gets the form
+    //获取表单
     $form = $crawler->filter('button')->form();
 
-    // gets the raw values
+    // 获取原始值
     $values = $form->getPhpValues();
 
-    // adds fields to the raw values
+    // 将字段添加到原始值
     $values['task']['tags'][0]['name'] = 'foo';
     $values['task']['tags'][1]['name'] = 'bar';
 
-    // submits the form with the existing and new values
+    // 使用现有值和新值提交表单
     $crawler = $client->request($form->getMethod(), $form->getUri(), $values,
         $form->getPhpFiles());
 
-    // the 2 tags have been added to the collection
+    // 2个标签已添加到集合中
     $this->assertEquals(2, $crawler->filter('ul.tags > li')->count());
 
-Where ``task[tags][0][name]`` is the name of a field created
-with JavaScript.
+其中 ``task[tags][0][name]`` 是使用JavaScript创建的字段的名称。
 
-You can remove an existing field, e.g. a tag::
+您可以删除现有字段，例如标签::
 
-    // gets the values of the form
+    // 获取表单的值
     $values = $form->getPhpValues();
 
-    // removes the first tag
+    // 删除第一个标签
     unset($values['task']['tags'][0]);
 
-    // submits the data
+    // 提交数据
     $crawler = $client->request($form->getMethod(), $form->getUri(),
         $values, $form->getPhpFiles());
 
-    // the tag has been removed
+    // 标签已被删除
     $this->assertEquals(0, $crawler->filter('ul.tags > li')->count());
 
 .. index::
    pair: Tests; Configuration
 
-Testing Configuration
+测试配置
 ---------------------
 
-The Client used by functional tests creates a Kernel that runs in a special
-``test`` environment. Since Symfony loads the ``config/packages/test/*.yaml``
-in the ``test`` environment, you can tweak any of your application's settings
-specifically for testing.
+功能测试使用的客户端创建一个在特殊 ``test`` 环境中运行的内核。
+由于Symfony在 ``test`` 环境中加载了 ``config/packages/test/*.yaml``，
+因此你可以调整应用的任何设置，专门用于测试。
 
-For example, by default, the Swift Mailer is configured to *not* actually
-deliver emails in the ``test`` environment. You can see this under the ``swiftmailer``
-configuration option:
+例如，默认情况下，Swift Mailer配置为 *不* 在 ``test`` 环境中实际传递电子邮件。
+你可以在 ``swiftmailer`` 配置选项下看到这个：
 
 .. configuration-block::
 
@@ -868,24 +844,22 @@ configuration option:
             'disable_delivery' => true,
         ));
 
-You can also use a different environment entirely, or override the default
-debug mode (``true``) by passing each as options to the ``createClient()``
-method::
+你当然完全可以使用不同的环境，或者通过将每个配置作为选项传递给 ``createClient()``
+方法来覆盖默认的调试模式（``true``）::
 
     $client = static::createClient(array(
         'environment' => 'my_test_env',
         'debug'       => false,
     ));
 
-If your application behaves according to some HTTP headers, pass them as the
-second argument of ``createClient()``::
+如果你的应用的行为根据某些HTTP标头，请将它们作为 ``createClient()`` 的第二个参数传递::
 
     $client = static::createClient(array(), array(
         'HTTP_HOST'       => 'en.example.com',
         'HTTP_USER_AGENT' => 'MySuperBrowser/1.0',
     ));
 
-You can also override HTTP headers on a per request basis::
+你还可以基于每个请求覆盖HTTP标头::
 
     $client->request('GET', '/', array(), array(), array(
         'HTTP_HOST'       => 'en.example.com',
@@ -894,29 +868,25 @@ You can also override HTTP headers on a per request basis::
 
 .. tip::
 
-    The test client is available as a service in the container in the ``test``
-    environment (or wherever the :ref:`framework.test <reference-framework-test>`
-    option is enabled). This means you can override the service entirely
-    if you need to.
+    测试客户端可作为 ``test`` 环境中容器中的一个服务
+    （或启用 :ref:`framework.test <reference-framework-test>` 选项来在任何位置生效）。
+    这意味着如果需要，你可以完全覆盖该服务。
 
 .. index::
    pair: PHPUnit; Configuration
 
-PHPUnit Configuration
+PHPUnit配置
 ~~~~~~~~~~~~~~~~~~~~~
 
-Each application has its own PHPUnit configuration, stored in the
-``phpunit.xml.dist`` file. You can edit this file to change the defaults or
-create a ``phpunit.xml`` file to set up a configuration for your local machine
-only.
+每个应用都有自己的PHPUnit配置，存储在 ``phpunit.xml.dist`` 文件中。
+你可以编辑此文件以更改默认值或创建 ``phpunit.xml`` 文件以仅为本地计算机设置一个配置。
 
 .. tip::
 
-    Store the ``phpunit.xml.dist`` file in your code repository and ignore
-    the ``phpunit.xml`` file.
+    将 ``phpunit.xml.dist`` 文件存储在代码仓库库中，并忽略 ``phpunit.xml`` 文件。
 
-By default, only the tests stored in ``tests/`` are run via the ``phpunit`` command,
-as configured in the ``phpunit.xml.dist`` file:
+默认情况下，只有存储在 ``tests/`` 中的测试可以通过 ``phpunit`` 命令运行，
+如 ``phpunit.xml.dist`` 文件中的配置：
 
 .. code-block:: xml
 
@@ -931,8 +901,7 @@ as configured in the ``phpunit.xml.dist`` file:
         <!-- ... -->
     </phpunit>
 
-But you can easily add more directories. For instance, the following
-configuration adds tests from a custom ``lib/tests`` directory:
+但是你可以添加更多目录。例如，以下配置添加了一个自定义 ``lib/tests`` 目录到测试：
 
 .. code-block:: xml
 
@@ -948,8 +917,7 @@ configuration adds tests from a custom ``lib/tests`` directory:
         <!-- ... -->
     </phpunit>
 
-To include other directories in the code coverage, also edit the ``<filter>``
-section:
+要在代码覆盖率中包含其他目录，还要编辑 ``<filter>`` 部分：
 
 .. code-block:: xml
 
@@ -969,7 +937,7 @@ section:
         <!-- ... -->
     </phpunit>
 
-Learn more
+扩展阅读
 ----------
 
 .. toctree::
@@ -978,8 +946,8 @@ Learn more
 
     testing/*
 
-* :ref:`Testing a console command <console-testing-commands>`
-* :doc:`The chapter about tests in the Symfony Framework Best Practices </best_practices/tests>`
+* :ref:`测试控制台命令 <console-testing-commands>`
+* :doc:`Symfony最佳实践的测试章节 </best_practices/tests>`
 * :doc:`/components/dom_crawler`
 * :doc:`/components/css_selector`
 

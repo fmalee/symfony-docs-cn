@@ -4,18 +4,13 @@
 消息
 ========================
 
-Symfony的Messenger提供消息总线和一些路由功能，以便在您的应用程序内以及通过消息队列等传输方式发送消息。在使用它之前，请阅读Messenger组件文档以熟悉其概念。
-Symfony's Messenger provides a message bus and some routing capabilities to send
-messages within your application and through transports such as message queues.
-Before using it, read the :doc:`Messenger component docs </components/messenger>`
-to get familiar with its concepts.
+Symfony的信使提供一个消息总线和一些路由功能，以便在你的应用内以及通过消息队列等传输方式发送消息。
+在使用它之前，请阅读 :doc:`Messenger组件文档 </components/messenger>` 以熟悉其概念。
 
 安装
 ------------
 
-在使用Symfony Flex的应用程序中，运行此命令以在使用之前安装messenger：
-In applications using :doc:`Symfony Flex </setup/flex>`, run this command to
-install messenger before using it:
+在使用 :doc:`Symfony Flex </setup/flex>` 的应用程序中，运行此命令以在使用之前安装信使：
 
 .. code-block:: terminal
 
@@ -24,9 +19,7 @@ install messenger before using it:
 使用Messenger服务
 ---------------------------
 
-启用后，message_bus服务可以在您需要的任何服务中注入，例如在控制器中：
-Once enabled, the ``message_bus`` service can be injected in any service where
-you need it, like in a controller::
+启用后，``message_bus`` 服务可以在你需要的任何服务中注入，例如在控制器中::
 
     // src/Controller/DefaultController.php
     namespace App\Controller;
@@ -46,9 +39,7 @@ you need it, like in a controller::
 注册处理器
 --------------------
 
-为了在分派消息时执行某些操作，您需要创建消息处理程序。它是一个带__invoke方法的类：
-In order to do something when your message is dispatched, you need to create a
-message handler. It's a class with an ``__invoke`` method::
+为了在派遣消息时执行某些操作，你需要创建消息处理器。它是带一个 ``__invoke`` 方法的类::
 
     // src/MessageHandler/MyMessageHandler.php
     namespace App\MessageHandler;
@@ -59,18 +50,15 @@ message handler. It's a class with an ``__invoke`` method::
     {
         public function __invoke(MyMessage $message)
         {
-            // do something with it.
+            // 用它做一些事情
         }
     }
 
-消息处理程序必须注册为服务并使用messenger.message_handler标记进行标记。如果您使用默认的services.yaml配置，由于自动配置，已经为您完成了。
-Message handlers must be registered as services and :doc:`tagged </service_container/tags>`
-with the ``messenger.message_handler`` tag. If you're using the
-:ref:`default services.yaml configuration <service-container-services-load-example>`,
-this is already done for you, thanks to :ref:`autoconfiguration <services-autoconfigure>`.
+消息处理器必须注册为服务并使用 ``messenger.message_handler`` 标签进行 :doc:`标记 </service_container/tags>`。
+如果你使用 :ref:`默认的services.yaml配置 <service-container-services-load-example>`，
+那么 :ref:`自动配置 <services-autoconfigure>` 已经为你完成服务的注册工作。
 
-如果您没有使用服务自动配置，那么您需要添加此配置：
-If you're not using service autoconfiguration, then you need to add this config:
+如果你没有使用服务的自动配置，那么你需要添加此配置：
 
 .. configuration-block::
 
@@ -107,30 +95,21 @@ If you're not using service autoconfiguration, then you need to add this config:
 
 .. note::
 
-    If the message cannot be guessed from the handler's type-hint, use the
-    ``handles`` attribute on the tag.
-    如果无法从处理程序的type-hint中猜出消息，请使用标记上的handles属性。
+    如果该消息无法从处理器的类型约束中猜测出来，请使用标签上的 ``handles`` 属性。
 
-Transports
+传输
 ----------
 
-默认情况下，消息在分派后立即处理。如果您希望异步处理消息，则必须配置传输。这些传输通过排队系统或第三方与您的应用程序通信。内置的AMQP传输允许您与大多数AMQP代理（如RabbitMQ）进行通信。
-By default, messages are processed as soon as they are dispatched. If you prefer
-to process messages asynchronously, you must configure a transport. These
-transports communicate with your application via queuing systems or third parties.
-The built-in AMQP transport allows you to communicate with most of the AMQP
-brokers such as RabbitMQ.
+默认情况下，消息在派遣后会立即处理。如果你希望异步处理消息，则必须配置一个传输系统。
+这些传输系统通过队列系统或第三方与你的应用通信。
+内置的AMQP传输系统允许你与大多数AMQP代理（如RabbitMQ）进行通信。
 
 .. note::
 
-    If you need more message brokers, you should have a look at `Enqueue's transport`_
-    which supports things like Kafka, Amazon SQS or Google Pub/Sub.
-    如果您需要更多的消息代理，您应该查看Enqueue的传输，它支持Kafka，Amazon SQS或Google Pub / Sub等内容。
+    如果需要更多的消息代理，你应该阅读 `Enqueue's transport`_，它支持Kafka，Amazon SQS或Google Pub/Sub等服务。
 
-使用“DSN”注册传输，“DSN”是表示连接凭据和配置的字符串。默认情况下，当您安装了Messenger组件时，应该已创建以下配置：
-A transport is registered using a "DSN", which is a string that represents the
-connection credentials and configuration. By default, when you've installed
-the messenger component, the following configuration should have been created:
+一个传输系统使用“DSN”注册，“DSN”是表示连接凭据和配置的一个字符串。
+默认情况下，当你安装了Messenger组件时，应该已创建以下配置：
 
 .. configuration-block::
 
@@ -179,18 +158,14 @@ the messenger component, the following configuration should have been created:
     MESSENGER_TRANSPORT_DSN=amqp://guest:guest@localhost:5672/%2f/messages
     ###< symfony/messenger ###
 
-这足以让您将邮件路由到amqp传输。这还将为您配置以下服务：
-This is enough to allow you to route your message to the ``amqp`` transport.
-This will also configure the following services for you:
+这足以让你将消息路由到 ``amqp`` 传输系统。同时还为你配置如下服务：
 
-#. A ``messenger.sender.amqp`` sender to be used when routing messages;路由消息时使用的messenger.sender.amqp发送方;
-#. A ``messenger.receiver.amqp`` receiver to be used when consuming messages.消费消息时使用的messenger.receiver.amqp接收器。
+#. 一个 ``messenger.sender.amqp`` 发件人，用来发送(routing)消息；
+#. 一个 ``messenger.receiver.amqp`` 收件人，用来接收(consuming)消息。
 
 .. note::
 
-    In order to use Symfony's built-in AMQP transport, you will need the Serializer
-    Component. Ensure that it is installed with:
-    为了使用Symfony的内置AMQP传输，您将需要Serializer组件。确保安装时使用：
+    为了使用Symfony的内置AMQP传输系统，你将需要Serializer组件。确保安装时使用：
 
     .. code-block:: terminal
 
@@ -199,11 +174,8 @@ This will also configure the following services for you:
 路由
 -------
 
-您可以选择将邮件路由到发件人，而不是调用处理程序。作为传输的一部分，它负责在某处发送您的消息。您可以使用以下配置配置将哪条消息路由到哪个发件人：
-Instead of calling a handler, you have the option to route your message(s) to a
-sender. Part of a transport, it is responsible for sending your message somewhere.
-You can configure which message is routed to which sender with the following
-configuration:
+你可以选择将邮件路由到发件人，而不是调用一个处理器。
+作为传输系统的一部分，它负责在某处发送你的消息。你可以使用以下配置定义将哪条消息路由到哪个发件人：
 
 .. configuration-block::
 
@@ -213,7 +185,7 @@ configuration:
         framework:
             messenger:
                 routing:
-                    'My\Message\Message':  amqp # The name of the defined transport
+                    'My\Message\Message':  amqp # 默认传输系统的名称
 
     .. code-block:: xml
 
@@ -247,13 +219,9 @@ configuration:
             ),
         ));
 
-此类配置仅将My \ Message \ Message消息路由为异步，其余消息仍将直接处理。
-Such configuration would only route the ``My\Message\Message`` message to be
-asynchronous, the rest of the messages would still be directly handled.
+此类配置仅将 ``My\Message\Message`` 消息路由为异步，其余消息仍将直接处理。
 
-您可以使用星号而不是类名将所有类别的邮件路由到同一发件人：
-You can route all classes of messages to the same sender using an asterisk
-instead of a class name:
+你可以使用一个星号而不是类名将所有类的消息路由到同一发件人：
 
 .. configuration-block::
 
@@ -302,8 +270,7 @@ instead of a class name:
             ),
         ));
 
-通过指定列表，还可以将一类消息路由到多个发件人：
-A class of messages can also be routed to multiple senders by specifying a list:
+通过指定列表，还可以将一个类的消息路由到多个发件人：
 
 .. configuration-block::
 
@@ -348,9 +315,7 @@ A class of messages can also be routed to multiple senders by specifying a list:
             ),
         ));
 
-
-By specifying the ``send_and_handle`` option, you can also route a class of messages to a sender
-while still having them passed to their respective handler:
+通过指定 ``send_and_handle`` 选项，你还可以将一个类的消息路由到一个发件人，同时仍将它们传递到各自的处理器：
 
 .. configuration-block::
 
@@ -399,28 +364,23 @@ while still having them passed to their respective handler:
             ),
         ));
 
-Consuming Messages
+消费消息
 ------------------
 
-Once your messages have been routed, you will like to consume your messages in most
-of the cases. To do so, you can use the ``messenger:consume-messages`` command
-like this:
+一旦消息路由后，在大多数情况下你会消费你的消息。为此，你可以使用 ``messenger:consume-messages`` 命令：
 
 .. code-block:: terminal
 
     $ bin/console messenger:consume-messages amqp
 
-The first argument is the receiver's service name. It might have been created by
-your ``transports`` configuration or it can be your own receiver.
+第一个参数是收件人的服务名称。它可能是由你的 ``transports`` 配置创建的，也可能是你自己的收件人。
 
-Multiple Buses
+多个总线
 --------------
 
-If you are interested in architectures like CQRS, you might want to have multiple
-buses within your application.
+如果你对CQRS等架构感兴趣，可能需要在应用中安装多个总线。
 
-You can create multiple buses (in this example, a command bus and an event bus) like
-this:
+你可以创建多个总线（在此示例中的命令总线和事件总线），如下所示：
 
 .. configuration-block::
 
@@ -429,10 +389,10 @@ this:
         # config/packages/messenger.yaml
         framework:
             messenger:
-                # The bus that is going to be injected when injecting MessageBusInterface:
+                # 注入 MessageBusInterface 时要注入的总线：
                 default_bus: messenger.bus.commands
 
-                # Create buses
+                # 创建总线
                 buses:
                     messenger.bus.commands: ~
                     messenger.bus.events: ~
@@ -470,24 +430,19 @@ this:
             ),
         ));
 
-This will generate the ``messenger.bus.commands`` and ``messenger.bus.events`` services
-that you can inject in your services.
+这将生成 ``messenger.bus.commands`` 和 ``messenger.bus.events`` 服务，你可以在你的服务注入它们。
 
 .. note::
 
-    To register a handler only for a specific bus, add a ``bus`` attribute to
-    the handler's service tag (``messenger.message_handler``) and use the bus
-    name as its value.
+    要仅为特定总线注册一个处理器，请将一个 ``bus`` 属性添加到处理器的服务标签（``messenger.message_handler``）中，并使用该总线名称作为它的值。
 
-Type-hints and Auto-wiring
+类型约束和自动装配
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Auto-wiring is a great feature that allows you to reduce the amount of configuration
-required for your service container to be created. When using multiple buses, by default,
-the auto-wiring will not work as it won't know which bus to inject in your own services.
+自动装配是一项很棒的功能，可以减少创建服务容器所需的配置量。
+使用多个总线时，默认情况下自动装配不起作用，因为它不知道要在你自己的服务中注入哪个总线。
 
-In order to clarify this, you can use the DependencyInjection's binding capabilities
-to clarify which bus will be injected based on the argument's name:
+为了解决这一点，你可以使用依赖注入的绑定功能，该功能根据参数的名称来阐明哪个总线将被注入：
 
 .. configuration-block::
 
@@ -519,29 +474,24 @@ to clarify which bus will be injected based on the argument's name:
             </services>
         </container>
 
-Middleware
+中间件
 ----------
 
-What happens when you dispatch a message to a message bus(es) depends on its
-collection of middleware (and their order). By default, the middleware configured
-for each bus looks like this:
+将消息发送到消息总线时会发生什么取决于它的中间件集合（及其顺序）。
+默认情况下，为每个总线配置的中间件如下所示：
 
-#. ``logging`` middleware. Responsible for logging the beginning and the end of the
-   message within the bus;
+#. ``logging`` 中间件，负责在总线内记录消息的开头和结尾;
 
-#. _Your own collection of middleware_;
+#. 你自己的 中间件_ 集合；
 
-#. ``route_messages`` middleware. Will route the messages you configured to their
-   corresponding sender and stop the middleware chain;
+#. ``route_messages`` 中间件，将你配置的消息路由到相应的发件人并停止中间件链;
 
-#. ``call_message_handler`` middleware. Will call the message handler(s) for the
-   given message.
+#. ``call_message_handler`` 中间件，为给定的消息调用消息处理器。
 
-Adding your own Middleware
+添加自定义中间件
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-As described in the component documentation, you can add your own middleware
-within the buses to add some extra capabilities like this:
+如组件文档中所述，你可以在总线中添加自己的中间件，以添加一些额外的功能，如下所示：
 
 .. configuration-block::
 
@@ -594,14 +544,12 @@ within the buses to add some extra capabilities like this:
             ),
         ));
 
-Note that if the service is abstract, a different instance of service will be
-created per bus.
+请注意，如果服务是抽象的，则每个总线将创建一个不同的服务实例。
 
-Disabling default Middleware
+禁用默认中间件
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you don't want the default collection of middleware to be present on your bus,
-you can disable them like this:
+如果你不希望总线上存在默认的中间件集合，则可以将其禁用：
 
 .. configuration-block::
 
@@ -646,12 +594,11 @@ you can disable them like this:
             ),
         ));
 
-Using Middleware Factories
+使用中间件工厂
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Some third-party bundles and libraries provide configurable middleware via
-factories. Defining such requires a two-step configuration based on Symfony's
-:doc:`dependency injection </service_container>` features:
+一些第三方bundle和库通过工厂提供可配置的中间件。
+定义此类需要一个基于Symfony :doc:`依赖注入 </service_container>` 功能的两步配置：
 
 .. configuration-block::
 
@@ -660,19 +607,17 @@ factories. Defining such requires a two-step configuration based on Symfony's
         # config/services.yaml
         services:
 
-            # Step 1: a factory class is registered as a service with the required
-            # dependencies to instantiate a middleware
+            # 第1步：将一个工厂类注册为具有所需依赖的服务，以实例化一个中间件
             doctrine.orm.messenger.middleware_factory.transaction:
                 class: Symfony\Bridge\Doctrine\Messenger\DoctrineTransactionMiddlewareFactory
                 arguments: ['@doctrine']
 
-            # Step 2: an abstract definition that will call the factory with default
-            # arguments or the ones provided in the middleware config
+            # 第2步：一个抽象定义，它将使用默认参数或中间件配置中提供的参数调用工厂
             messenger.middleware.doctrine_transaction_middleware:
                 class: Symfony\Bridge\Doctrine\Messenger\DoctrineTransactionMiddleware
                 factory: 'doctrine.orm.messenger.middleware_factory.transaction:createMiddleware'
                 abstract: true
-                # the default arguments to use when none provided from config. Example:
+                # 当配置没有所提供参数时使用的默认参数。例如：
                 # middleware:
                 #     - doctrine_transaction_middleware: ~
                 arguments: ['default']
@@ -731,12 +676,10 @@ factories. Defining such requires a two-step configuration based on Symfony's
             ->setAbstract(true)
             ->setArguments(array('default'));
 
-The "default" value in this example is the name of the entity manager to use,
-which is the argument expected by the
-``Symfony\Bridge\Doctrine\Messenger\DoctrineTransactionMiddlewareFactory::createMiddleware`` method.
+此示例中的“default”值是要使用的实体管理器的名称，该值是
+``Symfony\Bridge\Doctrine\Messenger\DoctrineTransactionMiddlewareFactory::createMiddleware`` 方法所期望的参数。
 
-Then you can reference and configure the
-``messenger.middleware.doctrine_transaction_middleware`` service as a middleware:
+然后，你可以将 ``messenger.middleware.doctrine_transaction_middleware`` 服务作为中间件来引用和配置：
 
 .. configuration-block::
 
@@ -748,9 +691,9 @@ Then you can reference and configure the
                 buses:
                     command_bus:
                         middleware:
-                            # Using defaults
+                            # 使用默认
                             - doctrine_transaction_middleware
-                            # Using another entity manager
+                            # 使用另一个实体管理器
                             - doctrine_transaction_middleware: ['custom']
 
     .. code-block:: xml
@@ -799,32 +742,25 @@ Then you can reference and configure the
 
 .. note::
 
-    The ``doctrine_transaction_middleware`` shortcut is a convention. The real
-    service id is prefixed with the ``messenger.middleware.`` namespace.
+    该 ``doctrine_transaction_middleware`` 快捷方式是一个惯例。实际的服务ID以 ``messenger.middleware.`` 命名空间为前缀。
 
 .. note::
 
-    Middleware factories only allow scalar and array arguments in config (no
-    references to other services). For most advanced use-cases, register a
-    concrete definition of the middleware manually and use its id.
+    中间件工厂仅允许配置中的标量和数组参数（不引用其他服务）。对于大多数高级用例，请手动注册中间件的具体定义并使用其id。
 
 .. tip::
 
-    The ``doctrine_transaction_middleware`` is a built-in middleware wired
-    automatically when the DoctrineBundle and the Messenger component are
-    installed and enabled.
+    该 ``doctrine_transaction_middleware`` 是安装并启用DoctrineBundle和Messenger组件时自动装配的内置中间件。
 
-Your own Transport
+自定义传输
 ------------------
 
-Once you have written your transport's sender and receiver, you can register your
-transport factory to be able to use it via a DSN in the Symfony application.
+一旦你编写了传输的发件人和收件人，就可以注册你的传输工厂，以便能够通过Symfony应用中的DSN使用它。
 
-Create your Transport Factory
+创建传输工厂
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You need to give FrameworkBundle the opportunity to create your transport from a
-DSN. You will need a transport factory::
+你需要给FrameworkBundle提供从DSN创建你自己的传输的机会。你需要一个传输工厂::
 
     use Symfony\Component\Messenger\Transport\TransportFactoryInterface;
     use Symfony\Component\Messenger\Transport\TransportInterface;
@@ -844,8 +780,8 @@ DSN. You will need a transport factory::
         }
     }
 
-The transport object needs to implement the ``TransportInterface`` (which simply combines
-the ``SenderInterface`` and ``ReceiverInterface``). It will look like this::
+传输对象需要实现 ``TransportInterface``（简单地组合``SenderInterface`` 和 ``ReceiverInterface``）。
+它看起来像这样::
 
     class YourTransport implements TransportInterface
     {
@@ -865,7 +801,7 @@ the ``SenderInterface`` and ``ReceiverInterface``). It will look like this::
         }
     }
 
-Register your Factory
+注册工厂
 ~~~~~~~~~~~~~~~~~~~~~
 
 .. configuration-block::
@@ -901,11 +837,10 @@ Register your Factory
         $container->register(YourTransportFactory::class)
             ->setTags(array('messenger.transport_factory'));
 
-Use your Transport
+使用自定义传输
 ~~~~~~~~~~~~~~~~~~
 
-Within the ``framework.messenger.transports.*`` configuration, create your
-named transport using your own DSN:
+在 ``framework.messenger.transports.*`` 配置中，使用你自己的DSN创建指定的传输：
 
 .. configuration-block::
 
@@ -947,10 +882,9 @@ named transport using your own DSN:
             ),
         ));
 
-In addition of being able to route your messages to the ``yours`` sender, this
-will give you access to the following services:
+除了能够将消息路由到该 ``yours`` 发件人之外，还可以访问以下服务：
 
-#. ``messenger.sender.yours``: the sender;
-#. ``messenger.receiver.yours``: the receiver.
+#. ``messenger.sender.yours``: 发件人;
+#. ``messenger.receiver.yours``: 收件人.
 
 .. _`enqueue's transport`: https://github.com/php-enqueue/messenger-adapter

@@ -69,7 +69,7 @@
 - `Event`：事件
 - `Subscriber`：订阅器
 - `Listener`：监听器
-- `Dispatch`：调度
+- `Dispatch`：调度、派遣
 - `Exception`：异常
 - `Workflow`：工作流
 - `Serializer`：序列化器
@@ -83,6 +83,9 @@
 - `Assert`：断言
 - `Validator`：验证器
 - `Messenger`：信使
+- `Middleware`：中间件
+- `Broker`：代理
+- `Header`：标头
 
 ## 语法问题
 
