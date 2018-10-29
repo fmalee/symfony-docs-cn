@@ -128,7 +128,7 @@ Swift Mailer库通过创建、配置然后发送 ``Swift_Message`` 对象来工�
 -----------------------------------
 
 对于不想设置和维护自己的可靠邮件服务器的公司，云邮件服务是一种流行的选择。
-在Symfony应用中，使用这些服务就像更新 ``.env`` 文件中 ``MAILER_URL`` 的值一样简单。
+要在Symfony应用中使用这些服务，更新 ``.env`` 文件中 ``MAILER_URL`` 的值。
 例如，对于 `Amazon SES`_ （Simple Email Service）：
 
 .. code-block:: bash

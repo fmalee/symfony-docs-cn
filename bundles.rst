@@ -76,9 +76,9 @@ Symfony框架的核心功能是使用bundle（FrameworkBundle，SecurityBundle�
 Bundle目录结构
 --------------------------
 
-bundle目录是简单而有弹性的。
-默认条件下，bundle系统遵循着一组命名约定，以保持所有Symfony bundle的代码一致性。
-看一眼AcmeDemoBundle，它包括了一个bundle最常见的某些元素：
+bundle的目录结构旨在帮助保持所有Symfony包之间的代码一致。
+它遵循一系列约定，但如果需要，也可灵活调整。
+看一下AcmeDemoBundle，因为它包含了一些最常见的bundle元素：
 
 ``Controller/``
     里面有该bundle的控制器（如 ``RandomController.php``）。

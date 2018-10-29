@@ -158,7 +158,7 @@
 翻译流程
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-为了能翻译一条信息，Symfony执行以下简明流程：
+为了能翻译一条信息，Symfony执行以下流程：
 
 * 确定存储在请求中的当前用户的 ``locale``;
 
@@ -460,7 +460,7 @@ Symfony在以下默认位置查找消息文件（即翻译）：
 总结
 -------
 
-使用Symfony翻译组件，创建国际化应用不再是一个痛苦的过程，并归结为几个基本步骤：
+使用Symfony翻译组件，创建国际化应用不再是一个痛苦的过程，并归结为几个步骤：
 
 * 通过在 :method:`Symfony\\Component\\Translation\\Translator::trans`
   或 :method:`Symfony\\Component\\Translation\\Translator::transChoice`

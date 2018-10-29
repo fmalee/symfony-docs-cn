@@ -513,7 +513,7 @@ Symfony有几个 :doc:`内置的认证提供者 </security/auth_providers>`。
 保护之控制器和其他代码
 ...................................
 
-你可以轻松的在控制器内部使用拒绝访问::
+你可以在控制器内部使用拒绝访问::
 
     // src/Controller/AdminController.php
     // ...

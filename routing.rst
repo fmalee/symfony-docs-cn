@@ -227,6 +227,35 @@ Symfony提供了一种方便的方式来声明本地化路由而无需重复。
                 en: '' # 不要为英语（默认语言环境）添加前缀
                 nl: '/nl'
 
+    .. code-block:: xml
+
+        <!-- config/routes/annotations.xml -->
+        <?xml version="1.0" encoding="UTF-8" ?>
+        <routes xmlns="http://symfony.com/schema/routing"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://symfony.com/schema/routing
+                http://symfony.com/schema/routing/routing-1.0.xsd">
+
+            <import resource="../src/Controller/" type="annotation">
+                <!-- don't prefix URLs for English, the default locale -->
+                <prefix locale="en"></prefix>
+                <prefix locale="nl">/nl</prefix>
+            </import>
+        </routes>
+
+    .. code-block:: php
+
+        // config/routes/annotations.php
+        use Symfony\Component\Routing\RouteCollection;
+
+        $routes = $loader->import('../src/Controller/', 'annotation');
+
+        // don't prefix URLs for English, the default locale
+        $app->addPrefix('/', array('_locale' => 'en'));
+        $app->addPrefix('/nl', array('_locale' => 'nl'));
+
+        return $routes;
+
 .. _routing-requirements:
 
 添加 {通配符} 条件
@@ -237,12 +266,12 @@ Symfony提供了一种方便的方式来声明本地化路由而无需重复。
 如果你将路径的路径更改为 ``/blog/{page}``，将会造成一个困扰：
 
 * blog_list: ``/blog/{page}`` 会匹配 ``/blog/*``;
-* blog_show: ``/blog/{slug}`` *同样*会匹配 ``/blog/*``.
+* blog_show: ``/blog/{slug}`` *同样* 会匹配 ``/blog/*``.
 
-当两个路由匹配相同的URL时，会先加载*第一条*路由。
+当两个路由匹配相同的URL时，会先加载\ *第一条*\路由。
 不幸的是，这意味着 ``/blog/yay-routing`` 将匹配到 ``blog_list``。这就糟糕了！
 
-要解决此问题，可以添加 ``{page}`` 通配符只能匹配数字（digits）的*规定*(requirement)：
+要解决此问题，可以添加 ``{page}`` 通配符只能匹配数字（digits）的\ *规定*\(requirement)：
 
 .. configuration-block::
 
@@ -739,14 +768,14 @@ Symfony遵循这个逻辑，在带有和不带尾部斜杠的URL之间重定向�
 .. tip::
 
     要引用控制器类中的一个 ``__invoke()`` 方法来实现操作，你不必传递方法名称，
-    而只需使用完全限定的类名（例如``App\Controller\BlogController``）。
+    同样使用完全限定的类名（例如``App\Controller\BlogController``）。
 
 .. index::
    single: Routing; Generating URLs
 
 .. _routing-generate:
 
-生成 URL 地址
+生成URL地址
 ---------------
 
 路由系统也可以生成URL。实际上，路由是双向系统：将URL映射到一个控制器以及一个路由对应一个URL。

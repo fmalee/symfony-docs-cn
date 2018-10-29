@@ -260,7 +260,7 @@ Monolog附带了\ *许多*\ 内置处理器，可用于邮寄日志、将它们�
 
 另一个选择是让Monolog使用 ``rotating_file`` 处理器为你切割文件。
 该处理器每​​天创建一个新的日志文件，也可以自动删除旧文件。
-要使用它，只需将处理器的 ``type`` 选项设置为 ``rotating_file``：
+要使用它，请将处理器的 ``type`` 选项设置为 ``rotating_file``：
 
 .. configuration-block::
 

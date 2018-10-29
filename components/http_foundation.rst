@@ -284,7 +284,7 @@ this complexity and defines some methods for the most common tasks::
 Accessing ``Accept-*`` Headers Data
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You can easily access basic data extracted from ``Accept-*`` headers
+You can access basic data extracted from ``Accept-*`` headers
 by using the following methods:
 
 :method:`Symfony\\Component\\HttpFoundation\\Request::getAcceptableContentTypes`
@@ -430,7 +430,7 @@ incompatibility with the HTTP specification (e.g. a wrong ``Content-Type`` heade
 
     $response->prepare($request);
 
-Sending the response to the client is then as simple as calling
+Sending the response to the client is done by calling the method
 :method:`Symfony\\Component\\HttpFoundation\\Response::send`::
 
     $response->send();
@@ -560,23 +560,27 @@ Serving Files
 ~~~~~~~~~~~~~
 
 When sending a file, you must add a ``Content-Disposition`` header to your
-response. While creating this header for basic file downloads is easy, using
-non-ASCII filenames is more involving. The
-:method:`Symfony\\Component\\HttpFoundation\\ResponseHeaderBag::makeDisposition`
+response. While creating this header for basic file downloads is straightforward,
+using non-ASCII filenames is more involving. The
+:method:`Symfony\\Component\\HttpFoundation\\HeaderUtils::makeDisposition`
 abstracts the hard work behind a simple API::
 
+    use Symfony\Component\HttpFoundation\HeaderUtils;
     use Symfony\Component\HttpFoundation\Response;
     use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
     $fileContent = ...; // the generated file content
     $response = new Response($fileContent);
 
-    $disposition = $response->headers->makeDisposition(
-        ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+    $disposition = HeaderUtils::makeDisposition(
+        HeaderUtils::DISPOSITION_ATTACHMENT,
         'foo.pdf'
     );
 
     $response->headers->set('Content-Disposition', $disposition);
+
+.. versionadded:: 4.2
+    The static ``HeaderUtils::makeDisposition()`` method was introduced in Symfony 4.2.
 
 Alternatively, if you are serving a static file, you can use a
 :class:`Symfony\\Component\\HttpFoundation\\BinaryFileResponse`::

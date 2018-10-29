@@ -61,7 +61,7 @@ Symfony在处理HTTP请求时触发多个与 :doc:`内核相关的事件 </refer
     :class:`Symfony\\Component\\HttpKernel\\Event\\GetResponseForExceptionEvent`。
     查看 :doc:`Symfony事件参考 </reference/events>`，了解每个事件提供的对象类型。
 
-现在，类被创建了，你只需把它注册成服务，然后通过使用一个特殊的“标签”，
+现在，类被创建了，你需要把它注册成服务，然后通过使用一个特殊的“标签”，
 告诉Symfony这是一个针对 ``kernel.exception`` 事件的“监听器”：
 
 .. configuration-block::

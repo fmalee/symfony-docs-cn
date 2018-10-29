@@ -89,7 +89,7 @@ PHPUnit由Symfony应用的根目录中的 ``phpunit.xml.dist`` 文件配置。
 就像在你的实际应用中一样 - 通过 ``vendor/autoload.php`` 文件自动启用自动加载
 （默认情况下在 ``phpunit.xml.dist`` 文件中配置）。
 
-针对指定文件或目录的测试也很简单：
+你还可以将测试运行限制在目录或特定测试文件：
 
 .. code-block:: terminal
 

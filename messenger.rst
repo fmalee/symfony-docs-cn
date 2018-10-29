@@ -44,7 +44,7 @@ Symfony的信使提供一个消息总线和一些路由功能，以便在你的�
     // src/MessageHandler/MyMessageHandler.php
     namespace App\MessageHandler;
 
-    use Symfony\Component\Messenger\Handler;
+    use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
     class MyMessageHandler implements MessageHandlerInterface
     {

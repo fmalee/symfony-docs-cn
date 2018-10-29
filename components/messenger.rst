@@ -146,7 +146,7 @@ Messenger组件
 自定义发件人
 ~~~~~~~~~~~~~~~
 
-使用 ``SenderInterface``，你可以轻松创建自己的消息发件人。
+使用 ``SenderInterface``，你可以创建自己的消息发件人。
 想象一下，你已经有一个 ``ImportantAction`` 消息通过消息总线并由处理器处理。
 现在，你还希望将此消息作为电子邮件发送。
 
@@ -160,8 +160,8 @@ Messenger组件
 
     class ImportantActionToEmailSender implements SenderInterface
     {
-       private $toEmail;
        private $mailer;
+       private $toEmail;
 
        public function __construct(\Swift_Mailer $mailer, string $toEmail)
        {

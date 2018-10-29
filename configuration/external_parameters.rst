@@ -512,18 +512,12 @@ Custom Environment Variable Processors
 
 It's also possible to add your own processors for environment variables. First,
 create a class that implements
-:class:`Symfony\\Component\\DependencyInjection\\EnvVarProcessorInterface` and
-then, define a service for that class::
+:class:`Symfony\\Component\\DependencyInjection\\EnvVarProcessorInterface`::
+
+    use Symfony\Component\DependencyInjection\EnvVarProcessorInterface;
 
     class LowercasingEnvVarProcessor implements EnvVarProcessorInterface
     {
-        private $container;
-
-        public function __construct(ContainerInterface $container)
-        {
-            $this->container = $container;
-        }
-
         public function getEnv($prefix, $name, \Closure $getEnv)
         {
             $env = $getEnv($name);
@@ -538,6 +532,12 @@ then, define a service for that class::
             ];
         }
     }
+
+To enable the new processor in the app, register it as a service and
+:doc:`tag it </service_container/tags>` with the ``container.env_var_processor``
+tag. If you're using the
+:ref:`default services.yaml configuration <service-container-services-load-example>`,
+this is already done for you, thanks to :ref:`autoconfiguration <services-autoconfigure>`.
 
 Constants
 ---------
