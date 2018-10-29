@@ -1,4 +1,4 @@
-* **Code of Conduct**
+* **行为守则**
 
   * :doc:`/contributing/code_of_conduct/code_of_conduct`
   * :doc:`/contributing/code_of_conduct/reporting_guidelines`
@@ -8,28 +8,28 @@
 * **代码**
 
   * :doc:`Bugs </contributing/code/bugs>`
-  * :doc:`Patches </contributing/code/patches>`
-  * :doc:`Reviewing Issues and Patches </contributing/community/reviews>`
-  * :doc:`Maintenance </contributing/code/maintenance>`
-  * :doc:`The Core Team </contributing/code/core_team>`
-  * :doc:`Security </contributing/code/security>`
-  * :doc:`Tests </contributing/code/tests>`
-  * :doc:`Backward Compatibility </contributing/code/bc>`
-  * :doc:`Coding Standards</contributing/code/standards>`
-  * :doc:`Code Conventions</contributing/code/conventions>`
+  * :doc:`补丁 </contributing/code/patches>`
+  * :doc:`审查问题和补丁 </contributing/community/reviews>`
+  * :doc:`维护 </contributing/code/maintenance>`
+  * :doc:`核心团队 </contributing/code/core_team>`
+  * :doc:`安全 </contributing/code/security>`
+  * :doc:`测试 </contributing/code/tests>`
+  * :doc:`向后兼容性 </contributing/code/bc>`
+  * :doc:`代码标准 </contributing/code/standards>`
+  * :doc:`代码约定 </contributing/code/conventions>`
   * :doc:`Git</contributing/code/git>`
-  * :doc:`License </contributing/code/license>`
+  * :doc:`许可 </contributing/code/license>`
 
 * **文档**
 
-  * :doc:`Overview </contributing/documentation/overview>`
-  * :doc:`Format </contributing/documentation/format>`
-  * :doc:`Documentation Standards </contributing/documentation/standards>`
-  * :doc:`License </contributing/documentation/license>`
+  * :doc:`贡献文档 </contributing/documentation/overview>`
+  * :doc:`文档格式 </contributing/documentation/format>`
+  * :doc:`文档标准 </contributing/documentation/standards>`
+  * :doc:`文档许可 </contributing/documentation/license>`
 
 * **社区**
 
-  * :doc:`Release Process </contributing/community/releases>`
-  * :doc:`Respectful Review comments </contributing/community/review-comments>`
-  * :doc:`Community Reviews </contributing/community/reviews>`
-  * :doc:`Other Resources </contributing/community/other>`
+  * :doc:`发布流程 </contributing/community/releases>`
+  * :doc:`尊重审查意见 </contributing/community/review-comments>`
+  * :doc:`社区审查 </contributing/community/reviews>`
+  * :doc:`其他资源 </contributing/community/other>`

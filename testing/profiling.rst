@@ -1,7 +1,7 @@
 .. index::
    single: Tests; Profiling
 
-How to Use the Profiler in a Functional Test
+如何在功能测试中使用分析器
 ============================================
 
 It's highly recommended that a functional test only tests the Response. But if

@@ -1,93 +1,74 @@
-Contributing to the Documentation
+贡献文档
 =================================
 
-Before Your First Contribution
+在你的第一次贡献之前
 ------------------------------
 
-**Before contributing**, you need to:
+**在做出贡献之前**, 你需要：
 
-* Sign up for a free `GitHub`_ account, which is the service where the Symfony
-  documentation is hosted.
-* Be familiar with the `reStructuredText`_ markup language, which is used to
-  write Symfony docs. Read :doc:`this article </contributing/documentation/format>`
-  for a quick overview.
+* 注册一个免费的 `GitHub`_ 帐户，这是托管Symfony文档的服务商。
+* 熟悉 `reStructuredText`_ 标记语言，该语言用于编写Symfony文档。
+  阅读 :doc:`本文档 </contributing/documentation/format>` 以获得快速概述。
 
 .. _minor-changes-e-g-typos:
 
-Fast Online Contributions
+快速在线贡献
 -------------------------
 
-If you're making a relatively small change - like fixing a typo or rewording
-something - the easiest way to contribute is directly on GitHub! You can do this
-while you're reading the Symfony documentation.
+如果你做了一个相对较小的改变 - 比如修正拼写错误或重新措辞 - 最简单的贡献方式就是直接在GitHub上操作！
+你可以在阅读Symfony文档时执行此操作。
 
-**Step 1.** Click on the **edit this page** button on the upper right corner
-and you'll be redirected to GitHub:
+**步骤1.** 单击右上角的 **edit this page** 按钮，你将被重定向到GitHub：
 
 .. image:: /_images/contributing/docs-github-edit-page.png
    :align: center
    :class: with-browser
 
-**Step 2.** Edit the contents, describe your changes and click on the
-**Propose file change** button.
+**步骤2.** 编辑内容，描述你的更改，然后单击 **Propose file change** 按钮。
 
-**Step 3.** GitHub will now create a branch and a commit for your changes
-(forking the repository first if this is your first contribution) and it will
-also display a preview of your changes:
+**步骤3.** GitHub现在将为你的更改创建一个分支和提交
+（如果这是你的第一个贡献，则首先forking该仓库），它还将显示你的更改的预览：
 
 .. image:: /_images/contributing/docs-github-create-pr.png
    :align: center
    :class: with-browser
 
-If everything is correct, click on the **Create pull request** button.
+如果一切正确，请单击 **Create pull request** 按钮。
 
-**Step 4.** GitHub will display a new page where you can do some last-minute
-changes to your pull request before creating it. For simple contributions, you
-can safely ignore these options and just click on the **Create pull request**
-button again.
+**步骤4.** GitHub将显示一个新页面，你可以在创建拉取请求之前对其进行最后一分钟的更改。
+对于简单的贡献，你可以安全地忽略这些选项，只需再次单击 **Create pull request** 按钮。
 
-**Congratulations!** You just created a pull request to the official Symfony
-documentation! The community will now review your pull request and (possibly)
-suggest tweaks.
+**恭喜！** 你刚刚创建了一个对官方Symfony文档的拉取请求！
+社区现在将审核你的拉取请求并（可能）审议调整。
 
-If your contribution is large or if you prefer to work on your own computer,
-keep reading this guide to learn an alternative way to send pull requests to the
-Symfony Documentation.
+如果你的贡献很大或者你更喜欢在自己的计算机上工作，请继续阅读本指南以了解向Symfony文档发起拉取请求的替代方法。
 
-Your First Documentation Contribution
+你的第一份文件贡献
 -------------------------------------
 
-In this section, you'll learn how to contribute to the Symfony documentation for
-the first time. The next section will explain the shorter process you'll follow
-in the future for every contribution after your first one.
+在本节中，你将学习如何首次参与Symfony文档。
+下一部分将解释你在第一次之后的每个贡献将要遵循的较短流程。
 
-Let's imagine that you want to improve the Setup guide. In order to make your
-changes, follow these steps:
+让我们假设你想要改进安装指南。要进行更改，请按以下步骤操作：
 
-**Step 1.** Go to the official Symfony documentation repository located at
-`github.com/symfony/symfony-docs`_ and click on the **Fork** button to `fork the
-repository`_ to your personal account. This is only needed the first time you
-contribute to Symfony.
+**步骤1.** 转到位于 `github.com/symfony/symfony-docs`_ 的官方Symfony文档仓库，
+然后单击 **Fork** 按钮将仓库分叉到你的个人帐户。只有在你第一次参与Symfony贡献时才需要这样做。
 
-**Step 2.** **Clone** the forked repository to your local machine (this example
-uses the ``projects/symfony-docs/`` directory to store the documentation; change
-this value accordingly):
+**步骤2.** 克隆分叉库到本地机器（本例中使用 ``projects/symfony-docs/`` 目录来存储文件;相应地更改此值）：
 
 .. code-block:: terminal
 
     $ cd projects/
     $ git clone git://github.com/YOUR-GITHUB-USERNAME/symfony-docs.git
 
-**Step 3.** Add the original Symfony docs repository as a "Git remote" executing
-this command:
+**步骤3.** 将原始Symfony文档仓库库添加为执行此命令的“Git remote”：
 
 .. code-block:: terminal
 
     $ cd symfony-docs/
     $ git remote add upstream https://github.com/symfony/symfony-docs.git
 
-If things went right, you'll see the following when listing the "remotes" of
-your project:
+如果情况正常，在列出项目的“remotes”时会看到以下内容：
 
 .. code-block:: terminal
 
@@ -97,35 +78,29 @@ your project:
     upstream  https://github.com/symfony/symfony-docs.git (fetch)
     upstream  https://github.com/symfony/symfony-docs.git (push)
 
-Fetch all the commits of the upstream branches by executing this command:
+通过执行以下命令获取上游分支的所有提交：
 
 .. code-block:: terminal
 
     $ git fetch upstream
 
-The purpose of this step is to allow you work simultaneously on the official
-Symfony repository and on your own fork. You'll see this in action in a moment.
+此步骤的目的是允许你在官方Symfony仓库和你自己的fork上同时工作。你马上就会看到这一点。
 
-**Step 4.** Create a dedicated **new branch** for your changes. Use a short and
-memorable name for the new branch (if you are fixing a reported issue, use
-``fix_XXX`` as the branch name, where ``XXX`` is the number of the issue):
+**步骤4.** 为你的更改创建专用的 **新分支**。为新分支使用简短且令人难忘的名称（如果要修复一个已报告的issue，使用 ``fix_XXX`` 作为其分支名称， ``XXX`` 代表该issue的编号）：
 
 .. code-block:: terminal
 
     $ git checkout -b improve_install_article upstream/2.8
 
-In this example, the name of the branch is ``improve_install_article`` and the
-``upstream/2.8`` value tells Git to create this branch based on the ``2.8``
-branch of the ``upstream`` remote, which is the original Symfony Docs repository.
+在此示例中，分支的名称是 ``improve_install_article``，并且该 ``upstream/2.8``
+值告诉Git基于 ``upstream`` 远程的 ``2.8`` 分支创建此分支，该分支是原始的Symfony文档仓库。
 
-Fixes should always be based on the **oldest maintained branch** which contains
-the error. Nowadays this is the ``2.8`` branch. If you are instead documenting a
-new feature, switch to the first Symfony version that included it, e.g.
-``upstream/3.1``. Not sure? That's ok! Just use the ``upstream/master`` branch.
+修复应始终基于包含错误的最旧维护分支。现在是 ``2.8`` 分支。
+如果你正在书写新功能，请切换到包含它的第一个Symfony版本，例如 ``upstream/3.1``。
+不确定是哪个分支？没关系！只需使用 ``upstream/master`` 分支。
 
-**Step 5.** Now make your changes in the documentation. Add, tweak, reword and
-even remove any content and do your best to comply with the
-:doc:`/contributing/documentation/standards`. Then commit your changes!
+**步骤5.** 现在在文档中进行更改。添加、调整、重新创建甚至删除任何内容，并尽力遵守
+:doc:`/contributing/documentation/standards`。然后提交你的更改！
 
 .. code-block:: terminal
 
@@ -133,47 +108,38 @@ even remove any content and do your best to comply with the
     $ git add setup.rst
     $ git commit setup.rst
 
-**Step 6.** **Push** the changes to your forked repository:
+**步骤6.** 将更改推送到分叉(forked)仓库：
 
 .. code-block:: terminal
 
     $ git push origin improve_install_article
 
-The ``origin`` value is the name of the Git remote that corresponds to your
-forked repository and ``improve_install_article`` is the name of the branch you
-created previously.
+``origin`` 值是与分叉仓库对应的Git远程名称，而 ``improve_install_article`` 是你之前创建的分支的名称。
 
-**Step 7.** Everything is now ready to initiate a **pull request**. Go to your
-forked repository at ``https://github.com/YOUR-GITHUB-USERNAME/symfony-docs``
-and click on the **Pull Requests** link located in the sidebar.
+**步骤7.** 现在一切都准备好发起 **拉取请求**。
+转到你位于 ``https://github.com/YOUR-GITHUB-USERNAME/symfony-docs`` 的分叉仓库，
+然后单击侧栏中的 **Pull Requests** 链接。
 
-Then, click on the big **New pull request** button. As GitHub cannot guess the
-exact changes that you want to propose, select the appropriate branches where
-changes should be applied:
+然后，单击 **New pull request** 大按钮。
+由于GitHub无法猜测你想要提出的确切更改，请选择应该应用更改的相应分支：
 
 .. image:: /_images/contributing/docs-pull-request-change-base.png
    :align: center
 
-In this example, the **base fork** should be ``symfony/symfony-docs`` and
-the **base** branch should be the ``2.8``, which is the branch that you selected
-to base your changes on. The **head fork** should be your forked copy
-of ``symfony-docs`` and the **compare** branch should be ``improve_install_article``,
-which is the name of the branch you created and where you made your changes.
+在此示例中，**base fork** 应该是 ``symfony/symfony-docs``，并且 **base** 分支应该是 ``2.8``，
+就是选择你更改的那个分支。
+**head fork** 应该是你的分叉副本 ``symfony-docs``，**compare** 分支应该是 ``improve_install_article``，
+这是你所创建的分支的名称以及你做修改的地方。
 
 .. _pull-request-format:
 
-**Step 8.** The last step is to prepare the **description** of the pull request.
-A short phrase or paragraph describing the proposed changes is enough to ensure
-that your contribution can be reviewed.
+**步骤8.** 最后一步是准备拉取请求的 **描述**。一个描述变更的短语或段落足以确保你的贡献可以得到审核。
 
-**Step 9.** Now that you've successfully submitted your first contribution to
-the Symfony documentation, **go and celebrate!**  The documentation managers
-will carefully review your work in short time and they will let you know about
-any required change.
+**步骤9.** 既然你已成功提交了Symfony文档的第一份文稿，那就去庆祝吧！
+文档管理员将在短时间内仔细审核你的作品，他们会告知你任何所需的更改。
 
-In case you are asked to add or modify something, don't create a new pull
-request. Instead, make sure that you are on the correct branch, make your
-changes and push the new changes:
+如果要求你添加或修改某些内容，请不要创建新的拉取请求。
+相反，请确保你在正确的分支上进行更改并推送新的更改：
 
 .. code-block:: terminal
 
@@ -184,151 +150,127 @@ changes and push the new changes:
 
     $ git push
 
-**Step 10.** After your pull request is eventually accepted and merged in the
-Symfony documentation, you will be included in the `Symfony Documentation
-Contributors`_ list. Moreover, if you happen to have a `SensioLabsConnect`_
-profile, you will get a cool `Symfony Documentation Badge`_.
+**步骤10.** 在最终接受并在Symfony文档中合并你的请求后，你将被包含在 `Symfony文档贡献者`_ 列表中。
+此外，如果你碰巧拥有一个 `SensioLabsConnect`_ 账号，你将获得一个很酷的 `Symfony文档徽章`_。
 
-Your Next Documentation Contributions
+你的下一个文档贡献
 -------------------------------------
 
-Check you out! You've made your first contribution to the Symfony documentation!
-Somebody throw a party! Your first contribution took a little extra time because
-you needed to learn a few standards and setup your computer. But from now on,
-your contributions will be much easier to complete.
+看看你！你已经为Symfony文档做出了第一个贡献！有人要举办派对了！
+你的第一个贡献需要一些额外的时间，因为你需要学习一些标准并设置你的计算机。
+但是从现在开始，你的贡献将更容易完成。
 
-Here is a **checklist** of steps that will guide you through your next
-contribution to the Symfony docs:
+这是一个 **步骤清单**，将指导你完成对Symfony文档的下一个贡献：
 
 .. code-block:: terminal
 
-    # create a new branch based on the oldest maintained version
+    # 基于最早维护的版本创建一个新分支
     $ cd projects/symfony-docs/
     $ git fetch upstream
     $ git checkout -b my_changes upstream/2.8
 
-    # ... do your changes
+    # ... 做修改工作
 
-    # (optional) add your changes if this is a new content
+    # (可选) 如果这是一个新内容，请添加它
     $ git add xxx.rst
 
-    # commit your changes and push them to your fork
+    # 提交你的更改并将它们推送到你的fork
     $ git commit xxx.rst
     $ git push origin my_changes
 
-    # ... go to GitHub and create the Pull Request
+    # ... 转到GitHub并创建拉取请求
 
-    # (optional) make the changes requested by reviewers and commit them
+    # (可选) 按照审阅者的要求进行更改并提交
     $ git commit xxx.rst
     $ git push
 
-After completing your next contributions, also watch your ranking improve on
-the list of `Symfony Documentation Contributors`_. You guessed right: after all
-this hard work, it's **time to celebrate again!**
+完成下一个贡献后，还可以在 `Symfony文档贡献者`_ 列表中查看你的排名。
+你猜对了：经过这么辛苦的工作，**是时候再次庆祝了！**
 
-Review your changes
+检查你的更改
 -------------------
 
-Every GitHub Pull Request is automatically built and deployed by `Platform.sh`_
-on a single environment that you can access on your browser to review your
-changes.
+`Platform.sh`_ 会在单独环境中自动构建和部署每个GitHub拉取请求 ，你可以在浏览器上访问该环境以查看更改。
 
 .. image:: /_images/contributing/docs-pull-request-platformsh.png
    :align: center
    :alt:   Platform.sh Pull Request Deployment
 
-To access the `Platform.sh`_ environment URL, go to your Pull Request page on
-GitHub, click on the **Show all checks** link and finally, click on the ``Details``
-link displayed for Platform.sh service.
+要访问 `Platform.sh`_ 环境的URL，请转到GitHub上的Pull Request页面，单击 **Show all checks** 链接，
+最后单击 ``Details`` 显示Platform.sh服务的链接。
 
 .. note::
 
-    Only Pull Requests to maintained branches are automatically built by
-    Platform.sh. Check the `roadmap`_ for maintained branches.
+    Platform.sh仅自动构建对维护分支的拉取请求。查阅维护分支的 `路线图`_ 。
 
-Build the Documentation Locally
+在本地构建文档
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Alternatively you can build the documentation on your own computer for testing
-purposes following these steps:
+或者，你可以按照以下步骤在自己的计算机上生成文档，以便进行测试：
 
-#. Install `pip`_ as explained in the `pip installation`_ article;
+#. 按照 `pip安装`_ 文档中的说明安装 `pip`_;
 
-#. Install `Sphinx`_ and `Sphinx Extensions for PHP and Symfony`_
-   (depending on your system, you may need to execute this command as root user):
+#. 安装 `Sphinx`_ 和 `PHP和Symfony的Sphinx扩展`_ （根据你的系统，你可能需要以root用户身份执行此命令）：
 
    .. code-block:: terminal
 
         $ pip install sphinx~=1.3.0 git+https://github.com/fabpot/sphinx-php.git
 
-#. Run the following command to build the documentation in HTML format:
+#. 运行以下命令以HTML格式构建文档：
 
    .. code-block:: terminal
 
        $ cd _build/
        $ make html
 
-The generated documentation is available in the ``_build/html`` directory.
+生成的文档可在 ``_build/html`` 目录中找到。
 
-Frequently Asked Questions
+常见问题
 --------------------------
 
-Why Do my Changes Take so Long to Be Reviewed and/or Merged?
+为什么我的更改需要很长时间才能被审核和/或合并？
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Please be patient. It can take up to several days before your pull request can
-be fully reviewed. After merging the changes, it could take again several hours
-before your changes appear on the symfony.com website.
+请耐心等待。你的拉取请求可能需要几天才能完全审核。合并更改后，可能需要几个小时才能在symfony.com网站上显示更改。
 
-Why Should I Use the Oldest Maintained Branch Instead of the Master Branch?
+为什么我应该使用最旧的维护分支而不是主分支？
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Consistent with Symfony's source code, the documentation repository is split
-into multiple branches, corresponding to the different versions of Symfony itself.
-The ``master`` branch holds the documentation for the development branch of
-the code.
+与Symfony的源代码一致，文档仓库被拆分为多个分支，对应于Symfony本身的不同版本。
+而 ``master`` 分支对应的是代码开发分支的文档。
 
-Unless you're documenting a feature that was introduced after Symfony 2.8,
-your changes should always be based on the ``2.8`` branch. Documentation managers
-will use the necessary Git-magic to also apply your changes to all the active
-branches of the documentation.
+除非你书写在Symfony 2.8之后引入的功能，否则你的更改应始终基于 ``2.8`` 分支。
+文档管理员将使用必要的Git-magic将你的更改应用于文档的所有活动分支。
 
-What If I Want to Submit my Work without Fully Finishing It?
+如果我想在没有完全完成的情况下提交作品怎么办？
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You can do it. But please use one of these two prefixes to let reviewers know
-about the state of your work:
+你可以这样做。但请使用这两个前缀中的一个让审阅者了解你的工作状态：
 
-* ``[WIP]`` (Work in Progress) is used when you are not yet finished with your
-  pull request, but you would like it to be reviewed. The pull request won't
-  be merged until you say it is ready.
+* ``[WIP]`` （正在进行中）当你尚未完成拉取请求，但你希望对其进行审核是，会使用它。
+  在你说准备就绪之前，拉取请求不会合并。
 
-* ``[WCM]`` (Waiting Code Merge) is used when you're documenting a new feature
-  or change that hasn't been accepted yet into the core code. The pull request
-  will not be merged until it is merged in the core code (or closed if the
-  change is rejected).
+* ``[WCM]`` （等待代码合并）当你书写一个新功能或尚未被接收到核心代码的更改时，将使用它。
+  拉取请求在合并进核心代码之前不会合并（如果更改被拒绝，则会关闭拉取请求）。
 
-Would You Accept a Huge Pull Request with Lots of Changes?
+你会接受一个有很多变化的巨大拉动请求吗？
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-First, make sure that the changes are somewhat related. Otherwise, please create
-separate pull requests. Anyway, before submitting a huge change, it's probably a
-good idea to open an issue in the Symfony Documentation repository to ask the
-managers if they agree with your proposed changes. Otherwise, they could refuse
-your proposal after you put all that hard work into making the changes. We
-definitely don't want you to waste your time!
+首先，确保这些更改都有关联。否则，请创建单独的拉取请求。
+无论如何，在提交巨大的更改之前，在Symfony文档仓库中打开一个issue来询问管理员是否同意你提议的更改可能是一个好主意，。
+否则，在你付出所有努力进行更改之后，他们可能拒绝你的提案。我们绝对不希望你浪费自己的时间！
 
 .. _`github.com/symfony/symfony-docs`: https://github.com/symfony/symfony-docs
 .. _`reStructuredText`: http://docutils.sourceforge.net/rst.html
 .. _`GitHub`: https://github.com/
 .. _`fork the repository`: https://help.github.com/articles/fork-a-repo
-.. _`Symfony Documentation Contributors`: https://symfony.com/contributors/doc
+.. _`Symfony文档贡献者`: https://symfony.com/contributors/doc
 .. _`SensioLabsConnect`: https://connect.sensiolabs.com/
-.. _`Symfony Documentation Badge`: https://connect.sensiolabs.com/badge/36/symfony-documentation-contributor
+.. _`Symfony文档徽章`: https://connect.sensiolabs.com/badge/36/symfony-documentation-contributor
 .. _`sync your fork`: https://help.github.com/articles/syncing-a-fork
 .. _`Platform.sh`: https://platform.sh
-.. _`roadmap`: https://symfony.com/roadmap
+.. _`路线图`: https://symfony.com/roadmap
 .. _`pip`: https://pip.pypa.io/en/stable/
-.. _`pip installation`: https://pip.pypa.io/en/stable/installing/
+.. _`pip安装`: https://pip.pypa.io/en/stable/installing/
 .. _`Sphinx`: http://sphinx-doc.org/
-.. _`Sphinx Extensions for PHP and Symfony`: https://github.com/fabpot/sphinx-php
+.. _`PHP和Symfony的Sphinx扩展`: https://github.com/fabpot/sphinx-php

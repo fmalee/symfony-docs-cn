@@ -1,4 +1,4 @@
-Our Backward Compatibility Promise
+我们的向后兼容性承诺
 ==================================
 
 Ensuring smooth upgrades of your projects is our first priority. That's why
@@ -41,14 +41,14 @@ follow to ensure smooth upgrades for our users.
     Also note that backward compatibility breaks are tolerated if they are
     required to fix a security issue.
 
-Using Symfony Code
+使用Symfony代码
 ------------------
 
 If you are using Symfony in your projects, the following guidelines will help
 you to ensure smooth upgrades to all future minor releases of your Symfony
 version.
 
-Using our Interfaces
+使用我们的接口
 ~~~~~~~~~~~~~~~~~~~~
 
 All interfaces shipped with Symfony can be used in type hints. You can also call
@@ -143,7 +143,7 @@ covered by our backward compatibility promise:
 | Access a private property (via Reflection)    | No                          |
 +-----------------------------------------------+-----------------------------+
 
-使用我们的 Traits
+使用我们的Traits
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 All traits provided by Symfony may be used in your classes.
@@ -178,7 +178,7 @@ covered by our backward compatibility promise:
 | Use a public, protected or private method     | Yes                         |
 +-----------------------------------------------+-----------------------------+
 
-Working on Symfony Code
+修改Symfony代码
 -----------------------
 
 Do you want to help us improve Symfony? That's great! However, please stick
@@ -325,7 +325,7 @@ Remove constant                                     No
 Change value of a constant                          Yes [1]_ [5]_
 ==================================================  ==============
 
-修改 Traits
+修改Traits
 ~~~~~~~~~~~~~~~
 
 This table tells you which changes you are allowed to do when working on

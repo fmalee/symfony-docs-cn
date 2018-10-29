@@ -1,7 +1,7 @@
 .. index::
     single: Validation; Groups
 
-How to Apply only a Subset of all Your Validation Constraints (Validation Groups)
+如何仅应用所有验证约束的子集（验证组）
 =================================================================================
 
 By default, when validating an object all constraints of this class will

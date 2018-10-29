@@ -1,41 +1,34 @@
 文档格式
 ====================
 
-The Symfony documentation uses `reStructuredText`_ as its markup language and
-`Sphinx`_ for generating the documentation in the formats read by the end users,
-such as HTML and PDF.
+Symfony文档使用 `reStructuredText`_ 作为其标记语言，使用 `Sphinx`_ 生成给最终用户阅读的格式文档，例如HTML和PDF。
 
 reStructuredText
 ----------------
 
-reStructuredText is a plaintext markup syntax similar to Markdown, but much
-stricter with its syntax. If you are new to reStructuredText, take some time to
-familiarize with this format by reading the existing `Symfony documentation`_
-source code.
+reStructuredText是一种类似于Markdown的纯文本标记语法，但其语法更为严格。
+如果你不熟悉reStructuredText，请阅读现有的 `Symfony文档`_ 源代码，花些时间熟悉此格式。
 
-If you want to learn more about this format, check out the `reStructuredText Primer`_
-tutorial and the `reStructuredText Reference`_.
+如果你想了解有关此格式的更多信息，请参阅 `reStructuredText启蒙`_ 教程和 `reStructuredText参考`_。
 
 .. caution::
 
-    If you are familiar with Markdown, be careful as things are sometimes very
-    similar but different:
+    如果你熟悉Markdown，请小心，因为事情有时非常相似但不同：
 
-    * Lists starts at the beginning of a line (no indentation is allowed);
-    * Inline code blocks use double-ticks (````like this````).
+    * 列表从一行的开头开始（不允许缩进）;
+    * 内联代码块使用双刻度（````like this````）。
 
 Sphinx
 ------
 
-Sphinx_ is a build system that provides tools to create documentation from
-reStructuredText documents. As such, it adds new directives and interpreted text
-roles to the standard reST markup. Read more about the `Sphinx Markup Constructs`_.
+Sphinx_ 是一个构建系统，它提供了从reStructuredText文档创建文档的工具。
+因此，它将新指令和解释文本角色添加到标准的reST标记中。
+阅读更多关于 `Sphinx Markup Constructs`_ 的信息。
 
-Syntax 高亮
+Syntax语法高亮
 ~~~~~~~~~~~~~~~~~~~
 
-PHP is the default syntax highlighter applied to all code blocks. You can
-change it with the ``code-block`` directive:
+PHP是应用于所有代码块的默认语法高亮器。您可以使用 ``code-block`` 指令更改它：
 
 .. code-block:: rst
 
@@ -45,18 +38,16 @@ change it with the ``code-block`` directive:
 
 .. note::
 
-    Besides all of the major programming languages, the syntax highlighter
-    supports all kinds of markup and configuration languages. Check out the
-    list of `supported languages`_ on the syntax highlighter website.
+    除了所有主要的编程语言之外，语法高亮器还支持各种标记和配置语言。
+    在语法高亮显示器网站上查看 `支持的语言`_ 列表。
 
 .. _docs-configuration-blocks:
 
-Configuration Blocks
+配置块
 ~~~~~~~~~~~~~~~~~~~~
 
-Whenever you include a configuration sample, use the ``configuration-block``
-directive to show the configuration in all supported configuration formats
-(``PHP``, ``YAML`` and ``XML``). Example:
+当你要引用一个配置方案，使用 ``configuration-block`` 指令来展示所有支持的配置格式的配置
+（``PHP``、``YAML`` 和 ``XML``）。例如：
 
 .. code-block:: rst
 
@@ -74,7 +65,7 @@ directive to show the configuration in all supported configuration formats
 
             // Configuration in PHP
 
-The previous reST snippet renders as follow:
+之前的reST代码段渲染如下：
 
 .. configuration-block::
 
@@ -90,33 +81,32 @@ The previous reST snippet renders as follow:
 
         // Configuration in PHP
 
-The current list of supported formats are the following:
+当前支持的格式列表如下：
 
 ===================  ======================================
-Markup Format        Use It to Display
+标记格式              用它来显示
 ===================  ======================================
 ``html``             HTML
 ``xml``              XML
 ``php``              PHP
 ``yaml``             YAML
-``twig``             Pure Twig markup
-``html+twig``        Twig markup blended with HTML
-``html+php``         PHP code blended with HTML
+``twig``             纯Twig标记
+``html+twig``        Twig代码与HTML混合
+``html+php``         PHP代码与HTML混合
 ``ini``              INI
-``php-annotations``  PHP Annotations
+``php-annotations``  PHP注释
 ===================  ======================================
 
 添加链接
 ~~~~~~~~~~~~
 
-The most common type of links are **internal links** to other documentation pages,
-which use the following syntax:
+最常见的链接类型是指向其他文档页面的\ **内部链接**，它们使用以下语法：
 
 .. code-block:: rst
 
     :doc:`/absolute/path/to/page`
 
-The page name should not include the file extension (``.rst``). For example:
+页面名称不应包含文件扩展名（``.rst``）。例如：
 
 .. code-block:: rst
 
@@ -126,8 +116,7 @@ The page name should not include the file extension (``.rst``). For example:
 
     :doc:`/configuration/environments`
 
-The title of the linked page will be automatically used as the text of the link.
-If you want to modify that title, use this alternative syntax:
+链接页面的标题将自动用作链接的文本。如果要修改该标题，请使用以下语法替代：
 
 .. code-block:: rst
 
@@ -135,9 +124,7 @@ If you want to modify that title, use this alternative syntax:
 
 .. note::
 
-    Although they are technically correct, avoid the use of relative internal
-    links such as the following, because they break the references in the
-    generated PDF documentation:
+    虽然它们在技术上是正确的，但是请避免使用如下所示的相关的内部链接，因为它们会破坏生成的PDF文档中的引用：
 
     .. code-block:: rst
 
@@ -147,8 +134,7 @@ If you want to modify that title, use this alternative syntax:
 
         :doc:`environments`
 
-**Links to the API** follow a different syntax, where you must specify the type
-of the linked resource (``namespace``, ``class`` or ``method``):
+**API的链接** 遵循不同的语法，你必须在其中指定链接资源的类型（``namespace``、``class`` 或 ``method``）：
 
 .. code-block:: rst
 
@@ -158,7 +144,7 @@ of the linked resource (``namespace``, ``class`` or ``method``):
 
     :method:`Symfony\\Component\\HttpKernel\\Bundle\\Bundle::build`
 
-**Links to the PHP documentation** follow a pretty similar syntax:
+**PHP文档的链接** 遵循非常相似的语法：
 
 .. code-block:: rst
 
@@ -168,12 +154,10 @@ of the linked resource (``namespace``, ``class`` or ``method``):
 
     :phpfunction:`iterator_to_array`
 
-New Features or Behavior Changes
+新功能或行为更改
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you're documenting a brand new feature or a change that's been made in
-Symfony, you should precede your description of the change with a
-``.. versionadded:: 2.X`` directive and a short description:
+如果你要书写一个全新的功能或在Symfony中进行的更改，你应该在更改的描述之前加上 ``.. versionadded:: 2.X`` 指令和简短描述：
 
 .. code-block:: rst
 
@@ -182,8 +166,7 @@ Symfony, you should precede your description of the change with a
 
     You can also ask a question and hide the response. This is particularly [...]
 
-If you're documenting a behavior change, it may be helpful to *briefly* describe
-how the behavior has changed:
+如果你正在书写一个行为更改，则简要描述行为是如何更改的可能会有所帮助：
 
 .. code-block:: rst
 
@@ -191,17 +174,14 @@ how the behavior has changed:
         The ``include()`` function is a new Twig feature that's available in
         Symfony 2.7. Prior, the ``{% include %}`` tag was used.
 
-Whenever a new minor version of Symfony is released (e.g. 2.4, 2.5, etc),
-a new branch of the documentation is created from the ``master`` branch.
-At this point, all the ``versionadded`` tags for Symfony versions that have
-reached end-of-maintenance will be removed. For example, if Symfony 2.5 were
-released today, and 2.2 had recently reached its end-of-maintenance, the 2.2
-``versionadded`` tags would be removed from the new ``2.5`` branch.
+每当发布一个新的Symfony次要版本（例如2.4，2.5等）时，就会从 ``master`` 分支创建一个新的文档分支。
+此时，将会删除已达到维护截止期的Symfony版本的所有 ``versionadded`` 标签。
+例如，如果Symfony 2.5今天发布，并且2.2最近已达到其维护终止期，则2.2 ``versionadded`` 标签将从新的 ``2.5`` 分支中删除。
 
 .. _reStructuredText: http://docutils.sourceforge.net/rst.html
 .. _Sphinx: http://sphinx-doc.org/
-.. _`Symfony documentation`: https://github.com/symfony/symfony-docs
-.. _`reStructuredText Primer`: http://sphinx-doc.org/rest.html
-.. _`reStructuredText Reference`: http://docutils.sourceforge.net/docs/user/rst/quickref.html
+.. _`Symfony文档`: https://github.com/symfony/symfony-docs
+.. _`reStructuredText启蒙`: http://sphinx-doc.org/rest.html
+.. _`reStructuredText参考`: http://docutils.sourceforge.net/docs/user/rst/quickref.html
 .. _`Sphinx Markup Constructs`: http://sphinx-doc.org/markup/
-.. _`supported languages`: http://pygments.org/languages/
+.. _`支持的语言`: http://pygments.org/languages/

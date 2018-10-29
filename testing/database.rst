@@ -1,7 +1,7 @@
 .. index::
    single: Tests; Database
 
-How to Test Code that Interacts with the Database
+如何测试与数据库交互的代码
 =================================================
 
 If your code interacts with the database, e.g. reads data from or stores data

@@ -1,7 +1,7 @@
 .. index::
     single: Workflow; Workflows as State Machines
 
-Workflows as State Machines
+作为状态机的工作流
 ===========================
 
 The workflow component is modelled after a *Workflow net* which is a subclass

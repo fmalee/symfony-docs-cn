@@ -1,9 +1,9 @@
 .. _symfony2-license:
 
-Symfony 代码许可
+Symfony代码许可
 ====================
 
-Symfony code is released under `the MIT license`_:
+Symfony代码在 `MIT许可`_ 下发布：
 
 Copyright (c) 2004-2018 Fabien Potencier
 
@@ -25,11 +25,10 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
-其他 Symfony 许可
+其他Symfony许可
 ----------------------
 
-Check out the :doc:`license of the Symfony documentation </contributing/documentation/license>`
-and other `Symfony licenses and trademarks`_.
+查阅 :doc:`Symfony文档许可证 </contributing/documentation/license>` 和其他 `Symfony许可证和商标`_。
 
-.. _`the MIT license`: https://en.wikipedia.org/wiki/MIT_License
-.. _`Symfony licenses and trademarks`: https://symfony.com/license
+.. _`MIT许可`: https://en.wikipedia.org/wiki/MIT_License
+.. _`Symfony许可证和商标`: https://symfony.com/license

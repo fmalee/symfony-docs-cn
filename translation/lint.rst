@@ -2,7 +2,7 @@
     single: Translation; Lint
     single: Translation; Translation File Errors
 
-How to Find Errors in Translation Files
+如何在翻译文件中查找错误
 =======================================
 
 Symfony processes all the application translation files as part of the process
@@ -21,7 +21,7 @@ translation file using the ``lint:yaml`` and ``lint:xliff`` commands:
     # lint a whole directory
     $ ./bin/console lint:yaml translations
     $ ./bin/console lint:xliff translations
-    
+
     # lint multiple files or directories
     $ ./bin/console lint:yaml translations path/to/trans
     $ ./bin/console lint:xliff translations/messages.en.xlf translations/messages.es.xlf

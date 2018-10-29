@@ -1,4 +1,4 @@
-Creating a Bug Reproducer
+重现Bug
 =========================
 
 The main Symfony code repository receives thousands of issues reports per year.
@@ -8,7 +8,7 @@ much harder to understand because developers can't easily reproduce them in thei
 computers. That's when we'll ask you to create a "bug reproducer", which is the
 minimum amount of code needed to make the bug appear when executed.
 
-Reproducing Simple Bugs
+再现简单的错误
 -----------------------
 
 If you are reporting a bug related to some Symfony component used outside the
@@ -29,7 +29,7 @@ shows the bug::
     // "null" instead because there is no context to build a validator violation
     var_dump($urlValidator->validate($wrongUrl, $urlConstraint));
 
-Reproducing Complex Bugs
+再现复杂的错误
 ------------------------
 
 If the bug is related to the Symfony Framework or if it's too complex to create
@@ -53,7 +53,7 @@ a PHP script, it's better to reproduce the bug by creating a new project. To do 
    and, if necessary, explain the steps to reproduce (e.g. "browse this URL",
    "fill in this data in the form and submit it", etc.)
 
-Adding the Minimum Amount of Code Possible
+添加最小代码量
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The key to create a bug reproducer is to solely focus on the feature that you

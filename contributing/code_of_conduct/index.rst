@@ -1,4 +1,4 @@
-Code of Conduct
+法典
 ===============
 
 .. toctree::

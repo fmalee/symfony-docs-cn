@@ -1,30 +1,22 @@
-Code of Conduct: Concrete Example Document
+行为准则：具体示例文件
 ==========================================
 
-This is a living document that serves to give concrete examples of
-unwanted behaviour. These examples have all taken place somewhere in the
-PHP community in the past, and are clear code of conduct violations
-according to the Symfony code of conduct.
+这是一份保持更新的文件，用于提供不良行为的具体示例。
+这些示例过去都发生在PHP社区的某个地方，并且根据Symfony行为准则是​​明确的行为违规行为。=
 
-Concrete Examples
+具体例子
 -----------------
 
-* Unwelcome comments regarding a person’s lifestyle choices and practices,
-  including those related to food, health, parenting, drugs, and employment;
-* Deliberate misgendering or use of `dead names`_ (The birth name
-  of a person who has since changed their name, often a transgender person);
-* Threats of violence like "The person that created this PR should be
-  punched in the face";
-* Incitement of violence towards any individual, including encouraging a
-  person to commit suicide or to engage in self-harm (even as a joke);
-* Sustained disruption of discussion;
-* Pattern of inappropriate social contact, such as requesting/assuming
-  inappropriate levels of intimacy with others;
-* Continued one-on-one communication after requests to cease;
-* Putting down people based on their technology choices or their work.
+* 关于一个人的生活方式选择和做法的不受欢迎的评论，包括与食物，健康，养育子女，吸毒和就业有关的评论;
+* 蓄意误导或使用 `dead names`_ （一个人的姓氏，后来改名，通常是变性人）;
+* 像“创造这个PR的人应该被打了一拳”这样的暴力威胁;
+* 煽动对任何个人的暴力行为，包括鼓励一个人自杀或进行自我伤害（即使是一个笑话）;
+* 持续扰乱讨论;
+* 不恰当的社交联系模式，例如请求/假设与他人的不合适的亲密行为;
+* 请求停止后继续进行一对一通信;
+* 根据他们的技术选择或工作来压制人。
 
-The original list is inspired and modified from `geek feminism`_ and
-confirmed by experiences from PHPWomen.
+最初的名单受到了 `geek feminism`_ 的启发和修改，并得到了PHPWomen的经验证实。
 
 .. _dead names: https://en.wiktionary.org/wiki/deadname
 .. _geek feminism: https://geekfeminism.org/about/code-of-conduct

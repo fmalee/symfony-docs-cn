@@ -2,7 +2,7 @@
     single: Validation; Group Sequences
     single: Validation; Group Sequence Providers
 
-How to Sequentially Apply Validation Groups
+如何按顺序应用验证组
 ===========================================
 
 In some cases, you want to validate your groups by steps. To do this, you can

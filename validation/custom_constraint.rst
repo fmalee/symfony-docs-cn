@@ -1,7 +1,7 @@
 .. index::
    single: Validation; Custom constraints
 
-How to Create a custom Validation Constraint
+如何创建自定义验证约束
 ============================================
 
 You can create a custom constraint by extending the base constraint class,

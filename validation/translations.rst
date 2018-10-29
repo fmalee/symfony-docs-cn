@@ -1,7 +1,7 @@
 .. index::
     single: Validation; Translation
 
-How to Translate Validation Constraint Messages
+如何翻译验证约束的消息
 ===============================================
 
 If you're using validation constraints with the Form component, then translating

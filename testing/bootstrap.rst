@@ -1,4 +1,4 @@
-How to Customize the Bootstrap Process before Running Tests
+如何在运行测试之前自定义引导过程
 ===========================================================
 
 Sometimes when running tests, you need to do additional bootstrap work before

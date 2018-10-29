@@ -1,14 +1,11 @@
-翻译
+翻译标准
 ============
 
-The official Symfony documentation is published only in English. You can
-read about the reasons in `this blog post`_.
+Symfony官方文档仅以英文发布。你可以在此 `博文`_ 中了解原因。
 
-We have taken steps to improve the experience when using
-`Google Translate`_ to prevent code blocks from being translated.
+我们已采取措施改善使用 `Google翻译`_ 时的体验， 以防止翻译代码块。
 
-To translate any page in our documentation please copy any URL from the
-documentation and paste it into the form on the Google Translate site.
+要翻译我们文档中的任何页面，请复制任何文档的URL并将其粘贴到Google翻译网站上的表单中。
 
-.. _`this blog post`: https://symfony.com/blog/discontinuing-the-symfony-community-translations
-.. _`Google Translate`: https://translate.google.com
+.. _`博文`: https://symfony.com/blog/discontinuing-the-symfony-community-translations
+.. _`Google翻译`: https://translate.google.com

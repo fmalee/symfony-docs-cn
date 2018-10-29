@@ -1,17 +1,14 @@
-Conventions
+约定
 ===========
 
-The :doc:`standards` document describes the coding standards for the Symfony
-projects and the internal and third-party bundles. This document describes
-coding standards and conventions used in the core framework to make it more
-consistent and predictable. You are encouraged to follow them in your own
-code, but you don't need to.
+:doc:`standards` 文档描述了Symfony的项目和内部及第三方bundle的编码标准。
+本文档描述了核心框架中使用的编码标准和约定，以使其更加一致和可预测。
+我们鼓励你在自己的代码中关注它们，但你不需要这样做。
 
 方法名称
 ------------
 
-When an object has a "main" many relation with related "things"
-(objects, parameters, ...), the method names are normalized:
+当一个对象与相关的“事物”（对象，参数......）有很多关系(relation)时，方法名称被规范化：
 
 * ``get()``
 * ``set()``
@@ -26,22 +23,18 @@ When an object has a "main" many relation with related "things"
 * ``count()``
 * ``keys()``
 
-The usage of these methods is only allowed when it is clear that there
-is a main relation:
+只有在明确存在主要关系时才允许使用这些方法：
 
-* a ``CookieJar`` has many ``Cookie`` objects;
+* 一个 ``CookieJar`` 有很多 ``Cookie`` 对象;
 
-* a Service ``Container`` has many services and many parameters (as services
-  is the main relation, the naming convention is used for this relation);
+* 一个服务 ``Container`` 有许多服务和许多参数（因为服务是主要关系，命名约定用于此关系）;
 
-* a Console ``Input`` has many arguments and many options. There is no "main"
-  relation, and so the naming convention does not apply.
+* 一个控制台 ``Input`` 有许多参数和许多选项。没有“主要”关系，因此不适用命名约定。
 
-For many relations where the convention does not apply, the following methods
-must be used instead (where ``XXX`` is the name of the related thing):
+对于不适用约定的许多关系，必须使用以下方法代替（ ``XXX`` 是相关事物的名称）：
 
 +----------------+-------------------+
-| Main Relation  | Other Relations   |
+| Main Relation  |  Other Relation   |
 +================+===================+
 | ``get()``      | ``getXXX()``      |
 +----------------+-------------------+
@@ -72,49 +65,38 @@ must be used instead (where ``XXX`` is the name of the related thing):
 
 .. note::
 
-    While "setXXX" and "replaceXXX" are very similar, there is one notable
-    difference: "setXXX" may replace, or add new elements to the relation.
-    "replaceXXX", on the other hand, cannot add new elements. If an unrecognized
-    key is passed to "replaceXXX" it must throw an exception.
+    虽然“setXXX”和“replaceXXX”非常相似，但有一个值得注意的区别：“setXXX”可以替换或添加新元素到关系。
+    另一方面，“replaceXXX”无法添加新元素。如果将无法识别的键传递给“replaceXXX”，则必会抛出异常。
 
 .. _contributing-code-conventions-deprecations:
 
-Deprecations
+弃用
 ------------
 
-From time to time, some classes and/or methods are deprecated in the
-framework; that happens when a feature implementation cannot be changed
-because of backward compatibility issues, but we still want to propose a
-"better" alternative. In that case, the old implementation can simply be
-**deprecated**.
+有时会在框架中弃用某些类或方法；
+当由于向后兼容性问题而无法更改功能实现时会发生这种情况，但我们仍然希望提出一个“更好”的替代方案。
+在这种情况下，可以简单地 **弃用** 旧的实现。
 
-A feature is marked as deprecated by adding a ``@deprecated`` phpdoc to
-relevant classes, methods, properties, ...::
+通过向相关类，方法，属性......添加一个 ``@deprecated`` phpdoc，可以将一个功能标记为已弃用::
 
     /**
      * @deprecated since version 2.8, to be removed in 3.0. Use XXX instead.
      */
 
-The deprecation message should indicate the version when the class/method was
-deprecated, the version when it will be removed, and whenever possible, how
-the feature was replaced.
+弃用消息应指出不推荐使用该类/方法时的版本，将被删除时的版本以及可能的替换功能。
 
-A PHP ``E_USER_DEPRECATED`` error must also be triggered to help people with
-the migration starting one or two minor versions before the version where the
-feature will be removed (depending on the criticality of the removal)::
+还必须触发一个PHP ``E_USER_DEPRECATED`` 错误，
+以帮助迁移人员在“删除了该功能的版本”之前启动一个或两个次要版本（取决于该删除的重要性）::
 
     @trigger_error('XXX() is deprecated since version 2.8 and will be removed in 3.0. Use XXX instead.', E_USER_DEPRECATED);
 
-Without the `@-silencing operator`_, users would need to opt-out from deprecation
-notices. Silencing swaps this behavior and allows users to opt-in when they are
-ready to cope with them (by adding a custom error handler like the one used by
-the Web Debug Toolbar or by the PHPUnit bridge).
+如果没有 `@-silencing运算符`_，用户将需要手动选择关闭(opt-out)弃用通知。
+静默交换此行为（Silencing swaps this behavior）并允许用户在准备好应对它们时选择加入(opt-in)
+（通过在Web调试工具栏或PHPUnit桥接器中的一个中添加自定义错误处理器）。
 
-.. _`@-silencing operator`: https://php.net/manual/en/language.operators.errorcontrol.php
+.. _`@-silencing运算符`: https://php.net/manual/en/language.operators.errorcontrol.php
 
-When deprecating a whole class the ``trigger_error()`` call should be placed
-between the namespace and the use declarations, like in this example from
-`ArrayParserCache`_::
+在弃用整个类时，应该在命名空间和use声明之间调用 ``trigger_error()``，就像在 `ArrayParserCache`_ 中的示例一样::
 
     namespace Symfony\Component\ExpressionLanguage\ParserCache;
 

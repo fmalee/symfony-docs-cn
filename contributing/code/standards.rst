@@ -1,33 +1,28 @@
 代码标准
 ================
 
-Symfony code is contributed by thousands of developers around the world. To make
-every piece of code look and feel familiar, Symfony defines some coding standards
-that all contributions must follow.
+Symfony代码由全球数千名开发人员提供。
+为了让每一段代码看起来都很熟悉，Symfony定义了一些所有贡献必须遵循的编码标准。
 
-These Symfony coding standards are based on the `PSR-1`_, `PSR-2`_ and `PSR-4`_
-standards, so you may already know most of them.
+这些Symfony编码标准基于 `PSR-1`_、`PSR-2`_ 和 `PSR-4`_ 标准，因此你可能已经了解其中的大多数标准。
 
 让你的代码遵循以下代码标准
 --------------------------------------------
 
-Instead of reviewing your code manually, Symfony makes it simple to ensure that
-your contributed code matches the expected code syntax. First, install the
-`PHP CS Fixer tool`_ and then, run this command to fix any problem:
+Symfony不是手动审查代码，而是确保你提供的代码与预期的代码语法相匹配。
+首先，安装 `PHP CS Fixer`_ 工具，然后运行此命令来解决任何问题：
 
 .. code-block:: terminal
 
     $ cd your-project/
     $ php php-cs-fixer.phar fix -v
 
-If you forget to run this command and make a pull request with any syntax issue,
-our automated tools will warn you about that and will provide the solution.
+如果你忘记运行此命令并发起有任何语法问题的拉取请求时，我们的自动化工具将向你发出警告，并提供解决方案。
 
-Symfony 代码标准的细节
+Symfony代码标准的细节
 ----------------------------------
 
-If you want to learn about the Symfony coding standards in detail, here's a
-short example containing most features described below:
+如果你想详细了解Symfony编码标准，这里有一个包含下述大多数特性的简短示例：
 
 .. code-block:: html+php
 
@@ -138,152 +133,119 @@ short example containing most features described below:
 结构
 ~~~~~~~~~
 
-* Add a single space after each comma delimiter;
+* 在每个逗号分隔符后添加一个空格;
 
-* Add a single space around binary operators (``==``, ``&&``, ...), with
-  the exception of the concatenation (``.``) operator;
+* 在二元运算符（``==``、``&&``...）周围添加一个空格，但串联（``.``）运算符除外;
 
-* Place unary operators (``!``, ``--``, ...) adjacent to the affected variable;
+* 将一元运算符（``!``、``--``...）放在受影响变量附近;
 
-* Always use `identical comparison`_ unless you need type juggling;
+* 除非你需要类型转换(juggling)，否则总是使用 `全等比较`_ ;
 
-* Use `Yoda conditions`_ when checking a variable against an expression to avoid
-  an accidental assignment inside the condition statement (this applies to ``==``,
-  ``!=``, ``===``, and ``!==``);
+* 在针对一个表达式检查一个变量时使用 `Yoda条件`_ ，为了避免该条件语句内的意外分配
+  （这适用于 ``==``、``!=``、```===`` 以及 ``!==``）;
 
-* Add a comma after each array item in a multi-line array, even after the
-  last one;
+* 在多行数组中的每个数组项之后添加逗号，即使在最后一个数组之后也是如此;
 
-* Add a blank line before ``return`` statements, unless the return is alone
-  inside a statement-group (like an ``if`` statement);
+* 在 ``return`` 语句之前添加一个空行，除非在语句组中只有一个返回（如 ``if`` 语句）;
 
-* Use ``return null;`` when a function explicitly returns ``null`` values and
-  use ``return;`` when the function returns ``void`` values;
+* 一个函数返回明确的 ``null`` 值时使用 ``return null;``，
+  如果函数返回的是 ``void`` 值，则使用 ``return;``;
 
-* Use braces to indicate control structure body regardless of the number of
-  statements it contains;
+* 使用大括号来表示控制结构体，而不管它包含的语句数量;
 
-* Define one class per file - this does not apply to private helper classes
-  that are not intended to be instantiated from the outside and thus are not
-  concerned by the `PSR-0`_ and `PSR-4`_ autoload standards;
+* 为每个文件定义一个类 - 这不适用于不打算从外部实例化的私有辅助类，因此不关心 `PSR-0`_ 和 `PSR-4`_ 自动加载标准;
 
-* Declare the class inheritance and all the implemented interfaces on the same
-  line as the class name;
+* 在类名称的同一行声明类继承和所有实现的接口;
 
-* Declare class properties before methods;
+* 在方法之前声明类属性;
 
-* Declare public methods first, then protected ones and finally private ones.
-  The exceptions to this rule are the class constructor and the ``setUp()`` and
-  ``tearDown()`` methods of PHPUnit tests, which must always be the first methods
-  to increase readability;
+* 首先声明公有方法，然后声明受保护方法，最后是私有方法。
+  此规则的例外是类的构造函数以及PHPUnit测试方法的 ``setUp()``、``tearDown()`` 方法，因为他们必须始终是第一个方法，以便提高可读性;
 
-* Declare all the arguments on the same line as the method/function name, no
-  matter how many arguments there are;
+* 在与方法/函数名称同一行上声明所有参数，无论有多少参数;
 
-* Use parentheses when instantiating classes regardless of the number of
-  arguments the constructor has;
+* 无论构造函数具有多少个参数，在实例化该类时都使用括号;
 
-* Exception and error message strings must be concatenated using :phpfunction:`sprintf`;
+* 必须使用 :phpfunction:`sprintf` 串联(concatenated)异常和错误消息的字符串;
 
-* Calls to :phpfunction:`trigger_error` with type ``E_USER_DEPRECATED`` must be
-  switched to opt-in via ``@`` operator.
-  Read more at :ref:`contributing-code-conventions-deprecations`;
+* 调用带有 ``E_USER_DEPRECATED`` 类型的 :phpfunction:`trigger_error` 必须使用 ``@`` 操作符切换到选择加入（opt-in）
+  阅读 :ref:`contributing-code-conventions-deprecations` 了解详情。
 
-* Do not use ``else``, ``elseif``, ``break`` after ``if`` and ``case`` conditions
-  which return or throw something;
+* 不要在有返回或抛出(throw)东西的 ``if`` 和 ``case`` 条件之后使用 ``else``、``elseif``、``break``;
 
-* Do not use spaces around ``[`` offset accessor and before ``]`` offset accessor;
+* 不要在 ``[`` 偏移访问器周围和 ``]`` 偏移访问器之前使用空格;
 
-* Add a ``use`` statement for every class that is not part of the global namespace.
+* 为不属于全局命名空间的每个类添加 ``use`` 语句。
 
-Naming Conventions
+命名约定
 ~~~~~~~~~~~~~~~~~~
 
-* Use `camelCase`_ for PHP variables, function and method names, arguments
-  (e.g. ``$acceptableContentTypes``, ``hasSession()``);
+* 使用 `小骆驼拼写法`_ 命名PHP变量、函数和方法的名称、参数（例如 ``$acceptableContentTypes``、``hasSession()``）;
 
-* Use `snake_case`_ for configuration parameters and Twig template variables
-  (e.g. ``framework.csrf_protection``, ``http_status_code``);
+* 使用 `蛇形拼写法`_ 命名配置参数和Twig模板变量（例如 ``framework.csrf_protection``、``http_status_code``）;
 
-* Use namespaces for all PHP classes and `UpperCamelCase`_ for their names (e.g.
-  ``ConsoleLogger``);
+* 对所有PHP类使用名称空间，使用 `大骆驼拼写法`_ 命名类名称（例如 ``ConsoleLogger``）;
 
-* Prefix all abstract classes with ``Abstract`` except PHPUnit ``*TestCase``.
-  Please note some early Symfony classes do not follow this convention and
-  have not been renamed for backward compatibility reasons. However all new
-  abstract classes must follow this naming convention;
+* 除PHPUnit的 ``*TestCase`` 之外的所有抽象类都需要使用 ``Abstract`` 前缀。
+  请注意，一些早期的Symfony类不遵循此约定，并且由于向后兼容性原因而未重命名。
+  但是，所有新的抽象类都必须遵循此命名约定;
 
-* Suffix interfaces with ``Interface``;
+* 给接口添加 ``Interface`` 后缀;
 
-* Suffix traits with ``Trait``;
+* 给复用添加 ``Trait`` 后缀;
 
-* Suffix exceptions with ``Exception``;
+* 给异常添加 ``Exception`` 后缀;
 
-* Use UpperCamelCase for naming PHP files (e.g. ``EnvVarProcessor.php``) and
-  snake case for naming Twig templates and web assets (``section_layout.html.twig``,
-  ``index.scss``);
+* 使用大骆峰拼写法命名PHP文件（例如``EnvVarProcessor.php``），
+  以蛇形拼写法命名Twig模板和Web资源（``section_layout.html.twig``、``index.scss``）;
 
-* For type-hinting in PHPDocs and casting, use ``bool`` (instead of ``boolean``
-  or ``Boolean``), ``int`` (instead of ``integer``), ``float`` (instead of
-  ``double`` or ``real``);
+* 对于PHPDocs的类型约束和类型转换(casting)，使用 ``bool`` (代替 ``boolean`` 或 ``Boolean``)，
+  ``int`` (代替 ``integer``), ``float`` (代替 ``double`` 或 ``real``);
 
-* Don't forget to look at the more verbose :doc:`conventions` document for
-  more subjective naming considerations.
+* 不要忘记查阅更详细的 :doc:`conventions` 文档以获得更直观的命名注意事项。
 
 .. _service-naming-conventions:
 
-Service Naming Conventions
+服务命名约定
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-* A service name must be the same as the fully qualified class name (FQCN) of
-  its class (e.g. ``App\EventSubscriber\UserSubscriber``);
+* 服务名称必须与其类的完全限定类名（FQCN）相同（例如 ``App\EventSubscriber\UserSubscriber``）;
 
-* If there are multiple services for the same class, use the FQCN for the main
-  service and use lowercased and underscored names for the rest of services.
-  Optionally divide them in groups separated with dots (e.g.
-  ``something.service_name``, ``fos_user.something.service_name``);
+* 如果同一类有多个服务，则使用FQCN命名主服务，并对其余服务使用小写和下划线名称。
+  可以选择使用点号将他们分组（例如 ``something.service_name``、``fos_user.something.service_name``）;
 
-* Use lowercase letters for parameter names (except when referring
-  to environment variables with the ``%env(VARIABLE_NAME)%`` syntax);
+* 对参数名称使用小写字母（除非使用 ``%env(VARIABLE_NAME)%`` 语法引用环境变量）;
 
-* Add class aliases for public services (e.g. alias ``Symfony\Component\Something\ClassName``
-  to ``something.service_name``).
+* 为共有服务添加类别名（如 ``Symfony\Component\Something\ClassName`` 的别名是 ``something.service_name``）。
 
 文档
 ~~~~~~~~~~~~~
 
-* Add PHPDoc blocks for all classes, methods, and functions (though you may
-  be asked to remove PHPDoc that do not add value);
+* 为所有的类、方法和函数添加PHPDoc块（尽管可能会要求你删除不增加值的PHPDoc）;
 
-* Group annotations together so that annotations of the same type immediately
-  follow each other, and annotations of a different type are separated by a
-  single blank line;
+* 将注释组合在一起，以便相同类型的注释紧跟在一起，并且不同类型的注释由单个空行分隔;
 
-* Omit the ``@return`` tag if the method does not return anything;
+* 如果方法没有返回任何内容，则省略 ``@return`` 标签;
 
-* The ``@package`` and ``@subpackage`` annotations are not used;
+* 不使用 ``@package`` 和 ``@subpackage`` 注解;
 
-* Don't inline PHPDoc blocks, even when they contain just one tag (e.g. don't
-  put ``/** {@inheritdoc} */`` in a single line);
+* 不要内联PHPDoc块，即使它们只包含一个标签（例如不要将 ``/** {@inheritdoc} */`` 放在一行中）;
 
-* When adding a new class or when making significant changes to an existing class,
-  an ``@author`` tag with personal contact information may be added, or expanded.
-  Please note it is possible to have the personal contact information updated or
-  removed per request to the doc:`core team </contributing/code/core_team>`.
+* 添加新类或对现有类进行重大更改时，可以添加或扩展包含个人联系信息的 ``@author`` 标记。
+  请注意，可以根据 :doc:`core team </contributing/code/core_team>` 的请求更新或删除个人联系信息。
 
 许可
 ~~~~~~~
 
-* Symfony is released under the MIT license, and the license block has to be
-  present at the top of every PHP file, before the namespace.
+* Symfony是在MIT许可下发布的，该许可块必须出现在命名空间之前的每个PHP文件的顶部。
 
-.. _`PHP CS Fixer tool`: http://cs.sensiolabs.org/
+.. _`PHP CS Fixer`: http://cs.sensiolabs.org/
 .. _`PSR-0`: https://www.php-fig.org/psr/psr-0/
 .. _`PSR-1`: https://www.php-fig.org/psr/psr-1/
 .. _`PSR-2`: https://www.php-fig.org/psr/psr-2/
 .. _`PSR-4`: https://www.php-fig.org/psr/psr-4/
-.. _`identical comparison`: https://php.net/manual/en/language.operators.comparison.php
-.. _`Yoda conditions`: https://en.wikipedia.org/wiki/Yoda_conditions
-.. _`camelCase`: https://en.wikipedia.org/wiki/Camel_case
-.. _`UpperCamelCase`: https://en.wikipedia.org/wiki/Camel_case
-.. _`snake_case`: https://en.wikipedia.org/wiki/Snake_case
+.. _`全等比较`: https://php.net/manual/en/language.operators.comparison.php
+.. _`Yoda条件`: https://en.wikipedia.org/wiki/Yoda_conditions
+.. _`小骆驼拼写法`: https://en.wikipedia.org/wiki/Camel_case
+.. _`大骆驼拼写法`: https://en.wikipedia.org/wiki/Camel_case
+.. _`蛇形拼写法`: https://en.wikipedia.org/wiki/Snake_case

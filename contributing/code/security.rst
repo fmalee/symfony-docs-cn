@@ -13,7 +13,7 @@ bug tracker and don't publish it publicly. Instead, all security issues must
 be sent to **security [at] symfony.com**. Emails sent to this address are
 forwarded to the Symfony core team private mailing-list.
 
-Resolving Process
+解决过程
 -----------------
 
 For each report, we first try to confirm the vulnerability. When it is
@@ -55,7 +55,7 @@ confirmed, the core team works on a solution following these steps:
     on its complexity and the coordination with the downstream projects (see
     next paragraph).
 
-Collaborating with Downstream Open-Source Projects
+与下游开源项目合作
 --------------------------------------------------
 
 As Symfony is used by many large Open-Source projects, we standardized the way
@@ -91,7 +91,7 @@ of the downstream projects included in this process:
 * Drupal (releases typically happen on Wednesdays)
 * eZPublish
 
-Security Advisories
+安全建议
 -------------------
 
 .. tip::

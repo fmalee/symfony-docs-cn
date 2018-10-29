@@ -1,120 +1,91 @@
-The Release Process
+发布流程
 ===================
 
-This document explains the process followed by the Symfony project to develop,
-release and maintain its different versions.
+本文档解释了Symfony项目开发、发布和维护其不同版本所遵循的流程。
 
-Symfony releases follow the `semantic versioning`_ strategy and they are
-published through a *time-based model*:
+Symfony版本遵循 `语义版本控制`_ 策略，并通过 *基于时间的模型* 发布：
 
-* A new **Symfony patch version** (e.g. 2.8.15, 4.1.7) comes out roughly every
-  month. It only contains bug fixes, so you can safely upgrade your apps;
-* A new **Symfony minor version** (e.g. 2.8, 3.2, 4.1) comes out every *six months*:
-  one in *May* and one in *November*. It contains bug fixes and new features, but
-  it doesn't include any breaking change, so you can safely upgrade your apps;
-* A new **Symfony major version** (e.g. 3.0, 4.0) comes out every *two years*.
-  It can contain breaking changes, so you may need to do some changes in your
-  apps before upgrading.
+* 一个新的 **Symfony补丁版本** （例如2.8.15、4.1.7）每个月都会发行。
+  它只包含Bug修复，因此你可以安全地升级你的应用;
+* 一个新的 **Symfony次要版本** （例如2.8、3.2、4.1）每六个月会发行：一个在五月，一个在十一月。
+  它包含Bug修复和新功能，但它不包含任何重大更改，因此你可以安全地升级你的应用;
+* 一个新的 **Symfony主要版本** （如3.0、4.0）每2年会发行。
+  它可能包含重大更改，因此你可能需要在升级之前对应用进行一些更改。
 
 .. tip::
 
-    `Subscribe to Symfony Roadmap notifications`_ to receive an email when a new
-    Symfony version is published or when a Symfony version reaches its end of life.
+    `订阅Symfony路线图通知`_，以便在发布新的Symfony版本或Symfony版本达到其使用寿命时收到邮件通知。
 
 .. _contributing-release-development:
 
-Development
+开发
 -----------
 
-The full development period for any major or minor version lasts six months and
-is divided into two phases:
+任何主要版本或次要版本的完整开发周期为六个月，分为两个阶段：
 
-* **Development**: *Four months* to add new features and to enhance existing
-  ones;
+* **开发**: 用 *四个月* 时间增加新功能并增强现有功能;
 
-* **Stabilization**: *Two months* to fix bugs, prepare the release, and wait
-  for the whole Symfony ecosystem (third-party libraries, bundles, and
-  projects using Symfony) to catch up.
+* **稳定**: 用 *两个月* 来修复错误，发布准备，并等待整个Symfony生态系统
+  （第三方库、bundles以及使用Symfony的项目）的适配。
 
-During the development phase, any new feature can be reverted if it won't be
-finished in time or if it won't be stable enough to be included in the current
-final release.
+在开发阶段，任何新功能如果不能及时完成或者如果它不够稳定以包含在当前最终版本中，则可能会回滚(reverted)。
 
 .. tip::
 
-    Check out the `Symfony Roadmap`_ to learn more about any specific version.
+    查看 `Symfony路线图`_，了解有关任何特定版本的更多信息。
 
 .. _contributing-release-maintenance:
 .. _symfony-versions:
 .. _releases-lts:
 
-Maintenance
+维护
 -----------
 
-Starting from the Symfony 3.x branch, the number of minor versions is limited to
-five per branch (X.0, X.1, X.2, X.3 and X.4). The last minor version of a branch
-(e.g. 3.4, 4.4, 5.4) is considered a **long-term support version** and the other
-ones are considered **standard versions**:
+从Symfony 3.x分支开始，次要版本的数量限制为每个分支五个（X.0、X.1、X.2、X.3和X.4）。
+分支的最后一个次要版本（例如3.4、4.4、5.4）被视为 **长期支持版本**，其他版本被视为 **标准版本**：
 
 =======================  =====================  ================================
-Version Type             Bugs are fixed for...  Security issues are fixed for...
+版本类型                    Bug修复期...           安全问题修复期...
 =======================  =====================  ================================
-Standard                 8 months               14 months
-Long-Term Support (LTS)  3 years                4 years
+标准                       8个月                  14个月
+长期支持版本(LTS)           3年                    4年
 =======================  =====================  ================================
 
 .. note::
 
-    After the active maintenance of a Symfony version has ended, you can get
-    `professional Symfony support`_ from SensioLabs, the company which sponsors
-    the Symfony project.
+    在一个Symfony版本的主动维护结束后，你可以从赞助Symfony项目的公司SensioLabs那获得 `专业的Symfony支持`_。
 
 .. _deprecations:
 
-Backward Compatibility
+向后兼容性
 ----------------------
 
-Our :doc:`Backward Compatibility Promise </contributing/code/bc>` is very
-strict and allows developers to upgrade with confidence from one minor version
-of Symfony to the next one.
+我们的 :doc:`向后兼容性承诺 </contributing/code/bc>` 非常严格，允许开发人员从容地从Symfony的一个次要版本升级到下一个版本。
 
-When a feature implementation cannot be replaced with a better one without
-breaking backward compatibility, Symfony deprecates the old implementation and
-adds a new preferred one along side. Read the
-:ref:`conventions <contributing-code-conventions-deprecations>` document to
-learn more about how deprecations are handled in Symfony.
+如果一个新功能无法在不破坏向后兼容性的情况下用更好的来替代，Symfony会弃用旧实现并添加新的首选实现。
+阅读 :ref:`公约 <contributing-code-conventions-deprecations>` 文档，
+了解有关如何在Symfony中处理旧功能(deprecations)的更多信息。
 
-Rationale
+理由
 ---------
 
-This release process was adopted to give more *predictability* and
-*transparency*. It was discussed based on the following goals:
+采用此发布流程可提供更高的 *可预测性* 和 *透明度*。它是基于以下目标进行讨论的：
 
-* Shorten the release cycle (allow developers to benefit from the new
-  features faster);
-* Give more visibility to the developers using the framework and Open-Source
-  projects using Symfony;
-* Improve the experience of Symfony core contributors: everyone knows when a
-  feature might be available in Symfony;
-* Coordinate the Symfony timeline with popular PHP projects that work well
-  with Symfony and with projects using Symfony;
-* Give time to the Symfony ecosystem to catch up with the new versions
-  (bundle authors, documentation writers, translators, ...);
-* Give companies a strict and predictable timeline they can rely on to plan
-  their own projects development.
+* 缩短发布周期（允许开发人员更快地从新功能中受益）;
+* 给使用框架的开发者和使用Symfony的开源项目提供更多的曝光度(visibility);
+* 改善Symfony核心贡献者的体验：每个人都知道Symfony中何时可以使用某个功能;
+* 协调Symfony与流行的PHP项目的时间表，这些项目与Symfony以及使用Symfony的项目相得益彰;
+* 给Symfony生态系统留出时间来赶上新版本（bundle作者，文档编写者，翻译者......）;
+* 为公司提供严格且可预测的时间表，他们可以依赖这些时间表来规划自己的项目开发。
 
-The six month period was chosen as two releases fit in a year. It also allows
-for plenty of time to work on new features and it allows for non-ready
-features to be postponed to the next version without having to wait too long
-for the next cycle.
+选择六个月为周期，可以两个版本就布满(fit)一年。
+它还允许有足够的时间处理新功能，并允许将非就绪功能推迟到下一版本，而无需为下一个周期等待太长时间。
 
-The dual maintenance mode was adopted to make every Symfony user happy. Fast
-movers, who want to work with the latest and the greatest, use the standard
-version: a new version is published every six months, and there is a two months
-period to upgrade. Companies wanting more stability use the LTS versions: a new
-version is published every two years and there is a year to upgrade.
+采用双重维护模式，让每个Symfony用户都满意。
+想要使用最新版本和最好版本的快速推送者使用标准版本：每六个月发布一个新版本，并且有两个月的升级时间。
+想要更稳定的公司使用LTS版本：每两年发布一个新版本，有一年的升级时间。
 
-.. _`semantic versioning`: https://semver.org/
-.. _`Subscribe to Symfony Roadmap notifications`: https://symfony.com/account
-.. _`Symfony Roadmap`: https://symfony.com/roadmap#checker
-.. _`professional Symfony support`: https://sensiolabs.com/
+.. _`语义版本控制`: https://semver.org/
+.. _`订阅Symfony路线图通知`: https://symfony.com/account
+.. _`Symfony路线图`: https://symfony.com/roadmap#checker
+.. _`专业的Symfony支持`: https://sensiolabs.com/

@@ -1,7 +1,7 @@
 .. index::
    single: Tests; HTTP authentication
 
-How to Simulate HTTP Authentication in a Functional Test
+如何在功能测试中模拟HTTP身份认证
 ========================================================
 
 Authenticating requests in functional tests can slow down the entire test suite.

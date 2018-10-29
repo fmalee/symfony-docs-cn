@@ -1,7 +1,7 @@
 .. index::
     single: Translation; Locale
 
-How to Work with the User's Locale
+如何使用用户的语言环境
 ==================================
 
 The locale of the current user is stored in the request and is accessible

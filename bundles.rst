@@ -3,7 +3,7 @@
 
 .. _page-creation-bundles:
 
-Bundle系统
+Bundle
 =================
 
 .. caution::

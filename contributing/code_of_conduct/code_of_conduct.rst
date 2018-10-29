@@ -1,7 +1,7 @@
-Code of Conduct
+行为守则
 ===============
 
-Our Pledge
+我们的承诺
 ----------
 
 In the interest of fostering an open and welcoming environment, we as
@@ -11,7 +11,7 @@ size, disability, ethnic origin, gender identity and expression, level of experi
 education, socio-economic status, nationality, personal appearance,
 religion, or sexual identity and orientation.
 
-Our Standards
+我们的标准
 -------------
 
 Examples of behavior that contributes to creating a positive environment
@@ -34,7 +34,7 @@ Examples of unacceptable behavior by participants include:
 * Other conduct which could reasonably be considered inappropriate in a
   professional setting
 
-Our Responsibilities
+我们的责任
 --------------------
 
 :doc:`CoC Active Response Ensurers, or CARE</contributing/code_of_conduct/care_team>`,
@@ -48,7 +48,7 @@ that are not aligned to this Code of Conduct, or to ban temporarily or
 permanently any contributor for other behaviors that they deem inappropriate,
 threatening, offensive, or harmful.
 
-Scope
+范围
 -----
 
 This Code of Conduct applies both within project spaces and in public spaces
@@ -58,7 +58,7 @@ address, posting via an official social media account, or acting as an appointed
 representative at an online or offline event. Representation of a project may be
 further defined and clarified by CARE team members.
 
-Enforcement
+措施
 -----------
 
 Instances of abusive, harassing, or otherwise unacceptable behavior
@@ -73,13 +73,13 @@ CARE team members who do not follow or enforce the Code of Conduct in good
 faith may face temporary or permanent repercussions as determined by the
 :doc:`core team </contributing/code/core_team>`.
 
-Attribution
+归属
 -----------
 
 This Code of Conduct is adapted from the `Contributor Covenant`_, version 1.4,
 available at https://www.contributor-covenant.org/version/1/4/code-of-conduct.html
 
-Related Documents
+相关文档
 -----------------
 
 .. toctree::

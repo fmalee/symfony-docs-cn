@@ -3,7 +3,7 @@
     single: Translation; Missing Messages
     single: Translation; Unused Messages
 
-How to Find Missing or Unused Translation Messages
+如何查找丢失或未使用的翻译消息
 ==================================================
 
 When maintaining an application or bundle, you may add or remove translation

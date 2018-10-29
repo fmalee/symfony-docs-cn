@@ -1,4 +1,4 @@
-Reporting Guidelines
+报告指南
 ====================
 
 If you believe someone is violating the Code of Conduct we ask that you report
@@ -29,7 +29,7 @@ In your report please include:
 * If you believe this incident is ongoing.
 * Any other information you believe we should have.
 
-What happens after you file a report?
+提交报告后会发生什么？
 -------------------------------------
 
 You will receive a reply from the :doc:`CARE team </contributing/code_of_conduct/care_team>`
@@ -78,14 +78,14 @@ created related to the incidents.
 CARE team members are expected to inform the CARE team and the reporters
 in case of conflicts on interest and recuse themselves if this is deemed a problem.
 
-Appealing the response
+呼吁响应
 ----------------------
 
 Only permanent resolutions (such as bans) may be appealed. To appeal a decision
 of the working group, contact the :doc:`CARE team </contributing/code_of_conduct/care_team>`
 with your appeal and they will review the case.
 
-Document origin
+文件来源
 ---------------
 
 Reporting Guidelines derived from those of the `Stumptown Syndicate`_ and the

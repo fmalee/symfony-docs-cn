@@ -4,7 +4,7 @@
 Patches are the best way to provide a bug fix or to propose enhancements to
 Symfony.
 
-Step 1: 配置环境
+第1步: 配置环境
 ------------------------------
 
 安装软件
@@ -16,7 +16,7 @@ software:
 * Git;
 * PHP version 5.5.9 or above.
 
-配置 Git
+配置Git
 ~~~~~~~~~~~~~
 
 Set up your user information with your real name and a working email address:
@@ -61,7 +61,7 @@ Set up your user information with your real name and a working email address:
     Replace --global by --local if you want to set it only for the active
     repository
 
-获取 Symfony 源代码
+获取Symfony源代码
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Get the Symfony source code:
@@ -84,16 +84,16 @@ Get the Symfony source code:
       $ cd symfony
       $ git remote add upstream git://github.com/symfony/symfony.git
 
-Check that the current Tests Pass
+检查当前的测试
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Now that Symfony is installed, check that all unit tests pass for your
 environment as explained in the dedicated :doc:`document <tests>`.
 
-Step 2: Work on your Patch
+第2步: 处理补丁
 --------------------------
 
-许可
+许可证
 ~~~~~~~~~~~
 
 Before you start, you must know that all the patches you are going to submit
@@ -120,7 +120,7 @@ work:
     for the ``2.8`` branch, the patch will also be applied by the core team on
     the ``master`` branch.
 
-Create a Topic Branch
+创建主题分支
 ~~~~~~~~~~~~~~~~~~~~~
 
 Each time you want to work on a patch for a bug or on an enhancement, create a
@@ -151,7 +151,7 @@ Then create a new branch off the ``2.8`` branch to work on the bugfix:
 The above checkout commands automatically switch the code to the newly created
 branch (check the branch you are working on with ``git branch``).
 
-Use your Branch in an Existing Project
+在现有项目中使用你的分支
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If you want to test your code in an existing project that uses ``symfony/symfony``
@@ -167,7 +167,7 @@ uses, and replaces them by symbolic links to the ones in the Git repository.
 Before running the ``link`` command, be sure that the dependencies of the project you
 want to debug are installed by running ``composer install`` inside it.
 
-Work on your Patch
+处理你的补丁
 ~~~~~~~~~~~~~~~~~~
 
 Work on the code as much as you want and commit as much as you want; but keep
@@ -210,7 +210,7 @@ in mind the following:
     verb (``fixed ...``, ``added ...``, ...) to start the summary and don't
     add a period at the end.
 
-Prepare your Patch for Submission
+准备提交补丁
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 When your patch is not about a bug fix (when you add a new feature or change
@@ -223,13 +223,13 @@ an existing one for instance), it must also include the following:
   ``UPGRADE`` file(s) if the changes break backward compatibility or if you
   deprecate something that will ultimately break backward compatibility.
 
-Step 3: 提交分支
+第3步: 提交分支
 -------------------------
 
 Whenever you feel that your patch is ready for submission, follow the
 following steps.
 
-Rebase your Patch
+变基你的补丁
 ~~~~~~~~~~~~~~~~~
 
 Before submitting your patch, update your branch (needed if it takes you a
@@ -339,7 +339,7 @@ commit message).
 In addition to this "code" pull request, you must also send a pull request to
 the `documentation repository`_ to update the documentation when appropriate.
 
-修订补丁
+修订你的补丁
 ~~~~~~~~~~~~~~~~~
 
 Based on the feedback on the pull request, you might need to rework your

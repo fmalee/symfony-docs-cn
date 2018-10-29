@@ -1,4 +1,4 @@
-Experimental Features
+实验性功能
 =====================
 
 All Symfony features benefit from our :doc:`Backward Compatibility Promise

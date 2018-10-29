@@ -1,4 +1,4 @@
-Community Reviews
+社区审查
 =================
 
 Symfony is an open-source project driven by a large community. If you don't feel
@@ -6,7 +6,7 @@ ready to contribute code or patches, reviewing issues and pull requests (PRs)
 can be a great start to get involved and give back. In fact, people who "triage"
 issues are the backbone to Symfony's success!
 
-Why Reviewing Is Important
+为什么审查很重要
 --------------------------
 
 Community reviews are essential for the development of the Symfony framework,
@@ -27,7 +27,7 @@ status:
 Note that **anyone who has some basic familiarity with Symfony and PHP can
 review bug reports and pull requests**. You don't need to be an expert to help.
 
-Be Constructive
+具有建设性
 ---------------
 
 Before you begin, remember that you are looking at the result of someone else's
@@ -35,13 +35,13 @@ hard work. A good review comment thanks the contributor for their work,
 identifies what was done well, identifies what should be improved and suggests a
 next step.
 
-Create a GitHub Account
+创建GitHub帐户
 -----------------------
 
 Symfony uses GitHub_ to manage bug reports and pull requests. If you want to
 do reviews, you need to `create a GitHub account`_ and log in.
 
-The Bug Report Review Process
+错误报告审核流程
 -----------------------------
 
 A good way to get started with reviewing is to pick a bug report from the
@@ -93,7 +93,7 @@ The steps for the review are:
 
         Status: Reviewed
 
-The Pull Request Review Process
+拉取请求审核流程
 -------------------------------
 
 The process for reviewing pull requests (PRs) is similar to the one for bug

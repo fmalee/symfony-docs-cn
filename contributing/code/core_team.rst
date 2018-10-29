@@ -1,4 +1,4 @@
-Symfony 核心团队
+Symfony核心团队
 =================
 
 The **Symfony Core** team is the group of developers that determine the
@@ -13,7 +13,7 @@ This document states the rules that govern the Symfony core team. These rules
 are effective upon publication of this document and all Symfony Core members
 must adhere to said rules and protocol.
 
-核心机构
+核心组织
 -----------------
 
 Symfony Core members are divided into groups. Each member can only belong to one
@@ -22,43 +22,43 @@ all higher priority groups.
 
 The Symfony Core groups, in descending order of priority, are as follows:
 
-1. **Project Leader**
+1. **项目负责人**
 
 * Elects members in any other group;
 * Merges pull requests in all Symfony repositories.
 
-2. **Mergers Team**
+2. **合并团队**
 
 * Merge pull requests for the component or components on which they have been
   granted privileges.
 
-3. **Deciders Team**
+3. **决策团队**
 
 * Decide to merge or reject a pull request.
 
 In addition, there are other groups created to manage specific topics:
 
-**Security Team**
+**安全团队**
 
 * Manage the whole security process (triaging reported vulnerabilities, fixing
   the reported issues, coordinating the release of security fixes, etc.)
 
-**Documentation Team**
+**文档团队**
 
 * Manage the whole `symfony-docs repository`_.
 
-Active Core Members
+活跃的核心成员
 ~~~~~~~~~~~~~~~~~~~
 
 .. role:: leader
 .. role:: merger
 .. role:: decider
 
-* **Project Leader**:
+* **项目负责人**:
 
   * **Fabien Potencier** (`fabpot`_).
 
-* **Mergers Team** (``@symfony/mergers`` on GitHub):
+* **合并团队** (``@symfony/mergers`` on GitHub):
 
   * **Tobias Schultze** (`Tobion`_) can merge into the Routing_,
     OptionsResolver_ and PropertyAccess_ components;
@@ -96,17 +96,17 @@ Active Core Members
 
   * **Samuel Rozé** (`sroze`_) can merge into the Messenger_ component.
 
-* **Deciders Team** (``@symfony/deciders`` on GitHub):
+* **决策团队** (``@symfony/deciders`` on GitHub):
 
   * **Jordi Boggiano** (`seldaek`_);
   * **Lukas Kahwe Smith** (`lsmith77`_).
 
-* **Security Team** (``@symfony/security`` on GitHub):
+* **安全团队** (``@symfony/security`` on GitHub):
 
   * **Fabien Potencier** (`fabpot`_);
   * **Michael Cullum** (`michaelcullum`_).
 
-* **Documentation Team** (``@symfony/team-symfony-docs`` on GitHub):
+* **文档团队** (``@symfony/team-symfony-docs`` on GitHub):
 
   * **Fabien Potencier** (`fabpot`_);
   * **Ryan Weaver** (`weaverryan`_);
@@ -115,7 +115,7 @@ Active Core Members
   * **Jules Pietri** (`HeahDude`_);
   * **Javier Eguiluz** (`javiereguiluz`_).
 
-Former Core Members
+前核心成员
 ~~~~~~~~~~~~~~~~~~~
 
 They are no longer part of the core team, but we are very grateful for all their
@@ -125,12 +125,12 @@ Symfony contributions:
 * **Abdellatif AitBoudad** (`aitboudad`_);
 * **Romain Neutron**.
 
-Core Membership Application
+核心会员申请
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 At present, new Symfony Core membership applications are not accepted.
 
-Core Membership Revocation
+核心成员资格撤销
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 A Symfony Core membership can be revoked for any of the following reasons:
@@ -143,14 +143,14 @@ A Symfony Core membership can be revoked for any of the following reasons:
 Should new Symfony Core memberships be accepted in the future, revoked
 members must wait at least 12 months before re-applying.
 
-Code Development Rules
+代码开发规则
 ----------------------
 
 Symfony project development is based on pull requests proposed by any member
 of the Symfony community. Pull request acceptance or rejection is decided based
 on the votes cast by the Symfony Core members.
 
-Pull Request Voting Policy
+拉请求投票政策
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 * ``-1`` votes must always be justified by technical and objective reasons;
@@ -163,7 +163,7 @@ Pull Request Voting Policy
 
 * Core members are not allowed to vote on their own pull requests.
 
-Pull Request Merging Policy
+拉取请求合并策略
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 A pull request **can be merged** if:
@@ -176,7 +176,7 @@ A pull request **can be merged** if:
 * At least the component's **Merger** or two other Core members voted ``+1``
   and no Core member voted ``-1``.
 
-Pull Request Merging Process
+拉取请求合并处理
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 All code must be committed to the repository through pull requests, except for
@@ -185,12 +185,12 @@ minor changes [1]_ which can be committed directly to the repository.
 **Mergers** must always use the command-line ``gh`` tool provided by the
 **Project Leader** to merge the pull requests.
 
-Release Policy
+发布策略
 ~~~~~~~~~~~~~~
 
 The **Project Leader** is also the release manager for every Symfony version.
 
-Symfony Core Rules and Protocol Amendments
+Symfony核心规则和协议修正案
 ------------------------------------------
 
 The rules described in this document may be amended at anytime at the

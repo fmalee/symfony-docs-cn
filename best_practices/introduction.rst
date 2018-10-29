@@ -1,7 +1,7 @@
 .. index::
    single: Symfony Framework Best Practices
 
-Symfony 框架最佳实践
+Symfony框架最佳实践
 ====================================
 
 Symfony框架因具备*相当的*弹性而广为人知，进而被用于构建从小网站，到处理十亿连接的企业级程序，甚至被当作*其他*框架的底层。

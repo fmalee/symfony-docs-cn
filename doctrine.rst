@@ -1,7 +1,7 @@
 .. index::
    single: Doctrine
 
-数据库 & Doctrine ORM
+数据库 & Doctrine
 ==============================
 
 .. admonition:: Screencast

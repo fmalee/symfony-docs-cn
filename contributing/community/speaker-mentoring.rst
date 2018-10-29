@@ -1,44 +1,29 @@
-Speaker Mentoring
+发言人指导
 =================
 
-The Symfony community benefits greatly when as many people as possible
-share their knowledge and experience with others. Every different
-point of view adds to our collective understanding of how to best use
-and evolve the code, design patterns and architecture provided within
-the Symfony community. Because of this, we specifically want to hear
-from long-time contributors and new users, who often come across entirely
-different challenges with a totally fresh new look and perspective.
+当尽可能多的人与他人分享他们的知识和经验时，Symfony社区将受益匪浅。
+每个不同的观点都增加了我们对如何最好地使用和发展Symfony社区中提供的代码、设计模式和架构的集体理解。
+因此，我们特别希望听到长期贡献者和新用户的回应，他们经常会遇到完全不同的挑战，并拥有全新的看法和视角。
 
-How to get started
+如何开始
 ------------------
 
-Giving a first talk at a conference can seem quite intimidating. But
-don't worry! At one time, every speaker went through the same process.
-And so, we want to make sure that as many people as possible are empowered
-to take this path if they are motivated. We have collected a few resources
-with advice to get started. More importantly, we can connect experienced
-speakers with people who are just taking their first steps in this area:
+在会议上发表第一次谈话似乎非常令人生畏。但别担心！有一段时间，每个发言者都经历了同样的过程。
+因此，我们希望确保尽可能多的人在有动力的情况下有能力走这条路。
+我们收集了一些资源，并提供了入门建议。更重要的是，我们可以将经验丰富的演讲者与刚刚迈出这一领域的人们联系起来：
 
 .. tip::
 
-    A good first step might be to give a talk at a local user group to a
-    smaller crowd that one knows more intimately. A next step could be to
-    give a talk at conference in your first language.
+    一个良好的第一步可能是在当地用户群中向较小、更熟悉的人群发表演讲。
+    下一步可能是用你的第一语言在会议上发表演讲。
 
-The best way to find people that can review your talk idea or slides is
-the `#speaker-mentoring`_ channel on `Symfony Slack`_. There are many
-seasoned speakers with knowledge in various parts of Symfony that are
-motivated to help you get started on your path towards becoming a
-public speaker. They can even do practice runs via video chat!
-Furthermore, they can also be an ally when it comes to the day of
-giving the talk at a conference!
+找到可以评估你的谈话想法或幻灯片的人的最佳方式是 `Symfony Slack`_ 上的 `#speaker-mentoring`_ 频道。
+Symfony的各个部分都有许多经验丰富的演讲者，他们的动力是帮助你开始成为一名公众演讲者。
+他们甚至可以通过视频聊天进行演练！此外，当他们在会议上发表讲话时，他们也可以成为盟友！
 
-A great resource with advice on everything related to `public speaking`_
-is a collection of links maintained by VM (Vicky) Brasseur. It covers
-everything from finding a conference call for proposals, how to
-refine a proposal, to how to put together slide decks to practical
-tips for preparation and talk delivery.
+提供与 `公共演讲`_ 相关的一切建议的一个很好的资源，是由VM（Vicky）Brasseur维护的一系列链接。
+它涵盖了从为提案寻找一个电话会议，如何完善提案，到如何将幻灯片组合到准备和谈话交付的实用技巧等所有内容。
 
 .. _`#speaker-mentoring`: https://symfony-devs.slack.com/messages/speaker-mentoring
 .. _`Symfony Slack`: https://symfony.com/slack-invite
-.. _`public speaking`: https://github.com/vmbrasseur/Public_Speaking
+.. _`公共演讲`: https://github.com/vmbrasseur/Public_Speaking

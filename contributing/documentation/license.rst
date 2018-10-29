@@ -1,59 +1,46 @@
 .. _symfony2-documentation-license:
 
-Symfony 文档许可
+文档许可
 =============================
 
-The Symfony documentation is licensed under a Creative Commons
-Attribution-Share Alike 3.0 Unported License (`CC BY-SA 3.0`_).
+Symfony文档根据Creative Commons Attribution-Share Alike 3.0 Unported (`CC BY-SA 3.0`_)许可获得许可。
 
-**You are free:**
+**你的自由:**
 
-* to *Share* — to copy, distribute and transmit the work;
+* 可 *分享* — 复制，分发和传输作品;
 
-* to *Remix* — to adapt the work.
+* 可 *修订* — 适配作品。
 
-**Under the following conditions:**
+**在以下条件:**
 
-* *Attribution* — You must attribute the work in the manner specified by
-  the author or licensor (but not in any way that suggests that they
-  endorse you or your use of the work);
+* *归属* — 你必须以作者或许可人指定的方式对作品进行创作（但不得以任何方式表明他们认可你或你对作品的使用）;
 
-* *Share Alike* — If you alter, transform, or build upon this work, you
-  may distribute the resulting work only under the same or similar license
-  to this one.
+* *类似分享* — 如果你更改，转换或以此作品为基础，你可以仅在与此作品相同或类似的许可下分发作品。
 
-**With the understanding that:**
+**理解为:**
 
-* *Waiver* — Any of the above conditions can be waived if you get
-  permission from the copyright holder;
+* *免责* — 如果你获得版权所有者的许可，则可以免除上述任何条款;
 
-* *Public Domain* — Where the work or any of its elements is in the public
-  domain under applicable law, that status is in no way affected by the
-  license;
+* *公有领域* — 根据适用法律，如果作品或其任何要素属于公有领域，则该状态不受许可的影响;
 
-* *Other Rights* — In no way are any of the following rights affected by the
-  license:
+* *其他权利* — 许可证不受以下任何权利的影响：
 
-  * Your fair dealing or fair use rights, or other applicable copyright exceptions
-    and limitations;
+  * 你的公平交易或合理使用权利，或其他适用的版权例外和限制;
 
-  * The author's moral rights;
+  * 作者的精神权利;
 
-  * Rights other persons may have either in the work itself or in how the
-    work is used, such as publicity or privacy rights.
+  * 其他人可能在作品本身或使用方式上拥有的权利，例如宣传或隐私权。
 
-* *Notice* — For any reuse or distribution, you must make clear to others
-  the license terms of this work. The best way to do this is with a link
-  to this web page.
+* *注意* — 对于任何重用或分发，你必须向其他人说明此工作的许可条款。执行此操作的最佳方法是使用此网页的链接。
 
-This is a human-readable summary of the `Legal Code (the full license)`_.
+这是 `法典（完整许可证）`_ 的人类可读摘要。
 
-Other Symfony Licenses
+其他Symfony许可证
 ----------------------
 
-Check out the :doc:`license of the Symfony code </contributing/code/license>`
-and other `Symfony licenses and trademarks`_.
+查看 :doc:`Symfony代码许可证 </contributing/code/license>`
+和其他 `Symfony许可证和商标`_.
 
 .. _`CC BY-SA 3.0`: http://creativecommons.org/licenses/by-sa/3.0/
-.. _Legal Code (the full license): http://creativecommons.org/licenses/by-sa/3.0/legalcode
-.. _`Symfony licenses and trademarks`: https://symfony.com/license
+.. _`法典（完整许可证）`: http://creativecommons.org/licenses/by-sa/3.0/legalcode
+.. _`Symfony许可证和商标`: https://symfony.com/license

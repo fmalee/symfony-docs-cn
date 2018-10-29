@@ -1,7 +1,7 @@
 .. index::
     single: Validation; Validating raw values
 
-How to Validate Raw Values (Scalar Values and Arrays)
+如何验证原始值（标量值和数组）
 =====================================================
 
 Usually you will be validating entire objects. But sometimes, you just want

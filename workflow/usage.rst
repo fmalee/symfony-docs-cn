@@ -1,10 +1,10 @@
 .. index::
     single: Workflow; Usage
 
-How to Create and Use Workflows
+如何创建和使用工作流
 ===============================
 
-Installation
+安装
 ------------
 
 In applications using :doc:`Symfony Flex </setup/flex>`, run this command to
@@ -14,7 +14,7 @@ install the workflow feature before using it:
 
     $ composer require symfony/workflow
 
-Creating a Workflow
+创建工作流
 -------------------
 
 A workflow is a process or a lifecycle that your objects go through. Each
@@ -182,7 +182,7 @@ like this:
     Setting the ``audit_trail.enabled`` option to ``true`` makes the application
     generate detailed log messages for the workflow activity.
 
-Using a Workflow
+使用工作流
 ----------------
 
 Once the ``blog_publishing`` workflow has been created, you can now use it to
@@ -234,7 +234,7 @@ you can get the workflow by injecting the Workflow registry service::
     The :method:`Symfony\\Component\\Workflow\\Registry::all` method was
     introduced in Symfony 4.1.
 
-Using Events
+使用事件
 ------------
 
 To make your workflows more flexible, you can construct the ``Workflow``
@@ -359,7 +359,7 @@ workflow leaves a place::
 
 .. _workflow-usage-guard-events:
 
-Guard Events
+保护事件
 ~~~~~~~~~~~~
 
 There are a special kind of events called "Guard events". Their event listeners
@@ -399,7 +399,7 @@ See example to make sure no blog post without title is moved to "review"::
         }
     }
 
-Event Methods
+事件方法
 ~~~~~~~~~~~~~
 
 Each workflow event is an instance of :class:`Symfony\\Component\\Workflow\\Event\\Event`.
@@ -426,7 +426,7 @@ This class has two more methods:
 :method:`Symfony\\Component\\Workflow\\Event\\GuardEvent::setBlocked`
     Sets the blocked value.
 
-Usage in Twig
+在Twig中使用
 -------------
 
 Symfony defines several Twig functions to manage workflows and reduce the need

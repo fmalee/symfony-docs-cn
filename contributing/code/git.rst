@@ -1,41 +1,32 @@
 Git
 ===
 
-This document explains some conventions and specificities in the way we manage
-the Symfony code with Git.
+本文档解释了我们使用Git管理Symfony代码的方式的一些约定和特性。
 
-Pull Requests
+拉取请求
 -------------
 
-Whenever a pull request is merged, all the information contained in the pull
-request (including comments) is saved in the repository.
+每当合并一个拉取请求时，拉取请求中包含的所有信息（包括注释）都将保存仓库中。
 
-You can identify pull request merges as the commit message always follows
-this pattern:
+你可以识别拉取请求合并，因为提交消息始终遵循此模式：
 
 .. code-block:: text
 
     merged branch USER_NAME/BRANCH_NAME (PR #1111)
 
-The PR reference allows you to have a look at the original pull request on
-GitHub: https://github.com/symfony/symfony/pull/1111. But all the information
-you can get on GitHub is also available from the repository itself.
+PR参考允许你查看GitHub上的原始拉取请求：https：//github.com/symfony/symfony/pull/1111。
+但是你可以从仓库本身获得GitHub上可以获得的所有信息。
 
-The merge commit message contains the original message from the author of the
-changes. Often, this can help understand what the changes were about and the
-reasoning behind the changes.
+合并提交消息包含来自更改作者的原始消息。通常，这有助于了解变更的内容以及变更背后的原因。
 
-Moreover, the full discussion that might have occurred back then is also
-stored as a Git note (before March 22 2013, the discussion was part of the
-main merge commit message). To get access to these notes, add this line to
-your ``.git/config`` file:
+此外，当时可能发生的完整讨论也存储为Git备注（在2013年3月22日之前，讨论是主合并提交消息的一部分）。
+要访问这些笔记，请将此行添加到你的 ``.git/config`` 文件中：
 
 .. code-block:: ini
 
     fetch = +refs/notes/*:refs/notes/*
 
-After a fetch, getting the GitHub discussion for a commit is then a matter of
-adding ``--show-notes=github-comments`` to the ``git show`` command:
+抓取(fetch)之后，获取提交的GitHub讨论就是在 ``git show`` 命令上添加 ``--show-notes=github-comments`` 参数的问题：
 
 .. code-block:: terminal
 

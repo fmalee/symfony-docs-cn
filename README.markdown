@@ -86,6 +86,9 @@
 - `Middleware`：中间件
 - `Broker`：代理
 - `Header`：标头
+- `UpperCamelCase`：大驼峰拼写法
+- `CamelCase`：驼峰拼写法
+- `snake_case`：蛇形拼写法
 
 ## 语法问题
 
@@ -213,26 +216,26 @@
 
 ## 生成文档
 
-1. Install [pip](https://pip.pypa.io/en/stable/) as explained in the [pip installation](https://pip.pypa.io/en/stable/installing/) article;
+1. 按照[pip安装](https://pip.pypa.io/en/stable/installing/)文档中的说明安装 [pip](https://pip.pypa.io/en/stable/)；
 
-2. Install [Sphinx](http://sphinx-doc.org/) and [Sphinx Extensions for PHP and Symfony](https://github.com/fabpot/sphinx-php) (depending on your system, you may need to execute this command as root user):
+2. 安装 [Sphinx](http://sphinx-doc.org/) 和 [PHP和Symfony的Sphinx扩展](https://github.com/fabpot/sphinx-php) （根据你的系统，你可能需要以root用户身份执行此命令）：
 
 ```bash
 $ pip install sphinx~=1.3.0 git+https://github.com/fabpot/sphinx-php.git
 ```
 
-3. Run the following command to build the documentation in HTML format:
+3. 运行以下命令以HTML格式构建文档：
 
 ```bash
 $ cd _build/
 $ make html
 ```
 
-The generated documentation is available in the `_build/html` directory.
+生成的文档可在 `_build/html` 目录中找到。
 
 ### Platform.sh
 
-Pull requests are automatically built by [Platform.sh](https://platform.sh).
+[Platform.sh](https://platform.sh)会自动构建新的拉取请求。
 
 ### Docker
 

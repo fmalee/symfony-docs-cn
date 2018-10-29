@@ -1,4 +1,4 @@
-Respectful Review Comments
+尊重审查意见
 ==========================
 
 :doc:`Reviewing issues and pull requests </contributing/community/reviews>`
@@ -32,7 +32,7 @@ First of, accept that many programming decisions are opinions.
 Discuss trade offs, which you prefer, and reach a resolution quickly.
 It's not about being right or wrong, but using what works.
 
-Tone of Voice
+语气
 -------------
 
 We don't expect you to be completely formal, or to even write error-free
@@ -43,7 +43,7 @@ that, but swearing/cursing and name calling doesn't really encourage anyone to
 help you. Take a deep breath, count to 10 and try to *clearly* explain what problems
 you encounter.
 
-Inclusive Language
+包容性语言
 ------------------
 
 In an effort to be inclusive to a wide group of people, it's recommended to
@@ -56,7 +56,7 @@ Try to avoid using wording that may be considered excluding, needlessly gendered
 a particular group in society. For example, it's recommended to use words like
 "folks", "team", "everyone" instead of "guys", "ladies", "yanks", etc.
 
-Giving Positive Feedback
+给予正面反馈
 ------------------------
 
 While reviewing issues and pull requests you may run into some suggestions
@@ -120,7 +120,7 @@ If a piece of code is in fact wrong, explain why:
     * This would require adding lots of code and making lots of changes for a feature that doesn't look so important.
       That could hurt maintaining in the future.
 
-Asking for Changes
+要求变更
 ------------------
 
 Rarely something is perfect from the start, while the code itself is good.
@@ -149,7 +149,7 @@ you don't have to use "Please" all the time. But it wouldn't hurt.
 It may not seem like much, but saying "Thank you" does make others feel
 more welcome.
 
-Using Humor
+使用幽默
 -----------
 
 In short: Extreme misbehavior will not be tolerated and may even get you banned;
@@ -164,7 +164,7 @@ problem to them. Making jokes about this doesn't help with solving their
 problem and only makes them *feel stupid*. Instead try to discover what
 the problem is really about.
 
-Final Words
+最后的话
 -----------
 
 Don't feel bad if you "failed" to follow these tips. As long as your
