@@ -1,7 +1,7 @@
 .. index::
    single: Logging; Console messages
 
-How to Configure Monolog to Display Console Messages
+如何配置Monolog显示命令台信息
 ====================================================
 
 It is possible to use the console to print messages for certain

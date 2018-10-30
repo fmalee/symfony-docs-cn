@@ -1,4 +1,4 @@
-Managing Vendor Libraries with ``composer.json``
+使用 ``composer.json`` 管理依赖库
 ------------------------------------------------
 
 How Does it Work?

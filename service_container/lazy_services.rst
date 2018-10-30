@@ -1,7 +1,7 @@
 .. index::
    single: Dependency Injection; Lazy Services
 
-Lazy Services
+延迟服务
 =============
 
 .. seealso::

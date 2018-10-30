@@ -1,7 +1,7 @@
 .. index::
     single: DependencyInjection; Autowiring
 
-Defining Services Dependencies Automatically (Autowiring)
+自动定义服务依赖（自动装配）
 =========================================================
 
 Autowiring allows you to manage services in the container with minimal

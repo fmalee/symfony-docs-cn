@@ -1,8 +1,10 @@
 .. index::
     single: DependencyInjection; Parent services
 
-How to Manage Common Dependencies with Parent Services
+如何使用父服务管理公共依赖
 ======================================================
+
+  How to Manage Common Dependencies with Parent Services
 
 As you add more functionality to your application, you may well start to
 have related classes that share some of the same dependencies. For example,

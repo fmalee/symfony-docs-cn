@@ -1,7 +1,7 @@
 .. index::
     single: Routing; Redirect URLs with a trailing slash
 
-Redirect URLs with a Trailing Slash
+使用尾随斜杠重定向网址
 ===================================
 
 .. caution::

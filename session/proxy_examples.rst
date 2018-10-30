@@ -1,21 +1,17 @@
 .. index::
    single: Sessions, Session Proxy, Proxy
 
-Session Proxy Examples
+会话代理示例
 ======================
 
-The session proxy mechanism has a variety of uses and this article demonstrates
-two common uses. Rather than using the regular session handler, you can create
-a custom save handler by defining a class that extends the
-:class:`Symfony\\Component\\HttpFoundation\\Session\\Storage\\Proxy\\SessionHandlerProxy`
-class.
+会话代理机制有多种用途，本文演示了两种常见用法。
+你可以通过定义继承 :class:`Symfony\\Component\\HttpFoundation\\Session\\Storage\\Proxy\\SessionHandlerProxy`
+类的类来创建自定义保存处理器，而不是使用常规的会话处理器。
 
-Then, define the class as a :ref:`service <service-container-creating-service>`.
-If you're using the :ref:`default services.yaml configuration <service-container-services-load-example>`,
-that happens automatically.
+然后，将该类定义为 :ref:`服务 <service-container-creating-service>`。
+如果你使用的是 :ref:`默认的services.yaml配置 <service-container-services-load-example>`，则会自动执行此操作。
 
-Finally, use the ``framework.session.handler_id`` configuration option to tell
-Symfony to use your session handler instead of the default one:
+最后，使用 ``framework.session.handler_id`` 配置选项告诉Symfony使用你的会话处理器而不是默认的会话处理器：
 
 .. configuration-block::
 
@@ -54,16 +50,13 @@ Symfony to use your session handler instead of the default one:
             ),
         ));
 
-Keep reading the next sections to learn how to use the session handlers in practice
-to solve two common use cases: encrypt session information and define readonly
-guest sessions.
+继续阅读下一节，了解如何在实践中使用会话处理器来解决两个常见用例：加密会话信息和定义只读访客会话。
 
-Encryption of Session Data
+会话数据的加密
 --------------------------
 
-If you want to encrypt the session data, you can use the proxy to encrypt and
-decrypt the session as required. The following example uses the `php-encryption`_
-library, but you can adapt it to any other library that you may be using::
+如果要加密会话数据，可以根据需要使用代理加密和解密会话。
+以下示例使用 `php-encryption`_ 库，但你可以将其调整为你可能正在使用的任何其他库::
 
     // src/Session/EncryptedSessionProxy.php
     namespace App\Session;
@@ -98,12 +91,11 @@ library, but you can adapt it to any other library that you may be using::
         }
     }
 
-Readonly Guest Sessions
+只读访客会话
 -----------------------
 
-There are some applications where a session is required for guest users, but
-where there is no particular need to persist the session. In this case you
-can intercept the session before it is written::
+有些应用需要对访客用户进行会话，但是没有持久保存会话的特别需求。
+在这种情况下，你可以在写入会话之前拦截会话::
 
     // src/Session/ReadOnlySessionProxy.php
     namespace App\Session;

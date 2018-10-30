@@ -1,7 +1,7 @@
 .. index::
     single: DependencyInjection; Service definitions
 
-How to work with Service Definition Objects
+如何使用服务定义对象
 ===========================================
 
 Service definitions are the instructions describing how the container should

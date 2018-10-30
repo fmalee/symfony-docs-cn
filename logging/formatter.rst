@@ -1,4 +1,4 @@
-How to Define a Custom Logging Formatter
+如何自定义一个日志formatter
 ========================================
 
 Each logging handler uses a ``Formatter`` to format the record before logging

@@ -1,7 +1,7 @@
 .. index::
    single: Twig extensions
 
-How to Write a custom Twig Extension
+如何编写自定义Twig扩展
 ====================================
 
 If you need to create custom Twig functions, filters, tests or more, you'll need

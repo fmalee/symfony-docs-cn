@@ -1,7 +1,7 @@
 .. index::
     single: Sessions, saving locale
 
-Making the Locale "Sticky" during a User's Session
+在用户会话期间保存(Sticky)语言环境
 ==================================================
 
 Symfony stores the locale setting in the Request, which means that this setting

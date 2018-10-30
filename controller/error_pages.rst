@@ -2,7 +2,7 @@
    single: Controller; Customize error pages
    single: Error pages
 
-How to Customize Error Pages
+如何自定义错误页面
 ============================
 
 In Symfony applications, all errors are treated as exceptions, no matter if they

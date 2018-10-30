@@ -1,8 +1,10 @@
 .. index::
     single: DependencyInjection; Service Subscribers
 
-Service Subscribers & Locators
+服务订阅器 & 定位器
 ==============================
+
+    Service Subscribers & Locators
 
 .. versionadded:: 3.3
     Service subscribers and locators were introduced in Symfony 3.3.

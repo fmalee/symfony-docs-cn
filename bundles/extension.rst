@@ -2,7 +2,7 @@
    single: Configuration; Semantic
    single: Bundle; Extension configuration
 
-How to Load Service Configuration inside a Bundle
+Bundle如何在Bundle中加载服务配置
 =================================================
 
 Services created by bundles are not defined in the main ``config/services.yaml``

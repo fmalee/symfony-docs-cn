@@ -2,7 +2,7 @@
     single: DependencyInjection; Debug
     single: Service Container; Debug
 
-How to Debug the Service Container & List Services
+如何调试服务容器和列表服务
 ==================================================
 
 You can find out what services are registered with the container using the

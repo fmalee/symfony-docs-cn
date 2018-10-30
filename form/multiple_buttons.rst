@@ -1,7 +1,7 @@
 .. index::
     single: Forms; Multiple Submit Buttons
 
-How to Submit a Form with Multiple Buttons
+如何提交具有多个按钮的表单
 ==========================================
 
 When your form contains more than one submit button, you will want to check

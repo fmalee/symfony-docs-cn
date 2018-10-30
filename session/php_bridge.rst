@@ -1,7 +1,7 @@
 .. index::
    single: Sessions
 
-Bridge a legacy Application with Symfony Sessions
+使用Symfony会话桥接遗留应用程序
 =================================================
 
 If you're integrating the Symfony full-stack Framework into a legacy application

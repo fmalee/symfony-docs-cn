@@ -1,7 +1,7 @@
 .. index::
     single: Upgrading; Bundle; Major Version
 
-Upgrading a Third-Party Bundle for a Major Symfony Version
+升级Symfony主要版本的第三方Bundle
 ==========================================================
 
 Symfony 3 was released on November 2015. Although this version doesn't contain

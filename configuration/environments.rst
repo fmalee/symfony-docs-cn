@@ -1,7 +1,7 @@
 .. index::
     single: Environments
 
-How to Master and Create new Environments
+如何掌握和创建新环境
 =========================================
 
 Every application is the combination of code and a set of configuration that
@@ -16,7 +16,7 @@ should use configuration that makes development easy and friendly, while the
 .. index::
    single: Environments; Configuration files
 
-Different Environments, different Configuration Files
+不同的环境，不同的配置文件
 -----------------------------------------------------
 
 A typical Symfony application begins with three environments: ``dev``,

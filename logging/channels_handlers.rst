@@ -1,7 +1,7 @@
 .. index::
    single: Logging
 
-How to Log Messages to different Files
+如何把日志信息写入不同的文件中
 ======================================
 
 The Symfony Framework organizes log messages into channels. By default, there

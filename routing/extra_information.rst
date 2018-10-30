@@ -1,7 +1,7 @@
 .. index::
    single: Routing; Extra Information
 
-How to Pass Extra Information from a Route to a Controller
+如何将路由中的额外信息传递给控制器
 ==========================================================
 
 Parameters inside the ``defaults`` collection don't necessarily have to match

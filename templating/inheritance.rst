@@ -1,7 +1,7 @@
 .. index::
     single: Templating; Three-level inheritance pattern
 
-How to Organize Your Twig Templates Using Inheritance
+如何通过继承来组织你的Twig模板
 =====================================================
 
 One common way to use inheritance is to use a three-level approach. This

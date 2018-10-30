@@ -1,37 +1,32 @@
-How to Install or Upgrade to the Latest, Unreleased Symfony Version
+如何安装或升级到最新的未发布的Symfony版本
 ===================================================================
 
-In this article, you'll learn how to install and use new Symfony versions before
-they are released as stable versions.
+在本文中，你将学习如何在安装和使用作为稳定版本发布之前新的Symfony版本。
 
-Creating a New Project Based on an Unstable Symfony Version
+基于不稳定的Symfony版本创建新项目
 -----------------------------------------------------------
 
-Suppose that the Symfony 4.0 version hasn't been released yet and you want to create
-a new project to test its features. First, :doc:`install the Composer </setup/composer>`
-package manager. Then, open a command console, enter your project's directory and
-execute the following command:
+假设Symfony 4.0版本尚未发布，你想创建一个新项目来测试其功能。
+首先，:doc:`安装Composer </setup/composer>` 包管理器。
+然后，打开命令控制台，输入项目的目录并执行以下命令：
 
 .. code-block:: terminal
 
-    # Download the latest beta version
+    # 下载最新的测试版
     $ composer create-project symfony/skeleton my_project "4.0.*" -s beta
 
-    # Download the absolute latest commit
+    # 下载绝对最新提交
     $ composer create-project symfony/skeleton my_project "4.0.*" -s dev
 
-Once the command finishes its execution, you'll have a new Symfony project created
-in the ``my_project/`` directory.
+一旦命令完成执行，你将在 ``my_project/`` 目录中创建一个新的Symfony项目。
 
-Upgrading your Project to an Unstable Symfony Version
+将项目升级到不稳定的Symfony版本
 -----------------------------------------------------
 
-Suppose again that Symfony 4.0 hasn't been released yet and you want to upgrade
-an existing application to test that your project works with it.
+再次假设Symfony 4.0尚未发布，并且你希望升级现有应用以测试你的项目是否可以使用它。
 
-First, open the ``composer.json`` file located in the root directory of your
-project. Then, edit the value of all of the ``symfony/*`` libraries to the
-new version and change your ``minimum-stability`` to ``beta``:
+首先，打开位于项目根目录中的 ``composer.json`` 文件。
+然后，将所有 ``symfony/*`` 库的值编辑为新版本，并更改 ``minimum-stability`` 为 ``beta``：
 
 .. code-block:: diff
 
@@ -44,34 +39,30 @@ new version and change your ``minimum-stability`` to ``beta``:
     +     "minimum-stability": "beta"
     }
 
-You can also use set ``minimum-stability`` to ``dev``, or omit this line
-entirely, and opt into your stability on each package by using constraints
-like ``4.0.*@beta``.
+你也可以设置 ``minimum-stability`` 为 ``dev``。
+或者完全省略这一行，并使用像 ``4.0.*@beta`` 这样的约束决定你的每个包的稳定性。
 
-Finally, from a terminal, update your project's dependencies:
+最后，从终端更新项目的依赖项：
 
 .. code-block:: terminal
 
     $ composer update
 
-After upgrading the Symfony version, read the :ref:`Symfony Upgrading Guide <upgrade-major-symfony-deprecations>`
-to learn how you should proceed to update your application's code in case the new
-Symfony version has deprecated some of its features.
+升级Symfony版本后，请阅读 :ref:`Symfony升级指南 <upgrade-major-symfony-deprecations>`，
+了解如何在新Symfony版本升级你的代码，因为有些功能可能会在新版本中弃用。
 
 .. tip::
 
-    If you use Git to manage the project's code, it's a good practice to create
-    a new branch to test the new Symfony version. This solution avoids introducing
-    any issue in your application and allows you to test the new version with
-    total confidence:
+    如果你使用Git来管理项目的代码，那么创建一个新分支来测试新的Symfony版本是一个很好的做法。
+    此解决方案避免在你的应用中引入任何问题，并让你充满自信地测试新版本：
 
     .. code-block:: terminal
 
         $ cd projects/my_project/
         $ git checkout -b testing_new_symfony
-        # ... update composer.json configuration
+        # ... 更新 composer.json 配置
         $ composer update symfony/symfony
 
-        # ... after testing the new Symfony version
+        # ... 测试完Symfony的新版本之后
         $ git checkout master
         $ git branch -D testing_new_symfony

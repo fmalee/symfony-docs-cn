@@ -1,21 +1,20 @@
 .. index::
    single: Serializer; Custom normalizers
 
-How to Create your Custom Normalizer
+如何创建自定义规范化器
 ====================================
 
-The :doc:`Serializer component </components/serializer>` uses
-normalizers to transform any data into an array. The component provides several
-:doc:`built-in normalizers </serializer/normalizers>` but you may need to create
-your own normalizer to transform an unsupported data structure.
+:doc:`Serializer组件 </components/serializer>` 使用规范化器将任何数据变换成一个数组。
+该组件提供了几个 :doc:`内置规范化器 </serializer/normalizers>`，
+但你可能需要创建自己的规范化器来转换不支持的数据结构。
 
-Creating a New Normalizer
+创建新的规范化器
 -------------------------
 
-Imagine you want add, modify, or remove some properties during the serialization
-process. For that you'll have to create your own normalizer. But it's usually
-preferable to let Symfony normalize the object, then hook into the normalization
-to customize the normalized data. To do that, leverage the ``ObjectNormalizer``::
+想象一下，你希望在序列化过程中添加、修改或删除某些属性。
+为此，你必须创建自己的规范化器。
+但通常最好让Symfony来规范化对象，然后挂钩到规范化以定制规范化数据。
+为此，利用 ``ObjectNormalizer``::
 
     namespace App\Serializer;
 
@@ -39,7 +38,7 @@ to customize the normalized data. To do that, leverage the ``ObjectNormalizer``:
         {
             $data = $this->normalizer->normalize($topic, $format, $context);
 
-            // Here, add, edit, or delete some data:
+            // 在这里添加、编辑、删除数据:
             $data['href']['self'] = $this->router->generate('topic_show', array(
                 'id' => $topic->getId(),
             ), UrlGeneratorInterface::ABSOLUTE_URL);
@@ -53,10 +52,9 @@ to customize the normalized data. To do that, leverage the ``ObjectNormalizer``:
         }
     }
 
-Registering it in your Application
+在应用中注册
 ----------------------------------
 
-Before using this normalizer in a Symfony application it must be registered as
-a service and :doc:`tagged </service_container/tags>` with ``serializer.normalizer``.
-If you're using the :ref:`default services.yaml configuration <service-container-services-load-example>`,
-this is done automatically!
+在Symfony应用中使用此规范化器之前，必须将其注册为服务并 :doc:`标记 </service_container/tags>`
+为 ``serializer.normalizer``。
+如果你使用 :ref:`默认的services.yaml配置 <service-container-services-load-example>`，则注册会自动完成！

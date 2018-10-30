@@ -1,7 +1,7 @@
 .. index::
     single: Templating; Embedding action
 
-How to Embed Controllers in a Template
+如何在模板中嵌入控制器
 ======================================
 
 .. note::

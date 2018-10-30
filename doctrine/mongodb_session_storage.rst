@@ -1,4 +1,4 @@
-How to Use MongoDbSessionHandler to Store Sessions in a MongoDB Database
+如何使用MongoDbSessionHandler在MongoDB数据库中存储会话
 ========================================================================
 
 The default Symfony session storage writes the session information to files.

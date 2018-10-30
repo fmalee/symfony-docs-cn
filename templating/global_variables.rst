@@ -1,7 +1,7 @@
 .. index::
    single: Templating; Global variables
 
-How to Inject Variables into all Templates (i.e. global Variables)
+如何将变量注入所有模板（即全局变量）
 ==================================================================
 
 Sometimes you want a variable to be accessible to all the templates you use.

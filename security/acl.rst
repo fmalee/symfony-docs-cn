@@ -1,7 +1,7 @@
 .. index::
    single: Security; Access Control Lists (ACLs)
 
-How to Use Access Control Lists (ACLs)
+如何使用访问控制列表（ACL）
 ======================================
 
 .. caution::

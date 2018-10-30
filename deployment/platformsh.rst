@@ -3,7 +3,7 @@
 .. index::
    single: Deployment; Deploying to Platform.sh
 
-Deploying to Platform.sh
+部署到Platform.sh
 ========================
 
 To deploy to Platform.sh, see their official documentation:

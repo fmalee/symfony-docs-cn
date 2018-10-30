@@ -1,7 +1,7 @@
 .. index::
     single: Security; Impersonating User
 
-How to Impersonate a User
+如何冒充用户
 =========================
 
 Sometimes, it's useful to be able to switch from one user to another without

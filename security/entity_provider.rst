@@ -2,7 +2,7 @@
    single: Security; User provider
    single: Security; Entity provider
 
-How to Load Security Users from the Database (the Entity Provider)
+如何从数据库（实体提供器）加载安全用户
 ==================================================================
 
 Each User class in your app will usually need its own :doc:`user provider </security/user_provider>`.

@@ -2,7 +2,7 @@
     single: DependencyInjection; Request
     single: Service Container; Request
 
-How to Retrieve the Request from the Service Container
+如何从服务容器中检索请求
 ======================================================
 
 Whenever you need to access the current request in a service, you can either

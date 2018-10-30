@@ -1,7 +1,7 @@
 .. index::
     single: Forms; Validation groups based on submitted data
 
-How to Choose Validation Groups Based on the Submitted Data
+如何根据提交的数据选择验证组
 ===========================================================
 
 If you need some advanced logic to determine the validation groups (e.g.

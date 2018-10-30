@@ -1,7 +1,7 @@
 .. index::
     single: Environments; External parameters
 
-How to Set external Parameters in the Service Container
+如何在服务容器中设置外部参数
 =======================================================
 
 In :doc:`/configuration`, you learned how to manage your application
@@ -12,7 +12,7 @@ do this.
 
 .. _config-env-vars:
 
-Environment Variables
+环境变量
 ---------------------
 
 You can reference environment variables by using special parameters named after
@@ -101,7 +101,7 @@ will be used whenever the corresponding environment variable is *not* found:
 
 .. _configuration-env-var-in-prod:
 
-Configuring Environment Variables in Production
+在生产中配置环境变量
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 During development, you'll use the ``.env`` file to configure your environment
@@ -134,7 +134,7 @@ the following:
     :doc:`Symfony profiler </profiler>`. In practice this shouldn't be a
     problem because the web profiler must **never** be enabled in production.
 
-Environment Variable Processors
+环境变量处理器
 -------------------------------
 
 .. versionadded:: 3.4
@@ -507,7 +507,7 @@ It is also possible to combine any number of processors:
         # 4. JSON-decodes the content of the file and returns it
         auth: '%env(json:file:resolve:AUTH_FILE)%'
 
-Custom Environment Variable Processors
+自定义环境变量处理器
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 It's also possible to add your own processors for environment variables. First,
@@ -539,13 +539,13 @@ tag. If you're using the
 :ref:`default services.yaml configuration <service-container-services-load-example>`,
 this is already done for you, thanks to :ref:`autoconfiguration <services-autoconfigure>`.
 
-Constants
+常量
 ---------
 
 The container also has support for setting PHP constants as parameters.
 See :ref:`component-di-parameters-constants` for more details.
 
-Miscellaneous Configuration
+其他配置
 ---------------------------
 
 You can mix whatever configuration format you like (YAML, XML and PHP) in

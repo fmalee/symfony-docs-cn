@@ -1,7 +1,7 @@
 .. index::
     single: Console; Commands as Services
 
-How to Define Commands as Services
+如何将命令定义为服务
 ==================================
 
 If you're using the :ref:`default services.yaml configuration <service-container-services-load-example>`,

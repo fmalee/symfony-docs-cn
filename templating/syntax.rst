@@ -4,7 +4,7 @@
     single: Templating; Syntax Check
     single: Twig; Syntax Check
 
-How to Check the Syntax of Your Twig Templates
+如何检查Twig模板的语法
 ==============================================
 
 You can check for syntax errors in Twig templates using the ``lint:twig``

@@ -1,7 +1,7 @@
 .. index::
    single: Console; Generating URLs
 
-How to Generate URLs from the Console
+如何从控制台生成URL
 =====================================
 
 Unfortunately, the command line context does not know about your VirtualHost
@@ -85,7 +85,7 @@ router service and override its settings::
         public function __construct(RouterInterface $router)
         {
             parent::__construct();
-        
+
             $this->router = $router;
         }
 

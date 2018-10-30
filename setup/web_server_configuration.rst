@@ -1,7 +1,7 @@
 .. index::
     single: Web Server
 
-Configuring a Web Server
+配置Web服务器
 ========================
 
 The preferred way to develop your Symfony application is to use

@@ -1,7 +1,7 @@
 .. index::
     single: DependencyInjection; Method Calls
 
-Service Method Calls and Setter Injection
+服务方法调用和Setter注入
 =========================================
 
 .. tip::

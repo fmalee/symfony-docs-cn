@@ -1,7 +1,7 @@
 .. index::
     single: Security; Custom Authentication
 
-Custom Authentication System with Guard (API Token Example)
+带安保的自定义身份认证系统（API令牌示例）
 ===========================================================
 
 Whether you need to build a traditional login form, an API token authentication system

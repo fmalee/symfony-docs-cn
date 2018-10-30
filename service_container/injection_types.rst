@@ -1,7 +1,7 @@
 .. index::
    single: DependencyInjection; Injection types
 
-Types of Injection
+注射类型
 ==================
 
 Making a class's dependencies explicit and requiring that they be injected

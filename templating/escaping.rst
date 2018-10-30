@@ -1,7 +1,7 @@
 .. index::
     single: Templating; Output escaping
 
-How to Escape Output in Templates
+如何转义模板中的输出
 =================================
 
 When generating HTML from a template, there is always a risk that a template

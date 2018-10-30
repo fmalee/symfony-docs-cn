@@ -1,11 +1,11 @@
 .. index::
    single: Sessions, sessions directory
 
-Configuring the Directory where Session Files are Saved
+配置保存会话文件的目录
 =======================================================
 
-By default, Symfony stores session metadata on the filesystem. If you want to control
-this path, update the ``framework.session.save_path`` configuration key:
+默认情况下，Symfony将会话元数据存储在文件系统上。
+如果要控制该路径，请更新 ``framework.session.save_path`` 配置键：
 
 .. configuration-block::
 
@@ -44,11 +44,9 @@ this path, update the ``framework.session.save_path`` configuration key:
             ),
         ));
 
-Storing Sessions Elsewhere (e.g. database)
+在其他地方存储会话（例如数据库）
 ------------------------------------------
 
-You can store your session data anywhere by using the ``handler_id`` option.
-See :doc:`/components/http_foundation/session_configuration` for a discussion of
-session save handlers. There are also articles about storing sessions in a
-:doc:`relational database </doctrine/pdo_session_storage>`
-or a :doc:`NoSQL database </doctrine/mongodb_session_storage>`.
+你以使用该 ``handler_id`` 选项将会话数据存储在任何位置。
+有关会话保存处理器的讨论，请参阅 :doc:`/components/http_foundation/session_configuration`。
+还有关于在 :doc:`关系型数据库 </doctrine/pdo_session_storage>` 或 :doc:`NoSQL数据库 </doctrine/mongodb_session_storage>` 中存储会话的文章。

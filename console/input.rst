@@ -1,11 +1,11 @@
-Console Input (Arguments & Options)
+控制台输入（参数和选项）
 ===================================
 
 The most interesting part of the commands are the arguments and options that
 you can make available. These arguments and options allow you to pass dynamic
 information from the terminal to the command.
 
-Using Command Arguments
+使用命令参数
 -----------------------
 
 Arguments are the strings - separated by spaces - that
@@ -108,7 +108,7 @@ You can combine ``IS_ARRAY`` with ``REQUIRED`` and ``OPTIONAL`` like this::
             'Who do you want to greet (separate multiple names with a space)?'
         );
 
-Using Command Options
+使用命令选项
 ---------------------
 
 Unlike arguments, options are not ordered (meaning you can specify them in any

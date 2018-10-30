@@ -1,7 +1,7 @@
 .. index::
    single: Form; The "inherit_data" option
 
-How to Reduce Code Duplication with "inherit_data"
+如何使用“inherit_data”减少代码重复
 ==================================================
 
 The ``inherit_data`` form field option can be very useful when you have some

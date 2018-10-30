@@ -1,7 +1,7 @@
 .. index::
     single: Session; Database Storage
 
-How to Use PdoSessionHandler to Store Sessions in the Database
+如何使用PdoSessionHandler在数据库中存储会话
 ==============================================================
 
 The default Symfony session storage writes the session information to files.

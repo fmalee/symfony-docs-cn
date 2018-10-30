@@ -1,7 +1,7 @@
 .. index::
     single: Templating; app Variable
 
-How to Access the User, Request, Session & more in Twig via the ``app`` Variable
+如何通过 ``app`` 变量访问Twig中的用户，请求，会话等
 ================================================================================
 
 During each request, Symfony will set a global template variable ``app``

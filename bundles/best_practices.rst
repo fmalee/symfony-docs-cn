@@ -1,7 +1,7 @@
 .. index::
    single: Bundle; Best practices
 
-Best Practices for Reusable Bundles
+可重用Bundle的最佳实践
 ===================================
 
 This article is all about how to structure your **reusable bundles** so that

@@ -3,7 +3,7 @@
 
 .. _http-cache-invalidation:
 
-Cache Invalidation
+缓存失效
 ~~~~~~~~~~~~~~~~~~
 
     "There are only two hard things in Computer Science: cache invalidation

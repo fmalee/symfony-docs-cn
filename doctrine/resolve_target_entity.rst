@@ -2,7 +2,7 @@
    single: Doctrine; Resolving target entities
    single: Doctrine; Define relationships with abstract classes and interfaces
 
-How to Define Relationships with Abstract Classes and Interfaces
+如何定义与抽象类和接口的关系
 ================================================================
 
 One of the goals of bundles is to create discreet bundles of functionality

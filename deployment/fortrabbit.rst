@@ -3,7 +3,7 @@
 .. index::
    single: Deployment; Deploying to fortrabbit.com
 
-Deploying to fortrabbit
+部署到fortrabbit
 =======================
 
 For details on deploying to fortrabbit, see their official documentation:

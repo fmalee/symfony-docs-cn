@@ -1,7 +1,7 @@
 .. index::
     single: Cache; Varnish
 
-How to Use Varnish to Speed up my Website
+如何使用Varnish加速网站
 =========================================
 
 Because Symfony's cache uses the standard HTTP cache headers, the

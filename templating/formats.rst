@@ -1,7 +1,7 @@
 .. index::
     single: Templating; Formats
 
-How to Work with Different Output Formats in Templates
+如何在模板中使用不同的输出格式
 ======================================================
 
 Templates are a generic way to render content in *any* format. While in

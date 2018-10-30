@@ -3,60 +3,47 @@
 使用Flex来管理Symfony应用
 =================================================
 
-`Symfony Flex`_ is the new way to install and manage Symfony applications. Flex
-is not a new Symfony version, but a tool that replaces and improves the
-`Symfony Installer`_ and the `Symfony Standard Edition`_.
+`Symfony Flex`_ 是安装和管理Symfony应用的新方法。
+Flex不是一个新的Symfony版本，而是一个替换和改进 `Symfony安装器`_ 和 `Symfony标准版`_ 的工具。
 
-Symfony Flex **automates the most common tasks of Symfony applications**, like
-installing and removing bundles and other Composer dependencies. Symfony
-Flex works for Symfony 3.3 and higher. Starting from Symfony 4.0, Flex
-should be used by default, but it is still optional.
+Symfony Flex **可自动执行Symfony应用的最常见任务**，例如安装和删除Bundel以及其他Composer依赖项。
+Symfony Flex适用于Symfony 3.3及更高版本。从Symfony 4.0开始，默认情况下应该使用Flex，但它仍然是可选的。
 
 Flex如何工作
 ------------------
 
-Symfony Flex is a Composer plugin that modifies the behavior of the
-``require``, ``update``, and ``remove`` commands. When installing or removing
-dependencies in a Flex-enabled application, Symfony can perform tasks before
-and after the execution of Composer tasks.
+Symfony的Flex是一个Composer插件，修改 ``require``、``update`` 以及 ``remove`` 命令的行为。
+在启用Flex的应用中安装或删除依赖时，Symfony可以在执行Composer任务之前和之后处理任务。
 
-Consider the following example:
+请思考以下示例：
 
 .. code-block:: terminal
 
     $ cd my-project/
     $ composer require mailer
 
-If you execute that command in a Symfony application which doesn't use Flex,
-you'll see a Composer error explaining that ``mailer`` is not a valid package
-name. However, if the application has Symfony Flex installed, that command ends
-up installing and enabling the SwiftmailerBundle, which is the best way to
-integrate Swiftmailer, the official mailer for Symfony applications.
+如果你在不使用Flex的Symfony应用中执行该命令，你将会看到一个Composer错误，说明  ``mailer`` 不是有效的软件包名称。
+但是，如果应用安装了Symfony Flex，那么该命令最终会安装并启用SwiftmailerBundle，
+这是集成Swiftmailer（Symfony应用的官方邮件程序）的最佳方式。
 
-When Symfony Flex is installed in the application and you execute ``composer
-require``, the application makes a request to the Symfony Flex server before
-trying to install the package with Composer.
+当应用中已安装Symfony Flex并执行时 ``composer require`` 时，
+应用会在尝试使用Composer安装软件包之前向Symfony Flex服务器发出请求。
 
-* If there's no information about that package, the Flex server returns nothing and
-  the package installation follows the usual procedure based on Composer;
+* 如果没有关于该软件包的信息，则Flex服务器不返回任何内容，而软件包安装遵循基于Composer的常规过程;
 
-* If there's special information about that package, Flex returns it in a file
-  called a "recipe" and the application uses it to decide which package to
-  install and which automated tasks to run after the installation.
+* 如果有关于该软件包的指定信息，Flex会将其返回到名为“recipe”的文件中，
+  并且应用使用它来确定要安装的软件包以及安装后要运行的自动化任务。
 
-In the above example, Symfony Flex asks about the ``mailer`` package and the
-Symfony Flex server detects that ``mailer`` is in fact an alias for
-SwiftmailerBundle and returns the "recipe" for it.
+在上面的示例中，Symfony Flex查询 ``mailer`` 包，Symfony Flex服务器检测到 ``mailer``
+实际上是SwiftmailerBundle的别名，并返回关于它的“指令”。
 
-Flex keeps tracks of the recipes it installed in a ``symfony.lock`` file, which
-must be committed to your code repository.
+Flex会将其安装的指令记录保存在 ``symfony.lock`` 文件中，该文件必须提交到你的代码仓库。
 
 Flex指令
 ~~~~~~~~~~~~~~~~~~~~
 
-Recipes are defined in a ``manifest.json`` file and can contain any number of
-other files and directories. For example, this is the ``manifest.json`` for
-SwiftmailerBundle:
+指令在 ``manifest.json`` 文件中定义，可以包含任意数量的其他文件和目录。
+例如，这是SwiftmailerBundle的 ``manifest.json`` ：
 
 .. code-block:: javascript
 
@@ -73,41 +60,30 @@ SwiftmailerBundle:
         "aliases": ["mailer", "mail"]
     }
 
-The ``aliases`` option allows Flex to install packages using short and easy to
-remember names (``composer require mailer`` vs
-``composer require symfony/swiftmailer-bundle``). The ``bundles`` option tells
-Flex in which environments this bundle should be enabled automatically (``all``
-in this case). The ``env`` option makes Flex to add new environment variables to
-the application. Finally, the ``copy-from-recipe`` option allows the recipe to
-copy files and directories into your application.
+``aliases`` 选项允许Flex安装软件包时使用简短易记的名称
+（``composer require mailer`` vs ``composer require symfony/swiftmailer-bundle``）。
+``bundles`` 选项告诉Flex应该在哪些环境中自动启用此Bundle（在本例中是 ``all``）。
+``env`` 选项使Flex可以向应用添加新的环境变量。
+最后，``copy-from-recipe`` 选项允许指令将文件和目录复制到你的应用中。
 
-The instructions defined in this ``manifest.json`` file are also used by
-Symfony Flex when uninstalling dependencies (e.g. ``composer remove mailer``)
-to undo all changes. This means that Flex can remove the SwiftmailerBundle from
-the application, delete the ``MAILER_URL`` environment variable and any other
-file and directory created by this recipe.
+Symfony Flex在卸载依赖（例如 ``composer remove mailer``）时也会依据 ``manifest.json`` 中定义的指令来撤消所有更改。
+这意味着Flex可以从应用中移除SwiftmailerBundle，删除 ``MAILER_URL`` 环境变量以及该指令创建的任何其他文件和目录。
 
-Symfony Flex recipes are contributed by the community and they are stored in
-two public repositories:
+Symfony Flex指令由社区提供，它们存储在两个公共仓库中：
 
-* `Main recipe repository`_, is a curated list of recipes for high quality and
-  maintained packages. Symfony Flex only looks in this repository by default.
+* `主指令仓库`_，是高质量和正维护的软件包的指令的精选列表。默认情况下，Symfony Flex仅在此仓库中查找。
 
-* `Contrib recipe repository`_, contains all the recipes created by the
-  community. All of them are guaranteed to work, but their associated packages
-  could be unmaintained. Symfony Flex will ask your permission before installing
-  any of these recipes.
+* `Contrib指令仓库`_，包含社区创建的所有指令。所有这些都保证可以工作，但是它们相关的包可能没有再维护。
+  在安装任何这些指令之前，Symfony Flex会征得你的同意。
 
-Read the `Symfony Recipes documentation`_ to learn everything about how to
-create recipes for your own packages.
+阅读 `Symfony指令文档`_，了解有关如何为自己的软件包创建配方的所有信息。
 
 在新应用中使用Flex
 --------------------------------------
 
-Symfony has published a new "skeleton" project, which is a minimal Symfony
-project recommended to create new applications. This "skeleton" already
-includes Symfony Flex as a dependency. This means you can create a new Flex-enabled
-Symfony application by executing the following command:
+Symfony发布了一个新的“骨架”项目，这是一个推荐用于创建新应用的最小Symfony项目。
+这个“骨架”已经包含Symfony Flex作为依赖项。
+这意味着你可以通过执行以下命令来创建新的启用Flex的Symfony应用：
 
 .. code-block:: terminal
 
@@ -115,21 +91,17 @@ Symfony application by executing the following command:
 
 .. note::
 
-    The use of the Symfony Installer to create new applications is no longer
-    recommended since Symfony 3.3. Use the Composer ``create-project`` command
-    instead.
+    从Symfony 3.3开始，不再推荐使用Symfony安装器来创建新的应用。请改用Composer的 ``create-project`` 命令。
 
 .. _upgrade-to-flex:
 
-Upgrading Existing Applications to Flex
+将现有应用升级到Flex
 ---------------------------------------
 
-Using Symfony Flex is optional, even in Symfony 4, where Flex is used by
-default. However, Flex is so convenient and improves your productivity so much
-that it's strongly recommended to upgrade your existing applications to it.
+使用Symfony Flex是可选的，即使在Symfony4中默认使用Flex。
+但是，Flex非常方便，可以提高你的工作效率，因此强烈建议你升级现有应用。
 
-The only caveat is that Symfony Flex requires that applications use the
-following directory structure, which is the same used by default in Symfony 4:
+唯一需要注意的是，Symfony Flex要求应用使用以下目录结构，该结构在Symfony 4中默认使用：
 
 .. code-block:: text
 
@@ -153,28 +125,25 @@ following directory structure, which is the same used by default in Symfony 4:
     ├── var/
     └── vendor/
 
-This means that installing the ``symfony/flex`` dependency in your application
-is not enough. You must also upgrade the directory structure to the one shown
-above. There's no automatic tool to make this upgrade, so you must follow these
-manual steps:
+这意味着在应用中安装 ``symfony/flex`` 依赖是不够的。
+你还必须将目录结构升级到上面显示的目录结构。没有自动工具来完成此升级，因此你必须遵循以下手动步骤：
 
-#. Install Flex as a dependency of your project:
+#. 安装Flex作为项目的一个依赖：
 
    .. code-block:: terminal
 
        $ composer require symfony/flex
 
-#. If the project's ``composer.json`` file contains ``symfony/symfony`` dependency,
-   it still depends on the Symfony Standard edition, which is no longer available
-   in Symfony 4. First, remove this dependency:
+#. 如果项目的 ``composer.json`` 文件包含 ``symfony/symfony`` 依赖
+   （仍然依赖于Symfony标准版，但Symfony 4中不再使用）。
+   首先，删除该依赖项：
 
    .. code-block:: terminal
 
        $ composer remove symfony/symfony
 
-   Now add the ``symfony/symfony`` package to the ``conflict`` section of the project's
-   ``composer.json`` file as `shown in this example of the skeleton-project`_ so that
-   it will not be installed again:
+   现在将 ``symfony/symfony`` 软件包添加到 ``composer.json`` 文件的 ``conflict`` 部分中
+   （如 `“骨架”项目的示例所示`_），以便它不会再次安装：
 
    .. code-block:: diff
 
@@ -187,10 +156,8 @@ manual steps:
            }
        }
 
-   Now you must add in ``composer.json`` all the Symfony dependencies required
-   by your project. A quick way to do that is to add all the components that
-   were included in the previous ``symfony/symfony`` dependency and later you
-   can remove anything you don't really need:
+   现在，你必须在 ``composer.json`` 中添加项目所需的所有Symfony依赖项。
+   一种快速的方法是添加先前 ``symfony/symfony`` 依赖中包含的所有组件，稍后你可以删除任何你不需要的组件：
 
    .. code-block:: terminal
 
@@ -198,85 +165,67 @@ manual steps:
          logger mailer form security translation validator
        $ composer require --dev dotenv maker-bundle orm-fixtures profiler
 
-#. If the project's ``composer.json`` file doesn't contain the ``symfony/symfony``
-   dependency, it already defines its dependencies explicitly, as required by
-   Flex. Reinstall all dependencies to force Flex to generate the
-   configuration files in ``config/``, which is the most tedious part of the upgrade
-   process:
+#. 如果项目的 ``composer.json`` 文件不包含 ``symfony/symfony`` 依赖，则它已根据Flex的要求显式定义其依赖。
+   重新安装所有依赖以强制让Flex在 ``config/`` 中生成配置文件，这是升级过程中最乏味的部分：
 
    .. code-block:: terminal
 
        $ rm -fr vendor/*
        $ composer install
 
-#. No matter which of the previous steps you followed. At this point, you'll have
-   lots of new config files in ``config/``. They contain the default config
-   defined by Symfony, so you must check your original files in ``app/config/``
-   and make the needed changes in the new files. Flex config doesn't use suffixes
-   in config files, so the old ``app/config/config_dev.yml`` goes to
-   ``config/packages/dev/*.yaml``, etc.
+#. 无论你遵循以下哪个步骤。此时，你将在 ``config/`` 中拥有大量新的配置文件。
+   它们包含Symfony定义的默认配置，因此你必须检查在  ``app/config/`` 中的原始文件并在新文件中进行必要的更改。
+   Flex配置不会在配置文件中使用后缀，所以旧的 ``app/config/config_dev.yml`` 会变成 ``config/packages/dev/*.yaml`` 等等。
 
-#. The most important config file is ``app/config/services.yml``, which now is
-   located at ``config/services.yaml``. Copy the contents of the
-   `default services.yaml file`_ and then add your own service configuration.
-   Later you can revisit this file because thanks to Symfony's
-   :doc:`autowiring feature </service_container/3.3-di-changes>` you can remove
-   most of the service configuration.
+#. 最重要的配置文件是 ``app/config/services.yml``，现在位于 ``config/services.yaml``。
+   复制 `默认services.yaml文件`_ 的内容， 然后添加自己的服务配置。
+   稍后你可以重新访问此文件，因为借助Symfony的 :doc:`自动装配 </service_container/3.3-di-changes>` 功能，你可以删除大多数服务配置。
 
    .. note::
 
-       Make sure that your previous configuration files don't have ``imports``
-       declarations pointing to resources already loaded by ``Kernel::configureContainer()``
-       or ``Kernel::configureRoutes()`` methods.
+       确保先前的配置文件没有 ``imports`` 声明指向通过``Kernel::configureContainer()``
+       或 ``Kernel::configureRoutes()`` 加载的资源。
 
-#. Move the rest of the ``app/`` contents as follows (and after that, remove the
-   ``app/`` directory):
+#. 如下所示移动其余的 ``app/`` 内容（然后删除 ``app/`` 目录）：
 
    * ``app/Resources/views/`` -> ``templates/``
    * ``app/Resources/translations/`` -> ``translations/``
    * ``app/Resources/<BundleName>/views/`` -> ``templates/bundles/<BundleName>/``
-   * rest of ``app/Resources/`` files -> ``src/Resources/``
+   * ``app/Resources/`` 其余文件 -> ``src/Resources/``
 
-#. Move the original PHP source code from ``src/AppBundle/*``, except bundle
-   specific files (like ``AppBundle.php`` and ``DependencyInjection/``), to
-   ``src/``. Remove ``src/AppBundle/``.
+#. 将原始PHP源代码从 ``src/AppBundle/*`` 移动到 ``src/``，
+   但bundle的特定文件（如 ``AppBundle.php`` 和 ``DependencyInjection/``） 除外。
+   删除 ``src/AppBundle/``。
 
-   In addition to moving the files, update the ``autoload`` and ``autoload-dev``
-   values of the ``composer.json`` file as `shown in this example`_ to use
-   ``App\`` and ``App\Tests\`` as the application namespaces (advanced IDEs can
-   do this automatically).
+   除了移动文件之外，还要更新如 `本示例所示`_ 的 ``composer.json`` 的 ``autoload`` 和 ``autoload-dev`` 的值，
+   以便使用 ``App\`` 和 ``App\Tests\`` 作为应用的命名名空间（高级IDE可以自动执行此操作）。
 
-   If you used multiple bundles to organize your code, you must reorganize your
-   code into ``src/``. For example, if you had ``src/UserBundle/Controller/DefaultController.php``
-   and ``src/ProductBundle/Controller/DefaultController.php``, you could move
-   them to ``src/Controller/UserController.php`` and ``src/Controller/ProductController.php``.
+   如果你使用多个Bundle来组织代码，则必须将代码重新组织到 ``src/``。
+   例如，如果你有 ``src/UserBundle/Controller/DefaultController.php``
+   和 ``src/ProductBundle/Controller/DefaultController.php``，你可以将它们移动为 ``src/Controller/UserController.php`` 和 ``src/Controller/ProductController.php``。
 
-#. Move the public assets, such as images or compiled CSS/JS files, from
-   ``src/AppBundle/Resources/public/`` to ``public/`` (e.g. ``public/images/``).
+#. 将公共资源（如图像或已编译的CSS/JS文件）从 ``src/AppBundle/Resources/public/`` 移动到 ``public/``
+   （例如 ``public/images/``）。
 
-#. Move the source of the assets (e.g. the SCSS files) to ``assets/`` and use
-   :doc:`Webpack Encore </frontend>` to manage and compile them.
+#. 将那些资源的源（例如SCSS文件）移动到 ``assets/`` 并使用 :doc:`Webpack Encore </frontend>` 来管理和编译它们。
 
-#. Create the new ``public/index.php`` front controller
-   `copying Symfony's index.php source`_ and, if you made any customization in
-   your ``web/app.php`` and ``web/app_dev.php`` files, copy those changes into
-   the new file. You can now remove the old ``web/`` dir.
+#. 创建新的 ``public/index.php`` 前端控制器（`复制Symfony的index.php源代码`_）。
+   如果在 ``web/app.php`` 和 ``web/app_dev.php`` 文件中进行了任何自定义，则将这些更改复制到新文件中。
+   你现在可以删除 ``web/`` 旧目录了。
 
-#. Update the ``bin/console`` script `copying Symfony's bin/console source`_
-   and changing anything according to your original console script.
+#. 更新 ``bin/console`` 脚本（`复制Symfony的bin/console源代码`_）并根据原始控制台脚本来更改对应内容。
 
-#. Remove the ``bin/symfony_requirements`` script and if you need a replacement
-   for it, use the new `Symfony Requirements Checker`_.
+#. 删除 ``bin/symfony_requirements`` 脚本，如果需要替代功能，请使用新的 `Symfony Requirements Checker`_。
 
 .. _`Symfony Flex`: https://github.com/symfony/flex
-.. _`Symfony Installer`: https://github.com/symfony/symfony-installer
-.. _`Symfony Standard Edition`: https://github.com/symfony/symfony-standard
-.. _`Main recipe repository`: https://github.com/symfony/recipes
-.. _`Contrib recipe repository`: https://github.com/symfony/recipes-contrib
-.. _`Symfony Recipes documentation`: https://github.com/symfony/recipes/blob/master/README.rst
-.. _`default services.yaml file`: https://github.com/symfony/recipes/blob/master/symfony/framework-bundle/3.3/config/services.yaml
-.. _`shown in this example`: https://github.com/symfony/skeleton/blob/8e33fe617629f283a12bbe0a6578bd6e6af417af/composer.json#L24-L33
-.. _`shown in this example of the skeleton-project`: https://github.com/symfony/skeleton/blob/8e33fe617629f283a12bbe0a6578bd6e6af417af/composer.json#L44-L46
-.. _`copying Symfony's index.php source`: https://github.com/symfony/recipes/blob/master/symfony/framework-bundle/3.3/public/index.php
-.. _`copying Symfony's bin/console source`: https://github.com/symfony/recipes/blob/master/symfony/console/3.3/bin/console
+.. _`Symfony安装器`: https://github.com/symfony/symfony-installer
+.. _`Symfony标准版`: https://github.com/symfony/symfony-standard
+.. _`主指令仓库`: https://github.com/symfony/recipes
+.. _`Contrib指令仓库`: https://github.com/symfony/recipes-contrib
+.. _`Symfony指令文档`: https://github.com/symfony/recipes/blob/master/README.rst
+.. _`默认services.yaml文件`: https://github.com/symfony/recipes/blob/master/symfony/framework-bundle/3.3/config/services.yaml
+.. _`本示例所示`: https://github.com/symfony/skeleton/blob/8e33fe617629f283a12bbe0a6578bd6e6af417af/composer.json#L24-L33
+.. _`“骨架”项目的示例所示`: https://github.com/symfony/skeleton/blob/8e33fe617629f283a12bbe0a6578bd6e6af417af/composer.json#L44-L46
+.. _`复制Symfony的index.php源代码`: https://github.com/symfony/recipes/blob/master/symfony/framework-bundle/3.3/public/index.php
+.. _`复制Symfony的bin/console源代码`: https://github.com/symfony/recipes/blob/master/symfony/console/3.3/bin/console
 .. _`Symfony Requirements Checker`: https://github.com/symfony/requirements-checker

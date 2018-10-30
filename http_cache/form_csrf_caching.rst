@@ -1,7 +1,7 @@
 .. index::
     single: Cache; CSRF; Forms
 
-Caching Pages that Contain CSRF Protected Forms
+对包含了CSRF防护的表单页面进行缓存
 ===============================================
 
 CSRF tokens are meant to be different for every user. This is why you

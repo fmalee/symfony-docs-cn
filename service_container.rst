@@ -1036,7 +1036,7 @@ Creating/Configuring Services in the Container
     而且，默认情况下将会传递自动加载的那个服务。
     这就是为什么说创建别名是个好主意的原因。
 
-更多关于服务容器的内容
+扩展阅读
 ----------------------
 
 .. toctree::

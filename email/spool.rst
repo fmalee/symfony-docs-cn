@@ -1,7 +1,7 @@
 .. index::
    single: Emails; Spooling
 
-How to Spool Emails
+如何Spool邮件
 ===================
 
 The default behavior of the Symfony mailer is to send the email messages

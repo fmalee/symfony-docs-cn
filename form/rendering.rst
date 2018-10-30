@@ -1,7 +1,7 @@
 .. index::
     single: Forms; Rendering in a template
 
-How to Control the Rendering of a Form
+如何控制表单的渲染
 ======================================
 
 So far, you've seen how an entire form can be rendered with just one line

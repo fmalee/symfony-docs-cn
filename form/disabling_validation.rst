@@ -1,7 +1,7 @@
 .. index::
     single: Forms; Disabling validation
 
-How to Disable the Validation of Submitted Data
+如何禁用提交数据的验证
 ===============================================
 
 Sometimes it is useful to suppress the validation of a form altogether. For

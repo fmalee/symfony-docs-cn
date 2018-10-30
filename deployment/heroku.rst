@@ -3,7 +3,7 @@
 .. index::
    single: Deployment; Deploying to Heroku Cloud
 
-Deploying to Heroku
+部署到Heroku
 ===================
 
 To deploy to Heroku, see their official documentation:

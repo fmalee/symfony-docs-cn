@@ -4,7 +4,7 @@
 
 .. _edge-side-includes:
 
-Working with Edge Side Includes
+使用Edge Side Include
 ===============================
 
 Gateway caches are a great way to make your website perform better. But they

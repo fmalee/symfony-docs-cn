@@ -1,4 +1,4 @@
-Building your own Framework with the MicroKernelTrait
+使用MicroKernelTrait构建自己的框架
 =====================================================
 
 The default ``Kernel`` class included in Symfony applications uses a

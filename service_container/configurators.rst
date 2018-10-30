@@ -1,7 +1,7 @@
 .. index::
    single: DependencyInjection; Service configurators
 
-How to Configure a Service with a Configurator
+如何使用配置器配置服务
 ==============================================
 
 The *service configurator* is a feature of the service container that allows

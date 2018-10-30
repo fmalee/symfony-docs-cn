@@ -1,7 +1,7 @@
 .. index::
    single: kernel, performance
 
-How To Create Symfony Applications with Multiple Kernels
+如何使用多个内核创建Symfony应用
 ========================================================
 
 .. caution::

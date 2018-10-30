@@ -1,7 +1,7 @@
 .. index::
     single: Controller; Forwarding
 
-How to Forward Requests to another Controller
+如何将请求转发给另一个控制器
 =============================================
 
 Though not very common, you can also forward to another controller internally

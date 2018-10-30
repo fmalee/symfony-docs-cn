@@ -1,7 +1,7 @@
 .. index::
    single: Form; Events
 
-How to Dynamically Modify Forms Using Form Events
+如何使用表单事件动态修改表单
 =================================================
 
 Often times, a form can't be created statically. In this article, you'll learn

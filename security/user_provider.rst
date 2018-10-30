@@ -1,4 +1,4 @@
-All about User Providers
+所有关于用户提供者器
 ========================
 
 Each User class in your app will usually need its own "user provider": a class
@@ -181,4 +181,3 @@ Comparing Users Manually with EquatableInterface
 Or, if you need more control over the "compare users" process, make your User class
 implement :class:`Symfony\\Component\\Security\\Core\\User\\EquatableInterface`.
 Then, your ``isEqualTo()`` method will be called when comparing users.
-

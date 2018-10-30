@@ -1,7 +1,7 @@
 .. index::
    single: Asset; Custom Version Strategy
 
-How to Use a Custom Version Strategy for Assets
+如何自定义资源的版本策略
 ===============================================
 
 Asset versioning is a technique that improves the performance of web

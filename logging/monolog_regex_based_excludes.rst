@@ -3,7 +3,7 @@
    single: Logging; Exclude 404 Errors
    single: Monolog; Exclude 404 Errors
 
-How to Configure Monolog to Exclude 404 Errors from the Log
+如何配置Monolog把404错误从日志中排除出去
 ===========================================================
 
 .. tip::

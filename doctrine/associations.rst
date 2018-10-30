@@ -1,7 +1,7 @@
 .. index::
     single: Doctrine; Associations
 
-How to Work with Doctrine Associations / Relations
+如何使用Doctrine关联关系
 ==================================================
 
 .. admonition:: Screencast

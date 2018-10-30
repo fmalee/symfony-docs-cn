@@ -4,7 +4,7 @@
 .. _doctrine-event-config:
 .. _how-to-register-event-listeners-and-subscribers:
 
-Doctrine Event Listeners and Subscribers
+Doctrine事件监听器和订阅者
 ========================================
 
 Doctrine packages have a rich event system that fires events when almost anything

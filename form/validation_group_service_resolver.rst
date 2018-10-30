@@ -1,4 +1,4 @@
-How to Dynamically Configure Form Validation Groups
+如何动态配置表单验证组
 ===================================================
 
 Sometimes you need advanced logic to determine the validation groups. If they

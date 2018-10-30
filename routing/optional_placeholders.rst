@@ -1,7 +1,7 @@
 .. index::
     single: Routing; Optional Placeholders
 
-How to Define Optional Placeholders
+如何定义可选的占位符
 ===================================
 
 To make things more exciting, add a new route that displays a list of all

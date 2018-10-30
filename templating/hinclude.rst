@@ -1,7 +1,7 @@
 .. index::
     single: Templating; hinclude.js
 
-How to Embed Asynchronous Content with hinclude.js
+如何使用hinclude.js嵌入异步内容
 ==================================================
 
 Controllers can be embedded asynchronously using the hinclude.js_ JavaScript library.

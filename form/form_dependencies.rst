@@ -1,4 +1,4 @@
-How to Access Services or Config from Inside a Form
+如何从表单内访问服务或配置
 ===================================================
 
 Sometimes, you may need to access a :doc:`service </service_container>` or other

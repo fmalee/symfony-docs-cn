@@ -1,7 +1,7 @@
 .. index::
    single: Form; Custom field type
 
-How to Create a Custom Form Field Type
+如何创建自定义表单字段类型
 ======================================
 
 Symfony comes with a bunch of core field types available for building forms.

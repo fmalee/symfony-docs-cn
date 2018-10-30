@@ -1,7 +1,7 @@
 .. index::
    single: Form; Embed collection of forms
 
-How to Embed a Collection of Forms
+如何嵌入表单集合
 ==================================
 
 In this article, you'll learn how to create a form that embeds a collection

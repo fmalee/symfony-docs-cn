@@ -1,7 +1,7 @@
 .. index::
     single: Forms; Embedded forms
 
-How to Embed Forms
+如何嵌入表单
 ==================
 
 Often, you'll want to build a form that will include fields from many different

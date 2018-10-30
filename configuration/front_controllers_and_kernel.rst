@@ -2,7 +2,7 @@
     single: How the front controller, ``Kernel`` and environments
     work together
 
-Understanding how the Front Controller, Kernel and Environments Work together
+了解前端控制器、内核和环境如何协同工作
 =============================================================================
 
 The section :doc:`/configuration/environments` explained the basics on how

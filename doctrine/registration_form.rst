@@ -3,7 +3,7 @@
    single: Form; Simple Registration Form
    single: Security; Simple Registration Form
 
-How to Implement a Simple Registration Form
+如何实现简单的注册表单
 ===========================================
 
 Creating a registration form works the same as creating any form. You configure

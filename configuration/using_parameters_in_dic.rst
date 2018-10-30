@@ -1,7 +1,7 @@
 .. index::
     single: Using Parameters within a Dependency Injection Class
 
-Using Parameters within a Dependency Injection Class
+在依赖注入类中使用参数
 ----------------------------------------------------
 
 You have seen how to use configuration parameters within

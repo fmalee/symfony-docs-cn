@@ -1,4 +1,4 @@
-Prevent Multiple Executions of a Console Command
+防止多次执行控制台命令
 ================================================
 
 A simple but effective way to prevent multiple executions of the same command in

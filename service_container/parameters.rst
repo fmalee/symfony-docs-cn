@@ -1,7 +1,7 @@
 .. index::
    single: DependencyInjection; Parameters
 
-Introduction to Parameters
+参数介绍
 ==========================
 
 You can define parameters in the service container which can then be used

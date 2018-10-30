@@ -2,7 +2,7 @@
    single: Configuration; Semantic
    single: Bundle; Extension configuration
 
-How to Create Friendly Configuration for a Bundle
+如何为Bundle创建友好的配置
 =================================================
 
 If you open your main application configuration directory (usually

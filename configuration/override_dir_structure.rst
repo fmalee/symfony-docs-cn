@@ -1,7 +1,7 @@
 .. index::
     single: Override Symfony
 
-How to Override Symfony's default Directory Structure
+如何重写Symfony的默认目录结构
 =====================================================
 
 Symfony automatically ships with a default directory structure. You can
@@ -30,7 +30,7 @@ directory structure is:
 
 .. _override-cache-dir:
 
-Override the ``cache`` Directory
+重写 ``cache`` 目录
 --------------------------------
 
 You can change the default cache directory by overriding the ``getCacheDir()``
@@ -62,7 +62,7 @@ In this case you have changed the location of the cache directory to
 
 .. _override-logs-dir:
 
-Override the ``logs`` Directory
+重写 ``logs`` 目录
 -------------------------------
 
 Overriding the ``logs`` directory is the same as overriding the ``cache``
@@ -86,7 +86,7 @@ Here you have changed the location of the directory to ``var/{environment}/log``
 
 .. _override-templates-dir:
 
-Override the Templates Directory
+重写模板目录
 --------------------------------
 
 If your templates are not stored in the default ``templates/`` directory, use
@@ -129,7 +129,7 @@ own templates directory (or directories):
             ),
         ));
 
-Override the Translations Directory
+重写翻译目录
 -----------------------------------
 
 If your translation files are not stored in the default ``translations/``
@@ -180,7 +180,7 @@ configuration option to define your own translations directory (or directories):
 .. _override-web-dir:
 .. _override-the-web-directory:
 
-Override the ``public`` Directory
+重写 ``public`` 目录
 ---------------------------------
 
 If you need to rename or move your ``public`` directory, the only thing you need
@@ -213,7 +213,7 @@ You also need to change the ``extra.public-dir`` option in the
     ``public_html`` directory, and then replace it with a symbolic link to
     the ``public`` dir in your project.
 
-Override the ``vendor`` Directory
+重写 ``vendor`` 目录
 ---------------------------------
 
 To override the ``vendor`` directory, you need to define the ``vendor-dir``

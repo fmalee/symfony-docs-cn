@@ -1,7 +1,7 @@
 .. index::
     single: DependencyInjection; Synthetic Services
 
-How to Inject Instances into the Container
+如何将实例注入容器
 ------------------------------------------
 
 In some applications, you may need to inject a class instance as service,

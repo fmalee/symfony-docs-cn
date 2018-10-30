@@ -1,4 +1,4 @@
-How to Hide Console Commands
+如何隐藏控制台命令
 ============================
 
 By default, all console commands are listed when executing the console application

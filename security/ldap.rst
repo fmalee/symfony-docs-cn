@@ -1,7 +1,7 @@
 .. index::
    single: Security; Authenticating against an LDAP server
 
-Authenticating against an LDAP server
+针对LDAP服务器进行身份认证
 =====================================
 
 Symfony provides different means to work with an LDAP server.

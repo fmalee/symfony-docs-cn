@@ -1,7 +1,7 @@
 .. index::
    single: Profiling; Data collector
 
-How to Create a custom Data Collector
+如何创建自定义数据收集器
 =====================================
 
 The :doc:`Symfony Profiler </profiler>` obtains its profiling and debug

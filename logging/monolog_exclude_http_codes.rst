@@ -3,7 +3,7 @@
    single: Logging; Exclude HTTP Codes
    single: Monolog; Exclude HTTP Codes
 
-How to Configure Monolog to Exclude Specific HTTP Codes from the Log
+如何配置Monolog以从日志中排除特定的HTTP代码
 ====================================================================
 
 .. versionadded:: 4.1

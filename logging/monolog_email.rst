@@ -1,7 +1,7 @@
 .. index::
    single: Logging; Emailing errors
 
-How to Configure Monolog to Email Errors
+如何配置Monolog来邮寄错误信息
 ========================================
 
 Monolog_ can be configured to send an email when an error occurs with an

@@ -1,7 +1,7 @@
 .. index::
    single: Security; Data Permission Voters
 
-How to Use Voters to Check User Permissions
+如何使用表决器检查用户权限
 ===========================================
 
 Security voters are the most granular way of checking permissions (e.g. "can this

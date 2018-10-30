@@ -1,4 +1,4 @@
-How to Make Commands Lazily Loaded
+如何使命令延迟加载
 ==================================
 
 .. note::
@@ -35,7 +35,7 @@ method accepts any
 :class:`Symfony\\Component\\Console\\CommandLoader\\CommandLoaderInterface`
 instance so you can use your own implementation.
 
-Built-in Command Loaders
+内置命令加载器
 ------------------------
 
 ``FactoryCommandLoader``

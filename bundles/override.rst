@@ -1,7 +1,7 @@
 .. index::
    single: Bundle; Inheritance
 
-How to Override any Part of a Bundle
+如何重写Bundle的任何部分
 ====================================
 
 When using a third-party bundle, you might want to customize or override some of
@@ -18,7 +18,7 @@ features of a bundle.
 
 .. _override-templates:
 
-Templates
+模板
 ---------
 
 Third-party bundle templates can be overridden in the
@@ -60,7 +60,7 @@ extend from the original template, not from the overridden one:
     :doc:`customize error pages </controller/error_pages>` overriding TwigBundle
     templates.
 
-Routing
+路由
 -------
 
 Routing is never automatically imported in Symfony. If you want to include
@@ -71,7 +71,7 @@ The easiest way to "override" a bundle's routing is to never import it at
 all. Instead of importing a third-party bundle's routing, copy
 that routing file into your application, modify it, and import it instead.
 
-Controllers
+控制器
 -----------
 
 If the controller is a service, see the next section on how to override it.
@@ -79,7 +79,7 @@ Otherwise, define a new route + controller with the same path associated to the
 controller you want to override (and make sure that the new route is loaded
 before the bundle one).
 
-Services & Configuration
+服务 & 配置
 ------------------------
 
 If you want to modify the services created by a bundle, you can use
@@ -89,7 +89,7 @@ If you want to do more advanced manipulations, like removing services created by
 other bundles, you must work with :doc:`service definitions </service_container/definitions>`
 inside a :doc:`compiler pass </service_container/compiler_passes>`.
 
-Entities & Entity Mapping
+实体 & 实体映射
 -------------------------
 
 If a bundle defines its entity mapping in configuration files instead of
@@ -101,7 +101,7 @@ If a bundle provides a mapped superclass (such as the ``User`` entity in the
 FOSUserBundle) you can override its attributes and associations. Learn more
 about this feature and its limitations in `the Doctrine documentation`_.
 
-Forms
+表单
 -----
 
 Existing form types can be modified defining
@@ -109,7 +109,7 @@ Existing form types can be modified defining
 
 .. _override-validation:
 
-Validation Metadata
+验证元数据
 -------------------
 
 Symfony loads all validation configuration files from every bundle and
@@ -169,7 +169,7 @@ instead of the original ones.
 
 .. _override-translations:
 
-Translations
+翻译
 ------------
 
 Translations are not related to bundles, but to :ref:`translation domains <using-message-domains>`.

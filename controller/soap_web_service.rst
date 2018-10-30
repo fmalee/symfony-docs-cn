@@ -3,7 +3,7 @@
 
 .. _how-to-create-a-soap-web-service-in-a-symfony2-controller:
 
-How to Create a SOAP Web Service in a Symfony Controller
+如何在Symfony控制器中创建SOAP Web服务
 ========================================================
 
 Setting up a controller to act as a SOAP server is aided by a couple

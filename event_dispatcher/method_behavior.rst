@@ -1,7 +1,7 @@
 .. index::
    single: EventDispatcher
 
-How to Customize a Method Behavior without Using Inheritance
+如何在不使用继承的情况下自定义方法的行为(Behavior)
 ============================================================
 
 Doing something before or after a Method Call

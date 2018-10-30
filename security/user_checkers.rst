@@ -1,7 +1,7 @@
 .. index::
     single: Security; Creating and Enabling Custom User Checkers
 
-How to Create and Enable Custom User Checkers
+如何创建和启用自定义用户检查器
 =============================================
 
 During the authentication of a user, additional checks might be required to verify

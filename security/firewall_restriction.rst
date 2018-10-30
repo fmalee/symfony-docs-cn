@@ -1,7 +1,7 @@
 .. index::
    single: Security; Restrict Security Firewalls to a Request
 
-How to Restrict Firewalls to a Request
+如何将防火墙限制到一个请求
 ======================================
 
 When using the Security component, you can create firewalls that match certain request options.

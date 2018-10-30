@@ -1,7 +1,7 @@
 .. index::
     single: Upgrading; Major Version
 
-Upgrading a Major Version (e.g. 3.4.0 to 4.1.0)
+升级主要版本（例如3.4.0至4.1.0）
 ===============================================
 
 Every two years, Symfony releases a new major version release (the first number

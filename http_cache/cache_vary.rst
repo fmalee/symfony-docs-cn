@@ -2,7 +2,7 @@
    single: Cache; Vary
    single: HTTP headers; Vary
 
-Varying the Response for HTTP Cache
+多样化的HTTP缓存响应
 ===================================
 
 So far, it's been assumed that each URI has exactly one representation of the

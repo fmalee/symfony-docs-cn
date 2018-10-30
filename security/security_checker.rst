@@ -1,7 +1,7 @@
 .. index::
     single: Security; Vulnerability Checker
 
-How to Check for Known Security Vulnerabilities in Your Dependencies
+如何检查依赖中的已知安全漏洞
 ====================================================================
 
 When using lots of dependencies in your Symfony projects, some of them may

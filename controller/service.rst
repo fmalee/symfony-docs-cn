@@ -1,7 +1,7 @@
 .. index::
    single: Controller; As Services
 
-How to Define Controllers as Services
+如何将控制器定义为服务
 =====================================
 
 In Symfony, a controller does *not* need to be registered as a service. But if you're

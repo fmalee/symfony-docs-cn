@@ -2,7 +2,7 @@
     single: DependencyInjection; Tags
     single: Service Container; Tags
 
-How to Work with Service Tags
+如何使用服务标签
 =============================
 
 **Service tags** are a way to tell Symfony or other third-party bundles that

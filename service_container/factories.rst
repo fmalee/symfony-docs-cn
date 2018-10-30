@@ -1,7 +1,7 @@
 .. index::
    single: DependencyInjection; Factories
 
-Using a Factory to Create Services
+使用工厂创建服务
 ==================================
 
 Symfony's Service Container provides a powerful way of controlling the

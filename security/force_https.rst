@@ -1,7 +1,7 @@
 .. index::
    single: Security; Force HTTPS
 
-How to Force HTTPS or HTTP for different URLs
+如何为不同的URL强制使用HTTPS或HTTP
 =============================================
 
 .. tip::

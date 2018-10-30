@@ -1,7 +1,7 @@
 .. index::
    single: Security; Custom authentication provider
 
-How to Create a custom Authentication Provider
+如何创建自定义身份认证提供器
 ==============================================
 
 .. caution::

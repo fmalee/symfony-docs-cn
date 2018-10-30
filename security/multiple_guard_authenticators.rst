@@ -1,4 +1,4 @@
-How to Use Multiple Guard Authenticators
+如何使用多个安保认证器
 ========================================
 
 The Guard authentication component allows you to use many different

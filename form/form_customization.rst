@@ -1,7 +1,7 @@
 .. index::
    single: Form; Custom form rendering
 
-How to Customize Form Rendering
+如何自定义表单渲染
 ===============================
 
 Symfony gives you a wide variety of ways to customize how a form is rendered.

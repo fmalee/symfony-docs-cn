@@ -3,7 +3,7 @@
 .. index::
    single: Deployment; Deploying to Microsoft Azure Website Cloud
 
-Deploying to Microsoft Azure
+部署到Microsoft Azure
 ============================
 
 If you want information about deploying to Azure, see their official documentation:

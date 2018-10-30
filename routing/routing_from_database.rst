@@ -1,7 +1,7 @@
 .. index::
    single: Routing; Extra Information
 
-Looking up Routes from a Database: Symfony CMF DynamicRouter
+查找数据库中的路由：Symfony CMF DynamicRouter
 ============================================================
 
 The core Symfony Routing System is excellent at handling complex sets

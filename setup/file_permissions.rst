@@ -1,19 +1,18 @@
-Setting up or Fixing File Permissions
+设置或修复文件权限
 =====================================
 
-In Symfony 3.x, you needed to do some extra work to make sure that your cache directory
-was writable. But that is no longer true! In Symfony 4, everything works automatically:
+在Symfony 3.x中，你需要做一些额外的工作以确保缓存目录是可写的。
+但那都是过去式了！在Symfony 4中，一切都自动运行：
 
 * In the ``dev`` environment, ``umask()`` is used in ``bin/console`` and ``public/index.php``
   so that any created files are writable by everyone.
+  在 ``dev`` 环境，在 ``bin/console`` 和 ``public/index.php`` 中使用 ``umask()``，因此任何创建的文件都可以被所有人写入。
 
-* In the ``prod`` environment (i.e. when ``APP_ENV`` is ``prod`` and ``APP_DEBUG``
-  is ``0``), as long as you run ``php bin/console cache:warmup``, no cache files
-  will need to be written to disk at runtime.
+* 在 ``prod`` 环境中（即``APP_ENV`` 是 ``prod`` 以及 ``APP_DEBUG`` 为``0``），
+  只要运行 ``php bin/console cache:warmup``，就不需要在运行时将缓存文件写入磁盘。
 
 .. note::
 
-    If you decide to store log files on disk, you *will* need to make sure your
-    logs directory (e.g. ``var/log/``) is writable by your web server user and
-    terminal user. One way this can be done is by using ``chmod -R 777 var/log/``.
-    Be aware that your logs are readable by any user on your production system.
+    如果你决定将日志文件存储在磁盘上，则需要确保你的日志目录（例如 ``var/log/``）可由Web服务器用户和终端用户写入。
+    可以这样做的一种方法是使用 ``chmod -R 777 var/log/``。
+    请注意，此时生产系统上的任何用户都可以读取你的日志。

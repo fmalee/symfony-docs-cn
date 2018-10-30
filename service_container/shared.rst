@@ -1,7 +1,7 @@
 .. index::
     single: Service Container; Shared Services
 
-How to Define Non Shared Services
+如何定义非共享服务
 =================================
 
 In the service container, all services are shared by default. This means that

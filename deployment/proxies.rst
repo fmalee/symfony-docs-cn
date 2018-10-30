@@ -1,4 +1,4 @@
-How to Configure Symfony to Work behind a Load Balancer or a Reverse Proxy
+如何配置Symfony在负载均衡器或反向代理后面工作
 ==========================================================================
 
 When you deploy your application, you may be behind a load balancer (e.g.

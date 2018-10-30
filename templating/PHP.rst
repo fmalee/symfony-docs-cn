@@ -1,7 +1,7 @@
 .. index::
    single: PHP Templates
 
-How to Use PHP instead of Twig for Templates
+如何使用PHP代替Twig模板
 ============================================
 
 Symfony defaults to Twig for its template engine, but you can still use

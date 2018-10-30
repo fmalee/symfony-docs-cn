@@ -1,7 +1,7 @@
 .. index::
    single: Routing; Allow / in route parameter
 
-How to Allow a "/" Character in a Route Parameter
+如何在路径参数中允许“/”字符
 =================================================
 
 Sometimes, you need to compose URLs with parameters that can contain a slash

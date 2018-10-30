@@ -1,7 +1,7 @@
 .. index::
     single: Forms; Validation groups based on clicked button
 
-How to Choose Validation Groups Based on the Clicked Button
+如何根据点击按钮选择验证组
 ===========================================================
 
 When your form contains multiple submit buttons, you can change the validation

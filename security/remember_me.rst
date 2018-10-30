@@ -1,7 +1,7 @@
 .. index::
    single: Security; "Remember me"
 
-How to Add "Remember Me" Login Functionality
+如何添加“记住我”登录功能
 ============================================
 
 Once a user is authenticated, their credentials are typically stored in the
@@ -177,7 +177,7 @@ users to change their password. You can do this by leveraing a few special "role
 
     // src/Controller/AccountController.php
     // ...
-    
+
     public function accountInfo()
     {
         // allow any authenticated user - we don't care if they just

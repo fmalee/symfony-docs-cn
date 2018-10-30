@@ -1,7 +1,7 @@
 .. index::
    single: Console; Style commands
 
-How to Style a Console Command
+如何设置控制台命令的样式
 ==============================
 
 One of the most boring tasks when creating console commands is to deal with the
@@ -42,7 +42,7 @@ In order to reduce that boilerplate code, Symfony commands can optionally use th
 **Symfony Style Guide**. These styles are implemented as a set of helper methods
 which allow to create *semantic* commands and forget about their styling.
 
-Basic Usage
+基本用法
 -----------
 
 In your command, instantiate the :class:`Symfony\\Component\\Console\\Style\\SymfonyStyle`
@@ -71,7 +71,7 @@ title of the command::
         }
     }
 
-Helper Methods
+辅助方法
 --------------
 
 The :class:`Symfony\\Component\\Console\\Style\\SymfonyStyle` class defines some
@@ -99,7 +99,7 @@ Titling Methods
 
         // ...
 
-Content Methods
+内容方法
 ~~~~~~~~~~~~~~~
 
 :method:`Symfony\\Component\\Console\\Style\\SymfonyStyle::text`

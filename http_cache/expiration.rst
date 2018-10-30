@@ -1,7 +1,7 @@
 .. index::
     single: Cache; HTTP expiration
 
-HTTP Cache Expiration
+HTTP缓存过期
 =====================
 
 The `expiration model`_ is the most efficient and straightforward of the two

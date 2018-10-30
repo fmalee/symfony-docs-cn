@@ -1,17 +1,14 @@
 .. index::
     single: Sessions, cookies
 
-Avoid Starting Sessions for Anonymous Users
+避免为匿名用户启动会话
 ===========================================
 
-Sessions are automatically started whenever you read, write or even check for the
-existence of data in the session. This means that if you need to avoid creating
-a session cookie for some users, it can be difficult: you must *completely* avoid
-accessing the session.
+无论何时读取、写入甚至检查会话中的数据，都会自动启动会话。
+这意味着如果你需要避免为某些用户创建一个会话cookie，则可能很困难：你必须\ *完全*\避免访问会话。
 
-For example, one common problem in this situation involves checking for flash
-messages, which are stored in the session. The following code would guarantee
-that a session is *always* started:
+例如，在这种情况下的一个常见操作需要检查存储在会话中的闪存消息。
+以下代码将保证(guarantee)\ *始终*\启动一个会话：
 
 .. code-block:: html+twig
 
@@ -21,11 +18,9 @@ that a session is *always* started:
         </div>
     {% endfor %}
 
-Even if the user is not logged in and even if you haven't created any flash messages,
-just calling the ``get()`` (or even ``has()``) method of the ``flashBag`` will
-start a session. This may hurt your application performance because all users will
-receive a session cookie. To avoid this behavior, add a check before trying to
-access the flash messages:
+即使用户没有登录，即使你没有创建任何闪存消息，只要调用 ``flashBag`` 的 ``get()`` （甚至 ``has()``）方法即会启动一个会话。
+这可能会损害你的应用性能，因为所有用户都将收到一个会话cookie。
+要避免此行为，请在尝试访问闪存消息之前进行检查：
 
 .. code-block:: html+twig
 

@@ -1,7 +1,7 @@
 .. index::
    single: Routing; Redirect using Framework:RedirectController
 
-How to Configure a Redirect without a custom Controller
+如何在没有自定义控制器的情况下配置重定向
 =======================================================
 
 Sometimes, a URL needs to redirect to another URL. You can do that by creating

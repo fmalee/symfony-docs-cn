@@ -1,7 +1,7 @@
 .. index::
     single: Routing; Debugging
 
-How to Visualize And Debug Routes
+如何可视化和调试路由
 =================================
 
 While adding and customizing routes, it's helpful to be able to visualize

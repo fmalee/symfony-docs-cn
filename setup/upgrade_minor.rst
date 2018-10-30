@@ -1,7 +1,7 @@
 .. index::
     single: Upgrading; Minor Version
 
-Upgrading a Minor Version (e.g. 4.0.0 to 4.1.0)
+升级次要版本（例如4.0.0到4.1.0）
 ===============================================
 
 If you're upgrading a minor version (where the middle number changes), then

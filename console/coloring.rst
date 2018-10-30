@@ -1,4 +1,4 @@
-How to Color and Style the Console Output
+如何为控制台输出设置颜色和样式
 =========================================
 
 By using colors in the command output, you can distinguish different types of

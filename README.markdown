@@ -7,6 +7,7 @@
 ## 同步记录
 
 - `master`
+  - `e350b3efcfadbb26ab51768e5f6a2bcb07d9dc14`（2018-10-26）
   - `df318b284e22352b7678daeaa32ab06eb0fbcc0c`（2018-10-25）
   - `b43a26fc1c8408de31e79f1abf91e0201e92e487`（2018-10-19）
 
@@ -35,7 +36,7 @@
 - `Entity`：实体
 - `Entity Manger`：实体管理器
 - `Query Builder `：查询生成器
-- `Wire`：自动装配
+- `Wire`：装配
 - `Autowire`：自动装配
 - `Override`：重写，覆盖
 - `Public`：公有
@@ -45,14 +46,16 @@
 - `Tagged`：标记
 - `Resource`：资源
 - `Asset`：资源，特指CSS，JS等Web资源
+- `Guesser`：猜测器
+- `Transformer`：转换器、变压器
 - `Authentication`：认证
 - `Authenticator`：认证器
 - `Authorization`：授权
 - `Role`：角色
 - `Firewall`：防火墙
-- `Provider`：提供者
-- `User Provider`：用户提供者
-- `Authentication Provider`：认证提供者
+- `Provider`：提供器
+- `User Provider`：用户提供器
+- `Authentication Provider`：认证提供器
 - `Guard Authenticator`：安保认证器
 - `Remember Me`：保持登录
 - `Impersonation`：模拟
@@ -89,6 +92,9 @@
 - `UpperCamelCase`：大驼峰拼写法
 - `CamelCase`：驼峰拼写法
 - `snake_case`：蛇形拼写法
+- `Skeleton`：骨架
+- `Decorator`：装饰器
+- 
 
 ## 语法问题
 

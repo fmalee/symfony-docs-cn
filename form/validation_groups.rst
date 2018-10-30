@@ -1,7 +1,7 @@
 .. index::
     single: Forms; Validation groups
 
-How to Define the Validation Groups to Use
+如何定义要使用的验证组
 ==========================================
 
 Validation Groups

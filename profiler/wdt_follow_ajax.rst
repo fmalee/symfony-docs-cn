@@ -1,7 +1,7 @@
 .. index::
     single: Profiling: WDT Auto-update after AJAX Request
 
-How to Make the Web Debug Toolbar Auto-update After AJAX Requests
+如何使Web调试工具栏在AJAX请求后自动更新
 =================================================================
 
 For single page applications it would be more convenient if the toolbar

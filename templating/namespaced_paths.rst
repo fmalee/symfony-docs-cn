@@ -1,7 +1,7 @@
 .. index::
    single: Templating; Namespaced Twig Paths
 
-How to Use and Register Namespaced Twig Paths
+如何使用和注册Twig路径的命名空间
 =============================================
 
 Usually, when you refer to a template, you'll use the relative path from the

@@ -1,7 +1,7 @@
 .. index::
     single: Cache; Validation
 
-HTTP Cache Validation
+HTTP缓存验证
 =====================
 
 When a resource needs to be updated as soon as a change is made to the underlying

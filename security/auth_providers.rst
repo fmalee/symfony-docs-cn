@@ -1,4 +1,4 @@
-Built-in Authentication Providers
+内置认证提供者
 =================================
 
 If you need to add authentication to your app, we recommend using

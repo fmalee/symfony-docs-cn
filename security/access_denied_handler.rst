@@ -1,7 +1,7 @@
 .. index::
     single: Security; Creating a Custom Access Denied Handler
 
-How to Create a Custom Access Denied Handler
+如何创建自定义拒绝访问处理器
 ============================================
 
 When your application throws an ``AccessDeniedException``, you can handle this exception

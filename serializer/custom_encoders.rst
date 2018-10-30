@@ -1,23 +1,20 @@
 .. index::
    single: Serializer; Custom encoders
 
-How to Create your Custom Encoder
+如何创建自定义编码器
 =================================
 
-The :doc:`Serializer Component </components/serializer>` uses Normalizers
-to transform any data to an array. Then, by leveraging *Encoders*, that data can
-be converted into any data-structure (e.g. JSON).
+在 :doc:`Serializer组件 </components/serializer>` 使用正规化来将任何数据转换成一个数组。
+然后，通过利用 *编码器*，可以将该数据转换为任何数据结构（例如JSON）。
 
-The Component provides several built-in encoders that are described
-:doc:`in the serializer component </components/serializer>` but you may want
-to use another structure that's not supported.
+该组件提供了几个内置编码器，这些编码器在 :doc:`serializer组件 </components/serializer>`
+中有描述 ，但你可能希望使用另一个不受支持的结构。
 
-Creating a new encoder
+创建新编码器
 ----------------------
 
-Imagine you want to serialize and deserialize YAML. For that you'll have to
-create your own encoder that uses the
-:doc:`Yaml Component </components/yaml>`::
+想象一下，你想序列化和反序列化YAML。
+为此，你必须创建自己的使用 :doc:`Yaml组件 </components/yaml>` 的编码器::
 
     namespace App\Serializer;
 
@@ -48,18 +45,17 @@ create your own encoder that uses the
         }
     }
 
-Registering it in your app
+在应用中注册
 --------------------------
 
-If you use the Symfony Framework. then you probably want to register this encoder
-as a service in your app. If you're using the :ref:`default services.yaml configuration <service-container-services-load-example>`,
-that's done automatically!
+如果你使用Symfony框架。那么你可能想在你的应用中将此编码器注册为服务。
+如果你使用 :ref:`默认的services.yaml配置 <service-container-services-load-example>`，则注册将会自动完成！
 
 .. tip::
 
-    If you're not using :ref:`autoconfigure <service_autoconfigure>`, make sure
-    to register your class as a service and tag it with ``serializer.encoder``.
+    如果你没有使用 :ref:`自动配置 <service_autoconfigure>`，
+    请务必将你的类注册为服务并标记为 ``serializer.encoder``。
 
-Now you'll be able to serialize and deserialize YAML!
+现在，你将能够序列化和反序列化YAML！
 
 .. _tracker: https://github.com/symfony/symfony/issues

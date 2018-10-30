@@ -1,7 +1,7 @@
 .. index::
    single: Form; Form type extension
 
-How to Create a Form Type Extension
+如何创建表单类型扩展
 ===================================
 
 Form type extensions are *incredibly* powerful: they allow you to *modify* any

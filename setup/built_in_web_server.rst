@@ -1,7 +1,7 @@
 .. index::
     single: Web Server; Built-in Web Server
 
-如何使用 PHP 内置的服务器
+如何使用PHP内置Web服务器
 ====================================
 
 Since PHP 5.4 the CLI SAPI comes with a `built-in web server`_. It can be used

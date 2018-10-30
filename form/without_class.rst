@@ -1,7 +1,7 @@
 .. index::
     single: Forms; With no class
 
-How to Use a Form without a Data Class
+如何使用没有数据类的表单
 ======================================
 
 In most cases, a form is tied to an object, and the fields of the form get

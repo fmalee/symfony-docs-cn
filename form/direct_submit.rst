@@ -1,7 +1,7 @@
 .. index::
    single: Form; Form::submit()
 
-How to Use the submit() Function to Handle Form Submissions
+如何使用submit()函数处理表单提交
 ===========================================================
 
 With the ``handleRequest()`` method, you can handle form

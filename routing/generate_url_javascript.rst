@@ -1,4 +1,4 @@
-How to Generate Routing URLs in JavaScript
+如何在JavaScript中生成路由URL
 ==========================================
 
 If you're in a Twig template, you can use the same ``path()`` function to set JavaScript

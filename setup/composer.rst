@@ -1,7 +1,7 @@
 .. index::
     double: Composer; Installation
 
-安装 Composer
+安装Composer
 ===================
 
 `Composer`_ 是一个package管理器，被现代PHP程序所使用。使用Composer来管理你的Symfony程序的依赖，

@@ -1,7 +1,7 @@
 .. index::
    single: Console; How to Call a Command from a controller
 
-How to Call a Command from a Controller
+如何从控制器调用命令
 =======================================
 
 The :doc:`Console component documentation </components/console>` covers how to

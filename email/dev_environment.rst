@@ -1,7 +1,7 @@
 .. index::
    single: Emails; In development
 
-How to Work with Emails during Development
+如何在开发过程中处理邮件
 ==========================================
 
 When developing an application which sends email, you will often
@@ -13,7 +13,7 @@ choices when it comes to handling email during development: (a) disabling the
 sending of email altogether or (b) sending all email to a specific
 address (with optional exceptions).
 
-Disabling Sending
+禁用发送
 -----------------
 
 You can disable sending email by setting the ``disable_delivery`` option to
@@ -51,7 +51,7 @@ You can disable sending email by setting the ``disable_delivery`` option to
 
 .. _sending-to-a-specified-address:
 
-Sending to a Specified Address(es)
+发送到特定地址
 ----------------------------------
 
 You can also choose to have all email sent to a specific address or a list of addresses, instead

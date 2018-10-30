@@ -1,30 +1,26 @@
-Bootstrap 4 Form Theme
+Bootstrap4表单主题
 ======================
 
-Symfony provides several ways of integrating Bootstrap into your application. The
-most straightforward way is to add the required ``<link>`` and ``<script>``
-elements in your templates (usually you only include them in the main layout
-template which other templates extend from):
+Symfony提供了几种将Bootstrap集成到应用中的方法。
+最直接的方法是 在模板中添加必需元素 ``<link>`` 和 ``<script>`` 元素
+（通常只将它们包含在由其他模板扩展的主布局模板中）：
 
 .. code-block:: html+twig
 
     {# templates/base.html.twig #}
 
-    {# beware that the blocks in your template may be named different #}
+    {# 请注意，模板中的区块名称可能不同 #}
     {% block head_css %}
-        <!-- Copy CSS from https://getbootstrap.com/docs/4.1/getting-started/introduction/#css -->
+        <!-- 从 https://getbootstrap.com/docs/4.1/getting-started/introduction/#css 复制CSS -->
     {% endblock %}
     {% block head_js %}
-        <!-- Copy JavaScript from https://getbootstrap.com/docs/4.1/getting-started/introduction/#js -->
+        <!-- 从 https://getbootstrap.com/docs/4.1/getting-started/introduction/#js 复制JavaScript -->
     {% endblock %}
 
-If your application uses modern front-end practices, it's better to use
-:doc:`Webpack Encore </frontend>` and follow :doc:`this tutorial </frontend/encore/bootstrap>`
-to import Bootstrap's sources into your SCSS and JavaScript files.
+如果你的应用使用现代前端实践，最好使用 :doc:`Webpack Encore </frontend>`
+并按照 :doc:`本教程 </frontend/encore/bootstrap>` 将Bootstrap的源代码导入到你的SCSS和JavaScript文件。
 
-The next step is to configure the Symfony application to use Bootstrap 4 styles
-when rendering forms. If you want to apply them to all forms, define this
-configuration:
+下一步是在渲染表单时将Symfony应用配置为使用Bootstrap 4样式。如果要将它们应用于所有表单，请定义此配置：
 
 .. configuration-block::
 
@@ -63,13 +59,12 @@ configuration:
             // ...
         ));
 
-If you prefer to apply the Bootstrap styles on a form to form basis, include the
-``form_theme`` tag in the templates where those forms are used:
+如果你希望将基础表单上的Bootstrap样式应用于表单，请在使用这些表单的模板中引入 ``form_theme`` 标记：
 
 .. code-block:: twig
 
     {# ... #}
-    {# this tag only applies to the forms defined in this template #}
+    {# 此标签仅适用于此模板中定义的表单 #}
     {% form_theme form 'bootstrap_4_layout.html.twig' %}
 
     {% block body %}
@@ -77,40 +72,35 @@ If you prefer to apply the Bootstrap styles on a form to form basis, include the
         {{ form(form) }}
     {% endblock %}
 
-Accessibility
+辅助功能
 -------------
 
-The Bootstrap 4 framework has done a good job making it accessible for functional
-variations like impaired vision and cognitive ability. Symfony has taken this one
-step further to make sure the form theme complies with the `WCAG 2.0 standard`_.
+Bootstrap 4框架已经做得很好，使其可以辅助机能差异，如视力受损和认知障碍。
+Symfony更进一步确保表单主题符合 `WCAG 2.0 标准`_。
 
-This does not mean that your entire website automatically complies with the full
-standard, but it does mean that you have come far in your work to create a design
-for **all** users.
+这并不意味着你的整个网站自动符合该完整标准，但它确实意味着你的作品已经为 **所有** 用户做好了准备。
 
-Custom Forms
+自定义表单
 ------------
 
-Bootstrap 4 has a feature called "`custom forms`_". You can enable that on your
-Symfony Form ``RadioType`` and ``CheckboxType`` by adding a class called ``radio-custom``
-and ``checkbox-custom`` respectively.
+Bootstrap 4有一个称为“`自定义表单`_”的功能。
+该功能通过添加一个分别叫 ``radio-custom`` 和 ``checkbox-custom``
+的类来在Symfony表单 ``RadioType`` 和 ``CheckboxType`` 中启用。
 
 .. code-block:: html+twig
 
     {{ form_row(form.myRadio, {label_attr: {class: 'radio-custom'} }) }}
     {{ form_row(form.myCheckbox, {label_attr: {class: 'checkbox-custom'} }) }}
 
-Labels and Errors
+标签和错误
 -----------------
 
-When you use the Bootstrap form themes and render the fields manually, calling
-``form_label()`` for a checkbox/radio field doesn't render anything. Due to Bootstrap
-internals, the label is already rendered by ``form_widget()``.
+当你使用Bootstrap表单主题并手动渲染字段时，为复选框/单选框字段调用 ``form_label()`` 将不会渲染任何内容。
+因为在Bootstrap内部，该标签已经通过 ``form_widget()`` 渲染。
 
-Form errors are rendered **inside** the ``<label>`` element to make sure there
-is a strong connection between the error and its ``<input>``, as required by the
-`WCAG 2.0 standard`_.
+表单错误将在 ``<label>`` 元素 **内部** 渲染，以确保该错误与 ``<input>`` 之间存在紧密联系，
+这是 `WCAG 2.0 标准`_ 所要求的。
 
-.. _`their documentation`: https://getbootstrap.com/docs/4.1/
-.. _`WCAG 2.0 standard`: https://www.w3.org/TR/WCAG20/
-.. _`custom forms`: https://getbootstrap.com/docs/4.1/components/forms/#custom-forms
+.. _`它们的文档`: https://getbootstrap.com/docs/4.1/
+.. _`WCAG 2.0 标准`: https://www.w3.org/TR/WCAG20/
+.. _`自定义表单`: https://getbootstrap.com/docs/4.1/components/forms/#custom-forms

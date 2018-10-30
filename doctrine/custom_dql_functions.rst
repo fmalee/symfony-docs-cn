@@ -1,7 +1,7 @@
 .. index::
    single: Doctrine; Custom DQL functions
 
-How to Register custom DQL Functions
+如何注册自定义DQL函数
 ====================================
 
 Doctrine allows you to specify custom DQL functions. For more information

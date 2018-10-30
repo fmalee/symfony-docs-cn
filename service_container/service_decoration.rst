@@ -1,10 +1,10 @@
 .. index::
     single: Service Container; Decoration
 
-How to Decorate Services
+如何装饰(Decorate)服务
 ========================
 
-When overriding an existing definition (e.g. when applying the `Decorator pattern`_),
+When overriding an existing definition (e.g. when applying the `装饰器模式`_),
 the original service is lost:
 
 .. configuration-block::
@@ -286,4 +286,4 @@ The generated code will be the following::
 
     $this->services[Foo:class] = new Baz(new Bar(new Foo()));
 
-.. _decorator pattern: https://en.wikipedia.org/wiki/Decorator_pattern
+.. _装饰器模式: https://en.wikipedia.org/wiki/Decorator_pattern

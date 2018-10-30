@@ -1,4 +1,4 @@
-How to Add extra Data to Log Messages via a Processor
+如何通过处理器向日志消息添加额外数据
 =====================================================
 
 Monolog allows you to process the record before logging it to add some

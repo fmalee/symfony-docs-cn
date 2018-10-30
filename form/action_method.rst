@@ -1,7 +1,7 @@
 .. index::
     single: Forms; Changing the action and method
 
-How to Change the Action and Method of a Form
+如何更改表单的动作和方法
 =============================================
 
 By default, a form will be submitted via an HTTP POST request to the same

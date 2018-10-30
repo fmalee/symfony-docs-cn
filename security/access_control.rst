@@ -1,6 +1,6 @@
 .. _security-access-control-explanation:
 
-How Does the Security access_control Work?
+安全性access_control如何工作？
 ==========================================
 
 For each incoming request, Symfony checks each ``access_control`` entry

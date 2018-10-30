@@ -1,7 +1,7 @@
 .. index::
    single: Expressions in the Framework
 
-Security: Complex Access Controls with Expressions
+安全性：带表达式的复杂访问控制
 ==================================================
 
 .. seealso::

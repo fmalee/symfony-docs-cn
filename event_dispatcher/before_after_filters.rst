@@ -1,7 +1,7 @@
 .. index::
    single: EventDispatcher
 
-How to Set Up Before and After Filters
+如何设置前置/后置过滤器
 ======================================
 
 It is quite common in web application development to need some logic to be

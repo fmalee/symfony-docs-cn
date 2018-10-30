@@ -2,7 +2,7 @@
    single: Security; Securing any service
    single: Security; Securing any method
 
-How to Secure any Service or Method in your Application
+如何保护应用中的任何服务或方法
 =======================================================
 
 In the security article, you learned how to

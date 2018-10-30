@@ -1,7 +1,7 @@
 .. index::
     single: CSRF; CSRF protection
 
-How to Implement CSRF Protection
+如何实施CSRF保护
 ================================
 
 CSRF - or `Cross-site request forgery`_ - is a method by which a malicious

@@ -4,7 +4,7 @@
     single: Twig; Debug
     single: Twig; Dump
 
-How to Dump Debug Information in Twig Templates
+如何在Twig模板中Dump调试信息
 ===============================================
 
 When using PHP templates, you can use the

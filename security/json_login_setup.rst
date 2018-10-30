@@ -1,4 +1,4 @@
-How to Build a JSON Authentication Endpoint
+如何构建JSON身份认证端点
 ===========================================
 
 In this entry, you'll build a JSON endpoint to log in your users. When the

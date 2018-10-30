@@ -1,7 +1,7 @@
 .. index::
     single: Routing; Importing routing resources
 
-How to Include External Routing Resources
+如何引入部路由资源
 =========================================
 
 Simple applications can define all their routes in a single configuration file -

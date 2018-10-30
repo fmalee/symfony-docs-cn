@@ -1,7 +1,7 @@
 .. index::
     single: Security; Named Encoders
 
-How to Use A Different Password Encoder Algorithm Per User
+如何为每个用户使用不同的密码编码器算法
 ==========================================================
 
 Usually, the same password encoder is used for all users by configuring it

@@ -1,7 +1,7 @@
 .. index::
     single: Configuration
 
-How to Organize Configuration Files
+如何组织配置文件
 ===================================
 
 The Symfony skeleton defines three :doc:`execution environments </configuration/environments>`

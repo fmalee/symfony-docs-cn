@@ -1,7 +1,7 @@
 .. index::
     single: Upgrading; Patch Version
 
-更新补丁版本 (比如从 4.1.0 到 4.1.1)
+升级补丁版本（例如4.1.0到4.1.1）
 ===============================================
 
 When a new patch version is released (only the last number changed), it is a

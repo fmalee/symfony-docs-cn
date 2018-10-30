@@ -1,4 +1,4 @@
-Verbosity Levels
+Verbosity级别
 ================
 
 Console commands have different verbosity levels, which determine the messages

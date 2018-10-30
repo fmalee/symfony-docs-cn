@@ -1,7 +1,7 @@
 .. index::
     single: Forms; Custom Type Guesser
 
-Creating a custom Type Guesser
+创建自定义类型猜测器
 ==============================
 
 The Form component can guess the type and some options of a form field by
