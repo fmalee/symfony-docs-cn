@@ -226,6 +226,31 @@ related to deprecations.
 
 .. _write-assertions-about-deprecations:
 
+Deprecation Notices at Autoloading Time
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+By default, the PHPUnit Bridge uses ``DebugClassLoader`` from the
+:doc:`Debug component </components/debug>` to throw deprecation notices at
+class autoloading time. This can be disabled with the ``debug-class-loader`` option.
+
+.. code-block:: xml
+
+    <!-- phpunit.xml.dist -->
+    <!-- ... -->
+    <listeners>
+        <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener">
+            <arguments>
+                <array>
+                    <!-- set this option to 0 to disable the DebugClassLoader integration -->
+                    <element key="debug-class-loader"><integer>0</integer></element>
+                </array>
+            </arguments>
+        </listener>
+    </listeners>
+
+.. versionadded:: 4.2
+    The ``DebugClassLoader`` integration was introduced in Symfony 4.2.
+
 Write Assertions about Deprecations
 -----------------------------------
 

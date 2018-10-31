@@ -340,6 +340,10 @@ Symfony在以下默认位置查找消息文件（即翻译）：
 
 * ``Resources/translations/`` 目录（任何bundle中）.
 
+.. versionadded:: 4.2
+    在Symfony 4.2中不推荐使用 ``src/Resources/<bundle name>/translations/`` 目录来存储翻译。
+    而是使用 ``default_path`` 选项中定义的目录（默认情况下为 ``translations/``）。
+
 此处列出的位置按照优先级排序。也就是说，你可以在前两个目录中的任何一个中覆盖bundle的翻译消息。
 
 覆盖机制工作在键级别(key level)：只有被覆盖的键才需要列在更高优先级的消息文件中。

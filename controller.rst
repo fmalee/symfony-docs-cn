@@ -61,8 +61,8 @@
 将URI映射到控制器
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-为了能*浏览*此控制器的输出，你需要通过路由将URL映射到该控制器。
-这是通过 ``@Route("/lucky/number/{max}")`` :ref:`路由注释 <annotation-routes>`完成的。
+为了能 *浏览* 此控制器的输出，你需要通过路由将URL映射到该控制器。
+这是通过 ``@Route("/lucky/number/{max}")`` :ref:`路由注释 <annotation-routes>` 完成的。
 
 要查看页面，请在浏览器中打开此URL:
 
@@ -151,7 +151,7 @@
 ~~~~~~~~~~~~~~~~~~~
 
 如果你要提供HTML服务，则需要渲染一个模板。
-``render()`` 方法会渲染模板**并**将该内容放入到一个 ``Response``对象中::
+``render()`` 方法会渲染模板 **并** 将该内容放入到一个 ``Response`` 对象中::
 
     // 渲染 templates/lucky/number.html.twig
     return $this->render('lucky/number.html.twig', array('number' => $number));
