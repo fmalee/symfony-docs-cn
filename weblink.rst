@@ -45,7 +45,7 @@ Symfony提供了用于管理 ``Link`` HTTP标头的原生支持（通过 :doc:`W
 
 .. code-block:: terminal
 
-    $ composer req weblink
+    $ composer req web-link
 
 现在，更新模板以使用WebLink提供的 ``preload()`` Twig函数：
 
@@ -125,12 +125,19 @@ WebLink组件提供以下Twig函数来发送这些提示：
     {
         public function index(Request $request)
         {
+            // 使用由 AbstractController 提供的 addLink() 快捷方式
+            $this->addLink($request, new Link('preload', '/app.css'));
+
+            // 如果你不想使用 addLink() 快捷方式的替代方法
             $linkProvider = $request->attributes->get('_links', new GenericLinkProvider());
             $request->attributes->set('_links', $linkProvider->withLink(new Link('preload', '/app.css')));
 
             return $this->render('...');
         }
     }
+
+.. versionadded:: 4.2
+    在Symfony 4.2中引入了 ``addLink()`` 快捷方式。
 
 .. seealso::
 
