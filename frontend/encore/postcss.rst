@@ -1,16 +1,16 @@
-PostCSS and autoprefixing (postcss-loader)
+PostCSS和autoprefixing(postcss-loader)
 ==========================================
 
-`PostCSS`_ is a CSS post-processing tool that can transform your CSS in a lot
-of cool ways, like `autoprefixing`_, `linting`_ and more!
+PostCSS是CSS后期处理工具，可以以很多很酷的方式转换(transform)你的CSS，
+像 `autoprefixing`_, `linting`_ 以及更多！
 
-First, download ``postcss-loader`` and any plugins you want, like ``autoprefixer``:
+首先，下载 ``postcss-loader`` 和你想要的任何插件，如 ``autoprefixer``：
 
 .. code-block:: terminal
 
     $ yarn add --dev postcss-loader autoprefixer
 
-Next, create a ``postcss.config.js`` file at the root of your project:
+接下来，在项目的根目录下创建一个 ``postcss.config.js`` 文件：
 
 .. code-block:: javascript
 
@@ -24,7 +24,7 @@ Next, create a ``postcss.config.js`` file at the root of your project:
         }
     }
 
-Then, Enable the loader in Encore!
+然后，在Encore中启用该加载器！
 
 .. code-block:: diff
 
@@ -35,8 +35,8 @@ Then, Enable the loader in Encore!
     +     .enablePostCssLoader()
     ;
 
-That's it! The ``postcss-loader`` will now be used for all CSS, Sass, etc files.
-You can also pass options to the `postcss-loader`_ by passing a callback:
+仅此而已！该 ``postcss-loader`` 现在将用于所有的CSS、Sass等文件。
+你还可以通过传递回调将选项传递给 `postcss-loader`_：
 
 .. code-block:: diff
 
@@ -51,12 +51,11 @@ You can also pass options to the `postcss-loader`_ by passing a callback:
     +     })
     ;
 
-Adding browserslist to package.json
+添加browserslist到package.json
 -----------------------------------
 
-The ``autoprefixer`` (and many other tools) need to know what browsers you want to
-support. The best-practice is to configure this directly in your ``package.json``
-(so that all the tools can read this):
+``autoprefixer``（以及许多其他工具）需要知道你要支持哪些浏览器。
+最佳做法是直接在你的 ``package.json`` 中配置（以便所有工具都能读取此内容）：
 
 .. code-block:: diff
 
@@ -64,13 +63,13 @@ support. The best-practice is to configure this directly in your ``package.json`
     +     "browserslist": [ "last 2 versions", "ios >= 8" ]
     }
 
-See `browserslist`_ for more details on the syntax.
+有关语法的更多详细信息，请参阅 `browserslist`_ 。
 
 .. note::
 
-    Encore uses `babel-preset-env`_, which *also* needs to know which browsers you
-    want to support. But this does *not* read the ``browserslist`` config key. You
-    must configure the browsers separately via :doc:`configureBabel() </frontend/encore/babel>`.
+    Encore使用的是 `babel-preset-env`_，它 *同样* 需要知道你要支持哪些浏览器。
+    但它不会读取 ``browserslist`` 配置键。
+    所以你必须通过 :doc:`configureBabel() </frontend/encore/babel>` 单独配置浏览器。
 
 .. _`PostCSS`: http://postcss.org/
 .. _`autoprefixing`: https://github.com/postcss/autoprefixer

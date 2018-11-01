@@ -1,22 +1,20 @@
-Installing Encore (with Symfony Flex)
+安装Encore
 =====================================
 
 .. tip::
 
-    If your project does **not** use Symfony Flex, read :doc:`/frontend/encore/installation-no-flex`.
+    如果你的项目 **不** 使用Symfony Flex中，请参阅 :doc:`/frontend/encore/installation-no-flex`。
 
-First, make sure you `install Node.js`_ and also the `Yarn package manager`_. Then
-run:
+首先，确保 `安装Node.js`_ 以及 `Yarn包管理器`_。然后运行：
 
 .. code-block:: terminal
 
     $ composer require symfony/webpack-encore-pack
     $ yarn install
 
-This will create a ``webpack.config.js`` file, add the ``assets/`` directory, and
-add ``node_modules/`` to ``.gitignore``.
+这将创建一个 ``webpack.config.js`` 文件，添加 ``assets/`` 目录，然后添加 ``node_modules/`` 到 ``.gitignore``。
 
-Nice work! Write your first JavaScript and CSS by reading :doc:`/frontend/encore/simple-example`!
+干得好！通过阅读 :doc:`/frontend/encore/simple-example` 来编写你的第一个JavaScript和CSS ！
 
-.. _`install Node.js`: https://nodejs.org/en/download/
-.. _`Yarn package manager`: https://yarnpkg.com/lang/en/docs/install/
+.. _`安装Node.js`: https://nodejs.org/en/download/
+.. _`Yarn包管理器`: https://yarnpkg.com/lang/en/docs/install/

@@ -1,9 +1,8 @@
-Using a CDN
+使用CDN
 ===========
 
-Are you deploying to a CDN? That's awesome :) - and configuring Encore for that is
-easy. Once you've made sure that your built files are uploaded to the CDN, configure
-it in Encore:
+你在部署CDN吗？那太棒了:) - 配置Encore的CDN很容易。
+确保将生成的文件上载到CDN后，在Encore中进行配置：
 
 .. code-block:: diff
 
@@ -12,7 +11,7 @@ it in Encore:
 
     Encore
         .setOutputPath('public/build/')
-        // in dev mode, don't use the CDN
+        // 在开发模式下不使用CDN
         .setPublicPath('/build');
         // ...
     ;
@@ -20,28 +19,23 @@ it in Encore:
     + if (Encore.isProduction()) {
     +     Encore.setPublicPath('https://my-cool-app.com.global.prod.fastly.net');
     +
-    +     // guarantee that the keys in manifest.json are *still*
-    +     // prefixed with build/
-    +     // (e.g. "build/dashboard.js": "https://my-cool-app.com.global.prod.fastly.net/dashboard.js")
+    +     // 保证 manifest.json 中的键 *仍然* 以 “build/” 为前缀
+    +     // (例如 "build/dashboard.js": "https://my-cool-app.com.global.prod.fastly.net/dashboard.js")
     +     Encore.setManifestKeyPrefix('build/');
     + }
 
-That's it! Internally, Webpack will now know to load assets from your CDN -
-e.g. ``https://my-cool-app.com.global.prod.fastly.net/dashboard.js``.
+仅此而已！在内部，Webpack现在知道从你的CDN加载资产 - 例如 ``https://my-cool-app.com.global.prod.fastly.net/dashboard.js``。
 
 .. note::
 
-    It's still your responsibility to put your assets on the CDN - e.g. by
-    uploading them or by using "origin pull", where your CDN pulls assets
-    directly from your web server.
+    你仍然有必要将你的资产放在CDN上 - 例如通过上传或使用“origin pull”，你的CDN直接从你的Web服务器拉取资产。
 
-You *do* need to make sure that the ``script`` and ``link`` tags you include on your
-pages also use the CDN. Fortunately, the ``manifest.json`` paths are updated to
-point to the CDN. In Symfony, as long as you've configured
-:doc:`Asset Versioning </frontend/encore/versioning>`, you're done! The ``manifest.json``
-file includes the full CDN URL:
+你 *还* 需要确保的是，在你的网页内的 ``script`` 和 ``link`` 标签也使用CDN。
+幸运的是，``manifest.json`` 路径已经更新为指向CDN。
+在Symfony中，只要你配置了 :doc:`资产版本控制 </frontend/encore/versioning>`，就完成了！
+该 ``manifest.json`` 文件包含完整的CDN URL：
 
 .. code-block:: twig
 
-    {# Your script/link tags don't need to change at all to support the CDN #}
+    {# 你的 script/link 根本不需要为了CDN而做出修改 #}
     <script src="{{ asset('build/dashboard.js') }}"></script>

@@ -1,10 +1,8 @@
-Passing Information from Twig to JavaScript
+将信息从Twig传递到脚本
 ===========================================
 
-In Symfony applications, you may find that you need to pass some dynamic data
-(e.g. user information) from Twig to your JavaScript code. One great way to pass
-dynamic configuration is by storing information in ``data`` attributes and reading
-them later in JavaScript. For example:
+在Symfony应用中，你可能会发现需要将一些动态数据（例如用户信息）从Twig传递到脚本代码。
+传递动态配置的一个好方法是将信息存储在 ``data`` 属性中，稍后在脚本中读取它们。例如：
 
 .. code-block:: twig
 
@@ -12,7 +10,7 @@ them later in JavaScript. For example:
         <!-- ... -->
     </div>
 
-Fetch this in JavaScript:
+在脚本中获取该内容：
 
 .. code-block:: javascript
 
@@ -23,15 +21,13 @@ Fetch this in JavaScript:
 
 .. note::
 
-    When `accessing data attributes from JavaScript`_, the attribute names are
-    converted from dash-style to camelCase. For example, ``data-is-authenticated``
-    becomes ``isAuthenticated`` and ``data-number-of-reviews`` becomes
-    ``numberOfReviews``.
+    当 `从脚本中访问data属性`_ 时，该属性名称要从划线式（dash-style）转换为驼峰拼写法。
+    例如，``data-is-authenticated`` 变成 ``isAuthenticated``；
+    ``data-number-of-reviews`` 变成 ``numberOfReviews``。
 
-There is no size limit for the value of the ``data-`` attributes, so you can
-store any content. In Twig, use the ``html_attr`` escaping strategy to avoid messing
-with HTML attributes. For example, if your ``User`` object has some ``getProfileData()``
-method that returns an array, you could do the following:
+``data-`` 属性值没有大小限制，因此可以存储任何内容。
+在Twig中，使用 ``html_attr`` 转义策略以避免弄乱HTML属性。
+例如，如果你的 ``User`` 对象有一些 ``getProfileData()`` 方法返回一个数组，你可以执行以下操作：
 
 .. code-block:: twig
 
@@ -39,4 +35,4 @@ method that returns an array, you could do the following:
         <!-- ... -->
     </div>
 
-.. _`accessing data attributes from JavaScript`: https://developer.mozilla.org/en-US/docs/Learn/HTML/Howto/Use_data_attributes
+.. _`从脚本中访问data属性`: https://developer.mozilla.org/en-US/docs/Learn/HTML/Howto/Use_data_attributes

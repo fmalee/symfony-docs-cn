@@ -1,14 +1,10 @@
-Enabling Source Maps
+启用源映射
 ====================
 
-`Source maps`_ allow browsers to access the original code related to some
-asset (e.g. the Sass code that was compiled to CSS or the TypeScript code that
-was compiled to JavaScript). Source maps are useful for debugging purposes but
-unnecessary when executing the application in production.
+`源映射`_ 允许浏览器访问与某些资产关联的原始代码（例如，编译为CSS的Sass代码或编译为JavaScript的TypeScript代码）。
+源映射对于调试目标很有用，但不必要在生产中执行该应用。
 
-Encore inlines source maps in the compiled assets only in the development
-environment, but you can control this behavior with the ``enableSourceMaps()``
-method:
+Encore仅在开发环境的已编译资产中内联源映射，但你可以使用 ``enableSourceMaps()`` 方法控制该行为：
 
 .. code-block:: javascript
 
@@ -24,4 +20,4 @@ method:
         .enableSourceMaps(true)
     ;
 
-.. _`Source maps`: https://developer.mozilla.org/en-US/docs/Tools/Debugger/How_to/Use_a_source_map
+.. _`源映射`: https://developer.mozilla.org/en-US/docs/Tools/Debugger/How_to/Use_a_source_map

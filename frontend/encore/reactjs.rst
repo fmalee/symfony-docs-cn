@@ -1,14 +1,14 @@
-Enabling React.js
+启用React.js
 =================
 
-Using React? Make sure you have React installed, along with the `babel-preset-react`_:
+使用React？确保安装了React，以及 `babel-preset-react`_：
 
 .. code-block:: terminal
 
     $ yarn add --dev babel-preset-react
     $ yarn add react react-dom prop-types
 
-Enable react in your ``webpack.config.js``:
+在你的 ``webpack.config.js`` 中启用react：
 
 .. code-block:: javascript
 
@@ -20,7 +20,6 @@ Enable react in your ``webpack.config.js``:
         .enableReactPreset()
     ;
 
-That's it! Your ``.js`` and ``.jsx`` files will now be transformed through
-``babel-preset-react``.
+仅此而已！你的 ``.js`` 和 ``.jsx`` 文件现在将通过 ``babel-preset-react`` 转换(transform)。
 
 .. _`babel-preset-react`: https://babeljs.io/docs/plugins/preset-react/

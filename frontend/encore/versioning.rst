@@ -1,14 +1,11 @@
-Asset Versioning
+资产版本控制
 ================
 
 .. _encore-long-term-caching:
 
-Tired of deploying and having browser's cache the old version of your assets?
-By calling ``enableVersioning()``, each filename will now include a hash that
-changes whenever the *contents* of that file change (e.g. ``app.123abc.js``
-instead of ``app.js``). This allows you to use aggressive caching strategies
-(e.g. a far future ``Expires``) because, whenever a file change, its hash will change,
-ignoring any existing cache:
+厌倦了部署和浏览器缓存旧版本的资产？通过调用 ``enableVersioning()``，
+每个文件名现在将包括每当该文件的 *内容* 变更时改变的散列（例如 ``app.123abc.js``，而不是 ``app.js``）。
+这允许你使用积极的缓存策略（例如，遥远未来的 ``Expires``），因为每当文件更改时，其哈希将改变，从而忽略任何现有缓存：
 
 .. code-block:: diff
 
@@ -20,16 +17,14 @@ ignoring any existing cache:
         // ...
     +     .enableVersioning()
 
-To link to these assets, Encore creates a ``manifest.json`` file with a map to
-the new filenames.
+要链接到这些资源，Encore会创建一个包含新文件名映射的 ``manifest.json`` 文件。
 
 .. _load-manifest-files:
 
-Loading Assets from the manifest.json File
+从manifest.json文件加载资产
 ------------------------------------------
 
-Whenever you run Encore, a ``manifest.json`` file is automatically
-created in your ``outputPath`` directory:
+无论何时运行Encore，会在你的 ``outputPath`` 目录中自动创建一个 ``manifest.json`` 文件：
 
 .. code-block:: json
 
@@ -38,9 +33,8 @@ created in your ``outputPath`` directory:
         "build/dashboard.css": "/build/dashboard.a4bf2d.css"
     }
 
-In your app, you need to read this file to dynamically render the correct paths
-in your ``script`` and ``link`` tags. If you're using Symfony, activate the
-``json_manifest_file`` versioning strategy:
+在你的应用中，你需要读取此文件以在你的 ``script`` 和 ``link`` 标签中动态渲染正确的路径。
+如果你使用的是Symfony，请激活 ``json_manifest_file`` 版本控制策略：
 
 .. code-block:: yaml
 
@@ -50,8 +44,7 @@ in your ``script`` and ``link`` tags. If you're using Symfony, activate the
         assets:
             json_manifest_path: '%kernel.project_dir%/public/build/manifest.json'
 
-That's it! Be sure to wrap each path in the Twig ``asset()`` function
-like normal:
+仅此而已！像平常一样确保每个路径封装在Twig的 ``asset()`` 函数中：
 
 .. code-block:: twig
 
@@ -59,7 +52,7 @@ like normal:
 
     <link href="{{ asset('build/dashboard.css') }}" rel="stylesheet" />
 
-Learn more
+扩展阅读
 ----------
 
 * :doc:`/components/asset`

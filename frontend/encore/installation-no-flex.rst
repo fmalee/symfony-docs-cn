@@ -1,15 +1,14 @@
-Encore Installation (without Symfony Flex)
+安装Encore（不使用Symfony Flex）
 ==========================================
 
 .. tip::
 
-    If your project uses Symfony Flex, read :doc:`/frontend/encore/installation`
-    for easier instructions.
+    如果你的项目使用Symfony Flex，请阅读 :doc:`/frontend/encore/installation` 以获得更简单的说明。
 
-Installing Encore
+安装Encore
 -----------------
 
-Install Encore into your project via Yarn:
+通过Yarn将Encore安装到你的项目中：
 
 .. code-block:: terminal
 
@@ -17,21 +16,20 @@ Install Encore into your project via Yarn:
 
 .. note::
 
-    If you prefer to use `npm`_, no problem! Run ``npm install @symfony/webpack-encore --save-dev``.
+    如果你更喜欢使用 `npm`_，没问题！运行 ``npm install @symfony/webpack-encore --save-dev``。
 
-This command creates (or modifies) a ``package.json`` file and downloads dependencies
-into a ``node_modules/`` directory. Yarn also creates/updates a ``yarn.lock``
-(called ``package-lock.json`` if you use npm version 5+).
+此命令创建（或修改） ``package.json`` 文件并将依赖下载到 ``node_modules/`` 目录中。
+Yarn也会创建/更新 ``yarn.lock``（如果你使用npm5+，则调用 ``package-lock.json``）。
 
 .. tip::
 
-    You *should* commit ``package.json`` and ``yarn.lock`` (or ``package-lock.json``
-    if using npm 5) to version control, but ignore ``node_modules/``.
+    你应该提交 ``package.json`` 和 ``yarn.lock``
+    （或者 ``package-lock.json``，如果使用npm5的话）到版本控制，但忽略 ``node_modules/``。
 
-Creating the webpack.config.js File
+创建webpack.config.js文件
 -----------------------------------
 
-Next, create a new ``webpack.config.js`` file at the root of your project:
+接下来，在项目的根目录下创建一个新文件 ``webpack.config.js``：
 
 .. code-block:: js
 
@@ -75,8 +73,7 @@ Next, create a new ``webpack.config.js`` file at the root of your project:
 
     module.exports = Encore.getWebpackConfig();
 
-Next, create a new ``assets/js/app.js`` file with some basic JavaScript *and*
-import some JavaScript:
+接下来，使用一些基本JavaScript创建一个新的 ``assets/js/app.js`` 文件 *并* 导入一些JavaScript：
 
 .. code-block:: javascript
 
@@ -86,7 +83,7 @@ import some JavaScript:
 
     console.log('Hello Webpack Encore');
 
-And the new ``assets/css/app.css`` file:
+以及新的 ``assets/css/app.css`` 文件：
 
 .. code-block:: css
 
@@ -95,6 +92,6 @@ And the new ``assets/css/app.css`` file:
         background-color: lightgray;
     }
 
-You'll customize and learn more about these file in :doc:`/frontend/encore/simple-example`.
+你将在 :doc:`/frontend/encore/simple-example` 中自定义并了解有关这些文件的更多信息。
 
 .. _`npm`: https://www.npmjs.com/

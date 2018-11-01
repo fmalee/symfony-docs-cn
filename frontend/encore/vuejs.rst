@@ -1,13 +1,13 @@
-Enabling Vue.js (vue-loader)
+启用Vue.js (vue-loader)
 ============================
 
-Want to use `Vue.js`_? No problem! First, install Vue and some dependencies:
+想要使用 `Vue.js`_？没问题！首先，安装Vue和一些依赖：
 
 .. code-block:: terminal
 
     $ yarn add --dev vue vue-loader@^14 vue-template-compiler
 
-Then, activate the ``vue-loader`` in ``webpack.config.js``:
+然后，在你的 ``webpack.config.js`` 中激活 ``vue-loader``：
 
 .. code-block:: diff
 
@@ -21,8 +21,8 @@ Then, activate the ``vue-loader`` in ``webpack.config.js``:
     +     .enableVueLoader()
     ;
 
-That's it! Any ``.vue`` files that you require will be processed correctly. You can
-also configure the `vue-loader options`_ via a callback:
+仅此而已！你引入的任何 ``.vue`` 文件都将得到正确处理。
+你还可以通过回调配置 `vue-loader选项`_：
 
 .. code-block:: javascript
 
@@ -34,23 +34,21 @@ also configure the `vue-loader options`_ via a callback:
         };
     });
 
-Hot Module Replacement (HMR)
+热模块更换 (HMR)
 ----------------------------
 
-The ``vue-loader`` supports hot module replacement: just update your code and watch
-your Vue.js app update *without* a browser refresh! To activate it, use the
-``dev-server`` with the ``--hot`` option:
+``vue-loader`` 支持热模块更换：只需更新你的代码，*无需* 刷新浏览器就能监控Vue.js应用更新！
+要激活它，请使用带 ``--hot`` 选项的 ``dev-server``：
 
 .. code-block:: terminal
 
     $ ./node_modules/.bin/encore dev-server --hot
 
-That's it! Change one of your ``.vue`` files and watch your browser update. But
-note: this does *not* currently work for *style* changes in a ``.vue`` file. Seeing
-updated styles still requires a page refresh.
+仅此而已！更改其中一个 ``.vue`` 文件并观看浏览器更新。
+但请注意：该特性并 *不* 支持 ``.vue`` 文件中的 *样式* 变更。查看更新的样式仍需要刷新页面。
 
-See :doc:`/frontend/encore/dev-server` for more details.
+有关更多详细信息，请参阅 :doc:`/frontend/encore/dev-server`。
 
 .. _`babel-preset-react`: https://babeljs.io/docs/plugins/preset-react/
 .. _`Vue.js`: https://vuejs.org/
-.. _`vue-loader options`: https://vue-loader.vuejs.org/options.html
+.. _`vue-loader选项`: https://vue-loader.vuejs.org/options.html

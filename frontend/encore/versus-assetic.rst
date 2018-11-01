@@ -1,12 +1,11 @@
-Encore Versus Assetic?
+Encore VS Assetic
 ======================
 
-Symfony originally shipped with support for :doc:`Assetic </frontend/assetic/index>`: a
-pure PHP library capable of processing, combining and minifying CSS and JavaScript
-files. And while Encore is now the recommended way of processing your assets, Assetic
-still works well.
+Symfony最初附带了对 :doc:`Assetic </frontend/assetic/index>` 的支持：
+一个能够处理、组合、压缩CSS与JavaScript文件的纯PHP库。
+虽然Encore现在是处理资产的推荐方式，但Assetic仍然运作良好。
 
-So what are the differences between Assetic and Encore?
+那么Assetic和Encore之间有什么区别？
 
 +--------------------------+-------------------------------+-------------------------+
 |                          | Assetic                       | Encore                  +
@@ -29,28 +28,22 @@ So what are the differences between Assetic and Encore?
 | Support                  | Not actively maintained       | Actively maintained     |
 +--------------------------+-------------------------------+-------------------------+
 
-.. [1] JavaScript modules allow you to organize your JavaScript into small files
-       called modules and import them:
+.. [1] JavaScript模块允许你将脚本组织成称为模块的小文件并导入它们：
 
        .. code-block:: javascript
 
-           // require third-party modules
+           // 引入第三方模块
            var $ = require('jquery');
 
-           // require your own CoolComponent.js modules
+           // 引入你自己的 CoolComponent.js 模块
            var coolComponent = require('./components/CoolComponent');
 
-       Encore (via Webpack) parses these automatically and creates a JavaScript
-       file that contains all needed dependencies. You can even require CSS or
-       images.
+       Encore（通过Webpack）自动解析这些并创建一个包含所有必需依赖的脚本文件。你甚至可以引入CSS或图像。
 
-.. [2] Assetic has outdated support for React.js only. Encore ships with modern
-       support for React.js, Vue.js, TypeScript, etc.
+.. [2] Assetic仅过时(outdated)支持React.js。Encore附带支持最新的React.js、Vue.js、TypeScript等。
 
-Should I Upgrade from Assetic to Encore
+我应该从Assetic升级到Encore？
 ---------------------------------------
 
-If you already have Assetic working in an application, and haven't needed any of
-the features that Encore offers over Assetic, continuing to use Assetic is fine.
-If you *do* start to need more features, then you might have a business case for
-changing to Encore.
+如果你已经在应用中使用Assetic，并且不需要Encore提供超出Assetic的任何功能，那么继续使用Assetic就可以了。
+如果你确实需要更多功能，那么你可能需要将业务案例更改为Encore。

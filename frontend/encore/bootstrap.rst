@@ -1,50 +1,47 @@
-Using Bootstrap CSS & JS
+使用Bootstrap的CSS和JS
 ========================
 
-Want to use Bootstrap (or something similar) in your project? No problem!
-First, install it. To be able to customize things further, we'll install
-``bootstrap``:
+想在项目中使用Bootstrap（或类似的东西）？没问题！
+首先，安装它。为了能够进一步定制，我们将安装``bootstrap``：
 
 .. code-block:: terminal
 
     $ yarn add bootstrap --dev
 
-Importing Bootstrap Styles
+导入Bootstrap样式
 --------------------------
 
-Now that ``bootstrap`` lives in your ``node_modules/`` directory, you can
-import it from any Sass or JavaScript file. For example, if you already have
-a ``global.scss`` file, import it from there:
+现在 ``bootstrap`` 位于你的 ``node_modules/`` 目录中，你可以从任何Sass或JavaScript文件中导入它。
+例如，如果你已有 ``global.scss`` 文件，请从那里导入：
 
 .. code-block:: scss
 
     // assets/css/global.scss
 
-    // customize some Bootstrap variables
+    // 自定义一些Bootstrap变量
     $primary: darken(#428bca, 20%);
 
-    // the ~ allows you to reference things in node_modules
+    // ~ 允许你在 node_modules 引用一些东西
     @import "~bootstrap/scss/bootstrap";
 
-That's it! This imports the ``node_modules/bootstrap/scss/bootstrap.scss``
-file into ``global.scss``. You can even customize the Bootstrap variables first!
+仅此而已！这会将 ``node_modules/bootstrap/scss/bootstrap.scss`` 文件导入``global.scss``。
+你甚至可以先自定义Bootstrap变量！
 
 .. tip::
 
-    If you don't need *all* of Bootstrap's features, you can include specific files
-    in the ``bootstrap`` directory instead - e.g. ``~bootstrap/scss/alert``.
+    如果你不需要Bootstrap的 *所有* 功能，则可以包含在 ``bootstrap`` 目录中的特定文件 - 例如 ``~bootstrap/scss/alert``。
 
-Importing Bootstrap JavaScript
+导入Bootstrap的JavaScript
 ------------------------------
 
-Bootstrap JavaScript requires jQuery and Popper.js, so make sure you have this installed:
+Bootstrap JavaScript需要jQuery和Popper.js，所以请确保安装了这些：
 
 .. code-block:: terminal
 
     $ yarn add jquery --dev
     $ yarn add popper.js --dev
 
-Next, make sure to call ``.autoProvidejQuery()`` in your ``webpack.config.js`` file:
+接下来，请务必在 ``webpack.config.js`` 文件中调用 ``.autoProvidejQuery()``：
 
 .. code-block:: diff
 
@@ -54,19 +51,18 @@ Next, make sure to call ``.autoProvidejQuery()`` in your ``webpack.config.js`` f
     +     .autoProvidejQuery()
     ;
 
-This is needed because Bootstrap expects jQuery to be available as a global
-variable. Now, require bootstrap from any of your JavaScript files:
+这是必需的，因为Bootstrap希望jQuery可用作全局变量。现在，在任何JavaScript文件中导入bootstrap：
 
 .. code-block:: javascript
 
     // app.js
 
     const $ = require('jquery');
-    // JS is equivalent to the normal "bootstrap" package
-    // no need to set this to a variable, just require it
+    // JS等同于普通的“bootstrap”包
+    // 无需将其设置为变量，只需要 require 它
     require('bootstrap');
 
-    // or you can include specific pieces
+    // 或者你可以包含特定的部分
     // require('bootstrap/js/dist/tooltip');
     // require('bootstrap/js/dist/popover');
 
@@ -74,8 +70,7 @@ variable. Now, require bootstrap from any of your JavaScript files:
         $('[data-toggle="popover"]').popover();
     });
 
-Thanks to ``autoProvidejQuery()``, you can require any other jQuery
-plugins in a similar way:
+多亏了 ``autoProvidejQuery()``，你可以以类似的方式引入任何其他jQuery插件：
 
 .. code-block:: javascript
 

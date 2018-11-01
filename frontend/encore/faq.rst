@@ -1,51 +1,45 @@
-FAQ and Common Issues
+FAQ和常见错误
 =====================
 
 .. _how-do-i-deploy-my-encore-assets:
 
-How Do I Deploy My Encore Assets?
+如何部署Encore资产？
 ---------------------------------
 
-There are two important things to remember when deploying your assets.
+部署资产时需要记住两件重要事项。
 
-**1) Compile Assets for Production**
+**1) 为生成编译资产**
 
-Optimize your assets for production by running:
+通过运行一下命令来优化你的资产以进行生产：
 
 .. code-block:: terminal
 
     $ ./node_modules/.bin/encore production
 
-That will minify your assets and make other performance optimizations. Yay!
+这将压缩你的资产并进行其他性能优化。好极了！
 
-But, what server should you run this command on? That depends on how you deploy.
-For example, you could execute this locally (or on a build server), and use
-`rsync`_ or something else to transfer the generated files to your production
-server. Or, you could put your files on your production server first (e.g. via
-``git pull``) and then run this command on production (ideally, before traffic
-hits your code). In this case, you'll need to install Node.js on your production
-server.
+但是，你应该在什么服务器上运行此命令？这取决于你的部署方式。
+例如，你可以在本地（或在构建服务器上）执行此操作，并使用 `rsync`_ 或其他工具将生成的文件传输到生产服务器。
+或者，你可以先将文件放在生产服务器上（例如通过 ``git pull``），然后在生产中运行此命令
+（最好能在在流量到达代码之前）。在这种情况下，你需要在生产服务器上安装Node.js.
 
-**2) Only Deploy the Built Assets**
+**2) 仅部署生成的资产**
 
-The *only* files that need to be deployed to your production servers are the
-final, built assets (e.g. the ``public/build`` directory). You do *not* need to install
-Node.js, deploy ``webpack.config.js``, the ``node_modules`` directory or even your source
-asset files, **unless** you plan on running ``encore production`` on your production
-machine. Once your assets are built, these are the *only* thing that need to live
-on the production server.
+需要部署到生产服务器的 *唯一* 文件是最终生成的资产（例如 ``public/build`` 目录）。
+你不需要安装Node.js，部署 ``webpack.config.js``、``node_modules`` 目录，甚至你的源资源文件，
+除非你打算在你的生产机器上运行 ``encore production``。
+生成后的资产，才是生产服务器上 *唯一* 需要的东西。
 
-Do I Need to Install Node.js on My Production Server?
+我是否需要在我的生产服务器上安装Node.js？
 -----------------------------------------------------
 
-No, unless you plan to build your production assets on your production server,
-which is not recommended. See `How Do I Deploy my Encore Assets?`_.
+不用，除非你计划在生产服务器上生成生产资产，否则不建议这样做。请参阅 `如何部署Encore资产？`_。
 
-What Files Should I Commit to git? And which Should I Ignore?
+哪些文件应该提交到git？又应该忽略哪些？
 -------------------------------------------------------------
 
-You should commit all of your files to git, except for the ``node_modules/`` directory
-and the built files. Your ``.gitignore`` file should include:
+你应该将所有文件提交到git， ``node_modules/`` 目录和生成的文件除外。
+你的 ``.gitignore`` 文件应包括：
 
 .. code-block:: text
 
@@ -53,13 +47,13 @@ and the built files. Your ``.gitignore`` file should include:
     # whatever path you're passing to Encore.setOutputPath()
     /public/build
 
-You *should* commit all of your source asset files, ``package.json`` and ``yarn.lock``.
+你应该提交所有源资产文件、``package.json`` 以及 ``yarn.lock``。
 
-My App Lives under a Subdirectory
+我的应用位于子目录
 ---------------------------------
 
-If your app does not live at the root of your web server (i.e. it lives under a subdirectory,
-like ``/myAppSubdir``), you need to configure that when calling ``Encore.setPublicPrefix()``:
+如果你的应用不在你的Web服务器的根目录下（即它位于子目录下，例如 ``/myAppSubdir``），
+则需要在调用 ``Encore.setPublicPrefix()`` 时配置它：
 
 .. code-block:: diff
 
@@ -70,17 +64,16 @@ like ``/myAppSubdir``), you need to configure that when calling ``Encore.setPubl
         .setOutputPath('public/build/')
 
     -     .setPublicPath('/build')
-    +     // this is your *true* public path
+    +     // 这里是你 *实际* 的 public 路径
     +     .setPublicPath('/myAppSubdir/build')
 
-    +     // this is now needed so that your manifest.json keys are still `build/foo.js`
-    +     // i.e. you won't need to change anything in your Symfony app
+    +     // 现在需要这样，以便你的 manifest.json 键仍然是 `build/foo.js`
+    +     // 即你不需要更改Symfony应用中的任何内容
     +     .setManifestKeyPrefix('build')
     ;
 
-If you're :ref:`processing your assets through manifest.json <load-manifest-files>`,
-you're done! The ``manifest.json`` file will now include the subdirectory in the
-final paths:
+如果你 :ref:`通过manifest.json处理资产 <load-manifest-files>`，那么你已经完成了！
+``manifest.json`` 文件现在将包含最终路径中的子目录：
 
 .. code-block:: json
 
@@ -89,44 +82,41 @@ final paths:
         "build/dashboard.css": "/myAppSubdir/build/dashboard.a4bf2d.css"
     }
 
-"jQuery is not defined" or "$ is not defined"
+"jQuery is not defined" 或 "$ is not defined"
 ---------------------------------------------
 
-This error happens when your code (or some library that you are using) expects ``$``
-or ``jQuery`` to be a global variable. But, when you use Webpack and ``require('jquery')``,
-no global variables are set.
+当你的代码（或你正在使用的某个库）期望 ``$`` 或 ``jQuery`` 成为全局变量时，会发生此错误。
+但是，当你使用Webpack和 ``require('jquery')``，不会有全局变量被设置。
 
-The fix depends on if the error is happening in your code or inside some third-party
-code that you're using. See :doc:`/frontend/encore/legacy-apps` for the fix.
+此错误的修复取决于你的代码中或你正在使用的某些第三方代码中是否发生错误。
+请参阅 :doc:`/frontend/encore/legacy-apps` 以获取修复方法。
 
 Uncaught ReferenceError: webpackJsonp is not defined
 ----------------------------------------------------
 
-If you get this error, it's probably because you've just added a :doc:`shared entry </frontend/encore/shared-entry>`
-but you *forgot* to add a ``script`` tag for the new ``manifest.js`` file. See the
-information about the :ref:`script tags <encore-shared-entry-script>` in that section.
+如果你收到此错误，可能是因为你刚刚添加了 :doc:`共享条目 </frontend/encore/shared-entry>`，
+但你 *忘记* 为新的 ``manifest.js`` 文件添加 ``script`` 标签。
+请参阅该文档中有关 :ref:`script标签 <encore-shared-entry-script>` 的信息。
 
 This dependency was not found: some-module in ./path/to/file.js
 ---------------------------------------------------------------
 
-Usually, after you install a package via yarn, you can require / import it to use
-it. For example, after running ``yarn add respond.js``, you try to require that module:
+通常，在通过yarn安装一个软件包后，你可以引入/导入它以便使用它。
+例如，运行 ``yarn add respond.js`` 后，你尝试引入该模块：
 
 .. code-block:: javascript
 
     require('respond.js');
 
-But, instead of working, you see an error:
+但是，你看到了一个错误，而不是正常运行：
 
     This dependency was not found:
 
     * respond.js in ./assets/js/app.js
 
-Typically, a package will "advertise" its "main" file by adding a ``main`` key to
-its ``package.json``. But sometimes, old libraries won't have this. Instead, you'll
-need to specifically require the file you need. In this case, the file you should
-use is located at ``node_modules/respond.js/dest/respond.src.js``. You can require
-this via:
+通常，软件包将通过向 ``package.json`` 添加一个 ``main`` 键来“宣告”它的“主”文件。
+但有时候，旧的软件库不会有这个。相反，你需要专门引入你需要的文件。在这种情况下，你应该使用的文件位于 ``node_modules/respond.js/dest/respond.src.js``。
+你可以通过以下方式引入：
 
 .. code-block:: javascript
 

@@ -24,7 +24,7 @@ Encore的灵感来自 `Webpacker`_ 和 `Mix`_，但仍然保持Webpack的精髓�
 
 .. tip::
 
-    Encore由 `Symfony`_ 发行，能*完美*\集成到Symfony应用中。
+    Encore由 `Symfony`_ 发行，能\ *完美*\集成到Symfony应用中。
     但它可以很容易地用于任何语言的任何应用！
 
 .. _encore-toc:
@@ -35,43 +35,43 @@ Encore 文档
 快速上手
 ...............
 
-* :doc:`Installation </frontend/encore/installation>`
-* :doc:`First Example </frontend/encore/simple-example>`
+* :doc:`安装 </frontend/encore/installation>`
+* :doc:`第一个示例 </frontend/encore/simple-example>`
 
 添加更多功能
 ....................
 
-* :doc:`CSS Preprocessors: Sass, LESS, etc </frontend/encore/css-preprocessors>`
-* :doc:`PostCSS and autoprefixing </frontend/encore/postcss>`
-* :doc:`Enabling React.js </frontend/encore/reactjs>`
-* :doc:`Enabling Vue.js (vue-loader) </frontend/encore/vuejs>`
-* :doc:`Configuring Babel </frontend/encore/babel>`
-* :doc:`Source maps </frontend/encore/sourcemaps>`
-* :doc:`Enabling TypeScript (ts-loader) </frontend/encore/typescript>`
+* :doc:`CSS预处理器：Sass、LESS等 </frontend/encore/css-preprocessors>`
+* :doc:`PostCSS和autoprefixing </frontend/encore/postcss>`
+* :doc:`启用React.js </frontend/encore/reactjs>`
+* :doc:`启用Vue.js (vue-loader) </frontend/encore/vuejs>`
+* :doc:`配置Babel </frontend/encore/babel>`
+* :doc:`源映射 </frontend/encore/sourcemaps>`
+* :doc:`启用TypeScript (ts-loader) </frontend/encore/typescript>`
 
 优化
 ..........
 
-* :doc:`Versioning (and the manifest.json file) </frontend/encore/versioning>`
-* :doc:`Using a CDN </frontend/encore/cdn>`
-* :doc:`Creating a "Shared" entry for re-used modules </frontend/encore/shared-entry>`
+* :doc:`版本控制(以及manifest.json文件) </frontend/encore/versioning>`
+* :doc:`使用CDN </frontend/encore/cdn>`
+* :doc:`为复用模块创建共享条目 </frontend/encore/shared-entry>`
 * :doc:`/frontend/encore/url-loader`
 
 指南
 ......
 
-* :doc:`Using Bootstrap CSS & JS </frontend/encore/bootstrap>`
-* :doc:`Creating Page-Specific CSS/JS </frontend/encore/page-specific-assets>`
-* :doc:`jQuery and Legacy Applications </frontend/encore/legacy-apps>`
-* :doc:`Passing Information from Twig to JavaScript </frontend/encore/server-data>`
-* :doc:`webpack-dev-server and Hot Module Replacement (HMR) </frontend/encore/dev-server>`
-* :doc:`Adding custom loaders & plugins </frontend/encore/custom-loaders-plugins>`
-* :doc:`Advanced Webpack Configuration </frontend/encore/advanced-config>`
+* :doc:`使用Bootstrap的CSS和JS </frontend/encore/bootstrap>`
+* :doc:`创建特定于页面的CSS/JS </frontend/encore/page-specific-assets>`
+* :doc:`jQuery和旧应用 </frontend/encore/legacy-apps>`
+* :doc:`将信息从Twig传递到脚本 </frontend/encore/server-data>`
+* :doc:`webpack-dev-server和热模块更换(HMR) </frontend/encore/dev-server>`
+* :doc:`添加自定义加载器&插件 </frontend/encore/custom-loaders-plugins>`
+* :doc:`高级Webpack配置 </frontend/encore/advanced-config>`
 
 问 & 答
 ............
 
-* :doc:`FAQ & Common Issues </frontend/encore/faq>`
+* :doc:`FAQ和常见错误 </frontend/encore/faq>`
 * :doc:`/frontend/encore/versus-assetic`
 
 完整的API

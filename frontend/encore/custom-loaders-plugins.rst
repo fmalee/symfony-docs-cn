@@ -1,16 +1,12 @@
-Adding Custom Loaders & Plugins
+添加自定义加载器&插件
 ===============================
 
-Adding Custom Loaders
+添加自定义加载器
 ---------------------
 
-Encore already comes with a variety of different loaders out of the box,
-but if there is a specific loader that you want to use that is not currently supported, you
-can add your own loader through the ``addLoader`` function.
-The ``addLoader`` takes any valid webpack rules config.
+Encore已经开箱支持了各种不同的加载器，但是如果你想使用一个当前不支持的特定加载器，你可以通过 ``addLoader`` 函数添加自己的加载器。在 该 ``addLoader`` 支持(takes)任何有效的WebPack规则配置。
 
-If, for example, you want to add the `handlebars-loader`_, call ``addLoader`` with
-your loader config
+例如，如果要添加 `handlebars-loader`_，请使用你的loader配置调用 ``addLoader``：
 
 .. code-block:: javascript
 
@@ -19,8 +15,7 @@ your loader config
         .addLoader({ test: /\.handlebars$/, loader: 'handlebars-loader' })
     ;
 
-Since the loader config accepts any valid Webpack rules object, you can pass any
-additional information your need for the loader
+由于加载器配置接受任何有效的Webpack规则对象，因此你可以传递所需的任何额外信息给加载器：
 
 .. code-block:: javascript
 
@@ -41,12 +36,12 @@ additional information your need for the loader
         })
     ;
 
-Adding Custom Plugins
+添加自定义插件
 ---------------------
 
-Encore uses a variety of different `plugins`_ internally. But, you can add your own
-via the ``addPlugin()`` method. For example, if you use `Moment.js`_, you might want
-to use the `IgnorePlugin`_ (see `moment/moment#2373`_):
+Encore在内部使用各种不同的 `插件`_。
+但是，你可以通过 ``addPlugin()`` 方法添加自己的插件。
+例如，如果你使用 `Moment.js`_，则可能需要使用 `IgnorePlugin`_ （请参阅 `moment/moment#2373`_）：
 
 .. code-block:: diff
 
@@ -60,7 +55,7 @@ to use the `IgnorePlugin`_ (see `moment/moment#2373`_):
     ;
 
 .. _`handlebars-loader`: https://github.com/pcardune/handlebars-loader
-.. _`plugins`: https://webpack.js.org/plugins/
+.. _`插件`: https://webpack.js.org/plugins/
 .. _`Moment.js`: https://momentjs.com/
 .. _`IgnorePlugin`: https://webpack.js.org/plugins/ignore-plugin/
 .. _`moment/moment#2373`: https://github.com/moment/moment/issues/2373

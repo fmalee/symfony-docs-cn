@@ -1,12 +1,10 @@
-Configuring Babel
+配置Babel
 =================
 
-`Babel`_ is automatically configured for all ``.js`` and ``.jsx`` files via the
-``babel-loader`` with sensible defaults (e.g. with the ``env`` preset and
-``react`` if requested).
+通过具有合理的默认值（例如，使用 ``env`` 预设和已请求的 ``react``）的 ``babel-loader``，
+`Babel`_ 自动配置所有的 ``.js`` 和 ``.jsx`` 文件。
 
-Need to extend the Babel configuration further? The easiest way is via
-``configureBabel()``:
+需要进一步扩展Babel配置吗？最简单的方法是 ``configureBabel()``：
 
 .. code-block:: javascript
 
@@ -16,28 +14,27 @@ Need to extend the Babel configuration further? The easiest way is via
     Encore
         // ...
 
-        // first, install any presets you want to use (e.g. yarn add babel-preset-es2017)
-        // then, modify the default Babel configuration
+        // 首先，安装任何你需要的预设（如 yarn add babel-preset-es2017）
+        // 然后，编辑默认的Babel配置
         .configureBabel(function(babelConfig) {
-            // add additional presets
+            // 添加额外预设
             babelConfig.presets.push('es2017');
 
-            // no plugins are added by default, but you can add some
+            // 默认没有添加任何插件，但是你可以添加一些
             // babelConfig.plugins.push('styled-jsx/babel');
         })
     ;
 
-Creating a .babelrc File
+创建 .babelrc 文件
 ------------------------
 
-Instead of calling ``configureBabel()``, you could create a ``.babelrc`` file
-at the root of your project. This is a more "standard" way of configuring
-Babel, but it has a downside: as soon as a ``.babelrc`` file is present,
-**Encore can no longer add any Babel configuration for you**. For example,
-if you call ``Encore.enableReactPreset()``, the ``react`` preset will *not*
-automatically be added to Babel: you must add it yourself in ``.babelrc``.
+你可以在项目的根目录中创建 ``.babelrc`` 文件，而不是调用 ``configureBabel()``。
+这是配置Babel的更“标准”的方式，但它有一个缺点：
+只要 ``.babelrc`` 文件存在， **Encore就不能再为你添加任何Babel配置**。
+例如，如果你调用 ``Encore.enableReactPreset()``，
+``react`` 预设将 *不会* 自动添加到Babel：你必须在  ``.babelrc`` 中自己添加。
 
-An example ``.babelrc`` file might look like this:
+一个示例 ``.babelrc`` 文件可能如下所示：
 
 .. code-block:: json
 

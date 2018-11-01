@@ -1,16 +1,16 @@
-CSS Preprocessors: Sass, LESS, etc.
+CSS预处理器：Sass、LESS等
 ===================================
 
-Using Sass
+使用Sass
 ----------
 
-To use the Sass pre-processor, install the dependencies:
+要使用Sass预处理器，请安装该依赖：
 
 .. code-block:: terminal
 
     $ yarn add --dev sass-loader node-sass
 
-And enable it in ``webpack.config.js``:
+并在 ``webpack.config.js`` 中启用它：
 
 .. code-block:: javascript
 
@@ -22,8 +22,8 @@ And enable it in ``webpack.config.js``:
         .enableSassLoader()
     ;
 
-That's it! All files ending in ``.sass`` or ``.scss`` will be pre-processed. You
-can also pass options to ``sass-loader``:
+仅此而已！所有以 ``.sass`` 或 ``.scss`` 结尾的文件将被预处理。
+你还可以选项传递到 ``sass-loader``：
 
 .. code-block:: javascript
 
@@ -38,16 +38,16 @@ can also pass options to ``sass-loader``:
         });
     ;
 
-Using LESS
+使用LESS
 ----------
 
-To use the LESS pre-processor, install the dependencies:
+要使用LESS预处理器，请安装该依赖：
 
 .. code-block:: terminal
 
     $ yarn add --dev less-loader less
 
-And enable it in ``webpack.config.js``:
+并在 ``webpack.config.js`` 中启用它：
 
 .. code-block:: javascript
 
@@ -59,8 +59,8 @@ And enable it in ``webpack.config.js``:
         .enableLessLoader()
     ;
 
-That's it! All files ending in ``.less`` will be pre-processed. You can also pass
-options to ``less-loader``:
+仅此而已！所有以 ``.less`` 结尾的文件将被预处理。
+你还可以选项传递到 ``less-loader``：
 
 .. code-block:: javascript
 

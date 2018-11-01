@@ -1,13 +1,13 @@
-Enabling TypeScript (ts-loader)
+启用TypeScript (ts-loader)
 ===============================
 
-Want to use `TypeScript`_? No problem! First, install the dependencies:
+想要使用 `TypeScript`_？没问题！首先，安装该依赖：
 
 .. code-block:: terminal
 
     $ yarn add --dev typescript ts-loader@^3.0
 
-Then, activate the ``ts-loader`` in ``webpack.config.js``:
+然后，在 ``webpack.config.js`` 中激活 ``ts-loader``：
 
 .. code-block:: javascript
 
@@ -21,6 +21,7 @@ Then, activate the ``ts-loader`` in ``webpack.config.js``:
         .enableTypeScriptLoader()
     ;
 
+而已！.ts您需要的任何文件都将得到正确处理。您还可以通过回调配置ts-loader选项：
 That's it! Any ``.ts`` files that you require will be processed correctly. You can
 also configure the `ts-loader options`_ via a callback:
 
@@ -31,22 +32,21 @@ also configure the `ts-loader options`_ via a callback:
         typeScriptConfigOptions.configFile = '/path/to/tsconfig.json';
     });
 
-If React assets are enabled (``.enableReactPreset()``), any ``.tsx`` file will be
-processed as well by ``ts-loader``.
+如果已启用React资产（``.enableReactPreset()``），则任何 ``.tsx`` 文件都将由 ``ts-loader`` 处理。
 
-More information about the ``ts-loader`` can be found in its `README`_.
+有关 ``ts-loader`` 的更多信息，可以在他的 `README`_ 中找到。
 
-Faster Builds with fork-ts-checker-webpack-plugin
+使用fork-ts-checker-webpack-plugin更快生成
 -------------------------------------------------
 
-By using `fork-ts-checker-webpack-plugin`_, you can run type checking in a separate
-process, which can speedup compile time. To enable it, install the plugin:
+通过使用 `fork-ts-checker-webpack-plugin`_，你可以在单独的进程中运行类型检查，这样可以加快编译进程。
+要启用它，请安装该插件：
 
 .. code-block:: terminal
 
     $ yarn add --dev fork-ts-checker-webpack-plugin
 
-Then enable it by calling:
+然后通过调用启用它：
 
 .. code-block:: javascript
 
@@ -57,7 +57,7 @@ Then enable it by calling:
         .enableForkedTypeScriptTypesChecking()
     ;
 
-This plugin requires that you have a `tsconfig.json`_ file that is setup correctly.
+此插件要求你具有一个设置正确的 `tsconfig.json`_ 文件。
 
 .. _`TypeScript`: https://www.typescriptlang.org/
 .. _`ts-loader options`: https://github.com/TypeStrong/ts-loader#options

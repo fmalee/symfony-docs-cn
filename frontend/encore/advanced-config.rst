@@ -1,12 +1,10 @@
-Advanced Webpack Config
+高级Webpack配置
 =======================
 
-Encore generates the Webpack configuration that's used in your
-``webpack.config.js`` file. Encore doesn't support adding all of Webpack's
-`configuration options`_, because many can be easily added on your own.
+Encore使用你的 ``webpack.config.js`` 文件来生成Webpack配置。
+Encore不支持添加所有Webpack的 `配置选项`_，因为你可以轻松添加很多自己的配置。
 
-For example, suppose you need to set `Webpack's watchOptions`_ setting. To do that,
-modify the config after fetching it from Encore:
+例如，假设你需要设置Webpack的 `watchOptions`_ 设置。为此，请在从Encore获取配置后修改它：
 
 .. code-block:: javascript
 
@@ -16,18 +14,18 @@ modify the config after fetching it from Encore:
 
     // ... all Encore config here
 
-    // fetch the config, then modify it!
+    // 获取配置，然后修改它!
     var config = Encore.getWebpackConfig();
     config.watchOptions = { poll: true, ignored: /node_modules/ };
 
-    // other examples: add an alias or extension
+    // 其他示例: 添加一个别名或扩展
     // config.resolve.alias.local = path.resolve(__dirname, './resources/src');
     // config.resolve.extensions.push('json');
 
-    // export the final config
+    // 导出最终配置
     module.exports = config;
 
-But be careful not to accidentally override any config from Encore:
+但要注意不要意外覆盖Encore的任何配置：
 
 .. code-block:: javascript
 
@@ -40,12 +38,11 @@ But be careful not to accidentally override any config from Encore:
     // BAD - this replaces any extensions added by Encore
     // config.resolve.extensions = ['json'];
 
-Defining Multiple Webpack Configurations
+定义多个Webpack配置
 ----------------------------------------
 
-Webpack supports passing an `array of configurations`_, which are processed in
-parallel. Webpack Encore includes a ``reset()`` object allowing to reset the
-state of the current configuration to build a new one:
+Webpack支持传递一个 `配置数组`_，这些配置是并行处理的。
+Webpack Encore包含一个 ``reset()`` 对象，允许重置当前配置的状态以生成新配置：
 
 .. code-block:: javascript
 
@@ -88,13 +85,12 @@ state of the current configuration to build a new one:
     // export the final configuration as an array of multiple configurations
     module.exports = [firstConfig, secondConfig];
 
-When running Encore, both configurations will be built in parallel. If you
-prefer to build configs separately, pass the ``--config-name`` option:
+运行Encore时，两个配置将并行生成。如果你更喜欢单独生成配置，请传递 ``--config-name`` 选项：
 
 .. code-block:: terminal
 
     $ yarn encore dev --config-name firstConfig
 
-.. _`configuration options`: https://webpack.js.org/configuration/
-.. _`Webpack's watchOptions`: https://webpack.js.org/configuration/watch/#watchoptions
-.. _`array of configurations`: https://github.com/webpack/docs/wiki/configuration#multiple-configurations
+.. _`配置选项`: https://webpack.js.org/configuration/
+.. _`watchOptions`: https://webpack.js.org/configuration/watch/#watchoptions
+.. _`配置数组`: https://github.com/webpack/docs/wiki/configuration#multiple-configurations
