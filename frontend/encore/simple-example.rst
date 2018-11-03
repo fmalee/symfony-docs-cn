@@ -22,8 +22,8 @@ Encore将你的 ``app.js`` 文件视为独立的JavaScript应用：
     // ... the rest of your JavaScript...
 
 Encore的工作很简单：读取 *所有* 的 ``require`` 语句，
-并创建包含 *所有* 你的应用需求一个最终的 ``app.js``（和 ``app.css``）。
-当然，Encore可以做更多的事情：压缩文件，预处理Sass/LESS，支持React、Vue.js和更多。
+并创建包含你的应用 *所有* 需求的一个最终的 ``app.js`` （和 ``app.css``）。
+当然，Encore可以做更多的事情：压缩文件，预处理Sass/LESS，支持React、Vue.js以及更多。
 
 配置Encore/Webpack
 --------------------------

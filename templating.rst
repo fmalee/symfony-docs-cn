@@ -10,7 +10,7 @@
 现实中，控制器把大部分的繁重工作都委托给了其他地方，以令代码能够被测试和复用。
 当一个控制器需要生成HTML、CSS或者其他内容时，它把这些工作给了一个模板引擎。
 
-在本文中，你将学习如何编写功能强大的模板，用于把内容返回给用户、填充email，等等。
+在本文中，你将学习如何编写功能强大的模板，用于把内容返回给用户、填充email等等。
 你还将学会快捷方法，用聪明的方式来扩展模板，以及如何复用模板代码。
 
 .. index::
@@ -84,7 +84,7 @@ Twig也包含 **过滤器**，它可以在模板输出之前改变输出内容�
 
     {{ title|upper }}
 
-Twig 内置了大量的 `标签`_，`过滤器`_ 和 `函数`_ ，默认就可以使用。
+Twig 内置了大量的 `标签`_、`过滤器`_ 和 `函数`_ ，默认就可以使用。
 你甚至可以利用 :doc:`Twig 扩展 </templating/twig_extension>` 来 *自定义* 你自己的过滤器和函数（乃至更多）。
 
 Twig代码很像PHP代码，但两者有微妙的区别。
@@ -100,9 +100,9 @@ Twig代码很像PHP代码，但两者有微妙的区别。
 
 本章的模板示例，将同时使用Twig和PHP来展示。
 
-.. sidebar:: Why Twig?
+.. sidebar:: 为什么选择Twig?
 
-    Twig模板就是为了简单而不去处理PHP标签。设计上即是如此：Twig模板只负责呈现，而不去考虑逻辑。
+    Twig模板就是为了简单而不去处理PHP标签。设计上即是如此：Twig模板只负责渲染，而不去考虑逻辑。
     你用Twig越多，你就越会欣赏它，并从它的特性中受益。当然，你也会被普天下的网页设计者喜欢。
 
     还有很多Twig可以做但是PHP不可以的事，如空格控制、沙盒、自动转码HTML、手动上下文输出转义，
@@ -277,7 +277,7 @@ Twig超快的原因是，Twig模板被编译成原生PHP类并且缓存起来。
     每个第三方bundle的模板都会存放于它自己的 ``Resources/views/`` 目录（或者子目录）下。当你打算共享你的bundle时，你应该把它放在bundle中，而不是 ``templates/`` 目录。
 
 更多时候你要用到的模板是在 ``templates/`` 目录下。你需要的模板路径是相对于这个目录的。
-例如，去输出/继承 ``templates/base.html.twig``，你需要使用 `base.html.twig`` 的路径，
+例如，去输出/继承 ``templates/base.html.twig``，你需要使用 ``base.html.twig`` 路径，
 而要输出 ``templates/blog/index.html.twig`` 时，你需要使用 ``blog/index.html.twig`` 路径。
 
 .. _template-referencing-in-bundle:
@@ -316,7 +316,8 @@ Symfony使用Twig的命名空间语法（``@BundleName/directory/filename.html.t
 ``blog/index.css.twig``   CSS     Twig
 ========================  ======  ======
 
-默认情况下，任何Symfony模板都可以用Twig或PHP编写，而后缀的最后一部分（``.twig`` 或 ``.php``）指明了应该使用这两个*引擎*中的哪一个。
+默认情况下，任何Symfony模板都可以用Twig或PHP编写，而后缀的最后一部分
+（``.twig`` 或 ``.php``）指明了应该使用这两个 *引擎* 中的哪一个。
 后缀的第一部分（``.html``, ``.css``）是模板最终将生成的格式。
 与决定Symfony如何解析模板的引擎不同，这只是一种组织策略，
 用于需要将相同的资源渲染为HTML（``index.html.twig``），XML（``index.xml.twig``）或任何其他格式的情况。
@@ -382,8 +383,8 @@ Symfony内置了几个特殊的Twig标签和函数，来帮助模板设计者简
 注意，模板命名要遵循相同的典型约定。
 在 ``article_details.html.twig`` 模板中使用了 ``article`` 变量，这是我们传入模板的。
 本例中，你也可以完全不这样做，
-因为在 ``list.html.twig``模板中所有可用的变量也都可以在 ``article_details.html.twig`` 中使用
-（除非你设置了 `with_context`_ 为 false）。
+因为在 ``list.html.twig`` 模板中所有可用的变量也都可以在 ``article_details.html.twig`` 中使用
+（除非你设置了 `with_context`_ 为 ``false``）。
 
 .. tip::
 
@@ -689,7 +690,7 @@ Symfony同样在Twig中给了你一个全局的 ``app`` 变量，可以用于访
 总结
 --------------
 
-模板系统仅仅是Symfony诸多工具中的*一个*。
+模板系统仅仅是Symfony诸多工具中的 *一个*。
 它的工作很简单：方便我们渲染动态的、复杂的HTML输出，以便最终将其返回给用户，通过电子邮件或其他方式发送。
 
 继续阅读

@@ -3,39 +3,35 @@
 
 .. _requirements-for-running-symfony2:
 
-Requirements for Running Symfony
+运行Symfony的要求
 ================================
 
-Symfony 4.0 requires **PHP 7.1.3** or higher to run, in addition to other minor
-requirements. To make things simple, Symfony provides a tool to quickly check if
-your system meets all those requirements. Run this command to install the tool:
+除了其他次要要求之外，Symfony 4.0还需要运行 **PHP 7.1.3** 或更高版本。
+为简单起见，Symfony提供了一种工具，可以快速检查你的系统是否满足所有这些要求。
+运行此命令以安装该工具：
 
 .. code-block:: terminal
 
     $ cd your-project/
     $ composer require symfony/requirements-checker
 
-Beware that PHP can define a different configuration for the command console and
-the web server, so you need to check requirements in both environments.
+请注意，PHP可以为命令控制台和Web服务器定义不同的配置，因此你需要检查两个环境中的要求。
 
-Checking Requirements for the Web Server
+检查Web服务器的要求
 ----------------------------------------
 
-The requirements checker tool creates a file called ``check.php`` in the
-``public/`` directory of your project. Open that file with your browser to check
-the requirements.
+需求检查器工具在 ``public/`` 项目目录中创建一个叫 ``check.php`` 的文件。
+使用浏览器打开该文件以检查环境要求。
 
-Once you've fixed all the reported issues, uninstall the requirements checker
-to avoid leaking internal information about your application to visitors:
+修复所有报告的问题后，请卸载该需求检查器，以避免将有关应用的内部信息泄露给访问者：
 
 .. code-block:: terminal
 
     $ cd your-project/
     $ composer remove symfony/requirements-checker
 
-Checking Requirements for the Command Console
+检查命令控制台的要求
 ---------------------------------------------
 
-The requirements checker tool adds a script to your Composer configuration to
-check the requirements automatically. There's no need to execute any command; if
-there is any issue, you'll see them in the console output.
+需求检查器工具将一个脚本添加到Composer配置中以自动检查需求。
+没有必要执行任何命令;如果有任何问题，你将在控制台输出中看到它们。

@@ -1,7 +1,7 @@
 网站资源
 ==========
 
-网站资源（web assets）是指CSS，JavaScript和图像文件之类的东西，它们令网站的前端页面看起来更漂亮。
+网站资源（web assets）是指CSS、JavaScript和图像文件之类的东西，它们令网站的前端页面看起来更漂亮。
 
 .. best-practice::
 
@@ -13,11 +13,11 @@
 
     使用 `Webpack Encore`_ 编译、组合和最小化网站资源。
 
-`Webpack`_ 是领先的JavaScript模块捆绑器(bundler)，可以编译、转换和打包资源，以便在浏览器中使用。
+`Webpack`_ 是领先的JavaScript模块bundler，可以编译、转换和打包资源，以便在浏览器中使用。
 Webpack Encore 是一个JavaScript库，可以摆脱 Webpack 的大部分复杂性，而不会削减其任何功能或扭曲其使用和理念。
 
 Webpack Encore 旨在缩减Symfony应用与基于JavaScript工具的现代Web应用之间的差距。
-查看 `official Webpack Encore documentation`_ ，了解有关所有可用功能的更多信息。
+查看 `Webpack Encore文档`_，了解有关所有可用功能的更多信息。
 
 ----
 
@@ -25,4 +25,4 @@ Webpack Encore 旨在缩减Symfony应用与基于JavaScript工具的现代Web应
 
 .. _`Webpack Encore`: https://github.com/symfony/webpack-encore
 .. _`Webpack`: https://webpack.js.org/
-.. _`official Webpack Encore documentation`: https://symfony.com/doc/current/frontend.html
+.. _`Webpack Encore文档`: https://symfony.com/doc/current/frontend.html

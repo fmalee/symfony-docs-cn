@@ -8,7 +8,7 @@ FAQ和常见错误
 
 部署资产时需要记住两件重要事项。
 
-**1) 为生成编译资产**
+**1) 为生产编译资产**
 
 通过运行一下命令来优化你的资产以进行生产：
 
@@ -72,7 +72,7 @@ FAQ和常见错误
     +     .setManifestKeyPrefix('build')
     ;
 
-如果你 :ref:`通过manifest.json处理资产 <load-manifest-files>`，那么你已经完成了！
+如果你 :ref:`通过manifest.json处理资产 <load-manifest-files>`，那么你已经完工了！
 ``manifest.json`` 文件现在将包含最终路径中的子目录：
 
 .. code-block:: json

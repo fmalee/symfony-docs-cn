@@ -21,7 +21,7 @@
 
 .. seealso::
 
-    Symfony*包含(embraces)*HTTP请求-响应生命周期。
+    Symfony *包含(embraces)* HTTP请求-响应生命周期。
     要了解更多信息，请参阅 :doc:`/introduction/http_fundamentals`。
 
 .. index::
@@ -134,7 +134,7 @@ Symfony还允许你使用注释路由，而不是在 YAML 中定义路由。为�
 首先，``annotations`` 不是真正的包名称：
 它是Flex为 ``sensio/framework-extra-bundle`` 起的一个 *别名* （即快捷方式）。
 
-其次，在下载该软件包之后，Flex执行了一个 *食谱*(recipe)，这是一组自动指令，告诉Symfony如何集成外部软件包。
+其次，在下载该软件包之后，Flex执行了一个 *食谱(recipe)*，这是一组自动指令，告诉Symfony如何集成外部软件包。
 `Flex 食谱`_ 适用于许多软件包，并且能够做很多事情，例如添加配置文件，创建目录，
 更新 ``.gitignore`` 以及向 ``.env`` 文件添加新配置。
 Flex 会 *自动* 安装软件包，以便你可以轻松编写代码。
@@ -154,7 +154,7 @@ bin/console 命令
 你应该看到一个命令列表，它可以为你提供调试信息，帮助生成代码，生成数据库迁移等等。
 当你安装更多软件包时，将会看到更多命令。
 
-要获取系统中*所有*路由的列表，可以使用 ``debug:router`` 命令：
+要获取系统中 *所有* 路由的列表，可以使用 ``debug:router`` 命令：
 
 .. code-block:: terminal
 
@@ -237,7 +237,7 @@ Symfony的 *杀手级* 功能之一是Web调试工具栏：
 
     http://localhost:8000/lucky/number
 
-现在你可能在想Web调试工具栏到底在哪里：那是因为当前模板中没有``</body>`` 标签。
+现在你可能在想Web调试工具栏到底在哪里：那是因为当前模板中没有 ``</body>`` 标签。
 你可以自己添加body元素，或者继承 ``base.html.twig``，它包含所有默认的HTML元素。
 
 在 :doc:`/templating` 章节中，你将了解有关 Twig 的所有信息：如何实现循环，渲染其他模板以及利用其强大的布局继承系统。
@@ -248,7 +248,7 @@ Symfony的 *杀手级* 功能之一是Web调试工具栏：
 好消息！你早已经在项目中最重要的目录中开工了：
 
 ``config/``
-    包含......当然是配置啦！你可以在这里配置路由，:doc:`services </service_container>` 和依赖包。
+    包含......当然是配置啦！你可以在这里配置路由、:doc:`服务 </service_container>` 和依赖包。
 
 ``src/``
     你的所有PHP代码都存在于此处。
@@ -256,7 +256,7 @@ Symfony的 *杀手级* 功能之一是Web调试工具栏：
 ``templates/``
     你的所有Twig模板都存在于此处。
 
-大多数情况下，你将在 ``src/``，``templates/`` 或 ``config/`` 中工作。
+大多数情况下，你将在 ``src/``、``templates/`` 或 ``config/`` 中工作。
 当你继续阅读时，你将学习在每个目录中可以做些什么。
 
 那么项目中的其他目录呢？

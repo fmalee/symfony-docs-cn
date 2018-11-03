@@ -9,11 +9,11 @@
 基础架构相关配置
 ------------------------------------
 
-这些是从一台计算机更改为另一台计算机的选项（例如，从您的开发计算机更改为生产服务器），但不会更改应用程序行为。
+这些是从一台计算机更改为另一台计算机的选项（例如，从你的开发计算机更改为生产服务器），但不会更改应用程序行为。
 
 .. best-practice::
 
-    将基础结构相关的配置选项定义为 :doc:`environment variables </configuration/external_parameters>`。在开发过程中，使用项目根目录下的 ``.env`` 文件来设置它们。
+    将基础结构相关的配置选项定义为 :doc:`环境变量 </configuration/external_parameters>`。在开发过程中，使用项目根目录下的 ``.env`` 文件来设置它们。
 
 默认情况下，在应用中安装新的依赖项时，Symfony会将这些类型的选项添加到 ``.env`` 文件中：
 
@@ -35,7 +35,7 @@
 
 .. caution::
 
-    请注意，打印(dumping) ``$ _SERVER`` 和 ``$ _ENV`` 变量的内容或输出 ``phpinfo（）`` 内容将显示环境变量的值，
+    请注意，打印(dumping) ``$ _SERVER`` 和 ``$ _ENV`` 变量的内容或输出 ``phpinfo()`` 内容将显示环境变量的值，
     从而暴露敏感信息，如数据库凭据。
 
 .. _best-practices-canonical-parameters:
@@ -61,7 +61,7 @@ Symfony在项目根目录中包含一个名为 ``.env.dist`` 的配置文件，�
 ``services.yaml`` 文件包含应用用于修改其行为的选项，例如电子邮件通知的发件人或启用 `功能切换`_。
 将这些配置值定义在 ``.env`` 是不必要的，因为这将增加一个额外的配置层，而你不需要或不希望在每个服务器上更改这些配置值。
 
-``services.yaml`` 中定义的配置选项可能因 :doc:`environment </configuration/environments>` 而异。
+``services.yaml`` 中定义的配置选项可能因 :doc:`环境 </configuration/environments>` 而异。
 这也能解释为什么Symfony还自带了 ``config/services_dev.yaml`` 和 ``config/services_prod.yaml`` 文件，它们能让你覆写针对不同环境的特定的选项值。
 
 常量 v.s. 配置选项
@@ -81,7 +81,7 @@ Symfony在项目根目录中包含一个名为 ``.env.dist`` 的配置文件，�
     parameters:
         homepage.number_of_items: 10
 
-如果你已经这样做了，实际上你可能*很少*去改变这些值。
+如果你已经这样做了，实际上你可能 *很少* 去改变这些值。
 创建一个配置选项然后从不去改变它，那就是不必要。
 我们推荐你将这些值定义为常量，比如你可以在 ``Post`` 实体中定义一个 ``NUMBER_OF_ITEMS`` 常量::
 
@@ -97,7 +97,7 @@ Symfony在项目根目录中包含一个名为 ``.env.dist`` 的配置文件，�
 
 这样做的好处是你可以在程序中的任何地方使用这个值。而使用参数时，你只能通过使用容器来访问它们。
 
-常量可以在Twig模板中使用，多亏了 `constant() 函数`_：
+常量可以在Twig模板中使用，多亏了 `constant()函数`_：
 
 .. code-block:: html+twig
 
@@ -105,7 +105,7 @@ Symfony在项目根目录中包含一个名为 ``.env.dist`` 的配置文件，�
         Displaying the {{ constant('NUMBER_OF_ITEMS', post) }} most recent results.
     </p>
 
-而且，Doctrine 实体和仓库(repository)现在可以轻松访问这些值，而它们无法访问容器参数::
+而且，Doctrine 实体和仓库现在可以轻松访问这些值，而它们无法访问容器参数::
 
     namespace App\Repository;
 
@@ -129,7 +129,7 @@ Symfony在项目根目录中包含一个名为 ``.env.dist`` 的配置文件，�
 
     配置参数的名称应尽可能短，并且应包含整个应用的公共前缀。
 
-使用 ``app.`` 作为参数前缀是避免Symfony和第三方bundles/库的参数冲突的常见做法。
+使用 ``app.`` 作为参数前缀是避免Symfony和第三方bundles库的参数冲突的常见做法。
 然后，只用一两个词来描述参数的用途：
 
 .. code-block:: yaml
@@ -149,4 +149,4 @@ Symfony在项目根目录中包含一个名为 ``.env.dist`` 的配置文件，�
 下一章: :doc:`/best_practices/business-logic`
 
 .. _`功能切换`: https://en.wikipedia.org/wiki/Feature_toggle
-.. _`constant() 函数`: https://twig.symfony.com/doc/2.x/functions/constant.html
+.. _`constant()函数`: https://twig.symfony.com/doc/2.x/functions/constant.html

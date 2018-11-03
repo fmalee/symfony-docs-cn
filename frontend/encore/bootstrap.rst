@@ -2,7 +2,7 @@
 ========================
 
 想在项目中使用Bootstrap（或类似的东西）？没问题！
-首先，安装它。为了能够进一步定制，我们将安装``bootstrap``：
+首先，安装它。为了能够进一步定制，我们将安装 ``bootstrap``：
 
 .. code-block:: terminal
 
@@ -24,7 +24,7 @@
     // ~ 允许你在 node_modules 引用一些东西
     @import "~bootstrap/scss/bootstrap";
 
-仅此而已！这会将 ``node_modules/bootstrap/scss/bootstrap.scss`` 文件导入``global.scss``。
+仅此而已！这会将 ``node_modules/bootstrap/scss/bootstrap.scss`` 文件导入 ``global.scss``。
 你甚至可以先自定义Bootstrap变量！
 
 .. tip::

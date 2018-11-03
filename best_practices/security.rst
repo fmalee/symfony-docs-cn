@@ -5,7 +5,7 @@
 ------------------------------------------------------------------
 
 你可以配置Symfony以使用你想要的任何方法对用户进行身份认证，并从任何数据来源加载用户信息。
-这是一个复杂的主题，但 :doc:`Security guide </security>` 中有很多相关信息。
+这是一个复杂的主题，但 :doc:`安全指南 </security>` 中有很多相关信息。
 
 不管你的需求是什么，认证都要在 ``security.yaml`` 中进行配置，主要在 ``firewalls`` 键下进行。
 
@@ -19,14 +19,14 @@
 当然也有例外，特别是如果你的网站上有网页和API部分。但关键是要保持简单。
 
 此外，你应该使用防火墙下的 ``anonymous`` 键。
-如果你需要要求用户登录站点的不同部分（或几乎*所有*部分），请使用``access_control`` 区域。
+如果你需要要求用户登录站点的不同部分（或几乎 *所有* 部分），请使用``access_control`` 区域。
 
 .. best-practice::
 
     使用 ``bcrypt`` 编码器对用户密码进行哈希处理。
 
-如果您的用户使用密码，我们建议使用 ``bcrypt``编码器对其进行散列，而不是传统的 SHA-512 散列编码器。
-``bcrypt`` 的主要优点是包含一个*salt*值来防止彩虹表攻击，以及它的自适应性，能令暴力破解的过程变得愈发之长。
+如果您的用户使用密码，我们建议使用 ``bcrypt`` 编码器对其进行散列，而不是传统的 SHA-512 散列编码器。
+``bcrypt`` 的主要优点是包含一个 *salt* 值来防止彩虹表攻击，以及它的自适应性，能令暴力破解的过程变得愈发之长。
 
 .. note::
 
@@ -68,7 +68,7 @@
 授权 (如拒绝访问)
 -----------------------------------
 
-Symfony为你提供了几种实施授权的方法，包括 :doc:`security.yaml </reference/configuration/security>` 中的 ``access_control``配置，:ref:`@Security annotation <best-practices-security-annotation>` 以及直接在 ``security.authorization_checker`` 服务上使用 :ref:`isGranted <best-practices-directly-isGranted>`。
+Symfony为你提供了几种实施授权的方法，包括 :doc:`security.yaml </reference/configuration/security>` 中的 ``access_control`` 配置，:ref:`@Security注释 <best-practices-security-annotation>` 以及直接在 ``security.authorization_checker`` 服务上使用 :ref:`isGranted <best-practices-directly-isGranted>`。
 
 .. best-practice::
 
@@ -76,15 +76,15 @@ Symfony为你提供了几种实施授权的方法，包括 :doc:`security.yaml <
     * 尽最大可能使用 ``@Security`` 注释；
     * 一旦遇到复杂状况，直接利用 ``security.authorization_checker`` 服务来检查安全性。
 
-还有不同的方法可以集中管理授权逻辑，例如自定义安全选民(security voter)：
+还有不同的方法可以集中管理授权逻辑，例如自定义安全表决器(security voter)：
 
 .. best-practice::
 
-    定义一个自定义安全选民以实现精细化（fine-grained）的访问控制。
+    定义一个自定义安全表决器以实现精细化（fine-grained）的访问控制。
 
 .. _best-practices-security-annotation:
 
-@Security 注释
+@Security注释
 ------------------------
 
 在控制器里，实施访问控制时，尽量使用@Security注释。位于动作上方的它们，不光容易理解，还容易替换。
@@ -112,7 +112,7 @@ Symfony为你提供了几种实施授权的方法，包括 :doc:`security.yaml <
 在复杂安全限制中使用表达式
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-如果您的安全逻辑稍微复杂一些，可以在 ``@Security``中使用 :doc:`expression </components/expression_language>`。
+如果您的安全逻辑稍微复杂一些，可以在 ``@Security`` 中使用 :doc:`表达式 </components/expression_language>`。
 在以下示例中，如果用户的电子邮件与 ``Post`` 对象上的 ``getAuthorEmail()`` 方法返回的值匹配，则用户才能访问控制器::
 
     use App\Entity\Post;
@@ -234,7 +234,7 @@ Symfony为你提供了几种实施授权的方法，包括 :doc:`security.yaml <
 ---------------
 
 如果你的安全逻辑很复杂并且无法集中到像 ``isAuthor()`` 这样的方法中，那么你应该利用自定义表决器。
-这些比 :doc:`ACLs </security/acl>` 更容易，并且几乎在所有情况下都能为你提供所需的灵活性。
+这些比 :doc:`ACL </security/acl>` 更容易，并且几乎在所有情况下都能为你提供所需的灵活性。
 
 首先，要创建一个voter类。以下示例展示了与前例用过的 ``getAuthorEmail()`` 相同的逻辑::
 
@@ -350,6 +350,6 @@ Symfony为你提供了几种实施授权的方法，包括 :doc:`security.yaml <
 下一章: :doc:`/best_practices/web-assets`
 
 .. _`ParamConverter`: https://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/annotations/converters.html
-.. _`@Security annotation`: https://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/annotations/security.html
+.. _`@Security注释`: https://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/annotations/security.html
 .. _`FOSUserBundle`: https://github.com/FriendsOfSymfony/FOSUserBundle
 .. _`libsodium`: https://pecl.php.net/package/libsodium

@@ -8,8 +8,8 @@
 
     使用 Composer 和 Symfony Flex 来创建和管理 Symfony 应用。
 
-`Composer`_ 是个依赖管理器，被现代php程序广泛使用。`Symfony Flex`_ 是一个 Composer 插件
-`Symfony Flex`_ 是一个Composer插件，旨在自动执行 Symfony 应用中的一些最常见的任务。
+`Composer`_ 是个依赖管理器，被现代php程序广泛使用。
+而 `Symfony Flex`_ 是一个Composer插件，旨在自动执行 Symfony 应用中的一些最常见的任务。
 使用 Flex 是可选的，但建议使用，因为它可以显著的提高您的生产效率。
 
 .. best-practice::
@@ -34,7 +34,8 @@
     $ composer create-project symfony/skeleton blog
 
 上面的命令，创建了一个名为 ``blog`` 的新目录，里面是一个基于Symfony最新稳定版的全新项目。
-除此之外，安装器还会检查你的操作系统是否满足了运行Symfony所需之环境。如果不满足，你会看到一个列表，上面有你需要修复的信息。
+除此之外，安装器还会检查你的操作系统是否满足了运行Symfony所需之环境。
+如果不满足，你会看到一个列表，上面有你需要修复的信息。
 
 .. tip::
     运行 Symfony 的所需的环境要求很简单。
@@ -63,7 +64,7 @@
 这种层级式的文件和目录是符合Symfony推荐的命名约定的，可以令你的程序结构化。每个目录的推荐用法如下：
 这些文件和目录的层次结构是Symfony为构建应用程序而提出的约定。
 建议保留这种结构，因为它是易于导航，大多数目录名称都是不言自明的，
-但你可以：:doc:`override the location of any Symfony directory </configuration/override_dir_structure>`：
+但你可以：:doc:`重写Symfony的默认目录结构 </configuration/override_dir_structure>`：
 
 程序的bundles
 ~~~~~~~~~~~~~~~~~~~
@@ -73,7 +74,7 @@ Symfony 2.0推出之后，多数开发者很自然地用Symfony 1.x的方式去�
 当Symfony 2.0发布时，大多数开发人员自然采用了将应用程序划分为逻辑模块的symfony 1.x方式。
 
 但bundle的真义在于，它是作为软件的一个“可被复用”的独立构成而存在。
-如果UserBundle不能*“原封不动地”*使用在别的Symfony程序中，它不应该成为bundle。
+如果UserBundle不能 *“原封不动地”* 使用在别的Symfony程序中，它不应该成为bundle。
 另外，如果InvoiceBundle依赖于ProductBundle，那便没有任何必要将它们分成两个bundle。
 
 .. best-practice::

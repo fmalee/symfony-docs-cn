@@ -1,7 +1,7 @@
 组织你的业务逻辑
 ==============================
 
-在计算机软件领域， **业务逻辑** 或域逻辑（domain logic）指的是“程序中用于处理现实世界中决定数据被创建、显示、存储和改变的业务规则那部分内容”。（参考 `full definition`_）
+在计算机软件领域， **业务逻辑** 或域逻辑（domain logic）指的是“程序中用于处理现实世界中决定数据被创建、显示、存储和改变的业务规则那部分内容”。（参考 `完整定义`_）
 
 Symfony程序中，业务逻辑是指你为自己的不与框架本身重合（比如路由或控制器）的程序所写的全部定制代码。
 域类(Domain classes)，Doctrine 实体以及被当作服务来使用的常规PHP类，都是业务逻辑的好样板。
@@ -29,10 +29,10 @@ Symfony程序中，业务逻辑是指你为自己的不与框架本身重合（�
 
     使用自动装配来自动配置应用的服务。
 
-:doc:`Service autowiring </service_container/autowiring>` 是Symfony的服务容器提供的一项功能，
+:doc:`服务装配 </service_container/autowiring>` 是Symfony的服务容器提供的一项功能，
 用于以最少的配置来管理服务。
 它读取构造函数（或其他方法）上的类型提示，并自动将正确的服务传递给每个方法。
-它还可以向需要它们的服务添加 :doc:`service tags </service_container/tags>`，例如Twig扩展，事件订阅者等。
+它还可以向需要它们的服务添加 :doc:`服务标签 </service_container/tags>`，例如Twig扩展，事件订阅者等。
 
 博客应用需要一个工具，该工具可以将帖子标题（例如“Hello World”）转换为slug（例如“hello-world”）以将其作为帖子URL的一部分。
 让我们在 ``src/Utils/`` 中创建一个新的 ``Slugger`` 类::
@@ -71,7 +71,7 @@ Symfony程序中，业务逻辑是指你为自己的不与框架本身重合（�
         }
     }
 
-服务也可以是 :ref:`共有 或 私有 <container-public>`。
+服务也可以是 :ref:`共有或私有 <container-public>`。
 如果使用 :ref:`默认的services.yaml配置 <service-container-services-load-example>`，
 则默认情况下所有服务都是私有的。
 
@@ -83,12 +83,12 @@ Symfony程序中，业务逻辑是指你为自己的不与框架本身重合（�
 服务的格式：YAML
 --------------------
 
-如果使用 :ref:`default services.yaml configuration <service-container-services-load-example>`，
+如果使用 :ref:`默认的services.yaml配置 <service-container-services-load-example>`，
 则将自动配置大多数服务。但是，在某些边缘情况下，你需要手动配置服务（或其中的一部分）。
 
 .. best-practice::
 
-    使用 YAML 格式来配置你的服务。
+    使用YAML格式来配置你的服务。
 
 这是有争议的，而且在我们的实验中，YAML 和 XML 的使用即便在开发者中亦存在争议，YAML略微占先。
 两种格式拥有相同的性能，所以使用谁最终取决于个人口味。
@@ -96,13 +96,13 @@ Symfony程序中，业务逻辑是指你为自己的不与框架本身重合（�
 我们推荐 YAML 是因为它对初学者友好且简洁。你当然可以选择你喜欢的格式。
 
 使用持久层
--------------------------
+-------------
 
 Symfony 是一个HTTP框架，它只关心为每一个HTTP请求生成一个HTTP响应。
-这就是为何 Symfony 不提供用于持久层（如数据库，外部API）通信的方法的原因。
+这就是为何 Symfony 不提供用于持久层（如数据库、外部API）通信的方法的原因。
 对此，你可以选择自己的类库或策略来达到目的。
 
-实际上，很多 Symfony 程序使用依赖于独立的 `Doctrine project`_ 的实体和仓库来定义其模型。
+实际上，很多 Symfony 应用使用依赖于独立的 `Doctrine项目`_ 的实体和仓库来定义其模型。
 就像在业务逻辑中建议的那样，我们推荐把 Doctrine 实体存放在 ``src/Entity/`` 目录下。
 
 我们的示例博客应用中定义的三个实体就是一个很好的例子：
@@ -121,7 +121,7 @@ Doctrine映射信息
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Doctrine实体是你存储在某个“数据库”中的原生PHP对象。
-Doctrine只能通过你配置在模型类中元数据（metadata）来获知这个实体。Doctrine支持四种元数据格式：YAML，XML，PHP和注释。
+Doctrine只能通过你配置在模型类中元数据（metadata）来获知这个实体。Doctrine支持四种元数据格式：YAML、XML、PHP和注释。
 
 .. best-practice::
 
@@ -212,9 +212,9 @@ Data Fixtures
         Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle::class => ['dev' => true, 'test' => true],
     ];
 
-为了简化操作，我们推荐仅创建*一个* `fixture class`_，但如果类中的内容过长的话你也可以创建更多类。
+为了简化操作，我们推荐仅创建 *一个* `fixture类`_，但如果类中的内容过长的话你也可以创建更多类。
 
-假设你至少有一个 fixtures 类，而且数据库连接信息已被正确配置，通过以下命令即可加载你的 fixtures：:
+假设你至少有一个 fixtures 类，而且数据库连接信息已被正确配置，通过以下命令即可加载你的 fixtures：
 
 .. code-block:: terminal
 
@@ -227,20 +227,17 @@ Data Fixtures
 编码标准
 ----------------
 
-Symfony源代码遵循 `PSR-1`_ 和 `PSR-2`_ 代码书写规范，它们是由PHP社区制定的。
-你可以从 :doc:`the Symfony Coding standards </contributing/code/standards>` 了解更多，
-甚至使用`PHP-CS-Fixer`_，这是一个命令行工具，它可以“秒完成”地修复整个代码库的编码标准。
 Symfony源代码遵循PHP社区定义的 `PSR-1`_ 和 `PSR-2`_ 编码标准。
-你可以了解 :doc:`the Symfony Coding standards </contributing/code/standards>` 的更多信息，
+你可以了解 :doc:`Symfony代码标准 </contributing/code/standards>` 的更多信息，
 甚至可以使用 `PHP-CS-Fixer`_，它是一个命令行工具，可以在几秒钟内修复整个代码库的编码标准。
 
 ----
 
 下一章: :doc:`/best_practices/controllers`
 
-.. _`full definition`: https://en.wikipedia.org/wiki/Business_logic
-.. _`Doctrine project`: http://www.doctrine-project.org/
-.. _`fixture class`: https://symfony.com/doc/current/bundles/DoctrineFixturesBundle/index.html#writing-simple-fixtures
+.. _`完整定义`: https://en.wikipedia.org/wiki/Business_logic
+.. _`Doctrine项目`: http://www.doctrine-project.org/
+.. _`fixture类`: https://symfony.com/doc/current/bundles/DoctrineFixturesBundle/index.html#writing-simple-fixtures
 .. _`PSR-1`: https://www.php-fig.org/psr/psr-1/
 .. _`PSR-2`: https://www.php-fig.org/psr/psr-2/
 .. _`PHP-CS-Fixer`: https://github.com/FriendsOfPHP/PHP-CS-Fixer

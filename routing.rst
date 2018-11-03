@@ -19,7 +19,7 @@
 创建路由
 ---------------
 
-*路由* 是从URL路径到控制器的映射。假设你想要一条完全匹配 ``/blog`` 的路由，以及另一条可以匹配*任何*网址的动态路由，例如 ``/blog/my-post`` 或  ``/blog/all-about-symfony``。
+*路由* 是从URL路径到控制器的映射。假设你想要一条完全匹配 ``/blog`` 的路由，以及另一条可以匹配 *任何* 网址的动态路由，例如 ``/blog/my-post`` 或  ``/blog/all-about-symfony``。
 
 路由可以在YAML，XML和PHP中配置。所有格式都提供相同的功能和性能，因此请选择你喜欢的格式。
 如果选择PHP注释，请在应用中运行此命令，以添加对它们的支持：
@@ -120,8 +120,8 @@
   因为路由路径是 ``/blog/{slug}``，所以与该值匹配的一个 ``$slug`` 变量会传递给 ``show()``。
   例如，如果用户转到 ``/blog/yay-routing``，那么 ``$slug`` 将等于 ``yay-routing``。
 
-每当路由路径中有 ``{placeholder}`` 时，该部分就成为通配符：它匹配*任何*值。
-你的控制器现在*也可以*有一个名为 ``$placeholder`` 的参数（通配符和参数名称*必须匹配）。
+每当路由路径中有 ``{placeholder}`` 时，该部分就成为通配符：它匹配 *任何* 值。
+你的控制器现在 *也可以* 有一个名为 ``$placeholder`` 的参数（通配符和参数名称 *必须匹配*）。
 
 每个路由同样都有一个内部名称：``blog_list`` 和 ``blog_show``。
 这些可以是任何东西（只要它们都是唯一的）并且还没有任何意义。你稍后将使用它们来 :ref:`生成URL <routing-generate>`。
@@ -205,14 +205,14 @@ Symfony提供了一种方便的方式来声明本地化路由而无需重复。
 
 .. tip::
 
-    如果应用使用完整语言(full language)+区域语言(territory locales)例如 ``fr_FR``，``fr_BE``），
-    你可以路由中只使用语言部分(language part)（例如 ``fr``）。
-    当你希望为共享相同语言的不同区域(locales)使用相同的路由路径时，这样处理可以防止必须定义多个路径。
+    如果应用使用完整语言(full language)+语言环境(territory locales)例如 ``fr_FR``，``fr_BE``），
+    你可以在路由中只使用语言部分(language part)（例如 ``fr``）。
+    当你希望为共享相同语言的不同语言环境使用相同的路由路径时，这样处理可以防止必须定义多个路径。
 
 .. versionadded:: 4.2
-    The feature to fall back on the language part only was introduced in Symfony 4.2.
+    Symfony 4.2中引入了回归语言部分的功能。
 
-国际化应用的一个常见要求是为所有路由添加一个区域(locale)前缀。
+国际化应用的一个常见要求是为所有路由添加一个语言环境前缀。
 这可以通过为每个语言环境定义不同的前缀来完成（如果你愿意，可以为默认语言环境设置一个空前缀）：
 
 .. configuration-block::
@@ -263,7 +263,7 @@ Symfony提供了一种方便的方式来声明本地化路由而无需重复。
 
 想象一下， ``blog_list`` 路由将包含一个博客帖子的分页列表，
 其中包含 ``/blog/2`` 和 ``/blog/3`` 等第2页和第3页的URL。
-如果你将路径的路径更改为 ``/blog/{page}``，将会造成一个困扰：
+如果你将路由的路径更改为 ``/blog/{page}``，将会造成一个困扰：
 
 * blog_list: ``/blog/{page}`` 会匹配 ``/blog/*``;
 * blog_show: ``/blog/{slug}`` *同样* 会匹配 ``/blog/*``.
@@ -422,16 +422,16 @@ URL                       路由            参数
 .. versionadded:: 4.1
     Symfony 4.1中引入了内联规则的功能。
 
-要了解其他路由匹配条件（如HTTP方法，主机名和动态表达式），请参阅 :doc:`/routing/requirements`。
+要了解其他路由匹配条件（如HTTP方法、主机名和动态表达式），请参阅 :doc:`/routing/requirements`。
 
 给 {占位符} 一个默认值
 -------------------------------------
 
 在前面的示例中，``blog_list`` 的路径为 ``/blog/{page}``。
 如果用户访问 ``/blog/1``，它将匹配。但如果他们访问 ``/blog``，它将无法匹配。
-只要向路由添加了 ``{占位符}`` ，该占位符就*必须*有一个值。
+只要向路由添加了 ``{占位符}`` ，该占位符就 *必须* 有一个值。
 
-那么当用户访问 ``/blog` 时，如何让 ``blog_list`` 再次匹配？通过添加一个*默认*值：
+那么当用户访问 ``/blog`` 时，如何让 ``blog_list`` 再次匹配？通过添加一个 *默认* 值：
 
 .. configuration-block::
 
@@ -575,7 +575,7 @@ URL                       路由            参数
 
 .. tip::
 
-    要为任何一个占位符提供 ``null`` 默认值，就不要在 ``?`` 字符之后添加任何内容（例如``/blog/{page?}``）。
+    要为任何一个占位符提供 ``null`` 默认值，就不要在 ``?`` 字符之后添加任何内容（例如 ``/blog/{page?}``）。
 
 .. versionadded:: 4.1
     Symfony 4.1中引入了内联默认值的功能。
@@ -583,7 +583,7 @@ URL                       路由            参数
 列出所有路由
 --------------------------
 
-随着应用的功能增长，你最终会拥有*很多*路由！要查看所有路由，请运行：
+随着应用的功能增长，你最终会拥有 *很多* 路由！要查看所有路由，请运行：
 
 .. code-block:: terminal
 
@@ -688,7 +688,7 @@ URL                       路由            参数
 
         return $routes;
 
-如你所见，只有当URL的 ``{_locale}`` 部分为``en`` 或 ``fr`` 且 ``{year}`` 为数字时，此路由才会匹配。
+如你所见，只有当URL的 ``{_locale}`` 部分为 ``en`` 或 ``fr`` 且 ``{year}`` 为数字时，此路由才会匹配。
 此路由还显示了如何在占位符之间使用点(``.``)而不是斜杠(``/``)。
 与此路由匹配的网址可能如下所示：
 
@@ -708,7 +708,7 @@ URL                       路由            参数
 .. note::
 
     有时你希望使路由的某些部分全局可配置。
-    Symfony通过利用服务容器参数为您提供了一种方法。
+    Symfony通过利用服务容器参数为你提供了一种方法。
     在 ":doc:`/routing/service_container_parameters`" 中阅读有关此内容的更多信息。
 
 特殊路由参数
@@ -727,7 +727,7 @@ URL                       路由            参数
     用于设置片段(fragment)标识符，URL的以 ``#`` 字符开头的最后部分为可选配置，用于标识一个文档的部分内容。
 
 ``_locale``
-    用于在请求上设置区域语言（:ref:`详细信息 <translation-locale-url>`）。
+    用于在请求上设置语言环境（:ref:`详细信息 <translation-locale-url>`）。
 
 .. _routing-trailing-slash-redirection:
 
@@ -768,7 +768,7 @@ Symfony遵循这个逻辑，在带有和不带尾部斜杠的URL之间重定向�
 .. tip::
 
     要引用控制器类中的一个 ``__invoke()`` 方法来实现操作，你不必传递方法名称，
-    同样使用完全限定的类名（例如``App\Controller\BlogController``）。
+    同样使用完全限定的类名（例如 ``App\Controller\BlogController``）。
 
 .. index::
    single: Routing; Generating URLs
@@ -863,7 +863,7 @@ Symfony遵循这个逻辑，在带有和不带尾部斜杠的URL之间重定向�
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 默认情况下，路由会生成相对URL（例如 ``/blog``）。
-要生成绝对URL，在一个控制器中将 ``UrlGeneratorInterface::ABSOLUTE_URL``作为第三个参数传递给 ``generateUrl()`` 方法::
+要生成绝对URL，在一个控制器中将 ``UrlGeneratorInterface::ABSOLUTE_URL`` 作为第三个参数传递给 ``generateUrl()`` 方法::
 
     use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -884,15 +884,15 @@ Symfony遵循这个逻辑，在带有和不带尾部斜杠的URL之间重定向�
     Controller "App\\Controller\\BlogController::show()" requires that you
     provide a value for the "$slug" argument.
 
-会出现这种情况，是因为你的控制器方法拥有一个参数（例如``$slug``）::
+会出现这种情况，是因为你的控制器方法拥有一个参数（例如 ``$slug``）::
 
     public function show($slug)
     {
         // ..
     }
 
-但是你的路由路径中没有 ``{slug}`` 通配符（例如``/blog/show``）。
-解决方法：添加一个 ``{slug}`` 到你的路由路径：``/blog/show/{slug}``，或是为该参数赋予默认值（即``$slug = null``）。
+但是你的路由路径中没有 ``{slug}`` 通配符（例如 ``/blog/show``）。
+解决方法：添加一个 ``{slug}`` 到你的路由路径：``/blog/show/{slug}``，或是为该参数赋予默认值（即 ``$slug = null``）。
 
     Some mandatory parameters are missing ("slug") to generate a URL for route
     "blog_show".

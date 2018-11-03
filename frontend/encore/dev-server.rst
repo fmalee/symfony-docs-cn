@@ -7,7 +7,7 @@
 
     $ ./node_modules/.bin/encore dev-server
 
-该服务会生成新资产于一个新服务器中：``http://localhost:8080``（它实际上不会将任何文件写入磁盘）。
+该服务会生成新资产于一个新服务器中：``http://localhost:8080`` （它实际上不会将任何文件写入磁盘）。
 这意味着你的 ``script`` 和 ``link`` 标签需要更改为指向它的URL。
 
 如果你已激活 :ref:`manifest.json版本控制 <load-manifest-files>`，

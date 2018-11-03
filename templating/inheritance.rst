@@ -4,17 +4,13 @@
 如何通过继承来组织你的Twig模板
 =====================================================
 
-One common way to use inheritance is to use a three-level approach. This
-method works perfectly with the three different types of templates that were just
-covered:
+使用继承的一种常用方法是三级法。此方法以下三种不同类型的模板完美配合：
 
-* Create an ``templates/base.html.twig`` file that contains the main
-  layout for your application (like in the previous example). Internally, this
-  template is called ``base.html.twig``;
+* 创建一个包含应用的主要布局的 ``templates/base.html.twig`` 文件（如上例所示）。
+  在内部，用 ``base.html.twig`` 调用此模板;
 
-* Create a template for each "section" of your site. For example, the blog
-  functionality would have a template called ``blog/layout.html.twig`` that
-  contains only blog section-specific elements;
+* 为你网站的每个“部分”创建一个模板。
+  例如，博客功能将具有一个仅包含博客部分特定元素的名为 ``blog/layout.html.twig`` 的模板;
 
   .. code-block:: html+twig
 
@@ -27,9 +23,8 @@ covered:
           {% block content %}{% endblock %}
       {% endblock %}
 
-* Create individual templates for each page and make each extend the appropriate
-  section template. For example, the "index" page would be called something
-  close to ``blog/index.html.twig`` and list the actual blog posts.
+* 为每个页面创建单独的模板，并使每个模板继承相应的部分模板。
+  例如，该“首页”页面将调用比较相似的 ``blog/index.html.twig`` 并列出实际博客帖子的内容。
 
   .. code-block:: html+twig
 
@@ -43,13 +38,8 @@ covered:
           {% endfor %}
       {% endblock %}
 
-Notice that this template extends the section template (``blog/layout.html.twig``)
-which in turn extends the base application layout (``base.html.twig``). This is
-the common three-level inheritance model.
+请注意，此模板继承了部分模板（``blog/layout.html.twig``），
+后者又继承了应用的基本布局（``base.html.twig``）。这是常见的三级继承模型。
 
-When building your application, you may choose to follow this method or simply
-make each page template extend the base application template directly
-(e.g. ``{% extends 'base.html.twig' %}``). The three-template model is a
-best-practice method used by vendor bundles so that the base template for a
-bundle can be easily overridden to properly extend your application's base
-layout.
+在构建应用时，你可以选择遵循此方法，或者只是让每个页面模板直接继承应用的基本模板（即 ``{% extends 'base.html.twig' %}``）。
+三模板模型是供应商bundle使用的最佳实践方法，因此可以轻松覆盖bundle的基本模板，以正确继承应用的基本布局。
