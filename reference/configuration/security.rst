@@ -1,7 +1,7 @@
 .. index::
     single: Security; Configuration reference
 
-Security Configuration Reference (SecurityBundle)
+Security配置参考 (SecurityBundle)
 =================================================
 
 The SecurityBundle integrates the :doc:`Security component </components/security>`

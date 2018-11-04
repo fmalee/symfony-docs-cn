@@ -3,7 +3,7 @@
 
 .. _symfony2-twig-extensions:
 
-Symfony Twig Extensions
+Symfony的Twig扩展
 =======================
 
 Twig is the default template engine for Symfony. By itself, it already contains

@@ -1,4 +1,4 @@
-Built-in Symfony Service Tags
+Symfony内置服务标签
 =============================
 
 :doc:`Service tags </service_container/tags>` are the mechanism used by the

@@ -1,15 +1,11 @@
 如何隐藏控制台命令
 ============================
 
-By default, all console commands are listed when executing the console application
-script without arguments or when using the ``list`` command.
+默认情况下，不附带参数执行控制台应用脚本或使用 ``list`` 命令时，会列出所有控制台命令。
 
-However, sometimes commands are not intended to be executed by end-users; for
-example, commands for the legacy parts of the application, commands exclusively
-executed through scheduled tasks, etc.
+但是，有时命令并不是设计给最终用户执行的; 例如，应用的遗留部分的命令、通过计划任务专门执行的命令等。
 
-In those cases, you can define the command as **hidden** by setting the
-``setHidden()`` method to ``true`` in the command configuration::
+在这些情况下，你可以通过在命令配置中设置 ``setHidden()`` 方法为 ``true`` 来 **隐藏** 该命令::
 
     // src/Command/LegacyCommand.php
     namespace App\Command;
@@ -28,9 +24,8 @@ In those cases, you can define the command as **hidden** by setting the
         }
     }
 
-Hidden commands behave the same as normal commands but they are no longer displayed
-in command listings, so end-users are not aware of their existence.
+隐藏的命令与普通命令的行为相同，但它们不再显示在命令列表中，因此最终用户不知道它们的存在。
 
 .. note::
 
-    Hidden commands are still available using the JSON or XML descriptor.
+    使用JSON或XML描述符仍然可以获取到隐藏命令。

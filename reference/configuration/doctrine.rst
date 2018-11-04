@@ -2,7 +2,7 @@
     single: Doctrine; ORM configuration reference
     single: Configuration reference; Doctrine ORM
 
-Doctrine Configuration Reference (DoctrineBundle)
+Doctrine配置参考(DoctrineBundle)
 =================================================
 
 The DoctrineBundle integrates both the :doc:`DBAL </doctrine/dbal>` and

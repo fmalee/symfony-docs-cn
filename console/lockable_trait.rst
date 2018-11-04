@@ -1,14 +1,11 @@
 防止多次执行控制台命令
 ================================================
 
-A simple but effective way to prevent multiple executions of the same command in
-a single server is to use `locks`_. The :doc:`Lock component </components/lock>`
-provides multiple classes to create locks based on the filesystem (:ref:`FlockStore <lock-store-flock>`),
-shared memory (:ref:`SemaphoreStore <lock-store-semaphore>`) and even databases
-and Redis servers.
+防止在单个服务器中多次执行同一命令的简单但有效的方法是使用 `锁`_。
+:doc:`Lock组件 </components/lock>` 提供多个类来创建基于
+文件系统（:ref:`FlockStore <lock-store-flock>`）、共享内存（:ref:`SemaphoreStore <lock-store-semaphore>`）、甚至数据库和Redis的服务器的锁。
 
-In addition, the Console component provides a PHP trait called ``LockableTrait``
-that adds two convenient methods to lock and release commands::
+此外，Console组件提供了一个名为 ``LockableTrait`` 的PHP trait，它添加了两个方便的方法来锁定和释放命令::
 
     // ...
     use Symfony\Component\Console\Command\LockableTrait;
@@ -27,15 +24,14 @@ that adds two convenient methods to lock and release commands::
                 return 0;
             }
 
-            // If you prefer to wait until the lock is released, use this:
+            // 如果你希望等到该锁被释放，请使用：
             // $this->lock(null, true);
 
             // ...
 
-            // if not released explicitly, Symfony releases the lock
-            // automatically when the execution of the command ends
+            // 如果没有显式释放，Symfony会在命令执行结束时自动释放锁
             $this->release();
         }
     }
 
-.. _`locks`: https://en.wikipedia.org/wiki/Lock_(computer_science)
+.. _`锁`: https://en.wikipedia.org/wiki/Lock_(computer_science)

@@ -1,7 +1,7 @@
 .. index::
     single: Configuration reference; WebProfiler
 
-Profiler Configuration Reference (WebProfilerBundle)
+Profiler配置参考 (WebProfilerBundle)
 ====================================================
 
 The WebProfilerBundle is a **development tool** that provides detailed technical
@@ -27,7 +27,7 @@ under the ``web_profiler`` key in your application configuration.
 
     The web debug toolbar is not available for responses of type ``StreamedResponse``.
 
-Configuration
+配置
 -------------
 
 .. class:: list-config-options

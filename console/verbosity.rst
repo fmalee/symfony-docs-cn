@@ -1,44 +1,41 @@
-Verbosity级别
+冗余度级别
 ================
 
-Console commands have different verbosity levels, which determine the messages
-displayed in their output. By default, commands display only the most useful
-messages, but you can control their verbosity with the ``-q`` and ``-v`` options:
+控制台命令具有不同的冗余度(verbosity)级别，用于确定其输出中显示的消息。
+默认情况下，命令仅显示最有用的消息，但你可以使用 ``-q`` 和 ``-v`` 选项控制其详细程度：
 
 .. code-block:: terminal
 
-    # do not output any message (not even the command result messages)
+    # 不输出任何消息 (甚至没有该命令的最终消息)
     $ php bin/console some-command -q
     $ php bin/console some-command --quiet
 
-    # normal behavior, no option required (display only the useful messages)
+    # 正常行为, 没有引入选项 (只显示有用的消息)
     $ php bin/console some-command
 
-    # increase verbosity of messages
+    # 增加消息的冗余程度
     $ php bin/console some-command -v
 
-    # display also the informative non essential messages
+    # 显示非必要的消息
     $ php bin/console some-command -vv
 
-    # display all messages (useful to debug errors)
+    # 显示所有消息 (用于调试错误)
     $ php bin/console some-command -vvv
 
-The verbosity level can also be controlled globally for all commands with the
-``SHELL_VERBOSITY`` environment variable (the ``-q`` and ``-v`` options still
-have more precedence over the value of ``SHELL_VERBOSITY``):
+可以使用 ``SHELL_VERBOSITY`` 环境变量来全局控制所有命令的冗余度级别
+（ ``-q`` 和 ``-v`` 选项仍然优先于 ``SHELL_VERBOSITY`` 值）：
 
 =====================  =========================  ===========================================
-Console option         ``SHELL_VERBOSITY`` value  Equivalent PHP constant
+控制台选项                ``SHELL_VERBOSITY`` 值     等价的PHP常量
 =====================  =========================  ===========================================
 ``-q`` or ``--quiet``  ``-1``                     ``OutputInterface::VERBOSITY_QUIET``
-(none)                 ``0``                      ``OutputInterface::VERBOSITY_NORMAL``
+(无)                    ``0``                      ``OutputInterface::VERBOSITY_NORMAL``
 ``-v``                 ``1``                      ``OutputInterface::VERBOSITY_VERBOSE``
 ``-vv``                ``2``                      ``OutputInterface::VERBOSITY_VERY_VERBOSE``
 ``-vvv``               ``3``                      ``OutputInterface::VERBOSITY_DEBUG``
 =====================  =========================  ===========================================
 
-It is possible to print a message in a command for only a specific verbosity
-level. For example::
+可以在命令中仅为特定的冗余度级别打印消息。例如::
 
     // ...
     class CreateUserCommand extends Command
@@ -54,7 +51,7 @@ level. For example::
                 'Password: '.$input->getArgument('password'),
             ));
 
-            // available methods: ->isQuiet(), ->isVerbose(), ->isVeryVerbose(), ->isDebug()
+            // 可用方法: ->isQuiet(), ->isVerbose(), ->isVeryVerbose(), ->isDebug()
             if ($output->isVerbose()) {
                 $output->writeln('User class: '.get_class($user));
             }
@@ -67,18 +64,15 @@ level. For example::
         }
     }
 
-When the quiet level is used, all output is suppressed as the default
-:method:`Symfony\\Component\\Console\\Output\\Output::write` method returns
-without actually printing.
+使用静默级别时，所有输出都会被抑制，因为默认的
+:method:`Symfony\\Component\\Console\\Output\\Output::write` 方法返回时没有实际打印。
 
 .. tip::
 
-    The MonologBridge provides a :class:`Symfony\\Bridge\\Monolog\\Handler\\ConsoleHandler`
-    class that allows you to display messages on the console. This is cleaner
-    than wrapping your output calls in conditions. For an example use in
-    the Symfony Framework, see :doc:`/logging/monolog_console`.
+    MonologBridge提供了一个 :class:`Symfony\\Bridge\\Monolog\\Handler\\ConsoleHandler` 类，
+    允许你在控制台上显示消息。这比在条件中封装输出调用更简洁。
+    有关在Symfony Framework中使用的示例，请参阅 :doc:`/logging/monolog_console`。
 
 .. tip::
 
-    The full exception stacktrace is printed if the ``VERBOSITY_VERBOSE``
-    level or above is used.
+    如果使用 ``VERBOSITY_VERBOSE`` 级别或更高级别，则打印完整的异常堆栈跟踪。

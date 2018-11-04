@@ -1,7 +1,7 @@
 .. index::
     single: Configuration reference; Framework
 
-Debug Configuration Reference (DebugBundle)
+Debug配置参考(DebugBundle)
 ===========================================
 
 The DebugBundle integrates the :doc:`VarDumper component </components/var_dumper>`
@@ -22,7 +22,7 @@ key in your application configuration.
     namespace and the related XSD schema is available at:
     ``http://symfony.com/schema/dic/debug/debug-1.0.xsd``
 
-Configuration
+配置
 -------------
 
 .. class:: list-config-options

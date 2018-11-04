@@ -1,4 +1,4 @@
-Built-in Symfony Events
+Symfony内置事件
 =======================
 
 During the handling of an HTTP request, the Symfony framework (or any

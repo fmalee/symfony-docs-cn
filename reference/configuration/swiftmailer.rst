@@ -1,7 +1,7 @@
 .. index::
     single: Configuration reference; Swift Mailer
 
-Mailer Configuration Reference (SwiftmailerBundle)
+Mailer配置参考(SwiftmailerBundle)
 ==================================================
 
 The SwiftmailerBundle integrates the Swiftmailer library in Symfony applications

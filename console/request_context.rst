@@ -4,28 +4,21 @@
 如何从控制台生成URL
 =====================================
 
-Unfortunately, the command line context does not know about your VirtualHost
-or domain name. This means that if you generate absolute URLs within a
-console command you'll probably end up with something like ``http://localhost/foo/bar``
-which is not very useful.
+很不幸运，命令行上下文不知道你的虚拟主机或域名。
+这意味着如果你在控制台命令中生成绝对URL，你可能最终会得到像 ``http://localhost/foo/bar`` 的一些不太有用的东西。
 
-To fix this, you need to configure the "request context", which is a fancy
-way of saying that you need to configure your environment so that it knows
-what URL it should use when generating URLs.
+要解决此问题，你需要配置“请求上下文”，这是一种奇特的方式，表示你需要配置你的环境，以便它知道生成URL时应使用的URL。
 
-There are two ways of configuring the request context: at the application level
-and per Command.
+有两种配置请求上下文的方法：在应用级别和每个命令中。
 
-Configuring the Request Context Globally
+全局配置请求上下文
 ----------------------------------------
 
-To configure the Request Context - which is used by the URL Generator - you can
-redefine the parameters it uses as default values to change the default host
-(``localhost``) and scheme (``http``). You can also configure the base path (both for
-the URL generator and the assets) if Symfony is not running in the root directory.
+要配置URL生成器使用的请求上下文，
+你可以重新定义参数并将其作为默认值来更改默认的host（``localhost``）和scheme（``http``）。
+如果Symfony未在根目录中运行，你还可以配置基础路径（同时用于URL生成器和资产）。
 
-Note that this does not impact URLs generated via normal web requests, since those
-will override the defaults.
+请注意，这不会影响通过普通Web请求生成的URL，因为它们会覆盖默认值。
 
 .. configuration-block::
 
@@ -66,13 +59,12 @@ will override the defaults.
         $container->setParameter('asset.request_context.secure', true);
 
 .. versionadded:: 3.4
-    The ``asset.request_context.*`` parameters were introduced in Symfony 3.4.
+    ``asset.request_context.*`` 参数在Symfony的3.4中引入。
 
-Configuring the Request Context per Command
+按命令配置请求上下文
 -------------------------------------------
 
-To change it only in one command you can fetch the Request Context from the
-router service and override its settings::
+要仅在一个命令中更改它，你可以从路由服务中获取请求上下文并覆盖其设置::
 
     // src/Command/DemoCommand.php
     use Symfony\Component\Routing\RouterInterface;

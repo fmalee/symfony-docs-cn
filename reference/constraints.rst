@@ -1,4 +1,4 @@
-Validation Constraints Reference
+验证约束参考
 ================================
 
 .. toctree::
@@ -60,14 +60,12 @@ Validation Constraints Reference
    constraints/UserPassword
    constraints/Valid
 
-The Validator is designed to validate objects against *constraints*.
-In real life, a constraint could be: "The cake must not be burned". In
-Symfony, constraints are similar: They are assertions that a condition is
-true.
+验证器旨在根据 *约束* 验证对象。
+在现实生活中，一个约束可能是：“蛋糕不能被烧掉”。在Symfony中，约束类似：它们是条件为真的断言。
 
-Supported Constraints
+支持的约束
 ---------------------
 
-The following constraints are natively available in Symfony:
+Symfony中可以使用以下约束：
 
 .. include:: /reference/constraints/map.rst.inc

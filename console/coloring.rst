@@ -1,41 +1,35 @@
 如何为控制台输出设置颜色和样式
 =========================================
 
-By using colors in the command output, you can distinguish different types of
-output (e.g. important messages, titles, comments, etc.).
+通过在命令输出中使用颜色，你可以区分不同类型的输出（例如重要消息、标题、注释等）。
 
 .. note::
 
-    By default, the Windows command console doesn't support output coloring. The
-    Console component disables output coloring for Windows systems, but if your
-    commands invoke other scripts which emit color sequences, they will be
-    wrongly displayed as raw escape characters. Install the `Cmder`_, `ConEmu`_, `ANSICON`_
-    or `Mintty`_ (used by default in GitBash and Cygwin) free applications
-    to add coloring support to your Windows command console.
+    默认情况下，Windows命令控制台不支持输出着色。
+    控制台组件禁用Windows系统的输出着色，但如果你的命令调用其他发出(emit)颜色序列的脚本，则它们将错误地显示为原始转义字符。
+    安装 `Cmder`_、`ConEmu`_、`ANSICON`_ 或 `Mintty`_ （默认情况下在GitBash和Cygwin中使用）免费应用，
+    为Windows命令控制台添加着色支持。
 
-Using Color Styles
+使用颜色样式
 ------------------
 
-Whenever you output text, you can surround the text with tags to color its
-output. For example::
+无论何时输出文本，你都可以使用标签包裹文本以为其输出着色。例如::
 
-    // green text
+    // 绿色文本
     $output->writeln('<info>foo</info>');
 
-    // yellow text
+    // 黄色文本
     $output->writeln('<comment>foo</comment>');
 
-    // black text on a cyan background
+    // 青色背景的黑色文本
     $output->writeln('<question>foo</question>');
 
-    // white text on a red background
+    // 红色背景的白色文本
     $output->writeln('<error>foo</error>');
 
-The closing tag can be replaced by ``</>``, which revokes all formatting options
-established by the last opened tag.
+结束标签可以替换为 ``</>``，它将撤消最后打开的标签建立的所有格式选项。
 
-It is possible to define your own styles using the
-:class:`Symfony\\Component\\Console\\Formatter\\OutputFormatterStyle` class::
+可以使用 :class:`Symfony\\Component\\Console\\Formatter\\OutputFormatterStyle` 类定义自己的样式::
 
     use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 
@@ -45,34 +39,32 @@ It is possible to define your own styles using the
 
     $output->writeln('<fire>foo</>');
 
-Available foreground and background colors are: ``black``, ``red``, ``green``,
-``yellow``, ``blue``, ``magenta``, ``cyan`` and ``white``.
+可用前景色和背景色有：``black``、``red``、``green``、
+``yellow``、``blue``、``magenta``、``cyan`` 以及 ``white``。
 
-And available options are: ``bold``, ``underscore``, ``blink``, ``reverse``
-(enables the "reverse video" mode where the background and foreground colors
-are swapped) and ``conceal`` (sets the foreground color to transparent, making
-the typed text invisible - although it can be selected and copied; this option is
-commonly used when asking the user to type sensitive information).
+可用的选项为：``bold``、``underscore``、``blink``、``reverse``
+（启用背景和前景颜色交换的“反向视频”模式）以及 ``conceal``
+（设定前景颜色为透明，使键入的文本不可见-尽管它可被选择和复制;该选项通常在要求用户键入敏感信息时使用）。
 
-You can also set these colors and options directly inside the tag name::
+你还可以直接在标签名称中设置这些颜色和选项::
 
-    // green text
+    // 绿色文本
     $output->writeln('<fg=green>foo</>');
 
-    // black text on a cyan background
+    // 青色背景的黑色文本
     $output->writeln('<fg=black;bg=cyan>foo</>');
 
-    // bold text on a yellow background
+    // 黄色背景的加粗文本
     $output->writeln('<bg=yellow;options=bold>foo</>');
 
-    // bold text with underscore
+    // 带下划线的加粗文本
     $output->writeln('<options=bold,underscore>foo</>');
 
 .. note::
 
-    If you need to render a tag literally, escape it with a backslash: ``\<info>``
-    or use the :method:`Symfony\\Component\\Console\\Formatter\\OutputFormatter::escape`
-    method to escape all the tags included in the given string.
+    如果需要直接渲染一个标签，请使用反斜杠转义它： ``\<info>``
+    或使用 :method:`Symfony\\Component\\Console\\Formatter\\OutputFormatter::escape`
+    方法转义给定字符串中包含的所有标签。
 
 .. _Cmder: http://cmder.net/
 .. _ConEmu: https://conemu.github.io/

@@ -4,25 +4,20 @@
 如何从控制器调用命令
 =======================================
 
-The :doc:`Console component documentation </components/console>` covers how to
-create a console command. This article covers how to use a console command
-directly from your controller.
+:doc:`控制台组件文档 </components/console>`
+介绍了如何创建一个控制台命令。本文将介绍如何直接在控制器中使用控制台命令。
 
-You may have the need to execute some function that is only available in a
-console command. Usually, you should refactor the command and move some logic
-into a service that can be reused in the controller. However, when the command
-is part of a third-party library, you wouldn't want to modify or duplicate
-their code. Instead, you can execute the command directly.
+你可能需要执行仅在控制台命令中可用的某些功能。
+通常，你应该重构命令并将一些逻辑移动到可以在控制器中重用的服务中。
+但是，当命令是第三方库的一部分时，你并不希望修改或复制其代码。
+如此，你可以直接执行该命令。
 
 .. caution::
 
-    In comparison with a direct call from the console, calling a command from
-    a controller has a slight performance impact because of the request stack
-    overhead.
+    与从控制台直接调用相比，由于请求堆栈开销，从控制器调用命令会对性能产生轻微影响。
 
-Imagine you want to send spooled Swift Mailer messages by
-:doc:`using the swiftmailer:spool:send command </email/spool>`.
-Run this command from inside your controller via::
+想象一下，你想通过 :doc:`使用 swiftmailer:spool:send 命令 </email/spool>` 发送假脱机(spooled)的Swift Mailer消息。
+通过以下方式从控制器内部运行此命令::
 
     // src/Controller/SpoolController.php
     namespace App\Controller;
@@ -43,38 +38,37 @@ Run this command from inside your controller via::
 
             $input = new ArrayInput(array(
                'command' => 'swiftmailer:spool:send',
-               // (optional) define the value of command arguments
+               // (可选)定义命令参数的值
                'fooArgument' => 'barValue',
-               // (optional) pass options to the command
+               // (可选) 传递选择给命令
                '--message-limit' => $messages,
             ));
 
-            // You can use NullOutput() if you don't need the output
+            // 如果不需要任何输出，可以使用 NullOutput()
             $output = new BufferedOutput();
             $application->run($input, $output);
 
-            // return the output, don't use if you used NullOutput()
+            // 如果没有使用 NullOutput()，返回该输出
             $content = $output->fetch();
 
-            // return new Response(""), if you used NullOutput()
+            // 如果使用 NullOutput()，则是 return new Response("")
             return new Response($content);
         }
     }
 
-Showing Colorized Command Output
+显示彩色命令输出
 --------------------------------
 
-By telling the ``BufferedOutput`` it is decorated via the second parameter,
-it will return the Ansi color-coded content. The `SensioLabs AnsiToHtml converter`_
-can be used to convert this to colorful HTML.
+通过通过第二个参数告诉 ``BufferedOutput`` 进行装饰，它将返回Ansi颜色编码的内容。
+`SensioLabs AnsiToHtml converter`_ 可用于将其转换为丰富多彩的HTML。
 
-First, require the package:
+首先，安装该软件包：
 
 .. code-block:: terminal
 
     $ composer require sensiolabs/ansi-to-html
 
-Now, use it in your controller::
+现在，在你的控制器中使用它::
 
     // src/Controller/SpoolController.php
     namespace App\Controller;
@@ -92,11 +86,11 @@ Now, use it in your controller::
             // ...
             $output = new BufferedOutput(
                 OutputInterface::VERBOSITY_NORMAL,
-                true // true for decorated
+                true // true 意味着开始装饰
             );
             // ...
 
-            // return the output
+            // 返回该输出
             $converter = new AnsiToHtmlConverter();
             $content = $output->fetch();
 
@@ -104,8 +98,7 @@ Now, use it in your controller::
         }
     }
 
-The ``AnsiToHtmlConverter`` can also be registered `as a Twig Extension`_,
-and supports optional themes.
+``AnsiToHtmlConverter`` 也可以注册 `为Twig扩展`_，并支持可选的主题。
 
 .. _`SensioLabs AnsiToHtml converter`: https://github.com/sensiolabs/ansi-to-html
-.. _`as a Twig Extension`: https://github.com/sensiolabs/ansi-to-html#twig-integration
+.. _`为Twig扩展`: https://github.com/sensiolabs/ansi-to-html#twig-integration

@@ -96,7 +96,7 @@
 - `snake_case`：蛇形拼写法
 - `Skeleton`：骨架
 - `Decorator`：装饰器
-- 
+- `Verbosity`：冗余度
 
 ## 语法问题
 

@@ -3,7 +3,7 @@
 
 .. _framework-bundle-configuration:
 
-Framework Configuration Reference (FrameworkBundle)
+Framework配置参考(FrameworkBundle)
 ===================================================
 
 The FrameworkBundle defines the main framework configuration, from sessions and

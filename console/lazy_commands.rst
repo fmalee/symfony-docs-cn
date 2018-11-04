@@ -3,15 +3,13 @@
 
 .. note::
 
-    If you are using the Symfony full-stack framework, you are probably looking for
-    details about :ref:`creating lazy commands <console-command-service-lazy-loading>`
+    如果你使用的是Symfony全栈框架，
+    那么你可能正在寻找有关 :ref:`创建延迟命令 <console-command-service-lazy-loading>` 的详细信息
 
-The traditional way of adding commands to your application is to use
-:method:`Symfony\\Component\\Console\\Application::add`, which expects a
-``Command`` instance as an argument.
+向应用添加命令的传统方法是使用 :method:`Symfony\\Component\\Console\\Application::add`，
+该方法会将 ``Command`` 实例作为参数。
 
-In order to lazy-load commands, you need to register an intermediate loader
-which will be responsible for returning ``Command`` instances::
+为了延迟加载命令，你需要注册一个负责返回 ``Command`` 实例的中间加载器::
 
     use App\Command\HeavyCommand;
     use Symfony\Component\Console\Application;
@@ -25,15 +23,12 @@ which will be responsible for returning ``Command`` instances::
     $application->setCommandLoader($commandLoader);
     $application->run();
 
-This way, the ``HeavyCommand`` instance will be created only when the ``app:heavy``
-command is actually called.
+通过这个方式，``HeavyCommand`` 实例只有在 ``app:heavy`` 命令被实际调用时才会创建。
 
-This example makes use of the built-in
-:class:`Symfony\\Component\\Console\\CommandLoader\\FactoryCommandLoader` class,
-but the :method:`Symfony\\Component\\Console\\Application::setCommandLoader`
-method accepts any
-:class:`Symfony\\Component\\Console\\CommandLoader\\CommandLoaderInterface`
-instance so you can use your own implementation.
+此示例使用内置的 :class:`Symfony\\Component\\Console\\CommandLoader\\FactoryCommandLoader` 类，
+但 :method:`Symfony\\Component\\Console\\Application::setCommandLoader` 方法接受任何
+:class:`Symfony\\Component\\Console\\CommandLoader\\CommandLoaderInterface` 实例，
+因此你可以使用自己的实现。
 
 内置命令加载器
 ------------------------
@@ -41,9 +36,8 @@ instance so you can use your own implementation.
 ``FactoryCommandLoader``
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-The :class:`Symfony\\Component\\Console\\CommandLoader\\FactoryCommandLoader`
-class provides a way of getting commands lazily loaded as it takes an
-array of ``Command`` factories as its only constructor argument::
+:class:`Symfony\\Component\\Console\\CommandLoader\\FactoryCommandLoader`
+类提供一个延迟加载命令的方法：它使用一个 ``Command`` 工厂数组作为其唯一的构造函数参数::
 
     use Symfony\Component\Console\CommandLoader\FactoryCommandLoader;
 
@@ -52,18 +46,16 @@ array of ``Command`` factories as its only constructor argument::
         'app:bar' => array(BarCommand::class, 'create'),
     ));
 
-Factories can be any PHP callable and will be executed each time
-:method:`Symfony\\Component\\Console\\CommandLoader\\FactoryCommandLoader::get`
-is called.
+工厂可以是任何可调用的PHP，并且每次调用时都会执行
+:method:`Symfony\\Component\\Console\\CommandLoader\\FactoryCommandLoader::get`。
 
 ``ContainerCommandLoader``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The :class:`Symfony\\Component\\Console\\CommandLoader\\ContainerCommandLoader`
-class can be used to load commands from a PSR-11 container. As such, its
-constructor takes a PSR-11 ``ContainerInterface`` implementation as its first
-argument and a command map as its last argument. The command map must be an array
-with command names as keys and service identifiers as values::
+:class:`Symfony\\Component\\Console\\CommandLoader\\ContainerCommandLoader`
+类可用于从PSR-11容器中加载命令。
+因此，它的构造函数将一个 PSR-11 ``ContainerInterface`` 实现作为其第一个参数，将一个命令映射作为其最后一个参数。
+该命令映射必须是一个命令名称为键、服务标识为值的数组::
 
     use Symfony\Component\Console\CommandLoader\ContainerCommandLoader;
     use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -76,5 +68,5 @@ with command names as keys and service identifiers as values::
         'app:foo' => FooCommand::class,
     ));
 
-Like this, executing the ``app:foo`` command will load the ``FooCommand`` service
-by calling ``$containerBuilder->get(FooCommand::class)``.
+像这样，执行 ``app:foo`` 命令将通过调用 ``$containerBuilder->get(FooCommand::class)``
+来加载 ``FooCommand`` 服务。

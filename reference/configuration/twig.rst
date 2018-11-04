@@ -1,7 +1,7 @@
 .. index::
     pair: Twig; Configuration reference
 
-Twig Configuration Reference (TwigBundle)
+Twig配置参考(TwigBundle)
 =========================================
 
 The TwigBundle integrates the Twig library in Symfony applications to

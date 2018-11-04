@@ -1,7 +1,7 @@
 .. index::
     single: Configuration reference; Kernel class
 
-Configuring in the Kernel
+内核配置
 =========================
 
 Some configuration can be done on the kernel class itself (located by default at

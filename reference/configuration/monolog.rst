@@ -1,7 +1,7 @@
 .. index::
     pair: Monolog; Configuration reference
 
-Logging Configuration Reference (MonologBundle)
+Logging配置参考(MonologBundle)
 ===============================================
 
 The MonologBundle integrates the Monolog :doc:`logging </logging>` library in

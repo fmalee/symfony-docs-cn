@@ -4,16 +4,15 @@
 如何将命令定义为服务
 ==================================
 
-If you're using the :ref:`default services.yaml configuration <service-container-services-load-example>`,
-your command classes are already registered as services. Great! This is the
-recommended setup.
+如果你使用的是 :ref:`默认的services.yaml配置 <service-container-services-load-example>`，
+那么你的命令类已经注册为服务。非常好！这是推荐的设置。
 
 .. note::
 
-    You can also manually register your command as a service by configuring the service
-    and :doc:`tagging it </service_container/tags>` with ``console.command``.
+    你还可以通过配置服务并将其 :doc:`标记 </service_container/tags>` 为 ``console.command``
+    来手动将命令注册为服务。
 
-For example, suppose you want to log something from within your command::
+例如，假设你要在命令中记录某些内容::
 
     namespace App\Command;
 
@@ -30,7 +29,7 @@ For example, suppose you want to log something from within your command::
         {
             $this->logger = $logger;
 
-            // you *must* call the parent constructor
+            // 你 *必须* 调用其父构造函数
             parent::__construct();
         }
 
@@ -48,31 +47,29 @@ For example, suppose you want to log something from within your command::
         }
     }
 
-If you're using the :ref:`default services.yaml configuration <service-container-services-load-example>`,
-the command class will automatically be registered as a service and passed the ``$logger``
-argument (thanks to autowiring). In other words, *just* by creating this class, everything
-works! You can call the ``app:sunshine`` command and start logging.
+如果你使用的是 :ref:`默认的services.yaml配置 <service-container-services-load-example>`，
+则该命令类将自动注册为服务并被传递 ``$logger`` 参数（得益于自动装配）。
+换句话说，*只要* 创建这个类，就完工了！你可以调用 ``app:sunshine`` 命令并开始记录。
 
 .. caution::
 
-    You *do* have access to services in ``configure()``. However, if your command is
-    not :ref:`lazy <console-command-service-lazy-loading>`, try to avoid doing any
-    work (e.g. making database queries), as that code will be run, even if you're using
-    the console to execute a different command.
+    你 *确实* 可以在 ``configure()`` 中访问服务。
+    但是，如果你的命令不是 :ref:`惰性的 <console-command-service-lazy-loading>`，
+    请避免在其中执行任何工作（例如，进行数据库查询），因为即使你使用执行控制台的其他命令，该代码也会运行。
 
 .. note::
 
-    In previous Symfony versions, you could make the command class extend from
-    :class:`Symfony\\Bundle\\FrameworkBundle\\Command\\ContainerAwareCommand` to
-    get services via ``$this->getContainer()->get('SERVICE_ID')``. This is
-    deprecated in Symfony 4.2 and it won't work in future Symfony versions.
+    在以前的Symfony版本中，你可以在继承
+    :class:`Symfony\\Bundle\\FrameworkBundle\\Command\\ContainerAwareCommand`
+    的命令类中通过 ``$this->getContainer()->get('SERVICE_ID')`` 来获取服务。
+    但这在Symfony 4.2中已弃用，并在将来的Symfony版本中不起作用。
 
 .. _console-command-service-lazy-loading:
 
-Lazy Loading
+延迟加载
 ------------
 
-To make your command lazily loaded, either define its ``$defaultName`` static property::
+要使命令延迟加载，请定义其 ``$defaultName`` 静态属性::
 
     class SunshineCommand extends Command
     {
@@ -81,7 +78,7 @@ To make your command lazily loaded, either define its ``$defaultName`` static pr
         // ...
     }
 
-Or set the ``command`` attribute on the ``console.command`` tag in your service definition:
+或者在服务定义中的 ``console.command`` 标签上设置 ``command`` 属性：
 
 .. configuration-block::
 
@@ -122,17 +119,15 @@ Or set the ``command`` attribute on the ``console.command`` tag in your service 
 
 .. note::
 
-    If the command defines aliases (using the
-    :method:`Symfony\\Component\\Console\\Command\\Command::getAliases` method)
-    you must add one ``console.command`` tag per alias.
+    如果命令定义了别名（使用 :method:`Symfony\\Component\\Console\\Command\\Command::getAliases` 方法），
+    则必须为每个别名添加一个 ``console.command`` 标签。
 
-That's it. One way or another, the ``SunshineCommand`` will be instantiated
-only when the ``app:sunshine`` command is actually called.
+仅此而已。无论如何，``SunshineCommand`` 只有在 ``app:sunshine`` 命令被实际调用时才会实例化。
 
 .. note::
 
-    You don't need to call ``setName()`` for configuring the command when it is lazy.
+    在延迟时，你无需调用 ``setName()`` 来配置该命令。
 
 .. caution::
 
-    Calling the ``list`` command will instantiate all commands, including lazy commands.
+    调用 ``list`` 命令将实例化所有命令，包括惰性命令。
