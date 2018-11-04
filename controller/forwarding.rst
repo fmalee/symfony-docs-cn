@@ -4,12 +4,12 @@
 如何将请求转发给另一个控制器
 =============================================
 
-Though not very common, you can also forward to another controller internally
-with the :method:`Symfony\\Bundle\\FrameworkBundle\\Controller\\AbstractController::forward`
-method. Instead of redirecting the user's browser, this makes an "internal"
-sub-request and calls the defined controller. The ``forward()`` method returns
-the :class:`Symfony\\Component\\HttpFoundation\\Response` object that is returned
-from *that* controller::
+虽然不常见，但你可以使用
+:method:`Symfony\\Bundle\\FrameworkBundle\\Controller\\AbstractController::forward`
+方法在内部转发到另一个控制器。
+这不是重定向用户的浏览器，而是创建一个“内部”子请求并调用定义的控制器。
+``forward()`` 方法返回 *那个* 控制器返回的
+:class:`Symfony\\Component\\HttpFoundation\\Response` 对象::
 
     public function index($name)
     {
@@ -18,18 +18,17 @@ from *that* controller::
             'color' => 'green',
         ));
 
-        // ... further modify the response or return it directly
+        // ... 进一步修改响应或直接返回
 
         return $response;
     }
 
-The array passed to the method becomes the arguments for the resulting controller.
-The target controller method might look something like this::
+传递给该方法的数组成为目标控制器的参数。
+目标控制器方法可能如下所示::
 
     public function fancy($name, $color)
     {
-        // ... create and return a Response object
+        // ... 创建并返回一个Response对象
     }
 
-Just like when creating a controller for a route, the order of the arguments
-of the ``fancy()`` method doesn't matter: the matching is done by name.
+就像为路由创建控制器一样，``fancy()`` 方法的参数顺序无关紧要：匹配是通过名称完成的。
