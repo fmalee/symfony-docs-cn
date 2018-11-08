@@ -5,39 +5,30 @@
 如何定义与抽象类和接口的关系
 ================================================================
 
-One of the goals of bundles is to create discreet bundles of functionality
-that do not have many (if any) dependencies, allowing you to use that
-functionality in other applications without including unnecessary items.
+bundle的目标之一是创建谨慎的功能包，这些功能包没有很多（如果有的话）依赖关系，
+允许你在其他应用中使用该功能而不包含不必要的项。
 
-Doctrine 2.2 includes a new utility called the ``ResolveTargetEntityListener``,
-that functions by intercepting certain calls inside Doctrine and rewriting
-``targetEntity`` parameters in your metadata mapping at runtime. It means that
-in your bundle you are able to use an interface or abstract class in your
-mappings and expect correct mapping to a concrete entity at runtime.
+Doctrine 2.2包含一个名为 ``ResolveTargetEntityListener`` 的新实用工具，
+它通过拦截Doctrine中的某些调用并在运行时重写元数据映射中的 ``targetEntity`` 参数来起作用。
+这意味着在你的bundle中，你可以在映射中使用接口或抽象类，并期望在运行时正确映射到具体实体。
 
-This functionality allows you to define relationships between different entities
-without making them hard dependencies.
+此功能允许你定义不同实体之间的关联关系，而不会使它们成为硬依赖。
 
-Background
+背景
 ----------
 
-Suppose you have an InvoiceBundle which provides invoicing functionality
-and a CustomerBundle that contains customer management tools. You want
-to keep these separated, because they can be used in other systems without
-each other, but for your application you want to use them together.
+假设你有一个提供发票功能的InvoiceBundle和一个包含客户管理工具的CustomerBundle。
+你希望将这些分开，因为它们可以在其他系统中相互使用，但是对于你应用，你希望将它们一起使用。
 
-In this case, you have an ``Invoice`` entity with a relationship to a
-non-existent object, an ``InvoiceSubjectInterface``. The goal is to get
-the ``ResolveTargetEntityListener`` to replace any mention of the interface
-with a real object that implements that interface.
+在这种情况下，你有一个与不存在的对象有关联关系的 ``Invoice`` 实体，一个 ``InvoiceSubjectInterface``。
+目标是使用 ``ResolveTargetEntityListener`` 实现该接口的真实对象来替换对接口的任何提及。
 
-Set up
+设置
 ------
 
-This article uses the following two basic entities (which are incomplete for
-brevity) to explain how to set up and use the ``ResolveTargetEntityListener``.
+本文使用以下两个基础实体（为简洁起见不完整）来解释如何设置和使用 ``ResolveTargetEntityListener``。
 
-A Customer entity::
+客户实体::
 
     // src/Entity/Customer.php
 
@@ -53,11 +44,10 @@ A Customer entity::
      */
     class Customer extends BaseCustomer implements InvoiceSubjectInterface
     {
-        // In this example, any methods defined in the InvoiceSubjectInterface
-        // are already implemented in the BaseCustomer
+        // 在此示例中，InvoiceSubjectInterface中定义的任何方法都已在BaseCustomer中实现
     }
 
-An Invoice entity::
+发票实体::
 
     // src/Acme/InvoiceBundle/Entity/Invoice.php
 
@@ -81,23 +71,21 @@ An Invoice entity::
         protected $subject;
     }
 
-An InvoiceSubjectInterface::
+InvoiceSubjectInterface::
 
     // src/Acme/InvoiceBundle/Model/InvoiceSubjectInterface.php
 
     namespace Acme\InvoiceBundle\Model;
 
     /**
-     * An interface that the invoice Subject object should implement.
-     * In most circumstances, only a single object should implement
-     * this interface as the ResolveTargetEntityListener can only
-     * change the target to a single object.
+     * 发票Subject对象应实现的接口。
+     * 在大多数情况下，只有一个对象应该实现此接口，
+     * 因为ResolveTargetEntityListener只能将目标更改为单个对象。
      */
     interface InvoiceSubjectInterface
     {
-        // List any additional methods that your InvoiceBundle
-        // will need to access on the subject so that you can
-        // be sure that you have access to those methods.
+        // 列出InvoiceBundle需要访问该subject的任何其他方法,
+        // 以便确保你可以访问这些方法。
 
         /**
          * @return string
@@ -105,8 +93,7 @@ An InvoiceSubjectInterface::
         public function getName();
     }
 
-Next, you need to configure the listener, which tells the DoctrineBundle
-about the replacement:
+接下来，你需要配置监听器，它告诉DoctrineBundle有关于替换的信息：
 
 .. configuration-block::
 
@@ -155,10 +142,9 @@ about the replacement:
             ),
         ));
 
-Final Thoughts
+结束语
 --------------
 
-With the ``ResolveTargetEntityListener``, you are able to decouple your
-bundles, keeping them usable by themselves, but still being able to
-define relationships between different objects. By using this method,
-your bundles will end up being easier to maintain independently.
+通过 ``ResolveTargetEntityListener``，你可以分离你的bundle，
+使它们自己可用，但仍然能够定义不同对象之间的关联关系。
+通过使用此方法，你的bunlde最终将更容易独立维护。

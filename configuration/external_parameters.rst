@@ -4,32 +4,26 @@
 如何在服务容器中设置外部参数
 =======================================================
 
-In :doc:`/configuration`, you learned how to manage your application
-configuration. At times, it may benefit your application to store certain
-credentials outside of your project code. Database configuration is one such
-example. The flexibility of the Symfony service container allows you to easily
-do this.
+在 :doc:`/configuration` 中，你学习了如何管理应用配置。
+有时，你的应用可能会在项目代码之外存储某些凭据。数据库配置就是这样一个例子。
+Symfony服务容器的灵活性使你可以轻松地执行此操作。
 
 .. _config-env-vars:
 
 环境变量
 ---------------------
 
-You can reference environment variables by using special parameters named after
-the variables you want to use enclosed between ``env()``. Their actual values
-will be resolved at runtime (once per request), so that dumped containers can be
-reconfigured dynamically even after being compiled.
+你可以将需要使用的变量的特定参数命名放置在 ``env()`` 里来引用环境变量
+它们的实际值将在运行时解析（每个请求一次），这样即使在编译之后也可以动态地重新配置转储(dumped)容器。
 
-For example, when installing the ``doctrine`` recipe, database configuration is
-put in a ``DATABASE_URL`` environment variable:
+例如，在安装 ``doctrine`` 指令时，数据库配置放在一个 ``DATABASE_URL`` 环境变量中：
 
 .. code-block:: bash
 
     # .env
     DATABASE_URL="mysql://db_user:db_password@127.0.0.1:3306/db_name"
 
-This variable is referenced in the service container configuration using
-``%env(DATABASE_URL)%``:
+该变量可以在服务容器中使用 ``%env(DATABASE_URL)%`` 来引用：
 
 .. configuration-block::
 
@@ -70,8 +64,8 @@ This variable is referenced in the service container configuration using
             )
         ));
 
-You can also give the ``env()`` parameters a default value: the default value
-will be used whenever the corresponding environment variable is *not* found:
+你也可以给 ``env()`` 参数一个默认值。
+只要要相应的环境变量 *没有* 找到，该默认值将被使用：
 
 .. configuration-block::
 
@@ -104,10 +98,9 @@ will be used whenever the corresponding environment variable is *not* found:
 在生产中配置环境变量
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-During development, you'll use the ``.env`` file to configure your environment
-variables. On your production server, it is recommended to configure these at
-the web server level. If you're using Apache or Nginx, you can use e.g. one of
-the following:
+在开发期间，你将使用 ``.env`` 文件来配置环境变量。
+在生产服务器上，建议在Web服务器级别配置它们。
+如果你使用的是Apache或Nginx，则可以使用以下某项：
 
 .. configuration-block::
 
@@ -125,26 +118,22 @@ the following:
 
 .. caution::
 
-    Beware that dumping the contents of the ``$_SERVER`` and ``$_ENV`` variables
-    or outputting the ``phpinfo()`` contents will display the values of the
-    environment variables, exposing sensitive information such as the database
-    credentials.
+    请注意，转储(dumping) ``$_SERVER`` 和 ``$_ENV`` 变量或输出
+    ``phpinfo()`` 内容将会显示环境变量的值，从而暴露敏感信息（如数据库凭据）。
 
-    The values of the env vars are also exposed in the web interface of the
-    :doc:`Symfony profiler </profiler>`. In practice this shouldn't be a
-    problem because the web profiler must **never** be enabled in production.
+    环境变量的值也暴露在 :doc:`Symfony分析器 </profiler>` 的Web界面中。
+    在实践中，这应该不是问题，因为必须 *永远* 不在生产中启用Web分析器。
 
 环境变量处理器
 -------------------------------
 
 .. versionadded:: 3.4
-    Environment variable processors were introduced in Symfony 3.4.
+    Symfony 3.4中引入了环境变量处理器。
 
-The values of environment variables are considered strings by default.
-However, your code may expect other data types, like integers or booleans.
-Symfony solves this problem with *processors*, which modify the contents of the
-given environment variables. The following example uses the integer processor to
-turn the value of the ``HTTP_PORT`` env var into an integer:
+默认情况下，环境变量的值被视为字符串。
+但是，你的代码可能需要其他数据类型，如整数或布尔值。
+Symfony通过 *处理器* 解决了这个问题，处理器修改了给定环境变量的内容。
+以下示例使用整数处理器将 ``HTTP_PORT`` 环境变量的值转换为整数：
 
 .. configuration-block::
 
@@ -181,10 +170,10 @@ turn the value of the ``HTTP_PORT`` env var into an integer:
             ),
         ));
 
-Symfony provides the following env var processors:
+Symfony提供以下环境变量处理器：
 
 ``env(string:FOO)``
-    Casts ``FOO`` to a string:
+    转换 ``FOO`` 为字符串：
 
     .. configuration-block::
 
@@ -224,7 +213,7 @@ Symfony provides the following env var processors:
             ));
 
 ``env(bool:FOO)``
-    Casts ``FOO`` to a bool:
+    转换 ``FOO`` 为布尔值：
 
     .. configuration-block::
 
@@ -264,13 +253,13 @@ Symfony provides the following env var processors:
             ));
 
 ``env(int:FOO)``
-    Casts ``FOO`` to an int.
+    转换 ``FOO`` 为整数：
 
 ``env(float:FOO)``
-    Casts ``FOO`` to a float.
+    转换 ``FOO`` 为浮点：
 
 ``env(const:FOO)``
-    Finds the const value named in ``FOO``:
+    查找以 ``FOO`` 命名的常量值：
 
     .. configuration-block::
 
@@ -316,11 +305,10 @@ Symfony provides the following env var processors:
             ));
 
 ``env(base64:FOO)``
-    Decodes the content of ``FOO``, which is a base64 encoded string.
+    解码 ``FOO`` 的内容，这是base64编码的字符串。
 
 ``env(json:FOO)``
-    Decodes the content of ``FOO``, which is a JSON encoded string. It returns
-    either an array or ``null``:
+    解码 ``FOO`` 内容，这是一个JSON编码的字符串。它返回一个数组或 ``null``：
 
     .. configuration-block::
 
@@ -360,8 +348,7 @@ Symfony provides the following env var processors:
             ));
 
 ``env(resolve:FOO)``
-    Replaces the string ``FOO`` by the value of a config parameter with the
-    same name:
+    使用相同名称的配置参数值替换 ``FOO`` 字符串：
 
     .. configuration-block::
 
@@ -401,7 +388,7 @@ Symfony provides the following env var processors:
             ));
 
 ``env(csv:FOO)``
-    Decodes the content of ``FOO``, which is a CSV-encoded string:
+    解码CSV编码的 ``FOO`` 字符串的内容：
 
     .. code-block:: yaml
 
@@ -411,10 +398,10 @@ Symfony provides the following env var processors:
            trusted_hosts: '%env(csv:TRUSTED_HOSTS)%'
 
     .. versionadded:: 4.1
-        The ``csv`` processor was introduced in Symfony 4.1.
+        ``csv`` 处理器是在Symfony的4.1中引入。
 
 ``env(file:FOO)``
-    Returns the contents of a file whose path is the value of the ``FOO`` env var:
+    返回文件的内容，该文件的路径是 ``FOO`` 环境变量的值：
 
     .. configuration-block::
 
@@ -454,8 +441,7 @@ Symfony provides the following env var processors:
             ));
 
 ``env(key:FOO:BAR)``
-    Retrieves the value associated with the key ``FOO`` from the array whose
-    contents are stored in the ``BAR`` env var:
+    用 ``FOO`` 作为键，从储存在 ``BAR`` 环境变量的数组中取出对应值：
 
     .. configuration-block::
 
@@ -465,7 +451,7 @@ Symfony provides the following env var processors:
             parameters:
                 env(SECRETS_FILE): '/opt/application/.secrets.json'
                 database_password: '%env(key:database_password:json:file:SECRETS_FILE)%'
-                # if SECRETS_FILE contents are: {"database_password": "secret"} it returns "secret"
+                # 如果 SECRETS_FILE 的内容是: {"database_password": "secret"}，它将返回 "secret"
 
         .. code-block:: xml
 
@@ -492,27 +478,27 @@ Symfony provides the following env var processors:
             $container->setParameter('database_password', '%env(key:database_password:json:file:SECRETS_FILE)%');
 
     .. versionadded:: 4.2
-        The ``key`` processor was introduced in Symfony 4.2.
+        ``key`` 处理器是在Symfony的4.2中引入。
 
-It is also possible to combine any number of processors:
+也可以组合任意数量的处理器：
 
 .. code-block:: yaml
 
     parameters:
         env(AUTH_FILE): "%kernel.project_dir%/config/auth.json"
     google:
-        # 1. gets the value of the AUTH_FILE env var
-        # 2. replaces the values of any config param to get the config path
-        # 3. gets the content of the file stored in that path
-        # 4. JSON-decodes the content of the file and returns it
+        # 1. 取得 AUTH_FILE 环境变量的值
+        # 2. 替换任何配置参数的值以获取配置路径
+        # 3. 读取储存在该路径的文件的内容
+        # 4. JSON-decodes 该文件的内容并返回它
         auth: '%env(json:file:resolve:AUTH_FILE)%'
 
 自定义环境变量处理器
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-It's also possible to add your own processors for environment variables. First,
-create a class that implements
-:class:`Symfony\\Component\\DependencyInjection\\EnvVarProcessorInterface`::
+也可以为环境变量添加自己的处理器。
+首先，创建一个实现
+:class:`Symfony\\Component\\DependencyInjection\\EnvVarProcessorInterface` 的类::
 
     use Symfony\Component\DependencyInjection\EnvVarProcessorInterface;
 
@@ -533,33 +519,29 @@ create a class that implements
         }
     }
 
-To enable the new processor in the app, register it as a service and
-:doc:`tag it </service_container/tags>` with the ``container.env_var_processor``
-tag. If you're using the
-:ref:`default services.yaml configuration <service-container-services-load-example>`,
-this is already done for you, thanks to :ref:`autoconfiguration <services-autoconfigure>`.
+要在应用中启用新处理器，请将其注册为服务并使用
+``container.env_var_processor`` 标签 :doc:`标记它 </service_container/tags>`。
+如果你使用 :ref:`默认的services.yaml配置 <service-container-services-load-example>`，
+:ref:`自动配置 <services-autoconfigure>` 已经为你完成该操作了。
 
 常量
 ---------
 
-The container also has support for setting PHP constants as parameters.
-See :ref:`component-di-parameters-constants` for more details.
+该容器还支持将PHP常量设置为参数。有关详细信息，请参阅 :ref:`component-di-parameters-constants`。
 
 其他配置
 ---------------------------
 
-You can mix whatever configuration format you like (YAML, XML and PHP) in
-``config/packages/``.  Importing a PHP file gives you the flexibility to add
-whatever is needed in the container. For instance, you can create a
-``drupal.php`` file in which you set a database URL based on Drupal's database
-configuration::
+你可以在 ``config/packages/`` 中混合任何你喜欢的配置格式（YAML，XML和PHP）。
+导入PHP文件使你可以灵活地在容器中添加所需的任何内容。
+例如，你可以创建一个 ``drupal.php`` 文件，在该文件中根据Drupal的数据库配置设置数据库URL::
 
     // config/packages/drupal.php
 
-    // import Drupal's configuration
+    // 导入 Drupal 的配置
     include_once('/path/to/drupal/sites/default/settings.php');
 
-    // set a app.database_url parameter
+    // 设置一个 app.database_url 参数
     $container->setParameter('app.database_url', $db_url);
 
 .. _`SetEnv`: http://httpd.apache.org/docs/current/env.html

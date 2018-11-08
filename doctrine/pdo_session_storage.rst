@@ -4,14 +4,12 @@
 如何使用PdoSessionHandler在数据库中存储会话
 ==============================================================
 
-The default Symfony session storage writes the session information to files.
-Most medium to large websites use a database to store the session values
-instead of files, because databases are easier to use and scale in a
-multiple web server environment.
+默认的Symfony会话存储会将会话信息写入文件。
+大多数中型到大型网站使用数据库来存储会话值而不是文件，因为数据库更易于使用并可在多个Web服务器环境中进行扩展。
 
-Symfony has a built-in solution for database session storage called
-:class:`Symfony\\Component\\HttpFoundation\\Session\\Storage\\Handler\\PdoSessionHandler`.
-To use it, first register a new handler service:
+Symfony有一个内置的数据库会话存储解决方案：
+:class:`Symfony\\Component\\HttpFoundation\\Session\\Storage\\Handler\\PdoSessionHandler`。
+要使用它，首先注册一个新的处理器服务：
 
 .. configuration-block::
 
@@ -27,9 +25,10 @@ To use it, first register a new handler service:
                     - { db_username: myuser, db_password: mypassword }
 
                     # If you're using Doctrine & want to re-use that connection, then:
-                    # comment-out the above 2 lines and uncomment the line below
+                    # 如果你正在使用Doctrine并希望重用该连接，那么：
+                    # 注释上面的2行并取消下行的注释
                     # - !service { class: PDO, factory: 'database_connection:getWrappedConnection' }
-                    # If you get transaction issues (e.g. after login) uncomment the line below
+                    # 如果你遇到事务问题（例如登录后），请取消下行的注释
                     # - { lock_mode: 1 }
 
     .. code-block:: xml
@@ -68,11 +67,11 @@ To use it, first register a new handler service:
 
 .. tip::
 
-    Configure the database credentials as
-    :doc:`parameters defined with environment variables </configuration/external_parameters>`
-    to make your application more secure.
+    将数据库凭据配置为
+    :doc:`使用环境变量定义的参数 </configuration/external_parameters>`，
+    以使应用更安全。
 
-Next, tell Symfony to use your service as the session handler:
+接下来，告诉Symfony将你的服务用作会话处理器：
 
 .. configuration-block::
 
@@ -106,12 +105,11 @@ Next, tell Symfony to use your service as the session handler:
             ),
         ));
 
-Configuring the Table and Column Names
+配置表名和列名
 --------------------------------------
 
-This will expect a ``sessions`` table with a number of different columns.
-The table name, and all of the column names, can be configured by passing
-a second array argument to ``PdoSessionHandler``:
+这将期望(expect)一个包含许多不同列的 ``sessions`` 表。
+可以通过将第二个数组参数传递给 ``PdoSessionHandler`` 来配置表名和所有列名：
 
 .. configuration-block::
 
@@ -161,50 +159,48 @@ a second array argument to ``PdoSessionHandler``:
             ))
         ;
 
-These are parameters that you can configure:
+这些是你可以配置的参数：
 
-``db_table`` (default ``sessions``):
-    The name of the session table in your database;
+``db_table`` (默认 ``sessions``)：
+    数据库中会话表的名称;
 
-``db_id_col`` (default ``sess_id``):
-    The name of the id column in your session table (VARCHAR(128));
+``db_id_col`` (默认 ``sess_id``)：
+    会话表中id列的名称（VARCHAR（128））;
 
-``db_data_col`` (default ``sess_data``):
-    The name of the value column in your session table (BLOB);
+``db_data_col`` (默认 ``sess_data``):
+    会话表中值列的名称（BLOB）;
 
-``db_time_col`` (default ``sess_time``):
-    The name of the time column in your session table (INTEGER);
+``db_time_col`` (默认 ``sess_time``)：
+    会话表中的时间列的名称（INTEGER）;
 
-``db_lifetime_col`` (default ``sess_lifetime``):
-    The name of the lifetime column in your session table (INTEGER).
+``db_lifetime_col`` (默认 ``sess_lifetime``)：
+    会话表中的生命周期列的名称（INTEGER）。
 
 .. _example-sql-statements:
 
-Preparing the Database to Store Sessions
+准备数据库来存储会话
 ----------------------------------------
 
-Before storing sessions in the database, you must create the table that stores
-the information. The session handler provides a method called
+在数据库中存储会话之前，必须创建存储信息的表。
+会话处理器提供了一个
 :method:`Symfony\\Component\\HttpFoundation\\Session\\Storage\\Handler::createTable`
-to set up this table for you according to the database engine used::
+方法，根据使用的数据库引擎为你设置该表::
 
     try {
         $sessionHandlerService->createTable();
     } catch (\PDOException $exception) {
-        // the table could not be created for some reason
+        // 由于某种原因无法创建表
     }
 
-If you prefer to set up the table yourself, these are some examples of the SQL
-statements you may use according to your specific database engine.
+如果你更喜欢自己设置表，那么这些是根据你的特定数据库引擎可能使用的SQL语句的一些示例。
 
-A great way to run this on production is to generate an empty migration, and then
-add this SQL inside:
+在生产中运行它的一个好方法是生成一个空迁移，然后在里面添加这个SQL：
 
 .. code-block:: terminal
 
     $ php bin/console doctrine:migrations:generate
 
-Find the correct SQL below and put it inside that file. Then execute it with:
+在下面找到正确的SQL并将其放在该文件中。然后执行它：
 
 .. code-block:: terminal
 
@@ -224,10 +220,9 @@ MySQL
 
 .. note::
 
-    A ``BLOB`` column type can only store up to 64 kb. If the data stored in
-    a user's session exceeds this, an exception may be thrown or their session
-    will be silently reset. Consider using a ``MEDIUMBLOB`` if you need more
-    space.
+    一个 ``BLOB`` 列类型仅可以存储最多64 KB。
+    如果存储在用户会话中的数据超过此值，则可能会抛出异常或者会话将以静默方式重置。
+    如果您需要更多空间，请考虑使用 ``MEDIUMBLOB``。
 
 PostgreSQL
 ~~~~~~~~~~
@@ -264,13 +259,10 @@ Microsoft SQL Server
 
 .. caution::
 
-    If the session data doesn't fit in the data column, it might get truncated
-    by the database engine. To make matters worse, when the session data gets
-    corrupted, PHP ignores the data without giving a warning.
+    如果会话数据不适合该数据列，则可能会被数据库引擎截断。
+    更糟糕的是，当会话数据被破坏时，PHP会忽略该数据而不会发出警告。
 
-    If the application stores large amounts of session data, this problem can
-    be solved by increasing the column size (use ``BLOB`` or even ``MEDIUMBLOB``).
-    When using MySQL as the database engine, you can also enable the `strict SQL mode`_
-    to be notified when such an error happens.
+    如果应用存储大量会话数据，则可以通过增加列大小（使用 ``BLOB`` 甚至是 ``MEDIUMBLOB``）来解决此问题。
+    使用MySQL作为数据库引擎时，你还可以启用 `严格的SQL模式`_，以便在发生此类错误时收到通知。
 
-.. _`strict SQL mode`: https://dev.mysql.com/doc/refman/5.7/en/sql-mode.html
+.. _`严格的SQL模式`: https://dev.mysql.com/doc/refman/5.7/en/sql-mode.html

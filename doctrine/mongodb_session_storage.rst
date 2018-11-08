@@ -1,27 +1,25 @@
 如何使用MongoDbSessionHandler在MongoDB数据库中存储会话
 ========================================================================
 
-The default Symfony session storage writes the session information to files.
-Some medium to large websites use a NoSQL database called MongoDB to store the
-session values instead of files, because databases are easier to use and scale
-in a multi-webserver environment.
+默认的Symfony会话存储将会话信息写入文件。
+一些中型到大型网站使用名为MongoDB的NoSQL数据库来存储会话值而不是文件，
+因为数据库在多个Web服务器环境中更易于使用和扩展。
 
-Symfony has a built-in solution for NoSQL database session storage called
-:class:`Symfony\\Component\\HttpFoundation\\Session\\Storage\\Handler\\MongoDbSessionHandler`.
-To use this, you will need to:
+Symfony有一个内置的NoSQL数据库会话存储解决方案：
+:class:`Symfony\\Component\\HttpFoundation\\Session\\Storage\\Handler\\MongoDbSessionHandler`。
+要使用它，你需要：
 
-A) Register a ``MongoDbSessionHandler`` service;
+A) 注册一个 ``MongoDbSessionHandler`` 服务；
 
-B) Configure this under ``framework.session.handler_id`` configuration.
+B) 在 ``framework.session.handler_id`` 配置下配置此项。
 
-To see how to configure a similar handler, see :doc:`/doctrine/pdo_session_storage`.
+若要了解如何配置类似的处理器，请参阅 :doc:`/doctrine/pdo_session_storage`。
 
-Setting Up the MongoDB Collection
+设置MongoDB集合
 ---------------------------------
 
-You do not need to do anything to initialize your session collection. However, you
-may want to add an index to improve garbage collection performance. From the
-`MongoDB shell`_:
+你无需执行任何操作来初始化会话集合。
+但是，你可能希望添加索引以提高垃圾回收性能。在 `MongoDB shell`_ 中：
 
 .. code-block:: javascript
 

@@ -4,12 +4,11 @@
 如何组织配置文件
 ===================================
 
-The Symfony skeleton defines three :doc:`execution environments </configuration/environments>`
-called ``dev``, ``prod`` and ``test``. An environment represents a way
-to execute the same codebase with different configurations.
+Symfony骨架定义了三个 :doc:`执行环境 </configuration/environments>`
+叫 ``dev``、``prod`` 和 ``test``。环境表示使用不同配置执行相同代码库的方法。
 
-In order to select the configuration file to load for each environment, Symfony
-executes the ``configureContainer()`` method of the ``Kernel`` class::
+为了选择配置文件来加载每个环境，
+Symfony执行 ``Kernel`` 类的 ``configureContainer()`` 方法::
 
     // src/Kernel.php
     use Symfony\Component\Config\Loader\LoaderInterface;
@@ -34,16 +33,14 @@ executes the ``configureContainer()`` method of the ``Kernel`` class::
         }
     }
 
-For the ``dev`` environment, Symfony loads the following config files and
-directories and in this order:
+对于 ``dev`` 环境，Symfony按以下顺序加载以下配置文件和目录：
 
 #. ``config/packages/*``
 #. ``config/packages/dev/*``
 #.  ``config/services.yaml``
 #. ``config/services_dev.yaml``
 
-Therefore, the configuration files of the default Symfony applications follow
-this structure:
+因此，默认Symfony应用的配置文件遵循以下结构：
 
 .. code-block:: text
 
@@ -63,22 +60,19 @@ this structure:
     │     └─ services_dev.yaml
     ├─ ...
 
-This default structure was chosen for its simplicity — one file per package and
-environment. But as any other Symfony feature, you can customize it to better
-suit your needs.
+选择此默认结构是为了简化 - 每个软件包和环境一个文件。
+但与任何其他Symfony功能一样，你可以自定义它以更好地满足你的需求。
 
-Advanced Techniques
+高级技巧
 -------------------
 
-Symfony loads configuration files using the
-:doc:`Config component </components/config>`, which provides some
-advanced features.
+Symfony使用 :doc:`Config组件 </components/config>` 来加载配置文件，该组件提供了一些高级功能。
 
-Mix and Match Configuration Formats
+混合和匹配配置格式
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Configuration files can import files defined with any other built-in configuration
-format (``.yaml`` or ``.yml``, ``.xml``, ``.php``, ``.ini``):
+配置文件可以导入任何其他内置配置格式定义的文件
+（``.yaml`` 或 ``.yml``、``.xml``、``.php``、``.ini``）：
 
 .. configuration-block::
 
@@ -118,20 +112,17 @@ format (``.yaml`` or ``.yml``, ``.xml``, ``.php``, ``.ini``):
 
         // ...
 
-If you use any other configuration format, you have to define your own loader
-class extending it from :class:`Symfony\\Component\\DependencyInjection\\Loader\\FileLoader`.
-When the configuration values are dynamic, you can use the PHP configuration
-file to execute your own logic. In addition, you can define your own services
-to load configurations from databases or web services.
+如果使用任何其他配置格式，则必须定义自己的继承自
+:class:`Symfony\\Component\\DependencyInjection\\Loader\\FileLoader` 的加载器类。
+当配置值是动态时，你可以使用PHP配置文件来执行你自己的逻辑。
+此外，你可以定义自己的服务以从数据库或Web服务加载配置。
 
-Global Configuration Files
+全局配置文件
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Some system administrators may prefer to store sensitive parameters in files
-outside the project directory. Imagine that the database credentials for your
-website are stored in the ``/etc/sites/mysite.com/parameters.yaml`` file. You
-can load files from outside the project folder by indicating the full file path
-when importing it from any other configuration file:
+某些系统管理员可能更喜欢将敏感参数存储在项目目录之外的文件中。
+想象一下，你网站的数据库凭据存储在 ``/etc/sites/mysite.com/parameters.yaml`` 文件中。
+通过在从任何其他配置文件导入时指示完整的文件路径，可以从项目文件夹外部加载文件：
 
 .. configuration-block::
 
@@ -170,11 +161,10 @@ when importing it from any other configuration file:
 
 .. tip::
 
-    The ``ignore_errors`` option (which is the third optional argument in the
-    loader's ``import()`` method) silently discards errors when the loaded file
-    doesn't exist. This is needed in this case because most of the time, local
-    developers won't have the same files that exist on the production servers.
+    ``ignore_errors`` 选项（这是加载器的 ``import()`` 方法的第三个可选的参数）
+    将忽略加载的文件不存在的错误。
+    在这个例子中需要这样做，因为大多数情况下，本地开发人员不会拥有与生产服务器上保存的文件相同的文件。
 
-As you've seen, there are lots of ways to organize your configuration files. You
-can choose one of these or even create your own custom way of organizing the
-files. For even more customization, see ":doc:`/configuration/override_dir_structure`".
+如你所见，有很多方法可以组织配置文件。
+你可以选择其中一种，甚至可以创建自己的自定义方式来组织文件。
+有关更多自定义，请参阅 ":doc:`/configuration/override_dir_structure`"。

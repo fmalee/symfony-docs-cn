@@ -7,39 +7,34 @@
 .. admonition:: Screencast
     :class: screencast
 
-    Do you prefer video tutorials? Check out the `Mastering Doctrine Relations`_
-    screencast series.
+    更喜欢视频教程? 可以观看 `Mastering Doctrine Relations`_ 系列录像.
 
-There are **two** main relationship/association types:
+有 **两种** 主要的关系/关联类型：
 
 ``ManyToOne`` / ``OneToMany``
-    The most common relationship, mapped in the database with a foreign
-    key column (e.g. a ``category_id`` column on the ``product`` table). This is
-    actually just *one* association type, but seen from the two different *sides*
-    of the relation.
+    最常见的关系，使用外键列（例如，``product`` 表中的 ``category_id`` 列）映射到数据库中。
+    这实际上只是 *一种* 关联类型，但可以从关系的两个不同面来分开处理。
 
 ``ManyToMany``
-    Uses a join table and is needed when both sides of the relationship can have
-    many of the other side (e.g. "students" and "classes": each student is in many
-    classes, and each class has many students).
+    当关系的两面可以都具有许多的另一面时，需要使用一个连接表。
+    （例如“学生”和“班级”：每个学生在许多班级中，并且每个班级有许多学生）。
 
-First, you need to determine which relationship to use. If both sides of the relation
-will contain many of the other side (e.g. "students" and "classes"), you need a
-``ManyToMany`` relation. Otherwise, you likely need a ``ManyToOne``.
+首先，你需要确定要使用的关系。
+如果关系的两个方面都包含许多另一方（例如“学生”和“班级”），则需要一个 ``ManyToMany`` 关系。
+否则，你可能需要一个 ``ManyToOne``。
 
 .. tip::
 
-    There is also a OneToOne relationship (e.g. one User has one Profile and vice
-    versa). In practice, using this is similar to ``ManyToOne``.
+    还有一个 ``OneToOne`` 关系（例如，一个用户有一个用户资料，反之亦然）。
+    在实践中，会将它当做 ``ManyToOne`` 处理。
 
-The ManyToOne / OneToMany Association
+ManyToOne / OneToMany
 -------------------------------------
 
-Suppose that each product in your application belongs to exactly one category.
-In this case, you'll need a ``Category`` class, and a way to relate a
-``Product`` object to a ``Category`` object.
+假设你的应用中的每个产品都属于一个类别。
+在这种情况下，你将需要一个 ``Category`` 类，以及将 ``Product`` 对象与 ``Category`` 对象相关联的方法。
 
-Start by creating a ``Category`` entity with a ``name`` field:
+首先创建一个包含 ``name`` 字段的 ``Category`` 实体：
 
 .. code-block:: terminal
 
@@ -61,7 +56,7 @@ Start by creating a ``Category`` entity with a ``name`` field:
     >
     (press enter again to finish)
 
-This will generate your new entity class::
+这将生成新的实体类::
 
     // src/Entity/Category.php
     // ...
@@ -83,21 +78,18 @@ This will generate your new entity class::
         // ... getters and setters
     }
 
-Mapping the ManyToOne Relationship
+映射ManyToOne关系
 ----------------------------------
 
-In this example, each category can be associated with *many* products. But,
-each product can be associated with only *one* category. This relationship
-can be summarized as: *many* products to *one* category (or equivalently,
-*one* category to *many* products).
+在此示例中，每个类别可以与 *许多* 产品相关联。但是，每个产品只能与 *一个* 类别相关联。
+这种关系可以概括为：*许多* 产品属于 *一个* 类别（或等效地， *一个* 类别拥有 *多个* 产品）。
 
-From the perspective of the ``Product`` entity, this is a many-to-one relationship.
-From the perspective of the ``Category`` entity, this is a one-to-many relationship.
+从 ``Product`` 实体的角度来看，这是一种多对一的关系。
+从 ``Category`` 实体的角度来看，这是一种一对多的关系。
 
-To map this, first create a ``category`` property on the ``Product`` class with
-the ``ManyToOne`` annotation. You can do this by hand, or by using the ``make:entity``
-command, which will ask you several questions about your relationship. If you're
-not sure of the answer, don't worry! You can always change the settings later:
+要映射它，首先使用 ``ManyToOne`` 注释在 ``Product`` 类上创建一个 ``category`` 属性。
+你可以手动执行此操作，也可以使用 ``make:entity`` 命令执行此操作，该命令会向你询问有关你的关系的几个问题。
+如果你不确定答案，请不要担心！你可以随时更改该设置：
 
 .. code-block:: terminal
 
@@ -136,8 +128,8 @@ not sure of the answer, don't worry! You can always change the settings later:
     >
     (press enter again to finish)
 
-This made changes to *two* changes. First, added a new ``category`` property to
-the ``Product`` entity (and getter & setter methods):
+该操作改变了 *两个* 变化。
+首先，向 ``Product`` 实体添加新的 ``category`` 属性（以及getter和setter方法）：
 
 .. configuration-block::
 
@@ -201,13 +193,11 @@ the ``Product`` entity (and getter & setter methods):
             </entity>
         </doctrine-mapping>
 
-This ``ManyToOne`` mapping is required. It tells Doctrine to use the ``category_id``
-column on the ``product`` table to relate each record in that table with
-a record in the ``category`` table.
+该ManyToOne映射是必需的。
+它告诉Doctrine使用 ``product`` 表上的 ``category_id`` 列将该表中的每条记录与 ``category`` 表中的记录相关联。
 
-Next, since *one* ``Category`` object will relate to *many* ``Product`` objects,
-the ``make:entity`` command *also* added a ``products`` property to the ``Category``
-class that will hold these objects:
+接下来，由于 *一个* ``Category`` 对象将涉及 *许多* ``Product`` 对象，
+因此 ``make:entity`` 命令 *还* 向将保存这些对象的 ``Category`` 类添加了一个 ``products`` 属性：
 
 .. configuration-block::
 
@@ -241,7 +231,7 @@ class that will hold these objects:
                 return $this->products;
             }
 
-            // addProduct() and removeProduct() were also added
+            // 同时还添加了 addProduct() 和 removeProduct()
         }
 
     .. code-block:: yaml
@@ -280,35 +270,33 @@ class that will hold these objects:
             </entity>
         </doctrine-mapping>
 
-The ``ManyToOne`` mapping shown earlier is *required*, But, this ``OneToMany``
-is optional: only add it *if* you want to be able to access the products that are
-related to a category (this is one of the questions ``make:entity`` asks you). In
-this example, it *will* be useful to be able to call ``$category->getProducts()``.
-If you don't want it, then you also don't need the ``inversedBy`` or ``mappedBy``
-config.
+前面展示的 ``ManyToOne`` 映射是 *必需* 的，而这次的 ``OneToMany`` 映射是 *可选* 的：
+只有在你希望能够访问与类别相关的产品时才添加它（这是 ``make:entity`` 的问题之一）。
+在这个例子中，在需要调用 ``$category->getProducts()`` 时，该关系就派上用场了。
+如果你不想要它，那么你也不需要配置 ``inversedBy`` 或 ``mappedBy``。
 
-.. sidebar:: What is the ArrayCollection Stuff?
+.. sidebar:: 什么是ArrayCollection？
 
-    The code inside ``__construct()`` is important: The ``$products`` property must
-    be a collection object that implements Doctrine's ``Collection`` interface.
-    In this case, an ``ArrayCollection`` object is used. This looks and acts almost
-    *exactly* like an array, but has some added flexibility. Just imagine that it's
-    an ``array`` and you'll be in good shape.
+    ``__construct()`` 内部的代码很重要：
+    ``$products`` 属性必须是实现Doctrine的 ``Collection`` 接口的一个集合对象。
+    在这个例子中，使用的是 ``ArrayCollection`` 对象。
+    它的行为和外观几乎 *完全* 像一个数组，但多了一些额外的灵活性。
+    想象一下它就是一个 ``array`` 并且你将会处于良好状态。
 
-Your database is setup! Now, execute the migrations like normal:
+你的数据库已设置好！现在，像往常一样执行迁移：
 
 .. code-block:: terminal
 
     $ php bin/console doctrine:migrations:diff
     $ php bin/console doctrine:migrations:migrate
 
-Thanks to the relationship, this creates a ``category_id`` foreign key column on
-the ``product`` table. Doctrine is ready to persist our relationship!
+由于这种关系，它将会在 ``product`` 表上创建一个 ``category_id`` 外键列。
+Doctrine已经准备好持久化我们的关系！
 
-Saving Related Entities
+保存相关实体
 -----------------------
 
-Now you can see this new code in action! Imagine you're inside a controller::
+现在你可以看到这个新代码的实际应用！想象一下你的控制器内部::
 
     // ...
 
@@ -331,7 +319,7 @@ Now you can see this new code in action! Imagine you're inside a controller::
             $product->setPrice(19.99);
             $product->setDescription('Ergonomic and stylish!');
 
-            // relates this product to the category
+            // 将产品关联到类别
             $product->setCategory($category);
 
             $entityManager = $this->getDoctrine()->getManager();
@@ -346,31 +334,28 @@ Now you can see this new code in action! Imagine you're inside a controller::
         }
     }
 
-When you go to ``/product``, a single row is added to both the ``category`` and
-``product`` tables. The ``product.category_id`` column for the new product is set
-to whatever the ``id`` is of the new category. Doctrine manages the persistence of this
-relationship for you:
+当你浏览 ``/product`` 时，它会同时向 ``category`` 表和 ``product`` 表添加一行。
+新产品的 ``product.category_id`` 列已经设置为新类别的 ``id`` 列的值。
+Doctrine为你管理这种关系的持久性：
 
 .. image:: /_images/doctrine/mapping_relations.png
     :align: center
 
-If you're new to an ORM, this is the *hardest* concept: you need to stop thinking
-about your database, and instead *only* think about your objects. Instead of setting
-the category's integer id onto ``Product``, you set the entire ``Category`` *object*.
-Doctrine takes care of the rest when saving.
+如果你是ORM的新手，这是 *最难* 的概念：你需要停止考虑你的数据库，而 *只* 考虑你的对象。
+你需要将整个 ``Category`` *对象* （而不是类别的id）设置到 ``Product``。
+保存时，Doctrine会处理其余的事情。
 
-.. sidebar:: Updating the Relationship from the Inverse Side
+.. sidebar:: 从反面更新关系
 
-    Could you also call ``$category->addProduct()`` to change the relationship? Yes,
-    but, only because the ``make:entity`` command helped us. For more details,
-    see: `associations-inverse-side`_.
+    可以通过调用 ``$category->addProduct()`` 来改变关系吗？
+    可以的，因为 ``make:entity`` 命令帮助了我们实现了它。
+    有关更多详细信息，请参阅：`associations-inverse-side`_。
 
-Fetching Related Objects
+获取相关对象
 ------------------------
 
-When you need to fetch associated objects, your workflow looks just like it
-did before. First, fetch a ``$product`` object and then access its related
-``Category`` object::
+当你需要获取关联对象时，你的工作流程就和以前一样。
+首先，获取一个 ``$product`` 对象，然后访问与其相关的 ``Category`` 对象::
 
     use App\Entity\Product;
     // ...
@@ -388,22 +373,18 @@ did before. First, fetch a ``$product`` object and then access its related
         // ...
     }
 
-In this example, you first query for a ``Product`` object based on the product's
-``id``. This issues a query for *just* the product data and hydrates the
-``$product``. Later, when you call ``$product->getCategory()->getName()``,
-Doctrine silently makes a second query to find the ``Category`` that's related
-to this ``Product``. It prepares the ``$category`` object and returns it to
-you.
+在此示例中，你首先基于 ``Product`` 对象查询产品的 ``id``。
+这样就可以只查询产品数据并生成(hydrates) ``$product``。
+接下来，当你调用 ``$product->getCategory()->getName()`` 时，
+Doctrine默默地进行第二次查询以找到与 ``Product`` 相关的 ``Category``。
+并准备好 ``$category`` 对象，以将其返回给你。
 
 .. image:: /_images/doctrine/mapping_relations_proxy.png
     :align: center
 
-What's important is the fact that you have easy access to the product's related
-category, but the category data isn't actually retrieved until you ask for
-the category (i.e. it's "lazily loaded").
+重要的是你可以轻松访问产品的相关类别，但在你需要类别之前，实际上并未检索对应的类别数据（即“延迟加载”）。
 
-Because we mapped the optional ``OneToMany`` side, you can also query in the other
-direction::
+因为我们映射了可选的 ``OneToMany`` 侧，你还可以从另一个方向进行查询::
 
     public function showProducts($id)
     {
@@ -416,16 +397,13 @@ direction::
         // ...
     }
 
-In this case, the same things occur: you first query for a single ``Category``
-object. Then, only when (and if) you access the products, Doctrine makes a second
-query to retrieve the related ``Product`` objects. This extra query can be avoided
-by adding JOINs.
+在这个例子中，会发生同样的事情：首先查询单个 ``Category`` 对象。
+然后，只有当你访问产品时，Doctrine才会进行第二次查询以检索相关的 ``Product`` 对象。
+通过添加连接可以避免这种额外的查询。
 
-.. sidebar:: Relationships and Proxy Classes
+.. sidebar:: 关系和代理类
 
-    This "lazy loading" is possible because, when necessary, Doctrine returns
-    a "proxy" object in place of the true object. Look again at the above
-    example::
+    这种“延迟加载”是可能的，因为在必要时，Doctrine返回一个“代理”对象来代替真实对象。再看一下上面的例子::
 
         $product = $this->getDoctrine()
             ->getRepository(Product::class)
@@ -433,46 +411,39 @@ by adding JOINs.
 
         $category = $product->getCategory();
 
-        // prints "Proxies\AppEntityCategoryProxy"
+        // 打印 "Proxies\AppEntityCategoryProxy"
         dump(get_class($category));
         die();
 
-    This proxy object extends the true ``Category`` object, and looks and
-    acts exactly like it. The difference is that, by using a proxy object,
-    Doctrine can delay querying for the real ``Category`` data until you
-    actually need that data (e.g. until you call ``$category->getName()``).
+    此代理对象继承了真实的 ``Category`` 对象，其外观和行为与其完全相同。
+    不同之处在于，通过使用代理对象，Doctrine可以延迟查询实际的 ``Category`` 数据，
+    直到你确实需要该数据（例如，``$category->getName()`` 被调用）。
 
-    The proxy classes are generated by Doctrine and stored in the cache directory.
-    You'll probably never even notice that your ``$category`` object is actually
-    a proxy object.
+    该代理类由Doctrine生成并存储在缓存目录中。
+    你可能永远不会注意到你的 ``$category`` 对象实际上是一个代理对象。
 
-    In the next section, when you retrieve the product and category data
-    all at once (via a *join*), Doctrine will return the *true* ``Category``
-    object, since nothing needs to be lazily loaded.
+    在下一节中，当你一次性检索产品和类别数据时（通过 *join*），
+    因为不需要延迟加载任何内容，Doctrine将返回 *真实* 的 ``Category`` 对象，。
 
-Joining Related Records
+连接相关记录
 -----------------------
 
-In the examples above, two queries were made - one for the original object
-(e.g. a ``Category``) and one for the related object(s) (e.g. the ``Product``
-objects).
+在上面的示例中，进行了两个查询 - 一个用于原始对象（例如 ``Category``），一个用于相关对象（例如 ``Product`` 对象）。
 
 .. tip::
 
-    Remember that you can see all of the queries made during a request via
-    the web debug toolbar.
+    请记住，你可以通过Web调试工具栏查看请求期间发出的所有查询。
 
-If you know up front that you'll need to access both objects, you
-can avoid the second query by issuing a join in the original query. Add the
-following method to the ``ProductRepository`` class::
+如果你事先就知道需要访问这两个对象，则可以通过在原始查询中发出一个连接来避免第二个查询。
+将以下方法添加到 ``ProductRepository`` 类中::
 
     // src/Repository/ProductRepository.php
     public function findOneByIdJoinedToCategory($productId)
     {
         return $this->createQueryBuilder('p')
-            // p.category refers to the "category" property on product
+            // p.category是指产品上的“category”属性
             ->innerJoin('p.category', 'c')
-            // selects all the category data to avoid the query
+            // select 所有类别数据以避免再次查询
             ->addSelect('c')
             ->andWhere('p.id = :id')
             ->setParameter('id', $productId)
@@ -480,11 +451,10 @@ following method to the ``ProductRepository`` class::
             ->getOneOrNullResult();
     }
 
-This will *still* return an array of ``Product`` objects. But now, when you call
-``$product->getCategory()`` and use that data, no second query is made.
+这 *仍然* 会返回一个 ``Product`` 对象数组。
+但现在，当你调用 ``$product->getCategory()`` 并使用该数据时，不会再进行第二次查询。
 
-Now, you can use this method in your controller to query for a ``Product``
-object and its related ``Category`` with just one query::
+现在，你可以在控制器中使用此方法来查询一个 ``Product`` 对象以及相关的 ``Category``，并且只有一个查询::
 
     public function show($id)
     {
@@ -499,20 +469,18 @@ object and its related ``Category`` with just one query::
 
 .. _associations-inverse-side:
 
-Setting Information from the Inverse Side
+从反面设置信息
 -----------------------------------------
 
-So far, you've updated the relationship by calling ``$product->setCategory($category)``.
-This is no accident! Each relationship has two sides: in this example, ``Product.category``
-is the *owning* side and ``Category.products`` is the *inverse* side.
+到目前为止，你已通过调用 ``$product->setCategory($category)`` 更新了这段关系。
+这不是偶然的！每个关系具有两个方面：
+在这个例子中，``Product.category`` 是 *拥有* 方，而 ``Category.products`` 是 *从属* 方。
 
-To update a relationship in the database, you *must* set the relationship on the
-*owning* side. The owning side is always where the ``ManyToOne`` mapping is set
-(for a ``ManyToMany`` relation, you can choose which side is the owning side).
+要更新数据库中的关系，*必须* 在 *拥有* 方设置该关系。
+拥有方总是设置 ``ManyToOne`` 映射的那侧（对于 ``ManyToMany`` 关系，你可以选择哪一方是拥有方）。
 
-Does this means it's not possible to call ``$category->addProduct()`` or
-``$category->removeProduct()`` to update the database? Actually, it *is* possible,
-thanks to some clever code that the ``make:entity`` command generated::
+这是否意味着无法调用 ``$category->addProduct()`` 或 ``$category->removeProduct()`` 来更新数据库？
+事实上，由于 ``make:entity`` 命令生成了一些聪明的代码，所以这种调用是可行的::
 
     // src/Entity/Category.php
 
@@ -532,11 +500,11 @@ thanks to some clever code that the ``make:entity`` command generated::
         }
     }
 
-The *key* is ``$product->setCategory($this)``, which sets the *owning* side. Thanks,
-to this, when you save, the relationship *will* update in the database.
+*关键* 是 ``$product->setCategory($this)``，它设置了 *拥有* 方。
+因此，当你保存时，该关系 *将* 在数据库中更新。
 
-What about *removing* a ``Product`` from a ``Category``? The ``make:entity`` command
-also generated a ``removeProduct()`` method::
+怎么样在 ``Category`` 中移除一个 ``Product``？
+为此，``make:entity`` 命令还生成了一个 ``removeProduct()`` 方法::
 
     // src/Entity/Category.php
 
@@ -549,7 +517,7 @@ also generated a ``removeProduct()`` method::
         {
             if ($this->products->contains($product)) {
                 $this->products->removeElement($product);
-                // set the owning side to null (unless already changed)
+                // 将拥有方设置为null（除非已经更改）
                 if ($product->getCategory() === $this) {
                     $product->setCategory(null);
                 }
@@ -559,12 +527,11 @@ also generated a ``removeProduct()`` method::
         }
     }
 
-Thanks to this, if you call ``$category->removeProduct($product)``, the ``category_id``
-on that ``Product`` will be set to ``null`` in the database.
+得益于此，如果你调用了 ``$category->removeProduct($product)``，
+``Product`` 上的 ``category_id`` 将在数据库中被设置为 ``null``。
 
-But, instead of setting the ``category_id`` to null, what if you want the ``Product``
-to be *deleted* if it becomes "orphaned" (i.e. without a ``Category``)? To choose
-that behavior, use the `orphanRemoval`_ option inside ``Category``::
+但是，区别于设置 ``category_id`` 为空，如果你想要在 ``Product`` 变得“孤立”（即没有 ``Category``）时删除它？
+则请使用 ``Category`` 内部的 `orphanRemoval`_ 选项::
 
     // src/Entity/Category.php
 
@@ -575,23 +542,18 @@ that behavior, use the `orphanRemoval`_ option inside ``Category``::
      */
     private $products;
 
-Thanks to this, if the ``Product`` is removed from the ``Category``, it will be
-removed from the database entirely.
+得益于此，如果 ``Product`` 从 ``Category`` 中删除，它将从数据库中完全删除。
 
-More Information on Associations
+关于关联的更多信息
 --------------------------------
 
-This section has been an introduction to one common type of entity relationship,
-the one-to-many relationship. For more advanced details and examples of how
-to use other types of relations (e.g. one-to-one, many-to-many), see
-Doctrine's `Association Mapping Documentation`_.
+本节介绍了一种常见的实体关系，即一对多关系。
+有关如何使用其他类型关系的更多高级详细信息和示例（例如，一对一，多对多），请参阅Doctrine的 `关联映射文档`_。
 
 .. note::
 
-    If you're using annotations, you'll need to prepend all annotations with
-    ``@ORM\`` (e.g. ``@ORM\OneToMany``), which is not reflected in Doctrine's
-    documentation.
+    如果你正在使用注释，则需要在所有注释前面添加 ``@ORM\``（例如 ``@ORM\OneToMany``），这在Doctrine的文档中没有反映出来。
 
-.. _`Association Mapping Documentation`: http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/association-mapping.html
+.. _`关联映射文档`: http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/association-mapping.html
 .. _`orphanRemoval`: http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/working-with-associations.html#orphan-removal
 .. _`Mastering Doctrine Relations`: https://symfonycasts.com/screencast/doctrine-relations

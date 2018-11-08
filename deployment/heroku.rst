@@ -6,7 +6,6 @@
 部署到Heroku
 ===================
 
-To deploy to Heroku, see their official documentation:
-`Getting Started with Symfony on Heroku`_.
+有关部署到Heroku的详细信息，请参阅其官方文档：`在Heroku上使用Symfony`_。
 
-.. _`Getting Started with Symfony on Heroku`: https://devcenter.heroku.com/articles/getting-started-with-symfony
+.. _`在Heroku上使用Symfony`: https://devcenter.heroku.com/articles/getting-started-with-symfony

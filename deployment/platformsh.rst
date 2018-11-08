@@ -6,7 +6,6 @@
 部署到Platform.sh
 ========================
 
-To deploy to Platform.sh, see their official documentation:
-`Symfony Platform.sh Documentation`_.
+有关部署到Platform.sh的详细信息，请参阅其官方文档：`Symfony Platform.sh文档`_。
 
-.. _`Symfony Platform.sh Documentation`: https://docs.platform.sh/frameworks/symfony.html
+.. _`Symfony Platform.sh文档`: https://docs.platform.sh/frameworks/symfony.html

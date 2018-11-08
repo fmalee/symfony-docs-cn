@@ -1,31 +1,28 @@
 .. index::
     single: Templating; app Variable
 
-如何通过 ``app`` 变量访问Twig中的用户，请求，会话等
+如何通过 ``app`` 变量访问Twig中的用户、请求、会话等
 ================================================================================
 
-During each request, Symfony will set a global template variable ``app``
-in both Twig and PHP template engines by default. The ``app`` variable
-is a :class:`Symfony\\Bridge\\Twig\\AppVariable`
-instance which will give you access to some application specific variables
-automatically:
+在每个请求期间，Symfony将在Twig和PHP模板引擎中设置默认的 ``app`` 全局模板变量。
+该 ``app`` 变量是一个 :class:`Symfony\\Bridge\\Twig\\AppVariable` 实例，
+它允许你自动访问某些特定于应用的变量：
 
 ``app.user``
-    The representation of the current user or ``null`` if there is none. The
-    value stored in this variable can be a :class:`Symfony\\Component\\Security\\Core\\User\\UserInterface`
-    object, any other object which implements a ``__toString()`` method or even
-    a regular string.
+    表示当前的用户，如果没有用户则为 ``null``。
+    存储在此变量中的值可以是
+    :class:`Symfony\\Component\\Security\\Core\\User\\UserInterface` 对象，
+    实现 ``__toString()`` 方法的任何其他对象，甚至是一个常规字符串。
 ``app.request``
-    The :class:`Symfony\\Component\\HttpFoundation\\Request` object that represents
-    the current request (depending on your application, this can be a sub-request
-    or a regular request, as explained later).
+    表示当前请求的 :class:`Symfony\\Component\\HttpFoundation\\Request` 对象
+    （取决于你的应用，它可以是子请求或常规请求，稍后会再述）。
 ``app.session``
-    The :class:`Symfony\\Component\\HttpFoundation\\Session\\Session` object that
-    represents the current user's session or ``null`` if there is none.
+    表示当前用户会话的 :class:`Symfony\\Component\\HttpFoundation\\Session\\Session` 对象，
+    如果对象不存在，则为 ``null``。
 ``app.environment``
-    The name of the current environment (``dev``, ``prod``, etc).
+    当前环境的名称（``dev``、``prod`` 等等）。
 ``app.debug``
-    True if in debug mode. False otherwise.
+    如果处于调试模式则为 ``True``。否则就为 ``False``。
 
 .. code-block:: html+twig
 
@@ -37,5 +34,4 @@ automatically:
 
 .. tip::
 
-    You can add your own global template variables, see
-    :doc:`/templating/global_variables`.
+    你可以添加自己的全局模板变量，请参阅 :doc:`/templating/global_variables`。

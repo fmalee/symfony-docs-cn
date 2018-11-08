@@ -13,14 +13,6 @@
   - `df318b284e22352b7678daeaa32ab06eb0fbcc0c`（2018-10-25）
   - `b43a26fc1c8408de31e79f1abf91e0201e92e487`（2018-10-19）
 
-## 汉化进展
-
-- [Quick Tour](https://symfony.com/doc/current/quick_tour/index.html)
-- [Best Practices](https://symfony.com/doc/current/best_practices/index.html)
-- [Getting Started](https://symfony.com/doc/current/setup.html)
-- Guides
-  - Service Container
-
 ## 术语约定
 
 - `Route`：路由
@@ -285,4 +277,6 @@ Sphinx官方已经支持中文搜索。
 
 ## 文档主题
 
-- https://github.com/ryan-roemer/sphinx-bootstrap-theme
+推荐使用 `Doctrine` 项目文档的主题进行修改配置
+
+- https://github.com/doctrine/doctrine-sphinx-theme

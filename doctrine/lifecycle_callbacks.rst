@@ -4,14 +4,11 @@
 如何使用生命周期回调
 ====================================
 
-Sometimes, you need to perform an action right before or after an entity
-is inserted, updated, or deleted. These types of actions are known as "lifecycle"
-callbacks, as they're callback methods that you need to execute during different
-stages of the lifecycle of an entity (e.g. the entity is inserted, updated,
-deleted, etc).
+有时，你需要在插入、更新或删除实体之前或之后执行操作。
+这些类型的操作称为“生命周期”回调，
+因为它们是你需要在实体生命周期的不同阶段执行的回调方法（例如插入、更新、删除实体等）。
 
-If you're using annotations for your metadata, start by enabling the lifecycle
-callbacks. This is not necessary if you're using YAML or XML for your mapping.
+如果你正在为元数据使用注释，请首先启用生命周期回调。如果你使用YAML或XML进行映射，则不需要这样做。
 
 .. code-block:: php-annotations
 
@@ -24,9 +21,8 @@ callbacks. This is not necessary if you're using YAML or XML for your mapping.
         // ...
     }
 
-Now, you can tell Doctrine to execute a method on any of the available lifecycle
-events. For example, suppose you want to set a ``createdAt`` date column to
-the current date, only when the entity is first persisted (i.e. inserted):
+现在，你可以在任何可用的生命周期事件上告诉Doctrine执行一个方法。
+例如，假设你要仅在实体首次持久化（即插入）时，将 ``createdAt`` 日期列设置为当前日期：
 
 .. configuration-block::
 
@@ -70,27 +66,21 @@ the current date, only when the entity is first persisted (i.e. inserted):
 
 .. note::
 
-    The above example assumes that you've created and mapped a ``createdAt``
-    property (not shown here).
+    上面的示例假定你已创建并映射了一个 ``createdAt`` 属性（此处未显示）。
 
-Now, right before the entity is first persisted, Doctrine will automatically
-call this method and the ``createdAt`` field will be set to the current date.
+现在，在实体首次持久化之前，Doctrine将自动调用此方法，该 ``createdAt`` 字段将设置为当前日期。
 
-There are several other lifecycle events that you can hook into. For more
-information on other lifecycle events and lifecycle callbacks in general, see
-Doctrine's `Lifecycle Events documentation`_.
+你可以使用其他几个生命周期事件。
+有关其他生命周期事件和生命周期回调的更多信息，请参阅 `生命周期事件文档`_。
 
-.. sidebar:: Lifecycle Callbacks and Event Listeners
+.. sidebar:: 生命周期回调和事件监听器
 
-    Notice that the ``setCreatedAtValue()`` method receives no arguments. This
-    is always the case for lifecycle callbacks and is intentional: lifecycle
-    callbacks should be simple methods that are concerned with internally
-    transforming data in the entity (e.g. setting a created/updated field,
-    generating a slug value).
+    请注意， ``setCreatedAtValue()`` 方法不接收任何参数。
+    生命周期回调始终是这种情况并且是有意的：
+    生命周期回调应该是与实体中的内部转换(transforming)数据有关的简单方法（例如，设置一个创建/更新的字段、生成一个slug值）。
 
-    If you need to do some heavier lifting - like performing logging or sending
-    an email - you should register an external class as an event listener
-    or subscriber and give it access to whatever resources you need. For
-    more information, see :doc:`/doctrine/event_listeners_subscribers`.
+    如果你需要做一些更繁重的操作 - 比如记录日志或发送电子邮件 -
+    你应该注册一个外部类为事件监听器或订阅器，并让它访问你需要的任何资源。
+    有关更多信息，请参阅 :doc:`/doctrine/event_listeners_subscribers`。
 
-.. _`Lifecycle Events documentation`: http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/events.html#lifecycle-events
+.. _`生命周期事件文档`: http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/events.html#lifecycle-events

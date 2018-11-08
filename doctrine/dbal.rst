@@ -6,42 +6,38 @@
 
 .. note::
 
-    This article is about the Doctrine DBAL. Typically, you'll work with
-    the higher level Doctrine ORM layer, which uses the DBAL behind
-    the scenes to actually communicate with the database. To read more about
-    the Doctrine ORM, see ":doc:`/doctrine`".
+    本文是关于Doctrine DBAL的。
+    通常，你将使用更高级别的Doctrine ORM层，它在幕后实际是使用DBAL与数据库进行通信。
+    要阅读有关Doctrine ORM的更多信息，请参阅 ":doc:`/doctrine`"。
 
-The `Doctrine`_ Database Abstraction Layer (DBAL) is an abstraction layer that
-sits on top of `PDO`_ and offers an intuitive and flexible API for communicating
-with the most popular relational databases. In other words, the DBAL library
-makes it easy to execute queries and perform other database actions.
+`Doctrine`_ 数据库抽象层（DBAL）是位于的顶部一个抽象层 `PDO`_，
+并提供了一个直观而灵活的API与最流行的关系数据库进行通信。
+换句话说，DBAL库可以轻松执行查询并执行其他数据库操作。
 
 .. tip::
 
-    Read the official Doctrine `DBAL Documentation`_ to learn all the details
-    and capabilities of Doctrine's DBAL library.
+    阅读官方Doctrine `DBAL文档`_，了解Doctrine DBAL库的所有细节和功能。
 
-First, install the Doctrine ORM pack:
+首先，安装Doctrine ORM包：
 
 .. code-block:: terminal
 
     $ composer require symfony/orm-pack
 
-Then configure the ``DATABASE_URL`` environment variable in ``.env``:
+然后配置在 ``.env`` 中的 ``DATABASE_URL`` 环境变量：
 
 .. code-block:: text
 
     # .env
 
-    # customize this line!
+    # 自定义这一行!
     DATABASE_URL="mysql://db_user:db_password@127.0.0.1:3306/db_name"
 
-Further things can be configured in ``config/packages/doctrine.yaml`` - see
-:ref:`reference-dbal-configuration`. Remove the ``orm`` key in that file
-if you *don't* want to use the Doctrine ORM.
+可以在 ``config/packages/doctrine.yaml`` 配置其他内容 -
+请参阅 :ref:`reference-dbal-configuration`。
+如果你 *不* 愿意使用Doctrine ORM，请删除该文件中的 ``orm`` 键。
 
-You can then access the Doctrine DBAL connection by autowiring the ``Connection``
-object::
+然后，你可以通过自动装配 ``Connection`` 对象来访问Doctrine DBAL连接::
 
     use Doctrine\DBAL\Driver\Connection;
 
@@ -55,14 +51,13 @@ object::
         }
     }
 
-This will pass you the ``database_connection`` service.
+这将会给你传递 ``database_connection`` 服务。
 
-Registering custom Mapping Types
+注册自定义映射类型
 --------------------------------
 
-You can register custom mapping types through Symfony's configuration. They
-will be added to all configured connections. For more information on custom
-mapping types, read Doctrine's `Custom Mapping Types`_ section of their documentation.
+你可以通过Symfony的配置注册自定义映射类型。它们将添加到所有已配置的连接中。
+有关自定义映射类型的更多信息，请阅读Doctrine文档中的 `自定义映射类型`_ 部分。
 
 .. configuration-block::
 
@@ -109,15 +104,14 @@ mapping types, read Doctrine's `Custom Mapping Types`_ section of their document
             ),
         ));
 
-Registering custom Mapping Types in the SchemaTool
+在SchemaTool中注册自定义映射类型
 --------------------------------------------------
 
-The SchemaTool is used to inspect the database to compare the schema. To
-achieve this task, it needs to know which mapping type needs to be used
-for each database types. Registering new ones can be done through the configuration.
+SchemaTool用于检查数据库以对比模式(schema)。
+要完成此任务，需要知道每种数据库类型需要使用哪种映射类型。
+可以通过配置完成新类型的注册。
 
-Now, map the ENUM type (not supported by DBAL by default) to the ``string``
-mapping type:
+现在，映射 ENUM 类型（默认情况下不受DBAL支持）为 ``string`` 映射类型：
 
 .. configuration-block::
 
@@ -160,5 +154,5 @@ mapping type:
 
 .. _`PDO`:           https://php.net/pdo
 .. _`Doctrine`:      http://www.doctrine-project.org
-.. _`DBAL Documentation`: http://docs.doctrine-project.org/projects/doctrine-dbal/en/latest/index.html
-.. _`Custom Mapping Types`: http://docs.doctrine-project.org/projects/doctrine-dbal/en/latest/reference/types.html#custom-mapping-types
+.. _`DBAL文档`: http://docs.doctrine-project.org/projects/doctrine-dbal/en/latest/index.html
+.. _`自定义映射类型`: http://docs.doctrine-project.org/projects/doctrine-dbal/en/latest/reference/types.html#custom-mapping-types

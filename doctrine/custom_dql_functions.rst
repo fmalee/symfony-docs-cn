@@ -4,10 +4,10 @@
 如何注册自定义DQL函数
 ====================================
 
-Doctrine allows you to specify custom DQL functions. For more information
-on this topic, read Doctrine's cookbook article "`DQL User Defined Functions`_".
+Doctrine允许你指定自定义DQL函数。
+有关此主题的更多信息，请阅读Doctrine的教程："`DQL用户定义的函数`_"。
 
-In Symfony, you can register your custom DQL functions as follows:
+在Symfony中，你可以按如下方式注册自定义DQL函数：
 
 .. configuration-block::
 
@@ -78,9 +78,9 @@ In Symfony, you can register your custom DQL functions as follows:
 
 .. note::
 
-    In case the ``entity_managers`` were named explicitly, configuring the functions with the
-    orm directly will trigger the exception `Unrecognized option "dql" under "doctrine.orm"`.
-    The ``dql`` configuration block must be defined under the named entity manager.
+    如果 ``entity_managers`` 明确命名，
+    直接使用orm配置该函数将会触发 `Unrecognized option "dql" under "doctrine.orm"` 异常。
+    ``dql`` 配置块必须在命名实体管理器下定义。
 
     .. configuration-block::
 
@@ -92,7 +92,7 @@ In Symfony, you can register your custom DQL functions as follows:
                     # ...
                     entity_managers:
                         example_manager:
-                            # Place your functions here
+                            # 将功能放在这里
                             dql:
                                 datetime_functions:
                                     test_datetime: App\DQL\DatetimeFunction
@@ -148,4 +148,4 @@ In Symfony, you can register your custom DQL functions as follows:
                 ),
             ));
 
-.. _`DQL User Defined Functions`: http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/cookbook/dql-user-defined-functions.html
+.. _`DQL用户定义的函数`: http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/cookbook/dql-user-defined-functions.html

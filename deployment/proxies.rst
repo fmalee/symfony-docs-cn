@@ -1,28 +1,23 @@
-如何配置Symfony在负载均衡器或反向代理后面工作
+如何配置Symfony以在负载均衡器或反向代理后面工作
 ==========================================================================
 
-When you deploy your application, you may be behind a load balancer (e.g.
-an AWS Elastic Load Balancing) or a reverse proxy (e.g. Varnish for
-:doc:`caching</http_cache>`).
+部署应用时，你可能会在负载均衡器（例如AWS Elastic Load Balancing）或反向代理
+（例如用于 :doc:`缓存</http_cache>` 的Varnish）之后。
 
-For the most part, this doesn't cause any problems with Symfony. But, when
-a request passes through a proxy, certain request information is sent using
-either the standard ``Forwarded`` header or ``X-Forwarded-*`` headers. For example,
-instead of reading the ``REMOTE_ADDR`` header (which will now be the IP address of
-your reverse proxy), the user's true IP will be stored in a standard ``Forwarded: for="..."``
-header or a ``X-Forwarded-For`` header.
+在大多数情况下，这不会导致Symfony出现任何问题。
+但是，当请求通过代理时，会使用标准的 ``Forwarded`` 标头或 ``X-Forwarded-*`` 标头发送某些请求信息。
+例如，用户的真实IP将存储在标准的 ``Forwarded: for="..."`` 标头或 ``X-Forwarded-For`` 标头中，
+而不是读取 ``REMOTE_ADDR`` （现在将是你的反向代理的IP地址）。
 
-If you don't configure Symfony to look for these headers, you'll get incorrect
-information about the client's IP address, whether or not the client is connecting
-via HTTPS, the client's port and the hostname being requested.
+如果你不配置Symfony以查找这些标头，
+你将获得有关于客户端IP地址、客户端是否通过HTTPS连接、客户端端口以及请求的主机名等的错误信息。
 
 .. _request-set-trusted-proxies:
 
-Solution: setTrustedProxies()
+解决方案：setTrustedProxies()
 -----------------------------
 
-To fix this, you need to tell Symfony which reverse proxy IP addresses to trust
-and what headers your reverse proxy uses to send information:
+要解决此问题，你需要告诉Symfony要信任的反向代理的IP地址以及反向代理用于发送信息的标头：
 
 .. code-block:: php
 
@@ -31,37 +26,34 @@ and what headers your reverse proxy uses to send information:
     // ...
     $request = Request::createFromGlobals();
 
-    // tell Symfony about your reverse proxy
+    // 告诉Symfony关于反向代理的信息
     Request::setTrustedProxies(
-        // the IP address (or range) of your proxy
+        // 你的代理的IP地址 (或范围)
         ['192.0.0.1', '10.0.0.0/8'],
 
-        // trust *all* "X-Forwarded-*" headers
+        // 信任 *所有* "X-Forwarded-*" 标头
         Request::HEADER_X_FORWARDED_ALL
 
-        // or, if your proxy instead uses the "Forwarded" header
+        // 或者，你的代理使用 “Forwarded” 标头
         // Request::HEADER_FORWARDED
 
-        // or, if you're using AWS ELB
+        // 或者，你是使用 AWS ELB
         // Request::HEADER_X_FORWARDED_AWS_ELB
     );
 
-The Request object has several ``Request::HEADER_*`` constants that control exactly
-*which* headers from your reverse proxy are trusted. The argument is a bit field,
-so you can also pass your own value (e.g. ``0b00110``).
+请求对象有几个 ``Request::HEADER_*`` 常量，可以准确控制来自反向代理的 *哪些* 标头是可信的。
+参数是一个比特(bit)字段，因此你也可以传递自己的值（例如 ``0b00110``）。
 
-But what if the IP of my Reverse Proxy Changes Constantly!
+但是，如果我的反向代理的IP不断变化怎么办？
 ----------------------------------------------------------
 
-Some reverse proxies (like AWS Elastic Load Balancing) don't have a
-static IP address or even a range that you can target with the CIDR notation.
-In this case, you'll need to - *very carefully* - trust *all* proxies.
+某些反向代理（如AWS Elastic Load Balancing）没有静态IP地址，甚至没有可以使用CIDR表示法来定位的范围。
+在这种情况下，你需要 - *非常小心的* - 信任 *所有* 代理。
 
-#. Configure your web server(s) to *not* respond to traffic from *any* clients
-   other than your load balancers. For AWS, this can be done with `security groups`_.
+#. 将你的Web服务器配置为 *不* 响应来自负载均衡器以外的 *任何* 客户端的流量。
+   对于AWS，可以使用 `security groups`_ 完成此操作。
 
-#. Once you've guaranteed that traffic will only come from your trusted reverse
-   proxies, configure Symfony to *always* trust incoming request:
+#. 一旦你确保流量只来自你可信的反向代理，请将Symfony配置为 *始终* 信任传入的请求：
 
    .. code-block:: php
 
@@ -69,16 +61,15 @@ In this case, you'll need to - *very carefully* - trust *all* proxies.
 
        // ...
        Request::setTrustedProxies(
-           // trust *all* requests
+           // 信任 *所有* 请求
            array('127.0.0.1', $request->server->get('REMOTE_ADDR')),
 
-           // if you're using ELB, otherwise use a constant from above
+           // 如果你正在使用ELB，否则使用上面的常量
            Request::HEADER_X_FORWARDED_AWS_ELB
        );
 
-That's it! It's critical that you prevent traffic from all non-trusted sources.
-If you allow outside traffic, they could "spoof" their true IP address and
-other information.
+仅此而已！阻止来自所有不受信任来源的流量至关重要。
+如果你允许外部流量，他们可以“仿冒”他们的真实IP地址和其他信息。
 
 .. _`security groups`: http://docs.aws.amazon.com/elasticloadbalancing/latest/classic/elb-security-groups.html
 .. _`RFC 7239`: http://tools.ietf.org/html/rfc7239

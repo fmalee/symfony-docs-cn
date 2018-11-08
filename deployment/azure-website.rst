@@ -6,7 +6,6 @@
 部署到Microsoft Azure
 ============================
 
-If you want information about deploying to Azure, see their official documentation:
-`Create your PHP web application on Azure`_
+有关部署到Azure的详细信息，请参阅其官方文档：`在Azure中创建PHP应用`_。
 
-.. _`Create your PHP web application on Azure`: https://azure.microsoft.com/en-us/develop/php/
+.. _`在Azure中创建PHP应用`: https://azure.microsoft.com/en-us/develop/php/

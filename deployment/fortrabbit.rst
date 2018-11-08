@@ -6,7 +6,6 @@
 部署到fortrabbit
 =======================
 
-For details on deploying to fortrabbit, see their official documentation:
-`Install Symfony`_
+有关部署到fortrabbit的详细信息，请参阅其官方文档：`安装Symfony`_。
 
-.. _`Install Symfony`: https://help.fortrabbit.com/install-symfony-3-uni
+.. _`安装Symfony`: https://help.fortrabbit.com/install-symfony-3-uni

@@ -4,26 +4,20 @@
 如何从现有数据库生成实体
 ==================================================
 
-When starting work on a brand new project that uses a database, two different
-situations comes naturally. In most cases, the database model is designed
-and built from scratch. Sometimes, however, you'll start with an existing and
-probably unchangeable database model. Fortunately, Doctrine comes with a bunch
-of tools to help generate model classes from your existing database.
+在开始使用数据库的全新项目时，自然会出现两种不同的情况。
+在大多数情况下，数据库模型是从头开始设计和构建的。
+但是，有时你会从现有的、可能不可更改的数据库模型开始。
+幸运的是，Doctrine附带了许多工具来帮助从现有数据库生成模型类。
 
 .. note::
 
-    As the `Doctrine tools documentation`_ says, reverse engineering is a
-    one-time process to get started on a project. Doctrine is able to convert
-    approximately 70-80% of the necessary mapping information based on fields,
-    indexes and foreign key constraints. Doctrine can't discover inverse
-    associations, inheritance types, entities with foreign keys as primary keys
-    or semantical operations on associations such as cascade or lifecycle
-    events. Some additional work on the generated entities will be necessary
-    afterwards to design each to fit your domain model specificities.
+    正如 `Doctrine工具文档`_ 所说，逆向工程是一个开始项目的一次性过程。
+    Doctrine能够根据字段、索引和外键约束转换大约70-80％的必要映射信息。
+    Doctrine不能发现反向关联、继承类型、具有外键作为主键的实体或对诸如级联或生命周期事件之类的关联的语义操作。
+    之后，有必要对生成的实体进行一些额外的工作，以便根据你的域模型特性进行设计。
 
-This tutorial assumes you're using a simple blog application with the following
-two tables: ``blog_post`` and ``blog_comment``. A comment record is linked
-to a post record thanks to a foreign key constraint.
+本教程假设你使用的是一个简单的博客应用，其中包含以下两个表：``blog_post`` 和 ``blog_comment``。
+由于外键约束，一个评论记录链接到一个帖子记录。
 
 .. code-block:: sql
 
@@ -46,53 +40,46 @@ to a post record thanks to a foreign key constraint.
       CONSTRAINT `blog_post_id` FOREIGN KEY (`post_id`) REFERENCES `blog_post` (`id`) ON DELETE CASCADE
     ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-Before diving into the recipe, be sure your database connection parameters are
-correctly setup in the ``.env`` file.
+在深入了解指令之前，请确保在 ``.env`` 文件中正确设置了数据库连接参数。
 
-The first step towards building entity classes from an existing database
-is to ask Doctrine to introspect the database and generate the corresponding
-metadata files. Metadata files describe the entity class to generate based on
-table fields.
+从现有数据库构建实体类的第一步是要求Doctrine自检(introspect)数据库并生成相应的元数据文件。
+该元数据文件描述要生成的基于表字段的实体类。
 
 .. code-block:: terminal
 
     $ php bin/console doctrine:mapping:import 'App\Entity' annotation --path=src/Entity
 
-This command line tool asks Doctrine to introspect the database and generate
-new PHP classes with annotation metadata into ``src/Entity``. This generates two
-files: ``BlogPost.php`` and ``BlogComment.php``.
+此命令行工具要求Doctrine自检(introspect)数据库并生成带有注释元数据的新PHP类到 ``src/Entity``。
+这会生成两个文件：``BlogPost.php`` 和 ``BlogComment.php``。
 
 .. tip::
 
-    It's also possible to generate the metadata files into XML or YAML:
+    也可以将元数据文件生成为XML或YAML：
 
     .. code-block:: terminal
 
         $ php bin/console doctrine:mapping:import 'App\Entity' xml --path=config/doctrine
 
-Generating the Getters & Setters or PHP Classes
+生成Getters＆Setters或PHP类
 -----------------------------------------------
 
-The generated PHP classes now have properties and annotation metadata, but they
-do *not* have any getter or setter methods. If you generated XML or YAML metadata,
-you don't even have the PHP classes!
+生成的PHP类现在具有属性和注释元数据，但它们 *没有* 任何getter或setter方法。
+如果你生成了XML或YAML元数据，那么你甚至没有PHP类！
 
-To generate the missing getter/setter methods (or to *create* the classes if neceesary),
-run:
+要生成缺少的getter/setter方法（或者在必要时 *创建* 类），请运行：
 
 .. code-block:: terminal
 
-    // generates getter/setter methods
+    // 生成 getter/setter 方法
     $ php bin/console make:entity --regenerate App
 
 .. note::
 
-    If you want to have a OneToMany relationship, you will need to add
-    it manually into the entity (e.g. add a ``comments`` property to ``BlogPost``)
-    or to the generated XML or YAML files. Add a section on the specific entities
-    for one-to-many defining the ``inversedBy`` and the ``mappedBy`` pieces.
+    如果你想拥有OneToMany关系，则需要手动将其添加到实体
+    （例如，添加 ``comments`` 属性到 ``BlogPost``）或生成的XML或YAML文件中。
+    在特定实体上为一对多添加一个切片(section)，用于定义 ``inversedBy`` 和 ``mappedBy``。
 
-The generated entities are now ready to be used. Have fun!
+现在可以使用生成的实体了。玩得开心！
 
-.. _`Doctrine tools documentation`: http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/tools.html#reverse-engineering
+.. _`Doctrine工具文档`: http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/tools.html#reverse-engineering
 .. _`doctrine/doctrine#729`: https://github.com/doctrine/DoctrineBundle/issues/729

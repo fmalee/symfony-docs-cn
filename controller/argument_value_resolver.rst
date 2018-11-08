@@ -1,53 +1,46 @@
 .. index::
    single: Controller; Argument Value Resolvers
 
-Extending Action Argument Resolving
+扩展动作参数的解析
 ===================================
 
-In the :doc:`controller guide </controller>`, you've learned that you can get the
-:class:`Symfony\\Component\\HttpFoundation\\Request` object via an argument in
-your controller. This argument has to be type-hinted by the ``Request`` class
-in order to be recognized. This is done via the
-:class:`Symfony\\Component\\HttpKernel\\Controller\\ArgumentResolver`. By
-creating and registering custom argument value resolvers, you can extend this
-functionality.
+在 :doc:`控制器指南 </controller>` 中，你已经了解到可以通过控制器中的参数获取
+:class:`Symfony\\Component\\HttpFoundation\\Request` 对象。
+该参数必须由 ``Request`` 类进行类型约束才能被识别。
+这是通过 :class:`Symfony\\Component\\HttpKernel\\Controller\\ArgumentResolver` 完成的。
+通过创建和注册自定义的参数值解析器，你可以扩展此功能。
 
-Functionality Shipped with the HttpKernel
+HttpKernel附带的功能
 -----------------------------------------
 
-Symfony ships with five value resolvers in the HttpKernel component:
+Symfony在HttpKernel组件中附带五个值解析器：
 
 :class:`Symfony\\Component\\HttpKernel\\Controller\\ArgumentResolver\\RequestAttributeValueResolver`
-    Attempts to find a request attribute that matches the name of the argument.
+    尝试查找一个与参数名称匹配的请求属性。
 
 :class:`Symfony\\Component\\HttpKernel\\Controller\\ArgumentResolver\\RequestValueResolver`
-    Injects the current ``Request`` if type-hinted with ``Request`` or a class
-    extending ``Request``.
+    如果类型约束的是 ``Request`` 类或该类的扩展，则注入当前 ``Request``。
 
 :class:`Symfony\\Component\\HttpKernel\\Controller\\ArgumentResolver\\ServiceValueResolver`
-    Injects a service if type-hinted with a valid service class or interface. This
-    works like :doc:`autowiring </service_container/autowiring>`.
+    如果类型约束是有效的服务类或接口，则注入对应服务。
+    这就像 :doc:`自动装配 </service_container/autowiring>` 一样。
 
 :class:`Symfony\\Component\\HttpKernel\\Controller\\ArgumentResolver\\SessionValueResolver`
-    Injects the configured session class extending ``SessionInterface`` if
-    type-hinted with ``SessionInterface`` or a class extending
-    ``SessionInterface``.
+    如果类型约束的是 ``SessionInterface`` 类或该类的扩展，
+    则注入继承自  ``SessionInterface``  的已配置的会话类。
 
 :class:`Symfony\\Component\\HttpKernel\\Controller\\ArgumentResolver\\DefaultValueResolver`
-    Will set the default value of the argument if present and the argument
-    is optional.
+    将参数设置为默认值（如果该默认值存在且该参数是可选的）。
 
 :class:`Symfony\\Component\\HttpKernel\\Controller\\ArgumentResolver\\VariadicValueResolver`
-    Verifies if the request data is an array and will add all of them to the
-    argument list. When the action is called, the last (variadic) argument will
-    contain all the values of this array.
+    验证请求数据是否为数组，并将所有数据添加到参数列表中。
+    调用该动作时，最后一个（可变参数）参数将包含此数组的所有值。
 
-Adding a Custom Value Resolver
+添加自定义值解析器
 ------------------------------
 
-In the next example, you'll create a value resolver to inject the object that
-represents the current user whenever a controller method type-hints an argument
-with the ``User`` class::
+在下一个示例中，只要控制器方法使用 ``User`` 类来类型约束参数，
+你就会创建一个值解析器来注入表示当前用户的对象::
 
     namespace App\Controller;
 
@@ -62,10 +55,8 @@ with the ``User`` class::
         }
     }
 
-Beware that this feature is already provided by the `@ParamConverter`_
-annotation from the SensioFrameworkExtraBundle. If you have that bundle
-installed in your project, add this config to disable the auto-conversion of
-type-hinted method arguments:
+请注意，此功能已由SensioFrameworkExtraBundle中的 `@ParamConverter`_ 注释提供。
+如果你在项目中安装了该软件包，请添加此配置以禁用类型约束方法参数的自动转换：
 
 .. configuration-block::
 
@@ -102,25 +93,21 @@ type-hinted method arguments:
             ),
         ));
 
-Adding a new value resolver requires creating a class that implements
+添加新的值解析器需要创建一个实现
 :class:`Symfony\\Component\\HttpKernel\\Controller\\ArgumentValueResolverInterface`
-and defining a service for it. The interface defines two methods:
+类并将其定义为服务。该接口定义了两种方法：
 
 ``supports()``
-    This method is used to check whether the value resolver supports the
-    given argument. ``resolve()`` will only be executed when this returns ``true``.
+    此方法用于检查值解析器是否支持给定的参数。``resolve()`` 只有在返回 ``true`` 时才会执行。
 ``resolve()``
-    This method will resolve the actual value for the argument. Once the value
-    is resolved, you must `yield`_ the value to the ``ArgumentResolver``.
+    此方法将解析参数的实际值。一旦值被解析，必须 `yield`_ 该值到 ``ArgumentResolver``。
 
-Both methods get the ``Request`` object, which is the current request, and an
-:class:`Symfony\\Component\\HttpKernel\\ControllerMetadata\\ArgumentMetadata`
-instance. This object contains all information retrieved from the method signature
-for the current argument.
+两种方法都获取 ``Request`` 对象，即当前请求和
+:class:`Symfony\\Component\\HttpKernel\\ControllerMetadata\\ArgumentMetadata` 实例。
+此对象包含从当前参数的方法签名中检索的所有信息。
 
-Now that you know what to do, you can implement this interface. To get the
-current ``User``, you need the current security token. This token can be
-retrieved from the token storage::
+现在你知道该怎么做了，你可以实现此接口。要获取当前的 ``User``，你需要当前的安全令牌。
+可以从令牌存储中检索此令牌::
 
     // src/ArgumentResolver/UserValueResolver.php
     namespace App\ArgumentResolver;
@@ -155,19 +142,15 @@ retrieved from the token storage::
         }
     }
 
-In order to get the actual ``User`` object in your argument, the given value
-must fulfill the following requirements:
+为了在参数中获取到实际 ``User`` 对象，给定值必须满足以下要求：
 
-* An argument must be type-hinted as ``User`` in your action method signature;
-* The value must be an instance of the ``User`` class.
+* 参数必须在动作方法签名中使用 ``User`` 类型提示;
+* 该值必须是 ``User`` 类的实例。
 
-When all those requirements are met and ``true`` is returned, the
-``ArgumentResolver`` calls ``resolve()`` with the same values as it called
-``supports()``.
+当满足所有这些要求并返回 ``true`` 时，``ArgumentResolver`` 调用具有与调用 ``supports()`` 的值相同值的 ``resolve()`` 。
 
-That's it! Now all you have to do is add the configuration for the service
-container. This can be done by tagging the service with ``controller.argument_value_resolver``
-and adding a priority.
+仅此而已！现在，你只需添加服务容器的配置即可。
+这可以通过将服务标记为 ``controller.argument_value_resolver`` 并添加优先级来完成。
 
 .. configuration-block::
 
@@ -212,24 +195,20 @@ and adding a priority.
         $container->autowire(UserValueResolver::class)
             ->addTag('controller.argument_value_resolver', array('priority' => 50));
 
-While adding a priority is optional, it's recommended to add one to make sure
-the expected value is injected. The ``RequestAttributeValueResolver`` has a
-priority of 100. As this one is responsible for fetching attributes from the
-``Request``, it's recommended to trigger your custom value resolver with a
-lower priority. This makes sure the argument resolvers are not triggered when
-the attribute is present. For instance, when passing the user along a
-subrequests.
+虽然添加优先级是可选的，但建议添加一个以确保注入预期值。
+负责从 ``Request`` 提取属性的 ``RequestAttributeValueResolver`` 优先级为100，
+所以建议以较低优先级触发你的自定义值解析器。
+这可确保在属性存在时不会触发该参数解析器。
+例如在用子请求传递用户时。
 
 .. tip::
 
-    As you can see in the ``UserValueResolver::supports()`` method, the user
-    may not be available (e.g. when the controller is not behind a firewall).
-    In these cases, the resolver will not be executed. If no argument value
-    is resolved, an exception will be thrown.
+    正如你在 ``UserValueResolver::supports()`` 方法中看到的那样，
+    用户可能无法使用（例如，当控制器不在防火墙后面时）的情况。
+    在这些情况下，不会执行该解析器。如果没有参数值被解析，则抛出异常。
 
-    To prevent this, you can add a default value in the controller (e.g. ``User
-    $user = null``). The ``DefaultValueResolver`` is executed as the last
-    resolver and will use the default value if no value was already resolved.
+    为防止这种情况，你可以在控制器中添加一个默认值（例如 ``User $user = null``）。
+    ``DefaultValueResolver`` 会作为最后的解析器执行，如果没有值被解析，将使用默认值。
 
 .. _`@ParamConverter`: https://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/annotations/converters.html
 .. _`yield`: http://php.net/manual/en/language.generators.syntax.php

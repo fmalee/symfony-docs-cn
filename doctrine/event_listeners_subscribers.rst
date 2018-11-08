@@ -4,30 +4,25 @@
 .. _doctrine-event-config:
 .. _how-to-register-event-listeners-and-subscribers:
 
-Doctrine事件监听器和订阅者
+Doctrine事件监听器和订阅器
 ========================================
 
-Doctrine packages have a rich event system that fires events when almost anything
-happens inside the system. For you, this means that you can create arbitrary
-:doc:`services </service_container>` and tell Doctrine to notify those
-objects whenever a certain action (e.g. ``prePersist()``) happens within Doctrine.
-This could be useful, for example, to create an independent search index
-whenever an object in your database is saved.
+Doctrine包具有丰富的事件系统，系统内发生的几乎任何事情都会触发事件。
+对你而言，这意味着你可以创建任意 :doc:`服务 </service_container>`，
+并让Doctrine在它内部发生某个特定操作（例如 ``prePersist()``）时通知这些对象。
+例如，每当保存数据库中的对象时创建独立的搜索索引，该功能就派上用场了。
 
-Doctrine defines two types of objects that can listen to Doctrine events:
-listeners and subscribers. Both are very similar, but listeners are a bit
-more straightforward. For more, see `The Event System`_ on Doctrine's website.
+Doctrine定义了两种可以监听Doctrine事件的对象：监听器和订阅器。
+两者都非常相似，但监听器更直接。有关更多信息，请参阅Doctrine网站上的 `事件系统`_。
 
-The Doctrine website also explains all existing events that can be listened to.
+该Doctrine网站还罗列了可以监听的所有现有事件。
 
-Configuring the Listener/Subscriber
+配置监听器/订阅器
 -----------------------------------
 
-To register a service to act as an event listener or subscriber you have
-to :doc:`tag </service_container/tags>` it with the appropriate name. Depending
-on your use-case, you can hook a listener into every DBAL connection and ORM
-entity manager or just into one specific DBAL connection and all the entity
-managers that use this connection.
+要注册服务以充当事件监听器或订阅器，你必须使用适当的名称对其进行 :doc:`标记 </service_container/tags>`。
+根据你的用例，你可以将监听器挂钩(hook)到每个DBAL连接和ORM实体管理器，
+或者只挂钩到一个特定的DBAL连接以及使用此连接的所有实体管理器。
 
 .. configuration-block::
 
@@ -85,17 +80,16 @@ managers that use this connection.
             ->addTag('doctrine.event_subscriber', array('connection' => 'default'))
         ;
 
-Creating the Listener Class
+创建监听器类
 ---------------------------
 
-In the previous example, a ``SearchIndexer`` service was configured as a Doctrine
-listener on the event ``postPersist``. The class behind that service must have
-a ``postPersist()`` method, which will be called when the event is dispatched::
+在前面的示例中，``SearchIndexer`` 服务已配置为 ``postPersist`` 事件上的Doctrine监听器。
+该服务背后的类必须有一个 ``postPersist()`` 方法，该方法将在调度事件时调用::
 
     // src/EventListener/SearchIndexer.php
     namespace App\EventListener;
 
-    // for Doctrine < 2.4: use Doctrine\ORM\Event\LifecycleEventArgs;
+    // 对于Doctrine < 2.4: use Doctrine\ORM\Event\LifecycleEventArgs;
     use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
     use App\Entity\Product;
 
@@ -105,43 +99,39 @@ a ``postPersist()`` method, which will be called when the event is dispatched::
         {
             $entity = $args->getObject();
 
-            // only act on some "Product" entity
+            // 只针对 "Product" 实体上的一些动作
             if (!$entity instanceof Product) {
                 return;
             }
 
             $entityManager = $args->getObjectManager();
-            // ... do something with the Product
+            // ... 使用 Product 做一些事情
         }
     }
 
-In each event, you have access to a ``LifecycleEventArgs`` object, which
-gives you access to both the entity object of the event and the entity manager
-itself.
+在每个事件中，你都可以访问一个 ``LifecycleEventArgs`` 对象，
+该对象使你可以访问事件的实体对象和实体管理器本身。
 
-One important thing to notice is that a listener will be listening for *all*
-entities in your application. So, if you're interested in only handling a
-specific type of entity (e.g. a ``Product`` entity but not a ``BlogPost``
-entity), you should check for the entity's class type in your method
-(as shown above).
+需要注意的一件重要事情是，监听器将监听应用中的 *所有* 实体。
+因此，如果你只对处理特定类型的实体（例如 ``Product`` 实体而非 ``BlogPost`` 实体）感兴趣，
+则应在方法中检查实体的类类型（如上所示）。
 
 .. tip::
 
-    In Doctrine 2.4, a feature called Entity Listeners was introduced.
-    It is a lifecycle listener class used for an entity. You can read
-    about it in `the Doctrine Documentation`_.
+    在Doctrine 2.4中，引入了一个名为实体监听器的功能。
+    它是用于实体的生命周期监听器类。你可以在 `Doctrine文档`_ 中阅读相关内容。
 
-Creating the Subscriber Class
+创建订阅器类
 -----------------------------
 
-A Doctrine event subscriber must implement the ``Doctrine\Common\EventSubscriber``
-interface and have an event method for each event it subscribes to::
+Doctrine事件订阅器必须实现该 ``Doctrine\Common\EventSubscriber`` 接口，
+并为其订阅的每个事件都有一个对应事件方法::
 
     // src/EventListener/SearchIndexerSubscriber.php
     namespace App\EventListener;
 
     use Doctrine\Common\EventSubscriber;
-    // for Doctrine < 2.4: use Doctrine\ORM\Event\LifecycleEventArgs;
+    // 对于 Doctrine < 2.4: use Doctrine\ORM\Event\LifecycleEventArgs;
     use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
     use App\Entity\Product;
 
@@ -169,48 +159,42 @@ interface and have an event method for each event it subscribes to::
         {
             $entity = $args->getObject();
 
-            // perhaps you only want to act on some "Product" entity
+            // 也许你只想对一些“Product”实体采取动作
             if ($entity instanceof Product) {
                 $entityManager = $args->getObjectManager();
-                // ... do something with the Product
+                // ... 使用 Product 做一些事情
             }
         }
     }
 
 .. tip::
 
-    Doctrine event subscribers cannot return a flexible array of methods to
-    call for the events like the :ref:`Symfony event subscriber <event_dispatcher-using-event-subscribers>`
-    can. Doctrine event subscribers must return a simple array of the event
-    names they subscribe to. Doctrine will then expect methods on the subscriber
-    with the same name as each subscribed event, just as when using an event listener.
+    Doctrine事件订阅器无法返回灵活的方法数组来调用
+    :ref:`Symfony事件订阅器 <event_dispatcher-using-event-subscribers>` 可以调用的事件。
+    Doctrine事件订阅者必须返回他们订阅的事件名称的简单数组。
+    然后，Doctrine将期望订阅器上的方法与每个订阅事件具有相同的名称，就像使用事件监听器时一样。
 
-For a full reference, see chapter `The Event System`_ in the Doctrine documentation.
+有关完整参考，请参阅Doctrine文档中的 `事件系统`_ 一章。
 
-Performance Considerations
+性能的注意事项
 --------------------------
 
-One important difference between listeners and subscribers is that Symfony loads
-entity listeners lazily. This means that the listener classes are only fetched
-from the service container (and instantiated) if the related event is actually
-fired.
+监听器和订阅器之间的一个重要区别是Symfony惰性加载实体监听器。
+这意味着只有在实际触发相关事件时才从服务容器中获取（并实例化）监听器类。
 
-That's why it is preferable to use entity listeners instead of subscribers
-whenever possible.
+这就是为什么最好尽可能使用实体监听器而不是订阅器。
 
 .. versionadded:: 4.2
-    Starting from Symfony 4.2, Doctrine entity listeners are always lazy. In
-    previous Symfony versions this behavior was configurable.
+    从Symfony 4.2开始，Doctrine实体监听器总是惰性的。在以前的Symfony版本中，此行为是可配置的。
 
-.. _`The Event System`: http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/events.html
-.. _`the Doctrine Documentation`: https://symfony.com/doc/current/bundles/DoctrineBundle/entity-listeners.html
+.. _`事件系统`: http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/events.html
+.. _`Doctrine文档`: https://symfony.com/doc/current/bundles/DoctrineBundle/entity-listeners.html
 
-Priorities for Event Listeners
+事件监听器的优先级
 ------------------------------
 
-In case you have multiple listeners for the same event you can control the order
-in which they are invoked using the ``priority`` attribute on the tag.
-Listeners with a higher priority are invoked first.
+如果你有同一事件的多个监听器，则可以使用标签上的 ``priority`` 属性来控制调用它们的顺序。
+优先调用具有更高优先级的监听器。
 
 .. configuration-block::
 

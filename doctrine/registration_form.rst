@@ -6,39 +6,34 @@
 如何实现简单的注册表单
 ===========================================
 
-Creating a registration form works the same as creating any form. You configure
-the form to update some ``User`` model object (a Doctrine entity in this
-example) and then save it.
+创建注册表单与创建任何表单的工作方式相同。
+你配置表单以更新某个 ``User`` 模型对象（在此示例中为Doctrine实体），然后保存它。
 
-First, make sure you have all the dependencies you need installed:
+首先，确保你已安装所有需要的依赖：
 
 .. code-block:: terminal
 
     $ composer require symfony/orm-pack symfony/form symfony/security-bundle symfony/validator
 
-If you don't already have a ``User`` entity and a working login system,
-first start by following :doc:`/security`.
+如果你还没有 ``User`` 实体和一个登录系统，请首先按照 :doc:`/security` 进行配置。
 
-Your ``User`` entity will probably at least have the following fields:
+你的 ``User`` 实体可能至少具有以下字段：
 
 ``username``
-    This will be used for logging in, unless you instead want your user to
-    :ref:`log in via email <registration-form-via-email>` (in that case, this
-    field is unnecessary).
+    这将用于登录，除非你希望你的用户
+    :ref:`通过电子邮件登录 <registration-form-via-email>` （在这种情况下，此字段是不必要的）。
 
 ``email``
-    A nice piece of information to collect. You can also allow users to
-    :ref:`log in via email <registration-form-via-email>`.
+    用户信息中比较重要的。你还可以允许用户 :ref:`通过电子邮件登录 <registration-form-via-email>`。
 
 ``password``
-    The encoded password.
+    加密的密码。
 
 ``plainPassword``
-    This field is *not* persisted: (notice no ``@ORM\Column`` above it). It
-    temporarily stores the plain password from the registration form. This field
-    can be validated and is then used to populate the ``password`` field.
+    此字段 *不会* 保留:(请注意不在其上方添加 ``@ORM\Column`` ）。
+    它暂时存储注册表单中的文本密码。可以验证此字段，然后使用该字段填充 ``password`` 字段。
 
-With some validation added, your class may look something like this::
+添加一些验证后，你的类可能如下所示::
 
     // src/Entity/User.php
     namespace App\Entity;
@@ -99,7 +94,7 @@ With some validation added, your class may look something like this::
             $this->roles = array('ROLE_USER');
         }
 
-        // other properties and methods
+        // 其他属性和方法
 
         public function getEmail()
         {
@@ -143,8 +138,8 @@ With some validation added, your class may look something like this::
 
         public function getSalt()
         {
-            // The bcrypt and argon2i algorithms don't require a separate salt.
-            // You *may* need a real salt if you choose a different encoder.
+            // bcrypt和argon2i算法不需要单独的salt。
+            // 如果你选择不同的编码器，你*可能*需要一个真正的salt。
             return null;
         }
 
@@ -158,32 +153,27 @@ With some validation added, your class may look something like this::
         }
     }
 
-The :class:`Symfony\\Component\\Security\\Core\\User\\UserInterface` requires
-a few other methods and your ``security.yaml`` file needs to be configured
-properly to work with the ``User`` entity. For a more complete example, see
-the :doc:`Security Guide </security>`.
+:class:`Symfony\\Component\\Security\\Core\\User\\UserInterface`
+需要一些其他的方法，你的 ``security.yaml`` 文件也需要正确配置，以便与 ``User`` 实体一起工作。
+有关更完整的示例，请参阅 :doc:`安全指南 </security>`。
 
 .. _registration-password-max:
 
-.. sidebar:: Why the 4096 Password Limit?
+.. sidebar:: 为什么密码限制是4096？
 
-    Notice that the ``plainPassword`` field has a max length of 4096 characters.
-    For security purposes (`CVE-2013-5750`_), Symfony limits the plain password
-    length to 4096 characters when encoding it. Adding this constraint makes
-    sure that your form will give a validation error if anyone tries a super-long
-    password.
+    请注意，该 ``plainPassword`` 字段的最大长度为4096个字符。
+    出于安全目的（`CVE-2013-5750`_），Symfony在加密时将明文密码长度限制为4096个字符。
+    添加此约束可确保如果有人尝试超长密码，你的表单会给出一个验证错误。
 
-    You'll need to add this constraint anywhere in your application where
-    your user submits a plaintext password (e.g. change password form). The
-    only place where you don't need to worry about this is your login form,
-    since Symfony's Security component handles this for you.
+    在应用中的，你需要在用户提交明文密码的任何位置都添加此约束（例如，更改密码表单）。
+    不需要关心这一点的唯一地方是你的登录表单，因为Symfony的安全组件为你处理此问题。
 
 .. _create-a-form-for-the-model:
 
-Create a Form for the Entity
+为实体创建表单
 ----------------------------
 
-Next, create the form for the ``User`` entity::
+接下来，为 ``User`` 实体创建表单类型::
 
     // src/Form/UserType.php
     namespace App\Form;
@@ -220,20 +210,17 @@ Next, create the form for the ``User`` entity::
         }
     }
 
-There are just three fields: ``email``, ``username`` and ``plainPassword``
-(repeated to confirm the entered password).
+只有三个字段：``email``、``username`` 和 ``plainPassword`` （重复确认输入的密码）。
 
 .. tip::
 
-    To explore more things about the Form component, read the
-    :doc:`/forms` guide.
+    要了解有关Form组件的更多信息，请阅读 :doc:`/forms` 指南。
 
-Handling the Form Submission
+处理表单提交
 ----------------------------
 
-Next, you need a controller to handle the form rendering and submission. If the
-form is submitted, the controller performs the validation and saves the data
-into the database::
+接下来，你需要一个控制器来处理表单渲染和提交。
+如果提交了表单，控制器将执行验证并将数据保存到数据库中::
 
     // src/Controller/RegistrationController.php
     namespace App\Controller;
@@ -252,25 +239,25 @@ into the database::
          */
         public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder)
         {
-            // 1) build the form
+            // 1) 生成表单
             $user = new User();
             $form = $this->createForm(UserType::class, $user);
 
-            // 2) handle the submit (will only happen on POST)
+            // 2) 处理提交 (仅在POST时触发)
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
 
-                // 3) Encode the password (you could also do this via Doctrine listener)
+                // 3) 加密密码 (你也可以通过Doctrine监听器做此操作)
                 $password = $passwordEncoder->encodePassword($user, $user->getPlainPassword());
                 $user->setPassword($password);
 
-                // 4) save the User!
+                // 4) 保存用户!
                 $entityManager = $this->getDoctrine()->getManager();
                 $entityManager->persist($user);
                 $entityManager->flush();
 
-                // ... do any other work - like sending them an email, etc
-                // maybe set a "flash" success message for the user
+                // ... 其他操作 - 比如给他们发送邮件等等
+                // 也可以该用户设置一个闪存消息
 
                 return $this->redirectToRoute('replace_with_some_route');
             }
@@ -282,8 +269,7 @@ into the database::
         }
     }
 
-To define the algorithm used to encode the password in step 3 configure the
-encoder in the security configuration:
+要在步骤3中定义用于编码密码的算法，请在安全配置中配置编码器：
 
 .. configuration-block::
 
@@ -319,10 +305,10 @@ encoder in the security configuration:
             ),
         ));
 
-In this case the recommended `bcrypt`_ algorithm is used. If needed, check out
-the :ref:`user password encoding <security-encoding-user-password>` article.
+在这个例子中，使用推荐的 `bcrypt`_ 算法。如果有需要，请查看
+:ref:`用户密码编码 <security-encoding-user-password>` 章节。
 
-Next, create the template:
+接下来，创建模板：
 
 .. code-block:: html+twig
 
@@ -337,29 +323,27 @@ Next, create the template:
         <button type="submit">Register!</button>
     {{ form_end(form) }}
 
-See :doc:`/form/form_customization` for more details.
+有关更多详细信息，请参阅 :doc:`/form/form_customization`。
 
-Update your Database Schema
+更新数据库的模式
 ---------------------------
 
-If you've updated the ``User`` entity during this tutorial, you have to update
-your database schema using this command:
+如果你在本教程中更新了 ``User`` 实体，则必须使用以下命令更新数据库模式：
 
 .. code-block:: terminal
 
     $ php bin/console doctrine:migrations:diff
     $ php bin/console doctrine:migrations:migrate
 
-That's it! Head to ``/register`` to try things out!
+仅此而已！可以前往 ``/register`` 看看成果了！
 
 .. _registration-form-via-email:
 
-Having a Registration form with only Email (no Username)
+只有电子邮件（无用户名）的注册表单
 --------------------------------------------------------
 
-If you want your users to login via email and you don't need a username, then you
-can remove it from your ``User`` entity entirely. Instead, make ``getUsername()``
-return the ``email`` property::
+如果你希望用户通过电子邮件而不是用户名登录，则可以将其从你的 ``User`` 实体中完全删除。
+然后，在 ``getUsername()`` 中返回 ``email`` 属性::
 
     // src/Entity/User.php
     // ...
@@ -376,20 +360,19 @@ return the ``email`` property::
         // ...
     }
 
-Next, update the ``providers`` section of your ``security.yaml`` file
-so that Symfony knows how to load your users via the ``email`` property on
-login. See :ref:`authenticating-someone-with-a-custom-entity-provider`.
+接下来，更新 ``security.yaml`` 文件的 ``providers`` 部分，
+以便Symfony知道如何在登录时通过 ``email`` 属性加载用户。
+请参阅 :ref:`authenticating-someone-with-a-custom-entity-provider`。
 
-Adding a "accept terms" Checkbox
+添加“接受条款”复选框
 --------------------------------
 
-Sometimes, you want a "Do you accept the terms and conditions" checkbox on your
-registration form. The only trick is that you want to add this field to your form
-without adding an unnecessary new ``termsAccepted`` property to your ``User`` entity
-that you'll never need.
+有时，你需要在注册表单上添加“你是否接受条款和条件”复选框。
+唯一的诀窍是，你希望将此字段添加到表单中，
+而不向你的 ``User`` 实体添加你永远不需要的的 ``termsAccepted`` 新属性。
 
-To do this, add a ``termsAccepted`` field to your form, but set its
-:ref:`mapped <reference-form-option-mapped>` option to ``false``::
+为此，请在表单中添加一个 ``termsAccepted`` 字段，并将其
+:ref:`mapped <reference-form-option-mapped>` 选项设置为 ``false``::
 
     // src/Form/UserType.php
     // ...
@@ -412,14 +395,13 @@ To do this, add a ``termsAccepted`` field to your form, but set its
         }
     }
 
-The :ref:`constraints <form-option-constraints>` option is also used, which allows
-us to add validation, even though there is no ``termsAccepted`` property on ``User``.
+为了能够使用验证，``termsAccepted`` 字段也可以添加 :ref:`约束 <form-option-constraints>` 选项，
+即使在 ``User`` 上没有该属性。
 
-Manually Authenticating after Success
+成功后手动认证
 -------------------------------------
 
-If you're using Guard authentication, you can :ref:`automatically authenticate <guard-manual-auth>`
-after registration is successful.
+如果你使用的是安保(Guard)认证，则可以在注册成功后 :ref:`自动进行认证 <guard-manual-auth>`。
 
 .. _`CVE-2013-5750`: https://symfony.com/blog/cve-2013-5750-security-issue-in-fosuserbundle-login-form
 .. _`bcrypt`: https://en.wikipedia.org/wiki/Bcrypt
