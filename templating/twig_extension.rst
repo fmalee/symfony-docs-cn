@@ -4,35 +4,32 @@
 如何编写自定义Twig扩展
 ====================================
 
-If you need to create custom Twig functions, filters, tests or more, you'll need
-to create a Twig extension. You can read more about `Twig Extensions`_ in the Twig
-documentation.
+如果你需要创建自定义Twig函数、过滤器、测试等，则需要创建Twig扩展。
+你可以在Twig文档中阅读有关 `Twig扩展`_ 的更多信息。
 
 .. tip::
 
-    Before writing your own Twig extension, check if the filter/function that
-    you need is already implemented in the :doc:`Symfony Twig extensions </reference/twig_reference>`.
-    Check also the `official Twig extensions`_, which can be installed in your
-    application as follows:
+    在编写自己的Twig扩展之前，请检查你所需的过滤器/功能是否已在Symfony
+    :doc:`Twig扩展 </reference/twig_reference>` 中实现。
+    还可以查看 `官方的Twig扩展`_，它同样可以安装到你的应用中，如下所示：
 
     .. code-block:: terminal
 
         $ composer require twig/extensions
 
-Create the Extension Class
+创建扩展类
 --------------------------
 
-Suppose you want to create a new filter called ``price`` that formats a number into
-money:
+假设你要创建一个名为 ``price`` 的用于格式化数字的新过滤器：
 
 .. code-block:: twig
 
     {{ product.price|price }}
 
-    {# pass in the 3 optional arguments #}
+    {# 传递3个可选参数 #}
     {{ product.price|price(2, ',', '.') }}
 
-Create a class that extends ``AbstractExtension`` and fill in the logic::
+创建一个继承 ``AbstractExtension`` 的类并填充逻辑::
 
     // src/Twig/AppExtension.php
     namespace App\Twig;
@@ -58,8 +55,7 @@ Create a class that extends ``AbstractExtension`` and fill in the logic::
         }
     }
 
-If you want to create a function instead of a filter, define the
-``getFunctions()`` method::
+如果要创建函数而不是过滤器，请定义 ``getFunctions()`` 方法::
 
     // src/Twig/AppExtension.php
     namespace App\Twig;
@@ -84,47 +80,40 @@ If you want to create a function instead of a filter, define the
 
 .. tip::
 
-    Along with custom filters and functions, you can also register
-    `global variables`_.
+    除了自定义过滤器和函数，你还可以注册 `全局变量`_。
 
-Register an Extension as a Service
+将扩展注册为服务
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Next, register your class as a service and tag it with ``twig.extension``. If you're
-using the :ref:`default services.yaml configuration <service-container-services-load-example>`,
-you're done! Symfony will automatically know about your new service and add the tag.
+接下来，将你的类注册为服务并使用 ``twig.extension`` 标签。
+如果你使用 :ref:`默认的services.yaml配置 <service-container-services-load-example>`，
+那么你已经完工了！Symfony会自动了解你的新服务并添加相应的标签。
 
-Optionally, execute this command to confirm that your new filter was
-successfully registered:
+（可选操作）执行此命令以确认你的新过滤器是否成功注册：
 
 .. code-block:: terminal
 
     $ php bin/console debug:twig --filter=price
 
-You can now start using your filter in any Twig template.
+你现在可以在任何Twig模板中使用这个过滤器。
 
 .. _lazy-loaded-twig-extensions:
 
-Creating Lazy-Loaded Twig Extensions
+创建延迟加载的Twig扩展
 ------------------------------------
 
 .. versionadded:: 1.26
-    Support for lazy-loaded extensions was introduced in Twig 1.26.
+    Twig 1.26中引入了对延迟加载扩展的支持。
 
-Including the code of the custom filters/functions in the Twig extension class
-is the simplest way to create extensions. However, Twig must initialize all
-extensions before rendering any template, even if the template doesn't use an
-extension.
+在Twig扩展类中包含自定义过滤器/函数的代码是创建扩展的最简单方法。
+但是，Twig必须在渲染任何模板之前初始化所有扩展，即使该模板不使用该扩展。
 
-If extensions don't define dependencies (i.e. if you don't inject services in
-them) performance is not affected. However, if extensions define lots of complex
-dependencies (e.g. those making database connections), the performance loss can
-be significant.
+如果该扩展没有定义依赖关系（即，如果你不在其中注入服务），性能不会受到影响。
+但是，如果扩展定义了许多复杂的依赖关系（例如建立数据库连接），那么性能损失可能很大。
 
-That's why Twig allows to decouple the extension definition from its
-implementation. Following the same example as before, the first change would be
-to remove the ``priceFilter()`` method from the extension and update the PHP
-callable defined in ``getFilters()``::
+这就是为什么Twig允许将扩展定义与它的实现分离的原因。
+按照与之前相同的示例，第一个更改是从扩展中删除 ``priceFilter()`` 方法并更新在
+``getFilters()`` 中定义的可调用(callable)PHP代码::
 
     // src/Twig/AppExtension.php
     namespace App\Twig;
@@ -138,15 +127,14 @@ callable defined in ``getFilters()``::
         public function getFilters()
         {
             return array(
-                // the logic of this filter is now implemented in a different class
+                // 此过滤器的逻辑现在在不同的类中实现
                 new TwigFilter('price', array(AppRuntime::class, 'priceFilter')),
             );
         }
     }
 
-Then, create the new ``AppRuntime`` class (it's not required but these classes
-are suffixed with ``Runtime`` by convention) and include the logic of the
-previous ``priceFilter()`` method::
+然后，创建新的 ``AppRuntime`` 类（``Runtime`` 不是必需的，但这些类按惯例使用该后缀）
+并包含之前的 ``priceFilter()`` 方法的逻辑::
 
     // src/Twig/AppRuntime.php
     namespace App\Twig;
@@ -157,8 +145,8 @@ previous ``priceFilter()`` method::
     {
         public function __construct()
         {
-            // this simple example doesn't define any dependency, but in your own
-            // extensions, you'll need to inject services using this constructor
+            // 这个简单的例子没有定义任何依赖，
+            // 但在你自己的扩展中，你需要使用这个构造函数注入服务
         }
 
         public function priceFilter($number, $decimals = 0, $decPoint = '.', $thousandsSep = ',')
@@ -170,11 +158,11 @@ previous ``priceFilter()`` method::
         }
     }
 
-If you're using the default ``services.yaml`` configuration, this will already
-work! Otherwise, :ref:`create a service <service-container-creating-service>`
-for this class and :doc:`tag your service </service_container/tags>` with ``twig.runtime``.
+如果你使用默认 ``services.yaml`` 配置，这就已经有效！
+否则，请为这个类 :ref:`创建一个服务 <service-container-creating-service>`，
+并使用 ``twig.runtime`` :doc:`标记该服务 </service_container/tags>`。
 
-.. _`official Twig extensions`: https://github.com/twigphp/Twig-extensions
-.. _`global variables`: https://twig.symfony.com/doc/2.x/advanced.html#id1
+.. _`官方的Twig扩展`: https://github.com/twigphp/Twig-extensions
+.. _`全局变量`: https://twig.symfony.com/doc/2.x/advanced.html#id1
 .. _`functions`: https://twig.symfony.com/doc/2.x/advanced.html#id2
-.. _`Twig Extensions`: https://twig.symfony.com/doc/2.x/advanced.html#creating-an-extension
+.. _`Twig扩展`: https://twig.symfony.com/doc/2.x/advanced.html#creating-an-extension

@@ -1,7 +1,7 @@
 .. index::
    single: Security; Customizing form login redirect
 
-使用form_login身份认证提供器
+使用 ``form_login`` 身份认证提供器
 ============================================
 
 .. caution::

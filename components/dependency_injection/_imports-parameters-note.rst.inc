@@ -1,8 +1,7 @@
 .. note::
 
-    Due to the way in which parameters are resolved, you cannot use them
-    to build paths in imports dynamically. This means that something like
-    the following doesn't work:
+    由于参数的解析方式，你无法在动态地导入中使用它们来构建路径。
+    这意味着与以下内容类似的将不起作用：
 
     .. configuration-block::
 

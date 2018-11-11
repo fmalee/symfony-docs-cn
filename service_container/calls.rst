@@ -6,12 +6,10 @@
 
 .. tip::
 
-    If you're using autowiring, you can use ``@required`` to
-    :ref:`automatically configure method calls <autowiring-calls>`.
+    如果你使用自动装配，可以使用 ``@required`` 来 :ref:`自动的配置方法调用 <autowiring-calls>`。
 
-Usually, you'll want to inject your dependencies via the constructor. But sometimes,
-especially if a dependency is optional, you may want to use "setter injection". For
-example::
+通常，你需要通过构造函数注入依赖。
+但有时，特别是如果依赖是可选的，你可能需要使用“setter注入”。例如::
 
     namespace App\Service;
 
@@ -29,7 +27,7 @@ example::
         // ...
     }
 
-To configure the container to call the ``setLogger`` method, use the ``calls`` key:
+要配置容器以能调用 ``setLogger`` 方法，请使用 ``calls`` 键：
 
 .. configuration-block::
 

@@ -4,11 +4,9 @@
 如何将实例注入容器
 ------------------------------------------
 
-In some applications, you may need to inject a class instance as service,
-instead of configuring the container to create a new instance.
+在某些应用中，你可能需要注入一个类实例作为服务，而不是通过配置容器来创建一个新的实例。
 
-For instance, the ``kernel`` service in Symfony is injected into the container
-from within the ``Kernel`` class::
+例如，Symfony中的 ``kernel`` 服务从 ``Kernel`` 类中注入到容器::
 
     // ...
     abstract class Kernel implements KernelInterface, TerminableInterface
@@ -24,12 +22,10 @@ from within the ``Kernel`` class::
         }
     }
 
-Services that are set at runtime are called *synthetic services*. This service
-has to be configured so the container knows the service exists during compilation
-(otherwise, services depending on ``kernel`` will get a "service does not exist" error).
+在运行时(runtime)中设置的服务称为 *合成服务*。此服务必须配置，以便容器在编译期间知道该服务的存在
+（否则，依赖于 ``kernel`` 的服务将获得一个“service does not exist”错误）。
 
-In order to do so, mark the service as synthetic in your service definition
-configuration:
+为此，请在服务定义配置中将该服务标记为合成：
 
 .. configuration-block::
 
@@ -37,7 +33,7 @@ configuration:
 
         # config/services.yaml
         services:
-            # synthetic services don't specify a class
+            # 合成服务不指定一个类
             app.synthetic_service:
                 synthetic: true
 
@@ -66,9 +62,10 @@ configuration:
             ->setSynthetic(true)
         ;
 
-Now, you can inject the instance in the container using
-:method:`Container::set() <Symfony\\Component\\DependencyInjection\\Container::set>`::
+现在，你可以使用
+:method:`Container::set() <Symfony\\Component\\DependencyInjection\\Container::set>`
+方法在容器中注入该实例::
 
-    // instantiate the synthetic service
+    // 实例化该合成服务
     $theService = ...;
     $container->set('app.synthetic_service', $theService);

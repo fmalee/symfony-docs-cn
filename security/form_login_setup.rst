@@ -3,19 +3,16 @@
 
 .. seealso::
 
-    If you're looking for the ``form_login`` firewall option, see
-    :doc:`/security/form_login`.
+    如果你正在查找 ``form_login`` 防火墙选项，请参阅 :doc:`/security/form_login`。
 
-Ready to create a login form? First, make sure you've followed the main
-:doc:`Security Guide </security>` to install security and create your ``User``
-class.
+准备创建登录表单了吗？首先，请确保你已按照 :doc:`安全指南 </security>`
+安装了安全功能并创建了你的 ``User`` 类。
 
-Generating the Login Form
+生成登录表单
 -------------------------
 
-Creating a powerful login form can be bootstrapped with the ``make:auth`` command from
-`MakerBundle`_. Depending on your setup, you may be asked different questions
-and your generated code may be slightly different:
+可以使用 `MakerBundle`_ 中的 ``make:auth`` 命令来引导创建功能强大的登录表单。
+根据你的设置，该命令可能会向你提出不同的问题，最终生成的代码可能会略有不同：
 
 .. code-block:: terminal
 
@@ -38,13 +35,12 @@ and your generated code may be slightly different:
      created: templates/security/login.html.twig
 
 .. versionadded:: 1.8
-    Support for login form authentication was added to ``make:auth`` in MakerBundle 1.8.
+    MakerBundle 1.8中的 ``make:auth`` 添加了对登录表单认证证的支持。
 
-This generates three things: (1) a login route & controller, (2) a template that
-renders the login form and (3) a :doc:`Guard authenticator </security/guard_authentication>`
-class that processes the login submit.
+这会生成三件事：（1）一个登录路由和控制器，（2）一个渲染登录表单的模板和（3）
+一个处理登录提交的 :doc:`安保认证器 </security/guard_authentication>` 类。
 
-The ``/login`` route & controller::
+``/login`` 路由与控制器::
 
     // src/Controller/SecurityController.php
     namespace App\Controller;
@@ -61,9 +57,9 @@ The ``/login`` route & controller::
          */
         public function login(AuthenticationUtils $authenticationUtils): Response
         {
-            // get the login error if there is one
+            // 如果有登陆错误，请在此处获取
             $error = $authenticationUtils->getLastAuthenticationError();
-            // last username entered by the user
+            // 用户输入的最后一个用户名
             $lastUsername = $authenticationUtils->getLastUsername();
 
             return $this->render('security/login.html.twig', [
@@ -73,8 +69,7 @@ The ``/login`` route & controller::
         }
     }
 
-The template has very little to do with security: it just generates a traditional
-HTML form that submits to ``/login``:
+此模板与安全几乎没有关系：它只是生成一个提交到 ``/login`` 的传统的HTML表单：
 
 .. code-block:: twig
 
@@ -99,8 +94,8 @@ HTML form that submits to ``/login``:
         >
 
         {#
-            Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
-            See https://symfony.com/doc/current/security/remember_me.html
+            取消注释此部分，并在防火墙下添加remember_me选项，以激活记住我的功能。
+            参阅 https://symfony.com/doc/current/security/remember_me.html
 
             <div class="checkbox mb-3">
                 <label>
@@ -115,7 +110,7 @@ HTML form that submits to ``/login``:
     </form>
     {% endblock %}
 
-The Guard authenticator processes the form submit::
+安保认证器将处理表单的提交::
 
     // src/Security/LoginFormAuthenticator.php
     namespace App\Security;
@@ -184,7 +179,7 @@ The Guard authenticator processes the form submit::
             $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $credentials['email']]);
 
             if (!$user) {
-                // fail authentication with a custom error
+                // 为失败的认证自定义一个错误
                 throw new CustomUserMessageAuthenticationException('Email could not be found.');
             }
 
@@ -202,7 +197,7 @@ The Guard authenticator processes the form submit::
                 return new RedirectResponse($targetPath);
             }
 
-            // For example : return new RedirectResponse($this->router->generate('some_route'));
+            // 例如 : return new RedirectResponse($this->router->generate('some_route'));
             throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
         }
 
@@ -212,20 +207,17 @@ The Guard authenticator processes the form submit::
         }
     }
 
-Finishing the Login Form
+完成登录表单
 ------------------------
 
-Woh. The ``make:auth`` command just did a *lot* of work for you. But, you're not done
-yet. First, go to ``/login`` to see the new login form. Feel free to customize this
-however you want.
+哇哦。``make:auth`` 命令为你做了 *大量* 工作。但是，你还没有完工。
+首先，转到 ``/login`` 查看新的登录表单。你可以根据需要随意自定义。
 
-When you submit the form, the ``LoginFormAuthenticator`` will intercept the request,
-read the email (or whatever field you're using) & password from the form, find the
-``User`` object, validate the CSRF token and check the password.
+当你提交表单时，``LoginFormAuthenticator`` 将拦截该请求，并从表单中读取电子邮箱（或你正在使用的任何字段）和密码、
+查找 ``User`` 对象、验证CSRF令牌并检查密码。
 
-But, depending on your setup, you'll need to finish one or more TODOs before the
-whole process works. You will *at least* need to fill in *where* you want your user to
-be redirected after success:
+但是，根据你的设置，你需要在整个进程运行之前完成一个或多个TODO。
+你将 *至少* 需要填写完你希望你的用户能够认证成功后重定向到 *哪里*：
 
 .. code-block:: diff
 
@@ -237,37 +229,34 @@ be redirected after success:
         // ...
 
     -     throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
-    +     // redirect to some "app_homepage" route - of wherever you want
+    +     // 重定向到某个 “app_homepage” 路由 - 无论你想要什么
     +     return new RedirectResponse($this->router->generate('app_homepage'));
     }
 
-Unless you have any other TODOs in that file, that's it! If you're loading users
-from the database, make sure you've loaded some :ref:`dummy users <doctrine-fixtures>`.
-Then, try to login.
+除非你在该文件中有任何其他TODO，否则就已经完工了！
+如果你从数据库加载用户，请确保已加载一些 :ref:`虚拟用户 <doctrine-fixtures>`。
+然后，尝试登录一下。
 
-If you're successful, the web debug toolbar will tell you who you are and what roles
-you have:
+如果你成功登录了，Web调试工具栏将告显示你的身份以及你拥有的角色：
 
 .. image:: /_images/security/symfony_loggedin_wdt.png
    :align: center
 
-The Guard authentication system is powerful, and you can customize your authenticator
-class to do whatever you need. To learn more about what the individual methods do,
-see :doc:`/security/guard_authentication`.
+安保认证系统功能强大，你可以自定义认证器类以执行你需要的任何操作。
+要了解有关各个方法的更多信息，请参阅 :doc:`/security/guard_authentication`。
 
-Controlling Error Messages
+控制错误信息
 --------------------------
 
-You can cause authentication to fail with a custom message at any step by throwing
-a custom :class:`Symfony\\Component\\Security\\Core\\Exception\\CustomUserMessageAuthenticationException`.
-This is an easy way to control the error message.
+通过抛出一个自定义
+:class:`Symfony\\Component\\Security\\Core\\Exception\\CustomUserMessageAuthenticationException`
+，你可以在任何步骤中自定义一个认证失败的消息。
+这是一种控制错误消息的简便方法。
 
-But in some cases, like if you return ``false`` from ``checkCredentials()``, you
-may see an error that comes from the core of Symfony - like ``Invalid credentials.``.
+但在某些情况下，如果你从 ``checkCredentials()`` 中返回 ``false``，你可能会看到来自Symfony核心的错误 - 比如 ``Invalid credentials.``。
 
-To customize this message, you could throw a ``CustomUserMessageAuthenticationException``
-instead. Or, you can :doc:`translate </translation>` the message through the ``security``
-domain:
+要自定义此消息，你可以改为抛出一个 ``CustomUserMessageAuthenticationException``。
+或者，你可以通过 ``security`` 域来 :doc:`翻译 </translation>` 该消息：
 
 .. configuration-block::
 
@@ -298,21 +287,19 @@ domain:
             'Invalid credentials.' => 'The password you entered was invalid!',
         );
 
-If the message isn't translated, make sure you've installed the ``translator``
-and try clearing your cache:
+如果该消息未翻译，请确保已安装 ``translator`` 并尝试清除你的缓存：
 
 .. code-block:: terminal
 
     $ php bin/console cache:clear
 
-Redirecting to the Last Accessed Page with ``TargetPathTrait``
+使用 ``TargetPathTrait`` 重定向到上次访问页面
 --------------------------------------------------------------
 
-The last request URI is stored in a session variable named
-``_security.<your providerKey>.target_path`` (e.g. ``_security.main.target_path``
-if the name of your firewall is ``main``). Most of the times you don't have to
-deal with this low level session variable. However, the
-:class:`Symfony\\Component\\Security\\Http\\Util\\TargetPathTrait` utility
-can be used to read (like in the example above) or set this value manually.
+最后一个请求URI存储在一个名为 ``_security.<your providerKey>.target_path``
+的会话变量中（例如，如果防火墙的名称是 ``main``，则名为 ``_security.main.target_path``）。
+大多数情况下，你不必处理此底层会话变量。
+但是，:class:`Symfony\\Component\\Security\\Http\\Util\\TargetPathTrait`
+工具可用于读取（如上例所示）或手动设置该值。
 
 .. _`MakerBundle`: https://github.com/symfony/maker-bundle

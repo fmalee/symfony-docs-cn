@@ -5,11 +5,9 @@
 如何从服务容器中检索请求
 ======================================================
 
-Whenever you need to access the current request in a service, you can either
-add it as an argument to the methods that need the request or inject the
-``request_stack`` service and access the ``Request`` by calling the
+每当你需要在服务中访问当前请求时，你可以将其作为参数添加到需要请求的方法中或注入 ``request_stack`` 服务并通过调用
 :method:`Symfony\\Component\\HttpFoundation\\RequestStack::getCurrentRequest`
-method::
+方法来访问 ``Request`` ::
 
     namespace App\Newsletter;
 
@@ -27,18 +25,17 @@ method::
         public function anyMethod()
         {
             $request = $this->requestStack->getCurrentRequest();
-            // ... do something with the request
+            // ... 使用该请求做些事情
         }
 
         // ...
     }
 
-Now, inject the ``request_stack``, which behaves like any normal service.
-If you're using the :ref:`default services.yaml configuration <service-container-services-load-example>`,
-this will happen automatically via autowiring.
+现在，和任何正常服务一样注入 ``request_stack``。
+如果你使用的是
+:ref:`默认的services.yaml配置 <service-container-services-load-example>`，则会通过自动装配自动进行。
 
 .. tip::
 
-    In a controller you can get the ``Request`` object by having it passed in as an
-    argument to your action method. See :ref:`controller-request-argument` for
-    details.
+    在控制器中，你可以通过将 ``Request`` 对象作为参数传递给动作方法来获取该对象。
+    请参阅 :ref:`controller-request-argument` 以获取更详细的信息。

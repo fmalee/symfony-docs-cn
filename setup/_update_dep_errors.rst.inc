@@ -1,29 +1,24 @@
 依赖错误
 ~~~~~~~~~~~~~~~~~
 
-If you get a dependency error, it may simply mean that you need to upgrade
-other Symfony dependencies too. In that case, try the following command:
+如果出现依赖性错误，则可能只是意味着你还需要升级其他Symfony依赖。
+在这种情况下，请尝试以下命令：
 
 .. code-block:: terminal
 
     $ composer update "symfony/*" --with-all-dependencies
 
-This updates ``symfony/symfony`` and *all* packages that it depends on, which will
-include several other packages. By using tight version constraints in
-``composer.json``, you can control what versions each library upgrades to.
+此命令更新 ``symfony/symfony`` 和 *所有* 它所依赖的包，其中将包括其他几个包。
+通过使用在 ``composer.json`` 中使用严格的版本约束，你可以控制每个库升级到的版本。
 
-If this still doesn't work, your ``composer.json`` file may specify a version
-for a library that is not compatible with the newer Symfony version. In that
-case, updating that library to a newer version in ``composer.json`` may solve
-the issue.
+如果仍然无效，则你的 ``composer.json`` 文件可能指定了一个与较新的Symfony版本不兼容的库的版本。
+在这种情况下，在 ``composer.json`` 中将该库更新为更新版本可能会解决该问题。
 
-Or, you may have deeper issues where different libraries depend on conflicting
-versions of other libraries. Check your error message to debug.
+或者，你可能有更深层次的问题，其中不同的库依赖于其他库的冲突版本。检查你的错误消息以进行调试。
 
-Another issue that may happen is that the project dependencies can be installed
-on your local computer but not on the remote server. This usually happens when
-the PHP versions are different on each machine. The solution is to add the
-`platform`_ config option to your `composer.json` file to define the highest
-PHP version allowed for the dependencies (set it to the server's PHP version).
+可能发生的另一个问题是项目依赖项可以安装在本地计算机上，但不能安装在远程服务器上。
+当每个机器上的PHP版本不同时，通常会发生这种情况。
+解决方案是将 `platform`_ 配置选项添加到 `composer.json` 文件中，以定义依赖允许的最高PHP版本
+（将其设置为服务器的PHP版本）。
 
 .. _`platform`: https://getcomposer.org/doc/06-config.md#platform

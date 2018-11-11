@@ -4,10 +4,9 @@
 如何使用hinclude.js嵌入异步内容
 ==================================================
 
-Controllers can be embedded asynchronously using the hinclude.js_ JavaScript library.
-As the embedded content comes from another page (or controller for that matter),
-Symfony uses a version of the standard ``render()`` function to configure ``hinclude``
-tags:
+可以使用 hinclude.js_ 脚本库异步嵌入控制器。
+由于嵌入式内容来自另一个页面（或控制器），
+Symfony使用标准的 ``render()`` 函数的一个版本来配置 ``hinclude`` 标签：
 
 .. code-block:: twig
 
@@ -16,12 +15,11 @@ tags:
 
 .. note::
 
-    hinclude.js_ needs to be included in your page to work.
+    hinclude.js_ 需要包含在你的页面中才能工作。
 
 .. note::
 
-    When using a controller instead of a URL, you must enable the Symfony
-    ``fragments`` configuration:
+    使用控制器而不是URL时，必须启用Symfony的 ``fragments`` 配置：
 
     .. configuration-block::
 
@@ -57,8 +55,7 @@ tags:
                 'fragments' => array('path' => '/_fragment'),
             ));
 
-Default content (while loading or if JavaScript is disabled) can be set globally
-in your application configuration:
+默认内容（在加载时或者禁用脚本时使用）可以在应用配置中全局设置：
 
 .. configuration-block::
 
@@ -99,8 +96,7 @@ in your application configuration:
             ),
         ));
 
-You can define default templates per ``render()`` function (which will override
-any global default template that is defined):
+你可以为每个 ``render()`` 函数定义默认模板（它将覆盖定义的任何全局默认模板）：
 
 .. code-block:: twig
 
@@ -108,7 +104,7 @@ any global default template that is defined):
         'default': 'default/content.html.twig'
     }) }}
 
-Or you can also specify a string to display as the default content:
+或者你也可以指定一个字符串为默认显示的内容：
 
 .. code-block:: twig
 

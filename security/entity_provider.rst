@@ -5,8 +5,8 @@
 如何从数据库（实体提供器）加载安全用户
 ==================================================================
 
-Each User class in your app will usually need its own :doc:`user provider </security/user_provider>`.
-If you're loading users from the database, you can use the built-in ``entity`` provider:
+你应用中的每个用户类通常都需要自己的 :doc:`用户提供器 </security/user_provider>`。
+如果你从数据库加载用户，则可以使用内置的 ``entity`` 提供器：
 
 .. configuration-block::
 
@@ -19,9 +19,9 @@ If you're loading users from the database, you can use the built-in ``entity`` p
                 our_db_provider:
                     entity:
                         class: App\Entity\User
-                        # the property to query by - e.g. username, email, etc
+                        # 查询的属性 - 例如用户名、电子邮件等
                         property: username
-                        # if you're using multiple entity managers
+                        # 如果你使用多个实体管理器
                         # manager_name: customer
 
             # ...
@@ -65,23 +65,22 @@ If you're loading users from the database, you can use the built-in ``entity`` p
             // ...
         ));
 
-The ``providers`` section creates a "user provider" called ``our_db_provider`` that
-knows to query from your ``App\Entity\User`` entity by the ``username`` property.
-The name ``our_db_provider`` isn't important: it's not used, unless you have multiple
-user providers and need to specify which user provider to use via the ``provider``
-key under your firewall.
+``providers`` 区块创建一个叫 ``our_db_provider`` 的“用户提供器”，
+该提供器知道要通过 ``username`` 属性从你的 ``App\Entity\User`` 实体进行查询。
+``our_db_provider`` 这个名称并不重要：
+除非你有多个用户提供器，并且需要通过防火墙下的 ``provider`` 键指定要使用的用户提供器，否则不会用到该名称。
 
 .. _authenticating-someone-with-a-custom-entity-provider:
 
-Using a Custom Query to Load the User
+使用自定义查询加载用户
 -------------------------------------
 
-The ``entity`` provider can only query from one *specific* field, specified by the
-``property`` config key. If you want a bit more control over this - e.g. you want
-to find a user by ``email`` *or* ``username``, you can do that by making your
-``UserRepository`` implement a special
-:class:`Symfony\\Bridge\\Doctrine\\Security\\User\\UserLoaderInterface`. This
-interface only requires one method: ``loadUserByUsername($username)``::
+``entity`` 提供器只能查询一个由 ``property`` 键指定的 *特定* 字段。
+如果你想对它有更多的控制权 - 例如你想通过 ``email`` *或* ``username`` 来找到一个用户，
+你可以通过让你的 ``UserRepository`` 实现一个特殊的
+:class:`Symfony\\Bridge\\Doctrine\\Security\\User\\UserLoaderInterface`
+来做到这一点。
+此接口只要求一个方法：``loadUserByUsername($username)``::
 
     // src/Repository/UserRepository.php
     namespace App\Repository;
@@ -102,8 +101,7 @@ interface only requires one method: ``loadUserByUsername($username)``::
         }
     }
 
-To finish this, remove the ``property`` key from the user provider in
-``security.yaml``:
+要完成此操作，请在 ``security.yaml`` 中的用户提供器中移除 ``property`` 键：
 
 .. configuration-block::
 
@@ -154,6 +152,6 @@ To finish this, remove the ``property`` key from the user provider in
             ),
         ));
 
-This tells Symfony to *not* query automatically for the User. Instead, when needed
-(e.g. because ``switch_user``, ``remember_me`` or some other security feature is
-activated), the ``loadUserByUsername()`` method on ``UserRepository`` will be called.
+该操作告诉Symfony *不要* 自动查询用户。
+相反，在需要时（例如，在 ``switch_user``、``remember_me`` 或其他一些安全功能被激活时），
+``UserRepository`` 中的 ``loadUserByUsername()`` 方法会被调用。

@@ -1,13 +1,11 @@
 内置认证提供者
 =================================
 
-If you need to add authentication to your app, we recommend using
-:doc:`Guard authentication </security/guard_authentication>` because it gives you
-full control over the process.
+如果你需要向应用添加身份验证，我们建议你使用
+:doc:`安保认证 </security/guard_authentication>`，因为它可以让你完全控制认证过程。
 
-But, Symfony also offers a number of built-in authentication providers: systems
-that are easier to implement, but harder to customize. If your authentication
-use-case matches one of these exactly, they're a great option:
+但是，Symfony还提供了许多内置的身份认证提供器：更易于实现该系统，但更难以自定义。
+如果你的身份认证用例完全匹配其中一个，那么它们将是一个很好的选择：
 
 .. toctree::
     :hidden:
@@ -15,25 +13,24 @@ use-case matches one of these exactly, they're a great option:
     form_login
     json_login_setup
 
-* :doc:`form_login </security/form_login>`
-* :ref:`http_basic <security-http_basic>`
-* :doc:`LDAP via HTTP Basic or Form Login </security/ldap>`
-* :doc:`json_login </security/json_login_setup>`
-* :ref:`X.509 Client Certificate Authentication (x509) <security-x509>`
-* :ref:`REMOTE_USER Based Authentication (remote_user) <security-remote_user>`
+* :doc:`登录表单(form_login) </security/form_login>`
+* :ref:`HTTP基本认证(http_basic) <security-http_basic>`
+* :doc:`通过HTTP基本或表单登录的LDAP </security/ldap>`
+* :doc:`JSON身份验证(json_login) </security/json_login_setup>`
+* :ref:`X.509客户端证书认证(x509) <security-x509>`
+* :ref:`基于REMOTE_USER的身份验证(remote_user) <security-remote_user>`
 * ``simple_form``
 * ``simple_pre_auth``
 
 .. _security-http_basic:
 
-HTTP Basic Authentication
+HTTP基本认证
 -------------------------
 
-`HTTP Basic authentication`_ asks credentials (username and password) using a dialog
-in the browser. The credentials are sent without any hashing or encryption, so
-it's recommended to use it with HTTPS.
+HTTP基本认证使用浏览器中的对话框来询问凭据（用户名和密码）。
+该凭据在没有任何哈希或加密的情况下发送，因此建议将其与HTTPS一起使用。
 
-To support HTTP Basic authentication, add the ``http_basic`` key to your firewall:
+要支持HTTP基本认证，请将 ``http_basic`` 键添加到防火墙：
 
 .. configuration-block::
 
@@ -83,23 +80,21 @@ To support HTTP Basic authentication, add the ``http_basic`` key to your firewal
             ),
         ));
 
-That's it! Symfony will now be listening for any HTTP basic authentication data.
-To load user information, it will use your configured :doc:`user provider </security/user_provider>`.
+仅此而已！Symfony现在将监听任何HTTP基本认证数据。
+它将使用你配置的 :doc:`用户提供器 </security/user_provider>` 加载用户信息。
 
-Note: you cannot use the :ref:`log out <security-logging-out>` with ``http_basic``.
-Even if you log out, your browser "remembers" your credentials and will send them
-on every request.
+注意：你无法使用 ``http_basic`` 进行 :ref:`注销 <security-logging-out>`。
+即使你注销登录，你的浏览器也会“记住”你的凭据，并会在每次请求时发送它们。
 
 .. _security-x509:
 
-X.509 Client Certificate Authentication
+X.509客户端证书认证
 ---------------------------------------
 
-When using client certificates, your web server is doing all the authentication
-process itself. With Apache, for example, you would use the
-``SSLVerifyClient Require`` directive.
+使用客户端证书时，所有的身份验证过程由你的Web服务器本身执行。
+例如，如果使用Apache，你将使用它的 ``SSLVerifyClient Require`` 指令。
 
-Enable the x509 authentication for a particular firewall in the security configuration:
+在安全配置中为特定防火墙启用x509身份验证：
 
 .. configuration-block::
 
@@ -151,36 +146,30 @@ Enable the x509 authentication for a particular firewall in the security configu
             ),
         ));
 
-By default, the firewall provides the ``SSL_CLIENT_S_DN_Email`` variable to
-the user provider, and sets the ``SSL_CLIENT_S_DN`` as credentials in the
-:class:`Symfony\\Component\\Security\\Core\\Authentication\\Token\\PreAuthenticatedToken`.
-You can override these by setting the ``user`` and the ``credentials`` keys
-in the x509 firewall configuration respectively.
+默认情况下，防火墙将 ``SSL_CLIENT_S_DN_Email`` 变量提供给用户提供器，并在
+:class:`Symfony\\Component\\Security\\Core\\Authentication\\Token\\PreAuthenticatedToken`
+中设置 ``SSL_CLIENT_S_DN`` 为凭据。
+你可以通过在x509防火墙配置中分别设置 ``user`` 和 ``credentials`` 键来重写这些。
 
 .. _security-pre-authenticated-user-provider-note:
 
 .. note::
 
-    An authentication provider will only inform the user provider of the username
-    that made the request. You will need to create (or use) a "user provider" that
-    is referenced by the ``provider`` configuration parameter (``your_user_provider``
-    in the configuration example). This provider will turn the username into a User
-    object of your choice. For more information on creating or configuring a user
-    provider, see:
+    一个认证提供器仅会将创建该请求的用户名通知到用户提供器。
+    你将需要创建（或使用）``provider`` 配置参数(在配置示例中为 ``your_user_provider``)引用的一个“用户提供器”。
+    此提供器会将该用户名转换为你所选择的用户对象。有关创建或配置用户提供器的更多信息，请参阅：
 
     * :doc:`/security/user_provider`
 
 .. _security-remote_user:
 
-REMOTE_USER Based Authentication
+基于REMOTE_USER的认证
 --------------------------------
 
-A lot of authentication modules, like ``auth_kerb`` for Apache, provide the username
-using the ``REMOTE_USER`` environment variable. This variable can be trusted by
-the application since the authentication happened before the request reached it.
+许多身份验证模块（如Apache的 ``auth_kerb``）使用 ``REMOTE_USER`` 环境变量提供用户名。
+应用可以信任此变量，因为身份验证是在请求到达之前发生的。
 
-To configure Symfony using the ``REMOTE_USER`` environment variable, enable the
-corresponding firewall in your security configuration:
+要使用 ``REMOTE_USER`` 环境变量来配置Symfony，请在安全配置中启用相应的防火墙：
 
 .. configuration-block::
 
@@ -221,14 +210,12 @@ corresponding firewall in your security configuration:
             ),
         ));
 
-The firewall will then provide the ``REMOTE_USER`` environment variable to
-your user provider. You can change the variable name used by setting the ``user``
-key in the ``remote_user`` firewall configuration.
+然后，防火墙将为你的用户提供器提供 ``REMOTE_USER`` 环境变量。
+你可以通过在 ``remote_user`` 防火墙配置中设置 ``user`` 键来更改使用的变量名称。
 
 .. note::
 
-    Just like for X509 authentication, you will need to configure a "user provider".
-    See :ref:`the previous note <security-pre-authenticated-user-provider-note>`
-    for more information.
+    就像X509身份验证一样，你需要配置“用户提供器”。请参阅
+    :ref:`上一个注释 <security-pre-authenticated-user-provider-note>` 获得更多信息。
 
-.. _`HTTP Basic authentication`: https://en.wikipedia.org/wiki/Basic_access_authentication
+.. _`HTTP基本认证`: https://en.wikipedia.org/wiki/Basic_access_authentication

@@ -4,23 +4,19 @@
 如何实施CSRF保护
 ================================
 
-CSRF - or `Cross-site request forgery`_ - is a method by which a malicious
-user attempts to make your legitimate users unknowingly submit data that
-they don't intend to submit.
+CSRF - 或 `跨站点请求伪造`_ - 是一种恶意用户试图让你的合法用户无意中提交他们不打算提交的数据的方法。
 
-CSRF protection works by adding a hidden field to your form that contains a
-value that only you and your user know. This ensures that the user - not some
-other entity - is submitting the given data.
+CSRF保护的工作原理是在表单中添加一个隐藏字段，其中包含只有你和你的用户才知道的值。
+这可确保是用户自身（而非其他实体）提交给定数据。
 
-Before using the CSRF protection, install it in your project:
+在使用CSRF保护之前，请将其安装到你的项目中：
 
 .. code-block:: terminal
 
     $ composer require symfony/security-csrf
 
-Then, enable/disable the CSRF protection with the ``csrf_protection`` option
-(see the :ref:`CSRF configuration reference <reference-framework-csrf-protection>`
-for more information):
+然后，使用 ``csrf_protection`` 选项启用/禁用CSRF保护
+（有关更多信息，请参阅 :ref:`CSRF配置参考 <reference-framework-csrf-protection>`）：
 
 .. configuration-block::
 
@@ -55,17 +51,14 @@ for more information):
             'csrf_protection' => null,
         ));
 
-CSRF Protection in Symfony Forms
+Symfony表单中的CSRF保护
 --------------------------------
 
-Forms created with the Symfony Form component include CSRF tokens by default
-and Symfony checks them automatically, so you don't have to do anything to be
-protected against CSRF attacks.
+使用Symfony Form组件创建的表单默认包含CSRF令牌，Symfony会自动检查它们，因此你无需做任何事情来防止CSRF攻击。
 
 .. _form-csrf-customization:
 
-By default Symfony adds the CSRF token in a hidden field called ``_token``, but
-this can be customized on a form-by-form basis::
+默认情况下，Symfony会在名为 ``_token`` 的隐藏字段中添加CSRF令牌，但这可以在每个表单的基础上进行自定义::
 
     // ...
     use App\Entity\Task;
@@ -79,12 +72,12 @@ this can be customized on a form-by-form basis::
         {
             $resolver->setDefaults(array(
                 'data_class'      => Task::class,
-                // enable/disable CSRF protection for this form
+                // 在表单中启用/禁用CSRF保护
                 'csrf_protection' => true,
-                // the name of the hidden HTML field that stores the token
+                // 保存令牌的HTML隐藏字段的名称
                 'csrf_field_name' => '_token',
-                // an arbitrary string used to generate the value of the token
-                // using a different string for each form improves its security
+                // 用于生成令牌值的一个任意字符串
+                // 为每个表单使用不同的字符串可以提高其安全性
                 'csrf_token_id'   => 'task_item',
             ));
         }
@@ -94,45 +87,39 @@ this can be customized on a form-by-form basis::
 
 .. caution::
 
-    Since the token is stored in the session, a session is started automatically
-    as soon as you render a form with CSRF protection.
+    由于令牌存储在会话中，因此只要渲染具有CSRF保护的表单，系统就会自动启动一个会话。
 
 .. caution::
 
-    CSRF tokens are meant to be different for every user. Beware of that when
-    caching pages that include forms containing CSRF tokens. For more
-    information, see :doc:`/http_cache/form_csrf_caching`.
+    CSRF令牌对每个用户来说都是不同的。在缓存包含CSRF令牌的表单的页面时要小心。
+    有关更多信息，请参阅 :doc:`/http_cache/form_csrf_caching`。
 
-CSRF Protection in Login Forms
+登录表单中的CSRF保护
 ------------------------------
 
-See :doc:`/security/form_login_setup` for a login form that is protected from
-CSRF attacks.
+请参阅 :doc:`/security/form_login_setup` 来了解如何在登录表单启用CSRF保护。
 
-CSRF Protection in HTML Forms
+HTML表单中的CSRF保护
 -----------------------------
 
 .. versionadded:: 4.1
-    In Symfony versions prior to 4.1, CSRF support required installing the
-    Symfony Form component even if you didn't use it.
+    在4.1之前的Symfony版本中，CSRF支持需要安装Symfony Form组件，即使你并不使用该组件。
 
-It's also possible to add CSRF protection to regular HTML forms not managed by
-the Symfony Form component, for example the simple forms used to delete items.
-First, use the ``csrf_token()`` function in the Twig template to generate a CSRF
-token and store it as a hidden field of the form:
+也可以将CSRF保护添加到不受Symfony Form组件管理的常规HTML表单中，例如用于删除项目的简单表单。
+首先，使用Twig模板中的 ``csrf_token()`` 函数生成CSRF令牌并将其存储为表单的隐藏字段：
 
 .. code-block:: twig
 
     <form action="{{ url('admin_post_delete', { id: post.id }) }}" method="post">
-        {# the argument of csrf_token() is an arbitrary value used to generate the token #}
+        {# csrf_token() 的参数是用于生成令牌的任意值 #}
         <input type="hidden" name="token" value="{{ csrf_token('delete-item') }}" />
 
         <button type="submit">Delete item</button>
     </form>
 
-Then, get the value of the CSRF token in the controller action and use the
+然后，在控制器动作中获取CSRF令牌的值，并使用
 :method:`Symfony\\Bundle\\FrameworkBundle\\Controller\\AbstractController::isCsrfTokenValid`
-to check its validity::
+来检查其有效性::
 
     use Symfony\Component\HttpFoundation\Request;
     // ...
@@ -141,10 +128,10 @@ to check its validity::
     {
         $submittedToken = $request->request->get('token');
 
-        // 'delete-item' is the same value used in the template to generate the token
+        // 'delete-item'与模板中用于生成令牌的值相同
         if ($this->isCsrfTokenValid('delete-item', $submittedToken)) {
-            // ... do something, like deleting an object
+            // ... 做些事情，例如删除一个对象
         }
     }
 
-.. _`Cross-site request forgery`: http://en.wikipedia.org/wiki/Cross-site_request_forgery
+.. _`跨站点请求伪造`: http://en.wikipedia.org/wiki/Cross-site_request_forgery

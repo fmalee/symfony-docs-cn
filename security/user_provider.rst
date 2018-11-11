@@ -1,4 +1,4 @@
-所有关于用户提供者器
+所有关于用户提供器
 ========================
 
 Each User class in your app will usually need its own "user provider": a class

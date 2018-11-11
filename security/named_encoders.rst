@@ -4,8 +4,7 @@
 如何为每个用户使用不同的密码编码器算法
 ==========================================================
 
-Usually, the same password encoder is used for all users by configuring it
-to apply to all instances of a specific class:
+通常，所有用户使用相同的密码编码器，这是通过将其配置为应用于特定类的所有实例来实现的：
 
 .. configuration-block::
 
@@ -53,13 +52,12 @@ to apply to all instances of a specific class:
             ),
         ));
 
-Another option is to use a "named" encoder and then select which encoder
-you want to use dynamically.
+另一种选择是使用一个“命名”编码器，然后选择要动态使用的编码器。
 
-In the previous example, you've set the ``bcrypt`` algorithm for ``App\Entity\User``.
-This may be secure enough for a regular user, but what if you want your admins
-to have a stronger algorithm, for example ``bcrypt`` with a higher cost. This can
-be done with named encoders:
+在上一个示例中，你已为 ``App\Entity\User`` 设置了 ``bcrypt`` 算法。
+对于普通用户而言，这可能已经足够安全。
+但如果你希望管理员拥有更强大的算法（例如更高cost的 ``bcrypt``），该怎么办呢？
+这可以使用命名编码器来完成：
 
 .. configuration-block::
 
@@ -107,15 +105,13 @@ be done with named encoders:
 
 .. note::
 
-    If you are running PHP 7.2+ or have the `libsodium`_ extension installed,
-    then the recommended hashing algorithm to use is
-    :ref:`Argon2i <reference-security-argon2i>`.
+    如果你运行的是PHP 7.2+或安装了 `libsodium`_ 扩展，那么推荐使用的散列算法是
+    :ref:`Argon2i <reference-security-argon2i>`。
 
-This creates an encoder named ``harsh``. In order for a ``User`` instance
-to use it, the class must implement
-:class:`Symfony\\Component\\Security\\Core\\Encoder\\EncoderAwareInterface`.
-The interface requires one method - ``getEncoderName()`` - which should return
-the name of the encoder to use::
+这将创建一个名为 ``harsh`` 的编码器。
+为了让一个 ``User`` 实例使用它，该类必须实现
+:class:`Symfony\\Component\\Security\\Core\\Encoder\\EncoderAwareInterface`。
+该接口需要一个 ``getEncoderName()`` 方法，该方法应该返回要使用的编码器的名称::
 
     // src/Acme/UserBundle/Entity/User.php
     namespace Acme\UserBundle\Entity;
@@ -131,13 +127,13 @@ the name of the encoder to use::
                 return 'harsh';
             }
 
-            return null; // use the default encoder
+            return null; // 使用默认编码器
         }
     }
 
-If you created your own password encoder implementing the
-:class:`Symfony\\Component\\Security\\Core\\Encoder\\PasswordEncoderInterface`,
-you must register a service for it in order to use it as a named encoder:
+如果你创建了自己的实现了
+:class:`Symfony\\Component\\Security\\Core\\Encoder\\PasswordEncoderInterface`
+的密码编码器，则必须为其注册服务，以便将其用作命名编码器：
 
 .. configuration-block::
 
@@ -183,7 +179,7 @@ you must register a service for it in order to use it as a named encoder:
             ),
         ));
 
-This creates an encoder named ``app_encoder`` from a service with the ID
-``App\Security\Encoder\MyCustomPasswordEncoder``.
+这将创建一个名为 ``app_encoder`` 的编码器，该编码器使用了一个ID为
+``App\Security\Encoder\MyCustomPasswordEncoder`` 的服务。
 
 .. _`libsodium`: https://pecl.php.net/package/libsodium

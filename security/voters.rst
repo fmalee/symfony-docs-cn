@@ -4,37 +4,32 @@
 如何使用表决器检查用户权限
 ===========================================
 
-Security voters are the most granular way of checking permissions (e.g. "can this
-specific user edit the given item?"). This article explains voters in detail.
+安全表决器是检查权限的最细粒度(granular)的方式（例如“这个特定的用户可以编辑给定的项目吗？”）。
+这篇文档将详细的解释表决器。
 
 .. tip::
 
-    Take a look at the
-    :doc:`authorization </components/security/authorization>`
-    article for an even deeper understanding on voters.
+    请参阅 :doc:`授权 </components/security/authorization>` 文档，以便更深入地了解表决器。
 
-How Symfony Uses Voters
+Symfony如何使用表决器
 -----------------------
 
-In order to use voters, you have to understand how Symfony works with them.
-All voters are called each time you use the ``isGranted()`` method on Symfony's
-authorization checker or call ``denyAccessUnlessGranted()`` in a controller (which
-uses the authorization checker).
+为了使用表决器，你必须了解Symfony如何与他们合作的。
+每次在Symfony的授权检查器上使用 ``isGranted()``
+方法或在控制器（使用了授权检查器）中调用 ``denyAccessUnlessGranted()`` 时，都会调用所有的表决器。
 
-Ultimately, Symfony takes the responses from all voters and makes the final
-decision (to allow or deny access to the resource) according to the strategy defined
-in the application, which can be: affirmative, consensus or unanimous.
+最终，Symfony接受所有表决器的响应，并根据应用中定义的策略做出最终决定（允许或拒绝访问资源），
+该策略可以是：``affirmative``、``consensus`` 或 ``unanimous``。
 
-For more information take a look at
-:ref:`the section about access decision managers <components-security-access-decision-manager>`.
+有关更多信息，请查看 :ref:`有关访问决策管理器的章节 <components-security-access-decision-manager>`。
 
-The Voter Interface
+表决器接口
 -------------------
 
-A custom voter needs to implement
+自定义表决器需要实现
 :class:`Symfony\\Component\\Security\\Core\\Authorization\\Voter\\VoterInterface`
-or extend :class:`Symfony\\Component\\Security\\Core\\Authorization\\Voter\\Voter`,
-which makes creating a voter even easier::
+或继承 :class:`Symfony\\Component\\Security\\Core\\Authorization\\Voter\\Voter`，
+它们使得创建表决器更加容易::
 
     abstract class Voter implements VoterInterface
     {
@@ -44,12 +39,11 @@ which makes creating a voter even easier::
 
 .. _how-to-use-the-voter-in-a-controller:
 
-Setup: Checking for Access in a Controller
+设置：检查控制器中的访问权限
 ------------------------------------------
 
-Suppose you have a ``Post`` object and you need to decide whether or not the current
-user can *edit* or *view* the object. In your controller, you'll check access with
-code like this::
+假设你有一个 ``Post`` 对象，你需要决定当前用户是否可以 *编辑* 或 *查看* 该对象。
+在你的控制器中，你将使用以下代码检查访问权限::
 
     // src/Controller/PostController.php
     // ...
@@ -61,10 +55,10 @@ code like this::
          */
         public function show($id)
         {
-            // get a Post object - e.g. query for it
+            // 获取一个POST对象 - e.g. 查询它
             $post = ...;
 
-            // check for "view" access: calls all voters
+            // 检查“view”访问权限：调用所有表决器
             $this->denyAccessUnlessGranted('view', $post);
 
             // ...
@@ -75,28 +69,26 @@ code like this::
          */
         public function edit($id)
         {
-            // get a Post object - e.g. query for it
+            // 获取一个POST对象 - e.g. 查询它
             $post = ...;
 
-            // check for "edit" access: calls all voters
+            // 检查“edit”访问权限：调用所有表决器
             $this->denyAccessUnlessGranted('edit', $post);
 
             // ...
         }
     }
 
-The ``denyAccessUnlessGranted()`` method (and also the ``isGranted()`` method)
-calls out to the "voter" system. Right now, no voters will vote on whether or not
-the user can "view" or "edit" a ``Post``. But you can create your *own* voter that
-decides this using whatever logic you want.
+``denyAccessUnlessGranted()`` 方法（以及 ``isGranted()`` 方法）会调出“表决器”系统。
+现在，没有表决器会投票决定用户是否可以“查看”或“编辑”一个 ``Post``。
+但你可以创建自己的表决器，使用你想要的任何逻辑来决定这一点。
 
-Creating the custom Voter
+创建自定义表决器
 -------------------------
 
-Suppose the logic to decide if a user can "view" or "edit" a ``Post`` object is
-pretty complex. For example, a ``User`` can always edit or view a ``Post`` they created.
-And if a ``Post`` is marked as "public", anyone can view it. A voter for this situation
-would look like this::
+假设决定用户是否可以“查看”或“编辑”一个 ``Post`` 对象的逻辑非常复杂。
+例如，一个 ``User`` 总是可以编辑或查看他们自己创建一个 ``Post``。
+并且如果一个 ``Post`` 被标记为“公开”，任何人都可以查看它。这种情况下的表决器看起来像这样::
 
     // src/Security/PostVoter.php
     namespace App\Security;
@@ -108,18 +100,18 @@ would look like this::
 
     class PostVoter extends Voter
     {
-        // these strings are just invented: you can use anything
+        // 这些字符串刚刚被发明：你可以使用任何东西
         const VIEW = 'view';
         const EDIT = 'edit';
 
         protected function supports($attribute, $subject)
         {
-            // if the attribute isn't one we support, return false
+            // 如果该属性不是我们支持属性之一，则返回 false
             if (!in_array($attribute, array(self::VIEW, self::EDIT))) {
                 return false;
             }
 
-            // only vote on Post objects inside this voter
+            // 这个表决器只投票给 Post 对象
             if (!$subject instanceof Post) {
                 return false;
             }
@@ -132,11 +124,11 @@ would look like this::
             $user = $token->getUser();
 
             if (!$user instanceof User) {
-                // the user must be logged in; if not, deny access
+                // 用户必须已经登录; 如果没有，拒绝访问
                 return false;
             }
 
-            // you know $subject is a Post object, thanks to supports
+            // 你知道 $subject 是一个 Post 对象，感谢 supports
             /** @var Post $post */
             $post = $subject;
 
@@ -152,64 +144,60 @@ would look like this::
 
         private function canView(Post $post, User $user)
         {
-            // if they can edit, they can view
+            // 如果他们有编辑权限，就意味着有查看权限
             if ($this->canEdit($post, $user)) {
                 return true;
             }
 
-            // the Post object could have, for example, a method isPrivate()
-            // that checks a boolean $private property
+            // 假设Post对象会有一个 isPrivate() 方法来检查一个布尔类型的 $private 属性
             return !$post->isPrivate();
         }
 
         private function canEdit(Post $post, User $user)
         {
-            // this assumes that the data object has a getOwner() method
-            // to get the entity of the user who owns this data object
+            // 这假设数据对象具有一个 getOwner() 方法来获取拥有此数据对象的用户的实体
             return $user === $post->getOwner();
         }
     }
 
-That's it! The voter is done! Next, :ref:`configure it <declaring-the-voter-as-a-service>`.
+仅此而已！表决器就完工了！接下来，:ref:`配置它 <declaring-the-voter-as-a-service>`。
 
-To recap, here's what's expected from the two abstract methods:
+回顾一下，这是预期的两种抽象方法：
 
 ``Voter::supports($attribute, $subject)``
-    When ``isGranted()`` (or ``denyAccessUnlessGranted()``) is called, the first
-    argument is passed here as ``$attribute`` (e.g. ``ROLE_USER``, ``edit``) and
-    the second argument (if any) is passed as ``$subject`` (e.g. ``null``, a ``Post``
-    object). Your job is to determine if your voter should vote on the attribute/subject
-    combination. If you return true, ``voteOnAttribute()`` will be called. Otherwise,
-    your voter is done: some other voter should process this. In this example, you
-    return ``true`` if the attribute is ``view`` or ``edit`` and if the object is
-    a ``Post`` instance.
+    当调用 ``isGranted()``（或 ``denyAccessUnlessGranted()``）时，
+    第一个参数在此传递为 ``$attribute`` （例如 ``ROLE_USER``、``edit``），
+    第二个参数（如果有的话）被传递为 ``$subject``（例如 ``null``、一个 ``Post`` 对象）。
+    你的工作是确定你的表决器是否应该对 ”attribute/subject” 组合进行投票。
+    如果你返回 ``true``，``voteOnAttribute()`` 将被调用。
+    否则，你的表决器就完成任务了：其他的表决器会处理这个问题。
+    在此示例中，如果属性为 ``view`` 或 ``edit`` 且对象是一个 ``Post`` 实例，则返回 ``true`` 。
 
 ``voteOnAttribute($attribute, $subject, TokenInterface $token)``
-    If you return ``true`` from ``supports()``, then this method is called. Your
-    job is simple: return ``true`` to allow access and ``false`` to deny access.
-    The ``$token`` can be used to find the current user object (if any). In this
-    example, all of the complex business logic is included to determine access.
+    如果从 ``supports()`` 中返回 ``true``，则调用此方法。
+    你的工作很简单：返回 ``true`` 来允许访问，返回  ``false`` 则表示拒绝访问。
+    ``$token`` 可用于找到当前用户对象（如果有的话）。
+    在此示例中，包含了所有复杂的业务逻辑以确定访问权限。
 
 .. _declaring-the-voter-as-a-service:
 
-Configuring the Voter
+配置表决器
 ---------------------
 
-To inject the voter into the security layer, you must declare it as a service
-and tag it with ``security.voter``. But if you're using the
-:ref:`default services.yaml configuration <service-container-services-load-example>`,
-that's done automatically for you! When you
-:ref:`call isGranted() with view/edit and pass a Post object <how-to-use-the-voter-in-a-controller>`,
-your voter will be executed and you can control access.
+要将表决器注入安全层，你必须将其声明为服务并将其标记为 ``security.voter``。
+但是，如果你使用的是
+:ref:`默认的services.yaml配置 <service-container-services-load-example>`，则会自动为你完成配置！
+当你
+:ref:`使用view/edit调用isGranted()并传递Post对象 <how-to-use-the-voter-in-a-controller>`
+时，你的表决器将被执行然后你就可以控制访问权限了。
 
-Checking for Roles inside a Voter
+在表决器中检查角色
 ---------------------------------
 
-What if you want to call ``isGranted()`` from *inside* your voter - e.g. you want
-to see if the current user has ``ROLE_SUPER_ADMIN``. That's possible by injecting
-the :class:`Symfony\\Component\\Security\\Core\\Security`
-into your voter. You can use this to, for example, *always* allow access to a user
-with ``ROLE_SUPER_ADMIN``::
+如果你想从你的表决器 *内部* 调用 ``isGranted()`` 怎么办 -
+例如你想看看当前用户是否有 ``ROLE_SUPER_ADMIN``。
+这可以通过注入 :class:`Symfony\\Component\\Security\\Core\\Security` 到你的表决器来实现。
+例如，你可以使用它来 *始终* 允许 ``ROLE_SUPER_ADMIN`` 用户的访问::
 
     // src/Security/PostVoter.php
 
@@ -231,49 +219,43 @@ with ``ROLE_SUPER_ADMIN``::
         {
             // ...
 
-            // ROLE_SUPER_ADMIN can do anything! The power!
+            // ROLE_SUPER_ADMIN 可以做任何事情! 无比强大!
             if ($this->security->isGranted('ROLE_SUPER_ADMIN')) {
                 return true;
             }
 
-            // ... all the normal voter logic
+            // ... 所有的常规的表决器逻辑
         }
     }
 
-If you're using the :ref:`default services.yaml configuration <service-container-services-load-example>`,
-you're done! Symfony will automatically pass the ``security.helper``
-service when instantiating your voter (thanks to autowiring).
+如果你使用 :ref:`默认的services.yaml配置 <service-container-services-load-example>`，
+那么你就完工了！
+Symfony将在实例化你的表决器时自动传递 ``security.helper`` 服务（得益于自动装配）。
 
 .. _security-voters-change-strategy:
 
-Changing the Access Decision Strategy
+修改访问决策策略
 -------------------------------------
 
-Normally, only one voter will vote at any given time (the rest will "abstain", which
-means they return ``false`` from ``supports()``). But in theory, you could make multiple
-voters vote for one action and object. For instance, suppose you have one voter that
-checks if the user is a member of the site and a second one that checks if the user
-is older than 18.
+通常情况下，只有一个表决器会在任何特定时间投票
+（其余的将“弃权”，这意味着他们会从 ``supports()`` 中返回 ``false``）。
+但理论上，你可以让多个表决器投票支持一个动作和对象。
+例如，假设你有一个表决器检查用户是否是网站的成员，而另一个检查用户是否大于18岁。
 
-To handle these cases, the access decision manager uses an access decision
-strategy. You can configure this to suit your needs. There are three
-strategies available:
+为了处理这些情况，访问决策管理器使用一个访问策略。你可以根据需要进行配置。有三种策略可供选择：
 
-``affirmative`` (default)
-    This grants access as soon as there is *one* voter granting access;
+``affirmative`` (默认)
+    一旦有一个表决器授予访问权限，就会允许访问;
 
 ``consensus``
-    This grants access if there are more voters granting access than denying;
+    如果授权访问的表决器比拒绝的更多，则允许访问;
 
 ``unanimous``
-    This only grants access if there is no voter denying access. If all voters
-    abstained from voting, the decision is based on the ``allow_if_all_abstain``
-    config option (which defaults to ``false``).
+    仅在没有任何表决器拒绝访问的情况下授予访问权限。
+    如果所有的表决器都放弃权票，则会基于 ``allow_if_all_abstain`` 配置选项（默认为 ``false``）做出决定。
 
-In the above scenario, both voters should grant access in order to grant access
-to the user to read the post. In this case, the default strategy is no longer
-valid and ``unanimous`` should be used instead. You can set this in the
-security configuration:
+在上面的场景中，两个表决器都应该授予访问权限，以便允许用户阅读帖子。
+在这种情况下，默认的策略不再有效，而应该使用 ``unanimous``。你可以在安全配置中进行设置：
 
 .. configuration-block::
 

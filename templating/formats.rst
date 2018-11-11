@@ -4,23 +4,19 @@
 如何在模板中使用不同的输出格式
 ======================================================
 
-Templates are a generic way to render content in *any* format. While in
-most cases you'll use templates to render HTML content, a template can just
-as easily generate JavaScript, CSS, XML or any other format you can dream of.
+模板是以 *任何* 格式渲染内容的通用方式。
+虽然在大多数情况下你将使用模板来渲染HTML内容，但模板可以轻松生成JavaScript、CSS、XML或你梦寐以求的任何其他格式。
 
-For example, the same "resource" is often rendered in several formats.
-To render an article index page in XML, include the format in the
-template name:
+例如，相同的“资源”通常以多种格式渲染。
+要以XML格式渲染文章索引页面，请在模板名称中包含以下格式：
 
-* *XML template name*: ``article/show.xml.twig``
-* *XML template filename*: ``show.xml.twig``
+* *XML模板名称*: ``article/show.xml.twig``
+* *XML模板文件名*: ``show.xml.twig``
 
-In reality, this is nothing more than a naming convention and the template
-isn't actually rendered differently based on its format.
+实际上，这只不过是命名约定，并且模板实际上不会根据其格式进行不同的渲染。
 
-In many cases, you may want to allow a single controller to render multiple
-different formats based on the "request format". For that reason, a common
-pattern is to do the following::
+在许多情况下，你可能希望允许单个控制器根据“请求格式”渲染多种不同的格式。
+因此，常见的模式是执行以下操作::
 
     // ...
     use Symfony\Component\Routing\Annotation\Route;
@@ -32,7 +28,7 @@ pattern is to do the following::
          */
         public function show(Request $request, $slug)
         {
-            // retrieve the article based on $slug
+            // 基于 $slug 检索文章
             $article = ...;
 
             $format = $request->getRequestFormat();
@@ -43,12 +39,10 @@ pattern is to do the following::
         }
     }
 
-The ``getRequestFormat()`` on the ``Request`` object defaults to ``html``,
-but can return any other format based on the format requested by the user.
-The request format is most often managed by the routing, where a route can
-be configured so that ``/about-us`` sets the request format to ``html`` while
-``/about-us.xml`` sets the format to ``xml``. This can be achieved by using the
-special ``_format`` placeholder in your route definition::
+在 ``Request`` 对象中的 ``getRequestFormat()`` 默认为 ``html``，但也可以返回基于用户请求的任何其他格式。
+请求格式通常通过路由来管理，一个路由被配置后，其中 ``/about-us`` 的请求格式为 ``html``，
+而 ``/about-us.xml`` 的请求格式则是 ``xml``。
+这可以通过在路由定义中使用特殊的 ``_format`` 占位符来实现::
 
     /**
      * @Route("/{slug}.{_format}", defaults={"_format"="html"})
@@ -58,8 +52,7 @@ special ``_format`` placeholder in your route definition::
         // ...
     }
 
-Now, include the ``_format`` placeholder when generating a route for another
-format:
+现在，在为另一种格式生成路由时包含 ``_format`` 占位符：
 
 .. code-block:: html+twig
 
@@ -69,13 +62,11 @@ format:
 
 .. seealso::
 
-    For more information, see this :ref:`Advanced Routing Example <advanced-routing-example>`.
+    有关更多信息，请参阅 :ref:`高级路由示例 <advanced-routing-example>`。
 
 .. tip::
 
-    When building APIs, using file name extensions often isn't the best
-    solution. The FOSRestBundle provides a request listener that uses content
-    negotiation. For more information, check out the bundle's `Request Format Listener`_
-    documentation.
+    构建API时，使用文件扩展名通常不是最佳解决方案。FOSRestBundle提供使用内容协商的请求监听器。
+    有关更多信息，请查看该bundle的 `Request Format Listener`_ 文档。
 
 .. _Request Format Listener: http://symfony.com/doc/current/bundles/FOSRestBundle/3-listener-support.html#format-listener

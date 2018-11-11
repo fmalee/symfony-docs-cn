@@ -4,19 +4,17 @@
 如何创建和启用自定义用户检查器
 =============================================
 
-During the authentication of a user, additional checks might be required to verify
-if the identified user is allowed to log in. By defining a custom user checker, you
-can define per firewall which checker should be used.
+在用户身份认证期间，可能需要进行其他检查以验证已标识的用户是否允许登录。
+通过定义自定义用户检查器，你可以为每个防火墙定义应使用哪个检查器。
 
-Creating a Custom User Checker
+创建自定义用户检查器
 ------------------------------
 
-User checkers are classes that must implement the
-:class:`Symfony\\Component\\Security\\Core\\User\\UserCheckerInterface`. This interface
-defines two methods called ``checkPreAuth()`` and ``checkPostAuth()`` to
-perform checks before and after user authentication. If one or more conditions
-are not met, an exception should be thrown which extends the
-:class:`Symfony\\Component\\Security\\Core\\Exception\\AccountStatusException`.
+用户检查器是必须实现
+:class:`Symfony\\Component\\Security\\Core\\User\\UserCheckerInterface` 的类。
+该接口定义了两个分别叫 ``checkPreAuth()`` 和 ``checkPostAuth()`` 的方法，
+用于在用户认证之前和之后执行检查。如果不满足一个或多个条件，则会抛出一个继承自
+:class:`Symfony\\Component\\Security\\Core\\Exception\\AccountStatusException` 的异常。
 
 .. code-block:: php
 
@@ -37,11 +35,11 @@ are not met, an exception should be thrown which extends the
                 return;
             }
 
-            // user is deleted, show a generic Account Not Found message.
+            // 用户被删除，显示一个通用的“帐户未找到”消息。
             if ($user->isDeleted()) {
                 throw new AccountDeletedException('...');
 
-                // or to customize the message shown
+                // 或者自定义要显示的消息
                 throw new CustomUserMessageAuthenticationException(
                     'Your account was deleted. Sorry about that!'
                 );
@@ -54,22 +52,20 @@ are not met, an exception should be thrown which extends the
                 return;
             }
 
-            // user account is expired, the user may be notified
+            // 用户的账户已经过期，应该要通知该用户
             if ($user->isExpired()) {
                 throw new AccountExpiredException('...');
             }
         }
     }
 
-Enabling the Custom User Checker
+启用自定义用户检查器
 --------------------------------
 
-Next, make sure your user checker is registered as a service. If you're using the
-:ref:`default services.yaml configuration <service-container-services-load-example>`,
-the service is registered automatically.
+接下来，确保你的用户检查器已注册为服务。如果你使用
+:ref:`默认的services.yaml配置 <service-container-services-load-example>`，则会自动的注册该服务。
 
-All that's left to do is add the checker to the desired firewall where the value
-is the service id of your user checker:
+剩下要做的就是将检查器添加到所需的防火墙中，选项值是用户检查器的服务ID：
 
 .. configuration-block::
 

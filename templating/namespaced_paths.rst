@@ -4,29 +4,25 @@
 如何使用和注册Twig路径的命名空间
 =============================================
 
-Usually, when you refer to a template, you'll use the relative path from the
-main ``templates/`` dir at the root of the project:
+通常，当你引用模板时，你将使用项目根目录中 ``templates/`` 主目录的相对路径：
 
 .. code-block:: twig
 
-    {# this template is located in templates/layout.html.twig #}
+    {# 此模板位于 templates/layout.html.twig #}
     {% extends "layout.html.twig" %}
 
-    {# this template is located in templates/user/profile.html.twig #}
+    {# 此模板位于 templates/user/profile.html.twig #}
     {{ include('user/profile.html.twig') }}
 
-If the application defines lots of templates and stores them in deep nested
-directories, you may consider using **Twig namespaces**, which create shortcuts
-to template directories.
+如果应用定义了大量模板并将它们存储在深层嵌套目录中，你可以考虑使用 **Twig命名空间**，这会为模板目录创建快捷方式。
 
-Registering your own Namespaces
+注册自己的命名空间
 -------------------------------
 
-Suppose that you're using some third-party library that includes Twig templates
-that live in ``vendor/acme/foo-bar/templates/``. This path is too long, so you
-can define a ``foo_bar`` Twig namespace as a shortcut.
+假设你正在使用包含Twig模板的第三方库，而该模板位于 ``vendor/acme/foo-bar/templates/``。
+这个路径太长了，因此你可以将 ``foo_bar`` 命名空间定义为快捷方式。
 
-First, register a namespace for this directory:
+首先，为此目录注册名称空间：
 
 .. configuration-block::
 
@@ -62,30 +58,26 @@ First, register a namespace for this directory:
             ),
         ));
 
-The registered namespace is called ``foo_bar``, but you must prefix the ``@``
-character when using it in templates (that's how Twig can differentiate
-namespaces from regular paths). Assuming there's a file called ``sidebar.twig``
-in the ``vendor/acme/foo-bar/templates/`` directory, you can refer to it as:
+需要在模板中要调用已注册的 ``foo_bar`` 命名空间，则必须为该命名空间添加 ``@`` 字符前缀
+（这是为了让Twig区分命名空间与常规路径）。
+假设调用了一个在 ``vendor/acme/foo-bar/templates/`` 目录中的 ``sidebar.twig`` 文件，你可以将其引用为：
 
 .. code-block:: twig
 
     {{ include('@foo_bar/sidebar.twig') }}
 
-Execute this command to verify if your template name is correct and know which
-template file will be loaded:
+执行此命令以验证模板名称是否正确并查看将加载哪个模板文件：
 
 .. code-block:: terminal
 
     $ php bin/console debug:twig @foo_bar/sidebar.twig
 
-Multiple Paths per Namespace
+单个命名空间的多个路径
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-A single Twig namespace can be associated with multiple paths. The order in
-which paths are configured is very important, because Twig will always load
-the first template that exists, starting from the first configured path. This
-feature can be used as a fallback mechanism to load generic templates when the
-specific template doesn't exist.
+单个Twig命名空间可以与多个路径相关联。
+配置的路径的顺序非常重要，因为Twig将始终从第一个配置的路径开始加载存在的第一个模板。
+当指定的模板不存在时，此功能可用作加载通用模板时的回退机制。
 
 .. configuration-block::
 
@@ -127,8 +119,7 @@ specific template doesn't exist.
             ),
         ));
 
-Now, you can use the same ``@theme`` namespace to refer to any template located
-in the previous three directories:
+现在，你可以使用同样的 ``@theme`` 命名空间来引用位于之前三个目录中的任何模板：
 
 .. code-block:: twig
 

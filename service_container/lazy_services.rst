@@ -6,37 +6,34 @@
 
 .. seealso::
 
-    Another way to inject services lazily is via a :doc:`service subscriber </service_container/service_subscribers_locators>`.
+    另一种延迟注入服务的方法是通过
+    :doc:`服务订阅器 </service_container/service_subscribers_locators>`。
 
-Why Lazy Services?
+为何选择延迟服务？
 ------------------
 
-In some cases, you may want to inject a service that is a bit heavy to instantiate,
-but is not always used inside your object. For example, imagine you have
-a ``NewsletterManager`` and you inject a ``mailer`` service into it. Only
-a few methods on your ``NewsletterManager`` actually use the ``mailer``,
-but even when you don't need it, a ``mailer`` service is always instantiated
-in order to construct your ``NewsletterManager``.
+在某些情况下，你可能希望注入一个实例化有些繁杂的服务，但有并不总是在对象中使用它。
+例如，假设你有一个 ``NewsletterManager`` 并且将一个 ``mailer`` 服务注入其中。
+``NewsletterManager`` 实际上只使用了 ``mailer`` 的几种方法，
+即使你不需要使用 ``mailer`` ，系统也总是会实例化该服务来构建你的 ``NewsletterManager``。
 
-Configuring lazy services is one answer to this. With a lazy service, a
-"proxy" of the ``mailer`` service is actually injected. It looks and acts
-just like the ``mailer``, except that the ``mailer`` isn't actually instantiated
-until you interact with the proxy in some way.
+配置延迟服务就是一个解决方案。
+使用延迟服务，实际上会注入 ``mailer`` 服务的一个“代理”。
+它外观和行为很像 ``mailer`` ，除了在你以某种方式与代理交互之前实际上没有实例化 ``mailer``。
 
-Installation
+安装
 ------------
 
-In order to use the lazy service instantiation, you will need to install the
-``symfony/proxy-manager-bridge`` package:
+要使用延迟服务实例化，你需要安装 ``symfony/proxy-manager-bridge`` 包：
 
 .. code-block:: terminal
 
     $ composer require symfony/proxy-manager-bridge
 
-Configuration
+配置
 -------------
 
-You can mark the service as ``lazy`` by manipulating its definition:
+你可以通过操作其定义来标记该服务为 ``lazy``：
 
 .. configuration-block::
 
@@ -69,32 +66,27 @@ You can mark the service as ``lazy`` by manipulating its definition:
         $container->register(AppExtension::class)
             ->setLazy(true);
 
-Once you inject the service into another service, a virtual `proxy`_ with the
-same signature of the class representing the service should be injected. The
-same happens when calling ``Container::get()`` directly.
+将该服务注入另一个服务后，会注入一个具有相同类签名的虚拟 `代理`_ 来代表该服务。
+直接调用 ``Container::get()`` 也是如此。
 
-The actual class will be instantiated as soon as you try to interact with the
-service (e.g. call one of its methods).
+一旦你尝试与该服务交互（例如，调用其中一个方法），实际的类将被实例化。
 
-To check if your proxy works you can check the interface of the
-received object::
+要检查代理是否有效，你可以检查收到的对象的接口::
 
     dump(class_implements($service));
-    // the output should include "ProxyManager\Proxy\LazyLoadingInterface"
+    // 输出将包含 "ProxyManager\Proxy\LazyLoadingInterface"
 
 .. note::
 
-    If you don't install the `ProxyManager bridge`_ and the
-    `ocramius/proxy-manager`_, the container will skip over the ``lazy``
-    flag and directly instantiate the service as it would normally do.
+    如果未安装 `ProxyManager bridge`_ 和 `ocramius/proxy-manager`_，
+    容器将跳过 ``lazy`` 标签并像往常那样直接实例化该服务。
 
-Additional Resources
+其他资源
 --------------------
 
-You can read more about how proxies are instantiated, generated and initialized
-in the `documentation of ProxyManager`_.
+你可以在 `ProxyManager文档`_ 中阅读有关如何实例化、生成和初始化代理的更多信息。
 
 .. _`ProxyManager bridge`: https://github.com/symfony/symfony/tree/master/src/Symfony/Bridge/ProxyManager
-.. _`proxy`: https://en.wikipedia.org/wiki/Proxy_pattern
-.. _`documentation of ProxyManager`: https://github.com/Ocramius/ProxyManager/blob/master/docs/lazy-loading-value-holder.md
+.. _`代理`: https://en.wikipedia.org/wiki/Proxy_pattern
+.. _`ProxyManager文档`: https://github.com/Ocramius/ProxyManager/blob/master/docs/lazy-loading-value-holder.md
 .. _`ocramius/proxy-manager`: https://github.com/Ocramius/ProxyManager

@@ -4,11 +4,9 @@
 如何添加“记住我”登录功能
 ============================================
 
-Once a user is authenticated, their credentials are typically stored in the
-session. This means that when the session ends they will be logged out and
-have to provide their login details again next time they wish to access the
-application. You can allow users to choose to stay logged in for longer than
-the session lasts using a cookie with the ``remember_me`` firewall option:
+用户通过身份验证后，其凭据通常会存储在会话中。
+这意味着当会话结束时，该凭据会被注销，并且在下次访问应用时用户必须再次提供其登录信息。
+使用带有 ``remember_me`` 防火墙选项的cookie，你可以让用户选择将登录的保留时间比会话的周期更长：
 
 .. configuration-block::
 
@@ -23,11 +21,10 @@ the session lasts using a cookie with the ``remember_me`` firewall option:
                     # ...
                     remember_me:
                         secret:   '%kernel.secret%'
-                        lifetime: 604800 # 1 week in seconds
+                        lifetime: 604800 # 604800是一周的秒数
                         path:     /
-                        # by default, the feature is enabled by checking a
-                        # checkbox in the login form (see below), uncomment the
-                        # following line to always enable it.
+                        # 默认情况下，通过选中登录表单中的复选框启用该功能（请参阅下文）
+                        # 取消注释以下行以始终启用它。
                         #always_remember_me: true
 
     .. code-block:: xml
@@ -80,72 +77,59 @@ the session lasts using a cookie with the ``remember_me`` firewall option:
             ),
         ));
 
-The ``remember_me`` firewall defines the following configuration options:
+``remember_me`` 防火墙定义了以下配置选项：
 
 ``secret`` (**required**)
-    The value used to encrypt the cookie's content. It's common to use the
-    ``secret`` value defined in the ``APP_SECRET`` environment variable.
+    用于加密cookie内容的值。通常使用 ``APP_SECRET`` 环境变量中定义的 ``secret`` 值。
 
-``name`` (default value: ``REMEMBERME``)
-    The name of the cookie used to keep the user logged in. If you enable the
-    ``remember_me`` feature in several firewalls of the same application, make sure
-    to choose a different name for the cookie of each firewall. Otherwise, you'll
-    face lots of security related problems.
+``name`` (默认值: ``REMEMBERME``)
+    用于保持用户登录的cookie的名称。
+    如果在同一应用的多个防火墙中启用了 ``remember_me`` 功能，请确保为每个防火墙的cookie选择其他名称。
+    否则，你将面临许多与安全相关的问题。
 
-``lifetime`` (default value: ``31536000``)
-    The number of seconds during which the user will remain logged in. By default
-    users are logged in for one year.
+``lifetime`` (默认值: ``31536000``)
+    保持用户登录状态的秒数。默认情况下，用户将保持登录一年。
 
-``path`` (default value: ``/``)
-    The path where the cookie associated with this feature is used. By default
-    the cookie will be applied to the entire website but you can restrict to a
-    specific section (e.g. ``/forum``, ``/admin``).
+``path`` (默认值: ``/``)
+    使用与此功能关联的cookie的路径。
+    默认情况下，该cookie将被应用到整个网站，但你可以限制为特定的部分（例如 ``/forum``、``/admin``）。
 
-``domain`` (default value: ``null``)
-    The domain where the cookie associated with this feature is used. By default
-    cookies use the current domain obtained from ``$_SERVER``.
+``domain`` (默认值: ``null``)
+    使用与此功能关联的cookie的域。默认情况下，该cookie使用从 ``$_SERVER`` 中获取的当前域。
 
-``secure`` (default value: ``false``)
-    If ``true``, the cookie associated with this feature is sent to the user
-    through an HTTPS secure connection.
+``secure`` (默认值: ``false``)
+    如果值为 ``true``，与此功能关联的cookie将通过HTTPS安全连接发送给用户。
 
-``httponly`` (default value: ``true``)
-    If ``true``, the cookie associated with this feature is accessible only
-    through the HTTP protocol. This means that the cookie won't be accessible
-    by scripting languages, such as JavaScript.
+``httponly`` (默认值: ``true``)
+    如果值为 ``true``，与此功能关联的cookie只能通过HTTP协议访问。
+    这意味着脚本语言（例如JavaScript）无法访问该cookie。
 
-``samesite`` (default value: ``null``)
-    If set to ``strict``, the cookie associated with this feature will not
-    be sent along with cross-site requests, even when following a regular link.
+``samesite`` (默认值: ``null``)
+    如果设置为 ``strict``，则与此功能关联的cookie将不会与跨站点请求一起发送，即使跟随常规链接也是如此。
 
-``remember_me_parameter`` (default value: ``_remember_me``)
-    The name of the form field checked to decide if the "Remember Me" feature
-    should be enabled or not. Keep reading this article to know how to enable
-    this feature conditionally.
+``remember_me_parameter`` (默认值: ``_remember_me``)
+    表示表单字段的名称，系统会检查该字段以确定是否应启用“记住我”功能。
+    继续阅读本文，了解如何有条件地启用此功能。
 
 ``always_remember_me`` (default value: ``false``)
-    If ``true``, the value of the ``remember_me_parameter`` is ignored and the
-    "Remember Me" feature is always enabled, regardless of the desire of the
-    end user.
+    如果值为 ``true``，``remember_me_parameter`` 的值会被忽略，并且始终启用“记住我”功能，无论最终用户的意愿如何。
 
-``token_provider`` (default value: ``null``)
-    Defines the service id of a token provider to use. By default, tokens are
-    stored in a cookie. For example, you might want to store the token in a
-    database, to not have a (hashed) version of the password in a cookie. The
-    DoctrineBridge comes with a
-    ``Symfony\Bridge\Doctrine\Security\RememberMe\DoctrineTokenProvider`` that
-    you can use.
+``token_provider`` (默认值: ``null``)
+    定义要使用的令牌提供器的服务标识。
+    默认情况下，令牌存储在cookie中。
+    例如，你可能希望将令牌存储在数据库中，以使cookie中没有（已哈希）密码版本。
+    DoctrineBridge附带一个
+    ``Symfony\Bridge\Doctrine\Security\RememberMe\DoctrineTokenProvider``
+    供你使用。
 
-Forcing the User to Opt-Out of the Remember Me Feature
+强制用户选择记住我的功能
 ------------------------------------------------------
 
-It's a good idea to provide the user with the option to use or not use the
-remember me functionality, as it will not always be appropriate. The usual
-way of doing this is to add a checkbox to the login form. By giving the checkbox
-the name ``_remember_me`` (or the name you configured using ``remember_me_parameter``),
-the cookie will automatically be set when the checkbox is checked and the user
-successfully logs in. So, your specific login form might ultimately look like
-this:
+为用户提供一个选择记住我的功能的机会是个好实践，因为该功能并不总是适用的。
+通常的做法是在登录表单中添加一个复选框。
+通过给复选框指定 ``_remember_me`` 名称（或使用你指定的 ``remember_me_parameter``），
+当用户选中复选框并且成功登录时，cookie将被自动设置。
+因此，你的特定登录表单最终可能如下所示：
 
 .. code-block:: html+twig
 
@@ -160,28 +144,23 @@ this:
         {# ... #}
     </form>
 
-The user will then automatically be logged in on subsequent visits while
-the cookie remains valid.
+然后，当cookie保持有效时，用户将在后续访问时自动登录。
 
-Forcing the User to Re-Authenticate before Accessing certain Resources
+强制用户在访问某些资源之前重新进行身份验证
 ----------------------------------------------------------------------
 
-When the user returns to your site, they are authenticated automatically based
-on the information stored in the remember me cookie. This allows the user
-to access protected resources as if the user had actually authenticated upon
-visiting the site.
+当用户返回你的站点时，根据cookie中存储的记住我信息，他们会自动进行身份验证。
+这允许用户访问受保护的资源，就相当于用户在访问站点时实际的进行了身份验证一样。
 
-In some cases, however, you may want to force the user to actually re-authenticate
-before accessing certain resources. For example, you might allow "remember me"
-users to change their password. You can do this by leveraing a few special "roles"::
+但是，在某些情况下，你可能希望在访问某些资源之前强制用户实际的重新进行身份验证。
+例如，你可能不想“记住我”用户直接更改其密码。你可以通过一些特殊的“角色”来做到这一点::
 
     // src/Controller/AccountController.php
     // ...
 
     public function accountInfo()
     {
-        // allow any authenticated user - we don't care if they just
-        // logged in, or are logged in via a remember me cookie
+        // 允许任何已认证用户 - 我们不关心他是刚登录的，还是通过记住我的cookie来登录的
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_REMEMBERED');
 
         // ...
@@ -189,9 +168,8 @@ users to change their password. You can do this by leveraing a few special "role
 
     public function resetPassword()
     {
-        // require the user to log in during *this* session
-        // if they were only logged in via a remember me cookie, they
-        // will be redirected to the login page
+        // 要求用户是在 *当前* 会话中登录的
+        // 如果他们是通过记住我的cookie登录的，那他们将被重定向到登录页面
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
         // ...

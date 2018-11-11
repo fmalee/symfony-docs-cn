@@ -4,16 +4,13 @@
 如何在没有自定义控制器的情况下渲染模板
 ====================================================
 
-Usually, when you need to create a page, you need to create a controller
-and render a template from within that controller. But if you're rendering
-a simple template that doesn't need any data passed into it, you can avoid
-creating the controller entirely, by using the built-in
+通常，当你需要创建页面时，需要创建一个控制器并从该控制器中渲染模板。
+但是，如果你要渲染一个不需要传递任何数据的简单模板，则可以通过使用内置
 :class:`Symfony\\Bundle\\FrameworkBundle\\Controller\\TemplateController`
-controller.
+控制器来避免创建完全的控制器。
 
-For example, suppose you want to render a ``static/privacy.html.twig``
-template, which doesn't require that any variables are passed to it. You
-can do this without creating a controller:
+例如，假设你要渲染一个 ``static/privacy.html.twig`` 模板，该模板不需要传递任何变量。
+你则无需创建控制器即可完成此操作：
 
 .. configuration-block::
 
@@ -54,14 +51,11 @@ can do this without creating a controller:
 
         return $routes;
 
-The ``TemplateController`` will simply render whatever template you've passed as
-the ``template`` default value.
+``TemplateController`` 会简单地渲染任何模板，就像传递的 ``template`` 默认值。
 
-You can also use this trick when rendering embedded controllers
-from within a template. But since the purpose of rendering a controller from
-within a template is typically to prepare some data in a custom controller,
-this is probably only useful if you'd like to cache this page partial (see
-:ref:`templating-no-controller-caching`).
+在模板中渲染嵌入式控制器时，你也可以使用此技巧。
+但是，由于在模板中渲染一个控制器的目的通常是在自定义控制器中准备一些数据，因此这可能仅在你要缓存此页面的部分时才有用
+（请参阅 :ref:`templating-no-controller-caching`）。
 
 .. code-block:: html+twig
 
@@ -69,12 +63,11 @@ this is probably only useful if you'd like to cache this page partial (see
 
 .. _templating-no-controller-caching:
 
-Caching the static Template
+缓存静态模板
 ---------------------------
 
-Since templates that are rendered in this way are typically static, it might
-make sense to cache them. Fortunately, you can configure your route to control
-exactly how your page is cached:
+由于以这种方式渲染的模板通常是静态的，因此缓存它们应该是有意义的。
+幸运的是，你可以配置路由以准确控制页面的缓存方式：
 
 .. configuration-block::
 
@@ -121,10 +114,9 @@ exactly how your page is cached:
 
         return $routes;
 
-The ``maxAge`` and ``sharedAge`` values are used to modify the Response
-object created in the controller. For more information on caching, see
-:doc:`/http_cache`.
+``maxAge`` 和 ``sharedAge`` 的值被用于修改在控制器中创建的响应对象。
+有关缓存的更多信息，请参阅 :doc:`/http_cache`。
 
-There is also a ``private`` variable (not shown here). By default, the Response
-will be made public, as long as ``maxAge`` or ``sharedAge`` are passed.
-If set to ``true``, the Response will be marked as private.
+还有一个 ``private`` 变量（示例中没有显示）。
+默认情况下，只要传递 ``maxAge`` 或 ``sharedAge``，响应将被设置为公有。
+如果该变量设置为 ``true``，则响应将被标记为私有。

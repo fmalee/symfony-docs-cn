@@ -1,17 +1,15 @@
 .. index::
     single: Security; Creating a Custom Access Denied Handler
 
-如何创建自定义拒绝访问处理器
+如何创建自定义的拒绝访问处理器
 ============================================
 
-When your application throws an ``AccessDeniedException``, you can handle this exception
-with a service to return a custom response.
+当你的应用抛出一个 ``AccessDeniedException`` 时，你可以使用一个服务来处理此异常以返回一个自定义响应。
 
-First, create a class that implements
-:class:`Symfony\\Component\\Security\\Http\\Authorization\\AccessDeniedHandlerInterface`.
-This interface defines one method called ``handle()`` where you can implement whatever
-logic that should execute when access is denied for the current user (e.g. send a
-mail, log a message, or generally return a custom response)::
+首先，创建一个实现
+:class:`Symfony\\Component\\Security\\Http\\Authorization\\AccessDeniedHandlerInterface`
+的类。此接口定义了一个叫 ``handle()`` 的方法，你可以在其中实现拒绝当前用户访问时应执行的任何逻辑
+（例如，发送邮件，记录消息或和往常一样返回自定义响应）::
 
     namespace App\Security;
 
@@ -30,9 +28,9 @@ mail, log a message, or generally return a custom response)::
         }
     }
 
-If you're using the :ref:`default services.yaml configuration <service-container-services-load-example>`,
-you're done! Symfony will automatically know about your new service. You can then
-configure it under your firewall:
+如果你使用 :ref:`默认的services.yaml配置 <service-container-services-load-example>`，
+那么你已经完工了！Symfony会自动了解你的新服务。
+然后，你可以在防火墙的下面配置它：
 
 .. configuration-block::
 
@@ -69,5 +67,4 @@ configure it under your firewall:
             ),
         ));
 
-That's it! Any ``AccessDeniedException`` thrown by code under the ``main`` firewall
-will now be handled by your service.
+仅此而已！现在，你的服务将处理 ``main`` 防火墙下的代码抛出的任何 ``AccessDeniedException``。

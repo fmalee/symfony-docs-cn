@@ -4,13 +4,10 @@
 如何定义非共享服务
 =================================
 
-In the service container, all services are shared by default. This means that
-each time you retrieve the service, you'll get the *same* instance. This is
-usually the behavior you want, but in some cases, you might want to always get a
-*new* instance.
+在服务容器中，默认情况下共享所有服务。这意味着每次检索该服务时，你都将获得 *同一个* 实例。
+这通常是你想要的行为，但在某些情况下，你可能希望始终获得一个 *新* 实例。
 
-In order to always get a new instance, set the ``shared`` setting to ``false``
-in your service definition:
+要始终获得新实例，请在服务定义中将 ``shared`` 设置为 ``false``：
 
 .. configuration-block::
 
@@ -37,5 +34,4 @@ in your service definition:
         $container->register(SomeNonSharedService::class)
             ->setShared(false);
 
-Now, whenever you request the ``App\SomeNonSharedService`` from the container,
-you will be passed a new instance.
+现在，无论何时从容器请求 ``App\SomeNonSharedService`` ，你都将被传递一个新实例。

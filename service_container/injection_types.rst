@@ -1,23 +1,17 @@
 .. index::
    single: DependencyInjection; Injection types
 
-注射类型
+注入的类型
 ==================
 
-Making a class's dependencies explicit and requiring that they be injected
-into it is a good way of making a class more reusable, testable and decoupled
-from others.
+把一个类的依赖进行显式地和必需地“注入”，是一个很好的实践，这可以令类更能复用、更易测试、相对于其他类的藕合度更低。
 
-There are several ways that the dependencies can be injected. Each injection
-point has advantages and disadvantages to consider, as well as different
-ways of working with them when using the service container.
+有几种方法可以注入依赖。每种注入方式各有优缺点，使用服务容器时，它们各自的执行方式也有所不同。
 
-Constructor Injection
+构造函数注入
 ---------------------
 
-The most common way to inject dependencies is via a class's constructor.
-To do this you need to add an argument to the constructor signature to accept
-the dependency::
+注入依赖的最常用方法是通过类的构造函数。为此，你需要添加一个参数到构造函数的签名以接受该依赖::
 
     namespace App\Mail;
 
@@ -34,8 +28,7 @@ the dependency::
         // ...
     }
 
-You can specify what service you would like to inject into this in the
-service container configuration:
+你可以在服务容器配置中指定要注入的服务：
 
 .. configuration-block::
 
@@ -78,33 +71,24 @@ service container configuration:
 
 .. tip::
 
-    Type hinting the injected object means that you can be sure that a suitable
-    dependency has been injected. By type-hinting, you'll get a clear error
-    immediately if an unsuitable dependency is injected. By type hinting
-    using an interface rather than a class you can make the choice of dependency
-    more flexible. And assuming you only use methods defined in the interface,
-    you can gain that flexibility and still safely use the object.
+    对注入的对象进行类型约束，意味着你可以确保一个合适的依赖被注入。
+    如果注入了不合适的依赖项，你将立即得到明确的错误信息。
+    类型约束一个接口而不是一个类，可以让你更灵活的选择依赖。
+    如果你只使用接口中定义的方法，你可以在保证灵活性的同时仍可以安全地使用该对象。
 
-There are several advantages to using constructor injection:
+使用构造函数注入有几个优点：
 
-* If the dependency is a requirement and the class cannot work without it
-  then injecting it via the constructor ensures it is present when the class
-  is used as the class cannot be constructed without it.
+* 如果依赖是必需的，而没有它该类就无法工作，那么通过构造函数注入该依赖可以确保在该类使用它时它就存在，因为没有它就无法构造类。
 
-* The constructor is only ever called once when the object is created, so
-  you can be sure that the dependency will not change during the object's
-  lifetime.
+* 构造函数只在创建对象时被调用一次，因此你可以确保在对象的生命周期内该依赖不会发生改变。
 
-These advantages do mean that constructor injection is not suitable for
-working with optional dependencies. It is also more difficult to use in
-combination with class hierarchies: if a class uses constructor injection
-then extending it and overriding the constructor becomes problematic.
+这些优点意味着构造函数注入不适合与“可选的依赖（非必须的依赖）”一起工作。
+当类存在继承关系时，这种注入也很困难：如果一个类使用构造函数注入，那么继承它和覆写该构造函数时，会变得充满不确定性。
 
-Setter Injection
+Setter注入
 ----------------
 
-Another possible injection point into a class is by adding a setter method
-that accepts the dependency::
+另一个可能的注入点是通过添加一个setter方法来接受依赖::
 
     // ...
     class NewsletterManager
@@ -162,29 +146,23 @@ that accepts the dependency::
         $container->register('app.newsletter_manager', NewsletterManager::class)
             ->addMethodCall('setMailer', array(new Reference('mailer')));
 
-This time the advantages are:
+setter注入的优点是：
 
-* Setter injection works well with optional dependencies. If you do not
-  need the dependency, then do not call the setter.
+* Setter注入适用于可选的依赖。如果你不需要该依赖，则不要调用对应的setter。
 
-* You can call the setter multiple times. This is particularly useful if
-  the method adds the dependency to a collection. You can then have a variable
-  number of dependencies.
+* 你可以多次调用setter。如果方法将依赖添加到一个集合，这将特别有用。然后，你可以拥有一个可变数量的依赖。
 
-The disadvantages of setter injection are:
+setter注入的缺点是：
 
-* The setter can be called more than just at the time of construction so
-  you cannot be sure the dependency is not replaced during the lifetime
-  of the object (except by explicitly writing the setter method to check
-  if it has already been called).
+* 相较于在构造时注入，setter可以被调用多次，所以你不能确定该依赖在对象的生命周期之内是否被替换
+  （除非在setter方法中显式地添加判断来检查它是否已被调用）。
 
-* You cannot be sure the setter will be called and so you need to add checks
-  that any required dependencies are injected.
+* 你无法确定setter是否被调用过，因此你需要添加检查以判断任何所需的依赖是否被注入。
 
-Property Injection
+属性注入
 ------------------
 
-Another possibility is setting public fields of the class directly::
+另一种可能是直接设置类的公共字段来进行注入::
 
     // ...
     class NewsletterManager
@@ -235,16 +213,10 @@ Another possibility is setting public fields of the class directly::
         $container->register('newsletter_manager', NewsletterManager::class)
             ->setProperty('mailer', new Reference('mailer'));
 
-There are mainly only disadvantages to using property injection, it is similar
-to setter injection but with these additional important problems:
+使用属性注入基本只有缺点，它类似于setter注入，但有以下重要问题：
 
-* You cannot control when the dependency is set at all, it can be changed
-  at any point in the object's lifetime.
+* 你完全不能控制何时依赖会被设置，它可以在对象的生命周期内的任何时间点被改变。
 
-* You cannot use type hinting so you cannot be sure what dependency is injected
-  except by writing into the class code to explicitly test the class instance
-  before using it.
+* 你无法使用类型约束，因此无法确定到底注入了什么依赖，除非在类的代码中写入显式的判断，以在使用该依赖之前，对其实例化的对象进行测试。
 
-But, it is useful to know that this can be done with the service container,
-especially if you are working with code that is out of your control, such
-as in a third party library, which uses public properties for its dependencies.
+但是，在服务容器中知道有这样一种注入方式也是有用的，特别是如果你使用的是不受控制的代码，例如有第三方库使用公有属性设置其依赖。

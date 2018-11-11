@@ -4,29 +4,26 @@
 带安保的自定义身份认证系统（API令牌示例）
 ===========================================================
 
-Whether you need to build a traditional login form, an API token authentication system
-or you need to integrate with some proprietary single-sign-on system, the Guard
-component can make it easy... and fun!
+无论你是需要构建传统的登录表单、API令牌认证系统还是需要与某些专有的单点登录系统集成，Guard组件都可以让它变得轻松而有趣！
 
-Guard authentication can be used to:
+安保认证器可用于：
 
-* :doc:`Build a Login Form </security/form_login_setup>`,
-* Create an API token authentication system (done on this page!)
-* `Social Authentication`_ (or use `HWIOAuthBundle`_ for a robust, but non-Guard solution)
+* :doc:`构建登录表单， </security/form_login_setup>`,
+* 创建API令牌认证系统（在此页面上完成！）
+* `社交认证`_ （或使用 `HWIOAuthBundle`_ 获得强大但非安保的解决方案）
 
-or anything else you dream up. In this example, we'll build an API token authentication
-system so we can learn more about Guard in detail.
+或者你梦想的任何事情。
+在这个例子中，我们将构建一个API令牌认证系统，以便我们可以详细了解Guard的更多信息。
 
-Step 1) Prepare your User Class
+步骤 1) 准备用户类
 -------------------------------
 
-Suppose you want to build an API where your clients will send an ``X-AUTH-TOKEN`` header
-on each request with their API token. Your job is to read this and find the associated
-user (if any).
+假设你要构建一个API，客户端将使用其API令牌在每个请求上发送 ``X-AUTH-TOKEN`` 标头。
+你的工作是阅读此内容并找到关联的用户（如果有）。
 
-First, make sure you've followed the main :doc:`Security Guide </security>` to
-create your ``User`` class. Then, to keep things simple, add an ``apiToken`` property
-directly to your ``User`` class (the ``make:entity`` command is a good way to do this):
+首先，请确保你已按照 :doc:`安全指南 </security>` 创建 ``User`` 类。
+然后，为了简单起见，直接将 ``apiToken`` 属性添加到你的 ``User`` 类中
+（``make:entity`` 命令是执行此操作的好方法）：
 
 .. code-block:: diff
 
@@ -42,24 +39,24 @@ directly to your ``User`` class (the ``make:entity`` command is a good way to do
     +      */
     +     private $apiToken;
 
-        // the getter and setter methods
+        // getter和setter方法
     }
 
-Don't forget to generate and execute the migration:
+不要忘记生成并执行迁移：
 
 .. code-block:: terminal
 
     $ php bin/console make:migration
     $ php bin/console doctrine:migrations:migrate
 
-Step 2) Create the Authenticator Class
+步骤 2) 创建认证器类
 --------------------------------------
 
-To create a custom authentication system, create a class and make it implement
-:class:`Symfony\\Component\\Security\\Guard\\AuthenticatorInterface`. Or, extend
-the simpler :class:`Symfony\\Component\\Security\\Guard\\AbstractGuardAuthenticator`.
+要创建自定义认证系统，请创建一个类并使其实现
+:class:`Symfony\\Component\\Security\\Guard\\AuthenticatorInterface`。或者，继承更简单的
+:class:`Symfony\\Component\\Security\\Guard\\AbstractGuardAuthenticator`。
 
-This requires you to implement several methods::
+这需要你实现几种方法::
 
     // src/Security/TokenAuthenticator.php
     namespace App\Security;
@@ -85,9 +82,8 @@ This requires you to implement several methods::
         }
 
         /**
-         * Called on every request to decide if this authenticator should be
-         * used for the request. Returning false will cause this authenticator
-         * to be skipped.
+         * 在每个请求上调用以决定是否应该将此认证器器用于该请求。
+         * 返回false将会跳过此认证器。
          */
         public function supports(Request $request)
         {
@@ -95,8 +91,8 @@ This requires you to implement several methods::
         }
 
         /**
-         * Called on every request. Return whatever credentials you want to
-         * be passed to getUser() as $credentials.
+         * 会被每个请求调用。
+         * 返回你需要的任何凭据，该凭据将被作为 $credentials 传递到 getUser()。
          */
         public function getCredentials(Request $request)
         {
@@ -113,23 +109,23 @@ This requires you to implement several methods::
                 return;
             }
 
-            // if a User object, checkCredentials() is called
+            // 如果是一个User对象，则调用checkCredentials()
             return $this->em->getRepository(User::class)
                 ->findOneBy(['apiToken' => $apiToken]);
         }
 
         public function checkCredentials($credentials, UserInterface $user)
         {
-            // check credentials - e.g. make sure the password is valid
-            // no credential check is needed in this case
+            // 检查凭据 - 例如确保密码有效
+            // 在本例中没有凭据需要检查
 
-            // return true to cause authentication success
+            // 返回 true，意味着认证成功
             return true;
         }
 
         public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
         {
-            // on success, let the request continue
+            // 成功后，让该请求继续
             return null;
         }
 
@@ -138,7 +134,7 @@ This requires you to implement several methods::
             $data = array(
                 'message' => strtr($exception->getMessageKey(), $exception->getMessageData())
 
-                // or to translate this message
+                // 或翻译此消息
                 // $this->translator->trans($exception->getMessageKey(), $exception->getMessageData())
             );
 
@@ -146,12 +142,12 @@ This requires you to implement several methods::
         }
 
         /**
-         * Called when authentication is needed, but it's not sent
+         * 需要认证时被调用，但不会发送
          */
         public function start(Request $request, AuthenticationException $authException = null)
         {
             $data = array(
-                // you might translate this message
+                // 你可以翻译此消息
                 'message' => 'Authentication Required'
             );
 
@@ -164,17 +160,15 @@ This requires you to implement several methods::
         }
     }
 
+干得好！每种方法都在下面说明：:ref:`安保认证器的方法<guard-auth-methods>`。
 
-Nice work! Each method is explained below: :ref:`The Guard Authenticator Methods<guard-auth-methods>`.
-
-Step 3) Configure the Authenticator
+步骤 3) 配置认证器
 -----------------------------------
 
-To finish this, make sure your authenticator is registered as a service. If you're
-using the :ref:`default services.yaml configuration <service-container-services-load-example>`,
-that happens automatically.
+要完成此操作，请确保你的认证器已注册为服务。如果你使用的是
+:ref:`默认的services.yaml配置 <service-container-services-load-example>`，则会自动执行此操作。
 
-Finally, configure your ``firewalls`` key in ``security.yaml`` to use this authenticator:
+最后，在 ``security.yaml`` 配置你的 ``firewalls`` 键以使用此认证器：
 
 .. configuration-block::
 
@@ -195,7 +189,7 @@ Finally, configure your ``firewalls`` key in ``security.yaml`` to use this authe
                         authenticators:
                             - App\Security\TokenAuthenticator
 
-                    # if you want, disable storing the user in the session
+                    # 如果需要，禁用将用户存储在会话中
                     # stateless: true
 
                     # ...
@@ -250,91 +244,83 @@ Finally, configure your ``firewalls`` key in ``security.yaml`` to use this authe
             ),
         ));
 
-You did it! You now have a fully-working API token authentication system. If your
-homepage required ``ROLE_USER``, then you could test it under different conditions:
+你做到了！你现在拥有一个完全可用的API令牌认证系统。
+如果你的主页需要 ``ROLE_USER``，那么你可以在不同的条件下测试它：
 
 .. code-block:: bash
 
-    # test with no token
+    # 没有令牌的测试
     curl http://localhost:8000/
     # {"message":"Authentication Required"}
 
-    # test with a bad token
+    # 无效令牌的测试
     curl -H "X-AUTH-TOKEN: FAKE" http://localhost:8000/
     # {"message":"Username could not be found."}
 
-    # test with a working token
+    # 有效令牌的测试
     curl -H "X-AUTH-TOKEN: REAL" http://localhost:8000/
-    # the homepage controller is executed: the page loads normally
+    # 主页控制器被执行：页面正常加载
 
-Now, learn more about what each method does.
+现在，详细了解每种方法的作用。
 
 .. _guard-auth-methods:
 
-The Guard Authenticator Methods
+Guard认证器的方法
 -------------------------------
 
-Each authenticator needs the following methods:
+每个认证器都需要以下方法：
 
 **supports(Request $request)**
-    This will be called on *every* request and your job is to decide if the
-    authenticator should be used for this request (return ``true``) or if it
-    should be skipped (return ``false``).
+    这将在 *每个* 请求上调用，
+    你的工作是决定是否应该将此认证器用于此请求（返回 ``true``）或是否应该跳过（返回 ``false``）。
 
 **getCredentials(Request $request)**
-    This will be called on *every* request and your job is to read the token (or
-    whatever your "authentication" information is) from the request and return it.
-    These credentials are later passed as the first argument of ``getUser()``.
+    这将在 *每个* 请求上调用，你的工作是从请求中读取令牌（或其他任何“认证验证”信息）并将其返回。
+    这些凭据稍后作为第一个参数传递给 ``getUser()``。
 
 **getUser($credentials, UserProviderInterface $userProvider)**
-    The ``$credentials`` argument is the value returned by ``getCredentials()``.
-    Your job is to return an object that implements ``UserInterface``. If you do,
-    then ``checkCredentials()`` will be called. If you return ``null`` (or throw
-    an :ref:`AuthenticationException <guard-customize-error>`) authentication
-    will fail.
+    ``$credentials`` 参数是 ``getCredentials()`` 返回的值。
+    你的工作是返回一个实现 ``UserInterface`` 的对象。
+    如果你这样做，那么 ``checkCredentials()`` 就会被调用。
+    如果你返回 ``null`` （或抛出一个
+    :ref:`AuthenticationException <guard-customize-error>`）认证将失败。
 
 **checkCredentials($credentials, UserInterface $user)**
-    If ``getUser()`` returns a User object, this method is called. Your job is to
-    verify if the credentials are correct. For a login form, this is where you would
-    check that the password is correct for the user. To pass authentication, return
-    ``true``. If you return *anything* else
-    (or throw an :ref:`AuthenticationException <guard-customize-error>`),
-    authentication will fail.
+    如果 ``getUser()`` 返回一个User对象，则调用此方法。
+    你的工作是验证该凭据是否正确。对于登录表单，你可以在此处检查密码是否和该用户对应。
+    要通过认证，请返回 ``true``。如果你返回 *任何* 其他内容（或抛出一个
+    :ref:`AuthenticationException <guard-customize-error>`），认证将失败。
 
 **onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)**
-    This is called after successful authentication and your job is to either
-    return a :class:`Symfony\\Component\\HttpFoundation\\Response` object
-    that will be sent to the client or ``null`` to continue the request
-    (e.g. allow the route/controller to be called like normal). Since this
-    is an API where each request authenticates itself, you want to return
-    ``null``.
+    此方法成功认证后调用，你的工作是返回一个要发送到客户端的
+    :class:`Symfony\\Component\\HttpFoundation\\Response` 对象或 ``null`` 以继续该请求
+    （例如，允许像往常一样调用路由/控制器）。
+    由于这是一个API，每个请求都会对自身进行认证，因此你希望返回 ``null``。
 
 **onAuthenticationFailure(Request $request, AuthenticationException $exception)**
-    This is called if authentication fails. Your job
-    is to return the :class:`Symfony\\Component\\HttpFoundation\\Response`
-    object that should be sent to the client. The ``$exception`` will tell you
-    *what* went wrong during authentication.
+    如果认证失败，此方法将被调用。
+    你的工作是返回应发送给客户端的
+    :class:`Symfony\\Component\\HttpFoundation\\Response` 对象。
+    ``$exception`` 会告诉你认证过程中 *哪里* 出错了。
 
 **start(Request $request, AuthenticationException $authException = null)**
-    This is called if the client accesses a URI/resource that requires authentication,
-    but no authentication details were sent. Your job is to return a
-    :class:`Symfony\\Component\\HttpFoundation\\Response` object that helps
-    the user authenticate (e.g. a 401 response that says "token is missing!").
+    如果客户端访问需要认证的URI/资源，但未发送认证详细信息，则调用此方法。
+    你的工作是返回一个帮助用户进行认证的
+    :class:`Symfony\\Component\\HttpFoundation\\Response` 对象（例如表示“令牌丢失！”的401响应）。
 
 **supportsRememberMe()**
-    If you want to support "remember me" functionality, return true from this method.
-    You will still need to activate ``remember_me`` under your firewall for it to work.
-    Since this is a stateless API, you do not want to support "remember me"
-    functionality in this example.
+    如果要支持“记住我”功能，请从此方法返回 ``true``。
+    但你仍然需要在防火墙下激活 ``remember_me`` 才能生效。
+    由于这是一个无状态API，因此你不希望在此示例中支持“记住我”功能。
 
 **createAuthenticatedToken(UserInterface $user, string $providerKey)**
-    If you are implementing the :class:`Symfony\\Component\\Security\\Guard\\AuthenticatorInterface`
-    instead of extending the :class:`Symfony\\Component\\Security\\Guard\\AbstractGuardAuthenticator`
-    class, you have to implement this method. It will be called
-    after a successful authentication to create and return the token
-    for the user, who was supplied as the first argument.
+    如果你是实现
+    :class:`Symfony\\Component\\Security\\Guard\\AuthenticatorInterface` 而不是继承
+    :class:`Symfony\\Component\\Security\\Guard\\AbstractGuardAuthenticator`
+    类，则必须实现此方法。
+    它将在认证成功后调用，以创建并返回作为第一个参数传递的用户的令牌。
 
-The picture below shows how Symfony calls Guard Authenticator methods:
+下图显示了Symfony如何调用安保认证器的方法：
 
 .. raw:: html
 
@@ -342,18 +328,18 @@ The picture below shows how Symfony calls Guard Authenticator methods:
 
 .. _guard-customize-error:
 
-Customizing Error Messages
+自定义错误消息
 --------------------------
 
-When ``onAuthenticationFailure()`` is called, it is passed an ``AuthenticationException``
-that describes *how* authentication failed via its ``$exception->getMessageKey()`` (and
-``$exception->getMessageData()``) method. The message will be different based on *where*
-authentication fails (i.e. ``getUser()`` versus ``checkCredentials()``).
+当 ``onAuthenticationFailure()`` 被调用，它被传递了一个 ``AuthenticationException``，
+该异常通过自身的 ``$exception->getMessageKey()`` (和 ``$exception->getMessageData()``)
+方法来描述认证是如何失败的。
+认证失败的 *位置* 不同，该消息也会不同（例如，``getUser()`` 相对于 ``checkCredentials()``）。
 
-But, you can also return a custom message by throwing a
-:class:`Symfony\\Component\\Security\\Core\\Exception\\CustomUserMessageAuthenticationException`.
-You can throw this from ``getCredentials()``, ``getUser()`` or ``checkCredentials()``
-to cause a failure::
+但是，你也可以通过抛出一个
+:class:`Symfony\\Component\\Security\\Core\\Exception\\CustomUserMessageAuthenticationException`
+来自定义该消息。你可以从 ``getCredentials()``、``getUser()`` 或 ``checkCredentials()``
+中抛出该异常以引出一个失败操作::
 
     // src/Security/TokenAuthenticator.php
     // ...
@@ -380,8 +366,7 @@ to cause a failure::
         // ...
     }
 
-In this case, since "ILuvAPIs" is a ridiculous API key, you could include an easter
-egg to return a custom message if someone tries this:
+在这个例子中，由于“ILuvAPIs”是一个荒谬的API令牌，如果有人试图这样做，你可以返回一个包含复活节彩蛋的自定义消息：
 
 .. code-block:: bash
 
@@ -390,12 +375,11 @@ egg to return a custom message if someone tries this:
 
 .. _guard-manual-auth:
 
-Manually Authenticating a User
+手动认证用户
 ------------------------------
 
-Sometimes you might want to manually authenticate a user - like after the user
-completes registration. To do that, use your authenticator and a service called
-``GuardAuthenticatorHandler``::
+有时你可能需要手动认证用户身份 - 比如用户完成注册后。
+为此，请使用你的认证器和名为 ``GuardAuthenticatorHandler`` 的服务::
 
     // src/Controller/RegistrationController.php
     // ...
@@ -410,51 +394,43 @@ completes registration. To do that, use your authenticator and a service called
         {
             // ...
 
-            // after validating the user and saving them to the database
-            // authenticate the user and use onAuthenticationSuccess on the authenticator
+            // 验证该用户并将其保存到数据库后
+            // 认证该用户并在认证器上使用onAuthenticationSuccess
             return $guardHandler->authenticateUserAndHandleSuccess(
-                $user,          // the User object you just created
+                $user,          // 刚刚创建的User对象
                 $request,
-                $authenticator, // authenticator whose onAuthenticationSuccess you want to use
-                'main'          // the name of your firewall in security.yaml
+                $authenticator, // 你想要在 onAuthenticationSuccess 使用的认证器
+                'main'          // 在security.yaml中的你的防火墙的名称
             );
         }
     }
 
-Avoid Authenticating the Browser on Every Request
+避免认证浏览器的每个请求
 -------------------------------------------------
 
-If you create a Guard login system that's used by a browser and you're experiencing
-problems with your session or CSRF tokens, the cause could be bad behavior by your
-authenticator. When a Guard authenticator is meant to be used by a browser, you
-should *not* authenticate the user on *every* request. In other words, you need to
-make sure the ``supports()`` method *only* returns ``true`` when
-you actually *need* to authenticate the user. Why? Because, when ``supports()``
-returns true (and authentication is ultimately successful), for security purposes,
-the user's session is "migrated" to a new session id.
+如果你创建了一个由浏览器使用的安保登录系统，并且你遇到了会话或CSRF令牌的问题，那么可能是你的认证器行为导致了这些错误。
+当安保认证器是由浏览器使用的，你 *不* 应该在 *每个* 请求中都对用户进行认证。
+换句话说，你需要确保 ``supports()`` 方法 *仅* 在你确实 *需要* 对用户进行认证时才返回 ``true``。
+为什么？因为，当 ``supports()`` 返回 ``true`` （并且认证最终成功）时，出于安全考虑，该用户的会话将“迁移”到一个新的会话ID中。
 
-This is an edge-case, and unless you're having session or CSRF token issues, you
-can ignore this. Here is an example of good and bad behavior::
+这是一个边缘情况，除非你遇到会话或CSRF令牌问题，否则可以忽略它。这是一个好的和坏的行为的例子::
 
     public function supports(Request $request)
     {
-        // GOOD behavior: only authenticate (i.e. return true) on a specific route
+        // 好的行为: 只在特定路由上认证 (即 return true) on a specific route
         return 'login_route' === $request->attributes->get('_route') && $request->isMethod('POST');
 
-        // e.g. your login system authenticates by the user's IP address
-        // BAD behavior: So, you decide to *always* return true so that
-        // you can check the user's IP address on every request
+        // 例如，你的登录系统通过用户的IP地址进行认证
+        // 坏的行为:
+        // 因此，你决定 *总是* 返回true，以便你可以在每个请求中检查用户的IP地址
         return true;
     }
 
-The problem occurs when your browser-based authenticator tries to authenticate
-the user on *every* request - like in the IP address-based example above. There
-are two possible fixes:
+当你的基于浏览器的认证器尝试在 *每个* 请求上对用户进行认证时会出现此问题 - 例如，上面基于IP地址的示例。
+有两种可能的修复方法：
 
-1. If you do *not* need authentication to be stored in the session, set
-   ``stateless: true`` under your firewall.
-2. Update your authenticator to avoid authentication if the user is already
-   authenticated:
+1. 如果 *不* 需要将认证存储到会话中，在防火墙下设置 ``stateless: true``。
+2. 如果用户已经过认证，请更新你的认证器以避免再次认证：
 
 .. code-block:: diff
 
@@ -474,42 +450,37 @@ are two possible fixes:
 
         public function supports(Request $request)
         {
-    +         // if there is already an authenticated user (likely due to the session)
-    +         // then return false and skip authentication: there is no need.
+    +         // 如果该用户已经经过认证（比如已存在于会话），
+    +         // 则返回false并跳过此认证：没有必要再次认证。
     +         if ($this->security->getUser()) {
     +             return false;
     +         }
 
-    +         // the user is not logged in, so the authenticator should continue
+    +         // 用户未登录，因此该认证器应继续
     +         return true;
         }
     }
 
-If you use autowiring, the ``Security``  service will automatically be passed to
-your authenticator.
+如果你使用自动装配，``Security``  服务将自动传递到你的认证器。
 
-Frequently Asked Questions
+常见问题
 --------------------------
 
-**Can I have Multiple Authenticators?**
-    Yes! But when you do, you'll need to choose just *one* authenticator to be your
-    "entry_point". This means you'll need to choose *which* authenticator's ``start()``
-    method should be called when an anonymous user tries to access a protected resource.
-    For more details, see :doc:`/security/multiple_guard_authenticators`.
+**我可以拥有多个认证器吗？**
+    可以! 但是当你这样做时，你需要只选择 *一个* 认证器作为你的“入口点”。
+    这意味着当匿名用户尝试访问受保护资源时，你需要选择应调用 *哪个* 认证器的 ``start()`` 方法。
+    有关更多详细信息，请参阅 :doc:`/security/multiple_guard_authenticators`。
 
-**Can I use this with form_login?**
-    Yes! ``form_login`` is *one* way to authenticate a user, so you could use
-    it *and* then add one or more authenticators. Using a guard authenticator doesn't
-    collide with other ways to authenticate.
+**我可以在form_login中使用它吗？**
+    可以! ``form_login`` 是 *一个* 对用户进行认证的途径，因此你可以使用它，*然后* 添加一个或多个认证器。
+    使用安保认证器不会与其他认证方式发生冲突。
 
-**Can I use this with FOSUserBundle?**
-    Yes! Actually, FOSUserBundle doesn't handle security: it simply gives you a
-    ``User`` object and some routes and controllers to help with login, registration,
-    forgot password, etc. When you use FOSUserBundle, you typically use ``form_login``
-    to actually authenticate the user. You can continue doing that (see previous
-    question) or use the ``User`` object from FOSUserBundle and create your own
-    authenticator(s) (just like in this article).
+**我可以在FOSUserBundle中使用它吗？**
+    可以! 实际上，FOSUserBundle不处理安全性：
+    它只是给你一个 ``User`` 对象和一些路由、控制器来辅助登录、注册、忘记密码等。
+    当你使用FOSUserBundle时，你通常用 ``form_login`` 来实际认证用户。
+    你可以继续这样做（请参阅上一个问题）或使用UserFOSUserBundle中的 ``User`` 对象并创建自己的认证器（就像本文中一样）。
 
 .. _`must be quoted with backticks`: http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/basic-mapping.html#quoting-reserved-words
-.. _`Social Authentication`: https://github.com/knpuniversity/oauth2-client-bundle#authenticating-with-guard
+.. _`社交认证`: https://github.com/knpuniversity/oauth2-client-bundle#authenticating-with-guard
 .. _`HWIOAuthBundle`: https://github.com/hwi/HWIOAuthBundle

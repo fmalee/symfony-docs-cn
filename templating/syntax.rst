@@ -7,13 +7,12 @@
 如何检查Twig模板的语法
 ==============================================
 
-You can check for syntax errors in Twig templates using the ``lint:twig``
-console command:
+你可以使用 ``lint:twig`` 控制台命令检查Twig模板的语法错误：
 
 .. code-block:: terminal
 
-    # You can check by filename:
+    # 可以使用文件名进行检查:
     $ php bin/console lint:twig templates/article/recent_list.html.twig
 
-    # or by directory:
+    # 或是通过目录:
     $ php bin/console lint:twig templates/

@@ -4,78 +4,65 @@
 升级主要版本（例如3.4.0至4.1.0）
 ===============================================
 
-Every two years, Symfony releases a new major version release (the first number
-changes). These releases are the trickiest to upgrade, as they are allowed to
-break backward compatibility. However, Symfony makes this upgrade process as
-smooth as possible.
+每两年，Symfony都会发布一个新的主要版本（第一个数字发生变化）。
+升级这些版本是最棘手的，因为它们可能破坏向后兼容性。但是，Symfony会让这个升级过程尽可能的顺利。
 
-This means that you can update most of your code before the major release is
-actually released. This is called making your code *future compatible*.
+这意味着你可以在主要版本实际发布之前更新大部分代码。这称为使你的代码与 *未来兼容*。
 
-There are a couple of steps to upgrading a major version:
+升级一个主要版本有几个步骤：
 
-#. :ref:`Make your code deprecation free <upgrade-major-symfony-deprecations>`;
-#. :ref:`Update to the new major version via Composer <upgrade-major-symfony-composer>`;
-#. :ref:`Update your code to work with the new version <upgrade-major-symfony-after>`.
+#. :ref:`清理弃用的代码 <upgrade-major-symfony-deprecations>`;
+#. :ref:`通过Composer更新到新的主要版本 <upgrade-major-symfony-composer>`;
+#. :ref:`更新你的代码以使用新版本 <upgrade-major-symfony-after>`.
 
 .. _upgrade-major-symfony-deprecations:
 
-1) Make your Code Deprecation Free
+1) 清理弃用的代码
 ----------------------------------
 
-During the lifecycle of a major release, new features are added and method
-signatures and public API usages are changed. However,
-:doc:`minor versions </setup/upgrade_minor>` should not contain any
-backwards incompatible changes. To accomplish this, the "old" (e.g. functions,
-classes, etc) code still works, but is marked as *deprecated*, indicating that
-it will be removed/changed in the future and that you should stop using it.
+在一个主要版本的生命周期中，添加了新功能，并更改了方法签名和公共API用法。
+但是，:doc:`次要版本 </setup/upgrade_minor>` 不应包含任何不向后兼容的更改。
+为了实现这一点，“旧”代码（例如函数、类等）会仍然有效，但被标记为 *已弃用*，表示未来将会删除/更改它并且你应该停止使用它。
 
-When the major version is released (e.g. 4.1.0), all deprecated features and
-functionality are removed. So, as long as you've updated your code to stop
-using these deprecated features in the last version before the major (e.g.
-3.4.*), you should be able to upgrade without a problem.
+发布主要版本（例如 ``4.1.0``）时，将删除所有已弃用的功能。
+因此，只要你更新了代码以停止在主要版本之前的最后一个版本中使用这些已弃用的功能
+（例如 ``3.4.*``），你应该能够毫无问题地进行升级。
 
-To help you with this, deprecation notices are triggered whenever you end up
-using a deprecated feature. When visiting your application in the
-:doc:`dev environment </configuration/environments>`
-in your browser, these notices are shown in the web dev toolbar:
+为了帮助你解决此问题，每当你使用已弃用的功能时，都会触发弃用通知。
+使用浏览器在 :doc:`开发环境 </configuration/environments>` 中访问应用时，这些通知会显示在Web开发工具栏中：
 
 .. image:: /_images/install/deprecations-in-profiler.png
    :align: center
    :class: with-browser
 
-Ultimately, you should aim to stop using the deprecated functionality.
-Sometimes, this is easy: the warning might tell you exactly what to change.
+归根结底，你应该停止使用已弃用的功能。有时这很容易：该警告可能会告诉你确切要改变的内容。
 
-But other times, the warning might be unclear: a setting somewhere might
-cause a class deeper to trigger the warning. In this case, Symfony does its
-best to give a clear message, but you may need to research that warning further.
+但其他时候，该警告可能不够明确：在某处设置可能会导致一个类触发更深层次的警告。
+在这种情况下，Symfony会尽力给出明确的信息，但你可能需要进一步研究该警告。
 
-And sometimes, the warning may come from a third-party library or bundle
-that you're using. If that's true, there's a good chance that those deprecations
-have already been updated. In that case, upgrade the library to fix them.
+有时，警告可能来自你正在使用的第三方库或bundle。
+如果是这样，那么这些弃用很可能已经更新。在这种情况下，请升级库以修复它们。
 
-Once all the deprecation warnings are gone, you can upgrade with a lot
-more confidence.
+一旦所有弃用警告消失，你就可以更自信地进行升级。
 
-Deprecations in PHPUnit
+PHPUnit中的弃用
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-When you run your tests using PHPUnit, no deprecation notices are shown.
-To help you here, Symfony provides a PHPUnit bridge. This bridge will show
-you a nice summary of all deprecation notices at the end of the test report.
+使用PHPUnit运行测试时，不会显示弃用通知。
+为了帮助你解决这个问题，Symfony提供了一个PHPUnit桥接。
+此桥接将会在测试报告的末尾为你显示所有弃用通知的摘要。
 
-All you need to do is install the PHPUnit bridge:
+你需要做的就是安装PHPUnit桥接：
 
 .. code-block:: terminal
 
     $ composer require --dev symfony/phpunit-bridge
 
-Now, you can start fixing the notices:
+现在，你可以开始修改该通知了：
 
 .. code-block:: terminal
 
-    # this command is available after running "composer require --dev symfony/phpunit-bridge"
+    # 在运行 "composer require --dev symfony/phpunit-bridge" 后该命令才可用
     $ ./bin/phpunit
     ...
 
@@ -90,16 +77,13 @@ Now, you can start fixing the notices:
         2x in PageAdminTest::testPageList from Symfony\Cmf\SimpleCmsBundle\Tests\WebTest\Admin
         1x in PageAdminTest::testPageEdit from Symfony\Cmf\SimpleCmsBundle\Tests\WebTest\Admin
 
-Once you fixed them all, the command ends with ``0`` (success) and you're
-done!
+一旦你修复了所有警告，命令以 ``0`` （success）结束，你就完工可！
 
-.. sidebar:: Using the Weak Deprecations Mode
+.. sidebar:: 使用弱弃用模式
 
-    Sometimes, you can't fix all deprecations (e.g. something was deprecated
-    in 3.4 and you still need to support 3.3). In these cases, you can still
-    use the bridge to fix as many deprecations as possible and then switch
-    to the weak test mode to make your tests pass again. You can do this by
-    using the ``SYMFONY_DEPRECATIONS_HELPER`` env variable:
+    有时，你无法修复所有弃用（例如，某些功能已在3.4中弃用，但你仍然需要支持3.3）。
+    在这些情况下，你仍然可以使用该桥接器来可能多的修复尽弃用，然后切换到弱测试模式以使测试再次通过。
+    你可以通过使用 ``SYMFONY_DEPRECATIONS_HELPER`` 环境变量来完成此操作：
 
     .. code-block:: xml
 
@@ -112,15 +96,14 @@ done!
             </php>
         </phpunit>
 
-    (you can also execute the command like ``SYMFONY_DEPRECATIONS_HELPER=weak phpunit``).
+    （你也可以直接执行 ``SYMFONY_DEPRECATIONS_HELPER=weak phpunit`` 命令）。
 
 .. _upgrade-major-symfony-composer:
 
-2) Update to the New Major Version via Composer
+2) 通过Composer更新到新的主要版本
 -----------------------------------------------
 
-Once your code is deprecation free, you can update the Symfony library via
-Composer by modifying your ``composer.json`` file:
+一旦你的代码修复完成，你可以通过修改 ``composer.json`` 文件来使用Composer更新Symfony库：
 
 .. code-block:: json
 
@@ -133,7 +116,7 @@ Composer by modifying your ``composer.json`` file:
         "...": "..."
     }
 
-Next, use Composer to download new versions of the libraries:
+接下来，使用Composer下载新版本的库：
 
 .. code-block:: terminal
 
@@ -145,19 +128,16 @@ Next, use Composer to download new versions of the libraries:
 
 .. _upgrade-major-symfony-after:
 
-3) Update your Code to Work with the New Version
+3) 更新你的代码以使用新版本
 ------------------------------------------------
 
-The next major version *may* also contain new BC breaks as a BC layer is not always
-a possibility. Make sure you read the ``UPGRADE-X.0.md`` (where X is the new major
-version) included in the Symfony repository for any BC break that you need to be aware
-of.
+下一个主要版本也 *可能* 包含新的BC中断，因为BC层并不总是可行的。
+确保你阅读了包含在Symfony仓库中的 ``UPGRADE-X.0.md`` （其中X是新的主要版本），以了解你需要注意的任何BC中断。
 
-4) Updating to the Symfony 4 Flex Directory Structure
+4) 更新到Symfony 4 Flex目录结构
 -----------------------------------------------------
 
-When upgrading to Symfony 4, you will probably also want to upgrade to the new
-Symfony 4 directory structure so that you can take advantage of Symfony Flex.
-This takes some work, but is optional. For details, see :ref:`upgrade-to-flex`.
+升级到Symfony 4时，你可能还希望升级到新的Symfony 4目录结构，以便可以利用Symfony Flex。
+这需要一些工作，但是是可选的。有关详细信息，请参阅 :ref:`upgrade-to-flex`。
 
 .. _`Symfony-Upgrade-Fixer`: https://github.com/umpirsky/Symfony-Upgrade-Fixer

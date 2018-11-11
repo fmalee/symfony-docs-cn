@@ -5,12 +5,11 @@
 如何保护应用中的任何服务或方法
 =======================================================
 
-In the security article, you learned how to
-:ref:`secure a controller <security-securing-controller>` via a shortcut method.
+在安全文档中，你学习了如何通过快捷方法 :ref:`保护控制器 <security-securing-controller>`。
 
-But, you can check access *anywhere* in your code by injecting the ``Security``
-service. For example, suppose you have a ``SalesReportManager`` service and you
-want to include extra details only for users that have a ``ROLE_SALES_ADMIN`` role:
+但是，你可以通过在代码中注入 ``Security`` 服务来在 *任何* 位置验证访问。
+例如，假设你有一个 ``SalesReportManager`` 服务，
+但你希望仅为具有 ``ROLE_SALES_ADMIN`` 角色的用户提供额外的详细信息：
 
 .. code-block:: diff
 
@@ -43,11 +42,10 @@ want to include extra details only for users that have a ``ROLE_SALES_ADMIN`` ro
         // ...
     }
 
-If you're using the :ref:`default services.yaml configuration <service-container-services-load-example>`,
-Symfony will automatically pass the ``security.helper`` to your service
-thanks to autowiring and the ``Security`` type-hint.
+如果你使用的是
+:ref:`默认的services.yaml配置 <service-container-services-load-example>`，
+得益于自动装配和 ``Security`` 类型约束，Symfony会自动将 ``security.helper`` 传递给你的服务。
 
-You can also use a lower-level
+你也可以使用一个较底层的
 :class:`Symfony\\Component\\Security\\Core\\Authorization\\AuthorizationCheckerInterface`
-service. It does the same thing as ``Security``, but allows you to type-hint a
-more-specific interface.
+服务。它的功能与 ``Security`` 相同，但允许你类型约束更具体的接口。

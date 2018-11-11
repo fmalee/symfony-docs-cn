@@ -4,20 +4,17 @@
 如何将防火墙限制到一个请求
 ======================================
 
-When using the Security component, you can create firewalls that match certain request options.
-In most cases, matching against the URL is sufficient, but in special cases, you can further
-restrict the initialization of a firewall against other options of the request.
+使用安全组件时，你可以创建与某些请求选项匹配的防火墙。
+在大多数情况下，匹配URL就足够了，但在特殊情况下，你可以针对请求的其他选项进一步限制防火墙的初始化。
 
 .. note::
 
-    You can use any of these restrictions individually or mix them together to get
-    your desired firewall configuration.
+    你可以单独使用这些限制，也可以将它们混合在一起以获得所需的防火墙配置。
 
-Restricting by Pattern
+模式限制
 ----------------------
 
-This is the default restriction and restricts a firewall to only be initialized if the request URL
-matches the configured ``pattern``.
+这是默认限制，并限制仅在请求URL与配置的 ``pattern`` 匹配时才初始化防火墙。
 
 .. configuration-block::
 
@@ -64,17 +61,15 @@ matches the configured ``pattern``.
             ),
         ));
 
-The ``pattern`` is a regular expression. In this example, the firewall will only be
-activated if the URL starts (due to the ``^`` regex character) with ``/admin``. If
-the URL does not match this pattern, the firewall will not be activated and subsequent
-firewalls will have the opportunity to be matched for this request.
+``pattern`` 是一个正则表达式。
+在此示例中，仅当一个URL以 ``/admin`` 开头时（由于 ``^`` 正则表达式字符），才会激活该防火墙。
+如果URL与此模式不匹配，则不会激活防火墙，并且后续防火墙将有机会匹配此请求。
 
-Restricting by Host
+主机限制
 -------------------
 
-If matching against the ``pattern`` only is not enough, the request can also be matched against
-``host``. When the configuration option ``host`` is set, the firewall will be restricted to
-only initialize if the host from the request matches against the configuration.
+如果仅匹配 ``pattern`` 不够满足用例，则还可以匹配请求的 ``host``。
+设置 ``host`` 配置选项后，仅当请求中的主机与该配置匹配时，该防火墙将才会初始化。
 
 .. configuration-block::
 
@@ -121,18 +116,15 @@ only initialize if the host from the request matches against the configuration.
             ),
         ));
 
-The ``host`` (like the ``pattern``) is a regular expression. In this example,
-the firewall will only be activated if the host is equal exactly (due to
-the ``^`` and ``$`` regex characters) to the hostname ``admin.example.com``.
-If the hostname does not match this pattern, the firewall will not be activated
-and subsequent firewalls will have the opportunity to be matched for this
-request.
+``host`` 是一个正则表达式（类似于 ``pattern``）。
+在此示例中，仅当该主机与主机名 ``admin.example.com``
+完全相同（由于 ``^`` 和 ``$`` 正则表达式字符）时，才会激活该防火墙。
+如果主机名与此模式不匹配，则不会激活防火墙，并且后续防火墙将有机会匹配此请求。
 
-Restricting by HTTP Methods
+HTTP方法限制
 ---------------------------
 
-The configuration option ``methods`` restricts the initialization of the firewall to
-the provided HTTP methods.
+配置选项 ``methods`` 将防火墙的初始化限制为该选项提供的HTTP方法。
 
 .. configuration-block::
 
@@ -179,7 +171,5 @@ the provided HTTP methods.
             ),
         ));
 
-In this example, the firewall will only be activated if the HTTP method of the
-request is either ``GET`` or ``POST``. If the method is not in the array of the
-allowed methods, the firewall will not be activated and subsequent firewalls will again
-have the opportunity to be matched for this request.
+在此示例中，仅当请求的HTTP方法为 ``GET`` 或 ``POST`` 时，才会激活该防火墙。
+如果该方法不在允许方法的数组中，则不会激活防火墙，并且后续防火墙将再次有机会匹配此请求。

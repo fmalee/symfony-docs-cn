@@ -6,13 +6,11 @@
 
 .. tip::
 
-    The *best* policy is to force ``https`` on all URLs, which can be done via
-    your web server configuration or ``access_control``.
+    *最好* 的策略是在所有网址上强制使用 ``https``，你可以通过你的Web服务器配置或 ``access_control`` 来完成。
 
-You can force areas of your site to use the HTTPS protocol in the security
-config. This is done through the ``access_control`` rules using the ``requires_channel``
-option. To enforce HTTPS on all URLs, add the ``requires_channel`` config to every
-access control:
+你可以在安全配置中强制站点的区域使用HTTPS协议。
+这是通过 ``access_control`` 规则来使用 ``requires_channel`` 选项完成的。
+要在所有URL上强制执行HTTPS，请将 ``requires_channel`` 配置添加到每个访问控制上：
 
 .. configuration-block::
 
@@ -78,18 +76,14 @@ access control:
                 ),
             ));
 
-To make life easier while developing, you can also use an environment variable,
-like ``requires_channel: '%env(SECURE_SCHEME)%'``. In your ``.env`` file, set
-``SECURE_SCHEME`` to ``http`` locally, but ``https`` on production.
+为了在开发过程中更简便，你还可以使用环境变量，例如 ``requires_channel: '%env(SECURE_SCHEME)%'``。
+在你的 ``.env`` 文件中，在本地环境中将 ``SECURE_SCHEME`` 设置 ``http``，而在生产环境中则设置为将其 ``https``。
 
-See :doc:`/security/access_control` for more details about ``access_control``
-in general.
+请参阅 :doc:`/security/access_control` 以获得关于 ``access_control`` 的更多信息。
 
-It is also possible to specify using HTTPS in the routing configuration,
-see :doc:`/routing/scheme` for more details.
+也可以在路由配置中指定使用HTTPS，有关详细信息，请参阅 :doc:`/routing/scheme`。
 
 .. note::
 
-    Forcing HTTPS while using a reverse proxy or load balancer requires a proper
-    configuration to avoid infinite redirect loops; see :doc:`/deployment/proxies`
-    for more details.
+    在使用反向代理或负载平衡器时强制HTTPS，需要确保配置正确以避免无限重定向循环;
+    有关更多详细信息，请参阅 :doc:`/deployment/proxies`。

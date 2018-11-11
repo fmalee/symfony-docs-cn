@@ -4,14 +4,13 @@
 参数介绍
 ==========================
 
-You can define parameters in the service container which can then be used
-directly or as part of service definitions. This can help to separate out
-values that you will want to change more regularly.
+你可以在服务容器中定义参数，然后可以直接使用这些参数或将其作为服务定义的一部分。
+这有助于分离出你希望更频繁修改的值。
 
-Parameters in Configuration Files
+配置文件中的参数
 ---------------------------------
 
-Use the ``parameters`` section of a config file to set parameters:
+使用配置文件的 ``parameters`` 区块来设置参数：
 
 .. configuration-block::
 
@@ -40,14 +39,11 @@ Use the ``parameters`` section of a config file to set parameters:
         // config/services.php
         $container->setParameter('mailer.transport', 'sendmail');
 
-You can refer to parameters elsewhere in any config file by surrounding them
-with percent (``%``) signs, e.g. ``%mailer.transport%``. One use for this is
-to inject the values into your services. This allows you to configure different
-versions of services between applications or multiple services based on the
-same class but configured differently within a single application. You could
-inject the choice of mail transport into the ``Mailer`` class directly. But
-declaring it as a parameter makes it easier to change rather than being tied up
-and hidden with the service definition:
+你可以通过使用百分比（``%``）符号包裹参数来引用任何配置文件中的参数，例如 ``%mailer.transport%``。
+参数的其中一个用途是将该值注入到你的服务。
+这样能够实现在【不同应用之间】或【单一应用中基于相同类的多个服务之间】去配置“不同版本的服务”。
+你可以选择直接将邮件传输(transport)注入到 ``Mailer`` 类中。
+但是将其声明为参数使得修改它更容易，而不是将其依附和隐藏在服务定义中：
 
 .. configuration-block::
 
@@ -93,11 +89,9 @@ and hidden with the service definition:
 
 .. caution::
 
-    The values between ``parameter`` tags in XML configuration files are
-    not trimmed.
+    在XML配置文件中的 ``parameter`` 标签之间的值不会被修剪(trimmed)。
 
-    This means that the following configuration sample will have the value
-    ``\n    sendmail\n``:
+    这意味着以下配置示例将具有 ``\n    sendmail\n`` 值：
 
     .. code-block:: xml
 
@@ -105,9 +99,8 @@ and hidden with the service definition:
             sendmail
         </parameter>
 
-    In some cases (for constants or class names), this could throw errors.
-    In order to prevent this, you must always inline your parameters as
-    follow:
+    在某些情况下（对于常量或类名），这可能会抛出错误。
+    为了防止这种情况，你必须始终内联(inline)你的参数，如下所示：
 
     .. code-block:: xml
 
@@ -115,8 +108,8 @@ and hidden with the service definition:
 
 .. note::
 
-    If you use a string that starts with ``@`` or  has ``%`` anywhere in it, you
-    need to escape it by adding another ``@`` or ``%``:
+    如果你使用以 ``@`` 开头或在任何位置有 ``%`` 的字符串，
+    则需要通过添加另一个 ``@`` 或 ``%`` 来转义它：
 
     .. configuration-block::
 
@@ -124,10 +117,10 @@ and hidden with the service definition:
 
             # config/services.yaml
             parameters:
-                # This will be parsed as string '@securepass'
+                # 将会被解析为字符串 '@securepass'
                 mailer_password: '@@securepass'
 
-                # Parsed as http://symfony.com/?foo=%s&amp;bar=%d
+                # 传递为 http://symfony.com/?foo=%s&amp;bar=%d
                 url_pattern: 'http://symfony.com/?foo=%%s&amp;bar=%%d'
 
         .. code-block:: xml
@@ -150,42 +143,37 @@ and hidden with the service definition:
             // But % does need to be escaped
             $container->setParameter('url_pattern', 'http://symfony.com/?foo=%%s&amp;bar=%%d');
 
-Getting and Setting Container Parameters in PHP
+在PHP中获取和设置容器参数
 -----------------------------------------------
 
-Working with container parameters is straightforward using the container's
-accessor methods for parameters::
+使用容器的访问器方法可以让你直接简单的来使用容器参数::
 
-    // checks if a parameter is defined (parameter names are case-sensitive)
+    // 检查是否定义了一个参数（参数名称区分大小写）
     $container->hasParameter('mailer.transport');
 
-    // gets value of a parameter
+    // 获取一个参数的值
     $container->getParameter('mailer.transport');
 
-    // adds a new parameter
+    // 添加一个新参数
     $container->setParameter('mailer.transport', 'sendmail');
 
 .. caution::
 
-    The used ``.`` notation is a
-    :ref:`Symfony convention <service-naming-conventions>` to make parameters
-    easier to read. Parameters are flat key-value elements, they can't
-    be organized into a nested array
+    使用 ``.`` 符号是 :ref:`Symfony的约定 <service-naming-conventions>`，这样使参数更易于阅读。
+    参数是平行(flat)的键/值元素，因此它们不能被组织成一个嵌套数组
 
 .. note::
 
-    You can only set a parameter before the container is compiled: not at run-time.
-    To learn more about compiling the container see
-    :doc:`/components/dependency_injection/compilation`.
+    你只能在容器被编译之前设置参数：即不处于运行时(run-time)。
+    要了解有关编译容器的更多信息，请参阅 :doc:`/components/dependency_injection/compilation`。
 
 .. _component-di-parameters-array:
 
-Array Parameters
+数组参数
 ----------------
 
-Parameters do not need to be flat strings, they can also contain array values.
-For the XML format, you need to use the ``type="collection"`` attribute
-for all parameters that are arrays.
+参数并不总是扁平(flat)的字符串，它们也可以是包含数组的值。
+对于XML格式，你需要对所有数组参数使用 ``type="collection"`` 属性。
 
 .. configuration-block::
 
@@ -242,17 +230,17 @@ for all parameters that are arrays.
             'fr' => array('fr', 'en'),
         ));
 
-Environment Variables and Dynamic Values
+环境变量和动态值
 ----------------------------------------
 
-See :doc:`/configuration/external_parameters`.
+请参阅 :doc:`/configuration/external_parameters`。
 
 .. _component-di-parameters-constants:
 
-Constants as Parameters
+常量作为参数
 -----------------------
 
-Setting PHP constants as parameters is also supported:
+同时还支持将PHP常量设置为参数：
 
 .. configuration-block::
 
@@ -284,15 +272,14 @@ Setting PHP constants as parameters is also supported:
         $container->setParameter('global.constant.value', GLOBAL_CONSTANT);
         $container->setParameter('my_class.constant.value', My_Class::CONSTANT_NAME);
 
-Binary Values as Parameters
+二进制值作为参数
 ---------------------------
 
 .. versionadded:: 4.1
-    The support for binary values in container parameters was introduced in
-    Symfony 4.1
+    在Symfony 4.1中引入了在容器参数中使用二进制值的支持
 
-If the value of a container parameter is a binary value, set it as a base64
-encoded value in YAML and XML configs and use the escape sequences in PHP:
+如果容器参数的值是二进制值，则需要在YAML和XML配置中将其设置为base64编码值，
+在PHP配置中则使用转义序列(escape sequences)：
 
 .. configuration-block::
 
@@ -321,11 +308,11 @@ encoded value in YAML and XML configs and use the escape sequences in PHP:
         // config/services.php
         $container->setParameter('some_parameter', 'This is a Bell char \x07');
 
-PHP Keywords in XML
+XML中的PHP关键字
 -------------------
 
-By default, ``true``, ``false`` and ``null`` in XML are converted to the
-PHP keywords (respectively ``true``, ``false`` and ``null``):
+默认情况下，在XML中的 ``true``、``false`` 和 ``null`` 会被转换成PHP关键字
+（分别为 ``true``、``false`` 和 ``null``）：
 
 .. code-block:: xml
 
@@ -337,7 +324,7 @@ PHP keywords (respectively ``true``, ``false`` and ``null``):
     $container->getParameter('mailer.send_all_in_once'); // returns false
     -->
 
-To disable this behavior, use the ``string`` type:
+要禁用此行为，请使用 ``string`` 类型：
 
 .. code-block:: xml
 
@@ -351,5 +338,4 @@ To disable this behavior, use the ``string`` type:
 
 .. note::
 
-    This is not available for YAML and PHP, because they already have built-in
-    support for the PHP keywords.
+    这不适用于YAML和PHP，因为它们已经内置了对PHP关键字的支持。

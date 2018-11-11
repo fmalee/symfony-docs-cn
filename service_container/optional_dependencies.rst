@@ -1,15 +1,13 @@
-如何使服务参数/引用可选
+如何让服务参数/引用变为可选
 =================================================
 
-Sometimes, one of your services may have an optional dependency, meaning
-that the dependency is not required for your service to work properly. You can
-configure the container to not throw an error in this case.
+有时，你的某个服务可能具有可选的依赖关系，这意味着你的服务无需该依赖也可以正常运行。
+你可以将容器配置为在这种情况下不抛出错误。
 
-Setting Missing Dependencies to null
+设置缺失的依赖为null
 ------------------------------------
 
-You can use the ``null`` strategy to explicitly set the argument to ``null``
-if the service does not exist:
+如果服务不存在，你可以使用 ``null`` 策略显式的设置参数为 ``null``：
 
 .. configuration-block::
 
@@ -48,17 +46,14 @@ if the service does not exist:
 
 .. note::
 
-    The "null" strategy is not currently supported by the YAML driver.
+    YAML驱动目前不支持“null”策略。
 
-Ignoring Missing Dependencies
+忽略缺失的依赖
 -----------------------------
 
-The behavior of ignoring missing dependencies is the same as the "null" behavior
-except when used within a method call, in which case the method call itself
-will be removed.
+除了是在一个方法调用中使用外，忽略缺失的依赖的行为与“null”行为相同，在此情况下，该方法调用本身将被移除。
 
-In the following example the container will inject a service using a method
-call if the service exists and remove the method call if it does not:
+在以下示例中，如果服务存在，容器将使用一个方法调用来注入一个服务，如果不存在，则移除该方法调用：
 
 .. configuration-block::
 
@@ -112,13 +107,10 @@ call if the service exists and remove the method call if it does not:
 
 .. note::
 
-    If the argument to the method call is a collection of arguments and any of
-    them is missing, those elements are removed but the method call is still
-    made with the remaining elements of the collection.
+    如果方法调用的参数是参数集合并且缺少任意参数，则会移除这些元素，但仍然会使用集合的其余元素进行方法调用。
 
-In YAML, the special ``@?`` syntax tells the service container that the dependency
-is optional. The ``NewsletterManager`` must also be rewritten by
-adding a ``setLogger()`` method::
+在YAML中，特殊的 ``@?`` 语法告诉服务容器该依赖是可选的。
+还必须通过添加 ``setLogger()`` 方法来重写 ``NewsletterManager``::
 
         public function setLogger(LoggerInterface $logger)
         {

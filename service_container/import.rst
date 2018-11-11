@@ -7,32 +7,28 @@
 
 .. tip::
 
-    In this section, service configuration files are referred to as *resources*.
-    While most configuration resources are files (e.g. YAML, XML, PHP), Symfony is
-    able to load configuration from anywhere (e.g. a database or even via an external
-    web service).
+    在本节中，服务配置文件被称为 *资源*。
+    虽然大多数配置资源都是文件（例如YAML，XML，PHP），
+    但Symfony能够从任何地方（例如数据库甚至通过外部Web服务）加载配置。
 
-The service container is built using a single configuration resource
-(``config/services.yaml`` by default). This gives you absolute flexibility over
-the services in your application.
+服务容器使用单个配置资源（默认为 ``config/services.yaml``）来进行构建。
+这为你的应用中的服务提供了绝对的灵活性。
 
-External service configuration can be imported in two different ways. The first
-method, commonly used to import other resources, is via the ``imports``
-directive. The second method, using dependency injection extensions, is used by
-third-party bundles to load the configuration. Read on to learn more about both
-methods.
+可以通过两种不同的方式导入外部服务配置。
+第一种方法，使用 ``imports`` 指令，通常用于导入其他资源。
+第二种方法，使用依赖注入扩展，用于从第三方bundel加载配置。
+继续阅读以了解有关这两种方法的更多信息。
 
 .. index::
     single: Service Container; Imports
 
 .. _service-container-imports-directive:
 
-Importing Configuration with ``imports``
+使用 ``imports`` 导入配置
 ----------------------------------------
 
-By default, service configuration lives in ``config/services.yaml``. But if that
-file becomes large, you're free to organize into multiple files. For suppose you
-decided to move some configuration to a new file:
+默认情况下，服务配置存在于 ``config/services.yaml``。
+但是如果该文件越变越大，你可以自由组织成多个文件。假设你决定将某些配置移动到一个新文件：
 
 .. configuration-block::
 
@@ -40,10 +36,10 @@ decided to move some configuration to a new file:
 
         # config/services/mailer.yaml
         parameters:
-            # ... some parameters
+            # ... 一些参数
 
         services:
-            # ... some services
+            # ... 一些服务
 
     .. code-block:: xml
 
@@ -70,7 +66,7 @@ decided to move some configuration to a new file:
         // ... some parameters
         // ... some services
 
-To import this file, use the ``imports`` key from a file that *is* loaded:
+要导入此文件，可以通过使用 ``imports`` 键来加载它：
 
 .. configuration-block::
 
@@ -99,8 +95,7 @@ To import this file, use the ``imports`` key from a file that *is* loaded:
         // config/services.php
         $loader->import('services/mailer.php');
 
-The ``resource`` location, for files, is either a relative path from the
-current file or an absolute path.
+``resource`` 用于定位文件位置，可以使相对于当前文件的相对路径，也可以是一个绝对路径。
 
 .. include:: /components/dependency_injection/_imports-parameters-note.rst.inc
 
@@ -109,18 +104,15 @@ current file or an absolute path.
 
 .. _service-container-extension-configuration:
 
-Importing Configuration via Container Extensions
+通过容器扩展导入配置
 ------------------------------------------------
 
-Third-party bundle container configuration, including Symfony core services,
-are usually loaded using another method: a :doc:`container extension </bundles/extension>`.
+第三方bundle的容器配置（包括Symfony核心服务）通常使用另一种方法来加载：
+一个 :doc:`容器扩展 </bundles/extension>`。
 
-Internally, each bundle defines its services in files like you've seen so far.
-However, these files aren't imported using the ``import`` directive. Instead, bundles
-use a *dependency injection extension* to load the files automatically. As soon
-as you enable a bundle, its extension is called, which is able to load service
-configuration files.
+在内部，每个bundle都在你目前所见的文件中定义其服务。
+但是，不使用 ``import`` 指令导入这些文件。相反，bundle使用一个 *依赖注入扩展* 来自动加载该文件。
+一旦启用了一个bundle，就会调用它的扩展，而该扩展可以加载服​​务配置文件。
 
-In fact, each configuration file in ``config/packages/`` is passed to the
-extension of its related  bundle - e.g. ``FrameworkBundle`` or ``TwigBundle`` -
-and used to configure those services further.
+实际上，在 ``config/packages/`` 中的每个配置文件都会被传递到其相关bundle的扩展中 -
+例如 ``FrameworkBundle`` 或 ``TwigBundle`` - 并用于进一步配置这些服务。
