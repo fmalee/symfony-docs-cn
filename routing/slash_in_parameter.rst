@@ -1,26 +1,22 @@
 .. index::
    single: Routing; Allow / in route parameter
 
-如何在路径参数中允许“/”字符
+如何允许在路由参数中使用“/”字符
 =================================================
 
-Sometimes, you need to compose URLs with parameters that can contain a slash
-``/``. For example, consider the ``/share/{token}`` route. If the ``token``
-value contains a ``/`` character this route won't match. This is because Symfony
-uses this character as separator between route parts.
+有时，你需要使用包含一个斜杠 ``/`` 的参数来组合URL。
+例如，想象 ``/share/{token}`` 路由。如果 ``token`` 值包含 ``/`` 字符，则此路由将不匹配。
+这是因为Symfony使用该字符作为路由区块之间的分隔符。
 
-This article explains how you can modify a route definition so that placeholders
-can contain the ``/`` character too.
+本文介绍如何修改路由定义，以便占位符也可以包含 ``/`` 字符。
 
-Configure the Route
+配置路由
 -------------------
 
-By default, the Symfony Routing component requires that the parameters match
-the following regular expression: ``[^/]+``. This means that all characters are
-allowed except ``/``.
+默认情况下，Symfony Routing组件要求参数与以下正则表达式匹配：``[^/]+``。
+这意味着允许除了 ``/`` 之外的所有字符。
 
-You must explicitly allow ``/`` to be part of your placeholder by specifying
-a more permissive regular expression for it:
+你必须通过为占位符指定更宽松的正则表达式来明确允许 ``/`` 成为它的一部分：
 
 .. configuration-block::
 
@@ -78,21 +74,17 @@ a more permissive regular expression for it:
 
         return $routes;
 
-That's it! Now, the ``{token}`` parameter can contain the ``/`` character.
+仅此而已！现在 ``{token}`` 参数可以包含 ``/`` 字符了。
 
 .. note::
 
-    If the route includes the special ``{_format}`` placeholder, you shouldn't
-    use the ``.+`` requirement for the parameters that allow slashes. For example,
-    if the pattern is ``/share/{token}.{_format}`` and ``{token}`` allows any
-    character, the ``/share/foo/bar.json`` URL will consider ``foo/bar.json``
-    as the token and the format will be empty. This can be solved replacing the
-    ``.+`` requirement by ``[^.]+`` to allow any character except dots.
+    如果路由包含特殊的 ``{_format}`` 占位符，则不应对参数使用 ``.+`` 要求以允许斜杠。
+    例如，如果模式是 ``/share/{token}.{_format}`` 并且 ``{token}`` 允许任何字符，
+    则 ``/share/foo/bar.json`` URL中 ``foo/bar.json`` 会被视为令牌，而格式部分将为空。
+    这可以通过将 ``.+`` 要求替换为 ``[^.]+`` 以允许除点之外的任何字符来解决 。
 
 .. note::
 
-    If the route defines several placeholders and you apply this permissive
-    regular expression to all of them, the results won't be the expected. For
-    example, if the route definition is ``/share/{path}/{token}`` and both
-    ``path`` and ``token`` accept ``/``, then ``path`` will contain its contents
-    and the token, and ``token`` will be empty.
+    如果路由定义了多个占位符，然后你将该正则表达式应用于所有占位符，那么结果将不是你所预期的那样。
+    例如，如果路由定义是 ``/share/{path}/{token}``，并且
+    ``path`` 和 ``token`` 都接受 ``/``，那么 ``path`` 将包含自身的内容和令牌，并且 ``token`` 将是空的。

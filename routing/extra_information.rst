@@ -4,10 +4,9 @@
 如何将路由中的额外信息传递给控制器
 ==========================================================
 
-Parameters inside the ``defaults`` collection don't necessarily have to match
-a placeholder in the route ``path``. In fact, you can use the ``defaults``
-array to specify extra parameters that will then be accessible as arguments
-to your controller, and as attributes of the ``Request`` object:
+``defaults`` 集合中的参数不一定必须与路由 ``path`` 中的占位符匹配。
+实际上，你可以使用 ``defaults`` 数组指定额外的参数，
+然后可以将这些参数作为控制器的参数进行访问，同时也作为 ``Request`` 对象的属性：
 
 .. configuration-block::
 
@@ -52,15 +51,14 @@ to your controller, and as attributes of the ``Request`` object:
 
         return $routes;
 
-Now, you can access this extra parameter in your controller, as an argument
-to the controller method::
+现在，你可以在控制器中将此额外参数作为该控制器方法的参数来进行访问::
 
     public function index($page, $title)
     {
         // ...
     }
 
-Alternatively, the title could be accessed through the ``Request`` object::
+或者，可以通过 ``Request`` 对象来访问该标题::
 
     use Symfony\Component\HttpFoundation\Request;
 
@@ -71,6 +69,4 @@ Alternatively, the title could be accessed through the ``Request`` object::
         // ...
     }
 
-As you can see, the ``$title`` variable was never defined inside the route
-path, but you can still access its value from inside your controller, through
-the method's argument, or from the ``Request`` object's ``attributes`` bag.
+如你所见，``$title`` 变量从未在路由路径中定义，但你仍然可以在控制器内部，通过该控制器方法的参数或 ``Request`` 对象的 ``attributes`` 包来访问其值。

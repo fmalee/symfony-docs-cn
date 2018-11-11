@@ -6,7 +6,5 @@
 
 .. caution::
 
-    In Symfony 4.1 the automatic URL redirection was improved as explained in
-    :ref:`routing-trailing-slash-redirection`. That's why you no longer need to
-    do that redirection yourself and this article has been removed because it's
-    no longer needed.
+    在Symfony 4.1中，自动URL重定向得到了改进，如 :ref:`routing-trailing-slash-redirection` 所述。
+    这就是为什么你不再需要自己进行重定向的原因，所以本文已被删除，因为它不再需要了。

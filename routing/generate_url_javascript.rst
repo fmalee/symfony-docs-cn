@@ -1,8 +1,8 @@
 如何在JavaScript中生成路由URL
 ==========================================
 
-If you're in a Twig template, you can use the same ``path()`` function to set JavaScript
-variables. The ``escape()`` function helps escape any non-JavaScript-safe values:
+如果你使用的是Twig模板，则可以使用相同的 ``path()`` 函数来设置JavaScript变量。
+``escape()`` 函数有助于转义任何非安全JavaScript的值：
 
 .. code-block:: html+twig
 
@@ -10,8 +10,7 @@ variables. The ``escape()`` function helps escape any non-JavaScript-safe values
     var route = "{{ path('blog_show', {'slug': 'my-blog-post'})|escape('js') }}";
     </script>
 
-But if you *actually* need to generate routes in pure JavaScript, consider using
-the `FOSJsRoutingBundle`_. It makes the following possible:
+但是，如果你 *确实* 需要在纯JavaScript中生成路由，请考虑使用`FOSJsRoutingBundle`_。它使以下示例成为可能：
 
 .. code-block:: html+twig
 

@@ -4,10 +4,8 @@
 如何可视化和调试路由
 =================================
 
-While adding and customizing routes, it's helpful to be able to visualize
-and get detailed information about your routes. A great way to see every
-route in your application is via the ``debug:router`` console command, which
-lists *all* the configured routes in your application:
+在添加和自定义路由时，能够可视化并获取有关路由的详细信息会很有帮助。
+查看应用中每条路由的好方法是通过 ``debug:router`` 控制台命令，该命令列出应用中 *所有* 已配置的路由：
 
 .. code-block:: terminal
 
@@ -24,14 +22,13 @@ lists *all* the configured routes in your application:
      blog_show          ANY      ANY      ANY    /blog/{slug}
     ------------------ -------- -------- ------ ----------------------------------------------
 
-You can also get very specific information on a single route by including
-the route name as the command argument:
+你还可以通过使用路由名称作为命令的参数来获取有关单个路由的非常具体的信息：
 
 .. code-block:: terminal
 
     $ php bin/console debug:router article_show
 
-    # or use part of the name to search for routes
+    # 或使用名称的一部分来搜索路由
     $ php bin/console debug:router blo
 
       Select one of the matching routes:
@@ -39,11 +36,10 @@ the route name as the command argument:
       [1] blog_show
 
 .. versionadded:: 4.1
-    The feature to look for partial route names was introduced in Symfony 4.1.
+    Symfony 4.1中引入了查找部分路由名称的功能。
 
-Likewise, if you want to test whether a URL matches a given route, use the
-``router:match`` command. This is useful to debug routing issues and find out
-which route is associated with the given URL:
+同样，如果要测试一个URL是否与给定路由匹配，请使用 ``router:match`` 命令。
+这对于调试路由问题并找出与给定URL关联的路由非常有用：
 
 .. code-block:: terminal
 

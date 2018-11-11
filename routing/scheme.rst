@@ -4,9 +4,8 @@
 如何强制路由始终使用HTTPS或HTTP
 ===============================================
 
-Sometimes, you want to secure some routes and be sure that they are always
-accessed via the HTTPS protocol. The Routing component allows you to enforce
-the URI scheme via schemes:
+有时，你希望保护某些路由，并确保始终通过HTTPS协议访问它们。
+Routing组件允许你通过 ``schemes`` 强制执行URI scheme：
 
 .. configuration-block::
 
@@ -64,33 +63,28 @@ the URI scheme via schemes:
 
         return $routes;
 
-The above configuration forces the ``secure`` route to always use HTTPS.
+以上配置强制 ``secure`` 路由始终使用HTTPS。
 
-When generating the ``secure`` URL, and if the current scheme is HTTP, Symfony
-will automatically generate an absolute URL with HTTPS as the scheme, even when
-using the ``path()`` function:
+生成 ``secure`` URL时，如果当前scheme是HTTP，
+Symfony将自动生成一个使用HTTPS作为scheme的绝对URL，即使使用了 ``path()`` 函数：
 
 .. code-block:: twig
 
-    {# If the current scheme is HTTPS #}
+    {# 如果当前 scheme 是 HTTPS #}
     {{ path('secure') }}
-    {# generates a relative URL: /secure #}
+    {# 生成一个相对URL: /secure #}
 
-    {# If the current scheme is HTTP #}
+    {# 如果当前 scheme 是 HTTP #}
     {{ path('secure') }}
-    {# generates an absolute URL: https://example.com/secure #}
+    {# 生成一个绝对URL: https://example.com/secure #}
 
-The requirement is also enforced for incoming requests. If you try to access
-the ``/secure`` path with HTTP, you will automatically be redirected to the
-same URL, but with the HTTPS scheme.
+对传入请求也强制执行该要求。
+如果你尝试使用HTTP访问 ``/secure`` 路径，你将自动重定向到使用HTTPS scheme的相同URL。
 
-The above example uses ``https`` for the scheme, but you can also force a URL
-to always use ``http``.
+上面的示例使用 ``https`` 作为 scheme，但你也可以强制一个URL始终使用 ``http``。
 
 .. note::
 
-    The Security component provides another way to enforce HTTP or HTTPS via
-    the ``requires_channel`` setting. This alternative method is better suited
-    to secure an "area" of your website (all URLs under ``/admin``) or when
-    you want to secure URLs defined in a third party bundle (see
-    :doc:`/security/force_https` for more details).
+    Security组件提供了另一种通过 ``requires_channel`` 设置强制执行HTTP或HTTPS的方法。
+    此替代方法更适合保护网站的一个“区域”（``/admin`` 下的所有URL）或你希望保护在第三方bundle中定义的URL
+    （有关详细信息，请参阅 :doc:`/security/force_https`）。

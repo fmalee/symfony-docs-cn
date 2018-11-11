@@ -4,22 +4,20 @@
 如何使Web调试工具栏在AJAX请求后自动更新
 =================================================================
 
-For single page applications it would be more convenient if the toolbar
-showed the information for the most recent AJAX request instead of the
-initial page load.
+对于单页面应用，如果工具栏显示最新AJAX请求的信息而不是初始加载的页面，则会更方便。
 
-By setting the ``Symfony-Debug-Toolbar-Replace`` header to a value of ``1`` in the
-AJAX request, the toolbar will be automatically reloaded for the request. The
-header can be set on the response object::
+通过将AJAX请求中的 ``Symfony-Debug-Toolbar-Replace`` 标头值设置为 ``1``，将为该请求自动重新加载工具栏。
+该标头可以在响应对象上设置::
 
     $response->headers->set('Symfony-Debug-Toolbar-Replace', 1);
 
-Only Setting the Header During Development
+仅在开发期间设置标头
 -------------------------------------------
 
-Ideally this header should only be set during development and not for
-production. This can be accomplished by setting the header in a
-:ref:`kernel.response <component-http-kernel-kernel-response>` event listener::
+理想情况下，此标头只应在开发期间设置，而不能用于生产环境。
+这可以通过在一个
+:ref:`kernel.response <component-http-kernel-kernel-response>`
+事件监听器中设置该标头来完成::
 
     public function onKernelResponse(FilterResponseEvent $event)
     {
@@ -30,12 +28,13 @@ production. This can be accomplished by setting the header in a
 
 .. seealso::
 
-    Read more about :doc:`Symfony events </reference/events>`.
+    阅读更多关于 :doc:`Symfony events </reference/events>` 的信息。
 
-If you are using Symfony Flex, you should define your event listener service in the
-``config/services_dev.yml`` file so that it only exists in the ``dev`` environment.
+如果你使用的是Symfony Flex，则应在 ``config/services_dev.yml``
+文件中定义你的事件监听器服务，以使其仅存在于 ``dev`` 环境中。
 
 .. seealso::
 
-    Read more on
-    :doc:`creating dev only services </configuration/configuration_organization>`.
+    更多关于
+    :doc:`创建仅在开发环境下生效的服务 </configuration/configuration_organization>`
+    的信息。

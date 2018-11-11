@@ -4,9 +4,8 @@
 如何通过条件限制路由匹配
 =================================================
 
-A route can be made to match only certain routing placeholders (via regular
-expressions), HTTP methods, or host names. If you need more flexibility to
-define arbitrary matching logic, use the ``conditions`` routing option:
+可以使路由仅匹配某些路由占位符（通过正则表达式）、HTTP方法或主机名。
+如果你需要更灵活地定义任意匹配逻辑，请使用 ``conditions`` 路由选项：
 
 .. configuration-block::
 
@@ -17,7 +16,7 @@ define arbitrary matching logic, use the ``conditions`` routing option:
             path:       /contact
             controller: 'App\Controller\DefaultController::contact'
             condition:  "context.getMethod() in ['GET', 'HEAD'] and request.headers.get('User-Agent') matches '/firefox/i'"
-            # expressions can also include config parameters
+            # 表达式还可以包含配置参数
             # condition: "request.headers.get('User-Agent') matches '%app.allowed_browsers%'"
 
     .. code-block:: xml
@@ -60,29 +59,25 @@ define arbitrary matching logic, use the ``conditions`` routing option:
 
         return $collection;
 
-The ``condition`` is an expression, and you can learn more about its syntax
-here: :doc:`/components/expression_language/syntax`. With this, the route
-won't match unless the HTTP method is either GET or HEAD *and* if the ``User-Agent``
-header matches ``firefox``.
+``condition`` 是一个表达式，你可以在此处了解有关其语法的更多信息：
+:doc:`/components/expression_language/syntax`。
+由此，此路由将一直不匹配，直到HTTP方法是GET或HEAD，并且 ``User-Agent`` 标头和 ``firefox`` 相匹配。
 
-You can do any complex logic you need in the expression by leveraging two
-variables that are passed into the expression:
+你可以通过利用传递到表达式中的两个变量来执行表达式中所需的任何复杂逻辑：
 
 ``context``
-    An instance of :class:`Symfony\\Component\\Routing\\RequestContext`,
-    which holds the most fundamental information about the route being matched.
+    一个 :class:`Symfony\\Component\\Routing\\RequestContext` 的实例，其中包含有关被匹配路由的最基本信息。
 ``request``
-    The Symfony :class:`Symfony\\Component\\HttpFoundation\\Request` object
-    (see :ref:`component-http-foundation-request`).
+    Symfony :class:`Symfony\\Component\\HttpFoundation\\Request` 对象
+    （请参阅 :ref:`component-http-foundation-request`）。
 
 .. caution::
 
-    Conditions are *not* taken into account when generating a URL.
+    生成URL时 *不会* 考虑哪些条件。
 
-.. sidebar:: Expressions are Compiled to PHP
+.. sidebar:: 表达式编译为PHP
 
-    Behind the scenes, expressions are compiled down to raw PHP. Our example
-    would generate the following PHP in the cache directory::
+    在幕后，表达式被编译为原生PHP。我们的示例将在缓存目录中生成以下PHP::
 
         if (rtrim($pathInfo, '/contact') === '' && (
             in_array($context->getMethod(), array(0 => "GET", 1 => "HEAD"))
@@ -91,5 +86,4 @@ variables that are passed into the expression:
             // ...
         }
 
-    Because of this, using the ``condition`` key causes no extra overhead
-    beyond the time it takes for the underlying PHP to execute.
+    因此，使用 ``condition`` 键不会导致超出底层PHP执行所需的时间的额外开销。

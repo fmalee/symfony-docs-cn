@@ -4,8 +4,7 @@
 如何定义可选的占位符
 ===================================
 
-To make things more exciting, add a new route that displays a list of all
-the available blog posts for this imaginary blog application:
+为了使事情更令人兴奋，请添加一个新路由，以显示此虚构博客应用的所有可用博客帖子的列表：
 
 .. configuration-block::
 
@@ -61,10 +60,9 @@ the available blog posts for this imaginary blog application:
 
         return $routes;
 
-So far, this route is as simple as possible - it contains no placeholders
-and will only match the exact URL ``/blog``. But what if you need this route
-to support pagination, where ``/blog/2`` displays the second page of blog
-entries? Update the route to have a new ``{page}`` placeholder:
+到目前为止，这个路由尽可能简单 - 它不包含占位符，只匹配确切的 ``/blog`` URL。
+但是，如果你需要这个路由支持分页，比如 ``/blog/2`` 显示博客条目的第二页呢？
+更新路由以获得新的 ``{page}`` 占位符：
 
 .. configuration-block::
 
@@ -116,15 +114,13 @@ entries? Update the route to have a new ``{page}`` placeholder:
 
         return $routes;
 
-Like the ``{slug}`` placeholder before, the value matching ``{page}`` will
-be available inside your controller. Its value can be used to determine which
-set of blog posts to display for the given page.
+与之前的 ``{slug}`` 占位符一样，匹配 ``{page}`` 的值将在你的控制器中可用。
+它的值可用于确定要为给定页面显示的博客帖子集合。
 
-But hold on! Since placeholders are required by default, this route will
-no longer match on simply ``/blog``. Instead, to see page 1 of the blog,
-you'd need to use the URL ``/blog/1``! Since that's no way for a rich web
-app to behave, modify the route to make the ``{page}`` parameter optional.
-This is done by including it in the ``defaults`` collection:
+但还需要继续！由于默认情况下需要占位符，因此该路由将不再匹配 ``/blog``。
+同样的，要查看博客的第1页，你需要使用 ``/blog/1`` URL！
+由于富Web应用无法执行此操作，因此请修改路由以使 ``{page}`` 参数可选。
+这是通过将其包含在 ``defaults`` 集合中来完成的：
 
 .. configuration-block::
 
@@ -179,13 +175,12 @@ This is done by including it in the ``defaults`` collection:
 
         return $routes;
 
-By adding ``page`` to the ``defaults`` key, the ``{page}`` placeholder is
-no longer required. The URL ``/blog`` will match this route and the value
-of the ``page`` parameter will be set to ``1``. The URL ``/blog/2`` will
-also match, giving the ``page`` parameter a value of ``2``. Perfect.
+通过添加 ``page`` 到 ``defaults`` 键，不再永远都需要 ``{page}`` 占位符。
+``/blog`` URL将匹配此路由，``page`` 参数的值将被设置为 ``1``。
+``/blog/2`` URL也将匹配，并给 ``page`` 参数赋值为 ``2``。完美！
 
 ===========  ========  ==================
-URL          Route     Parameters
+网址          路由       参数
 ===========  ========  ==================
 ``/blog``    ``blog``  ``{page}`` = ``1``
 ``/blog/1``  ``blog``  ``{page}`` = ``1``
@@ -194,12 +189,9 @@ URL          Route     Parameters
 
 .. caution::
 
-    You can have more than one optional placeholder (e.g. ``/blog/{slug}/{page}``),
-    but everything after an optional placeholder must be optional. For example,
-    ``/{page}/blog`` is a valid path, but ``page`` will always be required
-    (i.e. simply ``/blog`` will not match this route).
+    你可以拥有多个可选占位符（例如 ``/blog/{slug}/{page}``），但可选占位符后面的所有内容就都必须是可选的。
+    例如，``/{page}/blog`` 是一个有效路径，但 ``page`` 将变为总是必需的（即简单的 ``/blog`` 将不匹配此路由）。
 
 .. tip::
 
-    Routes with optional parameters at the end will not match on requests
-    with a trailing slash (i.e. ``/blog/`` will not match, ``/blog`` will match).
+    带有可选参数的路由，最终会与具有尾斜杠的对应请求不匹配（即 ``/blog/`` 将不匹配，而 ``/blog`` 匹配）。
