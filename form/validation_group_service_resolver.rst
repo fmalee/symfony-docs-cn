@@ -1,10 +1,8 @@
 如何动态配置表单验证组
 ===================================================
 
-Sometimes you need advanced logic to determine the validation groups. If they
-can't be determined by a simple callback, you can use a service. Create a
-service that implements ``__invoke()`` which accepts a ``FormInterface`` as a
-parameter::
+有时你需要高级逻辑来确定验证组。如果无法通过简单的回调确定它们，则可以使用服务。
+创建一个实现 ``__invoke()`` 方法的服务，该方法接受一个 ``FormInterface`` 作为参数::
 
     // src/Validation/ValidationGroupResolver.php
     namespace App\Validation;
@@ -31,13 +29,13 @@ parameter::
         {
             $groups = array();
 
-            // ... determine which groups to apply and return an array
+            // ... 确定要应用哪些验证组并返回一个数组
 
             return $groups;
         }
     }
 
-Then in your form, inject the resolver and set it as the ``validation_groups``::
+然后在你的表单中，注入该解析器并将其设置为 ``validation_groups``::
 
     // src/Form/MyClassType.php;
     namespace App\Form;
@@ -64,5 +62,4 @@ Then in your form, inject the resolver and set it as the ``validation_groups``::
         }
     }
 
-This will result in the form validator invoking your group resolver to set the
-validation groups returned when validating.
+这将导致表单验证器调用(invoke)你的组解析器来设置验证时要返回的验证组。

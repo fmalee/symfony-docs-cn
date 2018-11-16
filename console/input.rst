@@ -1,17 +1,13 @@
 控制台输入（参数和选项）
 ===================================
 
-The most interesting part of the commands are the arguments and options that
-you can make available. These arguments and options allow you to pass dynamic
-information from the terminal to the command.
+命令中最有趣的部分是你可以使用的参数和选项。这些参数和选项允许你将动态信息从终端传递到该命令。
 
 使用命令参数
 -----------------------
 
-Arguments are the strings - separated by spaces - that
-come after the command name itself. They are ordered, and can be optional
-or required. For example, to add an optional ``last_name`` argument to the command
-and make the ``name`` argument required::
+参数是字符串 - 由空格分隔 - 位于命令名称本身之后。它们是有序的，可以是可选的或必需的。
+例如，要为命令添加一个 ``last_name`` 可选参数并使 ``name`` 参数成为必需参数::
 
     // ...
     use Symfony\Component\Console\Input\InputArgument;
@@ -30,7 +26,7 @@ and make the ``name`` argument required::
         }
     }
 
-You now have access to a ``last_name`` argument in your command::
+你现在可以访问命令中的 ``last_name`` 参数::
 
     // ...
     class GreetCommand extends Command
@@ -50,7 +46,7 @@ You now have access to a ``last_name`` argument in your command::
         }
     }
 
-The command can now be used in either of the following ways:
+该命令现在可以通过以下任一方式使用：
 
 .. code-block:: terminal
 
@@ -60,8 +56,7 @@ The command can now be used in either of the following ways:
     $ php bin/console app:greet Fabien Potencier
     Hi Fabien Potencier!
 
-It is also possible to let an argument take a list of values (imagine you want
-to greet all your friends). Only the last argument can be a list::
+也可以让参数采用一个值列表（想象你想要问候所有的朋友）。只有 *最后* 一个参数可以是一个列表::
 
     $this
         // ...
@@ -71,34 +66,31 @@ to greet all your friends). Only the last argument can be a list::
             'Who do you want to greet (separate multiple names with a space)?'
         );
 
-To use this, specify as many names as you want:
+要使用它，请根据需要指定任意数量的名称：
 
 .. code-block:: terminal
 
     $ php bin/console app:greet Fabien Ryan Bernhard
 
-You can access the ``names`` argument as an array::
+你可以将 ``names`` 参数作为一个数组访问::
 
     $names = $input->getArgument('names');
     if (count($names) > 0) {
         $text .= ' '.implode(', ', $names);
     }
 
-There are three argument variants you can use:
+你可以使用三种参数变体：
 
 ``InputArgument::REQUIRED``
-    The argument is mandatory. The command doesn't run if the argument isn't
-    provided;
+    表示这个参数是强制性的。如果未提供该参数，则命令不会运行;
 
 ``InputArgument::OPTIONAL``
-    The argument is optional and therefore can be omitted. This is the default
-    behavior of arguments;
+    表示该参数是可选的，因此可以省略。这是参数的默认行为;
 
 ``InputArgument::IS_ARRAY``
-    The argument can contain any number of values. For that reason, it must be
-    used at the end of the argument list.
+    表示该参数可以包含任意数量的值。因此，必须在参数列表的末尾使用它。
 
-You can combine ``IS_ARRAY`` with ``REQUIRED`` and ``OPTIONAL`` like this::
+你可以像这样结合 ``IS_ARRAY`` 来使用 ``REQUIRED`` 和 ``OPTIONAL``::
 
     $this
         // ...
@@ -111,13 +103,10 @@ You can combine ``IS_ARRAY`` with ``REQUIRED`` and ``OPTIONAL`` like this::
 使用命令选项
 ---------------------
 
-Unlike arguments, options are not ordered (meaning you can specify them in any
-order) and are specified with two dashes (e.g. ``--yell``). Options are
-*always* optional, and can be setup to accept a value (e.g. ``--dir=src``) or
-simply as a boolean flag without a value (e.g.  ``--yell``).
+与参数不同，选项不是有序的（意味着你可以按任何顺序指定它们），并且使用两个破折号（例如 ``--yell``）来指定。
+选项 *总是* 可选的，可以设置为接受一个值（例如 ``--dir=src``）或简单地作为没有值的布尔表示（例如 ``--yell``）。
 
-For example, add a new option to the command that can be used to specify
-how many times in a row the message should be printed::
+例如，在命令中添加一个新选项，可用于指定消息应打印的行数::
 
     // ...
     use Symfony\Component\Console\Input\InputOption;
@@ -132,18 +121,17 @@ how many times in a row the message should be printed::
             1
         );
 
-Next, use this in the command to print the message multiple times::
+接下来，在命令中使用此选项多次打印消息::
 
     for ($i = 0; $i < $input->getOption('iterations'); $i++) {
         $output->writeln($text);
     }
 
-Now, when you run the command, you can optionally specify a ``--iterations``
-flag:
+现在，当你运行该命令时，你可以选择指定一个 ``--iterations`` 标识：
 
 .. code-block:: terminal
 
-    # no --iterations provided, the default (1) is used
+    # 不提供 --iterations，则使用默认值(1)
     $ php bin/console app:greet Fabien
     Hi Fabien!
 
@@ -154,15 +142,14 @@ flag:
     Hi Fabien
     Hi Fabien
 
-    # the order of options isn't important
+    # 选项的排序并不重要
     $ php bin/console app:greet Fabien --iterations=5 --yell
     $ php bin/console app:greet Fabien --yell --iterations=5
     $ php bin/console app:greet --yell --iterations=5 Fabien
 
 .. tip::
 
-     You can also declare a one-letter shortcut that you can call with a single
-     dash, like ``-i``::
+     你还可以使用单个短划线调用来声明一个单字母快捷方式，例如 ``-i``::
 
         $this
             // ...
@@ -174,39 +161,31 @@ flag:
                 1
             );
 
-Note that to comply with the `docopt standard`_, long options can specify their
-values after a white space or an ``=`` sign (e.g. ``--iterations 5`` or
-``--iterations=5``), but short options can only use white spaces or no
-separation at all (e.g. ``-i 5`` or ``-i5``).
+请注意，为了符合 `docopt标准`_，长选项可以在空格或 ``=`` 符号（例如 ``--iterations 5`` 或
+``--iterations=5``）之后指定它们的值，但短选项只能使用空格或根本不使用分隔符（例如 ``-i 5`` 或 ``-i5``）。
 
 .. caution::
 
-    While it is possible to separate an option from its value with a white space,
-    using this form leads to an ambiguity should the option appear before the
-    command name. For example, ``php bin/console --iterations 5 app:greet Fabien``
-    is ambiguous; Symfony would interpret ``5`` as the command name. To avoid
-    this situation, always place options after the command name, or avoid using
-    a space to separate the option name from its value.
+    虽然可以使用空格将选项与其值分开，但如果选项出现在命令名称之前，则使用此表单会导致歧义。
+    例如 ``php bin/console --iterations 5 app:greet Fabien``
+    就含糊不清：Symfony会将 ``5`` 解释为命令名称。
+    要避免这种情况，请始终将选项放置到命令名称后面，或者避免使用空格将选项名称与其值分开。
 
-There are four option variants you can use:
+你可以使用以下四种选项：
 
 ``InputOption::VALUE_IS_ARRAY``
-    This option accepts multiple values (e.g. ``--dir=/foo --dir=/bar``);
+    此选项接受多个值（例如 ``--dir=/foo --dir=/bar``）；
 
 ``InputOption::VALUE_NONE``
-    Do not accept input for this option (e.g. ``--yell``). This is the default
-    behavior of options;
+    此选项不接受输入（例如 ``--yell``）。这是选项的默认行为；
 
 ``InputOption::VALUE_REQUIRED``
-    This value is required (e.g. ``--iterations=5`` or ``-i5``), the option
-    itself is still optional;
+    该选项的值是必需的（例如 ``--iterations=5`` or ``-i5``），但选项本身仍然是可选的；
 
 ``InputOption::VALUE_OPTIONAL``
-    This option may or may not have a value (e.g. ``--yell`` or
-    ``--yell=loud``).
+    此选项的值是可选的（例如 ``--yell`` 或 ``--yell=loud``）。
 
-You can combine ``VALUE_IS_ARRAY`` with ``VALUE_REQUIRED`` or
-``VALUE_OPTIONAL`` like this::
+你可以像这样结合 ``VALUE_IS_ARRAY`` 来使用 ``VALUE_REQUIRED`` 或 ``VALUE_OPTIONAL``::
 
     $this
         // ...
@@ -218,11 +197,10 @@ You can combine ``VALUE_IS_ARRAY`` with ``VALUE_REQUIRED`` or
             array('blue', 'red')
         );
 
-Options with optional arguments
+带可选参数的选项
 -------------------------------
 
-There is nothing forbidding you to create a command with an option that
-optionally accepts a value, but it's a bit tricky. Consider this example::
+没有什么可以禁止你创建一个带有可选的并接受值的选项的命令，但这有点棘手。考虑这个例子::
 
     // ...
     use Symfony\Component\Console\Input\InputOption;
@@ -236,11 +214,11 @@ optionally accepts a value, but it's a bit tricky. Consider this example::
             'Should I yell while greeting?'
         );
 
-This option can be used in 3 ways: ``--yell``, ``yell=louder``, and not passing
-the option at all. However, it's hard to distinguish between passing the option
-without a value (``greet --yell``) and not passing the option (``greet``).
+此选项可以通过三种方式使用：``--yell``，``yell=louder``，以及不传递该选项。
+但是，很难区分在没有值（``greet --yell``）的情况下传递选项而不传递选项（``greet``）。
+但是，很难在传递了选项但未传递值（``greet --yell``）和根本没有传递选项（``greet``）之间进行区分。
 
-To solve this issue, you have to set the option's default value to ``false``::
+要解决此问题，你必须将该选项的默认值设置为 ``false``::
 
     // ...
     use Symfony\Component\Console\Input\InputOption;
@@ -252,13 +230,13 @@ To solve this issue, you have to set the option's default value to ``false``::
             null,
             InputOption::VALUE_OPTIONAL,
             'Should I yell while greeting?',
-            false // this is the new default value, instead of null
+            false // 这是新的默认值，而不是null
         );
 
-Now check the value of the option and keep in mind that ``false !== null``::
+现在检查该选项的值，并记住 ``false !== null``::
 
     $optionValue = $input->getOption('yell');
     $yell = ($optionValue !== false);
     $yellLouder = ($optionValue === 'louder');
 
-.. _`docopt standard`: http://docopt.org/
+.. _`docopt标准`: http://docopt.org/

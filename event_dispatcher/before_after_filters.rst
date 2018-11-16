@@ -4,36 +4,28 @@
 如何设置前置/后置过滤器
 ======================================
 
-It is quite common in web application development to need some logic to be
-executed just before or just after your controller actions acting as filters
-or hooks.
+在Web应用开发中，某些逻辑需要在你的控制器动作之前或之后执行，以充当过滤器或钩子，这是很常见的场景。
 
-Some web frameworks define methods like ``preExecute()`` and ``postExecute()``,
-but there is no such thing in Symfony. The good news is that there is a much
-better way to interfere with the Request -> Response process using the
-:doc:`EventDispatcher component </components/event_dispatcher>`.
+一些web框架定义了一些类似 ``preExecute()`` 和 ``postExecute()`` 的方法，但Symfony没有这样的事情。
+好消息是有一种更好的方法，就是使用
+:doc:`EventDispatcher组件 </components/event_dispatcher>` 干扰“请求->响应”的过程。
 
-Token Validation Example
+令牌验证示例
 ------------------------
 
-Imagine that you need to develop an API where some controllers are public
-but some others are restricted to one or some clients. For these private features,
-you might provide a token to your clients to identify themselves.
+想象一下，你需要开发一个API，其中一些控制器是公有的，但其他控制器仅限于一个或一些客户端。
+对于这些私有功能，你可以向客户提供一个令牌以便识别它们。
 
-So, before executing your controller action, you need to check if the action
-is restricted or not. If it is restricted, you need to validate the provided
-token.
+因此，在执行控制器动作之前，你需要检查该动作是否受限制。如果受限制，则需要验证提供的令牌。
 
 .. note::
 
-    Please note that for simplicity in this recipe, tokens will be defined
-    in config and neither database setup nor authentication via the Security
-    component will be used.
+    请注意，为了简化本示例，将在配置中定义令牌，并且不会使用数据库设置和通过安全组件进行认证。
 
-Before Filters with the ``kernel.controller`` Event
+使用 ``kernel.controller`` 事件的前置过滤器
 ---------------------------------------------------
 
-First, define some token configuration as parameters:
+首先，将一些令牌配置定义为参数：
 
 .. configuration-block::
 
@@ -70,15 +62,13 @@ First, define some token configuration as parameters:
             'client2' => 'pass2',
         ));
 
-Tag Controllers to Be Checked
+标记控制器以便检查
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-A ``kernel.controller`` (aka ``KernelEvents::CONTROLLER``) listener gets notified
-on *every* request, right before the controller is executed. So, first, you need
-some way to identify if the controller that matches the request needs token validation.
+``kernel.controller``（又名 ``KernelEvents::CONTROLLER``）监听器在控制器执行之前就获得 *每个* 请求的通知。
+因此，首先，你需要一些方法来确定与请求匹配的控制器是否需要令牌验证。
 
-A clean and easy way is to create an empty interface and make the controllers
-implement it::
+一种干净简单的方法是创建一个空接口并让控制器实现它::
 
     namespace App\Controller;
 
@@ -87,7 +77,7 @@ implement it::
         // ...
     }
 
-A controller that implements this interface looks like this::
+实现此接口的控制器如下所示::
 
     namespace App\Controller;
 
@@ -96,19 +86,18 @@ A controller that implements this interface looks like this::
 
     class FooController extends AbstractController implements TokenAuthenticatedController
     {
-        // An action that needs authentication
+        // 需要认证的动作
         public function bar()
         {
             // ...
         }
     }
 
-Creating an Event Subscriber
+创建事件订阅器
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Next, you'll need to create an event listener, which will hold the logic
-that you want to be executed before your controllers. If you're not familiar with
-event listeners, you can learn more about them at :doc:`/event_dispatcher`::
+接下来，你需要创建一个事件监听器，它将保存你希望在控制器之前执行的逻辑。
+如果你不熟悉事件监听器，可以在 :doc:`/event_dispatcher` 中了解有关它们的更多信息::
 
     // src/EventSubscriber/TokenSubscriber.php
     namespace App\EventSubscriber;
@@ -133,9 +122,9 @@ event listeners, you can learn more about them at :doc:`/event_dispatcher`::
             $controller = $event->getController();
 
             /*
-             * $controller passed can be either a class or a Closure.
-             * This is not usual in Symfony but it may happen.
-             * If it is a class, it comes in array format
+             * 传递的 $controller 可以是类或闭包。
+             * 这在Symfony中并不常见，但可能会发生。
+             * 如果它是一个类，它以数组格式传递
              */
             if (!is_array($controller)) {
                 return;
@@ -157,36 +146,30 @@ event listeners, you can learn more about them at :doc:`/event_dispatcher`::
         }
     }
 
-That's it! Your ``services.yaml`` file should already be setup to load services from
-the ``EventSubscriber`` directory. Symfony takes care of the rest. Your
-``TokenSubscriber`` ``onKernelController()`` method will be executed on each request.
-If the controller that is about to be executed implements ``TokenAuthenticatedController``,
-token authentication is applied. This lets you have a "before" filter on any controller
-you want.
+仅此而已！你的 ``services.yaml`` 文件应该已经设置为从 ``EventSubscriber`` 目录加载服务。
+Symfony负责其余的工作。你的 ``TokenSubscriber`` 上的 ``onKernelController()`` 方法将在每个请求上执行。
+如果即将执行的控制器实现了 ``TokenAuthenticatedController``，则应用令牌认证。
+这使你可以在任何所需的控制器上使用“前置”过滤器。
 
 .. tip::
 
-    If your subscriber is *not* called on each request, double-check that
-    you're :ref:`loading services <service-container-services-load-example>` from
-    the ``EventSubscriber`` directory and have :ref:`autoconfigure <services-autoconfigure>`
-    enabled. You can also manually add the ``kernel.event_subscriber`` tag.
+    如果你的订阅器 *未* 在每个请求上调用，请仔细检查你是否从 ``EventSubscriber``
+    目录 :ref:`加载服务 <service-container-services-load-example>`
+    并启用了 :ref:`自动配置 <services-autoconfigure>`。
+    你也可以手动添加 ``kernel.event_subscriber`` 标签。
 
-After Filters with the ``kernel.response`` Event
+使用 ``kernel.response`` 事件的后置过滤器
 ------------------------------------------------
 
-In addition to having a "hook" that's executed *before* your controller, you
-can also add a hook that's executed *after* your controller. For this example,
-imagine that you want to add a sha1 hash (with a salt using that token) to
-all responses that have passed this token authentication.
+除了在控制器 *之前* 执行“钩子”之外，还可以添加在控制器 *之后* 执行的钩子。
+对于此示例，假设你要将一个sha1哈希（使用salt的令牌）添加到已通过此令牌认证的所有响应中。
 
-Another core Symfony event - called ``kernel.response`` (aka ``KernelEvents::RESPONSE``) -
-is notified on every request, but after the controller returns a Response object.
-To create an "after" listener, create a listener class and register
-it as a service on this event.
+另一个核心Symfony事件 - 名为``kernel.response``（又名 ``KernelEvents::RESPONSE``）
+- 在每次请求时都会收到通知，但是在控制器返回一个响应对象之后。
+要创建“后置”监听器，请创建一个监听器类，并将其注册为此事件上的服务。
 
-For example, take the ``TokenSubscriber`` from the previous example and first
-record the authentication token inside the request attributes. This will
-serve as a basic flag that this request underwent token authentication::
+例如， 从前面的示例中获取 ``TokenSubscriber`` 并先在该请求的属性中记录该认证令牌。
+这将作为此请求已进行令牌认证的基本标识::
 
     public function onKernelController(FilterControllerEvent $event)
     {
@@ -198,28 +181,27 @@ serve as a basic flag that this request underwent token authentication::
                 throw new AccessDeniedHttpException('This action needs a valid token!');
             }
 
-            // mark the request as having passed token authentication
+            // 将请求标记为已通过令牌认证
             $event->getRequest()->attributes->set('auth_token', $token);
         }
     }
 
-Now, configure the subscriber to listen to another event and add ``onKernelResponse()``.
-This will look for the ``auth_token`` flag on the request object and set a custom
-header on the response if it's found::
+现在，将该订阅器配置为监听另一个事件并添加 ``onKernelResponse()``。
+这将在请求对象上查找 ``auth_token`` 标识，如果找到该标识，则在响应中设置一个自定义标头::
 
-    // add the new use statement at the top of your file
+    // 在文件顶部添加新的use语句
     use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 
     public function onKernelResponse(FilterResponseEvent $event)
     {
-        // check to see if onKernelController marked this as a token "auth'ed" request
+        // 检查 onKernelController 是否将此标记为一个令牌“auth'ed”请求
         if (!$token = $event->getRequest()->attributes->get('auth_token')) {
             return;
         }
 
         $response = $event->getResponse();
 
-        // create a hash and set it as a response header
+        // 创建一个哈希并将其设置为一个响应头
         $hash = sha1($response->getContent().$token);
         $response->headers->set('X-CONTENT-HASH', $hash);
     }
@@ -232,9 +214,8 @@ header on the response if it's found::
         );
     }
 
-That's it! The ``TokenSubscriber`` is now notified before every controller is
-executed (``onKernelController()``) and after every controller returns a response
-(``onKernelResponse()``). By making specific controllers implement the ``TokenAuthenticatedController``
-interface, your listener knows which controllers it should take action on.
-And by storing a value in the request's "attributes" bag, the ``onKernelResponse()``
-method knows to add the extra header. Have fun!
+仅此而已！``TokenSubscriber`` 将在执行每个控制器之前（``onKernelController()``）被通知，
+并在控制器执行之后返回一个响应（``onKernelResponse()``）。
+通过使特定的控制器实现 ``TokenAuthenticatedController`` 接口，你的监听器知道应该在哪些控制器上采取行动。
+通过在请求的“attributes”包中存储一个值，``onKernelResponse()`` 方法知道应不应该添加一个额外的标头。
+玩得开心！

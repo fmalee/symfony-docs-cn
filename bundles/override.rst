@@ -4,47 +4,37 @@
 如何重写Bundle的任何部分
 ====================================
 
-When using a third-party bundle, you might want to customize or override some of
-its features. This document describes ways of overriding the most common
-features of a bundle.
+使用第三方软件包时，你可能希望自定义或重写它的某些功能。本文档介绍了重写一个bundle最常见功能的方法。
 
 .. tip::
 
-    The bundle overriding mechanism means that you cannot use physical paths to
-    refer to bundle's resources (e.g. ``__DIR__/config/services.xml``). Always
-    use logical paths in your bundles (e.g. ``@FooBundle/Resources/config/services.xml``)
-    and call the :ref:`locateResource() method <http-kernel-resource-locator>`
-    to turn them into physical paths when needed.
+    bundle重写机制意味着你不能使用物理路径来引用bundle的资源（例如 ``__DIR__/config/services.xml``）。
+    始终在bundle中使用逻辑路径（例如 ``@FooBundle/Resources/config/services.xml``），并在需要时调用
+    :ref:`locateResource() 方法 <http-kernel-resource-locator>` 将它们转换为物理路径。
 
 .. _override-templates:
 
 模板
 ---------
 
-Third-party bundle templates can be overridden in the
-``<your-project>/templates/bundles/<bundle-name>/`` directory. The new templates
-must use the same name and path (relative to ``<bundle>/Resources/views/``) as
-the original templates.
+可以在 ``<your-project>/templates/bundles/<bundle-name>/`` 目录中重写第三方bundle的模板。
+新模板必须使用与原始模板相同的名称和路径（相对于 ``<bundle>/Resources/views/``）。
 
-For example, to override the ``Resources/views/Registration/confirmed.html.twig``
-template from the FOSUserBundle, create this template:
-``<your-project>/templates/bundles/FOSUserBundle/Registration/confirmed.html.twig``
+例如，要重写FOSUserBundle中的
+``Resources/views/Registration/confirmed.html.twig`` 模板，请创建此模板： ``<your-project>/templates/bundles/FOSUserBundle/Registration/confirmed.html.twig``
 
 .. caution::
 
-    If you add a template in a new location, you *may* need to clear your
-    cache (``php bin/console cache:clear``), even if you are in debug mode.
+    如果在一个新位置添加模板，则 *可能* 需要清除缓存（``php bin/console cache:clear``），即使你处于调试模式也是如此。
 
-Instead of overriding an entire template, you may just want to override one or
-more blocks. However, since you are overriding the template you want to extend
-from, you would end up in an infinite loop error. The solution is to use the
-special ``!`` prefix in the template name to tell Symfony that you want to
-extend from the original template, not from the overridden one:
+你可能只想重写模板的一个或多个区块，而不是重写整个模板。
+但是，由于你正重写将要扩展的模板，因此最终会出现无限循环错误。
+解决方案是使用模板名称中的特殊的``!`` 前缀来告诉Symfony你要从原始模板扩展，而不是从正重写的模板扩展：
 
 .. code-block:: twig
 
     {# templates/bundles/FOSUserBundle/Registration/confirmed.html.twig #}
-    {# the special '!' prefix avoids errors when extending from an overridden template #}
+    {# 从一个被重写的模板扩展时，特殊的 '!' 前缀可以避免错误 #}
     {% extends "@!FOSUserBundle/Registration/confirmed.html.twig" %}
 
     {% block some_block %}
@@ -55,71 +45,58 @@ extend from the original template, not from the overridden one:
 
 .. tip::
 
-    Symfony internals use some bundles too, so you can apply the same technique
-    to override the core Symfony templates. For example, you can
-    :doc:`customize error pages </controller/error_pages>` overriding TwigBundle
-    templates.
+    Symfony内部也使用一些bundle，因此你可以应用相同的技术来重写核心的Symfony模板。
+    例如，你可以重写TwigBundle模板的 :doc:`自定义错误页面 </controller/error_pages>`。
 
 路由
 -------
 
-Routing is never automatically imported in Symfony. If you want to include
-the routes from any bundle, then they must be manually imported from somewhere
-in your application (e.g. ``config/routes.yaml``).
+在Symfony中永远不会自动导入路由。
+如果要引入任何bundle中的路由，则必须在应用中的某个位置手动导入它们（例如 ``config/routes.yaml``）。
 
-The easiest way to "override" a bundle's routing is to never import it at
-all. Instead of importing a third-party bundle's routing, copy
-that routing file into your application, modify it, and import it instead.
+“重写”一个bundle的路由的最简单方法是永远不导入它。
+不导入第三方bundle的路由，而是将该路由文件复制到你的应用中，修改它，然后导入它。
 
 控制器
 -----------
 
-If the controller is a service, see the next section on how to override it.
-Otherwise, define a new route + controller with the same path associated to the
-controller you want to override (and make sure that the new route is loaded
-before the bundle one).
+如果控制器是服务，请参阅下一节中有关如何重写服务的部分。
+否则，使用与要重写的控制器关联的相同路径定义一个新的路由和控制器，并确保在该bundle之前加载新路由。
 
 服务 & 配置
 ------------------------
 
-If you want to modify the services created by a bundle, you can use
-:doc:`service decoration </service_container/service_decoration>`.
+如果要修改bundle创建的服务，可以使用 :doc:`服务修饰 </service_container/service_decoration>`。
 
-If you want to do more advanced manipulations, like removing services created by
-other bundles, you must work with :doc:`service definitions </service_container/definitions>`
-inside a :doc:`compiler pass </service_container/compiler_passes>`.
+如果你想要做更高级的操作，如删除其他bundles创建的服务，你必须在一个
+:doc:`compiler pass </service_container/compiler_passes>` 中使用
+:doc:`服务定义 </service_container/definitions>`。
 
 实体 & 实体映射
 -------------------------
 
-If a bundle defines its entity mapping in configuration files instead of
-annotations, you can override them as any other regular bundle configuration
-file. The only caveat is that you must override all those mapping configuration
-files and not just the ones you actually want to override.
+如果bundle不是使用注释而是在配置文件中定义实体映射，则可以将它们视为任何其他常规的bundle配置文件进行重写。
+唯一需要注意的是，你必须重写所有的这些映射配置文件，而不仅仅是你实际想要重写的那些。
 
-If a bundle provides a mapped superclass (such as the ``User`` entity in the
-FOSUserBundle) you can override its attributes and associations. Learn more
-about this feature and its limitations in `the Doctrine documentation`_.
+如果bundle提供一个已映射的父类(superclass)（例如FOSUserBundle中的 ``User`` 实体），则可以重写它的属性和关联关系。
+在 `Doctrine文档`_ 中了解有关此功能及其局限性的更多信息。
 
 表单
 -----
 
-Existing form types can be modified defining
-:doc:`form type extensions </form/create_form_type_extension>`.
+可以通过 :doc:`单类型扩展 </form/create_form_type_extension>` 修改现有表单类型。
 
 .. _override-validation:
 
 验证元数据
 -------------------
 
-Symfony loads all validation configuration files from every bundle and
-combines them into one validation metadata tree. This means you are able to
-add new constraints to a property, but you cannot override them.
+Symfony从每个bundle中加载所有的验证配置文件，并将它们组合到一个验证元数据树中。
+这意味着你可以添加新约束到一个属性，但不能重写它们。
 
-To overcome this, the 3rd party bundle needs to have configuration for
-:doc:`validation groups </validation/groups>`. For instance, the FOSUserBundle
-has this configuration. To create your own validation, add the constraints
-to a new validation group:
+要解决此问题，第三方bundle需要具有 :doc:`验证组 </validation/groups>` 的配置。
+例如，FOSUserBundle具有此配置。
+要创建自己的验证，请将该约束添加到一个新验证组：
 
 .. configuration-block::
 
@@ -164,20 +141,17 @@ to a new validation group:
             </class>
         </constraint-mapping>
 
-Now, update the FOSUserBundle configuration, so it uses your validation groups
-instead of the original ones.
+现在，更新FOSUserBundle配置，然后它将使用你的验证组而不是原始验证组。
 
 .. _override-translations:
 
 翻译
 ------------
 
-Translations are not related to bundles, but to :ref:`translation domains <using-message-domains>`.
-For this reason, you can override any bundle translation file from the main
-``translations/`` directory, as long as the new file uses the same domain.
+翻译与bundle无关，而与 :ref:`翻译域 <using-message-domains>` 有关。
+因此，只要新文件使用相同的域，你就可以重写 ``translations/`` 主目录中的任何bundle翻译文件。
 
-For example, to override the translations defined in the
-``Resources/translations/FOSUserBundle.es.yml`` file of the FOSUserBundle,
-create a``<your-project>/translations/FOSUserBundle.es.yml`` file.
+例如，要重写 ``Resources/translations/FOSUserBundle.es.yml`` 文件中定义的翻译，请创建一个
+``<your-project>/translations/FOSUserBundle.es.yml`` 文件。
 
-.. _`the Doctrine documentation`: http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/inheritance-mapping.html#overrides
+.. _`Doctrine文档`: http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/inheritance-mapping.html#overrides

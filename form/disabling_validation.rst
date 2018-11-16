@@ -4,8 +4,8 @@
 如何禁用提交数据的验证
 ===============================================
 
-Sometimes it is useful to suppress the validation of a form altogether. For
-these cases you can set the ``validation_groups`` option to ``false``::
+有时，完全禁止表单的验证是有用的。
+对于这些情况，你可以将 ``validation_groups`` 选项设置为 ``false``::
 
     use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -16,11 +16,7 @@ these cases you can set the ``validation_groups`` option to ``false``::
         ));
     }
 
-Note that when you do that, the form will still run basic integrity checks,
-for example whether an uploaded file was too large or whether non-existing
-fields were submitted.
+请注意，执行此操作时，表单仍将运行基本的完整性检查，例如上传的文件是否过大或是否提交了不存在的字段。
 
-The submission of extra form fields can be controlled with the
-:ref:`allow_extra_fields config option <form-option-allow-extra-fields>` and
-the maximum upload file size should be handled via your PHP and web server
-configuration.
+可以使用 :ref:`allow_extra_fields配置选项 <form-option-allow-extra-fields>`
+控制额外表单字段的提交，并且应通过PHP和Web服务器配置处理最大上传文件大小。

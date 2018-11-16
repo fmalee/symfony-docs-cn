@@ -4,13 +4,11 @@
 如何测试在功能测试中发送的邮件
 ======================================================
 
-Sending emails with Symfony is pretty straightforward thanks to the
-SwiftmailerBundle, which leverages the power of the `Swift Mailer`_ library.
+由于SwiftmailerBundle利用了 `Swift Mailer`_ 库的强大功能，因此使用Symfony发送邮件非常简单。
 
-To functionally test that an email was sent, and even assert the email subject,
-content or any other headers, you can use :doc:`the Symfony Profiler </profiler>`.
+要功能测试邮件的发送，甚至断言邮件主题、内容或任何其他标头，你可以使用 :doc:`Symfony分析器 </profiler>`。
 
-Start with a simple controller action that sends an email::
+从发送邮件的简单控制器动作开始::
 
     public function sendEmail($name, \Swift_Mailer $mailer)
     {
@@ -25,8 +23,7 @@ Start with a simple controller action that sends an email::
         return $this->render(...);
     }
 
-In your functional test, use the ``swiftmailer`` collector on the profiler
-to get information about the messages sent on the previous request::
+在功能测试中，使用分析器上的 ``swiftmailer`` 收集器获取有关上一个请求中发送的消息的信息::
 
     // tests/Controller/MailControllerTest.php
     namespace App\Tests\Controller;
@@ -39,20 +36,20 @@ to get information about the messages sent on the previous request::
         {
             $client = static::createClient();
 
-            // enables the profiler for the next request (it does nothing if the profiler is not available)
+            // 为下一个请求启用分析器（如果分析器不可用，则不执行任何操作）
             $client->enableProfiler();
 
             $crawler = $client->request('POST', '/path/to/above/action');
 
             $mailCollector = $client->getProfile()->getCollector('swiftmailer');
 
-            // checks that an email was sent
+            // 检索一个已发送的邮件
             $this->assertSame(1, $mailCollector->getMessageCount());
 
             $collectedMessages = $mailCollector->getMessages();
             $message = $collectedMessages[0];
 
-            // Asserting email data
+            // 断言邮件数据
             $this->assertInstanceOf('Swift_Message', $message);
             $this->assertSame('Hello Email', $message->getSubject());
             $this->assertSame('send@example.com', key($message->getFrom()));
@@ -64,22 +61,19 @@ to get information about the messages sent on the previous request::
         }
     }
 
-Troubleshooting
+故障排除
 ---------------
 
-Problem: The Collector Object Is ``null``
+问题：The Collector Object Is ``null``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The email collector is only available when the profiler is enabled and collects
-information, as explained in :doc:`/testing/profiling`.
+邮件收集器仅在分析器已启用并收集信息时可用，请参阅 :doc:`/testing/profiling`。
 
-Problem: The Collector Doesn't Contain the Email
+问题：The Collector Doesn't Contain the Email
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If a redirection is performed after sending the email (for example when you send
-an email after a form is processed and before redirecting to another page), make
-sure that the test client doesn't follow the redirects, as explained in
-:doc:`/testing`. Otherwise, the collector will contain the information of the
-redirected page and the email won't be accessible.
+如果在发送邮件后执行重定向（例如，在处理表单之后和重定向到另一个页面之前发送电子邮件），
+请确保测试客户端不遵循重定向，请参阅 :doc:`/testing`。
+否则，该收集器将包含重定向页面的信息，从而无法访问该邮件。
 
 .. _`Swift Mailer`: http://swiftmailer.org/

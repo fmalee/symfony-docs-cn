@@ -13,6 +13,105 @@
   - `df318b284e22352b7678daeaa32ab06eb0fbcc0c`（2018-10-25）
   - `b43a26fc1c8408de31e79f1abf91e0201e92e487`（2018-10-19）
 
+## 汉化进度
+
+### 未汉化
+
+- `bundle/` (5)
+- `compoments`
+- `configuration` 
+  - `environments.rst`
+  - `micro_kernel_trait.rst`
+  - `multiple_kernels.rst`
+- `console`
+  - `style.rst`
+- `create_framework`
+- `form`
+  - `create_custom_field_type.rst`
+  - `create_form_type_extension.rst`
+  - `data_transformers.rst`
+  - `dynamic_form_modification.rst`
+  - `embedded.rst`
+  - `events.rst`
+  - `form_collections.rst`
+  - `form_customization.rst`
+  - `form_dependencies.rst`
+  - `form_themes.rst`
+  - `type_guesser.rst`
+  - `unit_testing.rst`
+- `http_cache`
+  - `cache_invalidation.rst`
+  - `cache_vary.rst`
+  - `esi.rst`
+  - `expiration.rst`
+  - `form_csrf_caching.rst`
+  - `validation.rst`
+  - `varnish.rst`
+- `introduction`
+- `logging`
+- `profiler`
+  - `data_collector.rst`
+- `reference`
+- `routing`
+  - `custom_route_loader.rst`
+  - `external_resources.rst`
+  - `hostname_pattern.rst`
+  - `redirect_in_config.rst`
+  - `requirements.rst`
+- `security`
+  - `access_control.rst`
+  - `custom_authentication_provider.rst`
+  - `form_login.rst`
+  - `impersonating_user.rst`
+  - `json_login_setup.rst`
+  - `ldap.rst`
+  - `multiple_guard_authenticators.rst`
+  - `user_provider.rst`
+- `service_container`
+  - `alias_private.rst`
+  - `autowiring.rst`
+  - `compiler_passes.rst`
+  - `configurators.rst`
+  - `definitions.rst`
+  - `expression_language.rst`
+  - `factories.rst`
+  - `parent_services.rst`
+  - `service_decoration.rst`
+  - `service_subscribers_locators.rst`
+  - `tags.rst`
+- `session`
+  - `locale_sticky_session.rst`
+  - `php_bridge.rst`
+- `setup`
+  - `built_in_web_server.rst`
+  - `bundles.rst`
+  - `homestead.rst`
+  - `web_server_configuration.rst`
+- `templating`
+  - `PHP.rst`
+- `testing`
+  - `bootstrap.rst`
+  - `database.rst`
+  - `doctrine.rst`
+  - `http_authentication.rst`
+  - `insulating_clients.rst`
+  - `profiling.rst`
+- `translation`
+  - `debug.rst`
+  - `lint.rst`
+  - `locale.rst`
+- `validation`
+  - `custom_constraint.rst`
+  - `groups.rst`
+  - `raw_values.rst`
+  - `sequence_provider.rst`
+  - `severity.rst`
+  - `translations.rst`
+- `workflow`
+  - `dumping-workflows.rst`
+  - `state-machines.rst`
+  - `usage.rst`
+
 ## 术语约定
 
 - `Route`：路由

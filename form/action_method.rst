@@ -4,12 +4,11 @@
 如何更改表单的动作和方法
 =============================================
 
-By default, a form will be submitted via an HTTP POST request to the same
-URL under which the form was rendered. Sometimes you want to change these
-parameters. You can do so in a few different ways.
+默认情况下，表单将通过HTTP POST请求提交到渲染表单的同一URL。
+有时你想要更改这些参数。你可以通过几种不同的方式完成此操作。
 
-If you use the :class:`Symfony\\Component\\Form\\FormBuilder` to build your
-form, you can use ``setAction()`` and ``setMethod()``:
+如果你使用 :class:`Symfony\\Component\\Form\\FormBuilder`
+构建表单，则可以使用 ``setAction()`` 和 ``setMethod()`` 方法：
 
 .. configuration-block::
 
@@ -67,11 +66,9 @@ form, you can use ``setAction()`` and ``setMethod()``:
 
 .. note::
 
-    This example assumes that you've created a route called ``target_route``
-    that points to the controller that processes the form.
+    此示例假定你已创建一个指向处理该表单的控制器的 ``target_route`` 路由。
 
-When using a form type class, you can pass the action and method as form
-options:
+使用一个表单类型类时，可以将动作和方法作为表单选项传递：
 
 .. configuration-block::
 
@@ -114,8 +111,7 @@ options:
             'method' => 'GET',
         ));
 
-Finally, you can override the action and method in the template by passing them
-to the ``form()`` or the ``form_start()`` helper functions:
+最后，你可以通过它们传递给 ``form()`` 或 ``form_start()`` 辅助方法来重写模板中的动作和方法：
 
 .. code-block:: html+twig
 
@@ -124,9 +120,7 @@ to the ``form()`` or the ``form_start()`` helper functions:
 
 .. note::
 
-    If the form's method is not GET or POST, but PUT, PATCH or DELETE, Symfony
-    will insert a hidden field with the name ``_method`` that stores this method.
-    The form will be submitted in a normal POST request, but Symfony's router
-    is capable of detecting the ``_method`` parameter and will interpret it as
-    a PUT, PATCH or DELETE request. See the :ref:`configuration-framework-http_method_override`
-    option.
+    如果表单的方法不是GET或POST，而是PUT、PATCH或DELETE，Symfony将插入一个名叫 ``_method``
+    的隐藏字段来存储该方法。
+    表单将在正常的POST请求中提交，但Symfony的路由器能够检测 ``_method`` 参数并将其解释为PUT、PATCH或DELETE请求。
+    请参阅 :ref:`configuration-framework-http_method_override` 选项。

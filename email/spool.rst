@@ -1,29 +1,24 @@
 .. index::
    single: Emails; Spooling
 
-如何Spool邮件
+如何假脱机邮件
 ===================
 
-The default behavior of the Symfony mailer is to send the email messages
-immediately. You may, however, want to avoid the performance hit of the
-communication to the email server, which could cause the user to wait for the
-next page to load while the email is sending. This can be avoided by choosing to
-"spool" the emails instead of sending them directly.
+Symfony邮件程序的默认行为是立即发送电子邮件。
+但是，你可能希望避免与邮件服务器通信的性能损失，因为这可能导致邮件发送时用户需要等待下一页的加载。
+选择“假脱机(spool)”邮件而不是直接发送邮件可以避免这种情况。
 
-This makes the mailer to not attempt to send the email message but instead save
-it somewhere such as a file. Another process can then read from the spool and
-take care of sending the emails in the spool. Currently only spooling to file or
-memory is supported.
+这使邮件程序不会尝试发送邮件消息，而是将其保存在某个位置，例如文件。
+然后，另一个进程可以负责在假脱机中读取并发送电子邮件。目前仅支持假脱机到文件或内存。
 
 .. _email-spool-memory:
 
-Spool Using Memory
+使用内存假脱机
 ------------------
 
-When you use spooling to store the emails to memory, they will get sent right
-before the kernel terminates. This means the email only gets sent if the whole
-request got executed without any unhandled exception or any errors. To configure
-this spool, use the following configuration:
+当你使用假脱机将邮件存储到内存时，它们将在内核终止之前发送。
+这意味着只有在整个请求期间没有任何未处理的异常或错误的情况下才会发送邮件。
+要配置此假脱机，请使用以下配置：
 
 .. configuration-block::
 
@@ -59,15 +54,13 @@ this spool, use the following configuration:
 
 .. _spool-using-a-file:
 
-Spool Using Files
+使用文件假脱机
 ------------------
 
-When you use the filesystem for spooling, Symfony creates a folder in the given
-path for each mail service (e.g. "default" for the default service). This folder
-will contain files for each email in the spool. So make sure this directory is
-writable by Symfony (or your webserver/php)!
+当你使用文件系统进行假脱机时，Symfony会在每个邮件服务的给定路径中创建一个文件夹（例如，默认服务的“default”）。
+此文件夹将包含假脱机中每封邮件的文件。因此，请确保Symfony（或你的 webserver/php）可以写入该目录！
 
-In order to use the spool with files, use the following configuration:
+要将假脱机与文件一起使用，请使用以下配置：
 
 .. configuration-block::
 
@@ -113,52 +106,43 @@ In order to use the spool with files, use the following configuration:
 
 .. tip::
 
-    If you want to store the spool somewhere with your project directory,
-    remember that you can use the ``%kernel.project_dir%`` parameter to reference
-    the project's root:
+    如果要将假脱机存储在项目目录的某处，请记住可以使用 ``%kernel.project_dir%`` 参数来引用项目的根目录：
 
     .. code-block:: yaml
 
         path: '%kernel.project_dir%/var/spool'
 
-Now, when your app sends an email, it will not actually be sent but instead
-added to the spool. Sending the messages from the spool is done separately.
-There is a console command to send the messages in the spool:
+现在，当你的应用发送邮件时，它实际上不会被发送，而是添加到假脱机中。
+从假脱机发送消息是单独完成的。有一个控制台命令可以在假脱机中发送消息：
 
 .. code-block:: terminal
 
     $ APP_ENV=prod php bin/console swiftmailer:spool:send
 
-It has an option to limit the number of messages to be sent:
+它有一个选项来限制要发送的消息数量：
 
 .. code-block:: terminal
 
     $ APP_ENV=prod php bin/console swiftmailer:spool:send --message-limit=10
 
-You can also set the time limit in seconds:
+你还可以以秒为单位来设置时间限制：
 
 .. code-block:: terminal
 
     $ APP_ENV=prod php bin/console swiftmailer:spool:send --time-limit=10
 
-You will most likely not want to run this command manually in reality. Instead, the
-console command should be triggered by a cron job or scheduled task and run
-at a regular interval.
+你很可能不想在现实中手动运行此命令。相反，控制台命令应由cron或计划任务触发，并以固定间隔运行。
 
 .. caution::
 
-    When you create a message with SwiftMailer, it generates a ``Swift_Message``
-    class. If the ``swiftmailer`` service is lazy loaded, it generates instead a
-    proxy class named ``Swift_Message_<someRandomCharacters>``.
+    使用SwiftMailer创建一个消息时，它会生成一个 ``Swift_Message`` 类。
+    如果swiftmailer服务是延迟加载的，它会生成一个名为 ``Swift_Message_<someRandomCharacters>`` 的代理类。
 
-    If you use the memory spool, this change is transparent and has no impact.
-    But when using the filesystem spool, the message class is serialized in
-    a file with the randomized class name. The problem is that this random
-    class name changes on every cache clear. So if you send a mail and then you
-    clear the cache, the message will not be unserializable.
+    如果使用内存假脱机，则此更改是透明的，不会产生任何影响。
+    但是，在使用文件系统假脱机时，消息类将在具有随机类名的文件中序列化。
+    问题是这个随机类名在每个缓存清除后都会改变。因此，如果你发送一个邮件然后清除了缓存，则该邮件将无法被反序列化。
 
-    On the next execution of ``swiftmailer:spool:send`` an error will raise because
-    the class ``Swift_Message_<someRandomCharacters>`` doesn't exist (anymore).
+    在下一次的 ``swiftmailer:spool:send`` 执行过程中会报错，因为该 ``Swift_Message_<someRandomCharacters>`` 类不(再)存在。
 
-    The solutions are either to use the memory spool or to load the
-    ``swiftmailer`` service without the ``lazy`` option (see :doc:`/service_container/lazy_services`).
+    解决方案是要么使用内存假脱机，要么在不带 ``lazy`` 选项的情况下加载 ``swiftmailer``
+    服务（请参阅 :doc:`/service_container/lazy_services`）。

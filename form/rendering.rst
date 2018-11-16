@@ -4,8 +4,7 @@
 如何控制表单的渲染
 ======================================
 
-So far, you've seen how an entire form can be rendered with just one line
-of code. Of course, you'll usually need much more flexibility when rendering:
+到目前为止，你已经看到了如何使用一行代码渲染整个表单。当然，渲染时通常需要更多的灵活性：
 
 .. code-block:: html+twig
 
@@ -17,25 +16,21 @@ of code. Of course, you'll usually need much more flexibility when rendering:
         {{ form_row(form.dueDate) }}
     {{ form_end(form) }}
 
-You already know the ``form_start()`` and ``form_end()`` functions, but what do
-the other functions do?
+你已经了解 ``form_start()`` 和 ``form_end()`` 函数，但其他函数有何功能？
 
 ``form_errors(form)``
-    Renders any errors global to the whole form (field-specific errors are displayed
-    next to each field).
+    将任何错误全局的渲染给整个表单（每个字段旁边都会显示特定于该字段的错误）。
 
 ``form_row(form.dueDate)``
-    Renders the label, any errors, and the HTML form widget for the given field
-    (e.g. ``dueDate``) inside, by default, a ``div`` element.
+    默认情况下，使用 ``div`` 元素为给定字段（例如 ``dueDate``）内部渲染标签、任何错误和HTML表单部件。
 
-The majority of the work is done by the ``form_row()`` helper, which renders
-the label, errors and HTML form widget of each field inside a ``div`` tag by
-default. In the :doc:`/form/form_themes` section, you'll learn how the ``form_row()``
-output can be customized on many different levels.
+大部分工作由 ``form_row()`` 帮助函数完成，默认情况下，它会在一个 ``div``
+标记内渲染每个字段的标签、错误和HTML表单部件。
+在 :doc:`/form/form_themes` 文档中，你将了解如何在多个不同级别上自定义 ``form_row()`` 输出。
 
 .. tip::
 
-    You can access the current data of your form via ``form.vars.value``:
+    你可以通过 ``form.vars.value`` 访问表单的当前数据：
 
 .. code-block:: twig
 
@@ -44,14 +39,12 @@ output can be customized on many different levels.
 .. index::
    single: Forms; Rendering each field by hand
 
-Rendering each Field by Hand
+手动渲染每个字段
 ----------------------------
 
-The ``form_row()`` helper is great because you can very quickly render each
-field of your form (and the markup used for the "row" can be customized as
-well). But since life isn't always so simple, you can also render each field
-entirely by hand. The end-product of the following is the same as when you
-used the ``form_row()`` helper:
+``form_row()`` 辅助函数很好用，因为你可以非常快速地渲染表单的每个字段（并且用于该“row”的标记很容易自定义）。
+但由于生活并非总是那么简单，你也可以完全用手渲染每个字段。
+以下的最终成品与你使用 ``form_row()`` 辅助函数时的相同：
 
 .. code-block:: html+twig
 
@@ -78,42 +71,35 @@ used the ``form_row()`` helper:
 
     {{ form_end(form) }}
 
-If the auto-generated label for a field isn't quite right, you can explicitly
-specify it:
+如果一个字段自动生成的标签不完全正确，则可以显性的指定它：
 
 .. code-block:: html+twig
 
     {{ form_label(form.task, 'Task Description') }}
 
-Some field types have additional rendering options that can be passed
-to the widget. These options are documented with each type, but one common
-option is ``attr``, which allows you to modify attributes on the form element.
-The following would add the ``task_field`` class to the rendered input text
-field:
+某些字段类型具有可以传递给小部件的其他渲染选项。
+每种类型都记录了这些选项，但有一个 ``attr`` 常用选项，它允许你修改表单元素上的属性。
+以下将添加 ``task_field`` 样式类到渲染的文本字段中：
 
 .. code-block:: html+twig
 
     {{ form_widget(form.task, {'attr': {'class': 'task_field'}}) }}
 
-If you need to render form fields "by hand" then you can access individual
-values for fields such as the ``id``, ``name`` and ``label``. For example
-to get the ``id``:
+如果你需要“手动”渲染表单字段，那么你可以独立的获取该字段的各个值，例如 ``id``、``name`` 和 ``label``。
+例如获取字段的 ``id``：
 
 .. code-block:: html+twig
 
     {{ form.task.vars.id }}
 
-To get the value used for the form field's name attribute you need to use
-the ``full_name`` value:
+要获取用于表单字段的名称属性的值，你需要使用 ``full_name`` 值：
 
 .. code-block:: html+twig
 
     {{ form.task.vars.full_name }}
 
-Twig Template Function Reference
+Twig模板函数参考
 --------------------------------
 
-If you're using Twig, a full reference of the form rendering functions is
-available in the :doc:`reference manual </reference/forms/twig_reference>`.
-Read this to know everything about the helpers available and the options
-that can be used with each.
+如果你正在使用Twig，则 :doc:`参考手册 </reference/forms/twig_reference>` 中提供了表单渲染函数的完整参考。
+阅读该文档以了解可用辅助函数的所有内容以及可用于每个辅助函数的选项。

@@ -4,9 +4,8 @@
 如何使用“inherit_data”减少代码重复
 ==================================================
 
-The ``inherit_data`` form field option can be very useful when you have some
-duplicated fields in different entities. For example, imagine you have two
-entities, a ``Company`` and a ``Customer``::
+当你在不同实体中有一些重复字段时，``inherit_data`` 表单字段选项非常有用。
+例如，假设你有两个实体，一个 ``Company`` 和一个 ``Customer``::
 
     // src/Entity/Company.php
     namespace App\Entity;
@@ -38,10 +37,9 @@ entities, a ``Company`` and a ``Customer``::
         private $country;
     }
 
-As you can see, each entity shares a few of the same fields: ``address``,
-``zipcode``, ``city``, ``country``.
+正如你所看到的，每个实体都持有数相同的字段：``address``、``zipcode``、``city``、``country``。
 
-Start with building two forms for these entities, ``CompanyType`` and ``CustomerType``::
+首先为这些实体构建两个表单，``CompanyType`` 和 ``CustomerType``::
 
     // src/Form/Type/CompanyType.php
     namespace App\Form\Type;
@@ -79,9 +77,8 @@ Start with building two forms for these entities, ``CompanyType`` and ``Customer
         }
     }
 
-Instead of including the duplicated fields ``address``, ``zipcode``, ``city``
-and ``country`` in both of these forms, create a third form called ``LocationType``
-for that::
+不是在两个表单中同时包含重复的 ``address``、``zipcode``、``city`` 和 ``country``
+字段，而是创建一个名为 ``LocationType`` 的第三个表单::
 
     // src/Form/Type/LocationType.php
     namespace App\Form\Type;
@@ -111,19 +108,16 @@ for that::
         }
     }
 
-The location form has an interesting option set, namely ``inherit_data``. This
-option lets the form inherit its data from its parent form. If embedded in
-the company form, the fields of the location form will access the properties of
-the ``Company`` instance. If embedded in the customer form, the fields will
-access the properties of the ``Customer`` instance instead. Convenient, eh?
+位置表单有一个有趣的选项集，名为 ``inherit_data``。该选项允许该表单从其父表单继承数据。
+如果嵌入在公司表单中，则位置表单的字段将访问 ``Company`` 实例的属性。
+如果嵌入在客户表单中，则该字段将访问 ``Customer`` 实例的属性。很方便对吧？
 
 .. note::
 
-    Instead of setting the ``inherit_data`` option inside ``LocationType``, you
-    can also (just like with any option) pass it in the third argument of
-    ``$builder->add()``.
+    不同于在 ``LocationType`` 里面设置 ``inherit_data``
+    选项，你也可以（就像使用其他任何选项一样）将它传递给 ``$builder->add()`` 的第三个参数。
 
-Finally, make this work by adding the location form to your two original forms::
+最后，通过将位置表单添加到两个原始表单来完成此工作::
 
     // src/Form/Type/CompanyType.php
     use App\Entity\Company;
@@ -153,9 +147,8 @@ Finally, make this work by adding the location form to your two original forms::
         ));
     }
 
-That's it! You have extracted duplicated field definitions to a separate
-location form that you can reuse wherever you need it.
+仅此而已！你已将重复的字段定义提取到单独的位置表单，你可以在任何需要的位置重复使用它。
 
 .. caution::
 
-    Forms with the ``inherit_data`` option set cannot have ``*_SET_DATA`` event listeners.
+    带有 ``inherit_data`` 选项集的表单不能拥有 ``*_SET_DATA`` 事件监听器。

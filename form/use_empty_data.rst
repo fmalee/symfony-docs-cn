@@ -4,44 +4,37 @@
 如何为表单类配置空数据
 ============================================
 
-The ``empty_data`` option allows you to specify an empty data set for your
-form class. This empty data set would be used if you submit your form, but
-haven't called ``setData()`` on your form or passed in data when you created
-your form. For example, in a controller::
+``empty_data`` 选项允许你为表单类指定空数据集。
+如果你提交了表单，但没有调用 ``setData()`` 或没有在创建表单时传入数据，则将使用此空数据集。
+例如，在控制器中::
 
     public function index()
     {
         $blog = ...;
 
-        // $blog is passed in as the data, so the empty_data
-        // option is not needed
+        // $blog 作为数据传入，因此不需要 empty_data 选项
         $form = $this->createForm(BlogType::class, $blog);
 
-        // no data is passed in, so empty_data is
-        // used to get the "starting data"
+        // 没有数据传入，所以 empty_data 将用于获取“起始数据”
         $form = $this->createForm(BlogType::class);
     }
 
-By default, ``empty_data`` is set to ``null``. Or, if you have specified
-a ``data_class`` option for your form class, it will default to a new instance
-of that class. That instance will be created by calling the constructor
-with no arguments.
+默认情况下，``empty_data`` 被设置为 ``null``。
+但如果你为表单类指定了一个 ``data_class`` 选项，``empty_data`` 将默认为该类的一个新实例。
+该实例将通过调用不带参数的构造函数来创建。
 
-If you want to override this default behavior, there are two ways to do this:
+如果要覆盖此默认行为，有两种可用方法：
 
-* `Option 1: Instantiate a new Class`_
-* `Option 2: Provide a Closure`_
+* `选项1：实例化一个新类`_
+* `选项2：提供一个闭包`_
 
-If you didn't set the ``data_class`` option, you can pass the initial data as
-string or pass an array of strings (where the key matches the field name) when
-the form type is compound.
+如果未设置 ``data_class`` 选项，则可以在表单类型为复合(compound)时，将初始数据作为字符串传递或传递一个字符串数组（其中键与字段名称匹配）。
 
-Option 1: Instantiate a new Class
+选项1：实例化一个新类
 ---------------------------------
 
-One reason you might use this option is if you want to use a constructor
-that takes arguments. Remember, the default ``data_class`` option calls
-that constructor with no arguments::
+你可以使用此选项的一个提前是你是否要使用带参数的构造函数。
+请记住，默认的 ``data_class`` 选项调用的构造函数是不带参数的::
 
     // src/Form/Type/BlogType.php
 
@@ -68,22 +61,20 @@ that constructor with no arguments::
         }
     }
 
-You can instantiate your class however you want. In this example, you pass
-some dependency into the ``BlogType`` then use that to instantiate the ``Blog`` class.
-The point is, you can set ``empty_data`` to the exact "new" object that you want to use.
+你可以根据需要实例化你的类。
+在此示例中，你将一些依赖传递给 ``BlogType`` 然后使用它来实例化 ``Blog`` 类。
+关键是，你可以设置 ``empty_data`` 来精确你要使用的“新”对象。
 
 .. tip::
 
-    In order to pass arguments to the ``BlogType`` constructor, you'll need to
-    :doc:`register it as a service and tag with form.type </form/form_dependencies>`.
+    为了将参数传递给 ``BlogType`` 构造函数，你需要将其 :doc:`注册为服务并使用form.type标签 </form/form_dependencies>`。
 
-Option 2: Provide a Closure
+选项2：提供一个闭包
 ---------------------------
 
-Using a closure is the preferred method, since it will only create the object
-if it is needed.
+使用闭包是首选方法，因为它只在需要时才创建对象。
 
-The closure must accept a ``FormInterface`` instance as the first argument::
+闭包必须接受一个 ``FormInterface`` 实例作为第一个参数::
 
     use Symfony\Component\OptionsResolver\OptionsResolver;
     use Symfony\Component\Form\FormInterface;

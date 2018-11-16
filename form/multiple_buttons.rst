@@ -1,12 +1,11 @@
 .. index::
     single: Forms; Multiple Submit Buttons
 
-如何提交具有多个按钮的表单
+如何使用多个按钮来提交表单
 ==========================================
 
-When your form contains more than one submit button, you will want to check
-which of the buttons was clicked to adapt the program flow in your controller.
-To do this, add a second button with the caption "Save and add" to your form::
+当你的表单包含多个提交按钮时，你需要检查点击了哪个按钮以调整控制器中的程序流程。
+为此，请在表单中添加标签为 "Save and add" 的第二个按钮::
 
     $form = $this->createFormBuilder($task)
         ->add('task', TextType::class)
@@ -15,12 +14,11 @@ To do this, add a second button with the caption "Save and add" to your form::
         ->add('saveAndAdd', SubmitType::class, array('label' => 'Save and Add'))
         ->getForm();
 
-In your controller, use the button's
-:method:`Symfony\\Component\\Form\\ClickableInterface::isClicked` method for
-querying if the "Save and add" button was clicked::
+在控制器中，使用按钮的 :method:`Symfony\\Component\\Form\\ClickableInterface::isClicked`
+方法来查询是否点击了"Save and add"按钮::
 
     if ($form->isSubmitted() && $form->isValid()) {
-        // ... perform some action, such as saving the task to the database
+        // ... 执行一些操作，例如将任务保存到数据库
 
         $nextAction = $form->get('saveAndAdd')->isClicked()
             ? 'task_new'
@@ -29,8 +27,7 @@ querying if the "Save and add" button was clicked::
         return $this->redirectToRoute($nextAction);
     }
 
-Or you can get the button's name by using the
-:method:`Symfony\\Component\\Form\\Form::getClickedButton` method of the form::
+或者你可以使用表单的 :method:`Symfony\\Component\\Form\\Form::getClickedButton` 方法来获取按钮的名称::
 
     if ($form->getClickedButton() && 'saveAndAdd' === $form->getClickedButton()->getName()) {
         // ...

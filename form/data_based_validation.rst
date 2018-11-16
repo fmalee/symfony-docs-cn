@@ -4,9 +4,8 @@
 如何根据提交的数据选择验证组
 ===========================================================
 
-If you need some advanced logic to determine the validation groups (e.g.
-based on submitted data), you can set the ``validation_groups`` option
-to an array callback::
+如果你需要一些高级逻辑来确定验证组（例如，基于提交的数据），你可以将
+``validation_groups`` 选项设置为数组回调::
 
     use App\Entity\Client;
     use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -22,10 +21,8 @@ to an array callback::
         ));
     }
 
-This will call the static method ``determineValidationGroups()`` on the
-``Client`` class after the form is submitted, but before validation is executed.
-The Form object is passed as an argument to that method (see next example).
-You can also define whole logic inline by using a ``Closure``::
+这将在提交表单之后，执行验证之前，调用类 ``Client`` 上的 ``determineValidationGroups()`` 静态方法。
+该表单对象将作为参数传递给该方法（参见下一个示例）。你还可以通过使用一个  ``Closure`` 内联定义整个逻辑::
 
     use App\Entity\Client;
     use Symfony\Component\Form\FormInterface;
@@ -47,9 +44,8 @@ You can also define whole logic inline by using a ``Closure``::
         ));
     }
 
-Using the ``validation_groups`` option overrides the default validation
-group which is being used. If you want to validate the default constraints
-of the entity as well you have to adjust the option as follows::
+使用 ``validation_groups`` 选项会重写正在使用的默认验证组。
+如果要验证实体的默认约束，则必须按如下方式调整选项::
 
     use App\Entity\Client;
     use Symfony\Component\Form\FormInterface;
@@ -71,5 +67,4 @@ of the entity as well you have to adjust the option as follows::
         ));
     }
 
-You can find more information about how the validation groups and the default constraints
-work in the article about :doc:`validation groups </validation/groups>`.
+你可以在 :doc:`验证组 </validation/groups>` 的文档中找到有关验证组和默认约束如何工作的更多信息。

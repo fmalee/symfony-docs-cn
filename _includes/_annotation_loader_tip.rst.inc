@@ -1,12 +1,10 @@
 .. note::
 
-    In order to use the annotation loader, you should have installed the
-    ``doctrine/annotations`` and ``doctrine/cache`` packages with Composer.
+    为了使用注释加载器，你应该使用Composer安装 ``doctrine/annotations`` 和 ``doctrine/cache`` 包。
 
 .. tip::
 
-    Annotation classes aren't loaded automatically, so you must load them
-    using a class loader like this::
+    注释类不会自动加载，因此你必须使用类似于此类的一个类加载器来加载它们::
 
         use Composer\Autoload\ClassLoader;
         use Doctrine\Common\Annotations\AnnotationRegistry;

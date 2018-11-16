@@ -4,12 +4,10 @@
 如何在不使用继承的情况下自定义方法的行为(Behavior)
 ============================================================
 
-Doing something before or after a Method Call
+在方法调用之前或之后做些操作
 ---------------------------------------------
 
-If you want to do something just before, or just after a method is called, you
-can dispatch an event respectively at the beginning or at the end of the
-method::
+如果你想在调用一个方法之前或者在之后执行某些操作，则可以分别在方法的开头或结尾处调度一个事件::
 
     class CustomMailer
     {
@@ -17,18 +15,18 @@ method::
 
         public function send($subject, $message)
         {
-            // dispatch an event before the method
+            // 在方法之前调度事件
             $event = new BeforeSendMailEvent($subject, $message);
             $this->dispatcher->dispatch('mailer.pre_send', $event);
 
-            // get $foo and $bar from the event, they may have been modified
+            // 从事件中获取$foo和$bar，它们可能已被修改
             $subject = $event->getSubject();
             $message = $event->getMessage();
 
-            // the real method implementation is here
+            // 真正的方法实现在这里
             $returnValue = ...;
 
-            // do something after the method
+            // 在方法之后做一些事情
             $event = new AfterSendMailEvent($returnValue);
             $this->dispatcher->dispatch('mailer.post_send', $event);
 
@@ -36,10 +34,9 @@ method::
         }
     }
 
-In this example, two events are thrown: ``mailer.pre_send``, before the method is
-executed, and ``mailer.post_send`` after the method is executed. Each uses a
-custom Event class to communicate information to the listeners of the two
-events. For example, ``BeforeSendMailEvent`` might look like this::
+在此示例中，抛出两个事件：在方法之前执行的 ``mailer.pre_send``，以及在方法执行之后的 ``mailer.post_send``。
+每个都使用一个自定义事件类将信息传递给对应事件的监听器。
+例如，``BeforeSendMailEvent`` 可能看起来像这样::
 
     // src/Event/BeforeSendMailEvent.php
     namespace App\Event;
@@ -78,7 +75,7 @@ events. For example, ``BeforeSendMailEvent`` might look like this::
         }
     }
 
-And the ``AfterSendMailEvent`` even like this::
+而 ``AfterSendMailEvent`` 是这样的::
 
     // src/Event/AfterSendMailEvent.php
     namespace App\Event;
@@ -105,11 +102,10 @@ And the ``AfterSendMailEvent`` even like this::
         }
     }
 
-Both events allow you to get some information (e.g. ``getMessage()``) and even change
-that information (e.g. ``setMessage()``).
+这两个事件都允许你获取一些信息（例如 ``getMessage()``）甚至更改该信息（例如 ``setMessage()``）。
 
-Now, you can create an event subscriber to hook into this event. For example, you
-could listen to the ``mailer.post_send`` event and change the method's return value::
+现在，你可以创建一个事件订阅器来挂钩(hook)此事件。
+例如，你可以监听 ``mailer.post_send`` 事件并更改该方法的返回值::
 
     // src/EventSubscriber/MailPostSendSubscriber.php
     namespace App\EventSubscriber;
@@ -122,7 +118,7 @@ could listen to the ``mailer.post_send`` event and change the method's return va
         public function onMailerPostSend(AfterSendMailEvent $event)
         {
             $returnValue = $event->getReturnValue();
-            // modify the original ``$returnValue`` value
+            // 修改原本的 ``$returnValue`` 值
 
             $event->setReturnValue($returnValue);
         }
@@ -135,5 +131,5 @@ could listen to the ``mailer.post_send`` event and change the method's return va
         }
     }
 
-That's it! Your subscriber should be called automatically (or read more about
-:ref:`event subscriber configuration <ref-event-subscriber-configuration>`).
+仅此而已！你的订阅器会自动被调用（或阅读有关
+:ref:`事件订阅器配置 <ref-event-subscriber-configuration>` 的更多信息 ）。
