@@ -68,19 +68,15 @@ FAQ和常见错误
     +     .setPublicPath('/myAppSubdir/build')
 
     +     // 现在需要这样，以便你的 manifest.json 键仍然是 `build/foo.js`
-    +     // 即你不需要更改Symfony应用中的任何内容
+    +     // 这是Symfony资产功能使用的一个文件
     +     .setManifestKeyPrefix('build')
     ;
 
-如果你 :ref:`通过manifest.json处理资产 <load-manifest-files>`，那么你已经完工了！
-``manifest.json`` 文件现在将包含最终路径中的子目录：
-
-.. code-block:: json
-
-    {
-        "build/app.js": "/myAppSubdir/build/app.123abc.js",
-        "build/dashboard.css": "/myAppSubdir/build/dashboard.a4bf2d.css"
-    }
+如果你正在使用 ``encore_entry_script_tags()`` 和 ``encore_entry_link_tags()``
+Twig快捷方式（或者是以某种其他方式 :ref:`通过entrypoints.json处理你的资产 <load-manifest-files>`
+），那么你已经完工了。这些快捷方法从
+:ref:`entrypoints.json <encore-entrypointsjson-simple-description>`
+文件中读取，该文件现在将包含子目录。
 
 "jQuery is not defined" 或 "$ is not defined"
 ---------------------------------------------
@@ -94,9 +90,8 @@ FAQ和常见错误
 Uncaught ReferenceError: webpackJsonp is not defined
 ----------------------------------------------------
 
-如果你收到此错误，可能是因为你刚刚添加了 :doc:`共享条目 </frontend/encore/shared-entry>`，
-但你 *忘记* 为新的 ``manifest.js`` 文件添加 ``script`` 标签。
-请参阅该文档中有关 :ref:`script标签 <encore-shared-entry-script>` 的信息。
+如果你收到此错误，可能是因为你忘了为包含Webpack运行时的 ``runtime.js`` 文件添加一个 ``script`` 标签。
+如果你正在使用 ``encore_entry_script_tags()`` Twig函数，则永远不会发生这种情况：该文件脚本标记会自动渲染。
 
 This dependency was not found: some-module in ./path/to/file.js
 ---------------------------------------------------------------
@@ -122,5 +117,12 @@ This dependency was not found: some-module in ./path/to/file.js
 
     // require a non-minified file whenever possible
     require('respond.js/dest/respond.src.js');
+
+我需要在第三方模块上执行Babel
+-----------------------------------------------
+
+为了提高性能，Encore不会通过Babel处理 ``node_modules/`` 中的库。
+但是，你可以通过 ``configureBabel()`` 方法改变它。
+有关详细信息，请参阅 :doc:`/frontend/encore/babel`。
 
 .. _`rsync`: https://rsync.samba.org/

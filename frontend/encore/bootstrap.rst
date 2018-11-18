@@ -38,28 +38,17 @@ Bootstrap JavaScript需要jQuery和Popper.js，所以请确保安装了这些：
 
 .. code-block:: terminal
 
-    $ yarn add jquery --dev
-    $ yarn add popper.js --dev
+    $ yarn add jquery popper.js --dev
 
-接下来，请务必在 ``webpack.config.js`` 文件中调用 ``.autoProvidejQuery()``：
-
-.. code-block:: diff
-
-    // webpack.config.js
-    Encore
-        // ...
-    +     .autoProvidejQuery()
-    ;
-
-这是必需的，因为Bootstrap希望jQuery可用作全局变量。现在，在任何JavaScript文件中导入bootstrap：
+现在，在任何你的脚本文件中引入bootstrap：
 
 .. code-block:: javascript
 
     // app.js
 
     const $ = require('jquery');
-    // JS等同于普通的“bootstrap”包
-    // 无需将其设置为变量，只需要 require 它
+    // 这会“修改”jquery模块：向其添加行为（behavior）
+    // bootstrap 模块不会导出/返回任何内容
     require('bootstrap');
 
     // 或者你可以包含特定的部分
@@ -70,7 +59,12 @@ Bootstrap JavaScript需要jQuery和Popper.js，所以请确保安装了这些：
         $('[data-toggle="popover"]').popover();
     });
 
-多亏了 ``autoProvidejQuery()``，你可以以类似的方式引入任何其他jQuery插件：
+使用其他Bootstrap/jQuery插件
+--------------------------------------
+
+如果你需要使用与jQuery兼容的jQuery插件，你可能需要使用Encore的
+:ref:`autoProvidejQuery() <encore-autoprovide-jquery>`
+方法，以便这些插件知道在哪里可以找到jQuery。然后，你可以像往常一样包含所需的JavaScript和CSS：
 
 .. code-block:: javascript
 

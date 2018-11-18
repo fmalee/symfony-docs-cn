@@ -3,7 +3,7 @@ WebLink
 
   使用HTTP/2和WebLink进行资源(Asset)预加载和Resource Hint
 
-Symfony提供了用于管理 ``Link`` HTTP标头的原生支持（通过 :doc:`WebLink组件 </components/weblink>`），
+Symfony提供了用于管理 ``Link`` HTTP标头的原生支持（通过 :doc:`WebLink组件 </components/web_link>`），
 这是在使用现代Web浏览器的HTTP/2和预加载功能时提高应用性能的关键。
 
 `HTTP/2 Server Push`_ 和W3C的 `Resource Hints`_ 中使用 ``Link`` 标头来将资源（例如CSS和JavaScript文件）
@@ -141,7 +141,7 @@ WebLink组件提供以下Twig函数来发送这些提示：
 
 .. seealso::
 
-    WebLink可以 :doc:`用作独立的PHP库 </components/weblink>`，而无需整个Symfony框架。
+    WebLink可以 :doc:`用作独立的PHP库 </components/web_link>`，而无需整个Symfony框架。
 
 .. _`HTTP/2 Server Push`: https://tools.ietf.org/html/rfc7540#section-8.2
 .. _`Resource Hints`: https://www.w3.org/TR/resource-hints/

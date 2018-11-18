@@ -81,5 +81,5 @@ Symfony框架因具备 *相当的* 弹性而广为人知，进而被用于构建
 
 下一章: :doc:`/best_practices/creating-the-project`
 
-.. _`Fabien Potencier`: https://connect.sensiolabs.com/profile/fabpot
+.. _`Fabien Potencier`: https://connect.symfony.com/profile/fabpot
 .. _`Symfony Demo`: https://github.com/symfony/demo

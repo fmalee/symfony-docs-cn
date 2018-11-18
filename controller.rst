@@ -471,7 +471,7 @@ Symfony会将 ``Request`` 对象传递给任何使用 ``Request`` 类进行类�
 
         // 使用规范化的小写键来检索HTTP请求标头
         $request->headers->get('host');
-        $request->headers->get('content_type');
+        $request->headers->get('content-type');
     }
 
 ``Request`` 类有几个公共属性和方法，可返回有关请求的所有信息。

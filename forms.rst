@@ -292,12 +292,12 @@ Symfony开箱附带许多内置类型，它们将在稍后讨论（参见 :ref:`
         class Task
         {
             /**
-             * @Assert\NotBlank()
+             * @Assert\NotBlank
              */
             public $task;
 
             /**
-             * @Assert\NotBlank()
+             * @Assert\NotBlank
              * @Assert\Type("\DateTime")
              */
             protected $dueDate;

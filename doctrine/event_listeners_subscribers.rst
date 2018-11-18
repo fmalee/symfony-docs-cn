@@ -134,14 +134,15 @@ Doctrine事件订阅器必须实现该 ``Doctrine\Common\EventSubscriber`` 接�
     // 对于 Doctrine < 2.4: use Doctrine\ORM\Event\LifecycleEventArgs;
     use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
     use App\Entity\Product;
+    use Doctrine\ORM\Events;
 
     class SearchIndexerSubscriber implements EventSubscriber
     {
         public function getSubscribedEvents()
         {
             return array(
-                'postPersist',
-                'postUpdate',
+                Events::postPersist,
+                Events::postUpdate,
             );
         }
 
@@ -194,7 +195,7 @@ Doctrine事件订阅器必须实现该 ``Doctrine\Common\EventSubscriber`` 接�
 ------------------------------
 
 如果你有同一事件的多个监听器，则可以使用标签上的 ``priority`` 属性来控制调用它们的顺序。
-优先调用具有更高优先级的监听器。
+优先级使用正整数或负整数来定义（默认为 ``0``）。数字越大意味着更早地调用该监听器。
 
 .. configuration-block::
 

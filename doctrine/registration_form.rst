@@ -59,19 +59,19 @@
 
         /**
          * @ORM\Column(type="string", length=255, unique=true)
-         * @Assert\NotBlank()
-         * @Assert\Email()
+         * @Assert\NotBlank
+         * @Assert\Email
          */
         private $email;
 
         /**
          * @ORM\Column(type="string", length=255, unique=true)
-         * @Assert\NotBlank()
+         * @Assert\NotBlank
          */
         private $username;
 
         /**
-         * @Assert\NotBlank()
+         * @Assert\NotBlank
          * @Assert\Length(max=4096)
          */
         private $plainPassword;

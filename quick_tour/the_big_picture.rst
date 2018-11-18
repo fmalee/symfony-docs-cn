@@ -26,7 +26,6 @@ Symfony *拥抱* 最佳实践，保持着向后兼容（是的，更新总是一
 
     quick_tour/
     ├─ .env
-    ├─ .env.dist
     ├─ bin/console
     ├─ composer.json
     ├─ composer.lock

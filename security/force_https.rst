@@ -77,7 +77,7 @@
             ));
 
 为了在开发过程中更简便，你还可以使用环境变量，例如 ``requires_channel: '%env(SECURE_SCHEME)%'``。
-在你的 ``.env`` 文件中，在本地环境中将 ``SECURE_SCHEME`` 设置 ``http``，而在生产环境中则设置为将其 ``https``。
+在你的 ``.env`` 文件中，将 ``SECURE_SCHEME`` 设置默认的 ``http``，而在生产环境中则重写为 ``https``。
 
 请参阅 :doc:`/security/access_control` 以获得关于 ``access_control`` 的更多信息。
 

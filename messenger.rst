@@ -16,6 +16,27 @@ Symfony的信使提供一个消息总线和一些路由功能，以便在你的�
 
     $ composer require messenger
 
+消息
+-------
+
+在发送一个消息之前，必须先创建消息。对消息没有特定要求，除了它应该可以通过Symfony
+Serializer实例来进行序列化和反序列化之外::
+
+    // src/Message/SmsNotification.php
+    namespace App\Message;
+
+    class SmsNotification
+    {
+        private $content;
+
+        public function __construct(string $content)
+        {
+            $this->content = $content;
+        }
+
+        // ...getters
+    }
+
 使用Messenger服务
 ---------------------------
 
@@ -24,7 +45,7 @@ Symfony的信使提供一个消息总线和一些路由功能，以便在你的�
     // src/Controller/DefaultController.php
     namespace App\Controller;
 
-    use App\Message\SendNotification;
+    use App\Message\SmsNotification;
     use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
     use Symfony\Component\Messenger\MessageBusInterface;
 
@@ -32,7 +53,7 @@ Symfony的信使提供一个消息总线和一些路由功能，以便在你的�
     {
         public function index(MessageBusInterface $bus)
         {
-            $bus->dispatch(new SendNotification('A string to be sent...'));
+            $bus->dispatch(new SmsNotification('A string to be sent...'));
         }
     }
 
@@ -41,14 +62,15 @@ Symfony的信使提供一个消息总线和一些路由功能，以便在你的�
 
 为了在派遣消息时执行某些操作，你需要创建消息处理器。它是带一个 ``__invoke`` 方法的类::
 
-    // src/MessageHandler/MyMessageHandler.php
+    // src/MessageHandler/SmsNotificationHandler.php
     namespace App\MessageHandler;
 
+    use App\Message\SmsNotification;
     use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
-    class MyMessageHandler implements MessageHandlerInterface
+    class SmsNotificationHandler implements MessageHandlerInterface
     {
-        public function __invoke(MyMessage $message)
+        public function __invoke(SmsNotification $message)
         {
             // 用它做一些事情
         }
@@ -56,7 +78,10 @@ Symfony的信使提供一个消息总线和一些路由功能，以便在你的�
 
 消息处理器必须注册为服务并使用 ``messenger.message_handler`` 标签进行 :doc:`标记 </service_container/tags>`。
 如果你使用 :ref:`默认的services.yaml配置 <service-container-services-load-example>`，
-那么 :ref:`自动配置 <services-autoconfigure>` 已经为你完成服务的注册工作。
+并且实现了
+:class:`Symfony\\Component\\Messenger\\Handler\\MessageHandlerInterface`
+或 :class:`Symfony\\Component\\Messenger\\Handler\\MessageSubscriberInterface`
+，那么 :ref:`自动配置 <services-autoconfigure>` 已经为你完成服务的注册工作。
 
 如果你没有使用服务的自动配置，那么你需要添加此配置：
 
@@ -66,7 +91,7 @@ Symfony的信使提供一个消息总线和一些路由功能，以便在你的�
 
         # config/services.yaml
         services:
-            App\MessageHandler\MyMessageHandler:
+            App\MessageHandler\SmsNotificationHandler:
                 tags: [messenger.message_handler]
 
     .. code-block:: xml
@@ -79,7 +104,7 @@ Symfony的信使提供一个消息总线和一些路由功能，以便在你的�
                 http://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <services>
-                <service id="App\MessageHandler\MyMessageHandler">
+                <service id="App\MessageHandler\SmsNotificationHandler">
                    <tag name="messenger.message_handler" />
                 </service>
             </services>
@@ -88,9 +113,9 @@ Symfony的信使提供一个消息总线和一些路由功能，以便在你的�
     .. code-block:: php
 
         // config/services.php
-        use App\MessageHandler\MyMessageHandler;
+        use App\MessageHandler\SmsNotificationHandler;
 
-        $container->register(MyMessageHandler::class)
+        $container->register(SmsNotificationHandler::class)
             ->addTag('messenger.message_handler');
 
 .. note::
@@ -374,6 +399,7 @@ Symfony的信使提供一个消息总线和一些路由功能，以便在你的�
     $ bin/console messenger:consume-messages amqp
 
 第一个参数是收件人的服务名称。它可能是由你的 ``transports`` 配置创建的，也可能是你自己的收件人。
+如果配置了多个总线，它还需要一个 ``--bus`` 选项，这是应该调度已接收的消息的总线的名称。
 
 多个总线
 --------------
@@ -484,9 +510,61 @@ Symfony的信使提供一个消息总线和一些路由功能，以便在你的�
 
 #. 你自己的 中间件_ 集合；
 
-#. ``route_messages`` 中间件，将你配置的消息路由到相应的发件人并停止中间件链;
+#. ``send_message`` 中间件，将你配置的消息路由到相应的发件人并停止中间件链;
 
-#. ``call_message_handler`` 中间件，为给定的消息调用消息处理器。
+#. ``handle_message`` 中间件，为给定的消息调用消息处理器。
+
+.. note::
+
+    这些中间件名称实际上是按惯例运作的快捷方式。真正的服务ID以 ``messenger.middleware.`` 命名空间为前缀。
+
+禁用默认中间件
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+如果你不希望总线上存在默认的中间件集合，则可以将其禁用：
+
+.. configuration-block::
+
+    .. code-block:: yaml
+
+        # config/packages/messenger.yaml
+        framework:
+            messenger:
+                buses:
+                    messenger.bus.default:
+                        default_middleware: false
+
+    .. code-block:: xml
+
+        <!-- config/packages/messenger.xml -->
+        <?xml version="1.0" encoding="UTF-8" ?>
+        <container xmlns="http://symfony.com/schema/dic/services"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns:framework="http://symfony.com/schema/dic/symfony"
+            xsi:schemaLocation="http://symfony.com/schema/dic/services
+                http://symfony.com/schema/dic/services/services-1.0.xsd
+                http://symfony.com/schema/dic/symfony
+                http://symfony.com/schema/dic/symfony/symfony-1.0.xsd">
+
+            <framework:config>
+                <framework:messenger>
+                    <framework:bus name="messenger.bus.default" default-middleware="false" />
+                </framework:messenger>
+            </framework:config>
+        </container>
+
+    .. code-block:: php
+
+        // config/packages/messenger.php
+        $container->loadFromExtension('framework', array(
+            'messenger' => array(
+                'buses' => array(
+                    'messenger.bus.default' => array(
+                        'default_middleware' => false,
+                    ),
+                ),
+            ),
+        ));
 
 添加自定义中间件
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -546,140 +624,12 @@ Symfony的信使提供一个消息总线和一些路由功能，以便在你的�
 
 请注意，如果服务是抽象的，则每个总线将创建一个不同的服务实例。
 
-禁用默认中间件
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-如果你不希望总线上存在默认的中间件集合，则可以将其禁用：
-
-.. configuration-block::
-
-    .. code-block:: yaml
-
-        # config/packages/messenger.yaml
-        framework:
-            messenger:
-                buses:
-                    messenger.bus.default:
-                        default_middleware: false
-
-    .. code-block:: xml
-
-        <!-- config/packages/messenger.xml -->
-        <?xml version="1.0" encoding="UTF-8" ?>
-        <container xmlns="http://symfony.com/schema/dic/services"
-            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xmlns:framework="http://symfony.com/schema/dic/symfony"
-            xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd
-                http://symfony.com/schema/dic/symfony
-                http://symfony.com/schema/dic/symfony/symfony-1.0.xsd">
-
-            <framework:config>
-                <framework:messenger>
-                    <framework:bus name="messenger.bus.default" default-middleware="false" />
-                </framework:messenger>
-            </framework:config>
-        </container>
-
-    .. code-block:: php
-
-        // config/packages/messenger.php
-        $container->loadFromExtension('framework', array(
-            'messenger' => array(
-                'buses' => array(
-                    'messenger.bus.default' => array(
-                        'default_middleware' => false,
-                    ),
-                ),
-            ),
-        ));
-
 使用中间件工厂
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 一些第三方bundle和库通过工厂提供可配置的中间件。
-定义此类需要一个基于Symfony :doc:`依赖注入 </service_container>` 功能的两步配置：
-
-.. configuration-block::
-
-    .. code-block:: yaml
-
-        # config/services.yaml
-        services:
-
-            # 第1步：将一个工厂类注册为具有所需依赖的服务，以实例化一个中间件
-            doctrine.orm.messenger.middleware_factory.transaction:
-                class: Symfony\Bridge\Doctrine\Messenger\DoctrineTransactionMiddlewareFactory
-                arguments: ['@doctrine']
-
-            # 第2步：一个抽象定义，它将使用默认参数或中间件配置中提供的参数调用工厂
-            messenger.middleware.doctrine_transaction_middleware:
-                class: Symfony\Bridge\Doctrine\Messenger\DoctrineTransactionMiddleware
-                factory: 'doctrine.orm.messenger.middleware_factory.transaction:createMiddleware'
-                abstract: true
-                # 当配置没有所提供参数时使用的默认参数。例如：
-                # middleware:
-                #     - doctrine_transaction_middleware: ~
-                arguments: ['default']
-
-    .. code-block:: xml
-
-        <!-- config/services.xml -->
-        <?xml version="1.0" encoding="UTF-8" ?>
-        <container xmlns="http://symfony.com/schema/dic/services"
-            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
-
-            <services>
-                <!-- Step 1: a factory class is registered as a service with the required
-                     dependencies to instantiate a middleware -->
-                <service id="doctrine.orm.messenger.middleware_factory.transaction"
-                    class="Symfony\Bridge\Doctrine\Messenger\DoctrineTransactionMiddlewareFactory">
-
-                    <argument type="service" id="doctrine" />
-                </service>
-
-                <!-- Step 2: an abstract definition that will call the factory with default
-                     arguments or the ones provided in the middleware config -->
-                <service id="messenger.middleware.doctrine_transaction_middleware"
-                    class="Symfony\Bridge\Doctrine\Messenger\DoctrineTransactionMiddleware"
-                    abstract="true">
-
-                    <factory service="doctrine.orm.messenger.middleware_factory.transaction"
-                        method="createMiddleware" />
-                    <argument>default</argument>
-                </service>
-            </services>
-        </container>
-
-    .. code-block:: php
-
-        // config/services.php
-        use Symfony\Bridge\Doctrine\Messenger\DoctrineTransactionMiddleware;
-        use Symfony\Bridge\Doctrine\Messenger\DoctrineTransactionMiddlewareFactory;
-        use Symfony\Component\DependencyInjection\Reference;
-
-        // Step 1: a factory class is registered as a service with the required
-        // dependencies to instantiate a middleware
-        $container
-            ->register('doctrine.orm.messenger.middleware_factory.transaction', DoctrineTransactionMiddlewareFactory::class)
-            ->setArguments(array(new Reference('doctrine')));
-
-        // Step 2: an abstract definition that will call the factory with default
-        // arguments or the ones provided in the middleware config
-        $container->register('messenger.middleware.doctrine_transaction_middleware', DoctrineTransactionMiddleware::class)
-            ->setFactory(array(
-                new Reference('doctrine.orm.messenger.middleware_factory.transaction'),
-                'createMiddleware'
-            ))
-            ->setAbstract(true)
-            ->setArguments(array('default'));
-
-此示例中的“default”值是要使用的实体管理器的名称，该值是
-``Symfony\Bridge\Doctrine\Messenger\DoctrineTransactionMiddlewareFactory::createMiddleware`` 方法所期望的参数。
-
-然后，你可以将 ``messenger.middleware.doctrine_transaction_middleware`` 服务作为中间件来引用和配置：
+例如，``messenger.middleware.doctrine_transaction`` 是在安装并启用DoctrineBundle和Messenger组件时自动装配的内置中间件。
+可以将此中间件配置为定义要使用的实体管理器：
 
 .. configuration-block::
 
@@ -691,7 +641,7 @@ Symfony的信使提供一个消息总线和一些路由功能，以便在你的�
                 buses:
                     command_bus:
                         middleware:
-                            # 使用默认
+                            # 使用默认配置的实体管理器名称
                             - doctrine_transaction_middleware
                             # 使用另一个实体管理器
                             - doctrine_transaction_middleware: ['custom']
@@ -711,7 +661,7 @@ Symfony的信使提供一个消息总线和一些路由功能，以便在你的�
             <framework:config>
                 <framework:messenger>
                     <framework:bus name="command_bus">
-                        <!-- Using defaults -->
+                        <!-- Using the default configured entity manager name -->
                         <framework:middleware id="doctrine_transaction_middleware" />
                         <!-- Using another entity manager -->
                         <framework:middleware id="doctrine_transaction_middleware">
@@ -730,7 +680,7 @@ Symfony的信使提供一个消息总线和一些路由功能，以便在你的�
                 'buses' => array(
                     'command_bus' => array(
                         'middleware' => array(
-                            // Using defaults
+                            // Using the default configured entity manager name
                             'doctrine_transaction_middleware',
                             // Using another entity manager
                             array('id' => 'doctrine_transaction_middleware', 'arguments' => array('custom')),
@@ -740,17 +690,59 @@ Symfony的信使提供一个消息总线和一些路由功能，以便在你的�
             ),
         ));
 
+定义这样的可配置中间件是基于Symfony的 :doc:`依赖注入 </service_container>` 功能：
+
+.. configuration-block::
+
+    .. code-block:: yaml
+
+        # config/services.yaml
+        services:
+            messenger.middleware.doctrine_transaction:
+                class: Symfony\Bridge\Doctrine\Messenger\DoctrineTransactionMiddleware
+                # 定义是抽象的，因此每个总线都会创建一个子定义
+                abstract: true
+                # 主要依赖由父定义来定义。中间件配置中提供的参数将附加在子定义上。
+                arguments: ['@doctrine']
+
+    .. code-block:: xml
+
+        <!-- config/services.xml -->
+        <?xml version="1.0" encoding="UTF-8" ?>
+        <container xmlns="http://symfony.com/schema/dic/services"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://symfony.com/schema/dic/services
+                http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+            <services>
+                <service id="messenger.middleware.doctrine_transaction"
+                    class="Symfony\Bridge\Doctrine\Messenger\DoctrineTransactionMiddleware"
+                    <!-- Definition is abstract, so a child definition will be created, per bus -->
+                    abstract="true">
+                    <!-- Main dependencies are defined by the parent definitions. -->
+                    <!-- Arguments provided in the middleware config will be appended on the child definition. -->
+                    <argument type="service" id="doctrine" />
+                </service>
+            </services>
+        </container>
+
+    .. code-block:: php
+
+        // config/services.php
+        use Symfony\Bridge\Doctrine\Messenger\DoctrineTransactionMiddleware;
+        use Symfony\Component\DependencyInjection\Reference;
+
+        $container->register('messenger.middleware.doctrine_transaction', DoctrineTransactionMiddleware::class)
+            // Definition is abstract, so a child definition will be created, per bus
+            ->setAbstract(true)
+            // Main dependencies are defined by the parent definitions.
+            // Arguments provided in the middleware config will be appended on the child definition.
+            ->setArguments(array(new Reference('doctrine')));
+
 .. note::
 
-    该 ``doctrine_transaction_middleware`` 快捷方式是一个惯例。实际的服务ID以 ``messenger.middleware.`` 命名空间为前缀。
-
-.. note::
-
-    中间件工厂仅允许配置中的标量和数组参数（不引用其他服务）。对于大多数高级用例，请手动注册中间件的具体定义并使用其id。
-
-.. tip::
-
-    该 ``doctrine_transaction_middleware`` 是安装并启用DoctrineBundle和Messenger组件时自动装配的内置中间件。
+    中间件工厂仅允许在配置中添加标量和数组参数（不引用其他服务）。
+    对于大多数高级用例，请手动注册中间件的具体定义并使用其id。
 
 自定义传输
 ------------------
@@ -764,8 +756,8 @@ Symfony的信使提供一个消息总线和一些路由功能，以便在你的�
 
     use Symfony\Component\Messenger\Transport\TransportFactoryInterface;
     use Symfony\Component\Messenger\Transport\TransportInterface;
-    use Symfony\Component\Messenger\Transport\ReceiverInterface;
-    use Symfony\Component\Messenger\Transport\SenderInterface;
+    use Symfony\Component\Messenger\Transport\Receiver\ReceiverInterface;
+    use Symfony\Component\Messenger\Transport\Sender\SenderInterface;
 
     class YourTransportFactory implements TransportFactoryInterface
     {
@@ -785,7 +777,7 @@ Symfony的信使提供一个消息总线和一些路由功能，以便在你的�
 
     class YourTransport implements TransportInterface
     {
-        public function send($message): void
+        public function send(Envelope $envelope): Envelope
         {
             // ...
         }

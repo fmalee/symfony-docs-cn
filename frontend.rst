@@ -45,6 +45,7 @@ Encore 文档
 * :doc:`PostCSS和autoprefixing </frontend/encore/postcss>`
 * :doc:`启用React.js </frontend/encore/reactjs>`
 * :doc:`启用Vue.js (vue-loader) </frontend/encore/vuejs>`
+* :doc:`/frontend/encore/copy-files`
 * :doc:`配置Babel </frontend/encore/babel>`
 * :doc:`源映射 </frontend/encore/sourcemaps>`
 * :doc:`启用TypeScript (ts-loader) </frontend/encore/typescript>`
@@ -52,8 +53,10 @@ Encore 文档
 优化
 ..........
 
-* :doc:`版本控制(以及manifest.json文件) </frontend/encore/versioning>`
+* :doc:`版本控制(以及entrypoints.json/manifest.json文件) </frontend/encore/versioning>`
 * :doc:`使用CDN </frontend/encore/cdn>`
+* :doc:`/frontend/encore/code-splitting`
+* :doc:`/frontend/encore/split-chunks`
 * :doc:`为复用模块创建共享条目 </frontend/encore/shared-entry>`
 * :doc:`/frontend/encore/url-loader`
 

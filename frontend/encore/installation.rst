@@ -9,7 +9,7 @@
 
 .. code-block:: terminal
 
-    $ composer require symfony/webpack-encore-pack
+    $ composer require encore
     $ yarn install
 
 这将创建一个 ``webpack.config.js`` 文件，添加 ``assets/`` 目录，然后添加 ``node_modules/`` 到 ``.gitignore``。

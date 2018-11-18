@@ -1,16 +1,7 @@
-CSS预处理器：Sass、LESS等
-===================================
+CSS预处理器：Sass、LESS、Stylus等
+===========================================
 
-使用Sass
-----------
-
-要使用Sass预处理器，请安装该依赖：
-
-.. code-block:: terminal
-
-    $ yarn add --dev sass-loader node-sass
-
-并在 ``webpack.config.js`` 中启用它：
+要使用Sass、LESS 或 Stylus预处理器，请在 ``webpack.config.js`` 中启用你需要的预处理器：
 
 .. code-block:: javascript
 
@@ -19,59 +10,23 @@ CSS预处理器：Sass、LESS等
 
     Encore
         // ...
+
+        // 只启用你想要的那个
+
+        // 处理以.scss或.sass结尾的文件
         .enableSassLoader()
-    ;
 
-仅此而已！所有以 ``.sass`` 或 ``.scss`` 结尾的文件将被预处理。
-你还可以选项传递到 ``sass-loader``：
-
-.. code-block:: javascript
-
-    // webpack.config.js
-    // ...
-
-    Encore
-        // ...
-        .enableSassLoader(function(options) {
-            // https://github.com/sass/node-sass#options
-            // options.includePaths = [...]
-        });
-    ;
-
-使用LESS
-----------
-
-要使用LESS预处理器，请安装该依赖：
-
-.. code-block:: terminal
-
-    $ yarn add --dev less-loader less
-
-并在 ``webpack.config.js`` 中启用它：
-
-.. code-block:: javascript
-
-    // webpack.config.js
-    // ...
-
-    Encore
-        // ...
+        // 处理以.less结尾的文件
         .enableLessLoader()
+
+        // 处理以.styl结尾的文件
+        .enableStylusLoader()
     ;
 
-仅此而已！所有以 ``.less`` 结尾的文件将被预处理。
-你还可以选项传递到 ``less-loader``：
+然后重启Encore。执行此操作时，它将为你提供一个命令，你可以运行该命令来安装任何缺少的依赖。
+运行该命令并重新启动Encore后，你就完工了！
 
-.. code-block:: javascript
+你还可以将配置选项传递给每个加载器。
+有关详细文档，请参阅 `Encore的index.js文件`_。
 
-    // webpack.config.js
-    // ...
-
-    Encore
-        // ...
-        .enableLessLoader(function(options) {
-            // https://github.com/webpack-contrib/less-loader#examples
-            // http://lesscss.org/usage/#command-line-usage-options
-            // options.relativeUrls = false;
-        });
-    ;
+.. _`Encore的index.js文件`: https://github.com/symfony/webpack-encore/blob/master/index.js

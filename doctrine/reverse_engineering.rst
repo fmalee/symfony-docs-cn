@@ -40,7 +40,7 @@
       CONSTRAINT `blog_post_id` FOREIGN KEY (`post_id`) REFERENCES `blog_post` (`id`) ON DELETE CASCADE
     ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-在深入了解指令之前，请确保在 ``.env`` 文件中正确设置了数据库连接参数。
+在深入了解指令之前，请确保在 ``.env`` 文件 (或 ``.env.local`` 重写文件)中正确设置了数据库连接参数。
 
 从现有数据库构建实体类的第一步是要求Doctrine自检(introspect)数据库并生成相应的元数据文件。
 该元数据文件描述要生成的基于表字段的实体类。

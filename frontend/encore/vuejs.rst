@@ -1,13 +1,7 @@
 启用Vue.js (vue-loader)
 ============================
 
-想要使用 `Vue.js`_？没问题！首先，安装Vue和一些依赖：
-
-.. code-block:: terminal
-
-    $ yarn add --dev vue vue-loader@^14 vue-template-compiler
-
-然后，在你的 ``webpack.config.js`` 中激活 ``vue-loader``：
+想要使用 `Vue.js`_？没问题！首先，在 ``webpack.config.js`` 中启用它：
 
 .. code-block:: diff
 
@@ -21,18 +15,12 @@
     +     .enableVueLoader()
     ;
 
-仅此而已！你引入的任何 ``.vue`` 文件都将得到正确处理。
-你还可以通过回调配置 `vue-loader选项`_：
+然后重启Encore。执行此操作时，它将为你提供一个命令，你可以运行该命令来安装任何缺少的依赖。
+运行该命令并重新启动Encore后，你就完工了！
 
-.. code-block:: javascript
-
-    .enableVueLoader(function(options) {
-        // https://vue-loader.vuejs.org/options.html
-
-        options.preLoaders = {
-            js: '/path/to/custom/loader'
-        };
-    });
+你引入的任何 ``.vue`` 文件都将被正确处理。
+你还可以通过将选项回调传递给 ``enableVueLoader()`` 来配置 `vue-loader选项`_。
+有关详细文档，请参阅 `Encore的index.js文件`_。
 
 热模块更换 (HMR)
 ----------------------------
@@ -42,7 +30,7 @@
 
 .. code-block:: terminal
 
-    $ ./node_modules/.bin/encore dev-server --hot
+    $ yarn encore dev-server --hot
 
 仅此而已！更改其中一个 ``.vue`` 文件并观看浏览器更新。
 但请注意：该特性并 *不* 支持 ``.vue`` 文件中的 *样式* 变更。查看更新的样式仍需要刷新页面。
@@ -52,3 +40,4 @@
 .. _`babel-preset-react`: https://babeljs.io/docs/plugins/preset-react/
 .. _`Vue.js`: https://vuejs.org/
 .. _`vue-loader选项`: https://vue-loader.vuejs.org/options.html
+.. _`Encore的index.js文件`: https://github.com/symfony/webpack-encore/blob/master/index.js

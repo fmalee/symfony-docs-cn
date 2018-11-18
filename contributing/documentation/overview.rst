@@ -151,7 +151,7 @@
     $ git push
 
 **步骤10.** 在最终接受并在Symfony文档中合并你的请求后，你将被包含在 `Symfony文档贡献者`_ 列表中。
-此外，如果你碰巧拥有一个 `SensioLabsConnect`_ 账号，你将获得一个很酷的 `Symfony文档徽章`_。
+此外，如果你碰巧拥有一个 `SymfonyConnect`_ 账号，你将获得一个很酷的 `Symfony文档徽章`_。
 
 你的下一个文档贡献
 -------------------------------------
@@ -265,8 +265,8 @@
 .. _`GitHub`: https://github.com/
 .. _`fork the repository`: https://help.github.com/articles/fork-a-repo
 .. _`Symfony文档贡献者`: https://symfony.com/contributors/doc
-.. _`SensioLabsConnect`: https://connect.sensiolabs.com/
-.. _`Symfony文档徽章`: https://connect.sensiolabs.com/badge/36/symfony-documentation-contributor
+.. _`SymfonyConnect`: https://connect.symfony.com/
+.. _`Symfony文档徽章`: https://connect.symfony.com/badge/36/symfony-documentation-contributor
 .. _`sync your fork`: https://help.github.com/articles/syncing-a-fork
 .. _`Platform.sh`: https://platform.sh
 .. _`路线图`: https://symfony.com/roadmap

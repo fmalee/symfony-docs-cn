@@ -46,18 +46,18 @@ Symfony执行 ``Kernel`` 类的 ``configureContainer()`` 方法::
 
     your-project/
     ├─ config/
-    │  └─ packages/
-    │     ├─ dev/
-    |     │  ├─ framework.yaml
-    │     │  └─ ...
-    │     ├─ prod/
-    │     │  └─ ...
-    │     ├─ test/
-    │     │  └─ ...
-    |     ├─ framework.yaml
-    │     └─ ...
-    │     ├─ services.yaml
-    │     └─ services_dev.yaml
+    │  ├─ packages/
+    │  │  ├─ dev/
+    │  │  │  ├─ framework.yaml
+    │  │  │  └─ ...
+    │  │  ├─ prod/
+    │  │  │  └─ ...
+    │  │  ├─ test/
+    │  │  │  └─ ...
+    │  │  ├─ framework.yaml
+    │  │  └─ ...
+    │  ├─ services.yaml
+    │  └─ services_dev.yaml
     ├─ ...
 
 选择此默认结构是为了简化 - 每个软件包和环境一个文件。

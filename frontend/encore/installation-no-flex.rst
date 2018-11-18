@@ -56,6 +56,10 @@ Yarn也会创建/更新 ``yarn.lock``（如果你使用npm5+，则调用 ``packa
         //.addEntry('page1', './assets/js/page1.js')
         //.addEntry('page2', './assets/js/page2.js')
 
+        // will require an extra script tag for runtime.js
+        // but, you probably want this, unless you're building a single-page app
+        .enableSingleRuntimeChunk()
+
         .cleanupOutputBeforeBuild()
         .enableSourceMaps(!Encore.isProduction())
         // enables hashed filenames (e.g. app.abc123.css)
@@ -94,4 +98,12 @@ Yarn也会创建/更新 ``yarn.lock``（如果你使用npm5+，则调用 ``packa
 
 你将在 :doc:`/frontend/encore/simple-example` 中自定义并了解有关这些文件的更多信息。
 
+.. caution::
+
+    一些文档将使用特定于Symfony或Symfony的 `WebpackEncoreBundle`_ 的功能。
+    这些是可选的，并且是指向Encore生成的资产路径的特殊方式，它们启用一些功能：
+    :doc:`版本控制 </frontend/encore/versioning>`
+    和 :doc:`split chunks </frontend/encore/split-chunks>`。
+
 .. _`npm`: https://www.npmjs.com/
+.. _WebpackEncoreBundle: https://github.com/symfony/webpack-encore-bundle

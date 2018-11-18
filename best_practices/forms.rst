@@ -150,7 +150,7 @@ Symfony表单组件允许你在表单类中把按钮作为字段来添加。这�
     class Post
     {
         /**
-         * @Assert\NotBlank()
+         * @Assert\NotBlank
          */
         public $title;
     }

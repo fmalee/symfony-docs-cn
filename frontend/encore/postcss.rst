@@ -35,6 +35,8 @@ PostCSS是CSS后期处理工具，可以以很多很酷的方式转换(transform
     +     .enablePostCssLoader()
     ;
 
+因为你刚刚修改了``webpack.config.js``，所以需要停止并重新启动Encore。
+
 仅此而已！该 ``postcss-loader`` 现在将用于所有的CSS、Sass等文件。
 你还可以通过传递回调将选项传递给 `postcss-loader`_：
 
@@ -51,6 +53,8 @@ PostCSS是CSS后期处理工具，可以以很多很酷的方式转换(transform
     +     })
     ;
 
+.. _browserslist_package_config:
+
 添加browserslist到package.json
 -----------------------------------
 
@@ -60,7 +64,12 @@ PostCSS是CSS后期处理工具，可以以很多很酷的方式转换(transform
 .. code-block:: diff
 
     {
-    +     "browserslist": [ "last 2 versions", "ios >= 8" ]
+    +  "browserslist": [
+    +    "> 0.5%",
+    +    "last 2 versions",
+    +    "Firefox ESR",
+    +    "not dead"
+    +  ]
     }
 
 有关语法的更多详细信息，请参阅 `browserslist`_ 。

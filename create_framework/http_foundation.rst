@@ -192,7 +192,7 @@ fingertips thanks to a nice and simple API::
 
     // retrieve an HTTP request header, with normalized, lowercase keys
     $request->headers->get('host');
-    $request->headers->get('content_type');
+    $request->headers->get('content-type');
 
     $request->getMethod();    // GET, POST, PUT, DELETE, HEAD
     $request->getLanguages(); // an array of languages the client accepts
@@ -264,7 +264,7 @@ explicitly trust your reverse proxies by calling ``setTrustedProxies()``::
 
 So, the ``getClientIp()`` method works securely in all circumstances. You can
 use it in all your projects, whatever the configuration is, it will behave
-correctly and safely. That's one of the goal of using a framework. If you were
+correctly and safely. That's one of the goals of using a framework. If you were
 to write a framework from scratch, you would have to think about all these
 cases by yourself. Why not using a technology that already works?
 

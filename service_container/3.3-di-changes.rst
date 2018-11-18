@@ -447,7 +447,7 @@ Symfony是独一无二的，因为它有一个 *编译(compiled)*容器。
         app.api_client_sl_connect:
             class: App\Service\ApiClient
             arguments:
-                - 'https://connect.sensiolabs.com/api'
+                - 'https://connect.symfony.com/api'
 
 这是可选的，但让我们逐步升级到新的Symfony 3.3配置， 而不会破坏我们的应用。
 
@@ -720,7 +720,7 @@ Step 5) 清理！
         app.api_client_sl_connect:
             class: App\Service\ApiClient
             arguments:
-                - 'https://connect.sensiolabs.com/api'
+                - 'https://connect.symfony.com/api'
 
 你现在可以利用未来的新功能了。
 

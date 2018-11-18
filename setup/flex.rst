@@ -170,7 +170,7 @@ Symfony发布了一个新的“骨架”项目，这是一个推荐用于创建�
 
    .. code-block:: terminal
 
-       $ rm -fr vendor/*
+       $ rm -rf vendor/*
        $ composer install
 
 #. 无论你遵循以下哪个步骤。此时，你将在 ``config/`` 中拥有大量新的配置文件。

@@ -1,66 +1,35 @@
 启用TypeScript (ts-loader)
 ===============================
 
-想要使用 `TypeScript`_？没问题！首先，安装该依赖：
+想要使用 `TypeScript`_？没问题！首先，启用它：
 
-.. code-block:: terminal
-
-    $ yarn add --dev typescript ts-loader@^3.0
-
-然后，在 ``webpack.config.js`` 中激活 ``ts-loader``：
-
-.. code-block:: javascript
+.. code-block:: diff
 
     // webpack.config.js
     // ...
 
     Encore
         // ...
-        .addEntry('main', './assets/main.ts')
+    +     .addEntry('main', './assets/main.ts')
 
-        .enableTypeScriptLoader()
+    +     .enableTypeScriptLoader()
+
+        // 可选择启用forked类型脚本以实现更快的构建
+        // https://www.npmjs.com/package/fork-ts-checker-webpack-plugin
+        // 要求你具有正确设置的tsconfig.json文件。
+    +     //.enableForkedTypeScriptTypesChecking()
     ;
 
-而已！.ts您需要的任何文件都将得到正确处理。您还可以通过回调配置ts-loader选项：
-That's it! Any ``.ts`` files that you require will be processed correctly. You can
-also configure the `ts-loader options`_ via a callback:
+然后重启Encore。执行此操作时，它将为你提供一个命令，你可以运行该命令来安装任何缺少的依赖。
+运行该命令并重新启动Encore后，你就完工了！
 
-.. code-block:: javascript
+你引入的任何 ``.ts`` 文件都将被正确处理。
+你还可以通过 ``enableTypeScriptLoader()`` 方法配置 `ts-loader选项`_。
+有关详细文档，请参阅 `Encore的index.js文件`_。
 
-    .enableTypeScriptLoader(function (typeScriptConfigOptions) {
-        typeScriptConfigOptions.transpileOnly = true;
-        typeScriptConfigOptions.configFile = '/path/to/tsconfig.json';
-    });
-
-如果已启用React资产（``.enableReactPreset()``），则任何 ``.tsx`` 文件都将由 ``ts-loader`` 处理。
-
-有关 ``ts-loader`` 的更多信息，可以在他的 `README`_ 中找到。
-
-使用fork-ts-checker-webpack-plugin更快生成
--------------------------------------------------
-
-通过使用 `fork-ts-checker-webpack-plugin`_，你可以在单独的进程中运行类型检查，这样可以加快编译进程。
-要启用它，请安装该插件：
-
-.. code-block:: terminal
-
-    $ yarn add --dev fork-ts-checker-webpack-plugin
-
-然后通过调用启用它：
-
-.. code-block:: javascript
-
-    // webpack.config.js
-
-    Encore
-        // ...
-        .enableForkedTypeScriptTypesChecking()
-    ;
-
-此插件要求你具有一个设置正确的 `tsconfig.json`_ 文件。
+如果启用了React（``.enableReactPreset()``），任何 ``.tsx`` 文件也将由 ``ts-loader`` 处理。
 
 .. _`TypeScript`: https://www.typescriptlang.org/
-.. _`ts-loader options`: https://github.com/TypeStrong/ts-loader#options
-.. _`README`: https://github.com/TypeStrong/ts-loader#typescript-loader-for-webpack
+.. _`ts-loader选项`: https://github.com/TypeStrong/ts-loader#options
 .. _`fork-ts-checker-webpack-plugin`: https://www.npmjs.com/package/fork-ts-checker-webpack-plugin
-.. _`tsconfig.json`: https://www.npmjs.com/package/fork-ts-checker-webpack-plugin#modules-resolution
+.. _`Encore的index.js文件`: https://github.com/symfony/webpack-encore/blob/master/index.js

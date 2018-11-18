@@ -28,7 +28,7 @@
 
 .. code-block:: text
 
-    # .env
+    # .env (或覆盖 .env.local 中的 DATABASE_URL 以避免提交更改)
 
     # 自定义这一行!
     DATABASE_URL="mysql://db_user:db_password@127.0.0.1:3306/db_name"

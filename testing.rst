@@ -159,18 +159,7 @@ PHPUnit由Symfony应用的根目录中的 ``phpunit.xml.dist`` 文件配置。
 .. tip::
 
     要运行功能测试，``WebTestCase`` 类需要知道引导它的应用内核。
-    内核类通常在 ``KERNEL_CLASS`` 环境变量中定义（包含在Symfony提供的默认 ``phpunit.xml.dist`` 文件中）：
-
-    .. code-block:: xml
-
-        <?xml version="1.0" charset="utf-8" ?>
-        <phpunit>
-            <php>
-                <!-- the value is the FQCN of the application kernel -->
-                <env name="KERNEL_CLASS" value="App\Kernel" />
-            </php>
-            <!-- ... -->
-        </phpunit>
+    内核类通常在 ``KERNEL_CLASS`` 环境变量中定义（包含在Symfony提供的默认 ``.env.test`` 文件中）：
 
     如果你的用例更复杂，你还可以覆盖功能测试的 ``createKernel()``
     或 ``getKernelClass()`` 方法，这些方法优先于 ``KERNEL_CLASS`` 环境变量。
@@ -851,6 +840,30 @@ Crawler可以从节点中提取信息::
         'environment' => 'my_test_env',
         'debug'       => false,
     ));
+
+自定义数据库URL/环境变量
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+如果你需要为测试自定义一些环境变量（例如Doctrine使用的 ``DATABASE_URL``），你可以通过重写
+``.env.test`` 文件中任何需要的内容来实现：
+
+.. code-block:: text
+
+    # .env.test
+    DATABASE_URL="mysql://db_user:db_password@127.0.0.1:3306/db_name_test"
+
+    # use SQLITE
+    # DATABASE_URL="sqlite:///%kernel.project_dir%/var/app.db"
+
+该文件在 ``test`` 环境中自动读取：这里的任何键都覆盖 ``.env`` 中的默认值。
+
+.. caution::
+
+    在2018年11月之前创建的应用有一个稍微不同的系统，涉及一个 ``.env.dist`` 文件。
+    有关升级的信息，请参阅 :doc:`configuration/dot-env-changes`。
+
+发送自定义标头
+~~~~~~~~~~~~~~~~~~~~~~
 
 如果你的应用的行为根据某些HTTP标头，请将它们作为 ``createClient()`` 的第二个参数传递::
 

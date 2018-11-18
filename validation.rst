@@ -54,7 +54,7 @@ Symfony提供了一个 `Validator`_ 组件，使该任务变得简单透明。
         class Author
         {
             /**
-             * @Assert\NotBlank()
+             * @Assert\NotBlank
              */
             public $name;
         }
@@ -505,7 +505,7 @@ Symfony封装了很多最常用的约束：
         class Author
         {
             /**
-             * @Assert\NotBlank()
+             * @Assert\NotBlank
              * @Assert\Length(min=3)
              */
             private $firstName;

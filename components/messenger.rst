@@ -34,7 +34,7 @@ Messenger组件
    负责序列化和发送消息到 *某些东西*。这些东西可以是消息代理(broker)或第三方API。
 
 **Receiver**:
-   负责反序列化并将消息转发给处理器。例如，这可以是消息队列拉取器或API端点。
+   负责检索、反序列化并将消息转发给处理器。例如，这可以是消息队列拉取器或API端点。
 
 **Handler**:
    责处理适用于该业务逻辑的消息。
@@ -91,52 +91,59 @@ Messenger组件
 ---------------------------------------
 
 如果需要向消息添加元数据或某些配置，请将其与 :class:`Symfony\\Component\\Messenger\\Envelope` 类包装在一起。
-例如，要设置消息通过传输层时使用的序列化组，请使用 ``SerializerConfiguration`` 信封::
+请使用 :class:`Symfony\\Component\\Messenger\\Envelope` 类将其封装并添加邮票(stamp)。
+例如，要设置消息通过传输层时使用的序列化组，请使用 ``SerializerStamp`` 邮票::
 
     use Symfony\Component\Messenger\Envelope;
-    use Symfony\Component\Messenger\Transport\Serialization\SerializerConfiguration;
+    use Symfony\Component\Messenger\Stamp\SerializerStamp;
 
     $bus->dispatch(
-        (new Envelope($message))->with(new SerializerConfiguration([
+        (new Envelope($message))->with(new SerializerStamp([
             'groups' => ['my_serialization_groups'],
         ]))
     );
 
-目前，Symfony Messenger具有以下内置信封：
+目前，Symfony Messenger具有以下内置信封邮票：
 
-#. :class:`Symfony\\Component\\Messenger\\Transport\\Serialization\\SerializerConfiguration`,
+#. :class:`Symfony\\Component\\Messenger\\Stamp\\SerializerStamp`，
    配置传输（transport）使用的序列化组。
-#. :class:`Symfony\\Component\\Messenger\\Middleware\\Configuration\\ValidationConfiguration`,
+#. :class:`Symfony\\Component\\Messenger\\Stamp\\ValidationStamp`，
    配置启用验证中间件时使用的验证组。
-#. :class:`Symfony\\Component\\Messenger\\Asynchronous\\Transport\\ReceivedMessage`,
-   一个内部项，用于标记(mark)从传输接收的消息。
+#. :class:`Symfony\\Component\\Messenger\\Stamp\\ReceivedStamp`，
+   一个内部邮票，用于标记(mark)从传输接收的消息。
+#. :class:`Symfony\\Component\\Messenger\\Stamp\\SentStamp`，
+   一个由特定发件人发送的用于标记消息的邮票，允许从
+   :class:`Symfony\\Component\\Messenger\\Transport\\Sender\\SendersLocator`
+   访问发件人的FQCN和别名（如果可用）。
+#. :class:`Symfony\\Component\\Messenger\\Stamp\\ReceivedStamp`，
+   一个由特定处理器处理的用于标记消息的邮票。允许访问处理器的返回值，该处理器可从
+   :class:`Symfony\\Component\\Messenger\\Handler\\HandlersLocator`
+   调用其名称及别名（如果可用）。
 
-你可以通过实现 :class:`Symfony\\Component\\Messenger\\EnvelopeAwareInterface` 标记来接收信封，
-而不是直接处理中间件中的消息，如下所示::
+你将收到该信封，而不是直接处理中间件中的消息。因此，你可以检查信封内容及其邮票，或添加任何信封::
 
-    use Symfony\Component\Messenger\Asynchronous\Transport\ReceivedMessage;
+    use App\Message\Stamp\AnotherStamp;
+    use Symfony\Component\Messenger\Stamp\ReceivedStamp;
     use Symfony\Component\Messenger\Middleware\MiddlewareInterface;
-    use Symfony\Component\Messenger\EnvelopeAwareInterface;
+    use Symfony\Component\Messenger\Middleware\StackInterface;
 
-    class MyOwnMiddleware implements MiddlewareInterface, EnvelopeAwareInterface
+    class MyOwnMiddleware implements MiddlewareInterface
     {
-        public function handle($envelope, callable $next)
+        public function handle(Envelope $envelope, StackInterface $stack): Envelope
         {
-            // $envelope 在这是一个 `Envelope` 对象，因为这个中间件实现了 EnvelopeAwareInterface 接口。
-
-            if (null !== $envelope->get(ReceivedMessage::class)) {
+            if (null !== $envelope->get(ReceivedStamp::class)) {
                 // 刚刚收到消息...
 
                 // 例如，你可以添加另一个项目
-                $envelope = $envelope->with(new AnotherEnvelopeItem(/* ... */));
+                $envelope = $envelope->with(new AnotherStamp(/* ... */));
             }
 
-            return $next($envelope);
+            return $stack->next()->handle($envelope, $stack);
         }
     }
 
-如果刚刚收到消息（即具有 `ReceivedMessage`  项），上面的示例将使用额外的信封将消息转发到下一个中​​间件。
-你可以通过实现 :class:`Symfony\\Component\\Messenger\\EnvelopeAwareInterface` 来创建自己的项目。
+如果刚刚收到消息（即具有 `ReceivedStamp` 邮票），上面的示例将使用额外的邮票将消息转发到下一个中​​间件。
+你可以通过实现 :class:`Symfony\\Component\\Messenger\\Stamp\\StampInterface` 来创建自己的项目。
 
 传输系统
 ----------
@@ -155,7 +162,7 @@ Messenger组件
     namespace App\MessageSender;
 
     use App\Message\ImportantAction;
-    use Symfony\Component\Messenger\Transport\SenderInterface;
+    use Symfony\Component\Messenger\Transport\Sender\SenderInterface;
     use Symfony\Component\Messenger\Envelope;
 
     class ImportantActionToEmailSender implements SenderInterface
@@ -169,7 +176,7 @@ Messenger组件
            $this->toEmail = $toEmail;
        }
 
-       public function send(Envelope $envelope)
+       public function send(Envelope $envelope): Envelope
        {
            $message = $envelope->getMessage();
 
@@ -185,13 +192,15 @@ Messenger组件
                        'text/html'
                    )
            );
+
+           return $envelope;
        }
     }
 
 自定义收件人
 ~~~~~~~~~~~~~~~~~
 
-收件人负责从一个源接收消息并将它们调度给应用。
+收件人负责从一个源获取消息并将它们调度给应用。
 
 想象一下，你已经使用 ``NewOrder`` 消息在应用中处理了一些“订单” 。
 现在，你希望与第三方或旧版应用集成，但不能使用API​​，而是需要使用带有新订单的共享CSV文件。
@@ -204,11 +213,11 @@ Messenger组件
     namespace App\MessageReceiver;
 
     use App\Message\NewOrder;
-    use Symfony\Component\Messenger\Transport\ReceiverInterface;
+    use Symfony\Component\Messenger\Transport\Receiver\ReceiverInterface;
     use Symfony\Component\Serializer\SerializerInterface;
     use Symfony\Component\Messenger\Envelope;
 
-    class NewOrdersFromCsvFile implements ReceiverInterface
+    class NewOrdersFromCsvFileReceiver implements ReceiverInterface
     {
        private $serializer;
        private $filePath;
@@ -240,8 +249,8 @@ Messenger组件
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 为了允许在同一总线上发送和接收消息并防止无限循环，消息总线将添加一个
-:class:`Symfony\\Component\\Messenger\\Asynchronous\\Transport\\ReceivedMessage` 信封到消息信封项，
-:class:`Symfony\\Component\\Messenger\\Asynchronous\\Middleware\\SendMessageMiddleware`
+:class:`Symfony\\Component\\Messenger\\Stamp\\ReceivedStamp` 邮票到消息信封，而
+:class:`Symfony\\Component\\Messenger\\Middleware\\SendMessageMiddleware`
 中间件将知道它不应将这些消息再路由回一个传输系统。
 
 .. _关于命令总线的博客: https://matthiasnoback.nl/tags/command%20bus/

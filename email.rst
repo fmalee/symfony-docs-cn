@@ -30,6 +30,8 @@ Symfony通过 `SwiftMailerBundle`_ 提供基于流行的 `Swift Mailer`_ 库的�
 
 .. code-block:: bash
 
+    # .env (或覆盖 .env.local 中的 MAILER_URL 以避免提交更改)
+
     # 用此来禁用邮件发送
     MAILER_URL=null://localhost
 

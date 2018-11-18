@@ -53,7 +53,7 @@ Symfony中文文档
     testing
     translation
     validation
-    weblink
+    web_link
     workflow
 
 最佳实践
