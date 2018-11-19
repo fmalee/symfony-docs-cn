@@ -2,50 +2,46 @@
    single: Dotenv
    single: Components; Dotenv
 
-The Dotenv Component
+Dotenv组件
 ====================
 
-    The Dotenv Component parses ``.env`` files to make environment variables
-    stored in them accessible via ``getenv()``, ``$_ENV`` or ``$_SERVER``.
+    Dotenv组件解析 ``.env`` 文件以使存储在其中的环境变量可通过
+    ``getenv()``、``$_ENV`` 或 ``$_SERVER`` 来访问。
 
-Installation
+安装
 ------------
 
 .. code-block:: terminal
 
     $ composer require --dev symfony/dotenv
 
-Alternatively, you can clone the `<https://github.com/symfony/dotenv>`_ repository.
+或者，你可以克隆 `<https://github.com/symfony/dotenv>`_ 仓库。
 
 .. include:: /components/require_autoload.rst.inc
 
-Usage
+用法
 -----
 
-Sensitive information and environment-dependent settings should be defined as
-environment variables (as recommended for `twelve-factor applications`_). Using
-a ``.env`` file to store those environment variables eases development and CI
-management by keeping them in one "standard" place and agnostic of the
-technology stack you are using (Nginx vs PHP built-in server for instance).
+应将敏感信息和依赖于环境的设置定义为环境变量（即 `twelve-factor applications`_ 推荐）。
+使用一个 ``.env`` 文件存储这些环境变量可以简化开发和CI管理，方法是将它们保存在一个“标准”位置，
+并且不知道你正在使用的技术堆栈（例如Nginx与PHP内置服务器）。
 
 .. note::
 
-    PHP has a lot of different implementations of this "pattern". This
-    implementation's goal is to replicate what ``source .env`` would do. It
-    tries to be as similar as possible with the standard shell's behavior (so
-    no value validation for instance).
+    PHP有很多此“模式”的不同实现。这个实现的目标是复制 ``source .env`` 会做的事情。
+    它试图与标准shell的行为尽可能相似（因此没有值验证）。
 
-Load a ``.env`` file in your PHP application via ``Dotenv::load()``::
+通过 ``Dotenv::load()`` 在PHP应用中加载一个 ``.env`` 文件::
 
     use Symfony\Component\Dotenv\Dotenv;
 
     $dotenv = new Dotenv();
     $dotenv->load(__DIR__.'/.env');
 
-    // You can also load several files
+    // 你也可以叫做多个文件
     $dotenv->load(__DIR__.'/.env', __DIR__.'/.env.dev');
 
-Given the following ``.env`` file content:
+假设下面为 ``.env`` 文件的内容：
 
 .. code-block:: bash
 
@@ -53,39 +49,34 @@ Given the following ``.env`` file content:
     DB_USER=root
     DB_PASS=pass
 
-Access the value with ``getenv()`` in your code::
+使用 ``getenv()`` 在代码中访问该值::
 
     $dbUser = getenv('DB_USER');
-    // you can also use ``$_ENV`` or ``$_SERVER``
+    // 你也可以使用 ``$_ENV`` or ``$_SERVER``
 
-The ``load()`` method never overwrites existing environment variables. Use the
-``overload()`` method if you need to overwrite them::
+``load()`` 方法永远不会重写现有的环境变量。如果需要重写它们，请使用 ``overload()`` 方法：
 
     // ...
     $dotenv->overload(__DIR__.'/.env');
 
 .. versionadded:: 4.2
-    The ``Dotenv::overload()`` method was introduced in Symfony 4.2.
+    ``Dotenv::overload()`` 方法是在Symfony 4.2中引入的。
 
-You should never store a ``.env`` file in your code repository as it might
-contain sensitive information; create a ``.env.dist`` file with sensible
-defaults instead.
+你永远不应该将 ``.env`` 文件存储在代码仓库中，因为它可能包含敏感信息;
+可以创建一个具有合理默认值的 ``.env.dist`` 文件。
 
 .. note::
 
-    Symfony Dotenv can be used in any environment of your application:
-    development, testing, staging and even production. However, in production
-    it's recommended to configure real environment variables to avoid the
-    performance overhead of parsing the ``.env`` file for every request.
+    Symfony Dotenv可用于你的应用的任何环境：开发、测试、升级甚至生产。
+    但是，在生产中，建议配置实际的环境变量，以避免为每个请求解析 ``.env`` 文件导致的性能开销。
 
-As a ``.env`` file is a regular shell script, you can ``source`` it in your own
-shell scripts:
+由于 ``.env`` 文件是一个常规shell脚本，你可以在自己的shell脚本中 ``source`` 它：
 
 .. code-block:: terminal
 
     source .env
 
-Add comments by prefixing them with ``#``:
+通过为它们添加 ``#`` 前缀来添加注释：
 
 .. code-block:: bash
 
@@ -93,14 +84,14 @@ Add comments by prefixing them with ``#``:
     DB_USER=root
     DB_PASS=pass # This is the secret password
 
-Use environment variables in values by prefixing variables with ``$``:
+通过在变量前添加 ``$`` 前缀，可以在值中使用环境变量：
 
 .. code-block:: bash
 
     DB_USER=root
     DB_PASS=${DB_USER}pass # Include the user as a password prefix
 
-Embed commands via ``$()`` (not supported on Windows):
+通过 ``$()`` 嵌入命令（Windows不支持）：
 
 .. code-block:: bash
 
@@ -108,7 +99,7 @@ Embed commands via ``$()`` (not supported on Windows):
 
 .. note::
 
-    Note that using ``$()`` might not work depending on your shell.
+    请注意，根据你的shell ，使用 ``$()`` 可能不起作用。
 
 .. _Packagist: https://packagist.org/packages/symfony/dotenv
 .. _twelve-factor applications: http://www.12factor.net/

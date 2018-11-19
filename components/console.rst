@@ -2,37 +2,33 @@
     single: Console; CLI
     single: Components; Console
 
-The Console Component
+Console组件
 =====================
 
-    The Console component eases the creation of beautiful and testable command
-    line interfaces.
+    Console组件简化了创建漂亮且可测试的命令行界面的过程。
 
-The Console component allows you to create command-line commands. Your console
-commands can be used for any recurring task, such as cronjobs, imports, or
-other batch jobs.
+Console组件允许你创建命令行命令。你的控制台命令可用于任何重复任务，例如cron作业，导入或其他批处理作业。
 
-Installation
+安装
 ------------
 
 .. code-block:: terminal
 
     $ composer require symfony/console
 
-Alternatively, you can clone the `<https://github.com/symfony/console>`_ repository.
+或者，你可以克隆 `<https://github.com/symfony/console>`_ 仓库。
 
 .. include:: /components/require_autoload.rst.inc
 
-Creating a Console Application
+创建控制台应用
 ------------------------------
 
 .. seealso::
 
-    This article explains how to use the Console features as an independent
-    component in any PHP application. Read the :doc:`/console` article to
-    learn about how to use it in Symfony applications.
+    本文介绍如何在任何PHP应用中将控制台功能用作独立组件。
+    阅读 :doc:`/console` 文档，以了解如何在Symfony应用中使用它。
 
-First, you need to create a PHP script to define the console application::
+首先，你需要创建一个PHP脚本来定义该控制台应用::
 
     #!/usr/bin/env php
     <?php
@@ -44,19 +40,18 @@ First, you need to create a PHP script to define the console application::
 
     $application = new Application();
 
-    // ... register commands
+    // ... 注册命令
 
     $application->run();
 
-Then, you can register the commands using
-:method:`Symfony\\Component\\Console\\Application::add`::
+然后，你可以使用 :method:`Symfony\\Component\\Console\\Application::add` 注册该命令::
 
     // ...
     $application->add(new GenerateAdminCommand());
 
-See the :doc:`/console` article for information about how to create commands.
+有关如何创建命令的信息，请参阅 :doc:`/console` 文档。
 
-Learn more
+扩展阅读
 ----------
 
 .. toctree::

@@ -2,40 +2,36 @@
    single: Workflow
    single: Components; Workflow
 
-The Workflow Component
+Workflow组件
 ======================
 
-    The Workflow component provides tools for managing a workflow or finite
-    state machine.
+    Workflow组件提供用于管理工作流或有限状态机的工具。
 
-Installation
+安装
 ------------
 
 .. code-block:: terminal
 
     $ composer require symfony/workflow
 
-Alternatively, you can clone the `<https://github.com/symfony/workflow>`_ repository.
+或者，你可以克隆 `<https://github.com/symfony/workflow>`_ 仓库。
 
 .. include:: /components/require_autoload.rst.inc
 
-Creating a Workflow
+创建工作流
 -------------------
 
-The workflow component gives you an object oriented way to define a process
-or a life cycle that your object goes through. Each step or stage in the
-process is called a *place*. You do also define *transitions* that describe
-the action to get from one place to another.
+工作流组件为你提供了一种面向对象的方式来定义对象所经历的过程或生命周期。
+该过程中的每个步骤或阶段被称为一个 *位置*。你还可以定义一个 *过渡*，它描述了从一个位置到另一个位置的动作。
 
 .. image:: /_images/components/workflow/states_transitions.png
 
-A set of places and transitions creates a **definition**. A workflow needs
-a ``Definition`` and a way to write the states to the objects (i.e. an
-instance of a :class:`Symfony\\Component\\Workflow\\MarkingStore\\MarkingStoreInterface`).
+一组位置和过渡创建了一个 **定义**。
+一个工作流需要一个 ``Definition`` 和一个将状态写入对象的方法（即一个
+:class:`Symfony\\Component\\Workflow\\MarkingStore\\MarkingStoreInterface` 实例）。
 
-Consider the following example for a blog post. A post can have one of a number
-of predefined statuses (`draft`, `review`, `rejected`, `published`). In a workflow,
-these statuses are called **places**. You can define the workflow like this::
+请考虑以下的博客文章示例。一个帖子可以具有多个预定义状态（`draft`、`review`、`rejected`、`published`）中的一个。
+在工作流程中，这些状态称为 **位置**。你可以像这样定义工作流::
 
     use Symfony\Component\Workflow\DefinitionBuilder;
     use Symfony\Component\Workflow\Transition;
@@ -45,6 +41,7 @@ these statuses are called **places**. You can define the workflow like this::
     $definitionBuilder = new DefinitionBuilder();
     $definition = $definitionBuilder->addPlaces(['draft', 'review', 'rejected', 'published'])
         // Transitions are defined with a unique name, an origin place and a destination place
+        // 过渡是使用唯一名称，原始位置和目标位置来定义的
         ->addTransition(new Transition('to_review', 'draft', 'review'))
         ->addTransition(new Transition('publish', 'review', 'published'))
         ->addTransition(new Transition('reject', 'review', 'rejected'))
@@ -54,14 +51,11 @@ these statuses are called **places**. You can define the workflow like this::
     $marking = new SingleStateMarkingStore('currentState');
     $workflow = new Workflow($definition, $marking);
 
-The ``Workflow`` can now help you to decide what actions are allowed
-on a blog post depending on what *place* it is in. This will keep your domain
-logic in one place and not spread all over your application.
+现在 ``Workflow`` 可以帮助你根据博客文章的 *位置* 来决定允许哪些操作。
+这将使你的域逻辑保持在一个位置而不会遍布你的应用。
 
-When you define multiple workflows you should consider using a ``Registry``,
-which is an object that stores and provides access to different workflows.
-A registry will also help you to decide if a workflow supports the object you
-are trying to use it with::
+定义多个工作流时，应考虑使用一个 ``Registry``，这是一个可以存储和访问不同工作流的对象。
+一个注册表还将帮助你确定一个工作流是否支持你正尝试使用的对象::
 
     use Symfony\Component\Workflow\Registry;
     use Symfony\Component\Workflow\WorkflowInterface\InstanceOfSupportStrategy;
@@ -74,15 +68,14 @@ are trying to use it with::
     $registry = new Registry();
     $registry->addWorkflow($blogWorkflow, new InstanceOfSupportStrategy(BlogPost::class));
     $registry->addWorkflow($newsletterWorkflow, new InstanceOfSupportStrategy(Newsletter::class));
-    
-.. versionadded:: 4.1
-    The ``addWorkflow()`` method was introduced in Symfony 4.1. In previous
-    Symfony versions it was called ``add()``.
 
-Usage
+.. versionadded:: 4.1
+    ``addWorkflow()`` 方法是在Symfony 4.1中引入的。在以前的Symfony版本中，它被称为 ``add()``。
+
+用法
 -----
 
-When you have configured a ``Registry`` with your workflows, you may use it as follows::
+在使用工作流配置了一个 ``Registry`` 后，就可以按如下方式来使用它::
 
     // ...
     $post = new BlogPost();
@@ -95,7 +88,7 @@ When you have configured a ``Registry`` with your workflows, you may use it as f
     $workflow->can($post, 'publish'); // True
     $workflow->getEnabledTransitions($post); // ['publish', 'reject']
 
-Learn more
+扩展阅读
 ----------
 
 .. toctree::

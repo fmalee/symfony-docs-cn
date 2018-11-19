@@ -2,28 +2,26 @@
    single: Finder
    single: Components; Finder
 
-The Finder Component
+Finder组件
 ====================
 
-    The Finder component finds files and directories via an intuitive fluent
-    interface.
+    Finder组件通过直观的流畅界面查找文件和目录。
 
-Installation
+安装
 ------------
 
 .. code-block:: terminal
 
     $ composer require symfony/finder
 
-Alternatively, you can clone the `<https://github.com/symfony/finder>`_ repository.
+或者，你可以克隆 `<https://github.com/symfony/finder>`_ 仓库。
 
 .. include:: /components/require_autoload.rst.inc
 
-Usage
+用法
 -----
 
-The :class:`Symfony\\Component\\Finder\\Finder` class finds files and/or
-directories::
+:class:`Symfony\\Component\\Finder\\Finder` 类查找的文件或目录::
 
     use Symfony\Component\Finder\Finder;
 
@@ -31,98 +29,86 @@ directories::
     $finder->files()->in(__DIR__);
 
     foreach ($finder as $file) {
-        // dumps the absolute path
+        // 转储绝对路径
         var_dump($file->getRealPath());
 
-        // dumps the relative path to the file, omitting the filename
+        // 转储文件的相对路径，省略文件名
         var_dump($file->getRelativePath());
 
-        // dumps the relative path to the file
+        // 转储文件的相对路径，包括文件名
         var_dump($file->getRelativePathname());
     }
 
-The ``$file`` is an instance of :class:`Symfony\\Component\\Finder\\SplFileInfo`
-which extends PHP's own :phpclass:`SplFileInfo` to provide methods to work with relative
-paths.
+``$file`` 是一个 :class:`Symfony\\Component\\Finder\\SplFileInfo`
+(继承自PHP自己的 :phpclass:`SplFileInfo`)实例，以提供使用相对路径的方法。
 
-The above code prints the names of all the files in the current directory
-recursively. The Finder class uses a fluent interface, so all methods return
-the Finder instance.
+上面的代码以递归方式打印当前目录中的所有文件的名称。
+Finder类使用流式接口，因此所有方法都返回该Finder实例。
 
 .. tip::
 
-    A Finder instance is a PHP :phpclass:`Iterator`. So, in addition to iterating over the
-    Finder with ``foreach``, you can also convert it to an array with the
-    :phpfunction:`iterator_to_array` method, or get the number of items with
-    :phpfunction:`iterator_count`.
+    Finder实例是一个PHP :phpclass:`Iterator`。
+    因此，除了使用 ``foreach`` 迭代Finder之外，你还可以使用 :phpfunction:`iterator_to_array`
+    方法将其转换为数组，或者使用 :phpfunction:`iterator_count` 来获取该项的数量。
 
 .. caution::
 
-    The ``Finder`` object doesn't reset its internal state automatically.
-    This means that you need to create a new instance if you do not want
-    get mixed results.
+    ``Finder`` 对象不会自动重置其内部状态。这意味着如果你不希望得到混合(mixed)结果，则需要创建一个新实例。
 
 .. caution::
 
-    When searching through multiple locations passed to the
-    :method:`Symfony\\Component\\Finder\\Finder::in` method, a separate iterator
-    is created internally for every location. This means we have multiple result
-    sets aggregated into one.
-    Since :phpfunction:`iterator_to_array` uses keys of result sets by default,
-    when converting to an array, some keys might be duplicated and their values
-    overwritten. This can be avoided by passing ``false`` as a second parameter
-    to :phpfunction:`iterator_to_array`.
+    在搜索被传递给 :method:`Symfony\\Component\\Finder\\Finder::in`
+    方法的多个位置时，会在内部为每个位置创建一个单独的迭代器。
+    这意味着我们会将多个结果集聚合为一个。由于 :phpfunction:`iterator_to_array`
+    默认情况下使用结果集的键，因此在转换为数组时，某些键可能会被复制并且其值会被覆盖。
+    通过将 ``false`` 传递给 :phpfunction:`iterator_to_array` 的第二个参数可以避免这种情况。
 
-Criteria
+条件
 --------
 
-There are lots of ways to filter and sort your results. You can also use the
-:method:`Symfony\\Component\\Finder\\Finder::hasResults` method to check if
-there's any file or directory matching the search criteria.
+有很多方法可以过滤和排序你的结果。
+你还可以使用 :method:`Symfony\\Component\\Finder\\Finder::hasResults`
+方法检查是否存在与搜索条件匹配的文件或目录。
 
-Location
+位置
 ~~~~~~~~
 
-The location is the only mandatory criteria. It tells the finder which
-directory to use for the search::
+位置是唯一的强制性条件。它告诉finder用于搜索的目录::
 
     $finder->in(__DIR__);
 
-Search in several locations by chaining calls to
-:method:`Symfony\\Component\\Finder\\Finder::in`::
+通过链式调用 :method:`Symfony\\Component\\Finder\\Finder::in` 来搜索多个位置::
 
-    // search inside *both* directories
+    // 在*两个*目录里面搜索
     $finder->in(array(__DIR__, '/elsewhere'));
 
-    // same as above
+    // 与上述相同
     $finder->in(__DIR__)->in('/elsewhere');
 
-Use wildcard characters to search in the directories matching a pattern::
+使用通配符来搜索匹配一个模式的目录::
 
     $finder->in('src/Symfony/*/*/Resources');
 
-Each pattern has to resolve to at least one directory path.
+每个模式必须解析为至少一个目录路径。
 
-Exclude directories from matching with the
-:method:`Symfony\\Component\\Finder\\Finder::exclude` method::
+使用 :method:`Symfony\\Component\\Finder\\Finder::exclude` 方法排除匹配的目录::
 
-    // directories passed as argument must be relative to the ones defined with the in() method
+    // 作为参数传递的目录必须相对于使用 in() 方法定义的目录
     $finder->in(__DIR__)->exclude('ruby');
 
-It's also possible to ignore directories that you don't have permission to read::
+也可以忽略你无权读取的目录::
 
     $finder->ignoreUnreadableDirs()->in(__DIR__);
 
-As the Finder uses PHP iterators, you can pass any URL with a supported
-`protocol`_::
+由于Finder使用PHP迭代器，你可以使用支持的 `协议`_ 来传递任何URL::
 
-    // always add a trailing slash when looking for in the FTP root dir
+    // 在FTP根目录中查找时始终添加一个尾斜杠
     $finder->in('ftp://example.com/');
 
-    // you can also look for in a FTP directory
+    // 你也可以在FTP目录中查找
     $finder->in('ftp://example.com/pub/');
 
-And it also works with user-defined streams::
+它也适用于用户定义的流::
 
     use Symfony\Component\Finder\Finder;
 
@@ -132,37 +118,36 @@ And it also works with user-defined streams::
     $finder = new Finder();
     $finder->name('photos*')->size('< 100K')->date('since 1 hour ago');
     foreach ($finder->in('s3://bucket-name') as $file) {
-        // ... do something with the file
+        // ... 对文件做一些事情
     }
 
 .. note::
 
-    Read the `Streams`_ documentation to learn how to create your own streams.
+    阅读 `Streams`_ 文档以了解如何创建自己的流。
 
-Files or Directories
+文件和目录
 ~~~~~~~~~~~~~~~~~~~~
 
-By default, the Finder returns files and directories; but the
-:method:`Symfony\\Component\\Finder\\Finder::files` and
-:method:`Symfony\\Component\\Finder\\Finder::directories` methods control that::
+默认情况下，Finder返回文件和目录; 但可以使用
+:method:`Symfony\\Component\\Finder\\Finder::files` 和
+:method:`Symfony\\Component\\Finder\\Finder::directories` 方法来控制改行为::
 
     $finder->files();
 
     $finder->directories();
 
-If you want to follow links, use the ``followLinks()`` method::
+如果要关注链接，请使用 ``followLinks()`` 方法::
 
     $finder->files()->followLinks();
 
-By default, the iterator ignores popular VCS files. This can be changed with
-the ``ignoreVCS()`` method::
+默认情况下，迭代器忽略流行的VCS文件。但可以通过 ``ignoreVCS()`` 方法更改::
 
     $finder->ignoreVCS(false);
 
-Sorting
+排序
 ~~~~~~~
 
-Sort the result by name or by type (directories first, then files)::
+按名称或类型（首先是目录，然后是文件）对结果进行排序::
 
     $finder->sortByName();
 
@@ -170,15 +155,15 @@ Sort the result by name or by type (directories first, then files)::
 
 .. tip::
 
-    By default, the ``sortByName()`` method uses the :phpfunction:`strcmp` PHP
-    function (e.g. ``file1.txt``, ``file10.txt``, ``file2.txt``). Pass ``true``
-    as its argument to use PHP's `natural sort order`_ algorithm instead (e.g.
-    ``file1.txt``, ``file2.txt``, ``file10.txt``).
+    默认情况下，``sortByName()`` 方法使用 :phpfunction:`strcmp`
+    PHP函数（例如 ``file1.txt``、``file10.txt``、``file2.txt``）。
+    可以通过传递 ``true`` 作为它的参数来使用PHP的 `自然排序`_
+    算法（例如 ``file1.txt``、``file2.txt``、``file10.txt``）。
 
     .. versionadded:: 4.2
-        The option to use the natural sort order was introduced in Symfony 4.2.
+        Symfony 4.2中引入了使用自然排序顺序的选项。
 
-Sort the files and directories by the last accessed, changed or modified time::
+按上次访问、变更或修改的时间对文件和目录进行排序::
 
     $finder->sortByAccessedTime();
 
@@ -186,200 +171,187 @@ Sort the files and directories by the last accessed, changed or modified time::
 
     $finder->sortByModifiedTime();
 
-You can also define your own sorting algorithm with ``sort()`` method::
+你还可以使用 ``sort()`` 方法定义自己的排序算法::
 
     $finder->sort(function (\SplFileInfo $a, \SplFileInfo $b) {
         return strcmp($a->getRealPath(), $b->getRealPath());
     });
 
-You can reverse any sorting by using the ``reverseSorting()`` method::
+你可以使用 ``reverseSorting()`` 方法反转任何排序::
 
-    // results will be sorted "Z to A" instead of the default "A to Z"
+    // 结果将被排序为“Z到A”而不是默认的“A到Z”
     $finder->sortByName()->reverseSorting();
 
 .. versionadded:: 4.2
-    The ``reverseSorting()`` method was introduced in Symfony 4.2.
+    ``reverseSorting()`` 方法是在Symfony 4.2中引入的。
 
 .. note::
 
-    Notice that the ``sort*`` methods need to get all matching elements to do
-    their jobs. For large iterators, it is slow.
+    请注意，这些 ``sort*`` 方法需要获取所有匹配的元素以完成它们的工作。对于大型迭代器，它会很慢。
 
-File Name
+文件名称
 ~~~~~~~~~
 
-Restrict files by name with the
-:method:`Symfony\\Component\\Finder\\Finder::name` method::
+使用 :method:`Symfony\\Component\\Finder\\Finder::name` 方法按名称限制文件::
 
     $finder->files()->name('*.php');
 
-The ``name()`` method accepts globs, strings, regexes or an array of globs,
-strings or regexes::
+``name()`` 方法接受globs、字符串、正则表达式或数组形式的globs、字符串、正则表达式::
 
     $finder->files()->name('/\.php$/');
 
-Multiple filenames can be defined by chaining calls or passing an array::
+可以通过链式调用或传递一个数组来定义多个文件名::
 
     $finder->files()->name('*.php')->name('*.twig');
 
-    // same as above
+    // 与上述相同
     $finder->files()->name(array('*.php', '*.twig'));
 
-The ``notName()`` method excludes files matching a pattern::
+``notName()`` 方法排除匹配一个模式的文件::
 
     $finder->files()->notName('*.rb');
 
-Multiple filenames can be excluded by chaining calls or passing an array::
+可以通过链式调用或传递一个数组来排除多个文件名::
 
     $finder->files()->notName('*.rb')->notName('*.py');
 
-    // same as above
+    // 与上述相同
     $finder->files()->notName(array('*.rb', '*.py'));
 
 .. versionadded:: 4.2
-    Support for passing arrays to ``name()`` and ``notName()`` was introduced
-    in Symfony 4.2
+    在Symfony 4.2引入了对将数组传递到 ``name()`` 和 ``notName()`` 的支持。
 
-File Contents
+文件内容
 ~~~~~~~~~~~~~
 
-Restrict files by contents with the
-:method:`Symfony\\Component\\Finder\\Finder::contains` method::
+使用 :method:`Symfony\\Component\\Finder\\Finder::contains` 方法来按内容限制文件::
 
     $finder->files()->contains('lorem ipsum');
 
-The ``contains()`` method accepts strings or regexes::
+``contains()`` 方法接受字符串或正则表达式::
 
     $finder->files()->contains('/lorem\s+ipsum$/i');
 
-The ``notContains()`` method excludes files containing given pattern::
+``notContains()`` 方法排除包含一个给定模式的文件::
 
     $finder->files()->notContains('dolor sit amet');
 
-Path
+路径
 ~~~~
 
-Restrict files and directories by path with the
-:method:`Symfony\\Component\\Finder\\Finder::path` method::
+使用 :method:`Symfony\\Component\\Finder\\Finder::path` 方法来按路径限制文件和目录::
 
-    // matches files that contain "data" anywhere in their paths (files or directories)
+    // 匹配其路径（文件或目录）中的任何位置包含“data”的文件
     $finder->path('data');
-    // for example this will match data/*.xml and data.xml if they exist
+    // 例如，如果它们存在的话，则匹配 data/*.xml 和 data.xml
     $finder->path('data')->name('*.xml');
 
-On all platforms slash (i.e. ``/``) should be used as the directory separator.
+在所有平台上，应该使用斜杠（即 ``/``）作为目录的分隔符。
 
-The ``path()`` method accepts a string, a regular expression or an array of
-strings or regulars expressions::
+``path()`` 方法接受字符串、正则表达式或字符串、正则表达式数组::
 
     $finder->path('foo/bar');
     $finder->path('/^foo\/bar/');
 
-Multiple paths can be defined by chaining calls or passing an array::
+可以通过链式调用或传递一个数组来定义多个路径::
 
     $finder->path('data')->path('foo/bar');
 
-    // same as above
+    // 与上述相同
     $finder->path(array('data', 'foo/bar'));
 
 .. versionadded:: 4.2
-    Support for passing arrays to ``path()`` was introduced in Symfony 4.2
+    在Symfony 4.2中引入了对传递数组到 ``path()`` 的支持
 
-Internally, strings are converted into regular expressions by escaping slashes
-and adding delimiters:
+在内部，通过转义斜杠和添加分隔符来将字符串转换为正则表达式：
 
 .. code-block:: text
 
     dirname    ===>    /dirname/
     a/b/c      ===>    /a\/b\/c/
 
-The :method:`Symfony\\Component\\Finder\\Finder::notPath` method excludes files by path::
+:method:`Symfony\\Component\\Finder\\Finder::notPath` 方法按路径排除文件::
 
     $finder->notPath('other/dir');
 
-Multiple paths can be excluded by chaining calls or passing an array::
+链式调用或传递一个数组可以排除多个路径::
 
     $finder->notPath('first/dir')->notPath('other/dir');
 
-    // same as above
+    // 与上述相同
     $finder->notPath(array('first/dir', 'other/dir'));
 
 .. versionadded:: 4.2
-    Support for passing arrays to ``notPath()`` was introduced in Symfony
-    4.2
+    在Symfony 4.2中引入了对传递数组到 ``notPath()`` 的支持
 
-File Size
+文件大小
 ~~~~~~~~~
 
-Restrict files by size with the
-:method:`Symfony\\Component\\Finder\\Finder::size` method::
+使用 :method:`Symfony\\Component\\Finder\\Finder::size` 方法来按大小(size)限制文件::
 
     $finder->files()->size('< 1.5K');
 
-Restrict by a size range by chaining calls or passing an array::
+通过链式调用或传递一个数组来限制大小范围::
 
     $finder->files()->size('>= 1K')->size('<= 2K');
 
-    // same as above
+    // 与上述相同
     $finder->files()->size(array('>= 1K', '<= 2K'));
 
 .. versionadded:: 4.2
-    Support for passing arrays to ``size()`` was introduced in Symfony 4.2
+    在Symfony 4.2中引入了对传递数组到 ``size()`` 的支持
 
-The comparison operator can be any of the following: ``>``, ``>=``, ``<``, ``<=``,
-``==``, ``!=``.
+比较运算符可以是下列任何一项： ``>``, ``>=``, ``<``, ``<=``, ``==``, ``!=``。
 
-The target value may use magnitudes of kilobytes (``k``, ``ki``), megabytes
-(``m``, ``mi``), or gigabytes (``g``, ``gi``). Those suffixed with an ``i`` use
-the appropriate ``2**n`` version in accordance with the `IEC standard`_.
+目标值可以使用千字节（``k``、``ki``），兆字节（``m``、``mi``）或千兆字节（``g``、``gi``）的大小。
+后缀为 ``i`` 的话，会根据 `IEC标准`_ 来使用适当的 ``2**n`` 版本。
 
-File Date
+文件日期
 ~~~~~~~~~
 
-Restrict files by last modified dates with the
-:method:`Symfony\\Component\\Finder\\Finder::date` method::
+使用 :method:`Symfony\\Component\\Finder\\Finder::date` 方法来按最后修改日期限制文件::
 
     $finder->date('since yesterday');
 
-Restrict by a date range by chaining calls or passing an array::
+通过链式调用或传递一个数组来限制日期范围::
 
     $finder->date('>= 2018-01-01')->size('<= 2018-12-31');
 
-    // same as above
+    // 与上述相同
     $finder->date(array('>= 2018-01-01', '<= 2018-12-31'));
 
 .. versionadded:: 4.2
-    Support for passing arrays to ``date()`` was introduced in Symfony 4.2
+    在Symfony 4.2中引入了对传递数组到 ``date()`` 的支持
 
-The comparison operator can be any of the following: ``>``, ``>=``, ``<``, ``<=``,
-``==``. You can also use ``since`` or ``after`` as an alias for ``>``, and
-``until`` or ``before`` as an alias for ``<``.
+比较运算符可以是下列任何一项：``>``, ``>=``, ``<``, ``<=``, ``==``。
+你还可以使用 ``since`` 或 ``after`` 作为 ``>``
+的别名，使用 ``until`` 或 ``before`` 作为 ``<`` 别名。
 
-The target value can be any date supported by the `strtotime`_ function.
+目标值可以是 `strtotime`_ 函数支持的任何日期。
 
-Directory Depth
+目录深度
 ~~~~~~~~~~~~~~~
 
-By default, the Finder recursively traverse directories. Restrict the depth of
-traversing with :method:`Symfony\\Component\\Finder\\Finder::depth`::
+默认情况下，Finder以递归方式遍历目录。通过使用
+:method:`Symfony\\Component\\Finder\\Finder::depth` 方法来限制遍历的深度::
 
     $finder->depth('== 0');
     $finder->depth('< 3');
 
-Restrict by a depth range by chaining calls or passing an array::
+通过链式调用或传递一个数组来限制深度范围::
 
     $finder->depth('> 2')->depth('< 5');
 
-    // same as above
+    // 与上述相同
     $finder->depth(array('> 2', '< 5'));
 
 .. versionadded:: 4.2
-    Support for passing arrays to ``depth()`` was introduced in Symfony 4.2
+    在Symfony 4.2中引入了对传递数组到 ``depth()`` 的支持
 
-Custom Filtering
+自定义过滤
 ~~~~~~~~~~~~~~~~
 
-To restrict the matching file with your own strategy, use
+要使用你自己的策略来限制匹配文件，请使用
 :method:`Symfony\\Component\\Finder\\Finder::filter`::
 
     $filter = function (\SplFileInfo $file)
@@ -391,16 +363,15 @@ To restrict the matching file with your own strategy, use
 
     $finder->files()->filter($filter);
 
-The ``filter()`` method takes a Closure as an argument. For each matching file,
-it is called with the file as a :class:`Symfony\\Component\\Finder\\SplFileInfo`
-instance. The file is excluded from the result set if the Closure returns
-``false``.
+``filter()`` 方法使用一个闭包作为其参数。
+对于每个匹配的文件，使用该文件作为 :class:`Symfony\\Component\\Finder\\SplFileInfo`
+实例来调用它。如果闭包返回 ``false``，则从结果集中排除该文件。
 
-Reading Contents of Returned Files
+读取返回文件的内容
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The contents of returned files can be read with
-:method:`Symfony\\Component\\Finder\\SplFileInfo::getContents`::
+返回文件的内容可以通过使用
+:method:`Symfony\\Component\\Finder\\SplFileInfo::getContents` 方法来读取::
 
     use Symfony\Component\Finder\Finder;
 
@@ -414,8 +385,8 @@ The contents of returned files can be read with
     }
 
 .. _strtotime:          https://php.net/manual/en/datetime.formats.php
-.. _protocol:           https://php.net/manual/en/wrappers.php
+.. _协议:               https://php.net/manual/en/wrappers.php
 .. _Streams:            https://php.net/streams
-.. _IEC standard:       https://physics.nist.gov/cuu/Units/binary.html
+.. _IEC标准:            https://physics.nist.gov/cuu/Units/binary.html
 .. _Packagist:          https://packagist.org/packages/symfony/finder
-.. _`natural sort order`: https://en.wikipedia.org/wiki/Natural_sort_order
+.. _`自然排序`: https://en.wikipedia.org/wiki/Natural_sort_order

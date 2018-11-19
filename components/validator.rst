@@ -2,39 +2,35 @@
    single: Validator
    single: Components; Validator
 
-The Validator Component
+Validator组件
 =======================
 
-    The Validator component provides tools to validate values following the
-    `JSR-303 Bean Validation specification`_.
+    Validator组件提供了验证 `JSR-303 Bean验证规范`_ 后面的值的工具 。
 
-Installation
+安装
 ------------
 
 .. code-block:: terminal
 
     $ composer require symfony/validator
 
-Alternatively, you can clone the `<https://github.com/symfony/validator>`_ repository.
+或者，你可以克隆 `<https://github.com/symfony/validator>`_ 仓库。
 
 .. include:: /components/require_autoload.rst.inc
 
-Usage
+用法
 -----
 
 .. seealso::
 
-    This article explains how to use the Validator features as an independent
-    component in any PHP application. Read the :doc:`/validation` article to
-    learn about how to validate data and entities in Symfony applications.
+    阅读 :doc:`/validation` 文档，了解如何验证Symfony应用中的数据和实体。
 
-The Validator component behavior is based on two concepts:
+Validator组件行为基于两个概念：
 
-* Constraints, which define the rules to be validated;
-* Validators, which are the classes that contain the actual validation logic.
+* 约束，定义要验证的规则;
+* 验证器，它是包含实际验证逻辑的类。
 
-The following example shows how to validate that a string is at least 10
-characters long::
+以下示例显示如何验证字符串的长度至少为10个字符::
 
     use Symfony\Component\Validator\Validation;
     use Symfony\Component\Validator\Constraints\Length;
@@ -47,42 +43,40 @@ characters long::
     ));
 
     if (0 !== count($violations)) {
-        // there are errors, now you can show them
+        // 有错误，现在你可以显示它们
         foreach ($violations as $violation) {
             echo $violation->getMessage().'<br>';
         }
     }
 
-The  ``validate()`` method returns the list of violations as an object that
-implements :class:`Symfony\\Component\\Validator\\ConstraintViolationListInterface`.
-If you have lots of validation errors, you can filter them by error code::
+``validate()`` 方法返回违规的列表作为一个实现
+:class:`Symfony\\Component\\Validator\\ConstraintViolationListInterface` 的对象。
+如果你有许多验证错误，可以通过错误代码过滤它们::
 
     use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
     $violations = $validator->validate(...);
     if (0 !== count($violations->findByCodes(UniqueEntity::NOT_UNIQUE_ERROR))) {
-        // handle this specific error (display some message, send an email, etc.)
+        // 处理此特定错误（显示一些消息，发送邮件等）
     }
 
 .. versionadded:: 3.3
-    The ``findByCodes()`` method was introduced in Symfony 3.3.
+    ``findByCodes()`` 方法是在Symfony 3.3中引入的。
 
-Retrieving a Validator Instance
+检索一个验证器实例
 -------------------------------
 
-The :class:`Symfony\\Component\\Validator\\Validator` class is the main access
-point of the Validator component. To create a new instance of this class, it's
-recommended to use the :class:`Symfony\\Component\\Validator\\Validation` class::
+:class:`Symfony\\Component\\Validator\\Validator` 类是Validator组件的主要接入点。
+要创建此类的新实例，建议使用 :class:`Symfony\\Component\\Validator\\Validation` 类::
 
     use Symfony\Component\Validator\Validation;
 
     $validator = Validation::createValidator();
 
-This ``$validator`` object can validate simple variables such as strings, numbers
-and arrays, but it can't validate objects. To do so, configure the
-``Validator`` class as explained in the next sections.
+此 ``$validator`` 对象可以验证简单变量，如字符串、数字和数组，但不能验证对象。
+为此，请按照下一节中的说明配置 ``Validator`` 类。
 
-Learn More
+扩展阅读
 ----------
 
 .. toctree::
@@ -93,5 +87,5 @@ Learn More
     /validation
     /validation/*
 
-.. _`JSR-303 Bean Validation specification`: http://jcp.org/en/jsr/detail?id=303
+.. _`JSR-303 Bean验证规范`: http://jcp.org/en/jsr/detail?id=303
 .. _Packagist: https://packagist.org/packages/symfony/validator

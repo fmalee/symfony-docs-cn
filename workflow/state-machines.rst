@@ -4,25 +4,20 @@
 作为状态机的工作流
 ===========================
 
-The workflow component is modelled after a *Workflow net* which is a subclass
-of a `Petri net`_. By adding further restrictions you can get a state machine.
-The most important one being that a state machine cannot be in more than
-one place simultaneously. It is also worth noting that a workflow does not
-commonly have cyclic path in the definition graph, but it is common for a state
-machine.
+工作流组件以一个 *工作流网络* 为模型，而该网络是 `Petri net`_ 的子类。
+通过添加进一步的限制，你可以获取一个状态机。最重要的一点是一个状态机不能同时存在于多个位置。
+还有一点值得注意，在定义图中，一个工作流通常不具有循环路径，但对于一个状态机来说却很常见。
 
-Example of a State Machine
+状态机示例
 --------------------------
 
-A pull request starts in an initial "start" state, a state for e.g. running
-tests on Travis. When this is finished, the pull request is in the "review"
-state, where contributors can require changes, reject or accept the
-pull request. At any time, you can also "update" the pull request, which
-will result in another Travis run.
+一个拉取请求以一个初始的“start”状态开始，还有一个在Travis上运行测试的状态。
+完成此操作后，拉取请求处于“review”状态，其中贡献者可以要求更改、拒绝或接受该拉取请求。
+你可以随时“update”该拉取请求，不过这将导致另一个Travis的运行。
 
 .. image:: /_images/components/workflow/pull_request.png
 
-Below is the configuration for the pull request state machine.
+以下是该拉取请求状态机的配置。
 
 .. configuration-block::
 
@@ -190,9 +185,8 @@ Below is the configuration for the pull request state machine.
             ),
         ));
 
-In a Symfony application using the
-:ref:`default services.yaml configuration <service-container-services-load-example>`,
-you can get this state machine by injecting the Workflow registry service::
+在使用 :ref:`默认services.yaml配置 <service-container-services-load-example>`
+的Symfony应用中，你可以通过注入工作流注册表服务来获取此状态机::
 
     // ...
     use Symfony\Component\Workflow\Registry;

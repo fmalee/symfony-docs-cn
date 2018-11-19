@@ -2,41 +2,37 @@
    single: DomCrawler
    single: Components; DomCrawler
 
-The DomCrawler Component
+DomCrawler组件
 ========================
 
-    The DomCrawler component eases DOM navigation for HTML and XML documents.
+    DomCrawler组件简化了HTML和XML文档的DOM导航。
 
 .. note::
 
-    While possible, the DomCrawler component is not designed for manipulation
-    of the DOM or re-dumping HTML/XML.
+    尽管可以做到，但DomCrawler组件并非设计来用于操纵DOM或重新转储(re-dumping)HTML/XML。
 
-Installation
+安装
 ------------
 
 .. code-block:: terminal
 
     $ composer require symfony/dom-crawler
 
-Alternatively, you can clone the `<https://github.com/symfony/dom-crawler>`_ repository.
+或者，你也可以克隆 `<https://github.com/symfony/dom-crawler>`_ 仓库。
 
 .. include:: /components/require_autoload.rst.inc
 
-Usage
+用法
 -----
 
 .. seealso::
 
-    This article explains how to use the DomCrawler features as an independent
-    component in any PHP application. Read the :ref:`Symfony Functional Tests <functional-tests>`
-    article to learn about how to use it when creating Symfony tests.
+    本文介绍如何在任何PHP应用中将DomCrawler功能用作独立组件。
+    阅读 :ref:`Symfony功能测试 <functional-tests>` 文档，以了解如何在创建Symfony测试时使用它。
 
-The :class:`Symfony\\Component\\DomCrawler\\Crawler` class provides methods
-to query and manipulate HTML and XML documents.
+:class:`Symfony\\Component\\DomCrawler\\Crawler` 类提供了查询和操作HTML和XML文档的方法。
 
-An instance of the Crawler represents a set of :phpclass:`DOMElement` objects,
-which are basically nodes that you can traverse easily::
+Crawler的一个实例代表一组 :phpclass:`DOMElement` 对象，它们是可以轻松遍历的基本节点::
 
     use Symfony\Component\DomCrawler\Crawler;
 
@@ -56,39 +52,35 @@ which are basically nodes that you can traverse easily::
         var_dump($domElement->nodeName);
     }
 
-Specialized :class:`Symfony\\Component\\DomCrawler\\Link`,
-:class:`Symfony\\Component\\DomCrawler\\Image` and
-:class:`Symfony\\Component\\DomCrawler\\Form` classes are useful for
-interacting with html links, images and forms as you traverse through the HTML
-tree.
+:class:`Symfony\\Component\\DomCrawler\\Link`、
+:class:`Symfony\\Component\\DomCrawler\\Image` 和
+:class:`Symfony\\Component\\DomCrawler\\Form` 类专门用于通过HTML树来遍历html链接、图片、表单。
 
 .. note::
 
-    The DomCrawler will attempt to automatically fix your HTML to match the
-    official specification. For example, if you nest a ``<p>`` tag inside
-    another ``<p>`` tag, it will be moved to be a sibling of the parent tag.
-    This is expected and is part of the HTML5 spec. But if you're getting
-    unexpected behavior, this could be a cause. And while the DomCrawler
-    isn't meant to dump content, you can see the "fixed" version of your HTML
-    by :ref:`dumping it <component-dom-crawler-dumping>`.
+    DomCrawler将尝试自动修复你的HTML以符合官方规范。
+    例如，如果将 ``<p>`` 标签嵌套在另一个 ``<p>`` 标签内，它将被移动为父标签的兄弟(sibling)。
+    这是预期的，也是HTML5规范的一部分。但如果你获得意料之外的行为，这可能是一个原因。
+    而且，尽管DomCrawler并不意味着转储(dump)的内容，但你可以通过
+    :ref:`转储它 <component-dom-crawler-dumping>` 以看到你的HTML的“修复”版本。
 
-Node Filtering
+节点过滤
 ~~~~~~~~~~~~~~
 
-Using XPath expressions, you can select specific nodes within the document::
+使用XPath表达式，你可以选择文档中的特定节点::
 
     $crawler = $crawler->filterXPath('descendant-or-self::body/p');
 
 .. tip::
 
-    ``DOMXPath::query`` is used internally to actually perform an XPath query.
+    ``DOMXPath::query`` 在内部用于实际执行一个XPath查询。
 
-If you prefer CSS selectors over XPath, install the CssSelector component.
-It allows you to use jQuery-like selectors to traverse::
+如果你更喜欢CSS选择器而不是XPath，请安装CssSelector组件。
+该组件允许你使用类似jQuery的选择器来进行遍历::
 
     $crawler = $crawler->filter('body > p');
 
-An anonymous function can be used to filter with more complex criteria::
+匿名函数可用于过滤更复杂的条件::
 
     use Symfony\Component\DomCrawler\Crawler;
     // ...
@@ -96,23 +88,23 @@ An anonymous function can be used to filter with more complex criteria::
     $crawler = $crawler
         ->filter('body > p')
         ->reduce(function (Crawler $node, $i) {
-            // filters every other node
+            // 过滤每个节点
             return ($i % 2) == 0;
         });
 
-To remove a node the anonymous function must return false.
+要删除一个节点，该匿名函数必须返回 ``false``。
 
 .. note::
 
-    All filter methods return a new :class:`Symfony\\Component\\DomCrawler\\Crawler`
-    instance with filtered content.
+    所有的过滤器方法都返回一个带有过滤内容的新的
+    :class:`Symfony\\Component\\DomCrawler\\Crawler` 实例。
 
-Both the :method:`Symfony\\Component\\DomCrawler\\Crawler::filterXPath` and
-:method:`Symfony\\Component\\DomCrawler\\Crawler::filter` methods work with
-XML namespaces, which can be either automatically discovered or registered
-explicitly.
+无论是
+:method:`Symfony\\Component\\DomCrawler\\Crawler::filterXPath`
+还是 :method:`Symfony\\Component\\DomCrawler\\Crawler::filter`
+方法都可以自动发现或明确注册XML命令空间。
 
-Consider the XML below:
+思考下面的XML：
 
 .. code-block:: xml
 
@@ -131,86 +123,84 @@ Consider the XML below:
         </media:group>
     </entry>
 
-This can be filtered with the  ``Crawler`` without needing to register namespace
-aliases both with :method:`Symfony\\Component\\DomCrawler\\Crawler::filterXPath`::
+该XML可以使用 ``Crawler`` 的
+:method:`Symfony\\Component\\DomCrawler\\Crawler::filterXPath`
+方法进行过滤，而无需注册命名空间别名::
 
     $crawler = $crawler->filterXPath('//default:entry/media:group//yt:aspectRatio');
 
-and :method:`Symfony\\Component\\DomCrawler\\Crawler::filter`::
+以及 :method:`Symfony\\Component\\DomCrawler\\Crawler::filter` 方法::
 
     $crawler = $crawler->filter('default|entry media|group yt|aspectRatio');
 
 .. note::
 
-    The default namespace is registered with a prefix "default". It can be
-    changed with the
+    默认命名空间使用一个“default”前缀进行注册。它可以通过使用
     :method:`Symfony\\Component\\DomCrawler\\Crawler::setDefaultNamespacePrefix`
-    method.
+    方法来改变。
 
-    The default namespace is removed when loading the content if it's the only
-    namespace in the document. It's done to simplify the xpath queries.
+    如果内容是文档中唯一的命名空间，则在加载该内容时将删除默认命名空间。这样做是为了简化xpath查询。
 
-Namespaces can be explicitly registered with the
-:method:`Symfony\\Component\\DomCrawler\\Crawler::registerNamespace` method::
+可以使用 :method:`Symfony\\Component\\DomCrawler\\Crawler::registerNamespace`
+方法显式注册命名空间::
 
     $crawler->registerNamespace('m', 'http://search.yahoo.com/mrss/');
     $crawler = $crawler->filterXPath('//m:group//yt:aspectRatio');
 
-Node Traversing
+节点遍历
 ~~~~~~~~~~~~~~~
 
-Access node by its position on the list::
+按节点在列表中的位置访问::
 
     $crawler->filter('body > p')->eq(0);
 
-Get the first or last node of the current selection::
+获取当前选择的第一个或最后一个节点::
 
     $crawler->filter('body > p')->first();
     $crawler->filter('body > p')->last();
 
-Get the nodes of the same level as the current selection::
+获取与当前选择的同级别的节点::
 
     $crawler->filter('body > p')->siblings();
 
-Get the same level nodes after or before the current selection::
+获取在当前选择之前或之后的同级别的节点::
 
     $crawler->filter('body > p')->nextAll();
     $crawler->filter('body > p')->previousAll();
 
-Get all the child or parent nodes::
+获取所有子节点或父节点::
 
     $crawler->filter('body')->children();
     $crawler->filter('body > p')->parents();
 
-Get all the direct child nodes matching a CSS selector::
+获取与一个CSS选择器匹配的所有直接子节点::
 
     $crawler->filter('body')->children('p.lorem');
 
 .. versionadded:: 4.2
-    The optional selector in ``children($selector)`` method was introduced in Symfony 4.2.
+    ``children($selector)`` 方法中的可选选择器是在Symfony 4.2中引入的。
 
 .. note::
 
-    All the traversal methods return a new :class:`Symfony\\Component\\DomCrawler\\Crawler`
-    instance.
+    所有遍历方法都返回一个新的 :class:`Symfony\\Component\\DomCrawler\\Crawler` 实例。
 
-Accessing Node Values
+访问节点值
 ~~~~~~~~~~~~~~~~~~~~~
 
-Access the node name (HTML tag name) of the first node of the current selection (eg. "p" or "div")::
+访问当前选择的第一个节点的节点名称（HTML标记名称，例如“p”或“div”）::
 
-    // returns the node name (HTML tag name) of the first child element under <body>
+    // 返回 <body> 之下的第一个子元素的节点名称（HTML标记名称）
     $tag = $crawler->filterXPath('//body/*')->nodeName();
 
-Access the value of the first node of the current selection::
+访问当前选择的第一个节点的值::
 
     $message = $crawler->filterXPath('//body/p')->text();
 
-Access the attribute value of the first node of the current selection::
+访问当前选择的第一个节点的属性值::
 
     $class = $crawler->filterXPath('//body/p')->attr('class');
 
-Extract attribute and/or node values from the list of nodes::
+从节点列表中提取属性值和节点值::
 
     $attributes = $crawler
         ->filterXpath('//body/p')
@@ -219,9 +209,9 @@ Extract attribute and/or node values from the list of nodes::
 
 .. note::
 
-    Special attribute ``_text`` represents a node value.
+    ``_text`` 特殊属性代表一个节点值。
 
-Call an anonymous function on each node of the list::
+在列表的每个节点上调用一个匿名函数::
 
     use Symfony\Component\DomCrawler\Crawler;
     // ...
@@ -230,13 +220,12 @@ Call an anonymous function on each node of the list::
         return $node->text();
     });
 
-The anonymous function receives the node (as a Crawler) and the position as arguments.
-The result is an array of values returned by the anonymous function calls.
+匿名函数接收节点（作为Crawler）和节点位置作为参数。结果是调用该匿名函数返回的数组形式的值。
 
-Adding the Content
+添加内容
 ~~~~~~~~~~~~~~~~~~
 
-The crawler supports multiple ways of adding the content::
+Crawler支持多种添加内容的方式::
 
     $crawler = new Crawler('<html><body /></html>');
 
@@ -251,18 +240,15 @@ The crawler supports multiple ways of adding the content::
 
 .. note::
 
-    The :method:`Symfony\\Component\\DomCrawler\\Crawler::addHtmlContent` and
-    :method:`Symfony\\Component\\DomCrawler\\Crawler::addXmlContent` methods
-    default to UTF-8 encoding but you can change this behavior with their second
-    optional argument.
+    :method:`Symfony\\Component\\DomCrawler\\Crawler::addHtmlContent` 和
+    :method:`Symfony\\Component\\DomCrawler\\Crawler::addXmlContent`
+    方法默认为UTF-8编码，但你可以通过它们的第二个可选参数改变此行为。
 
-    The :method:`Symfony\\Component\\DomCrawler\\Crawler::addContent` method
-    guesses the best charset according to the given contents and defaults to
-    ``ISO-8859-1`` in case no charset can be guessed.
+    :method:`Symfony\\Component\\DomCrawler\\Crawler::addContent`
+    方法根据给定的内容猜测最佳字符集，如果不能猜出字符集则默认设置为 ``ISO-8859-1``。
 
-As the Crawler's implementation is based on the DOM extension, it is also able
-to interact with native :phpclass:`DOMDocument`, :phpclass:`DOMNodeList`
-and :phpclass:`DOMNode` objects::
+由于Crawler是基于DOM扩展实现的，所以它也能与原生(native)的 :phpclass:`DOMDocument`、
+:phpclass:`DOMNodeList` 和 :phpclass:`DOMNode` 对象交互::
 
     $domDocument = new \DOMDocument();
     $domDocument->loadXml('<root><node /><node /></root>');
@@ -279,13 +265,11 @@ and :phpclass:`DOMNode` objects::
 
 .. sidebar:: Manipulating and Dumping a ``Crawler``
 
-    These methods on the ``Crawler`` are intended to initially populate your
-    ``Crawler`` and aren't intended to be used to further manipulate a DOM
-    (though this is possible). However, since the ``Crawler`` is a set of
-    :phpclass:`DOMElement` objects, you can use any method or property available
-    on :phpclass:`DOMElement`, :phpclass:`DOMNode` or :phpclass:`DOMDocument`.
-    For example, you could get the HTML of a ``Crawler`` with something like
-    this::
+    ``Crawler`` 上的这些方法最初是为了填充你的 ``Crawler``，而不是用来进一步操作DOM（虽然这是可行的）。
+    但是，由于Crawler是一组 :phpclass:`DOMElement` 对象，你可以使用
+    :phpclass:`DOMElement`、:phpclass:`DOMNode` 以及 :phpclass:`DOMDocument`
+    上的任何可用的方法或属性。
+    例如，你可以使用以下内容来获取一个 ``Crawler`` 的HTML::
 
         $html = '';
 
@@ -293,21 +277,19 @@ and :phpclass:`DOMNode` objects::
             $html .= $domElement->ownerDocument->saveHTML($domElement);
         }
 
-    Or you can get the HTML of the first node using
-    :method:`Symfony\\Component\\DomCrawler\\Crawler::html`::
+    或者你可以使用 :method:`Symfony\\Component\\DomCrawler\\Crawler::html`
+    方法获取第一个节点的HTML::
 
         $html = $crawler->html();
 
-Expression Evaluation
+表达式求值
 ~~~~~~~~~~~~~~~~~~~~~
 
-The ``evaluate()`` method evaluates the given XPath expression. The return
-value depends on the XPath expression. If the expression evaluates to a scalar
-value (e.g. HTML attributes), an array of results will be returned. If the
-expression evaluates to a DOM document, a new ``Crawler`` instance will be
-returned.
+``evaluate()`` 方法对给定的XPath表达式进行求值。返回值取决于该XPath表达式。
+如果对一个标量值（例如HTML属性）进行表达式求值，则结果将返回一个数组。
+如果对一个DOM文档进行表达式求值，则将返回一个新的 ``Crawler`` 实例。
 
-This behavior is best illustrated with examples::
+以下示例最好地说明了此行为::
 
     use Symfony\Component\DomCrawler\Crawler;
 
@@ -353,116 +335,102 @@ This behavior is best illustrated with examples::
     $crawler->evaluate('//span[1]');
     // A Symfony\Component\DomCrawler\Crawler instance
 
-Links
+链接
 ~~~~~
 
-To find a link by name (or a clickable image by its ``alt`` attribute), use
-the ``selectLink()`` method on an existing crawler. This returns a ``Crawler``
-instance with just the selected link(s). Calling ``link()`` gives you a special
-:class:`Symfony\\Component\\DomCrawler\\Link` object::
+要按名称查找链接（或按其 ``alt`` 属性搜索可点击的图像），请在现有Crawler上使用 ``selectLink()`` 方法。
+这将返回一个仅包含所选链接的 ``Crawler`` 实例。
+调用 ``link()`` 将为你提供一个特殊的 :class:`Symfony\\Component\\DomCrawler\\Link` 对象::
 
     $linksCrawler = $crawler->selectLink('Go elsewhere...');
     $link = $linksCrawler->link();
 
-    // or do this all at once
+    // 或者一次完成这一切
     $link = $crawler->selectLink('Go elsewhere...')->link();
 
-The :class:`Symfony\\Component\\DomCrawler\\Link` object has several useful
-methods to get more information about the selected link itself::
+:class:`Symfony\\Component\\DomCrawler\\Link` 对象有几种有用的方法，可以用来获取有关所选链接本身的更多信息::
 
-    // returns the proper URI that can be used to make another request
+    // 返回可用于创建其他请求的正确URI
     $uri = $link->getUri();
 
 .. note::
 
-    The ``getUri()`` is especially useful as it cleans the ``href`` value and
-    transforms it into how it should really be processed. For example, for a
-    link with ``href="#foo"``, this would return the full URI of the current
-    page suffixed with ``#foo``. The return from ``getUri()`` is always a full
-    URI that you can act on.
+    ``getUri（）`` 特别有用，因为它会清理 ``href`` 值并将其转换为实际需要的样子。
+    例如，对于带有 ``href="#foo"`` 的链接，这将返回附带 ``#foo`` 后缀的当前页面的完整URI。
+    ``getUri()`` 返回的始终是你可以执行的完整URI。
 
-Images
+图片
 ~~~~~~
 
-To find an image by its ``alt`` attribute, use the ``selectImage`` method on an
-existing crawler. This returns a ``Crawler`` instance with just the selected
-image(s). Calling ``image()`` gives you a special
-:class:`Symfony\\Component\\DomCrawler\\Image` object::
+要按其 ``alt`` 属性查找一个图像，请在现有Crawler上使用 ``selectImage()`` 方法。
+这将返回一个仅包含所选图像的 ``Crawler`` 实例。
+调用 ``image()`` 将为你提供一个特殊的 :class:`Symfony\\Component\\DomCrawler\\Image` 对象::
 
     $imagesCrawler = $crawler->selectImage('Kitten');
     $image = $imagesCrawler->image();
 
-    // or do this all at once
+    // 或者一次完成这一切
     $image = $crawler->selectImage('Kitten')->image();
 
-The :class:`Symfony\\Component\\DomCrawler\\Image` object has the same
-``getUri()`` method as :class:`Symfony\\Component\\DomCrawler\\Link`.
+:class:`Symfony\\Component\\DomCrawler\\Image` 对象具有与
+:class:`Symfony\\Component\\DomCrawler\\Link` 相同的 ``getUri()`` 方法。
 
-Forms
+表单
 ~~~~~
 
-Special treatment is also given to forms. A ``selectButton()`` method is
-available on the Crawler which returns another Crawler that matches ``<button>``
-or ``<input type="submit">`` or ``<input type="button">`` elements (or an
-``<img>`` element inside them). The string given as argument is looked for in
-the ``id``, ``alt``, ``name``, and ``value`` attributes and the text content of
-those elements.
+表单也有特殊待遇。Crawler上有一个 ``selectButton()`` 方法，它返回另一个匹配
+``<button>``、``<input type="submit">`` 或 ``<input type="button">``
+元素（或它们中的 ``<img>`` 元素）的Crawler。
+作为参数的给定字符串会被用于查找 ``id``、``alt``、``name`` 和 ``value`` 等属性以及这些元素的文本内容。
 
-This method is especially useful because you can use it to return
-a :class:`Symfony\\Component\\DomCrawler\\Form` object that represents the
-form that the button lives in::
+此方法特别有用，因为你可以使用它来返回一个代表按钮所在表单的
+:class:`Symfony\\Component\\DomCrawler\\Form` 对象::
 
-    // button example: <button id="my-super-button" type="submit">My super button</button>
+    // 实例按钮: <button id="my-super-button" type="submit">My super button</button>
 
-    // you can get button by its label
+    // 你可以通过它的标签来获得按钮
     $form = $crawler->selectButton('My super button')->form();
 
-    // or by button id (#my-super-button) if the button doesn't have a label
+    // 如果该按钮没有标签，则可以依据该按钮的ID来查找
     $form = $crawler->selectButton('my-super-button')->form();
 
-    // or you can filter the whole form, for example a form has a class attribute: <form class="form-vertical" method="POST">
+    // 或者你可以过滤整个表单，例如该表单具有一个类属性：<form class =“form-vertical”method =“POST”>
     $crawler->filter('.form-vertical')->form();
 
-    // or "fill" the form fields with data
+    // 或者用数据“填充”表单字段
     $form = $crawler->selectButton('my-super-button')->form(array(
         'name' => 'Ryan',
     ));
 
-The :class:`Symfony\\Component\\DomCrawler\\Form` object has lots of very
-useful methods for working with forms::
+:class:`Symfony\\Component\\DomCrawler\\Form` 对象提供许多非常有用的方法来处理表单::
 
     $uri = $form->getUri();
 
     $method = $form->getMethod();
 
-The :method:`Symfony\\Component\\DomCrawler\\Form::getUri` method does more
-than just return the ``action`` attribute of the form. If the form method
-is GET, then it mimics the browser's behavior and returns the ``action``
-attribute followed by a query string of all of the form's values.
+:method:`Symfony\\Component\\DomCrawler\\Form::getUri` 方法不仅仅返回表单的 ``action`` 属性。
+如果表单方法是 ``GET``，那么它模仿浏览器的行为，然后返回 ``action`` 属性，并跟随一个附带所有表单值的查询字符串。
 
 .. note::
 
-    The optional ``formaction`` and ``formmethod`` button attributes are
-    supported. The ``getUri()`` and ``getMethod()`` methods take into account
-    those attributes to always return the right action and method depending on
-    the button used to get the form.
+    支持可选的 ``formaction`` 和 ``formmethod`` 按钮属性。
+    ``getUri()`` 和 ``getMethod()`` 方法会确保这些属性总是返回正确的动作和方法，具体取决于用于获取表单的按钮。
 
-You can virtually set and get values on the form::
+你可以实质性的设置和获取表单上的值::
 
-    // sets values on the form internally
+    // 在表单内部设置值
     $form->setValues(array(
         'registration[username]' => 'symfonyfan',
         'registration[terms]'    => 1,
     ));
 
-    // gets back an array of values - in the "flat" array like above
+    // 获取到一个数组形式的值 - 在像上面那样的“扁平”数组中
     $values = $form->getValues();
 
-    // returns the values like PHP would see them,
-    // where "registration" is its own array
+    // 返回PHP会看到的值，其中“registration”是它自己的数组
     $values = $form->getPhpValues();
 
-To work with multi-dimensional fields::
+处理多维的字段::
 
     <form>
         <input name="multi[]" />
@@ -470,95 +438,87 @@ To work with multi-dimensional fields::
         <input name="multi[dimensional]" />
     </form>
 
-Pass an array of values::
+传递一个数组形式的值::
 
-    // sets a single field
+    // 设置单个字段
     $form->setValues(array('multi' => array('value')));
 
-    // sets multiple fields at once
+    // 一次设置多个字段
     $form->setValues(array('multi' => array(
         1             => 'value',
         'dimensional' => 'an other value',
     )));
 
-This is great, but it gets better! The ``Form`` object allows you to interact
-with your form like a browser, selecting radio values, ticking checkboxes,
-and uploading files::
+这很棒，但它会变得更好！``Form`` 对象允许你像浏览器一样与表单进行交互，选择单选框的值，勾选复选框和上传文件::
 
     $form['registration[username]']->setValue('symfonyfan');
 
-    // checks or unchecks a checkbox
+    // 选中或取消选中一个复选框
     $form['registration[terms]']->tick();
     $form['registration[terms]']->untick();
 
-    // selects an option
+    // 选择一个选项
     $form['registration[birthday][year]']->select(1984);
 
-    // selects many options from a "multiple" select
+    // 在选择框中选择多个选项
     $form['registration[interests]']->select(array('symfony', 'cookies'));
 
-    // fakes a file upload
+    // 伪造文件上传
     $form['registration[photo]']->upload('/path/to/lucas.jpg');
 
-Using the Form Data
+使用表单数据
 ...................
 
-What's the point of doing all of this? If you're testing internally, you
-can grab the information off of your form as if it had just been submitted
-by using the PHP values::
+做这一切有什么意义呢？如果你在内部进行测试，则可以从表单中获取信息，就像刚刚使用PHP值提交的那样::
 
     $values = $form->getPhpValues();
     $files = $form->getPhpFiles();
 
-If you're using an external HTTP client, you can use the form to grab all
-of the information you need to create a POST request for the form::
+如果你使用的是外部HTTP客户端，则可以使用该表单来获取“为该表单创建POST请求而所需的所有信息”::
 
     $uri = $form->getUri();
     $method = $form->getMethod();
     $values = $form->getValues();
     $files = $form->getFiles();
 
-    // now use some HTTP client and post using this information
+    // 现在使用一些HTTP客户端并使用此信息进行提交
 
-One great example of an integrated system that uses all of this is `Goutte`_.
-Goutte understands the Symfony Crawler object and can use it to submit forms
-directly::
+使用所有这些功能的集成系统的一个很好的例子就是`Goutte`_
+Goutte理解Symfony Crawler对象，可以使用它来直接提交表单::
 
     use Goutte\Client;
 
-    // makes a real request to an external site
+    // 向外部网站发出一个真实请求
     $client = new Client();
     $crawler = $client->request('GET', 'https://github.com/login');
 
-    // select the form and fill in some values
+    // 选中表单，并填充一些值
     $form = $crawler->selectButton('Sign in')->form();
     $form['login'] = 'symfonyfan';
     $form['password'] = 'anypass';
 
-    // submits the given form
+    // 提交给定的表单
     $crawler = $client->submit($form);
 
 .. _components-dom-crawler-invalid:
 
-Selecting Invalid Choice Values
+选择无效的选择框值
 ...............................
 
-By default, choice fields (select, radio) have internal validation activated
-to prevent you from setting invalid values. If you want to be able to set
-invalid values, you can use the  ``disableValidation()`` method on either
-the whole form or specific field(s)::
+默认情况下，选择字段（select, radio）已激活内部验证，以防止你设置无效值。
+如果你希望能够设置无效值，则可以在整个表单或特定字段上使用 ``disableValidation()`` 方法::
 
-    // disables validation for a specific field
+    // 禁用特定字段的验证
     $form['country']->disableValidation()->select('Invalid value');
 
-    // disables validation for the whole form
+    // 禁用整个表单的验证
     $form->disableValidation();
     $form['country']->select('Invalid value');
 
 .. _`Goutte`: https://github.com/FriendsOfPHP/Goutte
 .. _Packagist: https://packagist.org/packages/symfony/dom-crawler
 
-Learn more
+扩展阅读
 ----------
 
 * :doc:`/testing`

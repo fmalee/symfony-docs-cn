@@ -2,47 +2,43 @@
    single: BrowserKit
    single: Components; BrowserKit
 
-The BrowserKit Component
+BrowserKit组件
 ========================
 
-    The BrowserKit component simulates the behavior of a web browser, allowing
-    you to make requests, click on links and submit forms programmatically.
+    BrowserKit组件模拟Web浏览器的行为，允许你以编程方式创建请求、单击链接和提交表单。
 
 .. note::
 
-    The BrowserKit component can only make internal requests to your application.
-    If you need to make requests to external sites and applications, consider
-    using `Goutte`_, a simple web scraper based on Symfony Components.
+    BrowserKit组件只能向你的应用创建内部请求。
+    如果你需要向外部站点和应用发出请求，请考虑使用 `Goutte`_，它是一个基于Symfony组件的简单网络爬虫。
 
-Installation
+安装
 ------------
 
 .. code-block:: terminal
 
     $ composer require symfony/browser-kit
 
-Alternatively, you can clone the `<https://github.com/symfony/browser-kit>`_ repository.
+或者，你可以克隆 `<https://github.com/symfony/browser-kit>`_ 仓库。
 
 .. include:: /components/require_autoload.rst.inc
 
-Basic Usage
+基本用法
 -----------
 
 .. seealso::
 
-    This article explains how to use the BrowserKit features as an independent
-    component in any PHP application. Read the :ref:`Symfony Functional Tests <functional-tests>`
-    article to learn about how to use it in Symfony applications.
+    本文介绍如何在任何PHP应用中将BrowserKit功能用作独立组件。
+    阅读 :ref:`Symfony功能测试 <functional-tests>` 文档，了解如何在Symfony应用中使用它。
 
-Creating a Client
+获取客户端
 ~~~~~~~~~~~~~~~~~
 
-The component only provides an abstract client and does not provide any backend
-ready to use for the HTTP layer.
+该组件仅提供一个抽象客户端，并且不提供准备用于HTTP层的任何后端。
 
-To create your own client, you must extend the abstract ``Client`` class and
-implement the :method:`Symfony\\Component\\BrowserKit\\Client::doRequest` method.
-This method accepts a request and should return a response::
+要创建自己的客户端，必须扩展抽象 ``Client`` 类并实现
+:method:`Symfony\\Component\\BrowserKit\\Client::doRequest`
+方法。此方法接受一个请求并应返回一个响应::
 
     namespace Acme;
 
@@ -53,53 +49,47 @@ This method accepts a request and should return a response::
     {
         protected function doRequest($request)
         {
-            // ... convert request into a response
+            // ... 将请求转换为响应
 
             return new Response($content, $status, $headers);
         }
     }
 
-For a simple implementation of a browser based on the HTTP layer, have a look
-at `Goutte`_. For an implementation based on ``HttpKernelInterface``, have
-a look at the :class:`Symfony\\Component\\HttpKernel\\Client` provided by
-the :doc:`HttpKernel component </components/http_kernel>`.
+对于基于HTTP层的浏览器的简单实现，请查看 `Goutte`_。
+对于基于 ``HttpKernelInterface`` 的实现，请查看
+:doc:`HttpKernel组件 </components/http_kernel>` 提供的
+:class:`Symfony\\Component\\HttpKernel\\Client`。
 
-Making Requests
+创建请求
 ~~~~~~~~~~~~~~~
 
-Use the :method:`Symfony\\Component\\BrowserKit\\Client::request` method to
-make HTTP requests. The first two arguments are the HTTP method and the requested
-URL::
+使用 :method:`Symfony\\Component\\BrowserKit\\Client::request`
+方法创建HTTP请求。前两个参数分别是HTTP方法和请求的URL::
 
     use Acme\Client;
 
     $client = new Client();
     $crawler = $client->request('GET', '/');
 
-The value returned by the ``request()`` method is an instance of the
-:class:`Symfony\\Component\\DomCrawler\\Crawler` class, provided by the
-:doc:`DomCrawler component </components/dom_crawler>`, which allows accessing
-and traversing HTML elements programmatically.
+``request()`` 方法返回的值是 :doc:`DomCrawler组件 </components/dom_crawler>` 提供的 :class:`Symfony\\Component\\DomCrawler\\Crawler`
+类的一个实例，它允许以编程的方式访问和遍历HTML元素。
 
-The :method:`Symfony\\Component\\BrowserKit\\Client::xmlHttpRequest` method,
-which defines the same arguments as the ``request()`` method, is a shortcut to
-make AJAX requests::
+:method:`Symfony\\Component\\BrowserKit\\Client::xmlHttpRequest`
+方法与 ``request()`` 方法定义了相同的参数，是一个生成AJAX请求的快捷方式::
 
     use Acme\Client;
 
     $client = new Client();
-    // the required HTTP_X_REQUESTED_WITH header is added automatically
+    // 自动添加所需的 HTTP_X_REQUESTED_WITH 标头
     $crawler = $client->xmlHttpRequest('GET', '/');
 
 .. versionadded:: 4.1
-    The ``xmlHttpRequest()`` method was introduced in Symfony 4.1.
+    ``xmlHttpRequest()`` 方法是在Symfony 4.1中引入的。
 
-Clicking Links
+点击链接
 ~~~~~~~~~~~~~~
 
-The ``Client`` object is capable of simulating link clicks. Pass the text
-content of the link and the client will perform the needed HTTP GET request to
-simulate the link click::
+``Client`` 对象能够模拟链接点击。传递链接的文本内容，客户端将执行所需的HTTP GET请求以模拟链接点击::
 
     use Acme\Client;
 
@@ -109,91 +99,88 @@ simulate the link click::
     $crawler = $client->clickLink('Go elsewhere...');
 
 .. versionadded:: 4.2
-    The ``clickLink()`` method was introduced in Symfony 4.2.
+    ``clickLink()`` 方法是在Symfony 4.2中引入的。
 
-If you need the :class:`Symfony\\Component\\DomCrawler\\Link` object that
-provides access to the link properties (e.g. ``$link->getMethod()``,
-``$link->getUri()``), use this other method:
+如果你需要一个提供访问链接属性（例如 ``$link->getMethod()``、``$link->getUri()``）的方法的
+:class:`Symfony\\Component\\DomCrawler\\Link` 对象，请使用另一种方法::
 
     // ...
     $crawler = $client->request('GET', '/product/123');
     $link = $crawler->selectLink('Go elsewhere...')->link();
     $client->click($link);
 
-Submitting Forms
+提交表单
 ~~~~~~~~~~~~~~~~
 
-The ``Client`` object is also capable of submitting forms. First, select the
-form using any of its buttons and then override any of its properties (method,
-field values, etc.) before submitting it::
+``Client`` 对象还能够提交表单。
+首先，使用其任何按钮选择表单，然后在提交之前重写其任何属性（方法、字段值等）::
 
     use Acme\Client;
 
     $client = new Client();
     $crawler = $client->request('GET', 'https://github.com/login');
 
-    // find the form with the 'Log in' button and submit it
-    // 'Log in' can be the text content, id, value or name of a <button> or <input type="submit">
+    // 使用“Log in”按钮找到表单并提交
+    // “Log in”可以是 <button> 或 <input type =“submit”> 的文本内容、id、值或名称
     $client->submitForm('Log in');
 
-    // the second optional argument lets you override the default form field values
+    // 第二个可选参数允许你重写默认的表单字段值
     $client->submitForm('Log in', array(
         'login' => 'my_user',
         'password' => 'my_pass',
-        // to upload a file, the value must be the absolute file path
+        // 要上传文件，该值必须是绝对文件路径
         'file' => __FILE__,
     ));
 
-    // you can override other form options too
+    // 你也可以重写其他表单选项
     $client->submitForm(
         'Log in',
         array('login' => 'my_user', 'password' => 'my_pass'),
-        // override the default form HTTP method
+        // 重写默认表单HTTP方法
         'PUT',
-        // override some $_SERVER parameters (e.g. HTTP headers)
+        // 重写一些 $_SERVER 参数（例如HTTP标头）
         array('HTTP_ACCEPT_LANGUAGE' => 'es')
     );
 
 .. versionadded:: 4.2
-    The ``submitForm()`` method was introduced in Symfony 4.2.
+    ``submitForm()`` 方法是在Symfony 4.2中引入的。
 
-If you need the :class:`Symfony\\Component\\DomCrawler\\Form` object that
-provides access to the form properties (e.g. ``$form->getUri()``,
-``$form->getValues()``, ``$form->getFields()``), use this other method::
+如果你需要一个提供访问表单属性（例如 ``$form->getUri()``、``$form->getValues()``
+``$form->getFields()``）的方法的 :class:`Symfony\\Component\\DomCrawler\\Form`
+对象，请使用另一种方法::
 
     // ...
 
-    // select the form and fill in some values
+    // 选择表单并填写一些值
     $form = $crawler->selectButton('Log in')->form();
     $form['login'] = 'symfonyfan';
     $form['password'] = 'anypass';
 
-    // submit that form
+    // 提交该表单
     $crawler = $client->submit($form);
 
 Cookies
 -------
 
-Retrieving Cookies
+检索Cookie
 ~~~~~~~~~~~~~~~~~~
 
-The ``Client`` implementation exposes cookies (if any) through a
-:class:`Symfony\\Component\\BrowserKit\\CookieJar`, which allows you to store and
-retrieve any cookie while making requests with the client::
+``Client`` 实现通过一个 :class:`Symfony\\Component\\BrowserKit\\CookieJar`
+来暴露cookie（如果有的话），它允许你在使用客户端创建请求时存储和检索任何cookie::
 
     use Acme\Client;
 
-    // Make a request
+    // 创建一个请求
     $client = new Client();
     $crawler = $client->request('GET', '/');
 
-    // Get the cookie Jar
+    // 获取 cookie Jar
     $cookieJar = $client->getCookieJar();
 
-    // Get a cookie by name
+    // 根据名称获取 cookie
     $cookie = $cookieJar->get('name_of_the_cookie');
 
-    // Get cookie data
+    // 获取cookie数据
     $name       = $cookie->getName();
     $value      = $cookie->getValue();
     $rawValue   = $cookie->getRawValue();
@@ -207,90 +194,87 @@ retrieve any cookie while making requests with the client::
 
 .. note::
 
-    These methods only return cookies that have not expired.
+    这些方法仅返回尚未过期的cookie。
 
-Looping Through Cookies
+循环使用Cookie
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: php
 
     use Acme\Client;
 
-    // Make a request
+    // 创建一个请求
     $client = new Client();
     $crawler = $client->request('GET', '/');
 
-    // Get the cookie Jar
+    // 获取 cookie Jar
     $cookieJar = $client->getCookieJar();
 
-    // Get array with all cookies
+    // 获取包含所有cookie的数组
     $cookies = $cookieJar->all();
     foreach ($cookies as $cookie) {
         // ...
     }
 
-    // Get all values
+    // 获取所有值
     $values = $cookieJar->allValues('http://symfony.com');
     foreach ($values as $value) {
         // ...
     }
 
-    // Get all raw values
+    // 获取所有原始值
     $rawValues = $cookieJar->allRawValues('http://symfony.com');
     foreach ($rawValues as $rawValue) {
         // ...
     }
 
-Setting Cookies
+设置Cookie
 ~~~~~~~~~~~~~~~
 
-You can also create cookies and add them to a cookie jar that can be injected
-into the client constructor::
+你还可以创建cookie并将其添加到可以注入客户端构造函数的cookie jar中::
 
     use Acme\Client;
 
-    // create cookies and add to cookie jar
+    // 创建 cookies 并添加到 cookie jar
     $cookie = new Cookie('flavor', 'chocolate', strtotime('+1 day'));
     $cookieJar = new CookieJar();
     $cookieJar->set($cookie);
 
-    // create a client and set the cookies
+    // 创建一个客户端并设置cookies
     $client = new Client(array(), null, $cookieJar);
     // ...
 
-History
--------
+历史记录
+----------
 
-The client stores all your requests allowing you to go back and forward in your
-history::
+客户端存储着你的所有请求，允许你在历史记录中前后移动::
 
     use Acme\Client;
 
     $client = new Client();
     $client->request('GET', '/');
 
-    // select and click on a link
+    // 选择并点击一个连接
     $link = $crawler->selectLink('Documentation')->link();
     $client->click($link);
 
-    // go back to home page
+    // 回退到主页
     $crawler = $client->back();
 
-    // go forward to documentation page
+    // 前进到文档页
     $crawler = $client->forward();
 
-You can delete the client's history with the ``restart()`` method. This will
-also delete all the cookies::
+你可以使用 ``restart()`` 方法来删除客户端的历史记录。这也将删除所有cookie::
 
     use Acme\Client;
 
     $client = new Client();
     $client->request('GET', '/');
 
-    // reset the client (history and cookies are cleared too)
+    // 重置客户端 (历史和cookie也被清除)
     $client->restart();
 
-Learn more
+扩展阅读
 ----------
 
 * :doc:`/testing`

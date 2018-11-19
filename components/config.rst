@@ -2,25 +2,24 @@
    single: Config
    single: Components; Config
 
-The Config Component
+Config组件
 ====================
 
-    The Config component provides several classes to help you find, load,
-    combine, autofill and validate configuration values of any kind, whatever
-    their source may be (YAML, XML, INI files, or for instance a database).
+    Config组件提供了几个类来帮助你查找、加载、组合、自动填充和验证任何类型的配置值，
+    无论它们的来源是什么（YAML、XML、INI文件，或一个数据库）。
 
-Installation
+安装
 ------------
 
 .. code-block:: terminal
 
     $ composer require symfony/config
 
-Alternatively, you can clone the `<https://github.com/symfony/config>`_ repository.
+或者，你可以克隆 `<https://github.com/symfony/config>`_ 仓库。
 
 .. include:: /components/require_autoload.rst.inc
 
-Learn More
+扩展阅读
 ----------
 
 .. toctree::
