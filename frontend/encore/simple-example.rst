@@ -9,7 +9,7 @@ Encore：设置你的项目
 
 使用Encore，将你的 ``app.js`` 文件视为独立的JavaScript应用：
 它将 *引入(require)* 它所需的所有依赖（例如jQuery或React），*包含(including)* 任何CSS。
-你的 ``app.js`` 文件已经使用特殊 ``require`` 功能执行此操作：
+你的 ``app.js`` 文件已经使用特殊 ``require`` 函数执行此操作：
 
 .. code-block:: javascript
 

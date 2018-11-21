@@ -165,9 +165,9 @@ Symfony如何使用表决器
 回顾一下，这是预期的两种抽象方法：
 
 ``Voter::supports($attribute, $subject)``
-    当调用 ``isGranted()``（或 ``denyAccessUnlessGranted()``）时，
+    当调用 ``isGranted()`` （或 ``denyAccessUnlessGranted()``）时，
     第一个参数在此传递为 ``$attribute`` （例如 ``ROLE_USER``、``edit``），
-    第二个参数（如果有的话）被传递为 ``$subject``（例如 ``null``、一个 ``Post`` 对象）。
+    第二个参数（如果有的话）被传递为 ``$subject`` （例如 ``null``、一个 ``Post`` 对象）。
     你的工作是确定你的表决器是否应该对 ”attribute/subject” 组合进行投票。
     如果你返回 ``true``，``voteOnAttribute()`` 将被调用。
     否则，你的表决器就完成任务了：其他的表决器会处理这个问题。

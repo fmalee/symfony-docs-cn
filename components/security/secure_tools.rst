@@ -1,56 +1,47 @@
-Securely Generating Random Values
+安全地生成随机值
 =================================
 
-The Symfony Security component comes with a collection of nice utilities
-related to security. These utilities are used by Symfony, but you should
-also use them if you want to solve the problem they address.
+Symfony Security组件附带了一系列与安全性相关的优秀工具。
+这些实用工具由Symfony使用，但如果你想解决它们已解决的问题，也应该使用它们。
 
 .. note::
 
-    The functions described in this article were introduced in PHP 5.6 or 7.
-    For older PHP versions, a polyfill is provided by the
-    `Symfony Polyfill Component`_.
+    本文中描述的函数是在PHP 5.6或PHP 7中引入的。
+    对于较旧的PHP版本，`Symfony Polyfill组件`_ 提供了一个 polyfill。
 
-Comparing Strings
+比较字符串
 ~~~~~~~~~~~~~~~~~
 
-The time it takes to compare two strings depends on their differences. This
-can be used by an attacker when the two strings represent a password for
-instance; it is known as a `Timing attack`_.
+比较两个字符串所需的时间取决于它们的差异。
+当两个字符串代表密码时，攻击者可以使用它; 这被称为 `时序攻击`_。
 
-When comparing two passwords, you should use the :phpfunction:`hash_equals`
-function::
+比较两个密码时，你应该使用 :phpfunction:`hash_equals` 函数::
 
     if (hash_equals($knownString, $userInput)) {
         // ...
     }
 
-Generating a Secure Random String
+生成安全的随机字符串
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Whenever you need to generate a secure random string, you are highly
-encouraged to use the :phpfunction:`random_bytes` function::
+每当你需要生成安全的随机字符串时，强烈建议你使用 :phpfunction:`random_bytes` 函数::
 
     $random = random_bytes(10);
 
-The function returns a random string, suitable for cryptographic use, of
-the number bytes passed as an argument (10 in the above example).
+该函数返回一个适用于加密使用的随机字符串，字节的数量可以作为一个参数传递（在上例中为10）。
 
 .. tip::
 
-    The ``random_bytes()`` function returns a binary string which may contain
-    the ``\0`` character. This can cause trouble in several common scenarios,
-    such as storing this value in a database or including it as part of the
-    URL. The solution is to hash the value returned by ``random_bytes()`` with
-    a hashing function such as :phpfunction:`md5` or :phpfunction:`sha1`.
+    ``random_bytes()`` 函数返回一个可能包含 ``\0`` 字符的二进制字符串。
+    这可能会在几种常见情况下造成麻烦，例如将此值存储在数据库中或将其作为URL的一部分包含在内。
+    解决方案是使用一个哈希函数（例如 :phpfunction:`md5` 或 :phpfunction:`sha1`）哈希 ``random_bytes()`` 返回的值。
 
-Generating a Secure Random Number
+生成安全的随机数字
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you need to generate a cryptographically secure random integer, you should
-use the :phpfunction:`random_int` function::
+如果需要生成一个加密的安全的随机整数，则应使用 :phpfunction:`random_int` 函数::
 
     $random = random_int(1, 10);
 
-.. _`Timing attack`: https://en.wikipedia.org/wiki/Timing_attack
-.. _`Symfony Polyfill Component`: https://github.com/symfony/polyfill
+.. _`时序攻击`: https://en.wikipedia.org/wiki/Timing_attack
+.. _`Symfony Polyfill组件`: https://github.com/symfony/polyfill

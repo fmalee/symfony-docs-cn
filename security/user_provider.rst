@@ -1,37 +1,33 @@
-所有关于用户提供器
+关于用户提供器的一切
 ========================
 
-Each User class in your app will usually need its own "user provider": a class
-that has two jobs:
+应用中的每个 ``User`` 类通常都需要自己的“用户提供器”：一个有两个工作的类：
 
-**Reload the User from the Session**
-    At the beginning of each request (unless your firewall is ``stateless``), Symfony
-    loads the ``User`` object from the session. To make sure it's not out-of-date,
-    the user provider "refreshes it". The Doctrine user provider, for example,
-    queries the database for fresh data. Symfony then checks to see if the user
-    has "changed" and de-authenticates the user if they have (see :ref:`user_session_refresh`).
+**从会话中重新加载用户**
+    在每个请求开始时（除非你的防火墙是 ``stateless``），Symfony将从会话中加载 ``User`` 对象。
+    为了确保它不是过时的，用户提供器会“刷新它”。例如，一个Doctrine用户提供器会在数据库中查询新数据。
+    然后，Symfony会检查该用户是否已“更改”，如果已改变则取消对该用户的认证（请参阅 :ref:`user_session_refresh`）。
 
-**Load the User for some Feature**
-    Some features, like ``switch_user``, ``remember_me`` and many of the built-in
-    :doc:`authentication providers </security/auth_providers>`, use the user provider
-    to load a User object via is "username" (or email, or whatever field you want).
+**为某些功能加载用户**
+    某些功能，比如 ``switch_user``、``remember_me`` 和许多内置的
+    :doc:`认证提供器 </security/auth_providers>`
+    ，通过用户提供器来使用“用户名”（或电子邮件，或任何你想要的字段）来加载一个User对象。
 
-Symfony comes with several built-in user providers:
+Symfony附带几个内置的用户提供器：
 
 .. toctree::
     :hidden:
 
     entity_provider
 
-* :doc:`entity: (load users from the database) </security/entity_provider>`
+* :doc:`实体:（从数据库加载用户）</security/entity_provider>`
 * :doc:`ldap </security/ldap>`
-* ``memory`` (users are hardcoded in config)
-* ``chain`` (try multiple user providers)
+* ``memory`` (在配置中硬编码用户)
+* ``chain`` (尝试多个用户提供器)
 
-Or you can create a :ref:`custom user provider <custom-user-provider>`.
+或者，你可以创建一个 :ref:`自定义用户提供器 <custom-user-provider>`。
 
-User providers are configured in ``config/packages/security.yaml`` under the
-``providers`` key, and each has different configuration options:
+用户提供器都被配置在 ``config/packages/security.yaml`` 的 ``providers`` 键下面，每个都有不同的配置选项：
 
 .. code-block:: yaml
 
@@ -39,15 +35,14 @@ User providers are configured in ``config/packages/security.yaml`` under the
     security:
         # ...
         providers:
-            # this becomes the internal name of the provider
-            # not usually important, but can be used to specify which
-            # provider you want for which firewall (advanced case) or
-            # for a specific authentication provider
+            # 这将成为该提供器的内部名称，通常该名称并不重要
+            # 但可用于指定你需要将哪个提供器应用于哪个防火墙（高级案例）
+            # 或用于指定一个特殊的认证提供器
             some_provider_key:
 
-                # provider type - one of the above
+                # 提供器类型- 上面所述中的一个
                 memory:
-                    # custom options for that provider
+                    # 该提供器的自定义选项
                     users:
                         user:  { password: '%env(USER_PASSWORD)%', roles: [ 'ROLE_USER' ] }
                         admin: { password: '%env(ADMIN_PASSWORD)%', roles: [ 'ROLE_ADMIN' ] }
@@ -58,16 +53,14 @@ User providers are configured in ``config/packages/security.yaml`` under the
 
 .. _custom-user-provider:
 
-Creating a Custom User Provider
+创建自定义用户提供程序
 -------------------------------
 
-If you're loading users from a custom location (e.g. via an API or legacy database
-connection), you'll need to create a custom user provider class. First, make sure
-you've followed the :doc:`Security Guide </security>` to create your ``User`` class.
+如果你从自定义位置加载用户（例如，通过API或旧数据库连接），则需要创建一个自定义的用户提供器类。
+首先，请确保你已按照 :doc:`安全指南 </security>` 创建了 ``User`` 类。
 
-If you used the ``make:user`` command to create your ``User`` class (and you answered
-the questions indicating that you need a custom user provider), that command will
-generate a nice skeleton to get you started::
+如果你使用 ``make:user`` 命令创建了你的 ``User``
+类（并且你回答了表示你需要一个自定义用户提供器的问题），那么该命令将生成一个很好的框架以帮助你入门::
 
     // .. src/Security/UserProvider.php
     namespace App\Security;
@@ -80,11 +73,9 @@ generate a nice skeleton to get you started::
     class UserProvider implements UserProviderInterface
     {
         /**
-         * Symfony calls this method if you use features like switch_user
-         * or remember_me.
+         * 如果你使用switch_user或remember_me等功能，Symfony将会调用本方法。
          *
-         * If you're not using these features, you do not need to implement
-         * this method.
+         * 如果你不使用这些功能，则无需实现本方法。
          *
          * @return UserInterface
          *
@@ -92,23 +83,19 @@ generate a nice skeleton to get you started::
          */
         public function loadUserByUsername($username)
         {
-            // Load a User object from your data source or throw UsernameNotFoundException.
-            // The $username argument may not actually be a username:
-            // it is whatever value is being returned by the getUsername()
-            // method in your User class.
+            // 从数据源加载一个User对象或抛出UsernameNotFoundException。
+            // 该 $username 参数实际上可能不是一个用户名：
+            // 它是你的User类中的 getUsername() 方法返回的任何值。
             throw new \Exception('TODO: fill in loadUserByUsername() inside '.__FILE__);
         }
 
         /**
-         * Refreshes the user after being reloaded from the session.
+         * 从会话中重新加载用户对象，然后刷新该用户。
          *
-         * When a user is logged in, at the beginning of each request, the
-         * User object is loaded from the session and then this method is
-         * called. Your job is to make sure the user's data is still fresh by,
-         * for example, re-querying for fresh User data.
+         * 当一个用户登录后，在每个请求开始时，都将从会话中加载User对象，然后调用本方法。
+         * 你的工作是确保该用户的数据仍然新鲜，例如，重新查询以获取新的用户数据。
          *
-         * If your firewall is "stateless: false" (for a pure API), this
-         * method is not called.
+         * 如果你的防火墙是 “stateless: false”（对于纯API），则不会调用本方法。
          *
          * @return UserInterface
          */
@@ -118,13 +105,13 @@ generate a nice skeleton to get you started::
                 throw new UnsupportedUserException(sprintf('Invalid user class "%s".', get_class($user)));
             }
 
-            // Return a User object after making sure its data is "fresh".
-            // Or throw a UsernameNotFoundException if the user no longer exists.
+            // 确保其数据是“新鲜”的之后，返回一个User对象。
+            // 如果用户不再存在，则抛出一个UsernameNotFoundException。
             throw new \Exception('TODO: fill in refreshUser() inside '.__FILE__);
         }
 
         /**
-         * Tells Symfony to use this provider for this User class.
+         * 告诉Symfony将此User类用于此提供器。
          */
         public function supportsClass($class)
         {
@@ -132,52 +119,45 @@ generate a nice skeleton to get you started::
         }
     }
 
-Most of the work is already done! Read the comments in the code and update the TODO
-sections to finish the user provider.
+大部分工作已经完成！阅读代码中的注释并更新TODO部分以完成该用户提供器。
 
-When you're done, tell Symfony about the user provider by adding it in ``security.yaml``:
+完成后，通过在 ``security.yaml`` 中添加以下内容，来告诉Symfony有关用户提供器的信息：
 
 .. code-block:: yaml
 
     # config/packages/security.yaml
     security:
         providers:
-            # internal name - can be anything
+            # 内部名称 - 可以使任何东西
             your_custom_user_provider:
                 id: App\Security\UserProvider
 
-That's it! When you use any of the features that require a user provider, your
-provider will be used! If you have multiple firewalls and multiple providers,
-you can specify *which* provider to use by adding a ``provider`` key under your
-firewall and setting it to the internal name you gave to your user provider.
+仅此而已！当你使用需要一个用户提供器的任何功能时，你的提供器都将被使用！
+如果你有多个防火墙和多个供应器，你可以指定使用 *哪个* 供应器。
+具体方法是在你的防火墙下添加一个 ``provider`` 键，并且为你的用户提供器配置一个内部名称。
 
 .. _user_session_refresh:
 
-Understanding how Users are Refreshed from the Session
+了解用户是如何从会话中刷新的
 ------------------------------------------------------
 
-At the end of every request (unless your firewall is ``stateless``), your ``User``
-object is serialized to the session. At the beginning of the next request, it's
-deserialized and then passed to your user provider to "refresh" it (e.g. Doctrine
-queries for a fresh user).
+在每个请求结束时（除非你的防火墙是 ``stateless``），你的 ``User`` 对象被序列化到会话中。
+在下一个请求开始时，它会被反序列化，然后传递给你的用户提供器以“刷新”它（例如，使用Doctrine查询一个用户）。
 
-Then, the two User objects (the original from the session and the refreshed User
-object) are "compared" to see if they are "equal". By default, the core
-``AbstractToken`` class compares the return values of the ``getPassword()``,
-``getSalt()`` and ``getUsername()`` methods. If any of these are different, your
-user will be logged out. This is a security measure to make sure that malicious
-users can be de-authenticated if core user data changes.
+然后，“比较”两个User对象（来自会话的原始对象和已刷新的User对象）以查看它们是否“相等”。
+默认情况下，内核的 ``AbstractToken`` 类将同
+``getPassword()``、``getSalt()`` 以及 ``getUsername()`` 的返回值进行比较。
+如果其中的任何一个有区别，你的用户将被注销。
+这是一项安全措施，可确保在核心用户数据发生更改时可以解除恶意用户的认证。
 
-However, in some cases, this process can cause unexpected authentication problems.
-If you're having problems authenticating, it could be that you *are* authenticating
-successfully, but you immediately lose authentication after the first redirect.
+但是，在某些情况下，此过程可能会导致意外的认证问题。
+如果你在认证时遇到问题，可能是你 *已经* 认证成功，但在第一次重定向后你立即失去了该认证信息。
 
-In that case, review the serialization logic (e.g. ``SerializableInterface``) if
-you have any, to make sure that all the fields necessary are serialized.
+在这种情况下，如果你有序列化逻辑（例如 ``SerializableInterface``），则请审查它，以确保所有必要的字段都已序列化。
 
-Comparing Users Manually with EquatableInterface
+用EquatableInterface手动比较用户
 ------------------------------------------------
 
-Or, if you need more control over the "compare users" process, make your User class
-implement :class:`Symfony\\Component\\Security\\Core\\User\\EquatableInterface`.
-Then, your ``isEqualTo()`` method will be called when comparing users.
+或者，如果你需要更多地控制“比较用户”的过程，请使你的User类实现
+:class:`Symfony\\Component\\Security\\Core\\User\\EquatableInterface`。
+然后，在比较用户时将调用你的 ``isEqualTo()`` 方法。

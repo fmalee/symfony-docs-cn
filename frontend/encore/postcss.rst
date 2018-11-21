@@ -35,7 +35,7 @@ PostCSS是CSS后期处理工具，可以以很多很酷的方式转换(transform
     +     .enablePostCssLoader()
     ;
 
-因为你刚刚修改了``webpack.config.js``，所以需要停止并重新启动Encore。
+因为你刚刚修改了 ``webpack.config.js``，所以需要停止并重新启动Encore。
 
 仅此而已！该 ``postcss-loader`` 现在将用于所有的CSS、Sass等文件。
 你还可以通过传递回调将选项传递给 `postcss-loader`_：
@@ -58,7 +58,7 @@ PostCSS是CSS后期处理工具，可以以很多很酷的方式转换(transform
 添加browserslist到package.json
 -----------------------------------
 
-``autoprefixer``（以及许多其他工具）需要知道你要支持哪些浏览器。
+``autoprefixer`` （以及许多其他工具）需要知道你要支持哪些浏览器。
 最佳做法是直接在你的 ``package.json`` 中配置（以便所有工具都能读取此内容）：
 
 .. code-block:: diff

@@ -20,7 +20,7 @@
 
     +     .splitEntryChunks()
 
-现在，每个输出文件（例如 ``homepage.js``）*可* 被拆分成多个文件（例如 ``homepage.js``、``vendor~homepage.js``）。
+现在，每个输出文件（例如 ``homepage.js``） *可* 被拆分成多个文件（例如 ``homepage.js``、``vendor~homepage.js``）。
 这意味着你 *可能* 需要在模板中包含 *多个* ``script`` 标签（或CSS的 ``link`` 标签）。
 Encore创建了一个 :ref:`entrypoints.json <encore-entrypointsjson-simple-description>`
 文件，该文件准确列出了每个条目所需的CSS和JavaScript文件。

@@ -42,7 +42,7 @@ Symfony的安全系统是非常强大的，但在设置它时也可能令人迷�
 2a) 创建用户类
 --------------------------
 
-无论你将 *如何* 进行身份认证（例如登录表单或API令​​牌）或将用户数据存储的在*哪里*（数据库，单点登录），
+无论你将 *如何* 进行身份认证（例如登录表单或API令​​牌）或将用户数据存储的在\ *哪里*\（数据库，单点登录），
 下一步始终是相同的：创建“用户”类。最简单的方法是使用 `MakerBundle`_。
 
 假设你希望使用Doctrine将用户数据存储在数据库中：
@@ -87,7 +87,7 @@ Symfony的安全系统是非常强大的，但在设置它时也可能令人迷�
 2b) "User Provider"
 -----------------------
 
-除了你的 ``User`` 类之外，你还需要一个“用户提供者”：一个帮助处理一些事情的类，
+除了你的 ``User`` 类之外，你还需要一个“用户提供器”：一个帮助处理一些事情的类，
 比如从会话中重新加载用户数据和一些可选功能，
 比如 :doc:`保持登录 </security/remember_me>` 和 :doc:`模拟 </security/impersonating_user>`。
 
@@ -95,7 +95,7 @@ Symfony的安全系统是非常强大的，但在设置它时也可能令人迷�
 
 如果你的 ``User`` 类是实体，则无需执行任何其他操作。
 但是如果你的类不是实体，那么 ``make:user`` 也会生成一个你需要加工的 ``UserProvider`` 类。
-在此处详细了解用户提供商： :doc:`用户提供者 </security/user_provider>`。
+在此处详细了解用户提供器： :doc:`用户提供器 </security/user_provider>`。
 
 .. _security-encoding-user-password:
 .. _encoding-the-user-s-password:
@@ -105,7 +105,7 @@ Symfony的安全系统是非常强大的，但在设置它时也可能令人迷�
 
 并非所有应用都有需要密码的“用户”。
 *如果*\你的用户有密码，你可以在 ``security.yaml`` 中控制这些密码的加密方式。
-``make:user`` 命令将为你预先做了配置：
+``make:user`` 命令将为你做一些预先配置：
 
 .. configuration-block::
 
@@ -304,9 +304,9 @@ Symfony使用 ``pattern`` 键查找第一个匹配项
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Symfony中的身份认证起初可能会感觉有些“神奇”。
-这是因为，你不会通过构建路由和控制器来处理登录，而是激\ *认证提供程序*：在调用控制器\ *之前*\自动运行的某些代码。
+这是因为，你不会通过构建路由和控制器来处理登录，而是激活\ *认证提供器*：在调用控制器\ *之前*\自动运行的某些代码。
 
-Symfony有几个 :doc:`内置的认证提供者 </security/auth_providers>`。
+Symfony有几个 :doc:`内置的认证提供器 </security/auth_providers>`。
 如果你的用例 *完全* 符合其中一个，那就太好了！
 但是，在大多数情况下 - 包括登录表单 - *我们建议构建一个安保认证器*：
 一个允许你控制身份验证过程的\ *每个*\部分的类（请参阅下一节）。
@@ -382,8 +382,7 @@ Symfony有几个 :doc:`内置的认证提供者 </security/auth_providers>`。
 
 有\ **两种**\方法可以拒绝访问某些内容：
 
-#. :ref:`yaml中的access_control <security-authorization-access-control>` 允许你保护URL模式
-（例如 ``/admin/*``）。这很容易配置，但不太灵活;
+#. :ref:`yaml中的access_control <security-authorization-access-control>` 允许你保护URL模式（例如 ``/admin/*``）。这很容易配置，但不太灵活;
 
 #. :ref:`在你的控制器（或其他代码）中 <security-securing-controller>`。
 
@@ -522,7 +521,7 @@ Symfony有几个 :doc:`内置的认证提供者 </security/auth_providers>`。
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
-        // 或则添加一个可选消息 - 可被开发者看见
+        // 或者添加一个可被开发者看见的可选消息
         $this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'User tried to access a page without having ROLE_ADMIN');
     }
 
@@ -533,7 +532,7 @@ Symfony有几个 :doc:`内置的认证提供者 </security/auth_providers>`。
 
 1) 如果用户尚未登录，则会要求他们登录（例如，重定向到登录页面）。
 
-2) 如果用户\* 已*\登录，但\* 没有*\ ``ROLE_ADMIN`` 角色，则会显示403拒绝访问页面（你可以 :ref:`自定义 <controller-error-pages-by-status-code>`）。
+2) 如果用户\ *已*\登录，但\ *没有*\ ``ROLE_ADMIN`` 角色，则会显示403拒绝访问页面（你可以 :ref:`自定义 <controller-error-pages-by-status-code>`）。
 
 .. _security-securing-controller-annotations:
 
@@ -588,7 +587,7 @@ Symfony有几个 :doc:`内置的认证提供者 </security/auth_providers>`。
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 如果你\ *只*\想检查用户是否只是登录（你不关心角色），则有两种选择。
-首先，如果你已经为\* 每个*\用户提供了 ``ROLE_USER``，那么你可以检查该角色。
+首先，如果你已经为\ *每个*\用户提供了 ``ROLE_USER``，那么你可以检查该角色。
 要不然，你可以使用特殊的“属性”代替角色::
 
     // ...
@@ -605,15 +604,15 @@ Symfony有几个 :doc:`内置的认证提供者 </security/auth_providers>`。
 ``IS_AUTHENTICATED_FULLY`` 不是一个角色，但它有点像一个角色，每个已登录的用户都会拥有此角色。
 实际上，有3个这样的特殊属性：
 
-* ``IS_AUTHENTICATED_REMEMBERED``：\* 所有*\登录的用户都有这个属性，即使他们通过“记住我的cookie”而登录。
+* ``IS_AUTHENTICATED_REMEMBERED``：\ *所有*\登录的用户都有这个属性，即使他们通过“记住我的cookie”而登录。
   即使你不使用 :doc:`保持登录 </security/remember_me>`，也可以使用此功能检查用户是否已登录。
 
 * ``IS_AUTHENTICATED_FULLY``：这类似于 ``IS_AUTHENTICATED_REMEMBERED``，
   但更严格。仅通过“记住我的cookie”登录的用户将拥有 ``IS_AUTHENTICATED_REMEMBERED``，
   但不会有 ``IS_AUTHENTICATED_FULLY``。
 
-* ``IS_AUTHENTICATED_ANONYMOUSLY``：\* 所有*\用户（甚至是匿名用户）都有此属性 -
-  这在将URL列入\* 白名单*\以保障正常访问时非常有用 - 一些详细信息在 :doc:`/security/access_control`
+* ``IS_AUTHENTICATED_ANONYMOUSLY``：\ *所有*\用户（甚至是匿名用户）都有此属性 -
+  这在将URL列入\ *白名单*\以保障正常访问时非常有用 - 一些详细信息在 :doc:`/security/access_control`
 
 .. _security-secure-objects:
 
@@ -622,7 +621,7 @@ Symfony有几个 :doc:`内置的认证提供者 </security/auth_providers>`。
 
 想象一下，你正在设计一个博客，用户可以对你的帖子发表评论。
 你还希望用户能够编辑自己的评论，但不能编辑其他用户的评论。
-此外，作为管理员用户，你希望能够编辑\* 所有*\评论。
+此外，作为管理员用户，你希望能够编辑\ *所有*\评论。
 
 :doc:`表决器 </security/voters>` 允许你编写所需的\ *任何*\业务逻辑
 （例如，用户可以编辑此帖子，是因为他们是创建者）来确定访问权限。
@@ -866,7 +865,7 @@ Symfony将取消对当前用户的认证并重定向它们。
 使用 ``ROLE_SUPER_ADMIN`` 的用户将自动拥有 ``ROLE_ADMIN``，
 ``ROLE_ALLOWED_TO_SWITCH`` 和 ``ROLE_USER``（继承自 ``ROLE_ADMIN``）。
 
-要使角色层级起作用，请不要尝试手动调用 ``$user->getRoles()``::
+要使角色层级起作用，请不要尝试直接调用 ``$user->getRoles()``::
 
     // 错误 - $user->getRoles() 将不知道角色的层级
     $hasAccess = in_array('ROLE_ADMIN', $user->getRoles());
@@ -890,12 +889,12 @@ Symfony将取消对当前用户的认证并重定向它们。
 
 **我可以有多个防火墙吗？**
     没问题!但通常没有必要。每个防火墙就像一个单独的安全系统。
-    因此，除非你有\* 非常*\不同的认证需求，否则一个防火墙通常表现良好。
+    因此，除非你有\ *非常*\不同的认证需求，否则一个防火墙通常表现良好。
     使用 :doc:`安保认证器 </security/guard_authentication>`，
     你可以在同一防火墙下创建各种认证（例如表单登录，API令牌和LDAP）方式。
 
 **我能在防火墙之间共享身份验证吗？**
-    可以，但只有些许配置项。如果你使用多个防火墙，且只对一个防火墙进行身份验证，则\* 不会*\自动对任何其他防火墙进行认证。
+    可以，但只有些许配置项。如果你使用多个防火墙，且只对一个防火墙进行身份验证，则\ *不会*\自动对任何其他防火墙进行认证。
     不同的防火墙就像不同的安全系统。
     为此，你必须为不同的防火墙明确指定相同的 :ref:`reference-security-firewall-context`。
     但对于大多数应用程序，通常拥有一个主防火墙就足够了。
@@ -912,8 +911,8 @@ Symfony将取消对当前用户的认证并重定向它们。
     > Cannot refresh token because user has changed.
 
     如果你看到了这个，有两个可能的原因。
-    首先，从会话中加载用户可能会出现问题，详情请参阅 :ref:`user_session_refresh`。
-    其次，如果自上次刷新页面后数据库中的某些用户信息发生了变化，Symfony会出于安全原因故意注销用户。
+    首先，从会话中加载用户可能出现了问题，详情请参阅 :ref:`user_session_refresh`。
+    其次，如果自上次刷新页面后数据库中的某些用户信息发生了变化，Symfony会出于安全原因而故意注销该用户。
 
 扩展阅读
 ----------

@@ -108,10 +108,6 @@
   - `sequence_provider.rst`
   - `severity.rst`
   - `translations.rst`
-- `workflow`
-  - `dumping-workflows.rst`
-  - `state-machines.rst`
-  - `usage.rst`
 
 ## 术语约定
 

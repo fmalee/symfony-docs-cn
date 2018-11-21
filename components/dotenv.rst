@@ -54,7 +54,7 @@ Dotenv组件
     $dbUser = getenv('DB_USER');
     // 你也可以使用 ``$_ENV`` or ``$_SERVER``
 
-``load()`` 方法永远不会重写现有的环境变量。如果需要重写它们，请使用 ``overload()`` 方法：
+``load()`` 方法永远不会重写现有的环境变量。如果需要重写它们，请使用 ``overload()`` 方法::
 
     // ...
     $dotenv->overload(__DIR__.'/.env');
