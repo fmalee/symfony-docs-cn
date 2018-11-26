@@ -5,7 +5,7 @@
 ==========
 
 控制器是你创建的一个PHP函数，它从 ``Request`` 对象读取信息并创建和返回一个 ``Response`` 对象。
-响应可能是HTML页面，JSON，XML，文件下载，重定向，404错误或你可以想到的任何其他内容。
+响应可能是HTML页面、JSON、XML、文件下载、重定向、404错误或你可以想到的任何其他内容。
 控制器负责实施你的应用渲染页面内容所需的任意逻辑。
 
 .. tip::
@@ -18,7 +18,7 @@
 一个简单的控制器
 -------------------
 
-虽然控制器可以是任何PHP的callable（函数，对象上的方法或 ``Closure``），但一个控制器通常是控制器类中的一个方法::
+虽然控制器可以是任何可调用的PHP（函数，对象上的方法或 ``Closure``），但一个控制器通常是控制器类中的一个方法::
 
     // src/Controller/LuckyController.php
     namespace App\Controller;
@@ -41,7 +41,7 @@
         }
     }
 
-控制器就是该 ``number()`` 方法，它位于控制器类 ``LuckyController`` 中。
+控制器就是该 ``number()`` 方法，它位于 ``LuckyController`` 控制器类中。
 
 这个控制器非常简单：
 
@@ -61,7 +61,7 @@
 将URI映射到控制器
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-为了能 *浏览* 此控制器的输出，你需要通过路由将URL映射到该控制器。
+为了能 *浏览* 此控制器的输出，你需要通过路由将一个URL映射到该控制器。
 这是通过 ``@Route("/lucky/number/{max}")`` :ref:`路由注释 <annotation-routes>` 完成的。
 
 要查看页面，请在浏览器中打开此URL:
@@ -193,7 +193,7 @@ Symfony会自动给你传递所需的服务::
 
     $ php bin/console debug:autowiring
 
-如果需要控制一个参数的*确切*(exact)值，可以使用其名称来 :ref:`绑定 <services-binding>` 该参数：
+如果需要控制一个参数的 *确切* 值，可以使用其名称来 :ref:`绑定 <services-binding>` 该参数：
 
 .. configuration-block::
 
@@ -203,7 +203,7 @@ Symfony会自动给你传递所需的服务::
         services:
             # ...
 
-            # 明确的配置服务
+            # 显式的配置服务
             App\Controller\LuckyController:
                 public: true
                 bind:
@@ -302,7 +302,7 @@ Symfony会自动给你传递所需的服务::
         return $this->render(...);
     }
 
-:method:`Symfony\\Bundle\\FrameworkBundle\\Controller\\AbstractController::createNotFoundException` 方法只是创建一个特殊的 :class:`Symfony\\Component\\HttpKernel\\Exception\\NotFoundHttpException` 对象的快捷方式，它最终会在Symfony中触发一个404 HTTP响应。
+:method:`Symfony\\Bundle\\FrameworkBundle\\Controller\\AbstractController::createNotFoundException` 方法只是创建一个特定的 :class:`Symfony\\Component\\HttpKernel\\Exception\\NotFoundHttpException` 对象的快捷方式，它最终会在Symfony中触发一个404 HTTP响应。
 
 如果抛出的异常继承自 :class:`Symfony\\Component\\HttpKernel\\Exception\\HttpException` 或是其实例，Symfony将使用适当的HTTP状态代码。否则，响应将会使用500 HTTP状态代码::
 
@@ -493,7 +493,7 @@ Symfony会将 ``Request`` 对象传递给任何使用 ``Request`` 类进行类�
     $response->headers->set('Content-Type', 'text/css');
 
 有一些特殊的类可以使设置某些类型的响应更容易。
-其中一些在下面提到。要了解有关 ``Request`` 和 ``Response``（以及特殊 ``Response`` 类）的更多信息，
+其中一些在下面提到。要了解有关 ``Request`` 和 ``Response`` （以及特殊 ``Response`` 类）的更多信息，
 请参阅 :ref:`HttpFoundation组件文档 <component-http-foundation-request>`。
 
 返回JSON响应
@@ -512,8 +512,8 @@ Symfony会将 ``Request`` 对象传递给任何使用 ``Request`` 类进行类�
         // return $this->json($data, $status = 200, $headers = array(), $context = array());
     }
 
-如果在你的应用中启用了 :doc:`serializer 服务 </serializer>`，它将被用于将数据序列化为JSON。
-否则，请使用 :phpfunction:`json_encode` 函数。
+如果你的应用启用了 :doc:`serializer 服务 </serializer>`，它会被用于将该数据序列化为JSON。
+否则将使用 :phpfunction:`json_encode` 函数。
 
 流文件响应
 ~~~~~~~~~~~~~~~~~~~~~~~~
