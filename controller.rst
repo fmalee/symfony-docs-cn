@@ -566,11 +566,6 @@ Symfony会将 ``Request`` 对象传递给任何使用 ``Request`` 类进行类�
 ----------------------------
 
 .. toctree::
-    :hidden:
-
-    templating
-
-.. toctree::
     :maxdepth: 1
     :glob:
 

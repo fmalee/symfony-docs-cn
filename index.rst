@@ -32,7 +32,9 @@ Symfony中文文档
     :maxdepth: 1
 
     bundles
+    configuration
     console
+    controller
     doctrine
     deployment
     email
@@ -50,6 +52,7 @@ Symfony中文文档
     setup
     serializer
     service_container
+    templating
     testing
     translation
     validation

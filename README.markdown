@@ -109,6 +109,101 @@
   - `severity.rst`
   - `translations.rst`
 
+### 导航调整
+
+为了让文档的导航更清晰，所以对几个 `.. toctree::` 进行了一些调整。
+
+**configuration.rst**
+
+```diff
+.. index::
+   single: Configuration
+
+- 配置 Symfony (以及环境)
++ 配置
+
+======================================
+```
+
+**index.rst**
+
+```diff
+    bundles
++    configuration
+    console
++    controller
+    doctrine
+
+....
+
+    service_container
++    templating
+    testing
+```
+
+**controller.rst**
+
+```diff
+扩展阅读
+----------------------------
+
+- .. toctree::
+-     :hidden:
+- 
+-     templating
+
+```
+
+**page_creation.rst**
+
+```diff
+深入了解HTTP和框架基础知识
+----------------------------
+
+- .. toctree::
+-     :hidden:
+- 
+-     routing
+
+```
+
+**routing.rst**
+
+```diff
+扩展阅读
+----------------------------
+
+- .. toctree::
+-     :hidden:
+- 
+-     controller
+
+```
+
+**templating.rst**
+
+```diff
+.. index::
+   single: Templating
+
+- 创建和使用模板
++ 模板
+
+......
+
+扩展阅读
+----------------------------
+
+- .. toctree::
+-     :hidden:
+- 
+-     configuration
+
+```
+
+
+> 这些调整不会影响正文内容，只是生成的导航位置不一样
+
 ## 术语约定
 
 - `Route`：路由

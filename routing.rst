@@ -913,12 +913,7 @@ Symfony遵循这个逻辑，在带有和不带尾部斜杠的URL之间重定向�
 现在，揭示 :doc:`控制器 </controller>` 的能力。
 
 扩展阅读
-------------------------
-
-.. toctree::
-    :hidden:
-
-    controller
+---------------
 
 .. toctree::
     :maxdepth: 1

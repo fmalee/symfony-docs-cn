@@ -1,7 +1,7 @@
 .. index::
    single: Templating
 
-创建和使用模板
+模板
 ============================
 
 如同  :doc:`前文 </controller>` 所述，
@@ -698,13 +698,8 @@ Symfony同样在Twig中给了你一个全局的 ``app`` 变量，可以用于访
 
 在深入了解Symfony的其他部分之前，请查看 :doc:`配置系统 </configuration>`。
 
-更多关于模板的内容
+扩展阅读
 ----------------------
-
-.. toctree::
-    :hidden:
-
-    configuration
 
 .. toctree::
     :maxdepth: 1

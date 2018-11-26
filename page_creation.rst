@@ -297,11 +297,6 @@ Symfony的 *杀手级* 功能之一是Web调试工具栏：
 --------------------------------------------
 
 .. toctree::
-    :hidden:
-
-    routing
-
-.. toctree::
     :maxdepth: 1
     :glob:
 

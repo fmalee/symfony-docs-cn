@@ -1,7 +1,7 @@
 .. index::
    single: Configuration
 
-配置 Symfony (以及环境)
+配置
 ======================================
 
 Symfony应用可以安装第三方软件包（bundles，库等），为项目引入新功能（:doc:`服务 </service_container>`）。
