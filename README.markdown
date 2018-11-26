@@ -109,6 +109,20 @@
   - `severity.rst`
   - `translations.rst`
 
+
+### 语法问题
+
+- `reStructuredText` 需要在语法的前后添加空格才能进行解析。
+
+  但这在中文里很影响美观和阅读。所以在翻译文档有一些语法使用 `\` 做了转义，而有一些没有。后期有机会将所有语法都做转义以清除周边的空格。
+
+  - 加粗：`**`
+  - 斜体：`*`
+
+- 生成的文档对中文支持不太友好，需要调整样式的字体或是换个主题。
+
+- `Sphinx` 对中文搜索支持不够友好，也需要使用中文插件进行处理。
+
 ### 导航调整
 
 为了让文档的导航更清晰，所以对几个 `.. toctree::` 进行了一些调整。
@@ -149,7 +163,7 @@
 
 - .. toctree::
 -     :hidden:
-- 
+-
 -     templating
 
 ```
@@ -162,7 +176,7 @@
 
 - .. toctree::
 -     :hidden:
-- 
+-
 -     routing
 
 ```
@@ -175,7 +189,7 @@
 
 - .. toctree::
 -     :hidden:
-- 
+-
 -     controller
 
 ```
@@ -196,11 +210,10 @@
 
 - .. toctree::
 -     :hidden:
-- 
+-
 -     configuration
 
 ```
-
 
 > 这些调整不会影响正文内容，只是生成的导航位置不一样
 
@@ -281,15 +294,6 @@
 - `Decorator`：装饰器
 - `Verbosity`：冗余度
 
-## 语法问题
-
-- 对于加粗等语法，需要在 `**` 前后要加上空格，这在中文里很影响美观和阅读。
-  - 加粗：`**`
-  - 斜体：`*`
-  - 注释链接：\`链接\`_
-    - 链接的标题可以直接翻译，需要修改两个地方。
-- 代码：需要使用 `::`
-
 ## 汉化步骤
 
 ### 建立仓库
@@ -314,18 +318,18 @@
 - 从 `symfony-docs` 拉取最新的 `master` 记录。
   - 导出 `master` 的全部文件到 `/update/new`。
   - 在文档说明中记录最后提交的UUID和时间。
-- 从  `symfony-docs`  中检出 `doc-cn` 仓库记录的最后同步的版本。
+- 从 `symfony-docs` 中检出 `doc-cn` 仓库记录的最后同步的版本。
   - 导出该版本的全部文件到 `/update/old`。
 - 从 `doc-cn` 导出 `master` 分支的全部文件到 `/update/doc`。
-- 用 `Beyond Compare`  比较 `doc` 和 `old`
+- 用 `Beyond Compare` 比较 `doc` 和 `old`
   - 导出差异文件(也就是已经汉化的文件)到 `/update/cn`。
   - 删除 `/update/doc`。
 
 #### 更新未汉化文件
 
-- 删除  `doc-cn` 下 `master` 工作区的所有文件
-- 复制  `/update/new` 全部文件到 `doc-cn` 的 `master` 工作区，提交修改。
-- 合并  `/update/cn` 全部文件到 `doc-cn` 的 `master` 工作区，提交修改。
+- 删除 `doc-cn` 下 `master` 工作区的所有文件
+- 复制 `/update/new` 全部文件到 `doc-cn` 的 `master` 工作区，提交修改。
+- 合并 `/update/cn` 全部文件到 `doc-cn` 的 `master` 工作区，提交修改。
 
 - 删除 `/update/cn`。
 
@@ -345,16 +349,16 @@
 - 在 `Beyond Compare` 中和  `git status` 比对
   - 逐一对比两边文件变化
     - 如果Git中已完成，则将 `/update/new` 同步(`复制/删除`)到 `/update/old`。
-  - 提交  `doc-cn` 的 `master-new` 分支
+  - 提交 `doc-cn` 的 `master-new` 分支
 
 #### 更新修改文件
 
-- 根据  `Beyond Compare` 在 `master-new` 分支中合并对应文件。
+- 根据 `Beyond Compare` 在 `master-new` 分支中合并对应文件。
   - 如果文件比较多，可以一次合并少量文件。
 - 汉化合并的内容
 - 用 `git status` 检查文件状态
 - 在 `Beyond Compare` 中和  `git status` 比对
-  - 从 `/update/new`  复制已经合并的文件到 `/update/old`
+  - 从 `/update/new` 复制已经合并的文件到 `/update/old`
   - 直至 `git status` 的文件在 `Beyond Compare` 中没有差异
 - 提交 `master-new` 分支
 - 继续根据 `Beyond Compare` 在 `master-new` 分支中合并对应文件。
@@ -385,11 +389,11 @@
 
 - 从 `symfony-docs` 拉取最新的 `master` 记录
   - 导出 `master` 的全部文件到 `/update/master`
-- 从  `symfony-docs`  中检出最新的 `4.1` 分支
+- 从 `symfony-docs` 中检出最新的 `4.1` 分支
   - 导出该版本的全部文件到 `/update/4.1`
   - 在文档说明中记录最后提交的UUID和时间
 - 进入 `doc-cn` 仓库，从 `master` 分支创建并检出新分支：`4.1`
-- 用 `Beyond Compare`  比较 `master` 和 `4.1`
+- 用 `Beyond Compare` 比较 `master` 和 `4.1`
 - 先更新状态为 `新增/删除` 的文件
   - 具体操作参考 **更新文档** 的对应步骤
 - 更新差异文件
@@ -400,9 +404,9 @@
 > 如果文件太多，一时无法完成汉化：
 >
 > - 则需要再次导出 `symfony-docs` 的 `master` 和 `4.1` 的所有文件
-> - 然后再次用 `Beyond Compare`  对比
+> - 然后再次用 `Beyond Compare` 对比
 > - 在 `doc-cn` 的 `4.1` 分支中进行对比补漏
-> - 汉化完一个文件，就同步 `Beyond Compare`  里的文件。
+> - 汉化完一个文件，就同步 `Beyond Compare` 里的文件。
 > - 如此反复直至汉化完全完成。
 
 ## 生成文档
