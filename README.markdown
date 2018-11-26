@@ -18,9 +18,10 @@
 
 ### 未汉化
 
+- https://github.com/sensiolabs/SensioFrameworkExtraBundle/tree/master/Resources/doc
 - `bundle/` (5)
 - `compoments`
-- `configuration` 
+- `configuration`
   - `environments.rst`
   - `micro_kernel_trait.rst`
   - `multiple_kernels.rst`
@@ -58,7 +59,6 @@
   - `external_resources.rst`
   - `hostname_pattern.rst`
   - `redirect_in_config.rst`
-  - `requirements.rst`
 - `security`
   - `access_control.rst`
   - `custom_authentication_provider.rst`
