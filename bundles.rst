@@ -107,10 +107,17 @@ bundle的目录结构旨在帮助保持所有Symfony包之间的代码一致。
 扩展阅读
 ----------
 
-* :doc:`/bundles/override`
-* :doc:`/bundles/best_practices`
-* :doc:`/bundles/configuration`
-* :doc:`/bundles/extension`
-* :doc:`/bundles/prepend_extension`
+.. toctree::
+    :maxdepth: 1
+    :glob:
+
+    bundles/*
+
+.. 原文档内容
+.. * :doc:`/bundles/override`
+.. * :doc:`/bundles/best_practices`
+.. * :doc:`/bundles/configuration`
+.. * :doc:`/bundles/extension`
+.. * :doc:`/bundles/prepend_extension`
 
 .. _`第三方bundle`: https://github.com/search?q=topic%3Asymfony-bundle&type=Repositories

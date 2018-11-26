@@ -349,7 +349,7 @@ Doctrine为你管理这种关系的持久性：
 
     可以通过调用 ``$category->addProduct()`` 来改变关系吗？
     可以的，因为 ``make:entity`` 命令帮助了我们实现了它。
-    有关更多详细信息，请参阅：`associations-inverse-side`_。
+    有关更多详细信息，请参阅：:ref:`associations-inverse-side`。
 
 获取相关对象
 ------------------------
@@ -552,7 +552,7 @@ Doctrine默默地进行第二次查询以找到与 ``Product`` 相关的 ``Categ
 
 .. note::
 
-    如果你正在使用注释，则需要在所有注释前面添加 ``@ORM\``（例如 ``@ORM\OneToMany``），这在Doctrine的文档中没有反映出来。
+    如果你正在使用注释，则需要在所有注释前面添加 ``@ORM\`` （例如 ``@ORM\OneToMany``），这在Doctrine的文档中没有反映出来。
 
 .. _`关联映射文档`: http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/association-mapping.html
 .. _`orphanRemoval`: http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/working-with-associations.html#orphan-removal

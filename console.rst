@@ -11,7 +11,7 @@ Symfony框架通过 ``bin/console`` 脚本(如，广为人知的 ``bin/console c
 控制台: APP_ENV & APP_DEBUG
 ---------------------------------
 
-控制台命令在 ``dev`` 文件的 ``APP_ENV`` 变量中定义的 :ref:`环境 <config-dot-env>` 中运行，
+控制台命令在 ``.env`` 文件的 ``APP_ENV`` 变量中定义的 :ref:`环境 <config-dot-env>` 中运行，
 默认情况下为 ``dev``。
 它还读取 ``APP_DEBUG`` 值以开启或关闭“调试”模式（默认为 ``1``，即开启）。
 
@@ -287,7 +287,8 @@ Section 可以通过使用 :method:`Symfony\\Component\\Console\\Output\\Console
 :method:`Symfony\\Component\\Console\\Command\\Command::interact` *(可选)*
     此方法在 ``initialize()`` 之后和 ``execute()`` 之前执行。
     其目的是检查是否缺少某些选项/参数，并以交互方式询问用户这些缺失的值。
-    这是你可以弥补(ask)缺少的选项/参数的最后一个地方。执行此命令后，缺少选项/参数将导致错误。
+    这是你可以询问缺少的选项/参数的最后一个地方。
+    执行此命令后，如果还缺少选项/参数，将会导致错误。
 
 :method:`Symfony\\Component\\Console\\Command\\Command::execute` *(必须)*
     此方法在 ``interact()`` 和 ``initialize()`` 之后执行。

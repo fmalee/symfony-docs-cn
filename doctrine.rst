@@ -281,7 +281,7 @@ Doctrine 支持各种字段类型，每种类型都有自己的选项。
 
     $ php bin/console doctrine:migrations:migrate
 
-该命令只会执行*一个*新的迁移文件，因为 DoctrineMigrationsBundle 知道第一次迁移已经在之前执行过。
+该命令只会执行 *一个* 新的迁移文件，因为 DoctrineMigrationsBundle 知道第一次迁移已经在之前执行过。
 在幕后，它管理着一个 ``migration_versions`` 表来跟踪迁移信息。
 
 每次更改模式(schema)后，运行这两个命令以生成迁移，然后执行它。
@@ -291,13 +291,13 @@ Doctrine 支持各种字段类型，每种类型都有自己的选项。
 
 .. tip::
 
-    如果您希望手动添加新属性，``make:entity`` 命令可以为你生成 getter 和 setter 方法：
+    如果你希望手动添加新属性，``make:entity`` 命令可以为你生成 getter 和 setter 方法：
 
     .. code-block:: terminal
 
         $ php bin/console make:entity --regenerate
 
-    如果进行了一些修改并想要重新生成*所有*的 getter/setter 方法，还要传递 ``--overwrite`` 参数。
+    如果进行了一些修改并想要重新生成 *所有* 的 getter/setter 方法，还要传递 ``--overwrite`` 参数。
 
 持久化对象到数据库
 ----------------------------------
@@ -335,7 +335,7 @@ Doctrine 支持各种字段类型，每种类型都有自己的选项。
             $product->setPrice(1999);
             $product->setDescription('Ergonomic and stylish!');
 
-            // 告诉Doctrine你希望（最终）存储 Product 对象（还没有语句执行）
+            // 告诉Doctrine你希望（最终）存储 Product 对象（还没有语句被执行）
             $entityManager->persist($product);
 
             // 真正执行语句（如，INSERT 查询）
@@ -381,7 +381,7 @@ Doctrine 支持各种字段类型，每种类型都有自己的选项。
     请参阅 `事务和并发`_。
 
 无论你是创建还是更新对象，工作流始终都是相同的：
-Doctrine足够聪明，可以知道它应该是*插入*还是*更新*你的实体。
+Doctrine足够聪明，可以知道它应该是 *插入* 还是 *更新* 你的实体。
 
 从数据库中获取对象
 ----------------------------------
@@ -645,7 +645,6 @@ Doctrine足够聪明，可以知道它应该是*插入*还是*更新*你的实�
     }
 
 或者直接使用 SQL::
-Or directly with SQL if you need to::
 
     // src/Repository/ProductRepository.php
     // ...
