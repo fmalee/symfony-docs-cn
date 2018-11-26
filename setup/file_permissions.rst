@@ -4,11 +4,9 @@
 在Symfony 3.x中，你需要做一些额外的工作以确保缓存目录是可写的。
 但那都是过去式了！在Symfony 4中，一切都自动运行：
 
-* In the ``dev`` environment, ``umask()`` is used in ``bin/console`` and ``public/index.php``
-  so that any created files are writable by everyone.
-  在 ``dev`` 环境，在 ``bin/console`` 和 ``public/index.php`` 中使用 ``umask()``，因此任何创建的文件都可以被所有人写入。
+* 在 ``dev`` 环境下，在 ``bin/console`` 和 ``public/index.php`` 中使用 ``umask()``，因此任何创建的文件都可以被所有人写入。
 
-* 在 ``prod`` 环境中（即``APP_ENV`` 是 ``prod`` 以及 ``APP_DEBUG`` 为``0``），
+* 在 ``prod`` 环境中（即 ``APP_ENV`` 是 ``prod`` 以及 ``APP_DEBUG`` 为``0``），
   只要运行 ``php bin/console cache:warmup``，就不需要在运行时将缓存文件写入磁盘。
 
 .. note::

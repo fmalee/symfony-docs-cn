@@ -4,7 +4,7 @@
 路由
 =======
 
-对于任何严谨的web应用程序而言美观的URL是绝对必须的。
+对于任何严谨的web应用而言，美观的URL是绝对必须的。
 这意味着日渐淘汰的 ``index.php?article_id=57`` 这类丑陋的URL要被 ``/read/intro-to-symfony`` 取代。
 
 
@@ -43,7 +43,7 @@
         class BlogController extends AbstractController
         {
             /**
-             * Matches /blog exactly
+             * 确切的匹配 /blog
              *
              * @Route("/blog", name="blog_list")
              */
@@ -53,14 +53,14 @@
             }
 
             /**
-             * Matches /blog/*
+             * 匹配 /blog/*
              *
              * @Route("/blog/{slug}", name="blog_show")
              */
             public function show($slug)
             {
                 // $slug 将等于URL的动态部分
-                // 如URL是 /blog/yay-routing, 那么 $slug='yay-routing'
+                // 如果 URL是 /blog/yay-routing, 那么 $slug='yay-routing'
 
                 // ...
             }
@@ -121,7 +121,7 @@
   例如，如果用户转到 ``/blog/yay-routing``，那么 ``$slug`` 将等于 ``yay-routing``。
 
 每当路由路径中有 ``{placeholder}`` 时，该部分就成为通配符：它匹配 *任何* 值。
-你的控制器现在 *也可以* 有一个名为 ``$placeholder`` 的参数（通配符和参数名称 *必须匹配*）。
+你的控制器现在 *也可以* 有一个名为 ``$placeholder`` 的参数（通配符和参数名称 *必须保持一致*）。
 
 每个路由同样都有一个内部名称：``blog_list`` 和 ``blog_show``。
 这些可以是任何东西（只要它们都是唯一的）并且还没有任何意义。你稍后将使用它们来 :ref:`生成URL <routing-generate>`。
@@ -210,7 +210,7 @@ Symfony提供了一种方便的方式来声明本地化路由而无需重复。
     当你希望为共享相同语言的不同语言环境使用相同的路由路径时，这样处理可以防止必须定义多个路径。
 
 .. versionadded:: 4.2
-    Symfony 4.2中引入了回归语言部分的功能。
+    Symfony 4.2中引入了回退语言部分的功能。
 
 国际化应用的一个常见要求是为所有路由添加一个语言环境前缀。
 这可以通过为每个语言环境定义不同的前缀来完成（如果你愿意，可以为默认语言环境设置一个空前缀）：
@@ -271,7 +271,7 @@ Symfony提供了一种方便的方式来声明本地化路由而无需重复。
 当两个路由匹配相同的URL时，会先加载\ *第一条*\路由。
 不幸的是，这意味着 ``/blog/yay-routing`` 将匹配到 ``blog_list``。这就糟糕了！
 
-要解决此问题，可以添加 ``{page}`` 通配符只能匹配数字（digits）的\ *规定*\(requirement)：
+要解决此问题，可以添加 ``{page}`` 通配符只能匹配数字（digits）的\ *需求*\(requirement)：
 
 .. configuration-block::
 
@@ -358,7 +358,7 @@ URL                       路由            参数
 ========================  =============  ===============================
 
 如果你愿意，可以使用语法 ``{placeholder_name<requirements>}`` 在每个占位符中内联条件。
-此功能使配置更简洁，但当需求复杂时，它会降低路由的可读性：
+此功能使配置更简洁，但当需求比较复杂时，它会降低路由的可读性：
 
 .. configuration-block::
 
@@ -742,7 +742,7 @@ Symfony遵循这个逻辑，在带有和不带尾部斜杠的URL之间重定向�
 ==========  ========================================  ==========================================
 路由路径      如果请求URL是 ``/foo``                     如果请求URL是 ``/foo/``
 ----------  ----------------------------------------  ------------------------------------------
-``/foo``    匹配 (请求状态码``200``)                     创建 ``301`` 并重定向到 ``/foo``
+``/foo``    匹配 (请求状态码 ``200``)                    创建 ``301`` 并重定向到 ``/foo``
 ``/foo/``   创建 ``301`` 并重定向到 ``/foo/``            匹配 (请求状态码``200``)
 ==========  ========================================  ==========================================
 
@@ -763,12 +763,12 @@ Symfony遵循这个逻辑，在带有和不带尾部斜杠的URL之间重定向�
 控制器命名模式
 -------------------------
 
-路由中的 ``controller`` 值具有一个格式 ``CONTROLLER_CLASS::METHOD``。
+路由中的 ``controller`` 值具有一个 ``CONTROLLER_CLASS::METHOD`` 格式。
 
 .. tip::
 
-    要引用控制器类中的一个 ``__invoke()`` 方法来实现操作，你不必传递方法名称，
-    同样使用完全限定的类名（例如 ``App\Controller\BlogController``）。
+    要引用控制器类中的 ``__invoke()`` 方法实现的一个动作，你同样使用完全限定的类名（例如
+    ``App\Controller\BlogController``），但不必传递该方法名称。
 
 .. index::
    single: Routing; Generating URLs
@@ -778,7 +778,7 @@ Symfony遵循这个逻辑，在带有和不带尾部斜杠的URL之间重定向�
 生成URL地址
 ---------------
 
-路由系统也可以生成URL。实际上，路由是双向系统：将URL映射到一个控制器以及一个路由对应一个URL。
+路由系统也可以生成URL。实际上，路由是双向系统：将URL映射到一个控制器以及从一个路由回到一个URL。
 
 要生成URL，你需要指定路由的名称（例如 ``blog_show``）以及该路由路径中使用的任何通配符
 （例如 ``slug = my-blog-post``）。
@@ -798,8 +798,8 @@ Symfony遵循这个逻辑，在带有和不带尾部斜杠的URL之间重定向�
         }
     }
 
-如果需要从服务生成URL，
-请使用 :class:`Symfony\\Component\\Routing\\Generator\\UrlGeneratorInterface` 服务的类型提示::
+如果需要从服务生成URL，请类型约束
+:class:`Symfony\\Component\\Routing\\Generator\\UrlGeneratorInterface` 服务::
 
     // src/Service/SomeService.php
 
@@ -830,7 +830,7 @@ Symfony遵循这个逻辑，在带有和不带尾部斜杠的URL之间重定向�
 使用查询字符串生成URL
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-``generate()`` 方法采用有通配符组成的数组来生成URI。
+``generate()`` 方法采用由通配符组成的数组来生成URI。
 但是如果你传递额外的内容，它们将作为查询字符串添加到URI::
 
     $this->router->generate('blog', array(
@@ -848,7 +848,7 @@ Symfony遵循这个逻辑，在带有和不带尾部斜杠的URL之间重定向�
     $this->router->generate('about_us', array(
         '_locale' => 'nl',
     ));
-    // generates: /over-ons
+    // 生成结果: /over-ons
 
 从模板中生成URL
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -863,7 +863,7 @@ Symfony遵循这个逻辑，在带有和不带尾部斜杠的URL之间重定向�
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 默认情况下，路由会生成相对URL（例如 ``/blog``）。
-要生成绝对URL，在一个控制器中将 ``UrlGeneratorInterface::ABSOLUTE_URL`` 作为第三个参数传递给 ``generateUrl()`` 方法::
+要在一个控制器中生成绝对URL，请将 ``UrlGeneratorInterface::ABSOLUTE_URL`` 作为第三个参数传递给 ``generateUrl()`` 方法::
 
     use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -873,7 +873,7 @@ Symfony遵循这个逻辑，在带有和不带尾部斜杠的URL之间重定向�
 .. note::
 
     生成绝对URL时使用的主机(host)是根据当前的 ``Request`` 对象自动检测得来的。
-    如果是在Web上下文(web context)外部生成绝对URL（例如在控制台命令中），它会不起作用。
+    如果是在Web上下文(web context)外部生成绝对URL（例如在控制台命令中），它将不起作用。
     请参阅 :doc:`/console/request_context` 以了解如何解决此问题。
 
 故障排除

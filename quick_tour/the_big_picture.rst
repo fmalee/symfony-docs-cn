@@ -20,7 +20,7 @@ Symfony *拥抱* 最佳实践，保持着向后兼容（是的，更新总是一
 
     $ composer create-project symfony/skeleton quick_tour
 
-该命令创建了一个  ``quick_tour/``  目录，并在里面安装好了精巧但强大的 Symfony 应用：
+该命令创建了一个 ``quick_tour/`` 目录，并在里面安装好了精巧但强大的 Symfony 应用：
 
 .. code-block:: text
 
@@ -37,7 +37,7 @@ Symfony *拥抱* 最佳实践，保持着向后兼容（是的，更新总是一
     └─ vendor/
 
 我们现在可以在浏览器中运行项目了吗？当然！
-你可以安装 :doc:`Nginx or Apache </setup/web_server_configuration>` 并配置他们的文档根目录到 ``public/`` 目录。
+你可以安装 :doc:`Nginx 或 Apache </setup/web_server_configuration>` 并配置他们的文档根目录到 ``public/`` 目录。
 但是，为了便于开发，Symfony 配有自己的服务器。
 安装和运行方式：
 
@@ -69,7 +69,7 @@ Symfony 以小开局，但却可以成规模扩大。
         path: /
         controller: 'App\Controller\DefaultController::index'
 
-这就是一个 *路由*：它定义了页面的URL(``/``)和 “controller”：
+这就是一个 *路由*：它定义了页面的URL(``/``)和 “控制器”：
 该 *函数* 会在任何人访问这个URL的时候被调用。不过现在这个函数还不存在，让我们创建它！
 
 在 ``src/Controller`` 里，创建一个新的 ``DefaultController`` 类以及一个 ``index`` 方法::

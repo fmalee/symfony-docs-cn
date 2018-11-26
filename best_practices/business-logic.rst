@@ -49,7 +49,7 @@ Symfony程序中，业务逻辑是指你为自己的不与框架本身重合（�
     }
 
 如果你使用的是默认的 :ref:`默认的services.yaml配置 <service-container-services-load-example>`，
-则此类将自动注册为ID为 ``App\Utils\Slugger`` 的服务（如果已在你的代码中导入该类，则只需简介的 ``Slugger::class``）。
+则此类将自动注册为ID为 ``App\Utils\Slugger`` 的服务（如果已在你的代码中导入该类，则只需简洁的 ``Slugger::class``）。
 
 .. best-practice::
 

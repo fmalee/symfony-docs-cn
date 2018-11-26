@@ -4,7 +4,7 @@
 如何将控制器定义为服务
 =====================================
 
-在Symfony中，控制器就 *不* 需要注册为服务。
+在Symfony中，*不* 需要将控制器注册为服务。
 但是，如果你使用的是
 :ref:`默认services.yaml配置 <service-container-services-load-example>`，
 你的控制器都 *已经* 被注册为服务。这意味着你可以像任何其他普通服务一样使用依赖注入。
@@ -14,8 +14,8 @@
 
 将控制器注册为服务是第一步，但你还需要更新路由配置以正确引用服务，以便Symfony知道如何使用它。
 
-使用 ``service_id::method_name`` 语法来引用控制器方法。
-如果服务ID是控制器的完全限定类名（FQCN），正如Symfony建议的那样，那么该语法与控制器不是服务的语法相同
+现在可以使用 ``service_id::method_name`` 语法来引用该控制器方法。
+如果正如Symfony建议的那样，该控制器的服务ID是其完全限定类名（FQCN），那么该语法与控制器不是服务时的语法相同
 ：``App\Controller\HelloController::index``：
 
 .. configuration-block::
@@ -122,7 +122,7 @@ Invokable控制器
 
 了解如何替换基础 ``Controller`` 便捷方法的最佳方法是查看保存其逻辑的 `ControllerTrait`_。
 
-如果你想知道每个服务使用哪种类型约束，请参阅 `AbstractController`_ 中的 ``getSubscribedServices()`` 方法。
+如果你想知道使用哪种类型约束来获取每个服务，请参阅 `AbstractController`_ 中的 ``getSubscribedServices()`` 方法。
 
 .. _`控制器类源代码`: https://github.com/symfony/symfony/blob/master/src/Symfony/Bundle/FrameworkBundle/Controller/ControllerTrait.php
 .. _`base Controller class`: https://github.com/symfony/symfony/blob/master/src/Symfony/Bundle/FrameworkBundle/Controller/ControllerTrait.php

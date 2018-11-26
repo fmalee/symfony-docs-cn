@@ -10,7 +10,8 @@
     var route = "{{ path('blog_show', {'slug': 'my-blog-post'})|escape('js') }}";
     </script>
 
-但是，如果你 *确实* 需要在纯JavaScript中生成路由，请考虑使用`FOSJsRoutingBundle`_。它使以下示例成为可能：
+但是，如果你 *确实* 需要在纯JavaScript中生成路由，请考虑使用
+`FOSJsRoutingBundle`_。它使以下示例成为可能：
 
 .. code-block:: html+twig
 

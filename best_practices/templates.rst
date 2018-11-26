@@ -25,7 +25,7 @@ Twig是Symfony中的默认模板格式，并且拥有所有非PHP模板引擎的
 
     对目录和模板名称，使用蛇型拼写法的小写格式。
 
-此建议与Twig最佳实践一致，其中变量和模板名称也使用小写的snake_case
+此建议与Twig最佳实践一致，其中变量和模板名称也使用小写的蛇形命名
 （例如使用 ``user_profile`` 替代 ``userProfile``，使用 ``edit_form.html.twig`` 替代 ``EditForm.html.twig``）。
 
 .. best-practice::

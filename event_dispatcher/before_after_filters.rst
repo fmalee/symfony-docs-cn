@@ -65,7 +65,7 @@
 标记控制器以便检查
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-``kernel.controller``（又名 ``KernelEvents::CONTROLLER``）监听器在控制器执行之前就获得 *每个* 请求的通知。
+``kernel.controller`` （又名 ``KernelEvents::CONTROLLER``）监听器在控制器执行之前就获得 *每个* 请求的通知。
 因此，首先，你需要一些方法来确定与请求匹配的控制器是否需要令牌验证。
 
 一种干净简单的方法是创建一个空接口并让控制器实现它::
@@ -164,7 +164,7 @@ Symfony负责其余的工作。你的 ``TokenSubscriber`` 上的 ``onKernelContr
 除了在控制器 *之前* 执行“钩子”之外，还可以添加在控制器 *之后* 执行的钩子。
 对于此示例，假设你要将一个sha1哈希（使用salt的令牌）添加到已通过此令牌认证的所有响应中。
 
-另一个核心Symfony事件 - 名为``kernel.response``（又名 ``KernelEvents::RESPONSE``）
+另一个核心Symfony事件 - 名为 ``kernel.response`` （又名 ``KernelEvents::RESPONSE``）
 - 在每次请求时都会收到通知，但是在控制器返回一个响应对象之后。
 要创建“后置”监听器，请创建一个监听器类，并将其注册为此事件上的服务。
 

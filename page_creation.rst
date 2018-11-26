@@ -9,10 +9,10 @@
 
 创建一个新页面——无论是 HTML 还是 JSON 输出——都是一个简单的“两步”操作：
 
-#. **创建一个路由**: 路由（route）是一个指向你的页面URL（比如/about），同时它映射到一个控制器；
+#. **创建一个路由**: 路由是一个指向你的页面URL（比如 ``/about``），同时它映射到一个控制器；
 
-#. **创建一个控制器**: 控制器（controller）是你为了构造页面而写的功能。
-   你要拿到发送来的request请求信息，用它创建一个 Symfony 的 ``Response`` 对象，令其包含HTML内容，JSON字符串或是其他。
+#. **创建一个控制器**: 控制器是你为了构造页面而写的功能。
+   你要拿到发送来的请求信息，用它创建一个 Symfony 的 ``Response`` 对象，令其包含HTML内容、JSON字符串或是其他。
 
 .. admonition:: Screencast
     :class: screencast
@@ -63,7 +63,7 @@
 
     # config/routes.yaml
 
-    # "app_lucky_number" 这个路由名称现在还不是重点
+    # 这个 "app_lucky_number" 路由名称现在还不是重点
     app_lucky_number:
         path: /lucky/number
         controller: App\Controller\LuckyController::number
@@ -180,7 +180,7 @@ Symfony的 *杀手级* 功能之一是Web调试工具栏：
 安装名为 ``symfony/profiler-pack`` 的软件包后，开箱即用。
 
 你将在页面底部看到一个黑条。你将了解更多有关它所包含的所有信息，
-但可以随意进行试验：将鼠标悬停在上面并单击不同的图标以获取有关路由，性能，日志记录等信息。
+但可以随意进行试验：将鼠标悬停在上面并单击不同的图标以获取有关路由、性能、日志记录等信息。
 
 渲染模板
 --------------------
@@ -233,7 +233,8 @@ Symfony的 *杀手级* 功能之一是Web调试工具栏：
 
     <h1>你的幸运数字是 {{ number }}</h1>
 
- ``{{ number }}`` 语法在Twig中用于打印变量。刷新浏览器以获取*新*的幸运号码！
+
+``{{ number }}`` 语法在Twig中打印变量。刷新浏览器以获取 *新* 的幸运号码！
 
     http://localhost:8000/lucky/number
 

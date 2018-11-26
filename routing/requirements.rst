@@ -4,9 +4,8 @@
 如何定义路由要求
 ================================
 
-:ref:`Route requirements <routing-requirements>` can be used to make a specific route
-*only* match under specific conditions. The simplest example involves restricting
-a routing ``{wildcard}`` to only match some regular expression:
+:ref:`路由要求 <routing-requirements>` 可用于使一个特定路由仅在特定条件下匹配。
+最简单的示例是将一个路由 ``{wildcard}`` 限制为仅匹配某些正则表达式：
 
 .. configuration-block::
 
@@ -72,20 +71,17 @@ a routing ``{wildcard}`` to only match some regular expression:
 
         return $routes;
 
-Thanks to the ``\d+`` requirement (i.e. a "digit" of any length), ``/blog/2`` will
-match this route but ``/blog/some-string`` will *not* match.
+得益于 ``\d+`` 要求（即任意长度的“数字”），``/blog/2`` 将匹配这这个路由，但
+``/blog/some-string`` 将不会匹配。
 
-.. sidebar:: Earlier Routes Always Win
+.. sidebar:: 总是较早的路由胜出
 
-    Why would you ever care about requirements? If a request matches *two* routes,
-    then the first route always wins. By adding requirements to the first route,
-    you can make each route match in just the right situations. See :ref:`routing-requirements`
-    for an example.
+    为什么你要关心要求？如果一个请求与 *两个* 路由匹配，则第一条路由总是获胜。
+    通过向第一个路由添加要求，你可以在恰当的情况下使每个路由都能匹配。
+    有关示例，请参阅 :ref:`routing-requirements`。
 
-Since the parameter requirements are regular expressions, the complexity
-and flexibility of each requirement is entirely up to you. Suppose the homepage
-of your application is available in two different languages, based on the
-URL:
+由于参数要求是正则表达式，因此每个要求的复杂性和灵活性完全取决于你自己。
+假设你的应用的主页基于URL提供两种不同的语言支持：
 
 .. configuration-block::
 
@@ -148,44 +144,39 @@ URL:
 
         return $routes;
 
-For incoming requests, the ``{_locale}`` portion of the URL is matched against
-the regular expression ``(en|fr)``.
+对于传入请求，URL的 ``{_locale}`` 部分会与正则表达式 ``(en|fr)`` 进行匹配。
 
 =======  ========================
-Path     Parameters
+路径      参数
 =======  ========================
 ``/``    ``{_locale}`` = ``"en"``
 ``/en``  ``{_locale}`` = ``"en"``
 ``/fr``  ``{_locale}`` = ``"fr"``
-``/es``  *won't match this route*
+``/es``  *不会匹配本路由*
 =======  ========================
 
 .. note::
 
-    You can enable UTF-8 route matching by setting the ``utf8`` option when
-    declaring or importing routes. This will make e.g. a ``.`` in requirements
-    match any UTF-8 characters instead of just a single byte.
+    通过在声明或导入路由时设置 ``utf8`` 选项，可以启用UTF-8路由匹配。
+    这将使得要求中的例如 ``.`` 匹配任何UTF-8字符而不是单个字节。
 
 .. tip::
 
-    The route requirements can also include container parameters, as explained
-    in :doc:`this article </routing/service_container_parameters>`.
-    This comes in handy when the regular expression is very complex and used
-    repeatedly in your application.
+    如 :doc:`本文档 </routing/service_container_parameters>` 中所述，路由要求还可以包含容器参数。
+    它通常在正则表达式非常复杂并会在你的应用中重复使用时派上用场。
 
 .. index::
     single: Routing; Method requirement
 
 .. _routing-method-requirement:
 
-Adding HTTP Method Requirements
+添加HTTP方法要求
 -------------------------------
 
-In addition to the URL, you can also match on the *method* of the incoming
-request (i.e. GET, HEAD, POST, PUT, DELETE). Suppose you create an API for
-your blog and you have 2 routes: One for displaying a post (on a GET or HEAD
-request) and one for updating a post (on a PUT request). This can be
-accomplished with the following route configuration:
+除了URL之外，你还可以匹配传入请求的 *方法* （即GET、HEAD、POST、PUT、DELETE）。
+假设你为博客创建了一个API，并且你有两个路由：
+一个用于显示帖子（在GET或HEAD请求上），另一个用于更新帖子（在PUT请求中）。
+那么可以通过以下路由配置来完成：
 
 .. configuration-block::
 
@@ -203,7 +194,7 @@ accomplished with the following route configuration:
              */
             public function show($id)
             {
-                // ... return a JSON response with the post
+                // ... 使用帖子来返回一个 JSON 响应
             }
 
             /**
@@ -211,7 +202,7 @@ accomplished with the following route configuration:
              */
             public function edit($id)
             {
-                // ... edit a post
+                // ... 编辑一个帖子
             }
         }
 
@@ -263,33 +254,29 @@ accomplished with the following route configuration:
 
         return $routes;
 
-Despite the fact that these two routes have identical paths
-(``/api/posts/{id}``), the first route will match only GET or HEAD requests and
-the second route will match only PUT requests. This means that you can display
-and edit the post with the same URL, while using distinct controllers for the
-two actions.
+尽管这两个路由具有相同的路径（``/api/posts/{id}``），但第一个路由仅匹配
+``GET``或 ``HEAD`` 请求，第二个路由仅匹配 ``PUT`` 请求。
+这意味着你可以使用相同的URL来显示和编辑帖子，同时为这两个动作使用不同的控制器。
 
 .. note::
 
-    If no ``methods`` are specified, the route will match on *all* methods.
+    如果未指定 ``methods``，则该路由将匹配所有方法。
 
 .. tip::
 
-    If you're using HTML forms and HTTP methods *other* than ``GET`` and ``POST``,
-    you'll need to include a ``_method`` parameter to *fake* the HTTP method. See
-    :doc:`/form/action_method` for more information.
+    如果你要使用 ``GET`` 和 ``POST`` *以外* 的HTML表单和HTTP方法，你需要包含一个
+    ``_method`` 参数来 *伪造* 对应的HTTP方法。
+    有关更多信息，请参阅 :doc:`/form/action_method` 。
 
-Adding a Host Requirement
+添加主机要求
 -------------------------
 
-You can also match on the HTTP *host* of the incoming request. For more
-information, see :doc:`/routing/hostname_pattern` in the Routing
-component documentation.
+你还可以要求匹配传入请求的HTTP *主机*。
 
-Adding Dynamic Requirements with Expressions
+使用表达式添加动态要求
 --------------------------------------------
 
-For really complex requirements, you can use dynamic expressions to match *any*
-information on the request. See :doc:`/routing/conditions`.
+对于非常复杂的要求，你可以使用动态表达式来匹配请求中的 *任何* 信息。
+请参阅 :doc:`/routing/conditions`。
 
 .. _`PCRE Unicode property`: http://php.net/manual/en/regexp.reference.unicode.php
