@@ -19,7 +19,7 @@
             $event = new BeforeSendMailEvent($subject, $message);
             $this->dispatcher->dispatch('mailer.pre_send', $event);
 
-            // 从事件中获取$foo和$bar，它们可能已被修改
+            // 从事件中获取$foo和$bar，因为它们可能已被修改
             $subject = $event->getSubject();
             $message = $event->getMessage();
 
@@ -118,6 +118,7 @@
         public function onMailerPostSend(AfterSendMailEvent $event)
         {
             $returnValue = $event->getReturnValue();
+
             // 修改原本的 ``$returnValue`` 值
 
             $event->setReturnValue($returnValue);

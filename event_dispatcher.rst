@@ -29,7 +29,7 @@ Symfony在处理HTTP请求时触发多个与 :doc:`内核相关的事件 </refer
     {
         public function onKernelException(GetResponseForExceptionEvent $event)
         {
-            // 你可以从接收到的事件中，取得异常对象
+            // 你可以从接收到的事件中取得异常对象
             $exception = $event->getException();
             $message = sprintf(
                 'My Error says: %s with code: %s',
@@ -115,7 +115,7 @@ Symfony遵循以下逻辑来决定在事件监听器类中执行哪个方法：
 
     ``kernel.event_listener`` 标签有一个名为 ``priority`` 的可选属性，它是一个正整数或负整数，默认值为 ``0``，
     它控制执行监听器的顺序（数字越大，监听器越早执行）。
-    当你需要保证一个侦听器在另一个侦听器之前执行时，这非常有用。
+    当你需要保证一个监听器在另一个侦听器之前执行时，这非常有用。
     Symfony内部的监听器的优先级通常在 ``-255`` 到 ``255`` 之间，
     但你自己的监听器可以使用任何正整数或负整数。
 
@@ -208,7 +208,7 @@ Symfony会负责其余的工作。
         }
     }
 
-某些特定的行为，例如检查\ *真实*\请求的信息，可能不需要在子请求减去器上完成。
+某些特定的行为，例如检查\ *真实*\请求的信息，可能不需要在子请求监听器上完成。
 
 .. _events-or-subscribers:
 

@@ -16,7 +16,7 @@
 在Symfony中，这些有用的对象被称为 **服务**，每个服务都存在于一个称为 **服务容器** 的非常特殊的对象中。
 如果你有服务容器，那么你可以使用服务的id来取出服务：
 
-容器允许你以集中化化的方式构造对象。它让你的生活更轻松，构筑强大的架构，并且超级快！
+容器允许你以集中化的方式构造对象。它让你的生活更轻松，构筑强大的架构，并且超级快！
 
 取得和使用服务
 ----------------------
@@ -76,7 +76,6 @@ Symfony将自动传递与该类型相匹配的服务对象。
 
 .. _service-container-creating-service:
 
-Creating/Configuring Services in the Container
 在容器中创建/配置服务
 ----------------------------------------------
 
@@ -120,7 +119,7 @@ Creating/Configuring Services in the Container
 
 当你请求 ``MessageGenerator`` 服务时，容器构造一个新的 ``MessageGenerator`` 对象并返回它（参见下面的侧栏）。
 但是如果你从未请求这项服务，它就 *永远不会* 构建：优化内存和速度。
-作为回报，``MessageGenerator`` 服务仅创建 *一次*：每次请求时都返回相同的实例。
+作为回报，``MessageGenerator`` 服务仅创建 *一次*：每次请求它时都返回相同的实例。
 
 .. _service-container-services-load-example:
 
@@ -187,16 +186,16 @@ Creating/Configuring Services in the Container
 
     .. tip::
 
-        ``resource`` 和 ``exclude``选项的值可以是任何有效的 `glob模式`_。
+        ``resource`` 和 ``exclude`` 选项的值可以是任何有效的 `glob模式`_。
         ``exclude`` 选项的值也可以是glob模式的数组。
 
         .. versionadded:: 4.2
             在Symfony 4.2中引入了将glob模式的数组传递给 ``exclude`` 选项的功能。
 
-    由于这种配置，你可以自动使用 ``src/`` 目录中的任何类作为服务，而无需手动配置它。
+    得益于这种配置，你可以自动使用 ``src/`` 目录中的任何类作为服务，而无需手动配置它。
     稍后，你将在 :ref:`service-psr4-loader` 中了解更多相关信息。
 
-    如果你更愿意手动连接(wire)你的服务，那也是完全可能的：
+    如果你更愿意手动装配你的服务，那也是完全可能的：
     请参阅 :ref:`services-explicitly-configure-wire-services`。
 
 .. _services-constructor-injection:
@@ -298,7 +297,7 @@ Creating/Configuring Services in the Container
         }
     }
 
-同时需要 ``MessageGenerator`` *和* ``Swift_Mailer`` 服务。那也没问题！
+这里同时需要 ``MessageGenerator`` *和* ``Swift_Mailer`` 服务。那也没问题！
 事实上，这项新服务已经可以使用了。例如，在控制器中，你可以类型约束新的 ``SiteUpdateManager`` 类并使用它::
 
     // src/Controller/SiteController.php
@@ -317,7 +316,8 @@ Creating/Configuring Services in the Container
         // ...
     }
 
-由于自动装配和 你在 ``__construct()`` 中的类型约束，容器会创建 ``SiteUpdateManager`` 对象并将其传递到正确的参数。
+得益于自动装配和你在 ``__construct()`` 中的类型约束，容器会创建
+``SiteUpdateManager`` 对象并将其传递到正确的参数中。
 在大多数情况下，这非常有效。
 
 .. _services-manually-wire-args:
@@ -433,7 +433,7 @@ Creating/Configuring Services in the Container
 而其他参数仍然是自动装配的。
 
 但是，这不会很脆弱吗？幸运的是，没有！
-如果你将 `$adminEmail`` 参数重命名为其他内容 -- 例如 ``$mainEmail``-- 当你重新加载下一个页面时，你将获得明确的异常（即使该页面不使用此服务）。
+如果你将 ``$adminEmail`` 参数重命名为其他内容 -- 例如 ``$mainEmail``-- 当你重新加载下一个页面时，你将获得明确的异常（即使该页面不使用此服务）。
 
 .. _service-container-parameters:
 
@@ -545,7 +545,7 @@ Creating/Configuring Services in the Container
         // ...
     }
 
-但是，容器中有*多个*服务实现 ``LoggerInterface``，
+但是，容器中有 *多个* 服务实现 ``LoggerInterface``，
 例如 ``logger``、``monolog.logger.request``、``monolog.logger.php`` 等等。
 容器如何知道要使用哪个服务？
 
@@ -559,14 +559,14 @@ Creating/Configuring Services in the Container
 
         # config/services.yaml
         services:
-            # ... same code as before
+            # ... 和之前一样的代码
 
-            # explicitly configure the service
+            # 显式的配置服务
             App\Service\MessageGenerator:
                 arguments:
-                    # '@'符号很重要：这就是告诉容器要
-                    # 传递id为 'monolog.logger.request'的 *服务*，
-                    # 而不是内容为 'monolog.logger.request' 的*字符串*
+                    # '@'符号很重要：这就是告诉容器要传递id为
+                    # 'monolog.logger.request'的 *服务*，
+                    # 而不是值为 'monolog.logger.request' 的 *字符串*
                     $logger: '@monolog.logger.request'
 
     .. code-block:: xml
@@ -624,10 +624,10 @@ Creating/Configuring Services in the Container
         services:
             _defaults:
                 bind:
-                    # 将此值传递给在此文件中定义的任意服务的任何 $adminEmail 参数（包括控制器参数）
+                    # 将此 *值* 传递给在此文件中定义的任意服务的任何 $adminEmail 参数（包括控制器参数）
                     $adminEmail: 'manager@example.com'
 
-                    # 将此服务传递给在此文件中定义的任意服务的任何 $requestLogger 参数
+                    # 将此 *服务* 传递给在此文件中定义的任意服务的任何 $requestLogger 参数
                     $requestLogger: '@monolog.logger.request'
 
                     # 将此服务传递给在此文件中定义的任意服务的任何 LoggerInterface 类型约束
@@ -913,7 +913,7 @@ Creating/Configuring Services in the Container
             resource: '../src/Domain/*'
             # ...
 
-要获得多个定义，请添加``namespace`` 选项并使用任何的唯一字符串作为每个服务配置的键：
+要获得多个定义，请添加 ``namespace`` 选项并使用任何的唯一字符串作为每个服务配置的键：
 
 .. code-block:: yaml
 
@@ -934,7 +934,9 @@ Creating/Configuring Services in the Container
 显式的配置服务和参数
 ---------------------------------------------
 
-在Symfony 3.3之前，所有服务和（通常）参数都是显式配置的：无法 :ref:`自动加载服务 <service-container-services-load-example>`，:ref:`autowiring <services-autowire>` 也不常见。
+在Symfony 3.3之前，所有服务和（通常）参数都是显式配置的：无法
+:ref:`自动加载服务 <service-container-services-load-example>`，
+:ref:`自动装配 <services-autowire>` 也不常见。
 
 这两个功能都是可选的。即使你使用它们，也可能在某些情况下需要手动装配服务。
 例如，假设你要为 ``SiteUpdateManager`` 类注册 *2* 个服务 - 每个服务都有不同的管理员电子邮件。

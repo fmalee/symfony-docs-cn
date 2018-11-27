@@ -79,7 +79,7 @@ Symfony附带几个内置的用户提供器：
          *
          * @return UserInterface
          *
-         * @throws UsernameNotFoundException if the user is not found
+         * @throws UsernameNotFoundException 如果未找到该用户
          */
         public function loadUserByUsername($username)
         {

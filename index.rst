@@ -35,8 +35,8 @@ Symfony中文文档
     configuration
     console
     controller
-    doctrine
     deployment
+    doctrine
     email
     event_dispatcher
     forms

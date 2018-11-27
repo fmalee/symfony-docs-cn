@@ -121,8 +121,8 @@ Symfony整合了一个Form组件，让处理表单变得容易起来。
 表单构建器的目的是允许你编写简单的表单“指令(recipes)”，并让它完成实际构建表单的所有繁重工作。
 
 在此示例中，你已向表单添加了两个字段 -- ``task`` 和 ``dueDate`` -- 对应于 ``Task`` 类中的 ``task`` 和 ``dueDate`` 属性。
-你还为每个字段分配了一个“类型”（例如``TextType`` 和 ``DateType``），用其完全限定(fully qualified)的类名表示。
-除此之外，它还决定为该字段渲染哪个HTML表单标记。
+你还为每个字段分配了一个“类型”（例如 ``TextType`` 和 ``DateType``），用其完全限定的类名表示。
+除此之外，它还决定为该字段渲染哪个HTML表单标签。
 
 最后，你添加了一个带有自定义标签的提交按钮以向服务器提交表单。
 
@@ -197,7 +197,7 @@ Symfony开箱附带许多内置类型，它们将在稍后讨论（参见 :ref:`
 
     public function new(Request $request)
     {
-        // 直接设置一个全新v$taskv对象（删除了虚拟数据）
+        // 直接设置一个全新的$task对象（删除了虚拟数据）
         $task = new Task();
 
         $form = $this->createFormBuilder($task)
@@ -239,10 +239,10 @@ Symfony开箱附带许多内置类型，它们将在稍后讨论（参见 :ref:`
    如果表单未被提交，:method:`Symfony\\Component\\Form\\FormInterface::isSubmitted` 返回 ``false``;
 
 #. 当用户提交表单时，:method:`Symfony\\Component\\Form\\FormInterface::handleRequest`
-   会识别这个动作并立即将提交的数据写入到 ``$task`` 对象的 `task`` and ``dueDate`` 属性。
-   然后该对象被验证。如果它是无效的（验证在下一章），
+   会识别这个动作并立即将提交的数据写入到 ``$task`` 对象的 ``task`` 和 ``dueDate`` 属性。
+   然后验证该对象。如果它是无效的（验证在下一章），
    :method:`Symfony\\Component\\Form\\FormInterface::isValid` 会返回 ``false``，
-   进而表单被再次渲染，只是这次有验证错误;
+   进而表单被再次渲染，只是这次附加了验证错误;
 
 #. 当用户以合法数据提交表单的时，提交的数据会被再次写入到表单，但这一次
    :method:`Symfony\\Component\\Form\\FormInterface::isValid` 返回 ``true``。
@@ -251,7 +251,7 @@ Symfony开箱附带许多内置类型，它们将在稍后讨论（参见 :ref:`
 
    .. note::
 
-      表单成功提交之后的将用户重定向，是为了防止用户通过浏览器“刷新”按钮重复提交数据。
+      表单成功提交之后的将用户重定向，是为了防止用户通过浏览器的“刷新”按钮重复提交数据。
 
 .. seealso::
 
@@ -433,7 +433,7 @@ Symfony标配了大量的字段类型，涵盖了你所能遇到的全部常规�
 
 .. sidebar:: ``label`` 选项
 
-    表单字段可以使用``label``选项来设置表单字段的标签，它适用于任何字段::
+    表单字段可以使用 ``label`` 选项来设置表单字段的标签，它适用于任何字段::
 
         ->add('dueDate', DateType::class, array(
             'widget' => 'single_text',
@@ -478,7 +478,7 @@ Symfony标配了大量的字段类型，涵盖了你所能遇到的全部常规�
 .. index::
    single: Forms; Field type guessing
 
-字段类型选的猜测
+字段类型选项的猜测
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 除了猜测字段类型，Symfony还可尝试猜出字段选项的正确值。
@@ -490,19 +490,19 @@ Symfony标配了大量的字段类型，涵盖了你所能遇到的全部常规�
     所以你需要手动地添加这些服务器端的规则，然后这些字段类型的选项接下来可以根据这些规则被猜出来。
 
 ``required``
-    `required`` 选项可以基于验证规则 (如，该字段是否为 ``NotBlank`` 或 ``NotNull``)
+    ``required`` 选项可以基于验证规则 (如，该字段是否为 ``NotBlank`` 或 ``NotNull``)
     或者是Doctrine的元数据 (如，该字段是否为 ``nullable``)而被猜出来。
     这非常有用，因为你的客户端验证将自动匹配到你的验证规则。
 
 ``maxlength``
-    如果字段是某些列文本型字段，那么 ``maxlength`` 选项可以基于验证约束 (字段是否应用了 ``Length`` 或 ``Range``) 或者是Doctrine元数据 (通过该字段的长度) 而被猜出来。
+    如果字段是某些文本型字段，那么 ``maxlength`` 选项可以基于验证约束 (字段是否应用了 ``Length`` 或 ``Range``) 或者是Doctrine元数据 (通过该字段的长度) 而被猜出来。
 
 .. caution::
 
   这些字段选项 *仅* 在你使用Symfony进行类型猜测时
   （即，传入 ``null`` 作为 ``add()`` 方法的第二个参数或忽略该参数）才会进行猜测。
 
-如果你希望改变某个被猜出来的值，可以在字段类型的选项数组中传入此项进行覆写::
+如果你希望改变某个被猜出来的值，可以在字段类型的选项数组中传入此项进行重写::
 
     ->add('task', null, array('attr' => array('maxlength' => 4)))
 
@@ -580,7 +580,7 @@ Symfony标配了大量的字段类型，涵盖了你所能遇到的全部常规�
     当把表单映射成对象时，所有的字段都将被映射。表单中的任何字段如果在映射对象上“不存在”，都会抛出异常。
 
     当你需要在表单中使用附加字段（如，一个 “你是否同意这些声明？”的复选框）
-    而这个字段不需要被映射到底层对象时，你需要设置 ``mapped`` 选项为 ``false``::``false``::
+    而这个字段不需要被映射到底层对象时，你需要设置 ``mapped`` 选项为 ``false``::
 
         use Symfony\Component\Form\FormBuilderInterface;
 
@@ -609,7 +609,7 @@ Symfony标配了大量的字段类型，涵盖了你所能遇到的全部常规�
 
     表单名称是从类型类名称自动生成的。
     如果要修改它，请使用 :method:`Symfony\\Component\\Form\\FormFactoryInterface::createNamed` 方法。
-    你甚至可以通过将名称设置为空字符串来完全取消名称。
+    你甚至可以通过将名称设置为空字符串来完全取消命名。
 
 总结
 -------

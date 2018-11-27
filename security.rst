@@ -862,8 +862,8 @@ Symfony将取消对当前用户的认证并重定向它们。
         ));
 
 具有 ``ROLE_ADMIN`` 角色的用户也将具有 ``ROLE_USER`` 角色。
-使用 ``ROLE_SUPER_ADMIN`` 的用户将自动拥有 ``ROLE_ADMIN``，
-``ROLE_ALLOWED_TO_SWITCH`` 和 ``ROLE_USER``（继承自 ``ROLE_ADMIN``）。
+使用 ``ROLE_SUPER_ADMIN`` 的用户将自动拥有 ``ROLE_ADMIN``、
+``ROLE_ALLOWED_TO_SWITCH`` 和 ``ROLE_USER`` （继承自 ``ROLE_ADMIN``）。
 
 要使角色层级起作用，请不要尝试直接调用 ``$user->getRoles()``::
 

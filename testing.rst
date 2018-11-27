@@ -250,7 +250,7 @@ Crawler也可用于与页面交互。首先使用Crawler配合XPath表达式或C
 
         // ...
 
-        // 断言至少有一个带有“副标题”类的h2标签
+        // 断言至少有一个带有“subtitle”类的h2标签
         $this->assertGreaterThan(
             0,
             $crawler->filter('h2.subtitle')->count()
@@ -259,7 +259,7 @@ Crawler也可用于与页面交互。首先使用Crawler配合XPath表达式或C
         // 断言页面上只有4个h2标签
         $this->assertCount(4, $crawler->filter('h2'));
 
-        // 断言“Content-Type”标头是“application / json”
+        // 断言“Content-Type”标头是“application/json”
         $this->assertTrue(
             $client->getResponse()->headers->contains(
                 'Content-Type',
@@ -344,7 +344,7 @@ Crawler也可用于与页面交互。首先使用Crawler配合XPath表达式或C
 
 .. _testing-request-method-sidebar:
 
-.. sidebar:: ``request()`` 方法的更多信息：
+.. sidebar:: ``request()`` 方法的更多信息
 
     ``request()`` 方法的完整签名是::
 
@@ -358,7 +358,7 @@ Crawler也可用于与页面交互。首先使用Crawler配合XPath表达式或C
             $changeHistory = true
         )
 
-    ``server`` 数组是你通常在PHP $_SERVER`_ 超全局中找到的原始值。
+    ``server`` 数组是你通常在PHP `$_SERVER`_ 超全局中找到的原始值。
     例如，要设置 ``Content-Type`` 和 ``Referer`` HTTP标头，
     你将传递以下内容（请注意非标准标头的 ``HTTP_`` 前缀）::
 
@@ -437,11 +437,11 @@ AJAX请求
 客户端提供了一个 :method:`Symfony\\Component\\BrowserKit\\Client::xmlHttpRequest` 方法，
 该方法与 ``request()`` 方法具有相同的参数，但它是生成AJAX请求的快捷方式::
 
-    // the required HTTP_X_REQUESTED_WITH header is added automatically
+    // 自动添加所需的HTTP_X_REQUESTED_WITH标头
     $client->xmlHttpRequest('POST', '/submit', array('name' => 'Fabien'));
 
 .. versionadded:: 4.1
-    ``xmlHttpRequest()`` 方法是在Symfony 4.2中引入的。
+    ``xmlHttpRequest()`` 方法是在Symfony 4.1中引入的。
 
 浏览
 ~~~~~~~~
@@ -520,7 +520,7 @@ AJAX请求
 
     $crawler = $client->request('GET', '/profiler');
 
-    // gets the profile
+    // 获取资料
     $profile = $client->getProfile();
 
 有关在测试中使用分析器的具体详细信息，请参阅 :doc:`/testing/profiling` 文档。
@@ -791,7 +791,7 @@ Crawler可以从节点中提取信息::
 测试配置
 ---------------------
 
-功能测试使用的客户端创建一个在特殊 ``test`` 环境中运行的内核。
+功能测试使用的客户端创建了一个在特定 ``test`` 环境中运行的内核。
 由于Symfony在 ``test`` 环境中加载了 ``config/packages/test/*.yaml``，
 因此你可以调整应用的任何设置，专门用于测试。
 

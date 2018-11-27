@@ -24,7 +24,6 @@ Symfony有一个内置的数据库会话存储解决方案：
                     - 'mysql:dbname=mydatabase, host=myhost'
                     - { db_username: myuser, db_password: mypassword }
 
-                    # If you're using Doctrine & want to re-use that connection, then:
                     # 如果你正在使用Doctrine并希望重用该连接，那么：
                     # 注释上面的2行并取消下行的注释
                     # - !service { class: PDO, factory: 'database_connection:getWrappedConnection' }

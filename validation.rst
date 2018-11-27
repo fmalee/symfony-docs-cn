@@ -112,9 +112,9 @@ Symfony提供了一个 `Validator`_ 组件，使该任务变得简单透明。
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 接下来，要实际验证 ``Author`` 对象，请在 ``validator`` 服务
-（类 :class:`Symfony\\Component\\Validator\\Validator`）上使用 ``validate()`` 方法。
+（:class:`Symfony\\Component\\Validator\\Validator` 类）上使用 ``validate()`` 方法。
 ``validator`` 的工作就是读取类的约束（即规则）并验证对象上的数据是否满足这些约束。
-如果验证失败，则返回非空的错误列表（类 :class:`Symfony\\Component\\Validator\\ConstraintViolationList`）。
+如果验证失败，则返回非空的错误列表（:class:`Symfony\\Component\\Validator\\ConstraintViolationList` 类）。
 从控制器内部获取这个简单示例::
 
     // ...
@@ -181,7 +181,8 @@ Symfony提供了一个 `Validator`_ 组件，使该任务变得简单透明。
 
 .. note::
 
-    每个验证错误（称为“约束违规”）由 :class:`Symfony\\Component\\Validator\\ConstraintViolation` 对象表示。
+    每个验证错误（称为“约束违规”）都由
+    :class:`Symfony\\Component\\Validator\\ConstraintViolation` 对象表示。
 
 .. index::
    pair: Validation; Configuration

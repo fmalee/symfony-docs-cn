@@ -65,7 +65,7 @@ Symfony与最流行的PHP日志库 `Monolog`_ 无缝集成，可以在各种不�
 在 ``prod`` 环境中，日志被写入 ``var/log/prod.log``，但只记录在请求期间发生的错误(或高优先级）的日志
 （即 ``error()``、``critical()``、``alert()`` 或 ``emergency()``）。
 
-想控制该行为，你可以配置不同的\* 处理器*\来处理日志条目，有时会修改它们，并最终存储它们。
+想控制该行为，你可以配置不同的\ *处理器*\来处理日志条目，有时会修改它们，并最终存储它们。
 
 处理器: 将日志写入不同的位置
 ---------------------------------------------
@@ -98,7 +98,7 @@ Symfony在默认的 ``monolog.yaml`` 配置文件中预配置了一些基础处�
 
                 syslog_handler:
                     type: syslog
-                    # 记录 error 及跟高级别的日志
+                    # 记录 error 及更高级别的日志
                     level: error
 
     .. code-block:: xml
@@ -152,7 +152,7 @@ Symfony在默认的 ``monolog.yaml`` 配置文件中预配置了一些基础处�
 
 *有些*\处理器不是记录日志到某个文件，而是用于在将日志发送给\ *其他*\处理器之前过滤或修改日志。
 默认情况下，在 ``prod`` 环境中使用一个名为 ``fingers_crossed`` 的强大内置处理器。
-它在请求期间存储\ *所有*\日志消息，但\ *只*\有在其中一条消息到达 ``action_level`` 时才将它们传递给第二个处理器。
+它存储着一个请求期的\ *所有*\日志消息，但\ *只*\有在其中一条消息到达 ``action_level`` 时才将它们传递给第二个处理器。
 举个例子：
 
 .. configuration-block::
@@ -168,12 +168,12 @@ Symfony在默认的 ``monolog.yaml`` 配置文件中预配置了一些基础处�
                     action_level: error
                     handler: file_log
 
-                # 现在忽略(passed) *所有* 日志，仅当一个日志是 error 或更高时记录
+                # 当一个日志是 error 或更高时记录时，被传递 *所有* 日志
                 file_log:
                     type: stream
                     path: "%kernel.logs_dir%/%kernel.environment%.log"
 
-                # 还是忽略 *所有* 日志，仍然只记录 error 或更高级别的日志
+                # 还是仅当一个日志是 error 或更高时记录时，才被传递 *所有* 日志
                 syslog_handler:
                     type: syslog
                     level: error
