@@ -1,21 +1,16 @@
 .. index::
     single: Security; Impersonating User
 
-如何冒充用户
+如何模拟一个用户
 =========================
 
-Sometimes, it's useful to be able to switch from one user to another without
-having to log out and log in again (for instance when you are debugging something
-a user sees that you can't reproduce).
+有时，能够从一个用户切换到另一个用户而不必注销并再次登录是有用的（例如，当你调试用户能看到无法重现的内容时）。
 
 .. caution::
 
-    User impersonation is not compatible with some authentication mechanisms
-    (e.g. ``REMOTE_USER``) where the authentication information is expected to be
-    sent on each request.
+    用户模拟与某些认证机制（例如 ``REMOTE_USER``）不兼容，因为它们期望在每个请求上发送认证信息。
 
-Impersonating the user can be done by activating the ``switch_user``
-firewall listener:
+可以通过激活 ``switch_user`` 防火墙监听器来模拟用户：
 
 .. configuration-block::
 
@@ -64,30 +59,26 @@ firewall listener:
             ),
         ));
 
-To switch to another user, add a query string with the ``_switch_user``
-parameter and the username (or whatever field our user provider uses to load users)
-as the value to the current URL:
+要切换到另一个用户，请添加一个查询字符串作为当前URL的值，其中包含
+``_switch_user`` 参数和对应用户名（或任何用户提供器用于加载用户的字段）：
 
 .. code-block:: text
 
     http://example.com/somewhere?_switch_user=thomas
 
-To switch back to the original user, use the special ``_exit`` username:
+要切换回原始用户，请使用特殊的 ``_exit`` 用户名：
 
 .. code-block:: text
 
     http://example.com/somewhere?_switch_user=_exit
 
-This feature is only available to users with a special role called ``ROLE_ALLOWED_TO_SWITCH``.
-Using :ref:`role_hierarchy <security-role-hierarchy>` is a great way to give this
-role to the users that need it.
+此功能仅适用于具有一个 ``ROLE_ALLOWED_TO_SWITCH`` 特殊角色的用户。
 
-Knowing When Impersonation Is Active
+知道模拟何时被激活
 ------------------------------------
 
-During impersonation, the user is provided with a special role called
-``ROLE_PREVIOUS_ADMIN``. In a template, for instance, this role can be used
-to show a link to exit impersonation:
+在模拟期间，该用户被添加了一个名为 ``ROLE_PREVIOUS_ADMIN`` 的特殊角色。
+例如，在模板中，此角色可用于显示一个退出模拟的链接：
 
 .. code-block:: html+twig
 
@@ -95,12 +86,11 @@ to show a link to exit impersonation:
         <a href="{{ path('homepage', {'_switch_user': '_exit'}) }}">Exit impersonation</a>
     {% endif %}
 
-Finding the Original User
+查找原始用户
 -------------------------
 
-In some cases, you may need to get the object that represents the impersonator
-user rather than the impersonated user. Use the following snippet to iterate
-over the user's roles until you find one that is a ``SwitchUserRole`` object::
+在某些情况下，你可能需要获取代表该模仿用户的对象，而不是该模拟用户。
+使用以下代码段迭代用户的角色，直到找到一个 ``SwitchUserRole`` 对象为止::
 
     use Symfony\Component\Security\Core\Role\SwitchUserRole;
     use Symfony\Component\Security\Core\Security;
@@ -130,13 +120,12 @@ over the user's roles until you find one that is a ``SwitchUserRole`` object::
         }
     }
 
-Controlling the Query Parameter
+控制查询参数
 -------------------------------
 
-This feature needs to be available only to a restricted group of users.
-By default, access is restricted to users having the ``ROLE_ALLOWED_TO_SWITCH``
-role. The name of this role can be modified via the ``role`` setting. You can
-also adjust the query parameter name via the ``parameter`` setting:
+模拟功能只能供有限的用户组使用。
+默认情况下，仅限于访问具有 ``ROLE_ALLOWED_TO_SWITCH`` 角色的用户。
+可以通过 ``role`` 设置来修改此角色的名称。你还可以通过 ``parameter`` 设置来调整查询参数名称：
 
 .. configuration-block::
 
@@ -187,16 +176,15 @@ also adjust the query parameter name via the ``parameter`` setting:
             ),
         ));
 
-Events
+事件
 ------
 
-The firewall dispatches the ``security.switch_user`` event right after the impersonation
-is completed. The :class:`Symfony\\Component\\Security\\Http\\Event\\SwitchUserEvent` is
-passed to the listener, and you can use this to get the user that you are now impersonating.
+防火墙在模拟完成后会立即调度 ``security.switch_user`` 事件。
+:class:`Symfony\\Component\\Security\\Http\\Event\\SwitchUserEvent`
+将被传递给监听器，你可以用它来获取你现在模拟的用户。
 
-The :doc:`/session/locale_sticky_session` article does not update the locale
-when you impersonate a user. If you *do* want to be sure to update the locale when
-you switch users, add an event subscriber on this event::
+依据 :doc:`/session/locale_sticky_session` 章节，当你模拟用户时不会更新对应的语言环境。
+如果你 *确实* 希望在切换用户时更新对应的语言环境，请在此事件上添加一个事件订阅器::
 
     // src/EventListener/SwitchUserSubscriber.php
     namespace App\EventListener;
@@ -214,7 +202,7 @@ you switch users, add an event subscriber on this event::
             if ($request->hasSession() && ($session = $request->getSession)) {
                 $session->set(
                     '_locale',
-                    // assuming your User has some getLocale() method
+                    // 假设你的User类有一个 getLocale() 方法
                     $event->getTargetUser()->getLocale()
                 );
             }
@@ -223,14 +211,13 @@ you switch users, add an event subscriber on this event::
         public static function getSubscribedEvents()
         {
             return array(
-                // constant for security.switch_user
+                // security.switch_user的常量
                 SecurityEvents::SWITCH_USER => 'onSwitchUser',
             );
         }
     }
 
-That's it! If you're using the :ref:`default services.yaml configuration <service-container-services-load-example>`,
-Symfony will automatically discover your service and call ``onSwitchUser`` whenever
-a switch user occurs.
+仅此而已！如果你使用 :ref:`默认的services.yaml配置 <service-container-services-load-example>`
+，Symfony将自动发现你的服务并在切换用户时调用 ``onSwitchUser``。
 
-For more details about event subscribers, see :doc:`/event_dispatcher`.
+有关事件订阅器的更多详细信息，请参阅 :doc:`/event_dispatcher`。

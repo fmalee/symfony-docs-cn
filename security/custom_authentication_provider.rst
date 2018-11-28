@@ -6,22 +6,15 @@
 
 .. caution::
 
-    Creating a custom authentication system is hard, and almost definitely
-    **not** needed. Instead, see :doc:`/security/guard_authentication` for a
-    simple way to create an authentication system you will love. Do **not**
-    keep reading unless you want to learn the lowest level details of
-    authentication.
+    创建一个自定义的认证系统是很难的，而且几乎可以肯定是 *不* 必要的。
+    相反，可以参阅 :doc:`/security/guard_authentication`，以便创建一个你喜欢的认证系统。
+    除非你想学习认证的最底层的细节，要不然 *不* 用再继续阅读本文档了。
 
-Symfony provides support for the most
-:doc:`common authentication mechanisms </security/auth_providers>`. However, your
-app may need to integrated with some proprietary single-sign-on system or some
-legacy authentication mechanism. In those cases you could create a custom
-authentication provider. This article discusses the core classes involved
-in the authentication process, and how to implement a custom authentication
-provider. Because authentication and authorization are separate concepts,
-this extension will be user-provider agnostic, and will function with your
-application's user providers, may they be based in memory, a database, or
-wherever else you choose to store them.
+Symfony支持最 :doc:`常见的认证机制 </security/auth_providers>`。
+但是，你的应用可能需要与某些专有的单点登录系统或某些遗留的认证机制集成。
+在这些情况下，你可以创建一个自定义认证提供器。
+本文讨论认证过程中涉及的核心类，以及如何实现一个自定义认证提供器。
+由于认证和授权是单独的概念，因此此扩展将与用户提供器无关，并且将与你的应用的用户提供器一起使用，该提供器可能基于内存、数据库或你选择存储它们的任何其他位置。
 
 Meet WSSE
 ---------

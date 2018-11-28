@@ -1,22 +1,17 @@
 如何使用多个安保认证器
 ========================================
 
-The Guard authentication component allows you to use many different
-authenticators at a time.
+安保认证组件允许你一次使用多个不同的认证器。
 
-An entry point is a service id (of one of your authenticators) whose
-``start()`` method is called to start the authentication process.
+入口点是其中一个认证器的服务ID，该认证器的 ``start()`` 方法会被调用以启动认证过程。
 
-Multiple Authenticators with Shared Entry Point
+具有共享入口点的多个认证器
 -----------------------------------------------
 
-Sometimes you want to offer your users different authentication mechanisms like
-a form login and a Facebook login while both entry points redirect the user to
-the same login page.
-However, in your configuration you have to explicitly say which entry point
-you want to use.
+有时，你希望为用户提供不同的认证机制，如表单登录和Facebook登录，而两个入口点都会将用户重定向到同一登录页面。
+但是，在你的配置中，你必须明确说明要使用的入口点。
 
-This is how your security configuration can look in action:
+以下是对应这种情况的安全配置：
 
 .. configuration-block::
 
@@ -78,16 +73,14 @@ This is how your security configuration can look in action:
             ),
         ));
 
-There is one limitation with this approach - you have to use exactly one entry point.
+这种方法有一个限制，就是你必须恰好使用同一个入口点。
 
-Multiple Authenticators with Separate Entry Points
+具有单独入口点的多个认证器
 --------------------------------------------------
 
-However, there are use cases where you have authenticators that protect different
-parts of your application. For example, you have a login form that protects
-the secured area of your application front-end and API end points that are
-protected with API tokens. As you can only configure one entry point per firewall,
-the solution is to split the configuration into two separate firewalls:
+但是，在某些用例中，你需要使用认证器来保护应用的不同部分。
+例如，你有一个用登录表单保护的应用前端的安全区域，以及一个API令牌来保护的API端点。
+由于每个防火墙只能配置一个入口点，因此解决方案是将配置拆分为两个单独的防火墙：
 
 .. configuration-block::
 

@@ -3,34 +3,30 @@
 安全性access_control如何工作？
 ==========================================
 
-For each incoming request, Symfony checks each ``access_control`` entry
-to find *one* that matches the current request. As soon as it finds a matching
-``access_control`` entry, it stops - only the **first** matching ``access_control``
-is used to enforce access.
+对于每个传入的请求，Symfony检查会每个 ``access_control`` 以找到 *一个* 与当前请求相匹配的那个项。
+一旦找到匹配的 ``access_control`` 项，它就会停止 - 只有 *第一个* 匹配的 ``access_control`` 会被用于限制访问。
 
-Each ``access_control`` has several options that configure two different
-things:
+每个 ``access_control`` 都有几个选项来配置两件事情：
 
-#. :ref:`should the incoming request match this access control entry <security-access-control-matching-options>`
-#. :ref:`once it matches, should some sort of access restriction be enforced <security-access-control-enforcement-options>`:
+#. :ref:`传入请求是否与此访问控制项匹配 <security-access-control-matching-options>`
+#. :ref:`一旦匹配，是否应该执行某种访问限制 <security-access-control-enforcement-options>`:
 
 .. _security-access-control-matching-options:
 
-1. Matching Options
+1. 匹配选项
 -------------------
 
-Symfony creates an instance of :class:`Symfony\\Component\\HttpFoundation\\RequestMatcher`
-for each ``access_control`` entry, which determines whether or not a given
-access control should be used on this request. The following ``access_control``
-options are used for matching:
+Symfony 为每个 ``access_control`` 项创建一个
+:class:`Symfony\\Component\\HttpFoundation\\RequestMatcher`
+实例，用于确定是否应在此请求上使用给定的访问控制。以下选项会被用于匹配 ``access_control`` 项：
 
 * ``path``
-* ``ip`` or ``ips`` (netmasks are also supported)
+* ``ip`` 或 ``ips`` (也支持网络掩码)
 * ``port``
 * ``host``
 * ``methods``
 
-Take the following ``access_control`` entries as an example:
+以下面的 ``access_control`` 项为例：
 
 .. configuration-block::
 
@@ -100,34 +96,33 @@ Take the following ``access_control`` entries as an example:
             ),
         ));
 
-For each incoming request, Symfony will decide which ``access_control``
-to use based on the URI, the client's IP address, the incoming host name,
-and the request method. Remember, the first rule that matches is used, and
-if ``ip``, ``port``, ``host`` or ``method`` are not specified for an entry, that
-``access_control`` will match any ``ip``, ``port``, ``host`` or ``method``:
+对于每个传入请求，Symfony将根据URI、客户端的IP地址、传入主机名和请求方法来决定使用哪个 ``access_control``。
+请记住，使用第一个匹配的规则时，如果一个 ``access_control`` 没有指定
+``ip``、``port``、``host`` 或 ``method``，那么该项将匹配任何
+``ip``、``port``、``host`` 或 ``method``：
 
 +-----------------+-------------+-------------+-------------+------------+--------------------------------+-------------------------------------------------------------+
 | URI             | IP          | PORT        | HOST        | METHOD     | ``access_control``             | Why?                                                        |
 +=================+=============+=============+=============+============+================================+=============================================================+
-| ``/admin/user`` | 127.0.0.1   | 80          | example.com | GET        | rule #1 (``ROLE_USER_IP``)     | The URI matches ``path`` and the IP matches ``ip``.         |
+| ``/admin/user`` | 127.0.0.1   | 80          | example.com | GET        | 角色 #1 (``ROLE_USER_IP``)     | The URI matches ``path`` and the IP matches ``ip``.         |
 +-----------------+-------------+-------------+-------------+------------+--------------------------------+-------------------------------------------------------------+
-| ``/admin/user`` | 127.0.0.1   | 80          | symfony.com | GET        | rule #1 (``ROLE_USER_IP``)     | The ``path`` and ``ip`` still match. This would also match  |
+| ``/admin/user`` | 127.0.0.1   | 80          | symfony.com | GET        | 角色 #1 (``ROLE_USER_IP``)     | The ``path`` and ``ip`` still match. This would also match  |
 |                 |             |             |             |            |                                | the ``ROLE_USER_HOST`` entry, but *only* the **first**      |
 |                 |             |             |             |            |                                | ``access_control`` match is used.                           |
 +-----------------+-------------+-------------+-------------+------------+--------------------------------+-------------------------------------------------------------+
-| ``/admin/user`` | 127.0.0.1   | 8080        | symfony.com | GET        | rule #2 (``ROLE_USER_PORT``)   | The ``path``, ``ip`` and ``port`` match.                    |
+| ``/admin/user`` | 127.0.0.1   | 8080        | symfony.com | GET        | 角色 #2 (``ROLE_USER_PORT``)   | The ``path``, ``ip`` and ``port`` match.                    |
 +-----------------+-------------+-------------+-------------+------------+--------------------------------+-------------------------------------------------------------+
-| ``/admin/user`` | 168.0.0.1   | 80          | symfony.com | GET        | rule #3 (``ROLE_USER_HOST``)   | The ``ip`` doesn't match the first rule, so the second      |
+| ``/admin/user`` | 168.0.0.1   | 80          | symfony.com | GET        | 角色 #3 (``ROLE_USER_HOST``)   | The ``ip`` doesn't match the first rule, so the second      |
 |                 |             |             |             |            |                                | rule (which matches) is used.                               |
 +-----------------+-------------+-------------+-------------+------------+--------------------------------+-------------------------------------------------------------+
-| ``/admin/user`` | 168.0.0.1   | 80          | symfony.com | POST       | rule #3 (``ROLE_USER_HOST``)   | The second rule still matches. This would also match the    |
+| ``/admin/user`` | 168.0.0.1   | 80          | symfony.com | POST       | 角色 #3 (``ROLE_USER_HOST``)   | The second rule still matches. This would also match the    |
 |                 |             |             |             |            |                                | third rule (``ROLE_USER_METHOD``), but only the **first**   |
 |                 |             |             |             |            |                                | matched ``access_control`` is used.                         |
 +-----------------+-------------+-------------+-------------+------------+--------------------------------+-------------------------------------------------------------+
-| ``/admin/user`` | 168.0.0.1   | 80          | example.com | POST       | rule #4 (``ROLE_USER_METHOD``) | The ``ip`` and ``host`` don't match the first two entries,  |
+| ``/admin/user`` | 168.0.0.1   | 80          | example.com | POST       | 角色 #4 (``ROLE_USER_METHOD``) | The ``ip`` and ``host`` don't match the first two entries,  |
 |                 |             |             |             |            |                                | but the third - ``ROLE_USER_METHOD`` - matches and is used. |
 +-----------------+-------------+-------------+-------------+------------+--------------------------------+-------------------------------------------------------------+
-| ``/admin/user`` | 168.0.0.1   | 80          | example.com | GET        | rule #5 (``ROLE_USER``)        | The ``ip``, ``host`` and ``method`` prevent the first       |
+| ``/admin/user`` | 168.0.0.1   | 80          | example.com | GET        | 角色 #5 (``ROLE_USER``)        | The ``ip``, ``host`` and ``method`` prevent the first       |
 |                 |             |             |             |            |                                | three entries from matching. But since the URI matches the  |
 |                 |             |             |             |            |                                | ``path`` pattern of the ``ROLE_USER`` entry, it is used.    |
 +-----------------+-------------+-------------+-------------+------------+--------------------------------+-------------------------------------------------------------+
@@ -137,51 +132,39 @@ if ``ip``, ``port``, ``host`` or ``method`` are not specified for an entry, that
 
 .. _security-access-control-enforcement-options:
 
-2. Access Enforcement
+2. 访问限制
 ---------------------
 
-Once Symfony has decided which ``access_control`` entry matches (if any),
-it then *enforces* access restrictions based on the ``roles``, ``allow_if`` and ``requires_channel``
-options:
+一旦Symfony确定哪个 ``access_control`` 项匹配（如果有的话），然后它 *强制* 基于 ``roles``、``allow_if`` 和 ``requires_channel`` 选项进行访问限制：
 
-* ``roles`` If the user does not have the given role, then access is denied
-  (internally, an :class:`Symfony\\Component\\Security\\Core\\Exception\\AccessDeniedException`
-  is thrown). If this value is an array of multiple roles, the user must have
-  at least one of them (when using the default ``affirmative`` strategy in the
-  :ref:`Access Decision Manager <components-security-access-decision-manager>`)
-  or all of them when using the ``unanimous`` strategy;
+* ``roles`` 如果用户没有给定角色，则拒绝访问（在内部，抛出一个
+  :class:`Symfony\\Component\\Security\\Core\\Exception\\AccessDeniedException`）。
+  如果此值是多个角色的数组，则用户必须至少拥有其中一个（在使用 :ref:`访问决策管理器 <components-security-access-decision-manager>` 的默认 ``affirmative``
+  策略时 ），如果使用 ``unanimous`` 策略，则要求必须拥有所有角色；
 
-* ``allow_if`` If the expression returns false, then access is denied;
+* ``allow_if`` 如果表达式返回false，则拒绝访问;
 
-* ``requires_channel`` If the incoming request's channel (e.g. ``http``)
-  does not match this value (e.g. ``https``), the user will be redirected
-  (e.g. redirected from ``http`` to ``https``, or vice versa).
+* ``requires_channel`` 如果传入请求的通道（例如 ``http``）与该值（例如
+  ``https``）不匹配，则用户将被重定向（例如，从 ``http`` 重定向到 ``https``，或反之亦然）。
 
 .. tip::
 
-    If access is denied, the system will try to authenticate the user if not
-    already (e.g. redirect the user to the login page). If the user is already
-    logged in, the 403 "access denied" error page will be shown. See
-    :doc:`/controller/error_pages` for more information.
+    如果拒绝访问，系统将尝试认证用户（如果尚未认证的话）（例如，将用户重定向到登录页面）。
+    如果用户已登录，将显示403“拒绝访问”错误页面。
+    有关更多信息，请参见 :doc:`/controller/error_pages`。
 
-Matching access_control By IP
+通过IP匹配 access_control
 -----------------------------
 
-Certain situations may arise when you need to have an ``access_control``
-entry that *only* matches requests coming from some IP address or range.
-For example, this *could* be used to deny access to a URL pattern to all
-requests *except* those from a trusted, internal server.
+可能会出现某些案例，就是你需要有一个 *仅* 匹配来自某个IP地址或范围的请求的 ``access_control`` 项。
+例如，这可能被用来拒绝来自一个URL模式的所有请求，除了那些来自一个可信的内部服务器的访问。
 
 .. caution::
 
-    As you'll read in the explanation below the example, the ``ips`` option
-    does not restrict to a specific IP address. Instead, using the ``ips``
-    key means that the ``access_control`` entry will only match this IP address,
-    and users accessing it from a different IP address will continue down
-    the ``access_control`` list.
+    正如你将在下面的示例中解释的那样，``ips`` 选项不限于一个特定的IP地址。
+    相反，使用 ``ips`` 键意味着该 ``access_control`` 项仅匹配此IP地址，从不同IP地址访问它的用户将继续沿着 ``access_control`` 列表继续。
 
-Here is an example of how you configure some example ``/internal*`` URL
-pattern so that it is only accessible by requests from the local server itself:
+下面是一个示例，说明如何配置一些示例 ``/internal*`` URL模式，以便只能通过本地服务器自身的请求访问它：
 
 .. configuration-block::
 
@@ -192,7 +175,7 @@ pattern so that it is only accessible by requests from the local server itself:
             # ...
             access_control:
                 #
-                # the 'ips' option supports IP addresses and subnet masks
+                # 'ips' 选项支持IP地址和子网掩码
                 - { path: ^/internal, roles: IS_AUTHENTICATED_ANONYMOUSLY, ips: [127.0.0.1, ::1, 192.168.0.1/24] }
                 - { path: ^/internal, roles: ROLE_NO_ACCESS }
 
@@ -238,35 +221,29 @@ pattern so that it is only accessible by requests from the local server itself:
             ),
         ));
 
-Here is how it works when the path is ``/internal/something`` coming from
-the external IP address ``10.0.0.1``:
+当路径是 ``/internal/something``，IP地址是来自外部的 ``10.0.0.1`` 时，我们看看它是如何工作的：
 
-* The first access control rule is ignored as the ``path`` matches but the
-  IP address does not match either of the IPs listed;
+* 第一个访问控制规则被忽略，因为 ``path`` 匹配但该IP地址与访问控制列出的任何一个IP都不匹配;
 
-* The second access control rule is enabled (the only restriction being the
-  ``path``) and so it matches. If you make sure that no users ever have
-  ``ROLE_NO_ACCESS``, then access is denied (``ROLE_NO_ACCESS`` can be anything
-  that does not match an existing role, it just serves as a trick to always
-  deny access).
+* 第二个访问控制规则被启用，因为其唯一的限制是 ``path``，所以它匹配成功。
+  如果你确认没有用户拥有 ``ROLE_NO_ACCESS``，那么该访问会被拒绝（``ROLE_NO_ACCESS``
+  可以是任何与现有角色不匹配的东西，它只是一个始终拒绝访问的技巧）。
 
-But if the same request comes from ``127.0.0.1`` or ``::1`` (the IPv6 loopback
-address):
+但是，如果有相同的请求却来自 ``127.0.0.1`` 或 ``::1`` （IPv6环回地址）：
 
-* Now, the first access control rule is enabled as both the ``path`` and the
-  ``ip`` match: access is allowed as the user always has the
-  ``IS_AUTHENTICATED_ANONYMOUSLY`` role.
+* 现在，第一个访问控制规则被启用，因为 ``path`` 和 ``ip``
+  都匹配，然后该访问被允许，因为用户总是拥有 ``IS_AUTHENTICATED_ANONYMOUSLY`` 角色。
 
-* The second access rule is not examined as the first rule matched.
+* 第一个规则匹配后，就不会检查第二个访问规则。
+
 
 .. _security-allow-if:
 
-Securing by an Expression
+使用表达式进行限制
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Once an ``access_control`` entry is matched, you can deny access via the
-``roles`` key or use more complex logic with an expression in the ``allow_if``
-key:
+一旦一个 ``access_control`` 项匹配，就可以通过 ``roles`` 键拒绝访问，或在
+``allow_if`` 键的表达式中使用更复杂的逻辑：
 
 .. configuration-block::
 
@@ -305,33 +282,27 @@ key:
                 ),
             ),
 
-In this case, when the user tries to access any URL starting with ``/_internal/secure``,
-they will only be granted access if the IP address is ``127.0.0.1`` or if
-the user has the ``ROLE_ADMIN`` role.
+在这种情况下，当用户尝试访问任何以 ``/_internal/secure`` 开头的URL时，只有在IP地址是 ``127.0.0.1`` 或用户具有 ``ROLE_ADMIN``  角色的情况下，才会授予他们访问权限。
 
-Inside the expression, you have access to a number of different variables
-and functions including ``request``, which is the Symfony
-:class:`Symfony\\Component\\HttpFoundation\\Request` object (see
-:ref:`component-http-foundation-request`).
+在表达式中，你可以访问许多不同的变量和函数，包括 ``request``，它是Symfony的
+:class:`Symfony\\Component\\HttpFoundation\\Request`
+对象（请参阅 :ref:`component-http-foundation-request`）。
 
-For a list of the other functions and variables, see
-:ref:`functions and variables <security-expression-variables>`.
+有关其他函数和变量的列表，请参阅 :ref:`函数和变量s <security-expression-variables>`。
 
 .. tip::
 
-    The ``allow_if`` expressions can also contain custom functions registered
-    with :ref:`expression providers <components-expression-language-provider>`.
+    ``allow_if`` 表达式也可以包含用
+    :ref:`表达式提供器 <components-expression-language-provider>` 注册的自定义函数。
 
     .. versionadded:: 4.1
-        The feature to use custom functions inside ``allow_if`` expressions was
-        introduced in Symfony 4.1.
+        在Symfony 4.1中引入了在 ``allow_if`` 表达式中使用自定义函数的功能。
 
-Restrict to a port
+限制端口
 ------------------
 
-Add the ``port`` option to any ``access_control`` entries to require users to
-access those URLs via a specific port. This could be useful for example for
-``localhost:8080``.
+添加 ``port`` 选项到任何 ``access_control`` 项以要求用户通过一个特定端口访问这些URL。
+例如，对于 ``localhost:8080`` 这就比较有用。
 
 .. configuration-block::
 
@@ -372,13 +343,12 @@ access those URLs via a specific port. This could be useful for example for
             ),
         ));
 
-Forcing a Channel (http, https)
+强制使用特定通道（http，https）
 -------------------------------
 
-You can also require a user to access a URL via SSL; use the
-``requires_channel`` argument in any ``access_control`` entries. If this
-``access_control`` is matched and the request is using the ``http`` channel,
-the user will be redirected to ``https``:
+你还可以要求用户通过SSL访问一个URL。
+可以在任何 ``access_control`` 项中使用 ``requires_channel`` 参数。
+如果该 ``access_control`` 项被匹配并且请求正在使用 ``http`` 频道，则该用户将被重定向到 ``https``：
 
 .. configuration-block::
 

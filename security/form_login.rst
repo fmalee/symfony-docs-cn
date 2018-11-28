@@ -6,17 +6,16 @@
 
 .. caution::
 
-    To have complete control over your login form, we recommend building a
-    :doc:`form login authentication with Guard </security/form_login_setup>`.
+    要完全控制你的登录表单，我们建议你
+    :doc:`使用安保认证器来构建表单登录认证 </security/form_login_setup>`。
 
-Symfony comes with a built-in ``form_login`` system that handles a login form
-POST automatically. Before you start, make sure you've followed the
-:doc:`Security Guide </security>` to create your User class.
+Symfony附带一个内置的 ``form_login`` 系统，可自动处理一个登录表单的POST。
+在开始之前，请确保已按照 :doc:`安全指南 </security>` 创建了User类。
 
-form_login Setup
+form_login设置
 ----------------
 
-First, enable ``form_login`` under your firewall:
+首先，在防火墙下启用 ``form_login``::
 
 .. configuration-block::
 
@@ -68,13 +67,11 @@ First, enable ``form_login`` under your firewall:
 
 .. tip::
 
-    The ``login_path`` and ``check_path`` can also be route names (but cannot
-    have mandatory wildcards - e.g. ``/login/{foo}`` where ``foo`` has no
-    default value).
+    ``login_path`` 和 ``check_path`` 也可以是路由名称。
+    但该路由不能有强制性通配符 - 例如 ``/login/{foo}``，在那里，``foo`` 没有默认值。
 
-Now, when the security system initiates the authentication process, it will
-redirect the user to the login form ``/login``. Implementing this login form
-is your job. First, create a new ``SecurityController`` inside a bundle::
+现在，当安全系统启动认证进程时，它会将用户重定向到 ``/login`` 登录表单。
+实现此登录表单是你的工作。首先，在bundle中创建一个新的 ``SecurityController``::
 
     // src/Controller/SecurityController.php
     namespace App\Controller;
@@ -85,8 +82,7 @@ is your job. First, create a new ``SecurityController`` inside a bundle::
     {
     }
 
-Next, configure the route that you earlier used under your ``form_login``
-configuration (``login``):
+接下来，配置你之前在 ``form_login`` 配置下使用的路由（``login``）：
 
 .. configuration-block::
 
@@ -142,17 +138,17 @@ configuration (``login``):
 
         return $routes;
 
-Great! Next, add the logic to ``login()`` that displays the login form::
+很好！接下来，添加逻辑到 ``login()`` 以显示登录表单::
 
     // src/Controller/SecurityController.php
     use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
     public function login(AuthenticationUtils $authenticationUtils)
     {
-        // get the login error if there is one
+        // 如果有的话，获取登录错误
         $error = $authenticationUtils->getLastAuthenticationError();
 
-        // last username entered by the user
+        // 用户最后一次输入的用户名
         $lastUsername = $authenticationUtils->getLastUsername();
 
         return $this->render('security/login.html.twig', array(
@@ -163,27 +159,22 @@ Great! Next, add the logic to ``login()`` that displays the login form::
 
 .. note::
 
-    If you get an error that the ``$authenticationUtils`` argument is missing,
-    it's probably because the controllers of your application are not defined as
-    services and tagged with the ``controller.service_arguments`` tag, as done
-    in the :ref:`default services.yaml configuration <service-container-services-load-example>`.
+    如果你收到一个缺少 ``$authenticationUtils`` 参数的错误，可能是因为应用的控制器未定义为服务并使用标记为
+    ``controller.service_arguments`` 标签，就如在
+    :ref:`默认的services.yaml配置 <service-container-services-load-example>`
+    中所做的那样。
 
-Don't let this controller confuse you. As you'll see in a moment, when the
-user submits the form, the security system automatically handles the form
-submission for you. If the user submits an invalid username or password,
-this controller reads the form submission error from the security system,
-so that it can be displayed back to the user.
+不要让这个控制器迷惑你。正如你稍后将看到的那样，当用户提交表单时，安全系统会自动为你处理表单提交。
+如果用户提交了无效的用户名或密码，则此控制器会从安全系统中读取表单提交错误，以便将其显示给用户。
 
-In other words, your job is to *display* the login form and any login errors
-that may have occurred, but the security system itself takes care of checking
-the submitted username and password and authenticating the user.
+换句话说，你的工作是 *显示* 登录表单和可能发生的任何登录错误，但安全系统本身负责检查提交的用户名和密码并认证用户身份。
 
-Finally, create the template:
+最后，创建模板：
 
 .. code-block:: html+twig
 
     {# templates/security/login.html.twig #}
-    {# ... you will probably extend your base template, like base.html.twig #}
+    {# ... 你可能会扩展你的基础模板，如 base.html.twig #}
 
     {% if error %}
         <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
@@ -197,8 +188,7 @@ Finally, create the template:
         <input type="password" id="password" name="_password" />
 
         {#
-            If you want to control the URL the user
-            is redirected to on success (more details below)
+            如果要控制用户认证成功后重定向的URL（更多详细信息稍后说明）
             <input type="hidden" name="_target_path" value="/account" />
         #}
 
@@ -207,56 +197,45 @@ Finally, create the template:
 
 .. tip::
 
-    The ``error`` variable passed into the template is an instance of
-    :class:`Symfony\\Component\\Security\\Core\\Exception\\AuthenticationException`.
-    It may contain more information - or even sensitive information - about
-    the authentication failure, so use it wisely!
+    传递给模板的 ``error`` 变量是
+    :class:`Symfony\\Component\\Security\\Core\\Exception\\AuthenticationException`
+    的实例。它可能包含有关认证失败的更多信息 - 甚至是敏感信息，因此请理智地使用它！
 
-The form can look like anything, but it usually follows some conventions:
+该表单看起来和其他表单差不错，但它通常遵循一些约定：
 
-* The ``<form>`` element sends a ``POST`` request to the ``login`` route, since
-  that's what you configured under the ``form_login`` key in ``security.yaml``;
-* The username field has the name ``_username`` and the password field has the
-  name ``_password``.
+* ``<form>`` 元素发送一个 ``POST`` 请求到 ``login``
+  路由，因为这是你在 ``security.yaml`` 的 ``form_login`` 键下配置的内容;
+* 用户名字段使用 ``_username`` 名称，密码字段使用 ``_password`` 名称。
 
 .. tip::
 
-    Actually, all of this can be configured under the ``form_login`` key. See
-    :ref:`reference-security-firewall-form-login` for more details.
+    实际上，所有这些都可以在 ``form_login`` 键下配置。有关详细信息，请参阅
+    :ref:`reference-security-firewall-form-login`。
 
 .. caution::
 
-    This login form is currently not protected against CSRF attacks. Read
-    :ref:`form_login-csrf` on how to protect your login form.
+    此登录表单目前不受CSRF攻击保护。阅读 :ref:`form_login-csrf`，了解如何保护你的登录表单。
 
-And that's it! When you submit the form, the security system will automatically
-check the user's credentials and either authenticate the user or send the
-user back to the login form where the error can be displayed.
+就是这样！提交表单时，安全系统将自动检查用户的凭据，并对用户进行认证或将用户发送回可以显示错误的登录表单。
 
-To review the whole process:
+浏览整个过程：
 
-#. The user tries to access a resource that is protected;
-#. The firewall initiates the authentication process by redirecting the
-   user to the login form (``/login``);
-#. The ``/login`` page renders login form via the route and controller created
-   in this example;
-#. The user submits the login form to ``/login``;
-#. The security system intercepts the request, checks the user's submitted
-   credentials, authenticates the user if they are correct, and sends the
-   user back to the login form if they are not.
+#. 用户尝试访问一个受保护的资源;
+#. 防火墙通过将用户重定向到登录表单（``/login``）来启动认证进程;
+#. ``/login`` 页面通过本例中创建的路由和控制器渲染登录表单;
+#. 用户提交登录表单到 ``/login``;
+#. 安全系统拦截该请求，然后检查用户提交的凭据，如果凭据正确则对用户进行认证，不正确则将用户发送回登录表单。
 
 .. _form_login-csrf:
 
-CSRF Protection in Login Forms
+登录表单中的CSRF保护
 ------------------------------
 
-`Login CSRF attacks`_ can be prevented using the same technique of adding hidden
-CSRF tokens into the login forms. The Security component already provides CSRF
-protection, but you need to configure some options before using it.
+使用将隐藏的CSRF令牌添加到登录表单中的技术，可以防止 `登录CSRF攻击`_。
+安全组件已提供CSRF保护，但你需要在使用之前配置一些选项。
 
-First, configure the CSRF token provider used by the form login in your security
-configuration. You can set this to use the default provider available in the
-security component:
+首先，在安全配置中配置表单登录时使用的CSRF令牌提供器。
+你可以将其设置为使用安全组件中可用的默认提供器：
 
 .. configuration-block::
 
@@ -312,10 +291,8 @@ security component:
 
 .. _csrf-login-template:
 
-Then, use the ``csrf_token()`` function in the Twig template to generate a CSRF
-token and store it as a hidden field of the form. By default, the HTML field
-must be called ``_csrf_token`` and the string used to generate the value must
-be ``authenticate``:
+然后，使用Twig模板中的 ``csrf_token()`` 函数生成一个CSRF令牌并将其存储为表单的隐藏字段。
+默认情况下，该HTML字段必须命名为 ``_csrf_token``，而用于生成值的字符串必须为 ``authenticate``：
 
 .. code-block:: html+twig
 
@@ -323,7 +300,7 @@ be ``authenticate``:
 
     {# ... #}
     <form action="{{ path('login') }}" method="post">
-        {# ... the login fields #}
+        {# ... 用户登录的字段 #}
 
         <input type="hidden" name="_csrf_token"
             value="{{ csrf_token('authenticate') }}"
@@ -332,12 +309,12 @@ be ``authenticate``:
         <button type="submit">login</button>
     </form>
 
-After this, you have protected your login form against CSRF attacks.
+在此之后，你已经保护你的登录表单免受CSRF攻击。
 
 .. tip::
 
-    You can change the name of the field by setting ``csrf_parameter`` and change
-    the token ID by setting  ``csrf_token_id`` in your configuration:
+    你可以在你的配置中进行一些设置，通过设置 ``csrf_parameter``
+    来修改该字段的名称；通过设置 ``csrf_token_id`` 来修改令牌ID。
 
     .. configuration-block::
 
@@ -395,25 +372,21 @@ After this, you have protected your login form against CSRF attacks.
                 ),
             ));
 
-Redirecting after Success
+成功后重定向
 -------------------------
 
-By default, the form will redirect to the URL the user requested (i.e. the URL
-which triggered the login form being shown). For example, if the user requested
-``http://www.example.com/admin/post/18/edit``, then after they have successfully
-logged in, they will be sent back to ``http://www.example.com/admin/post/18/edit``.
+默认情况下，表单将重定向到用户请求的URL（即触发登录表单的URL）。
+例如，如果用户请求 ``http://www.example.com/admin/post/18/edit``，则在认证成功登录后，他们将被发送回 ``http://www.example.com/admin/post/18/edit``。
 
-This is done by storing the requested URL in the session. If no URL is present
-in the session (perhaps the user went directly to the login page), then the user
-is redirected to ``/`` (i.e. the homepage). You can change this behavior in
-several ways.
+这是通过在会话中存储请求的URL来完成的。
+如果会话中不存在对应URL（可能用户直接进入登录页面），则用户被重定向到 ``/`` （即主页）。
+你可以通过多种方式更改此行为。
 
-Changing the default Page
+更改默认页面
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Define the ``default_target_path`` option to change the page where the user
-is redirected to if no previous page was stored in the session. The value can be
-a relative/absolute URL or a Symfony route name:
+如果会话中没有存储先前页面，请定义 ``default_target_path`` 选项来更改用户重定向的目标页面。
+该值可以是一个相对/绝对URL或一个Symfony路由名称：
 
 .. configuration-block::
 
@@ -466,11 +439,10 @@ a relative/absolute URL or a Symfony route name:
             ),
         ));
 
-Always Redirect to the default Page
+始终重定向到默认页面
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Define the ``always_use_default_target_path`` boolean option to ignore the
-previously requested URL and always redirect to the default page:
+定义 ``always_use_default_target_path`` 布尔选项以忽略先前请求的URL并始终重定向到默认页面：
 
 .. configuration-block::
 
@@ -526,20 +498,19 @@ previously requested URL and always redirect to the default page:
 
 .. _control-the-redirect-url-from-inside-the-form:
 
-Control the Redirect Using Request Parameters
+使用请求参数控制重定向
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The URL to redirect after the login can be defined using the ``_target_path``
-parameter of GET and POST requests. Its value must be a relative or absolute
-URL, not a Symfony route name.
+可以使用GET和POST请求的 ``_target_path`` 参数定义登录后重定向的URL。
+其值必须是一个相对或绝对URL，而不是一个Symfony路由名称。
 
-Defining the redirect URL via GET using a query string parameter:
+使用一个查询字符串参数和GET请求来定义重定向URL：
 
 .. code-block:: text
 
     http://example.com/some/path?_target_path=/dashboard
 
-Defining the redirect URL via POST using a hidden form field:
+使用一个隐藏的表单字段和POST请求来定义重定向URL：
 
 .. code-block:: html+twig
 
@@ -551,13 +522,12 @@ Defining the redirect URL via POST using a hidden form field:
         <input type="submit" name="login" />
     </form>
 
-Using the Referring URL
-~~~~~~~~~~~~~~~~~~~~~~~
+使用 ``Referer`` 中的URL
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In case no previous URL was stored in the session and no ``_target_path``
-parameter is included in the request, you may use the value of the
-``HTTP_REFERER`` header instead, as this will often be the same. Define the
-``use_referer`` boolean option to enable this behavior:
+如果会话中没有存储先前的URL且请求中不包含任何 ``_target_path`` 参数，则可以使用
+``HTTP_REFERER`` 标头的值来代替，因为这通常是相同的。
+请定义 ``use_referer`` 布尔选项以启用此行为：
 
 .. configuration-block::
 
@@ -613,17 +583,15 @@ parameter is included in the request, you may use the value of the
 
 .. note::
 
-    The referrer URL is only used when it is different from the URL generated by
-    the ``login_path`` route to avoid a redirection loop.
+    引用URL仅在与 ``login_path`` 路由生成的URL不同时使用，以避免重定向循环。
 
 .. _redirecting-on-login-failure:
 
-Redirecting after Failure
+失败后重定向
 -------------------------
 
-After a failed login (e.g. an invalid username or password was submitted), the
-user is redirected back to the login form itself. Use the ``failure_path``
-option to define a new target via a relative/absolute URL or a Symfony route name:
+登录失败后（例如，提交的用户名或密码无效），用户将被重定向回登录表单本身。
+使用 ``failure_path`` 选项通过一个相对/绝对URL或Symfony路由名称来定义一个新的目标页面：
 
 .. configuration-block::
 
@@ -677,7 +645,7 @@ option to define a new target via a relative/absolute URL or a Symfony route nam
             ),
         ));
 
-This option can also be set via the ``_failure_path`` request parameter:
+也可以通过 ``_failure_path`` 请求参数来设置此选项：
 
 .. code-block:: text
 
@@ -693,12 +661,11 @@ This option can also be set via the ``_failure_path`` request parameter:
         <input type="submit" name="login" />
     </form>
 
-Customizing the Target and Failure Request Parameters
+自定义目标页面和失败请求参数
 -----------------------------------------------------
 
-The name of the request attributes used to define the success and failure login
-redirects can be customized using the  ``target_path_parameter`` and
-``failure_path_parameter`` options of the firewall that defines the login form.
+要定义登录成功和失败后重定向的请求属性的名称，可以通过防火墙的登录表单下的 ``target_path_parameter`` 和
+``failure_path_parameter`` 选项进行自定义。
 
 .. configuration-block::
 
@@ -753,8 +720,7 @@ redirects can be customized using the  ``target_path_parameter`` and
             ),
         ));
 
-Using the above configuration, the query string parameters and hidden form fields
-are now fully customized:
+使用上面的配置，查询字符串参数和隐藏的表单字段现在已经完全自定义：
 
 .. code-block:: text
 
@@ -771,4 +737,4 @@ are now fully customized:
         <input type="submit" name="login" />
     </form>
 
-.. _`Login CSRF attacks`: https://en.wikipedia.org/wiki/Cross-site_request_forgery#Forging_login_requests
+.. _`登录CSRF攻击`: https://en.wikipedia.org/wiki/Cross-site_request_forgery#Forging_login_requests

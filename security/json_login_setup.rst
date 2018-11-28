@@ -1,11 +1,11 @@
 如何构建JSON身份认证端点
 ===========================================
 
-In this entry, you'll build a JSON endpoint to log in your users. When the
-user logs in, you can load your users from anywhere - like the database.
-See :ref:`security-user-providers` for details.
+在此章节中，你将构建一个JSON端点以登录你的用户。
+当用户登录时，你可以从任何地方加载用户 - 比如数据库。
+有关详细信息，请参见 :ref:`security-user-providers`。
 
-First, enable the JSON login under your firewall:
+首先，在防火墙下启用JSON登录：
 
 .. configuration-block::
 
@@ -55,10 +55,10 @@ First, enable the JSON login under your firewall:
 
 .. tip::
 
-    The ``check_path`` can also be a route name (but cannot have mandatory
-    wildcards - e.g. ``/login/{foo}`` where ``foo`` has no default value).
+    ``check_path`` 也可以是一个路由名称。
+    但该路由不能有强制性通配符 - 例如 ``/login/{foo}``，在那里，``foo`` 没有默认值。
 
-The next step is to configure a route in your app matching this path:
+下一步是在你的应用中配置与此路径匹配的一个路由：
 
 .. configuration-block::
 
@@ -121,9 +121,8 @@ The next step is to configure a route in your app matching this path:
 
         return $routes;
 
-Now, when you make a ``POST`` request, with the header ``Content-Type: application/json``,
-to the ``/login`` URL with the following JSON document as the body, the security
-system intercepts the request and initiates the authentication process:
+现在，当你使用 ``Content-Type: application/json`` 标头以及以下JSON文档作为正文，向
+``/login`` URL发出一个 ``POST`` 请求时，安全系统会拦截该请求并启动认证进程：
 
 .. code-block:: json
 
@@ -132,14 +131,12 @@ system intercepts the request and initiates the authentication process:
         "password": "MyPassword"
     }
 
-Symfony takes care of authenticating the user with the submitted username and
-password or triggers an error in case the authentication process fails. If the
-authentication is successful, the controller defined earlier will be executed.
+Symfony负责使用提交的用户名和密码对用户进行认证，或者在认证进程失败时触发一个错误。
+如果认证成功，则将执行先前定义的控制器。
 
-If the JSON document has a different structure, you can specify the path to
-access the ``username`` and ``password`` properties using the ``username_path``
-and ``password_path`` keys (they default respectively to ``username`` and
-``password``). For example, if the JSON document has the following structure:
+如果JSON文档具有不同的结构，则可以使用 ``username_path`` 和 ``password_path``
+键（它们分别默认为 ``username`` 和 ``password``）来指定访问 ``username`` 和 ``password`` 属性的路径。
+例如，如果JSON文档具有以下结构：
 
 .. code-block:: json
 
@@ -152,7 +149,7 @@ and ``password_path`` keys (they default respectively to ``username`` and
         }
     }
 
-The security configuration should be:
+此时安全配置应该是：
 
 .. configuration-block::
 
