@@ -5,13 +5,12 @@
 如何按顺序应用验证组
 ===========================================
 
-In some cases, you want to validate your groups by steps. To do this, you can
-use the ``GroupSequence`` feature. In this case, an object defines a group
-sequence, which determines the order groups should be validated.
+在某些情况下，你希望按步骤验证你的组。为此，你可以使用 ``GroupSequence`` 功能。
+在这种情况下，一个对象定义一个组序列，该序列决定应验证的组的顺序。
 
-For example, suppose you have a ``User`` class and want to validate that the
-username and the password are different only if all other validation passes
-(in order to avoid multiple error messages).
+例如，假设你有一个 ``User``
+类，并且只有在所有其他验证通过后才会验证密码是否安全（即密码不能等同于用户名），
+这么做是为了避免同时出现多个错误消息。
 
 .. configuration-block::
 
@@ -122,25 +121,19 @@ username and the password are different only if all other validation passes
             }
         }
 
-In this example, it will first validate all constraints in the group ``User``
-(which is the same as the ``Default`` group). Only if all constraints in
-that group are valid, the second group, ``Strict``, will be validated.
+在此示例中，它将首先验证 ``User`` 组（等同于 ``Default`` 组）中的所有约束。
+仅当该组中的所有约束都有效时，才会验证第二个组，即 ``Strict``。
 
 .. caution::
 
-    As you have already seen in :doc:`/validation/groups`, the ``Default`` group
-    and the group containing the class name (e.g. ``User``) were identical.
-    However, when using Group Sequences, they are no longer identical. The
-    ``Default`` group will now reference the group sequence, instead of all
-    constraints that do not belong to any group.
+    正如你在 :doc:`/validation/groups` 中所见到的，``Default`` 组和使用类名称（例如 ``User``）的组是等同的。
+    但是当使用组序列时，它们不再等同。``Default`` 组这时将引用(reference)组序列，而不是所有不属于任何组的约束。
 
-    This means that you have to use the ``{ClassName}`` (e.g. ``User``) group
-    when specifying a group sequence. When using ``Default``, you get an
-    infinite recursion (as the ``Default`` group references the group
-    sequence, which will contain the ``Default`` group which references the
-    same group sequence, ...).
+    这意味着在指定组序列时必须使用 ``{ClassName}`` （例如 ``User``）组。
+    如果使用 ``Default``，你将获得无限的递归（因为
+    ``Default`` 组引用了组序列，而该序列又包含引用了相同组序列的 ``Default`` 组，...）。
 
-You can also define a group sequence in the ``validation_groups`` form option::
+你还可以在 ``validation_groups`` 表单选项中定义一个组序列::
 
     use Symfony\Component\Validator\Constraints\GroupSequence;
     use Symfony\Component\Form\AbstractType;
@@ -157,14 +150,13 @@ You can also define a group sequence in the ``validation_groups`` form option::
         }
     }
 
-Group Sequence Providers
+组序列提供器
 ------------------------
 
-Imagine a ``User`` entity which can be a normal user or a premium user. When
-it's a premium user, some extra constraints should be added to the user entity
-(e.g. the credit card details). To dynamically determine which groups should
-be activated, you can create a Group Sequence Provider. First, create the
-entity and a new constraint group called ``Premium``:
+想象一下可以是普通用户或高级用户的一个 ``User`` 实体。
+当它是高级用户时，应该向用户实体添加一些额外的约束（例如信用卡详细信息）。
+要动态的确定应激活哪些验证组，你可以创建一个组序列提供器。
+首先，创建实体和一个名为 ``Premium`` 的新约束组：
 
 .. configuration-block::
 
@@ -258,11 +250,10 @@ entity and a new constraint group called ``Premium``:
             }
         }
 
-Now, change the ``User`` class to implement
-:class:`Symfony\\Component\\Validator\\GroupSequenceProviderInterface` and
-add the
-:method:`Symfony\\Component\\Validator\\GroupSequenceProviderInterface::getGroupSequence`,
-method, which should return an array of groups to use::
+现在，修改 ``User`` 类以实现 :class:`Symfony\\Component\\Validator\\GroupSequenceProviderInterface`
+并添加
+:method:`Symfony\\Component\\Validator\\GroupSequenceProviderInterface::getGroupSequence`
+方法，该方法应返回一个要使用的验证组的数组::
 
     // src/Entity/User.php
     namespace App\Entity;
@@ -276,20 +267,17 @@ method, which should return an array of groups to use::
 
         public function getGroupSequence()
         {
-            // when returning a simple array, if there's a violation in any group
-            // the rest of groups are not validated. E.g. if 'User' fails,
-            // 'Premium' and 'Api' are not validated:
+            // 当返回一个简单数组时，如果任何组中存在一个违规，则不再验证其余的组。
+            // 例如，如果'User'验证失败，则'Premium'和'Api'不会被验证：
             return array('User', 'Premium', 'Api');
 
-            // when returning a nested array, all the groups included in each array
-            // are validated. E.g. if 'User' fails, 'Premium' is also validated
-            // (and you'll get its violations too) but 'Api' won't be validated:
+            // 当返回一个嵌套数组时，将验证每个数组中包含的所有组。
+            // 例如，如果'User'验证失败，'Premium'还是会被验证（并且你也将会得到它的违规），但'Api'将不会被验证：
             return array(array('User', 'Premium'), 'Api');
         }
     }
 
-At last, you have to notify the Validator component that your ``User`` class
-provides a sequence of groups to be validated:
+最后，你必须告知Validator组件，你的 ``User`` 类提供了一个要验证的组的序列：
 
 .. configuration-block::
 

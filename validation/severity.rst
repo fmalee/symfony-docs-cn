@@ -5,23 +5,21 @@
 如何处理不同的错误级别
 ====================================
 
-Sometimes, you may want to display constraint validation error messages differently
-based on some rules. For example, you have a registration form for new users
-where they enter some personal information and choose their authentication
-credentials. They would have to choose a username and a secure password,
-but providing bank account information would be optional. Nonetheless, you
-want to make sure that these optional fields, if entered, are still valid,
-but display their errors differently.
+有时，你可能希望根据某些规则以不同的方式来显示约束的验证错误消息。
+例如，你有一个新用户的注册表，他们输入一些个人信息并选择他们的认证凭据。
+他们必须选择一个用户名和一个安全密码，但提供银行帐户信息是可选的。
+尽管如此，你仍希望确保这些可选字段（如果已输入的话）仍然有效，但以不同的方式显示其错误。
 
-The process to achieve this behavior consists of two steps:
 
-#. Apply different error levels to the validation constraints;
-#. Customize your error messages depending on the configured error level.
+实现此行为的过程包括两个步骤：
 
-1. Assigning the Error Level
+#. 将不同的错误级别应用于验证约束;
+#. 根据配置的错误级别来自定义错误消息。
+
+1. 分配错误级别
 ----------------------------
 
-Use the ``payload`` option to configure the error level for each constraint:
+使用 ``payload`` 选项为每个约束配置错误级别：
 
 .. configuration-block::
 
@@ -125,22 +123,20 @@ Use the ``payload`` option to configure the error level for each constraint:
             }
         }
 
-2. Customize the Error Message Template
+2. 自定义错误消息模板
 ---------------------------------------
 
-When validation of the ``User`` object fails, you can retrieve the constraint
-that caused a particular failure using the
+当验证 ``User`` 对象失败时，你可以使用
 :method:`Symfony\\Component\\Validator\\ConstraintViolation::getConstraint`
-method. Each constraint exposes the attached payload as a public property::
+方法来检索导致一个特定失败的约束。每个约束都将附加的 ``payload`` 暴露为一个公共属性::
 
-    // a constraint validation failure, instance of
-    // Symfony\Component\Validator\ConstraintViolation
+    // 一个验证失败约束
+    // Symfony\Component\Validator\ConstraintViolation 的实例
     $constraintViolation = ...;
     $constraint = $constraintViolation->getConstraint();
     $severity = isset($constraint->payload['severity']) ? $constraint->payload['severity'] : null;
 
-For example, you can leverage this to customize the ``form_errors`` block
-so that the severity is added as an additional HTML class:
+例如，你可以利用此选项来自定义 ``form_errors`` 区块，以便将 ``severity`` 值添加为一个额外的HTML类：
 
 .. code-block:: html+jinja
 
@@ -156,4 +152,4 @@ so that the severity is added as an additional HTML class:
 
 .. seealso::
 
-    For more information on customizing form rendering, see :doc:`/form/form_customization`.
+    有关自定义表单渲染的详细信息，请参阅 :doc:`/form/form_customization`。

@@ -4,10 +4,8 @@
 如何验证原始值（标量值和数组）
 =====================================================
 
-Usually you will be validating entire objects. But sometimes, you just want
-to validate a simple value - like to verify that a string is a valid email
-address. To achieve this, you can instantiate the validator directly. From inside a
-controller, it looks like this::
+通常，你将验证整个对象。但有时，你只想验证一个简单的值 - 比如验证字符串是否是有效的电子邮件地址。
+为此，你可以直接实例化验证器。从控制器内部看起来就像这样::
 
     // ...
     use Symfony\Component\Validator\Constraints as Assert;
@@ -17,34 +15,32 @@ controller, it looks like this::
     public function addEmail($email, ValidatorInterface $validator)
     {
         $emailConstraint = new Assert\Email();
-        // all constraint "options" can be set this way
+        // 所有约束“选项”都可以以这种方式设置
         $emailConstraint->message = 'Invalid email address';
 
-        // use the validator to validate the value
+        // 使用验证器来验证该值
         $errors = $validator->validate(
             $email,
             $emailConstraint
         );
 
         if (0 === count($errors)) {
-            // ... this IS a valid email address, do something
+            // ... 这 *是* 一个有效的电子邮件地址，可以做点事情
         } else {
-            // this is *not* a valid email address
+            // 这 *不是* 一个有效的电子邮件地址
             $errorMessage = $errors[0]->getMessage();
 
-            // ... do something with the error
+            // ... 使用该错误信息做些事情
         }
 
         // ...
     }
 
-By calling ``validate()`` on the validator, you can pass in a raw value and
-the constraint object that you want to validate that value against. A full
-list of the available constraints - as well as the full class name for each
-constraint - is available in the :doc:`constraints reference </reference/constraints>`
-section.
+通过调用验证器的 ``validate()``，你可以传入一个原始值和要验证该值的约束对象。
+:doc:`约束参考 </reference/constraints>`
+章节提供了所有可用约束的完整列表 - 以及每个约束的完整类名称。
 
-Validation of arrays is possible using the ``Collection`` constraint::
+使用 ``Collection`` 约束可以验证一个数组::
 
     use Symfony\Component\Validator\Validation;
     use Symfony\Component\Validator\Constraints as Assert;
@@ -52,7 +48,7 @@ Validation of arrays is possible using the ``Collection`` constraint::
     $validator = Validation::createValidator();
 
     $constraint = new Assert\Collection(array(
-        // the keys correspond to the keys in the input array
+        // 该键对应于输入数组中的键
         'name' => new Assert\Collection(array(
           'first_name' => new Assert\Length(array('min' => 101)),
           'last_name' => new Assert\Length(array('min' => 1)),
@@ -66,7 +62,9 @@ Validation of arrays is possible using the ``Collection`` constraint::
 
     $violations = $validator->validate($input, $constraint);
 
-The ``validate()`` method returns a :class:`Symfony\\Component\\Validator\\ConstraintViolationList`
-object, which acts just like an array of errors. Each error in the collection
-is a :class:`Symfony\\Component\\Validator\\ConstraintViolation` object,
-which holds the error message on its ``getMessage()`` method.
+``validate()`` 方法返回一个
+:class:`Symfony\\Component\\Validator\\ConstraintViolationList`
+对象，其行为就像一个错误数组。
+集合中的每个错误都是一个
+:class:`Symfony\\Component\\Validator\\ConstraintViolation`
+对象，而他的 ``getMessage()`` 方法保存着对应的错误消息。

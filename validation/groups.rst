@@ -4,14 +4,11 @@
 如何仅应用所有验证约束的子集（验证组）
 =================================================================================
 
-By default, when validating an object all constraints of this class will
-be checked whether or not they actually pass. In some cases, however, you
-will need to validate an object against only *some* constraints on that class.
-To do this, you can organize each constraint into one or more "validation
-groups" and then apply validation against just one group of constraints.
+默认情况下，在验证对象时，将检查该类的所有约束是否实际通过。
+但是，在某些情况下，你需要仅针对该类的 *某些* 约束来验证对象。
+为此，你可以将每个约束组织到一个或多个“验证组”中，然后仅针对其中一组约束应用验证。
 
-For example, suppose you have a ``User`` class, which is used both when a
-user registers and when a user updates their contact information later:
+例如，假设你有一个 ``User`` 类，该类在用户注册时和用户稍后更新其联系信息时使用：
 
 .. configuration-block::
 
@@ -128,57 +125,44 @@ user registers and when a user updates their contact information later:
             }
         }
 
-With this configuration, there are three validation groups:
+使用此配置，将会有三个验证组：
 
 ``Default``
-    Contains the constraints in the current class and all referenced classes
-    that belong to no other group.
+    包含当前类和所有引用类的不属于任何其他组的约束。
 
 ``User``
-    Equivalent to all constraints of the ``User`` object in the ``Default``
-    group. This is always the name of the class. The difference between this
-    and ``Default`` is explained in :doc:`/validation/sequence_provider`.
+    相当于 ``Default`` 组中的 ``User`` 对象的所有约束。它始终是类的名称。
+    这与 ``Default`` 之间的区别在 :doc:`/validation/sequence_provider` 中进行了解释。
 
 ``registration``
-    Contains the constraints on the ``email`` and ``password`` fields only.
+    仅包含 ``email`` 和 ``password`` 字段的约束。
 
-Constraints in the ``Default`` group of a class are the constraints that have
-either no explicit group configured or that are configured to a group equal to
-the class name or the string ``Default``.
+一个类的 ``Default`` 组中的约束包括没有显式的配置为组的约束，以及配置为等于类名称或是 ``Default`` 字符串的组。
 
 .. caution::
 
-    When validating *just* the User object, there is no difference between the
-    ``Default`` group and the ``User`` group. But, there is a difference if
-    ``User`` has embedded objects. For example, imagine ``User`` has an
-    ``address`` property that contains some ``Address`` object and that you've
-    added the :doc:`/reference/constraints/Valid` constraint to this property
-    so that it's validated when you validate the ``User`` object.
+    *仅* 验证User对象时，``Default`` 组和 ``User`` 组之间没有区别。
+    但是如果 ``User`` 嵌入了对象，则会有所不同 。
+    例如，``User`` 有一个包含某个 ``Address`` 对象的 ``address`` 属性，并且你已将
+    :doc:`/reference/constraints/Valid` 约束添加到此属性，以便在验证 ``User`` 对象时对其进行验证。
 
-    If you validate ``User`` using the ``Default`` group, then any constraints
-    on the ``Address`` class that are in the ``Default`` group *will* be used.
-    But, if you validate ``User`` using the ``User`` validation group, then
-    only constraints on the ``Address`` class with the ``User`` group will be
-    validated.
+    如果你使用 ``Default`` 组来验证 ``User`` 类，那么任何属于
+    ``Address`` 类的 ``Default`` 组的约束 *将* 被使用。
+    但是，如果 ``User`` 类使用 ``User`` 验证组进行验证，则仅验证
+    ``Address`` 类的 ``User`` 组的约束。
 
-    In other words, the ``Default`` group and the class name group (e.g.
-    ``User``) are identical, except when the class is embedded in another
-    object that's actually the one being validated.
+    换句话说，``Default`` 组和类名称组（例如
+    ``User``）是相同的，除非该类嵌入在另一个实际上将被验证的对象中。
 
-    If you have inheritance (e.g. ``User extends BaseUser``) and you validate
-    with the class name of the subclass (i.e. ``User``), then all constraints
-    in the ``User`` and ``BaseUser`` will be validated. However, if you
-    validate using the base class (i.e. ``BaseUser``), then only the default
-    constraints in the ``BaseUser`` class will be validated.
+    如果你有继承（例如 ``User extends BaseUser``）并且使用子类的类名（即
+    ``User``）进行验证，则将验证 ``User`` 和 ``BaseUser`` 中的所有约束。
+    但是，如果使用基类（即 ``BaseUser``）进行验证，则只验证 ``BaseUser`` 类中的默认约束。
 
-To tell the validator to use a specific group, pass one or more group names
-as the third argument to the ``validate()`` method::
+要告知验证器使用一个特定组，请传递一个或多个组的名称到 ``validate()`` 方法的第三个参数::
 
     $errors = $validator->validate($author, null, array('registration'));
 
-If no groups are specified, all constraints that belong to the group ``Default``
-will be applied.
+如果未指定任何组，则将应用属于 ``Default`` 组的所有约束。
 
-In a full stack Symfony project, you'll usually work with validation indirectly through the form
-library. For information on how to use validation groups inside forms, see
-:doc:`/form/validation_groups`.
+在全栈的Symfony项目中，你通常会通过表单库来间接进行验证。
+有关如何在表单内使用验证组的信息，请参阅 :doc:`/form/validation_groups`。

@@ -4,12 +4,10 @@
 如何翻译验证约束的消息
 ===============================================
 
-If you're using validation constraints with the Form component, then translating
-the error messages is done in the translation resource for the
-``validators`` :ref:`domain <using-message-domains>`.
+如果你使用Form组件来验证约束，则在 ``validators`` :ref:`域 <using-message-domains>`
+的翻译资源中完成错误消息的翻译。
 
-To start, suppose you've created a plain-old-PHP object that you need to
-use somewhere in your application::
+首先，假设你已经创建了一个普通的PHP对象，你需要在应用中的某个位置使用它::
 
     // src/Entity/Author.php
     namespace App\Entity;
@@ -19,9 +17,8 @@ use somewhere in your application::
         public $name;
     }
 
-Add constraints through any of the supported methods. Set the message option
-to the translation source text. For example, to guarantee that the ``$name``
-property is not empty, add the following:
+通过任何支持的方法来添加约束。将消息选项设置为翻译源文本。
+例如，要保证 ``$name`` 属性不为空，请添加以下内容：
 
 .. configuration-block::
 
@@ -84,7 +81,7 @@ property is not empty, add the following:
             }
         }
 
-Now, create a ``validators`` catalog file in the ``translations/`` directory:
+现在，在 ``translations/`` 目录中创建一个 ``validators`` 目录(catalog)文件：
 
 .. configuration-block::
 
@@ -115,5 +112,4 @@ Now, create a ``validators`` catalog file in the ``translations/`` directory:
             'author.name.not_blank' => 'Please enter an author name.',
         );
 
-You may need to clear your cache (even in the dev environment) after creating this
-file for the first time.
+如果是第一次创建此文件，你可能需要清除缓存（即使在开发环境中）。
