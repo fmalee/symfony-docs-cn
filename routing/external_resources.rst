@@ -1,16 +1,14 @@
 .. index::
     single: Routing; Importing routing resources
 
-如何引入部路由资源
+如何引入外部路由资源
 =========================================
 
-Simple applications can define all their routes in a single configuration file -
-usually ``config/routes.yaml`` (see :ref:`routing-creating-routes`).
-However, in most applications it's common to import routes definitions from
-different resources: PHP annotations in controller files, YAML or XML files
-stored in some directory, etc.
+简单的应用可以在单个配置文件中定义所有路由 - 通常是
+``config/routes.yaml`` （请参阅 :ref:`routing-creating-routes`）。
+但是，在大多数应用中，通常从不同的资源中导入路由定义：控制器文件中的PHP注释，存储在某个目录中的YAML或XML文件等。
 
-This can be done by importing routing resources from the main routing file:
+这可以通过从主路由文件中导入路由资源来完成：
 
 .. configuration-block::
 
@@ -18,21 +16,21 @@ This can be done by importing routing resources from the main routing file:
 
         # config/routes.yaml
         app_file:
-            # loads routes from the given routing file stored in some bundle
+            # 从存储在某个bundle中的给定路由文件加载路由
             resource: '@AcmeOtherBundle/Resources/config/routing.yml'
 
         app_annotations:
-            # loads routes from the PHP annotations of the controllers found in that directory
+            # 从给定目录的控制器中的PHP注释加载路由
             resource: '../src/Controller/'
             type:     annotation
 
         app_directory:
-            # loads routes from the YAML or XML files found in that directory
+            # 从给定目录中的YAML或XML文件加载路由
             resource: '../legacy/routing/'
             type:     directory
 
         app_bundle:
-            # loads routes from the YAML or XML files found in some bundle directory
+            # 从某些bundle目录中的YAML或XML文件加载路由
             resource: '@AppBundle/Resources/config/routing/public/'
             type:     directory
 
@@ -82,17 +80,16 @@ This can be done by importing routing resources from the main routing file:
 
 .. note::
 
-    When importing resources from YAML, the key (e.g. ``app_file``) is meaningless.
-    Just be sure that it's unique so no other lines override it.
+    从YAML导入资源时，键（例如 ``app_file``）是没有意义的。只要它是唯一的，以确保它不会被其他行重写。
 
 .. _prefixing-imported-routes:
 
-Prefixing the URLs of Imported Routes
+为导入的路由的URL添加前缀
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You can also choose to provide a "prefix" for the imported routes. For example,
-suppose you want to prefix all application routes with ``/site`` (e.g.
-``/site/blog/{slug}`` instead of ``/blog/{slug}``):
+你还可以选择为导入的路由提供“前缀”。
+例如，假设你要为应用的所有路由添加 ``/site`` 前缀（例如
+``/site/blog/{slug}``，而不是 ``/blog/{slug}``）：
 
 .. configuration-block::
 
@@ -144,15 +141,13 @@ suppose you want to prefix all application routes with ``/site`` (e.g.
 
         return $routes;
 
-The path of each route being loaded from the new routing resource will now
-be prefixed with the string ``/site``.
+现在，从新路由资源加载的每个路由的路径都会添加 ``/site`` 字符串前缀。
 
 .. note::
 
-    If any of the prefixed routes defines an empty path, Symfony adds a trailing
-    slash to it. In the previous example, an empty path prefixed with ``/site``
-    will result in the ``/site/`` URL. If you want to avoid this behavior, set
-    the ``trailing_slash_on_root`` option to ``false``:
+    如果带前缀的任何路由定义了一个空路径，Symfony会向其添加一个尾斜杠。
+    在前面的示例中，带 ``/site`` 前缀的空路径，将会变成 ``/site/`` URL。
+    如果要避免此行为，请将 ``trailing_slash_on_root`` 选项设置为 ``false``：
 
     .. configuration-block::
 
@@ -192,13 +187,12 @@ be prefixed with the string ``/site``.
             // ...
 
     .. versionadded:: 4.1
-        The ``trailing_slash_on_root`` option was introduced in Symfony 4.1.
+        ``trailing_slash_on_root`` 选项在Symfony 4.1中引入。
 
-Prefixing the Names of Imported Routes
+为导入路由的名称添加前缀
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You also have the possibility to prefix the names of all the routes defined in
-a controller class or imported from a configuration file:
+你还可以为控制器类中定义的或从配置文件导入的所有路由的名称添加前缀：
 
 .. configuration-block::
 
@@ -264,15 +258,13 @@ a controller class or imported from a configuration file:
 
         return $collection;
 
-In this example, the names of the routes will be ``blog_index`` and ``blog_post``.
+在此示例中，路由的名称将会是 ``blog_index`` 和 ``blog_post``。
 
 .. versionadded:: 4.1
-    The option to prefix route names in YAML, XML and PHP files was introduced
-    in Symfony 4.1. Previously only the ``@Route()`` annotation supported this
-    feature.
+    在Symfony 4.1中引入了在YAML，XML和PHP文件中为路由名称添加前缀的选项。
+    以前只有 ``@Route()`` 注释才支持此功能。
 
-Adding a Host Requirement to Imported Routes
+为导入的路由添加主机要求
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You can set the host regex on imported routes. For more information, see
-:ref:`component-routing-host-imported`.
+你可以在导入的路由上设置主机正则表达式。有关更多信息，请参阅 :ref:`component-routing-host-imported`。

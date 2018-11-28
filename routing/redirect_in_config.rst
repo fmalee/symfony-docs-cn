@@ -4,21 +4,20 @@
 如何在没有自定义控制器的情况下配置重定向
 =======================================================
 
-Sometimes, a URL needs to redirect to another URL. You can do that by creating
-a new controller action whose only task is to redirect, but using the
-:class:`Symfony\\Bundle\\FrameworkBundle\\Controller\\RedirectController` of
-the FrameworkBundle is even easier.
+有时，URL需要重定向到另一个URL。
+你可以通过创建一个新的控制器动作来完成此操作，该动作的唯一任务是重定向。
+但使用FrameworkBundle的
+:class:`Symfony\\Bundle\\FrameworkBundle\\Controller\\RedirectController` 会更加简单。
 
-You can redirect to a specific path (e.g. ``/about``) or to a specific route
-using its name (e.g. ``homepage``).
+你可以重定向到一个指定路径（例如 ``/about``）或一个指定路由（使用其路由名称，例如 ``homepage``）。
 
-Redirecting Using a Path
+使用路径重定向
 ------------------------
 
-Assume there is no default controller for the ``/`` path of your application
-and you want to redirect these requests to ``/app``. You will need to use the
+假设你的应用的 ``/`` 路径没有默认控制器，并且你希望将这些请求重定向到 ``/app``。
+你需要使用
 :method:`Symfony\\Bundle\\FrameworkBundle\\Controller\\RedirectController::urlRedirectAction`
-action to redirect to this new url:
+动作来定向到此网址：
 
 .. configuration-block::
 
@@ -26,13 +25,13 @@ action to redirect to this new url:
 
         # config/routes.yaml
 
-        # load some routes - one should ultimately have the path "/app"
+        # 加载一些路由 - 其中一个最终应该有 "/app" 路径
         controllers:
             resource: ../src/Controller/
             type:     annotation
             prefix:   /app
 
-        # redirecting the homepage
+        # 重定向到主页
         homepage:
             path: /
             controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController::urlRedirectAction
@@ -86,19 +85,16 @@ action to redirect to this new url:
 
         return $routes;
 
-In this example, you configured a route for the ``/`` path and let the
-``RedirectController`` redirect it to ``/app``. The ``permanent`` switch
-tells the action to issue a ``301`` HTTP status code instead of the default
-``302`` HTTP status code.
+在此示例中，你为 ``/`` 路径配置了一个路由并让 ``RedirectController`` 将其重定向到 ``/app`` 路径。
+``permanent`` 开关通知该动作创建一个 ``301`` HTTP状态代码，而不是默认的 ``302`` HTTP状态代码。
 
-Redirecting Using a Route
+使用路由重定向
 -------------------------
 
-Assume you are migrating your website from WordPress to Symfony, you want to
-redirect ``/wp-admin`` to the route ``sonata_admin_dashboard``. You don't know
-the path, only the route name. This can be achieved using the
+假设你要将网站从WordPress迁移到Symfony，你想要重定向 ``/wp-admin`` 到 ``sonata_admin_dashboard`` 路由。
+但你不知道具体路径，只知道对应的路由名称。这可以通过
 :method:`Symfony\\Bundle\\FrameworkBundle\\Controller\\RedirectController::redirectAction`
-action:
+动作来实现：
 
 .. configuration-block::
 
@@ -113,9 +109,9 @@ action:
             controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController::redirectAction
             defaults:
                 route: sonata_admin_dashboard
-                # make a permanent redirection...
+                # 创建永久重定向...
                 permanent: true
-                # ...and keep the original query string parameters
+                # ...并保留原始查询字符串参数
                 keepQueryParams: true
 
     .. code-block:: xml
@@ -160,36 +156,30 @@ action:
         return $routes;
 
 .. versionadded:: 4.1
-    The ``keepQueryParams`` option was introduced in Symfony 4.1.
+    ``keepQueryParams`` 选项在Symfony 4.1中引入。
 
 .. caution::
 
-    Because you are redirecting to a route instead of a path, the required
-    option is called ``route`` in the ``redirect()`` action, instead of ``path``
-    in the ``urlRedirect()`` action.
+    由于你要重定向到路由而不是路径，因此在 ``redirect()`` 动作中所需的选项为
+    ``route``，而不是 ``urlRedirect()`` 动作中的 ``path``。
 
-Keeping the Request Method when Redirecting
+重定向时保持请求方法
 -------------------------------------------
 
 .. versionadded:: 4.1
-    The feature to keep the request method when redirecting was introduced in
-    Symfony 4.1.
+    在Symfony 4.1中引入了重定向时保持请求方法的功能。
 
-The redirections performed in the previous examples use the ``301`` and ``302``
-HTTP status codes. For legacy reasons, these HTTP redirections change the method
-of ``POST`` requests to ``GET`` (because redirecting a ``POST`` request didn't
-work well in old browsers).
+前面示例中执行的重定向使用 ``301`` 和 ``302`` HTTP状态代码。
+由于遗留原因，这些HTTP重定向会将 ``POST`` 请求方法更改为 ``GET`` （因为在旧浏览器中不能重定向一个 ``POST`` 请求）。
 
-However, in some scenarios it's either expected or required that the redirection
-request uses the same HTTP method. That's why the HTTP standard defines two
-additional status codes (``307`` and ``308``) to perform temporary/permanent
-redirects that maintain the original request method.
+但是，在某些情况下，会预期或要求重定向的请求使用相同的HTTP方法。
+这就是为什么HTTP标准定义了两个额外的状态代码（``307`` 和 ``308``）来执行维持原始请求方法的临时/永久重定向。
 
-The :method:`Symfony\\Bundle\\FrameworkBundle\\Controller\\RedirectController::urlRedirectAction`
-and :method:`Symfony\\Bundle\\FrameworkBundle\\Controller\\RedirectController::redirectAction`
-methods accept an additional argument called ``keepRequestMethod``. When it's
-set to ``true``, temporary redirects use ``307`` code instead of ``302`` and
-permanent redirects use ``308`` code instead of ``301``:
+:method:`Symfony\\Bundle\\FrameworkBundle\\Controller\\RedirectController::urlRedirectAction`
+和 :method:`Symfony\\Bundle\\FrameworkBundle\\Controller\\RedirectController::redirectAction`
+方法都接受一个名为 ``keepRequestMethod`` 的额外参数。
+当该参数设置为 ``true`` 时，临时重定向将使用 ``307`` 状态码，而不是
+``302``；而永久重定向则使用 ``308`` 状态码来取代 ``301`` 状态码：
 
 .. configuration-block::
 
@@ -197,7 +187,7 @@ permanent redirects use ``308`` code instead of ``301``:
 
         # config/routes.yaml
 
-        # redirects with the 308 status code
+        # 使用308状态代码重定向
         route_foo:
             # ...
             controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController::redirectAction
@@ -206,7 +196,7 @@ permanent redirects use ``308`` code instead of ``301``:
                 permanent: true
                 keepRequestMethod: true
 
-        # redirects with the 307 status code
+        # 使用307状态代码重定向
         route_bar:
             # ...
             controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController::redirectAction

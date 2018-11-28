@@ -4,7 +4,7 @@
 如何匹配基于主机的路由
 ======================================
 
-You can also match on the HTTP *host* of the incoming request.
+你还可以匹配传入请求中的HTTP *主机*。
 
 .. configuration-block::
 
@@ -82,14 +82,12 @@ You can also match on the HTTP *host* of the incoming request.
 
         return $routes;
 
-Both routes match the same path ``/``, however the first one will match
-only if the host is ``m.example.com``.
+两条路由都匹配相同的 ``/`` 路径，但第一条路由仅在主机是 ``m.example.com`` 时匹配。
 
-Using Placeholders
+使用占位符
 ------------------
 
-The host option uses the same syntax as the path matching system. This means
-you can use placeholders in your hostname:
+``host`` 选项使用与路径匹配系统相同的语法。这意味着你可以在主机名称中使用占位符：
 
 .. configuration-block::
 
@@ -167,9 +165,8 @@ you can use placeholders in your hostname:
 
         return $routes;
 
-You can also set requirements and default options for these placeholders. For
-instance, if you want to match both ``m.example.com`` and
-``mobile.example.com``, you use this:
+你还可以为这些占位符设置要求和默认选项。
+举例来说，如果你想同时匹配 ``m.example.com`` 和 ``mobile.example.com``，可以这样：
 
 .. configuration-block::
 
@@ -264,8 +261,7 @@ instance, if you want to match both ``m.example.com`` and
 
 .. tip::
 
-    You can also use service parameters if you do not want to hardcode the
-    hostname:
+    如果你不想对主机名进行硬编码，则可以使用服务参数：
 
     .. configuration-block::
 
@@ -360,16 +356,14 @@ instance, if you want to match both ``m.example.com`` and
 
 .. tip::
 
-    Make sure you also include a default option for the ``domain`` placeholder,
-    otherwise you need to include a domain value each time you generate
-    a URL using the route.
+    确保你还为 ``domain`` 占位符包含了默认选项，否则每次使用该路由生成URL时都需要包含一个域值。
 
 .. _component-routing-host-imported:
 
-Using Host Matching of Imported Routes
+使用导入的路由的主机匹配
 --------------------------------------
 
-You can also set the host option on imported routes:
+你还可以在导入的路由上设置主机选项：
 
 .. configuration-block::
 
@@ -416,14 +410,12 @@ You can also set the host option on imported routes:
 
         return $routes;
 
-The host ``hello.example.com`` will be set on each route loaded from the new
-routing resource.
+这将在从新路由资源加载的每个路由上设置 ``hello.example.com`` 主机。
 
-Testing your Controllers
+测试控制器
 ------------------------
 
-You need to set the Host HTTP header on your request objects if you want to get
-past url matching in your functional tests::
+如果要在功能测试中获取于此匹配的URL，则需要在请求对象上设置HTTP_HOST标头::
 
     $crawler = $client->request(
         'GET',
