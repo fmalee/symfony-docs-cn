@@ -770,7 +770,7 @@ Crawler可以从节点中提取信息::
 
 其中 ``task[tags][0][name]`` 是使用JavaScript创建的字段的名称。
 
-您可以删除现有字段，例如标签::
+你可以删除现有字段，例如标签::
 
     // 获取表单的值
     $values = $form->getPhpValues();

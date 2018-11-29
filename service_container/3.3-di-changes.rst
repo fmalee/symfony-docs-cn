@@ -230,7 +230,7 @@ Symfony具有 :doc:`严格的向后兼容性承诺 </contributing/code/bc>`，�
     但是，如果我有一个标量（例如字符串）参数怎么办？它是如何自动装配的？
 
 如果你的参数 *不是* 对象，则无法自动装配。但那没关系！Symfony将为你提供一个明确的异常（在下一次刷新 *任何* 页面时），
-告诉你哪个服务无法自动装配。要修复它，您可以 :ref:`仅仅手动配置那一个参数 <services-manually-wire-args>`。
+告诉你哪个服务无法自动装配。要修复它，你可以 :ref:`仅仅手动配置那一个参数 <services-manually-wire-args>`。
 这是自动装配的理念：仅配置你需要的部分。而大多数配置都是自动化。
 
     好的，但自动装配会使应用不稳定。如果你改变了一件事或犯了错误，可能会发生意想不到的事情。这不是问题吗？
@@ -517,7 +517,7 @@ Step 2) 使用类服务id
 
 .. note::
 
-    如果您摆脱了弃用(deprecations)并使控制器从 ``AbstractController`` 继承而不是 ``Controller``，
+    如果你摆脱了弃用(deprecations)并使控制器从 ``AbstractController`` 继承而不是 ``Controller``，
     你可以跳过此步骤的其余部分，因为 ``AbstractController`` 它不提供可以从中获取服务的容器。
     需要按照 :ref:`本文第5步 <step-5>` 中的说明注入所有服务。
 

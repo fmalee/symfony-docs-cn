@@ -281,7 +281,7 @@ Symfony封装了很多最常用的约束：
 
 .. include:: /reference/constraints/map.rst.inc
 
-您还可以创建自己的自定义约束。:doc:`/validation/custom_constraint` 文档中介绍了此主题。
+你还可以创建自己的自定义约束。:doc:`/validation/custom_constraint` 文档中介绍了此主题。
 
 .. index::
    single: Validation; Constraints configuration

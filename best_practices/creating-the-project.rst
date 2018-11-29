@@ -10,7 +10,7 @@
 
 `Composer`_ 是个依赖管理器，被现代php程序广泛使用。
 而 `Symfony Flex`_ 是一个Composer插件，旨在自动执行 Symfony 应用中的一些最常见的任务。
-使用 Flex 是可选的，但建议使用，因为它可以显著的提高您的生产效率。
+使用 Flex 是可选的，但建议使用，因为它可以显著的提高你的生产效率。
 
 .. best-practice::
 

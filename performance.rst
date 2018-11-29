@@ -9,7 +9,7 @@ Symfony很快，开箱即用。但是，如果你按照以下性能检查表中�
 应用的清单
 -----------------------------
 
-#. :ref:`如果您的服务器使用APC，请安装APCu Polyfill <performance-install-apcu-polyfill>`
+#. :ref:`如果你的服务器使用APC，请安装APCu Polyfill <performance-install-apcu-polyfill>`
 
 生产服务器的清单
 ---------------------------
@@ -22,7 +22,7 @@ Symfony很快，开箱即用。但是，如果你按照以下性能检查表中�
 
 .. _performance-install-apcu-polyfill:
 
-如果您的服务器使用APC，请安装APCu Polyfill
+如果你的服务器使用APC，请安装APCu Polyfill
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 如果你的生产服务器仍使用旧版APC PHP扩展而不是OPcache，

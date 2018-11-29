@@ -31,7 +31,7 @@ Symfony提供2个基于Dot的不同dumper。
     $ php dump-graph-puml.php | java -jar plantuml.jar -p  > puml_graph.png
 
     # run this command if you prefer SVG images:
-    # 如果您喜欢SVG图像，请运行此命令：
+    # 如果你喜欢SVG图像，请运行此命令：
     # $ php dump-graph-dot.php | dot -Tsvg -o dot_graph.svg
 
 DOT结果如下所示：

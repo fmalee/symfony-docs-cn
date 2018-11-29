@@ -28,7 +28,7 @@ Sphinx_ 是一个构建系统，它提供了从reStructuredText文档创建文�
 Syntax语法高亮
 ~~~~~~~~~~~~~~~~~~~
 
-PHP是应用于所有代码块的默认语法高亮器。您可以使用 ``code-block`` 指令更改它：
+PHP是应用于所有代码块的默认语法高亮器。你可以使用 ``code-block`` 指令更改它：
 
 .. code-block:: rst
 

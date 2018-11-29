@@ -123,7 +123,7 @@ Swift Mailer库通过创建、配置然后发送 ``Swift_Message`` 对象来工�
     MAILER_URL=gmail://username:password@localhost?encryption=tls&auth_mode=oauth
 
 如果你的Gmail帐户使用两步验证(2-Step-Verification)，则必须 `生成应用密码`_ 并将其用作邮件程序密码的值。
-你还必须确保 `允许安全性较低的应用访问您的Gmail帐户`_。
+你还必须确保 `允许安全性较低的应用访问你的Gmail帐户`_。
 
 
 使用云服务发送邮件
@@ -158,4 +158,4 @@ Swift Mailer库通过创建、配置然后发送 ``Swift_Message`` 对象来工�
 .. _`SendGrid`: https://sendgrid.com/
 .. _`Amazon SES`: http://aws.amazon.com/ses/
 .. _`生成应用密码`: https://support.google.com/accounts/answer/185833
-.. _`允许安全性较低的应用访问您的Gmail帐户`: https://support.google.com/accounts/answer/6010255
+.. _`允许安全性较低的应用访问你的Gmail帐户`: https://support.google.com/accounts/answer/6010255

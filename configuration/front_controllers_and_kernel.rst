@@ -35,7 +35,7 @@
 * 通过使用 :ref:`HttpCache <symfony-gateway-cache>` 封装内核来添加HTTP级别的缓存;
 * 启用 :doc:`Debug组件 </components/debug>`。
 
-您可以通过在URL中添加前端控制器来选择使用的前端控制器，例如：
+你可以通过在URL中添加前端控制器来选择使用的前端控制器，例如：
 
 .. code-block:: text
 
