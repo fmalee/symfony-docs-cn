@@ -4,18 +4,16 @@
     single: Service Container; ExpressionLanguage
     single: Service Container; Expressions
 
-如何基于复杂表达式注入值
+如何基于复杂表达式来注入值
 =================================================
 
-The service container also supports an "expression" that allows you to inject
-very specific values into a service.
+服务容器还支持一个“表达式”，允许你将非常特别的值注入一个服务。
 
-For example, suppose you have a service (not shown here), called ``App\Mail\MailerConfiguration``,
-which has a ``getMailerMethod()`` method on it. This returns a string - like ``sendmail``
-based on some configuration.
+例如，假设你有一个名为 ``App\Mail\MailerConfiguration``
+的服务（此处未显示），该服务上有一个 ``getMailerMethod()`` 方法。
+它会返回一个字符串 - 就像基于某些配置的 ``sendmail`` 一样。
 
-Suppose that you want to pass the result of this method as a constructor argument
-to another service: ``App\Mailer``. One way to do this is with an expression:
+假设你要将此方法的结果作为构造函数参数传递给另一个服务：``App\Mailer``。一种方法是使用表达式：
 
 .. configuration-block::
 
@@ -62,17 +60,17 @@ to another service: ``App\Mailer``. One way to do this is with an expression:
         $container->autowire(Mailer::class)
             ->addArgument(new Expression('service("App\\\\Mail\\\\MailerConfiguration").getMailerMethod()'));
 
-To learn more about the expression language syntax, see :doc:`/components/expression_language/syntax`.
+要了解有关表达式语言语法的更多信息，请参阅 :doc:`/components/expression_language/syntax`。
 
-In this context, you have access to 2 functions:
+在此上下文中，你可以访问2个函数：
 
 ``service``
-    Returns a given service (see the example above).
+    返回一个给定的服务（请参阅上面的示例）。
 ``parameter``
-    Returns a specific parameter value (syntax is just like ``service``).
+    返回一个特定的参数值（语法就像 ``service``）。
 
-You also have access to the :class:`Symfony\\Component\\DependencyInjection\\Container`
-via a ``container`` variable. Here's another example:
+你还可以通过一个 ``container`` 变量来访问
+:class:`Symfony\\Component\\DependencyInjection\\Container`。这是另一个例子：
 
 .. configuration-block::
 
@@ -110,5 +108,5 @@ via a ``container`` variable. Here's another example:
                 "container.hasParameter('some_param') ? parameter('some_param') : 'default_value'"
             ));
 
-Expressions can be used in ``arguments``, ``properties``, as arguments with
-``configurator`` and as arguments to ``calls`` (method calls).
+表达式可以在 ``arguments``、``properties`` 中使用，作为
+``configurator`` 的参数和 ``calls`` （方法调用）的参数。

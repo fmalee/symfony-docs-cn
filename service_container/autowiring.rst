@@ -4,25 +4,21 @@
 自动定义服务依赖（自动装配）
 =========================================================
 
-Autowiring allows you to manage services in the container with minimal
-configuration. It reads the type-hints on your constructor (or other methods)
-and automatically passes the correct services to each method. Symfony's
-autowiring is designed to be predictable: if it is not absolutely clear which
-dependency should be passed, you'll see an actionable exception.
+自动装配允许你以最少的配置管理容器中的服务。
+它读取构造函数（或其他方法）上的类型约束，并自动将正确的服务传递给每个方法。
+Symfony的自动装配被设计为可预测的：如果不清楚应该传递哪个依赖，你将看到一个可操作的异常。
 
 .. tip::
 
-    Thanks to Symfony's compiled container, there is no runtime overhead for using
-    autowiring.
+    感谢Symfony的编译容器，使用自动装配没有运行时开销。
 
-An Autowiring Example
+自动装配示例
 ---------------------
 
-Imagine you're building an API to publish statuses on a Twitter feed, obfuscated
-with `ROT13`_, a fun encoder that shifts all characters 13 letters forward in
-the alphabet.
+想象一下，你正在构建一个API，以便在Twitter上发布状态，并使用 `ROT13`_
+进行模糊处理，ROT13是一个有趣的编码器，可以将字母表中的所有字符向前移动13个字母。
 
-Start by creating a ROT13 transformer class::
+首先创建一个ROT13转换器类::
 
     namespace App\Util;
 
@@ -34,7 +30,7 @@ Start by creating a ROT13 transformer class::
         }
     }
 
-And now a Twitter client using this transformer::
+现在是一个使用这个转换器的Twitter客户端::
 
     namespace App\Service;
 
@@ -53,17 +49,17 @@ And now a Twitter client using this transformer::
         {
             $transformedStatus = $this->transformer->transform($status);
 
-            // ... connect to Twitter and send the encoded status
+            // ... 连接到Twitter并发送已编码的状态
         }
     }
 
-If you're using the :ref:`default services.yaml configuration <service-container-services-load-example>`,
-**both classes are automatically registered as services and configured to be autowired**.
-This means you can use them immediately without *any* configuration.
+如果你使用的是
+:ref:`默认的services.yaml配置 <service-container-services-load-example>`，则
+**这两个类都已自动注册为服务并配置为自动装配**。
+这意味着你可以立即使用它们而无需 *任何* 配置。
 
-However, to understand autowiring better, the following examples explicitly configure
-both services. Also, to keep things simple, configure ``TwitterClient`` to be a
-:ref:`public <container-public>` service:
+但是，为了更好地了解自动装配，以下示例显式的配置了这两个服务。
+另外，为了简单起见，配置 ``TwitterClient`` 为 :ref:`共有 <container-public>` 服务：
 
 .. configuration-block::
 
@@ -78,9 +74,9 @@ both services. Also, to keep things simple, configure ``TwitterClient`` to be a
             # ...
 
             App\Service\TwitterClient:
-                # redundant thanks to _defaults, but value is overridable on each service
+                # 其余的得感谢_defaults，但每个服务的值都可以被覆盖
                 autowire: true
-                # not required, will help in our example
+                # 不是必需的，但是对我们的示例有所帮助
                 public: true
 
             App\Util\Rot13Transformer:
@@ -120,7 +116,7 @@ both services. Also, to keep things simple, configure ``TwitterClient`` to be a
         $container->autowire(Rot13Transformer::class)
             ->setPublic(false);
 
-Now, you can use the ``TwitterClient`` service immediately in a controller::
+现在，你可以立即在控制器中使用 ``TwitterClient`` 服务了::
 
     namespace App\Controller;
 
@@ -135,7 +131,7 @@ Now, you can use the ``TwitterClient`` service immediately in a controller::
          */
         public function tweet()
         {
-            // fetch $user, $key, $status from the POST'ed data
+            // 从POST'ed 数据获取 $user, $key, $status
 
             $twitterClient = $this->container->get(TwitterClient::class);
             $twitterClient->tweet($user, $key, $status);
@@ -144,15 +140,14 @@ Now, you can use the ``TwitterClient`` service immediately in a controller::
         }
     }
 
-This works automatically! The container knows to pass the ``Rot13Transformer`` service
-as the first argument when creating the ``TwitterClient`` service.
+该服务已自动生效！容器知道在创建 ``TwitterClient`` 服务时将 ``Rot13Transformer`` 服务作为第一个参数传递过去。
 
 .. _autowiring-logic-explained:
 
-Autowiring Logic Explained
+自动装配逻辑阐述
 --------------------------
 
-Autowiring works by reading the ``Rot13Transformer`` *type-hint* in ``TwitterClient``::
+自动装配通过在 ``TwitterClient`` 中读取 ``Rot13Transformer`` *类型提示* 来工作::
 
     // ...
     use App\Util\Rot13Transformer;
@@ -167,35 +162,28 @@ Autowiring works by reading the ``Rot13Transformer`` *type-hint* in ``TwitterCli
         }
     }
 
-The autowiring system **looks for a service whose id exactly matches the type-hint**:
-so ``App\Util\Rot13Transformer``. In this case, that exists! When you configured
-the ``Rot13Transformer`` service, you used its fully-qualified class name as its
-id. Autowiring isn't magic: it simply looks for a service whose id matches the type-hint.
-If you :ref:`load services automatically <service-container-services-load-example>`,
-each service's id is its class name.
+自动装配系统会查找其id与类型约束完全匹配的服务：例如 ``App\Util\Rot13Transformer``。
+在这个例子中，该服务是存在的！配置 ``Rot13Transformer`` 服务时，你使用其完全限定的类名作为其ID。
+自动装配不是魔术：它只是寻找一个id与类型约束相匹配的服务。
+如果是 :ref:`自动的加载服务 <service-container-services-load-example>`，则每个服务的id都是其类名称。
 
-If there is *not* a service whose id exactly matches the type, a clear exception
-will be thrown.
+如果 *没有* 一个其id与类型完全匹配的服务，则会抛出一个明确的异常。
 
-Autowiring is a great way to automate configuration, and Symfony tries to be as
-*predictable* and clear as possible.
+自动装配是自动化配置的好方法，Symfony会尽可能地 *可预测* 和清晰。
 
 .. _service-autowiring-alias:
 
-Using Aliases to Enable Autowiring
+使用别名来启用自动装配
 ----------------------------------
 
-The main way to configure autowiring is to create a service whose id exactly matches
-its class. In the previous example, the service's id is ``App\Util\Rot13Transformer``,
-which allows us to autowire this type automatically.
+配置自动装配的主要方法是创建一个id与其类完全匹配的服务。
+在前面的示例中，该服务的id是 ``App\Util\Rot13Transformer``，从而允许我们自动自动装配此类型。
 
-This can also be accomplished using an :ref:`alias <services-alias>`. Suppose that
-for some reason, the id of the service was instead ``app.rot13.transformer``. In
-this case, any arguments type-hinted with the class name (``App\Util\Rot13Transformer``)
-can no longer be autowired.
+也可以通过使用 :ref:`别名 <services-alias>` 来完成此操作。
+假设由于某种原因，该服务的id变成 ``app.rot13.transformer``。
+在这种情况下，任何带有类名称（``App\Util\Rot13Transformer``）的类型提示的参数都不能再自动装配了。
 
-No problem! To fix this, you can *create* a service whose id matches the class by
-adding a service alias:
+没关系！要解决此问题，你可以通过添加一个服务别名来 *创建* 一个id与类匹配的服务：
 
 .. configuration-block::
 
@@ -205,14 +193,14 @@ adding a service alias:
         services:
             # ...
 
-            # the id is not a class, so it won't be used for autowiring
+            # id不是一个类，因此不会用于自动装配
             app.rot13.transformer:
                 class: App\Util\Rot13Transformer
                 # ...
 
-            # but this fixes it!
-            # the ``app.rot13.transformer`` service will be injected when
-            # an ``App\Util\Rot13Transformer`` type-hint is detected
+            # 但在这里解决了这个问题！
+            # 当检测到 ``App\Util\Rot13Transformer`` 类型约束时，
+            # 将注入 ``app.rot13.transformer`` 服务。
             App\Util\Rot13Transformer: '@app.rot13.transformer'
 
     .. code-block:: xml
@@ -242,27 +230,23 @@ adding a service alias:
             ->setPublic(false);
         $container->setAlias(Rot13Transformer::class, 'app.rot13.transformer');
 
-This creates a service "alias", whose id is ``App\Util\Rot13Transformer``.
-Thanks to this, autowiring sees this and uses it whenever the ``Rot13Transformer``
-class is type-hinted.
+这会创建一个id为 ``App\Util\Rot13Transformer`` 的服务“别名”。
+得益于此，自动装配会看到这一点，并在 ``Rot13Transformer`` 类被类型约束时使用它。
 
 .. tip::
 
-    Aliases are used by the core bundles to allow services to be autowired. For
-    example, MonologBundle creates a service whose id is ``logger``. But it also
-    adds an alias: ``Psr\Log\LoggerInterface`` that points to the ``logger`` service.
-    This is why arguments type-hinted with ``Psr\Log\LoggerInterface`` can be autowired.
+    核心bundle使用别名来允许服务被自动装配。例如MonologBu​​ndle创建了一个id为 ``logger`` 的服务。
+    但它也增加了一个指向 ``logger`` 服务的 ``Psr\Log\LoggerInterface`` 别名。
+    这就是为什么使用 ``Psr\Log\LoggerInterface`` 类型约束的参数可以自动装配的原因。
 
 .. _autowiring-interface-alias:
 
-Working with Interfaces
+接口的使用
 -----------------------
 
-You might also find yourself type-hinting abstractions (e.g. interfaces) instead
-of concrete classes as it makes it easy to replace your dependencies with other
-objects.
+你可能还会发现自己的类型约束是抽象的（例如接口）而不是具体类，这样的话它可以轻松地将依赖替换为其他对象。
 
-To follow this best practice, suppose you decide to create a ``TransformerInterface``::
+为了遵循此最佳做法，假设你决定创建一个 ``TransformerInterface``::
 
     namespace App\Util;
 
@@ -271,7 +255,7 @@ To follow this best practice, suppose you decide to create a ``TransformerInterf
         public function transform($value);
     }
 
-Then, you update ``Rot13Transformer`` to implement it::
+然后，你更新 ``Rot13Transformer`` 以实现它::
 
     // ...
     class Rot13Transformer implements TransformerInterface
@@ -279,7 +263,7 @@ Then, you update ``Rot13Transformer`` to implement it::
         // ...
     }
 
-Now that you have an interface, you should use this as your type-hint::
+既然你有了一个接口，你应该使用它作为你的类型约束::
 
     class TwitterClient
     {
@@ -291,11 +275,10 @@ Now that you have an interface, you should use this as your type-hint::
         // ...
     }
 
-But now, the type-hint (``App\Util\TransformerInterface``) no longer matches
-the id of the service (``App\Util\Rot13Transformer``). This means that the
-argument can no longer be autowired.
+但是现在，该类型约束（``App\Util\TransformerInterface``）不再匹配该服务（
+``App\Util\Rot13Transformer``）的id 。这意味着该参数不能再自动装配了。
 
-To fix that, add an :ref:`alias <service-autowiring-alias>`:
+要解决此问题，请添加一个 :ref:`别名 <service-autowiring-alias>`：
 
 .. configuration-block::
 
@@ -307,8 +290,8 @@ To fix that, add an :ref:`alias <service-autowiring-alias>`:
 
             App\Util\Rot13Transformer: ~
 
-            # the ``App\Util\Rot13Transformer`` service will be injected when
-            # an ``App\Util\TransformerInterface`` type-hint is detected
+            # 当检测到一个 ``App\Util\TransformerInterface`` 类型约束时，
+            # 将注入 ``App\Util\Rot13Transformer`` 服务
             App\Util\TransformerInterface: '@App\Util\Rot13Transformer'
 
     .. code-block:: xml
@@ -337,21 +320,17 @@ To fix that, add an :ref:`alias <service-autowiring-alias>`:
         $container->autowire(Rot13Transformer::class);
         $container->setAlias(TransformerInterface::class, Rot13Transformer::class);
 
-Thanks to the ``App\Util\TransformerInterface`` alias, the autowiring subsystem
-knows that the ``App\Util\Rot13Transformer`` service should be injected when
-dealing with the ``TransformerInterface``.
+得益于 ``App\Util\TransformerInterface`` 别名，自动装配子系统知道在
+``TransformerInterface`` 处理时应该注入 ``App\Util\Rot13Transformer`` 服务。
 
 .. tip::
 
-    As long as there is only one class implementing the interface and that class
-    is part of the same namespace configuring the alias is not mandatory and Symfony
-    will automatically create one.
+    如果只有一个类实现了该接口，并且该类是同一命名空间的一部分，那么配置别名就不是必需的，Symfony将自动创建一个。
 
-Dealing with Multiple Implementations of the Same Type
+处理相同类型的多个实现
 ------------------------------------------------------
 
-Suppose you create a second class - ``UppercaseTransformer`` that implements
-``TransformerInterface``::
+假设你创建了第二个类 - 实现了 ``TransformerInterface`` 的 ``UppercaseTransformer`` 类::
 
     namespace App\Util;
 
@@ -363,14 +342,11 @@ Suppose you create a second class - ``UppercaseTransformer`` that implements
         }
     }
 
-If you register this as a service, you now have *two* services that implement the
-``App\Util\TransformerInterface`` type. Autowiring subsystem can not decide
-which one to use. Remember, autowiring isn't magic; it simply looks for a service
-whose id matches the type-hint. So you need to choose one by creating an alias
-from the type to the correct service id (see :ref:`autowiring-interface-alias`).
+如果将此类注册为服务，则现在有 *两个* 实现了 ``App\Util\TransformerInterface`` 类型的服务。
+自动装配子系统将无法决定使用哪一个服务。请记住，自动装配不是魔术，它只是查找id与类型约束匹配的服务。
+因此，你需要通过创建一个对应正确的服务ID的别名来选择一个默认服务（请参阅 :ref:`autowiring-interface-alias`）。
 
-If you want ``Rot13Transformer`` to be the service that's used for autowiring, create
-that alias:
+如果你想 ``Rot13Transformer`` 成为用于自动装配的服务，请创建该别名：
 
 .. configuration-block::
 
@@ -383,16 +359,15 @@ that alias:
             App\Util\Rot13Transformer: ~
             App\Util\UppercaseTransformer: ~
 
-            # the ``App\Util\Rot13Transformer`` service will be injected when
-            # a ``App\Util\TransformerInterface`` type-hint is detected
+            # 当检测到 ``App\Util\TransformerInterface`` 类型约束时，
+            # 将注入 ``App\Util\Rot13Transformer`` 服务
             App\Util\TransformerInterface: '@App\Util\Rot13Transformer'
 
             App\Service\TwitterClient:
-                # the Rot13Transformer will be passed as the $transformer argument
+                # Rot13Transformer 将会被传递到 $transformer 参数
                 autowire: true
 
-                # If you wanted to choose the non-default service, wire it manually
-                # arguments:
+                # 如果要选择非默认服务，请手动装配参数：
                 #     $transformer: '@App\Util\UppercaseTransformer'
                 # ...
 
@@ -433,29 +408,26 @@ that alias:
             //->setArgument('$transformer', new Reference(UppercaseTransformer::class))
         ;
 
-Thanks to the ``App\Util\TransformerInterface`` alias, any argument type-hinted
-with this interface will be passed the ``App\Util\Rot13Transformer`` service.
-But, you can also manually wire the *other* service by specifying the argument
-under the arguments key.
+得益于 ``App\Util\TransformerInterface`` 别名，任何使用类型约束此接口的参数都将被传递
+``App\Util\Rot13Transformer`` 服务。
+但是，你也可以通过在 ``arguments`` 键下指定参数来手动装配 *其他* 服务。
 
-Fixing Non-Autowireable Arguments
+修复不能自动装配的参数
 ---------------------------------
 
-Autowiring only works when your argument is an *object*. But if you have a scalar
-argument (e.g. a string), this cannot be autowired: Symfony will throw a clear
-exception.
+自动装配仅在你的参数是一个 *对象* 时有效。
+但是如果你有一个标量参数（例如一个字符串），则无法自动装配：Symfony将抛出一个明确的异常。
 
-To fix this, you can :ref:`manually wire the problematic argument <services-manually-wire-args>`.
-You wire up the difficult arguments, Symfony takes care of the rest.
+要解决此问题，你可以 :ref:`手动装配有问题的参数 <services-manually-wire-args>`。
+你装配好比较困难的参数部分，Symfony会负责其余的事情。
 
 .. _autowiring-calls:
 
-Autowiring other Methods (e.g. Setters)
+自动装配的其他方法（例如Setter）
 ---------------------------------------
 
-When autowiring is enabled for a service, you can *also* configure the container
-to call methods on your class when it's instantiated. For example, suppose you want
-to inject the ``logger`` service, and decide to use setter-injection::
+为一个服务启用自动装配后，你 *还* 可以将容器配置为在该类实例化时调用它上面的方法。
+例如，假设你要注入 ``logger`` 服务，并决定使用setter注入::
 
     namespace App\Util;
 
@@ -478,30 +450,27 @@ to inject the ``logger`` service, and decide to use setter-injection::
         }
     }
 
-Autowiring will automatically call *any* method with the ``@required`` annotation
-above it, autowiring each argument. If you need to manually wire some of the arguments
-to a method, you can always explicitly :doc:`configure the method call </service_container/calls>`.
+自动装配将自动调用 *任何* 在其上方有 ``@required`` 注释的方法，并自动装配每个参数。
+如果需要手动将某些参数装配到一个方法，则始终可以显式的 :doc:`配置方法调用 </service_container/calls>`。
 
-Autowiring Controller Action Methods
+控制器动作方法的自动装配
 ------------------------------------
 
-If you're using the Symfony Framework, you can also autowire arguments to your controller
-action methods. This is a special case for autowiring, which exists for convenience.
-See :ref:`controller-accessing-services` for more details.
+如果你正在使用Symfony Framework，你还可以为控制器动作方法自动装配参数。
+这是自动装配的特殊情况，是为方便起见而存在。
+有关详细信息，请参阅 :ref:`controller-accessing-services`。
 
-Performance Consequences
+性能问题
 ------------------------
 
-Thanks to Symfony's compiled container, there is *no* performance penalty for using
-autowiring. However, there is a small performance penalty in the ``dev`` environment,
-as the container may be rebuilt more often as you modify classes. If rebuilding
-your container is slow (possible on very large projects), you may not be able to
-use autowiring.
+感谢Symfony的编译容器，使用自动装配 *不会* 有性能损失。
+但是，在 ``dev`` 环境中可能会有些许的性能损失，因为你修改类时可能会导致容器更频繁地重建。
+如果容器重建很慢（可能在非常大的项目中），则可能无法使用自动装配。
 
-Public and Reusable Bundles
+公共和可复用Bundle
 ---------------------------
 
-Public bundles should explicitly configure their services and not rely on autowiring.
+公共bundle应明确配置其服务，而不是依赖自动装配。
 
 .. _Rapid Application Development: https://en.wikipedia.org/wiki/Rapid_application_development
 .. _ROT13: https://en.wikipedia.org/wiki/ROT13

@@ -4,55 +4,49 @@
 如何使用服务定义对象
 ===========================================
 
-Service definitions are the instructions describing how the container should
-build a service. They are not the actual services used by your applications.
-The container will create the actual class instances based on the configuration
-in the definition.
+服务定义是描述容器应如何构建一个服务的指令。它们不是你的应用使用的实际服务。
+容器将根据定义中的配置来创建实际的类实例。
 
-Normally, you would use YAML, XML or PHP to describe the service definitions.
-But if you're doing advanced things with the service container, like working
-with a :doc:`Compiler Pass </service_container/compiler_passes>` or creating a
-:doc:`Dependency Injection Extension </bundles/extension>`, you may need to
-work directly with the ``Definition`` objects that define how a service will be
-instantiated.
+通常，你将使用YAML、XML或PHP来描述服务定义。
+但是，如果你正在使用服务容器进行高级操作，例如使用
+:doc:`编译器传递 </service_container/compiler_passes>` 或创建
+:doc:`依赖注入扩展 </bundles/extension>`，则可能需要直接使用定义一个服务如何实例化的 ``Definition`` 对象。
 
-Getting and Setting Service Definitions
+获取和设置服务定义
 ---------------------------------------
 
-There are some helpful methods for working with the service definitions::
+有一些有用的方法来处理服务定义::
 
-    // finds out if there is an "app.mailer" definition
+    // 找出是否存在一个 “app.mailer” 定义
     $container->hasDefinition('app.mailer');
-    // finds out if there is an "app.mailer" definition or alias
+    // 找出是否存在一个 “app.mailer” 定义或别名
     $container->has('app.mailer');
 
-    // gets the "app.user_config_manager" definition
+    // 获取 "app.user_config_manager" 定义
     $definition = $container->getDefinition('app.user_config_manager');
-    // gets the definition with the "app.user_config_manager" ID or alias
+    // 使用 "app.user_config_manager" ID 或别名来获取定义
     $definition = $container->findDefinition('app.user_config_manager');
 
-    // adds a new "app.number_generator" definition
+    // 添加一个新的 "app.number_generator" 定义
     $definition = new Definition(\App\NumberGenerator::class);
     $container->setDefinition('app.number_generator', $definition);
 
-    // shortcut for the previous method
+    // 前一个方法的快捷方式
     $container->register('app.number_generator', \App\NumberGenerator::class);
 
-Working with a Definition
+定义的使用
 -------------------------
 
-Creating a New Definition
+创建新定义
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In addition to manipulating and retrieving existing definitions, you can also
-define new service definitions with the :class:`Symfony\\Component\\DependencyInjection\\Definition`
-class.
+除了操作和检索现有定义之外，你还可以使用
+:class:`Symfony\\Component\\DependencyInjection\\Definition` 类来定义新的服务定义。
 
-Class
+类
 ~~~~~
 
-The first optional argument of the ``Definition`` class is the fully qualified
-class name of the object returned when the service is fetched from the container::
+``Definition`` 类的第一个可选参数是从容器中获取服务时返回的对象的完全限定类名::
 
     use App\Config\UserConfigManager;
     use App\Config\CustomConfigManager;
@@ -60,85 +54,77 @@ class name of the object returned when the service is fetched from the container
 
     $definition = new Definition(UserConfigManager::class);
 
-    // override the class
+    // 重写该类
     $definition->setClass(CustomConfigManager::class);
 
-    // get the class configured for this definition
+    // 获取为此定义而配置的类
     $class = $definition->getClass();
 
-Constructor Arguments
+构造函数参数
 ~~~~~~~~~~~~~~~~~~~~~
 
-The second optional argument of the ``Definition`` class is an array with the
-arguments passed to the constructor of the object returned when the service is
-fetched from the container::
+``Definition`` 类的第二个可选参数是一个数组，其中的参数传递给从容器中获取服务时返回的对象的构造函数::
 
     use App\Config\DoctrineConfigManager;
     use Symfony\Component\DependencyInjection\Definition;
     use Symfony\Component\DependencyInjection\Reference;
 
     $definition = new Definition(DoctrineConfigManager::class, array(
-        new Reference('doctrine'), // a reference to another service
-        '%app.config_table_name%',  // will be resolved to the value of a container parameter
+        new Reference('doctrine'), // 一个其他服务的引用
+        '%app.config_table_name%',  // 将被解析为一个容器参数的值
     ));
 
-    // gets all arguments configured for this definition
+    // 获取为 此定义 配置的所有参数
     $constructorArguments = $definition->getArguments();
 
-    // gets a specific argument
+    // 获取一个特定的参数
     $firstArgument = $definition->getArgument(0);
 
-    // adds a new argument
+    // 添加一个新参数
     $definition->addArgument($argument);
 
-    // replaces argument on a specific index (0 = first argument)
+    // 替换一个特定索引的参数（0=第一个参数）
     $definition->replaceArgument($index, $argument);
 
-    // replace all previously configured arguments with the passed array
+    // 用被传递的数组替换所有先前配置的参数
     $definition->setArguments($arguments);
 
 .. caution::
 
-    Don't use ``get()`` to get a service that you want to inject as constructor
-    argument, the service is not yet available. Instead, use a
-    ``Reference`` instance as shown above.
+    不要使用 ``get()`` 获取一个要作为构造函数参数注入的服务，该服务尚不可用。
+    相反，使用如上所示的一个 ``Reference`` 实例。
 
-Method Calls
+方法调用
 ~~~~~~~~~~~~
 
-If the service you are working with uses setter injection then you can manipulate
-any method calls in the definitions as well::
+如果你使用的服务使用setter注入，那么你也可以操作定义中的任何方法调用::
 
-    // gets all configured method calls
+    // 获取所有已配置的方法调用
     $methodCalls = $definition->getMethodCalls();
 
-    // configures a new method call
+    // 配置一个新的方法调用
     $definition->addMethodCall('setLogger', array(new Reference('logger')));
 
-    // replaces all previously configured method calls with the passed array
+    // 用被传递的数组替换所有先前配置的方法调用
     $definition->setMethodCalls($methodCalls);
 
 .. tip::
 
-    There are more examples of specific ways of working with definitions
-    in the PHP code blocks of the Service Container articles such as
-    :doc:`/service_container/factories` and :doc:`/service_container/parent_services`.
+    在服务容器文档的PHP代码块中有更多使用定义的特定方法示例，例如
+    :doc:`/service_container/factories` 以及 :doc:`/service_container/parent_services`。
 
 .. note::
 
-    The methods here that change service definitions can only be used before
-    the container is compiled. Once the container is compiled you cannot
-    manipulate service definitions further. To learn more about compiling
-    the container, see :doc:`/components/dependency_injection/compilation`.
+    这些更改服务定义的方法只能在容器被编译之前使用。在容器编译完成后，你将无法进一步操作服务定义。
+    要了解有关编译容器的更多信息，请参阅 :doc:`/components/dependency_injection/compilation`。
 
-Requiring Files
+引入文件
 ~~~~~~~~~~~~~~~
 
-There might be use cases when you need to include another file just before
-the service itself gets loaded. To do so, you can use the
-:method:`Symfony\\Component\\DependencyInjection\\Definition::setFile` method::
+可能存在一种用例，那就是你可能需要在服务本身加载之前引入另一个文件。
+为此，你可以使用
+:method:`Symfony\\Component\\DependencyInjection\\Definition::setFile` 方法::
 
     $definition->setFile('/src/path/to/file/foo.php');
 
-Notice that Symfony will internally call the PHP statement ``require_once``,
-which means that your file will be included only once per request.
+请注意，Symfony将在内部调用PHP的 ``require_once`` 语句，这意味着每个请求只包含(include)一次你的文件。

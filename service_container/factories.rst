@@ -4,16 +4,13 @@
 使用工厂创建服务
 ==================================
 
-Symfony's Service Container provides a powerful way of controlling the
-creation of objects, allowing you to specify arguments passed to the constructor
-as well as calling methods and setting parameters. Sometimes, however, this
-will not provide you with everything you need to construct your objects.
-For this situation, you can use a factory to create the object and tell
-the service container to call a method on the factory rather than directly
-instantiating the class.
+Symfony的服务容器提供了一种控制对象创建的强大方法，它允许你指定传递给构造函数的参数(argument)以及调用方法和设置参数（parameter）。
+但有时候，这不会为你提供构建对象所需的一切。
+对于这种情况，你可以使用一个工厂来创建对象并告诉服务容器在工厂中调用一个方法而不是直接实例化该类。
 
-Suppose you have a factory that configures and returns a new ``NewsletterManager``
-object by calling the static ``createNewsletterManager()`` method::
+假设你有一个工厂，该工厂通过调用其 ``createNewsletterManager()``
+静态方法来配置并返回一个新的 ``NewsletterManager`` 对象::
+
 
     class NewsletterManagerStaticFactory
     {
@@ -27,9 +24,8 @@ object by calling the static ``createNewsletterManager()`` method::
         }
     }
 
-To make the ``NewsletterManager`` object available as a service, you can
-configure the service container to use the
-``NewsletterManagerStaticFactory::createNewsletterManager()`` factory method:
+要使 ``NewsletterManager`` 对象可用作服务，可以配置服务容器以使用
+``NewsletterManagerStaticFactory::createNewsletterManager()`` 工厂方法：
 
 .. configuration-block::
 
@@ -40,7 +36,7 @@ configure the service container to use the
             # ...
 
             App\Email\NewsletterManager:
-                # call the static method
+                # 调用该静态方法
                 factory: ['App\Email\NewsletterManagerStaticFactory', createNewsletterManager]
 
     .. code-block:: xml
@@ -79,18 +75,13 @@ configure the service container to use the
 
 .. note::
 
-    When using a factory to create services, the value chosen for class
-    has no effect on the resulting service. The actual class name
-    only depends on the object that is returned by the factory. However,
-    the configured class name may be used by compiler passes and therefore
-    should be set to a sensible value.
+    使用一个工厂来创建服务时，为类选择的值对生成的服务没有影响。实际的类名称仅取决于工厂返回的对象。
+    但是，配置的类名称可能会由编译器传递使用，因此应设置为一个合理的值。
 
-If your factory is not using a static function to configure and create your
-service, but a regular method, you can instantiate the factory itself as a
-service too. Later, in the ":ref:`factories-passing-arguments-factory-method`"
-section, you learn how you can inject arguments in this method.
+如果你的工厂不是使用一个静态函数来配置和创建服务，而是使用一个常规方法，则可以将工厂本身实例化为一个服务。
+在稍后的 ":ref:`factories-passing-arguments-factory-method`" 章节中，你将学习如何在此方法中注入参数。
 
-Configuration of the service container then looks like this:
+然后，服务容器的配置如下所示：
 
 .. configuration-block::
 
@@ -103,7 +94,7 @@ Configuration of the service container then looks like this:
             App\Email\NewsletterManagerFactory: ~
 
             App\Email\NewsletterManager:
-                # call a method on the specified factory service
+                # 在特定的工厂服务上调用一个方法
                 factory: 'App\Email\NewsletterManagerFactory:createNewsletterManager'
 
     .. code-block:: xml
@@ -145,31 +136,28 @@ Configuration of the service container then looks like this:
 
 .. note::
 
-    The traditional configuration syntax in YAML files used an array to define
-    the factory service and the method name:
+    YAML文件中的传统配置语法使用一个数组来定义工厂服务和其方法名称：
 
     .. code-block:: yaml
 
         # config/services.yaml
         App\Email\NewsletterManager:
-            # new syntax
+            # 新语法
             factory: 'App\Email\NewsletterManagerFactory:createNewsletterManager'
-            # old syntax
+            # 传统语法
             factory: ['@App\Email\NewsletterManagerFactory', createNewsletterManager]
 
 .. _factories-passing-arguments-factory-method:
 
-Passing Arguments to the Factory Method
+将参数传递给工厂方法
 ---------------------------------------
 
 .. tip::
 
-    Arguments to your factory method are :ref:`autowired <services-autowire>` if
-    that's enabled for your service.
+    如果你的服务启用了 :ref:`自动装配 <services-autowire>`，则该工厂方法的参数将会自动装配。
 
-If you need to pass arguments to the factory method you can use the ``arguments``
-options. For example, suppose the ``createNewsletterManager()`` method in the previous
-example takes the ``templating`` service as an argument:
+如果需要将参数传递给工厂方法，则可以使用 ``arguments`` 选项。
+例如，假设前一个示例中的 ``createNewsletterManager()`` 方法将 ``templating`` 服务作为参数：
 
 .. configuration-block::
 

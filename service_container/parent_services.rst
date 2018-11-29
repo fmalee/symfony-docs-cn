@@ -1,15 +1,11 @@
 .. index::
     single: DependencyInjection; Parent services
 
-如何使用父服务管理公共依赖
+如何使用父服务来管理公共依赖
 ======================================================
 
-  How to Manage Common Dependencies with Parent Services
-
-As you add more functionality to your application, you may well start to
-have related classes that share some of the same dependencies. For example,
-you may have multiple repository classes which need the
-``doctrine.orm.entity_manager`` service and an optional ``logger`` service::
+当你向应用添加更多功能时，你可能会开始拥有共享某些相同依赖的相关类。
+例如，你可能有多个需要 ``doctrine.orm.entity_manager`` 服务的仓库类和一个可选的 ``logger`` 服务::
 
     // src/Repository/BaseDoctrineRepository.php
     namespace App\Repository;
@@ -33,7 +29,7 @@ you may have multiple repository classes which need the
         // ...
     }
 
-Your child service classes may look like this::
+你的子服务类可能如下所示::
 
     // src/Repository/DoctrineUserRepository.php
     namespace App\Repository;
@@ -57,9 +53,7 @@ Your child service classes may look like this::
         // ...
     }
 
-Just as you use PHP inheritance to avoid duplication in your PHP code, the
-service container allows you to extend parent services in order to avoid
-duplicated service definitions:
+正如你使用PHP继承来避免PHP代码中的重复一样，服务容器允许你继承父服务以避免重复的服务定义：
 
 .. configuration-block::
 
@@ -74,7 +68,7 @@ duplicated service definitions:
                     - [setLogger, ['@logger']]
 
             App\Repository\DoctrineUserRepository:
-                # extend the App\Repository\BaseDoctrineRepository service
+                # 继承 App\Repository\BaseDoctrineRepository 服务
                 parent: App\Repository\BaseDoctrineRepository
 
             App\Repository\DoctrinePostRepository:
@@ -139,33 +133,27 @@ duplicated service definitions:
 
         // ...
 
-In this context, having a ``parent`` service implies that the arguments
-and method calls of the parent service should be used for the child services.
-Specifically, the ``EntityManager`` will be injected and ``setLogger()`` will
-be called when ``App\Repository\DoctrineUserRepository`` is instantiated.
+在此上下文中，拥有一个 ``parent`` 服务意味着父服务的参数和方法调用应该被应用子服务。
+具体来说，``EntityManager`` 将被注入，并在 ``App\Repository\DoctrineUserRepository``
+实例化时调用 ``setLogger()``。
 
-All attributes on the parent service are shared with the child **except** for
-``shared``, ``abstract`` and ``tags``. These are *not* inherited from the parent.
+父服务的所有属性都与子服务共享，*除了* ``shared``、``abstract`` 和 ``tags``。
+这些 *不* 从父级继承。
 
 .. note::
 
-    If you have a ``_defaults`` section in your file, all child services are required
-    to explicitly override those values to avoid ambiguity. You will see a clear
-    error message about this.
+    如果你的文件中有一个 ``_defaults`` 区块，则所有子服务都需要显式的重写这些值以避免歧义。
+    否则，你将看到一个有关于此的明确的错误消息。
 
 .. tip::
 
-    In the examples shown, the classes sharing the same configuration also
-    extend from the same parent class in PHP. This isn't necessary at all.
-    You can also extract common parts of similar service definitions into
-    a parent service without also extending a parent class in PHP.
+    在上面的示例中，共享相同配置的类也继承了PHP中的同一父类。这根本不是必需的。
+    你还可以将类似的服务定义的公共部分提取到一个父服务中，而无需再在PHP中继承一个父类。
 
-Overriding Parent Dependencies
+重写父依赖
 ------------------------------
 
-There may be times where you want to override what service is injected for
-one child service only. You can override most settings by specifying it
-in the child class:
+有时你可能希望重写仅为一个子服务注入的服务。你可以通过在子类中指定它来重写大多数设置：
 
 .. configuration-block::
 
@@ -178,17 +166,16 @@ in the child class:
             App\Repository\DoctrineUserRepository:
                 parent: App\Repository\BaseDoctrineRepository
 
-                # overrides the public setting of the parent service
+                # 重写父服务的 public 设置
                 public: false
 
-                # appends the '@app.username_checker' argument to the parent
-                # argument list
+                # 将 '@app.username_checker' 参数附加到父参数列表
                 arguments: ['@app.username_checker']
 
             App\Repository\DoctrinePostRepository:
                 parent: App\Repository\BaseDoctrineRepository
 
-                # overrides the first argument (using the special index_N key)
+                # 重写第一个参数（使用特殊的index_N键）
                 arguments:
                     index_0: '@doctrine.custom_entity_manager'
 

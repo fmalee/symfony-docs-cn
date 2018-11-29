@@ -1,10 +1,10 @@
 .. index::
     single: Service Container; Decoration
 
-如何装饰(Decorate)服务
+如何装饰服务
 ========================
 
-When overriding an existing definition, the original service is lost:
+重写一个现有定义时，原始服务将会丢失：
 
 .. configuration-block::
 
@@ -14,8 +14,7 @@ When overriding an existing definition, the original service is lost:
         services:
             App\Mailer: ~
 
-            # this replaces the old App\Mailer definition with the new one, the
-            # old definition is lost
+            # 这将旧的 App\Mailer 定义替换为新的定义，旧的定义将丢失
             App\Mailer:
                 class: App\NewMailer
 
@@ -48,11 +47,9 @@ When overriding an existing definition, the original service is lost:
         // old definition is lost
         $container->register(Mailer::class, NewMailer::class);
 
-Most of the time, that's exactly what you want to do. But sometimes,
-you might want to decorate the old one instead (i.e. apply the `装饰器模式`_).
-In this case, the old service should be kept around to be able to reference
-it in the new one. This configuration replaces ``App\Mailer`` with a new one,
-but keeps a reference of the old one as ``App\DecoratingMailer.inner``:
+大多数时候，这正是你想要做的。但有时，你可能只是想要装饰旧的服务（即应用 `装饰器模式`_）。
+在这种情况下，应保留旧服务以便能够在新服务中引用它。
+以下配置替换 ``App\Mailer`` 为一个新定义，但保留了旧定义的一个引用（``App\DecoratingMailer.inner``）：
 
 .. configuration-block::
 
@@ -63,8 +60,8 @@ but keeps a reference of the old one as ``App\DecoratingMailer.inner``:
             App\Mailer: ~
 
             App\DecoratingMailer:
-                # overrides the App\Mailer service
-                # but that service is still available as App\DecoratingMailer.inner
+                # 重写 App\Mailer 服务
+                # 但该服务仍可作为 App\DecoratingMailer.inner 来使用
                 decorates: App\Mailer
 
     .. code-block:: xml
@@ -98,19 +95,15 @@ but keeps a reference of the old one as ``App\DecoratingMailer.inner``:
             ->setDecoratedService(Mailer::class)
         ;
 
-The ``decorates`` option tells the container that the ``App\DecoratingMailer``
-service replaces the ``App\Mailer`` service. If you're using the
-:ref:`default services.yaml configuration <service-container-services-load-example>`,
-the decorated service is automatically injected when the constructor of the
-decorating service has one argument type-hinted with the decorated service class.
+``decorates`` 选项告诉容器使用 ``App\DecoratingMailer`` 服务替换 ``App\Mailer`` 服务。
+如果你使用 :ref:`默认的services.yaml配置 <service-container-services-load-example>`，
+那么当装饰服务的构造函数使用一个被装饰的服务类的类型约束作为参数时，将自动注入被装饰的服务。
 
 .. versionadded:: 4.1
-    The autowiring of the decorated service was introduced in Symfony 4.1.
+    装饰服务的自动装配在Symfony 4.1中引入。
 
-If you are not using autowiring or the decorating service has more than one
-constructor argument type-hinted with the decorated service class, you must
-inject the decorated service explicitly (the ID of the decorated service is
-automatically changed to ``decorating_service_id + '.inner'``):
+如果你没有使用自动装配，或该装饰的服务拥有多个带有被装饰服务类的类型约束的构造函数参数，
+那么就必须显式的注入被装饰的服务（被装饰的服务的ID自动更改为 ``decorating_service_id + '.inner'``）：
 
 .. configuration-block::
 
@@ -122,7 +115,7 @@ automatically changed to ``decorating_service_id + '.inner'``):
 
             App\DecoratingMailer:
                 decorates: App\Mailer
-                # pass the old service as an argument
+                # 传递就服务为一个参数
                 arguments: ['@App\DecoratingMailer.inner']
 
     .. code-block:: xml
@@ -161,16 +154,13 @@ automatically changed to ``decorating_service_id + '.inner'``):
 
 .. tip::
 
-    The visibility of the decorated ``App\Mailer`` service (which is an alias
-    for the new service) will still be the same as the original ``App\Mailer``
-    visibility.
+    被装饰的 ``App\Mailer`` 服务（它是新服务的一个别名）的可见性仍将与原始 ``App\Mailer`` 的可见性相同。
 
 .. note::
 
-    The generated inner id is based on the id of the decorator service
-    (``App\DecoratingMailer`` here), not of the decorated service (``App\Mailer``
-    here). You can control the inner service name via the ``decoration_inner_name``
-    option:
+    生成的内部id基于装饰器服务的id（此处为
+    ``App\DecoratingMailer``），而不是基于被装饰的服务（此处为 ``App\Mailer``）。
+    你可以通过 ``decoration_inner_name`` 选项来控制该内部服务的名称：
 
     .. configuration-block::
 
@@ -218,12 +208,11 @@ automatically changed to ``decorating_service_id + '.inner'``):
                 // ...
             ;
 
-Decoration Priority
+装饰优先级
 -------------------
 
-When applying multiple decorators to a service, you can control their order with
-the ``decoration_priority`` option. Its value is an integer that defaults to
-``0`` and higher priorities mean that decorators will be applied earlier.
+将多个装饰器应用于服务时，你可以使用 ``decoration_priority`` 选项控制其顺序。
+它的值是一个默认为 ``0`` 的整数，更高的优先级意味着该装饰器将更早的被应用。
 
 .. configuration-block::
 
@@ -283,7 +272,7 @@ the ``decoration_priority`` option. Its value is an integer that defaults to
             ->setPublic(false)
             ->setDecoratedService(Foo:class, null, 1);
 
-The generated code will be the following::
+生成的代码如下::
 
     $this->services[Foo:class] = new Baz(new Bar(new Foo()));
 

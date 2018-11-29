@@ -6,27 +6,25 @@
 
 .. _container-private-services:
 
-Marking Services as Public / Private
+将服务标记为公有/私有
 ------------------------------------
 
-When defining a service, it can be made to be *public* or *private*. If a service
-is *public*, it means that you can access it directly from the container at runtime.
-For example, the ``doctrine`` service is a public service::
+定义服务时，可以将其设为 *公有* 或 *私有*。如果服务是 *公有* 的，则意味着你可以在运行时直接从容器访问它。
+例如，``doctrine`` 服务是一项公有服务::
 
-    // only public services can be accessed in this way
+    // 只有共有服务才可以通过这种方式访问
     $doctrine = $container->get('doctrine');
 
-But typically, services are accessed using :ref:`dependency injection <services-constructor-injection>`.
-And in this case, those services do *not* need to be public.
+但通常使用 :ref:`依赖注入 <services-constructor-injection>` 来访问服务。
+在这种情况下，那些业务并 *不* 需要公开。
 
 .. _inlined-private-services:
 
-So unless you *specifically* need to access a service directly from the container
-via ``$container->get()``, the best-practice is to make your services *private*.
-In fact, the :ref:`default services.yaml configuration <container-public>` configures
-all services to be private by default.
+因此，除非你 *特别* 需要通过 ``$container->get()``
+从容器直接访问服务，否则最佳做法是将你的服务设为 *私有*。
+实际上，:ref:`默认的services.yaml配置 <container-public>` 默认将所有服务配置为私有。
 
-You can also control the ``public`` option on a service-by-service basis:
+你还可以逐个服务地控制 ``public`` 选项：
 
 .. configuration-block::
 
@@ -62,33 +60,27 @@ You can also control the ``public`` option on a service-by-service basis:
 
 .. _services-why-private:
 
-Private services are special because they allow the container to optimize whether
-and how they are instantiated. This increases the container's performance. It also
-gives you better errors: if you try to reference a non-existent service, you will
-get a clear error when you refresh *any* page, even if the problematic code would
-not have run on that page.
+私有服务是特殊的，因为它们允许容器对其进行优化：要不要实例化以及如何实例化。这种行为增加了容器的性能。
+它还为你提供了更好的错误处理：
+如果你尝试引用不存在的服务，则在刷新 *任何* 页面时都会显示一个明显的错误，即在该页面上没有运行有问题的代码。
 
-Now that the service is private, you *must not* fetch the service directly
-from the container::
+既然服务是私有的，你就 *不能* 直接从容器中获取相关服务：
 
     use App\Service\Foo;
 
     $container->get(Foo::class);
 
-Simply said: A service can be marked as private if you do not want to access
-it directly from your code.
+简单地说：如果你不想直接从代码中访问一个服务，则可以将该服务标记为私有。
 
-However, if a service has been marked as private, you can still alias it
-(see below) to access this service (via the alias).
+但是，如果某个服务已被标记为私有，你仍可以对其设置别名（请参阅下文）以访问此服务（通过别名）。
 
 .. _services-alias:
 
-Aliasing
+别名
 --------
 
-You may sometimes want to use shortcuts to access some services. You can
-do so by aliasing them and, furthermore, you can even alias non-public
-services.
+你有时可能希望使用快捷方式来访问某些服务。
+你可以通过对它们设置别名来实现，此外，你甚至可以为非公有服务添加别名。
 
 .. configuration-block::
 
@@ -130,14 +122,13 @@ services.
 
         $container->setAlias('app.mailer', PhpMailer::class);
 
-This means that when using the container directly, you can access the
-``PhpMailer`` service by asking for the ``app.mailer`` service like this::
+这意味着当直接使用容器时，你可以像这样通过询问 ``app.mailer`` 服务来访问 ``PhpMailer`` 服务::
 
-    $container->get('app.mailer'); // Would return a PhpMailer instance
+    $container->get('app.mailer'); // 将会返回一个 PhpMailer 实例
 
 .. tip::
 
-    In YAML, you can also use a shortcut to alias a service:
+    在YAML中，你还可以使用快捷方式对一个服务设置别名：
 
     .. code-block:: yaml
 
@@ -146,22 +137,20 @@ This means that when using the container directly, you can access the
             # ...
             app.mailer: '@App\Mail\PhpMailer'
 
-Anonymous Services
+匿名服务
 ------------------
 
 .. note::
 
-    Anonymous services are only supported by the XML and YAML configuration formats.
+    只有XML和YAML配置格式支持匿名服务。
 
 .. versionadded:: 3.3
-    The feature to configure anonymous services in YAML was introduced in Symfony 3.3.
+    在Symfony 3.3中引入了在YAML中配置匿名服务的功能。
 
-In some cases, you may want to prevent a service being used as a dependency of
-other services. This can be achieved by creating an anonymous service. These
-services are like regular services but they don't define an ID and they are
-created where they are used.
+在某些情况下，你可能希望阻止将一个服务用作其他服务的依赖。这可以通过创建一个匿名服务来实现。
+这些服务与常规服务类似，但它们不会定义一个ID，而是在它们被使用的地方才创建它们。
 
-The following example shows how to inject an anonymous service into another service:
+以下示例显示如何将一个匿名服务注入另一个服务：
 
 .. configuration-block::
 
@@ -192,7 +181,7 @@ The following example shows how to inject an anonymous service into another serv
             </services>
         </container>
 
-Using an anonymous service as a factory looks like this:
+使用匿名服务作为一个工厂看起来像这样：
 
 .. configuration-block::
 
@@ -221,11 +210,10 @@ Using an anonymous service as a factory looks like this:
             </services>
         </container>
 
-Deprecating Services
+弃用服务
 --------------------
 
-Once you have decided to deprecate the use of a service (because it is outdated
-or you decided not to maintain it anymore), you can deprecate its definition:
+一旦你决定弃用一个服务（因为它已过时或你决定不再维护它），你可以增加一个弃用定义：
 
 .. configuration-block::
 
@@ -263,26 +251,20 @@ or you decided not to maintain it anymore), you can deprecate its definition:
             )
         ;
 
-Now, every time this service is used, a deprecation warning is triggered,
-advising you to stop or to change your uses of that service.
+现在，每次使用此服务时，都会触发一个弃用警告，建议你停止或更改对该服务的使用。
 
-The message is actually a message template, which replaces occurrences of the
-``%service_id%`` placeholder by the service's id. You **must** have at least one
-occurrence of the ``%service_id%`` placeholder in your template.
+该消息实际上是一个消息模板，它用对应服务的id来替换出现的 ``%service_id%`` 占位符。
+你的模板中 **必须** 至少出现一次 ``%service_id%`` 占位符。
 
 .. note::
 
-    The deprecation message is optional. If not set, Symfony will show this default
-    message: ``The "%service_id%" service is deprecated. You should stop using it,
-    as it will soon be removed.``.
+    弃用消息是可选的。如果未设置，Symfony将显示此默认消息：``The "%service_id%"
+    service is deprecated. You should stop using it, as it will soon be removed.``
 
 .. tip::
 
-    It is strongly recommended that you define a custom message because the
-    default one is too generic. A good message informs when this service was
-    deprecated, until when it will be maintained and the alternative services
-    to use (if any).
+    强烈建议你定义一个自定义消息，因为默认消息太通用。
+    一条好的消息会告知该服务何时被弃用，直到它将被维护以及使用了替代服务（如果有的话）。
 
-For service decorators (see :doc:`/service_container/service_decoration`), if the
-definition does not modify the deprecated status, it will inherit the status from
-the definition that is decorated.
+对于服务装饰器（请参阅 :doc:`/service_container/service_decoration`），
+如果该定义未改变已弃用的状态，则它将从装饰的定义继承状态。

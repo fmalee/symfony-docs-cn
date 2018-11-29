@@ -5,9 +5,7 @@
 如何使用服务标签
 =============================
 
-**Service tags** are a way to tell Symfony or other third-party bundles that
-your service should be registered in some special way. Take the following
-example:
+**服务标签** 是告诉Symfony或其他第三方bundle以某种特殊方式注册你的服务的方法。思考以下示例：
 
 .. configuration-block::
 
@@ -44,27 +42,21 @@ example:
             ->setPublic(false)
             ->addTag('twig.extension');
 
-Services tagged with the ``twig.extension`` tag are collected during the
-initialization of TwigBundle and added to Twig as extensions.
+标记为 ``twig.extension`` 标签的服务在TwigBundle初始化期间被收集，并作为扩展添加到Twig。
 
-Other tags are used to integrate your services into other systems. For a list of
-all the tags available in the core Symfony Framework, check out
-:doc:`/reference/dic_tags`. Each of these has a different effect on your service
-and many tags require additional arguments (beyond just the ``name`` parameter).
+其他标签用于将你的服务集成到其他系统中。
+有关核心Symfony Framework中可用的所有标签的列表，请查看 :doc:`/reference/dic_tags`。
+其中每个都对你的服务产生不同的影响，许多标签可能需要额外的参数（不仅仅是 ``name`` 参数）。
 
-**For most users, this is all you need to know**. If you want to go further and
-learn how to create your own custom tags, keep reading.
+**对于大多数用户而言，这是你需要了解的全部内容**。如果你想进一步了解如何创建自己的自定义标签，请继续阅读。
 
-Autoconfiguring Tags
+自动配置标签
 --------------------
 
-If you enable :ref:`autoconfigure <services-autoconfigure>`, then some tags are
-automatically applied for you. That's true for the ``twig.extension`` tag: the
-container sees that your class extends ``AbstractExtension`` (or more accurately,
-that it implements ``ExtensionInterface``) and adds the tag for you.
+如果启用 :ref:`自动配置 <services-autoconfigure>`，则会自动为你应用某些标记。
+就对于 ``twig.extension`` 标签来说：容器看到你的类继承 ``AbstractExtension`` （或更准确地说是实现了 ``ExtensionInterface``），然后以此给类添加上 ``twig.extension`` 标签。
 
-If you want to apply tags automatically for your own services, use the
-``_instanceof`` option:
+如果要自动为自己的服务应用标签，请使用 ``_instanceof`` 选项：
 
 .. configuration-block::
 
@@ -72,9 +64,9 @@ If you want to apply tags automatically for your own services, use the
 
         # config/services.yaml
         services:
-            # this config only applies to the services created by this file
+            # 此配置仅适用于此文件创建的服务
             _instanceof:
-                # services whose classes are instances of CustomInterface will be tagged automatically
+                # 是一个CustomInterface实例的类的服务将自动标记
                 App\Security\CustomInterface:
                     tags: ['app.custom_tag']
             # ...
@@ -104,9 +96,9 @@ If you want to apply tags automatically for your own services, use the
             ->addTag('app.custom_tag')
             ->setAutowired(true);
 
-For more advanced needs, you can define the automatic tags using the
+对于更高级的需求，你可以从你的内核或在 :doc:`扩展 </bundles/extension>` 中使用
 :method:`Symfony\\Component\\DependencyInjection\\ContainerBuilder::registerForAutoconfiguration`
-method in an :doc:`extension </bundles/extension>` or from your kernel::
+方法来定义自动化的标签::
 
     // src/Kernel.php
     class Kernel extends BaseKernel
@@ -121,21 +113,17 @@ method in an :doc:`extension </bundles/extension>` or from your kernel::
         }
     }
 
-Creating custom Tags
+创建自定义标签
 --------------------
 
-Tags on their own don't actually alter the functionality of your services in
-any way. But if you choose to, you can ask a container builder for a list of
-all services that were tagged with some specific tag. This is useful in
-compiler passes where you can find these services and use or modify them in
-some specific way.
+标签本身并不会以任何方式改变你的服务功能。
+但是如果你愿意，你可以向容器构建器询问所有使用某些特定标签标记的服务的列表。
+这在编译器传递中很有用，你可以在其中找到这些服务并以某种特定方式使用或修改它们。
 
-For example, if you are using Swift Mailer you might imagine that you want
-to implement a "transport chain", which is a collection of classes implementing
-``\Swift_Transport``. Using the chain, you'll want Swift Mailer to try several
-ways of transporting the message until one succeeds.
+例如，如果你使用的是Swift Mailer，你可能会想到要实现一个“传输链”，它是一个实现了
+``\Swift_Transport`` 的类的集合。使用该链，你将希望Swift Mailer尝试多种传输消息的方法，直到成功为止。
 
-To begin with, define the ``TransportChain`` class::
+首先，定义 ``TransportChain`` 类::
 
     // src/Mail/TransportChain.php
     namespace App\Mail;
@@ -155,7 +143,7 @@ To begin with, define the ``TransportChain`` class::
         }
     }
 
-Then, define the chain as a service:
+然后，将该链定义为一个服务：
 
 .. configuration-block::
 
@@ -186,12 +174,11 @@ Then, define the chain as a service:
 
         $container->autowire(TransportChain::class);
 
-Define Services with a Custom Tag
+使用自定义标记定义服务
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Now you might want several of the ``\Swift_Transport`` classes to be instantiated
-and added to the chain automatically using the ``addTransport()`` method.
-For example, you may add the following transports as services:
+现在，你可能希望实例化几个 ``\Swift_Transport`` 类，并使用 ``addTransport()`` 方法自动添加到链中。
+例如，你可以将以下传输添加为服务：
 
 .. configuration-block::
 
@@ -238,17 +225,16 @@ For example, you may add the following transports as services:
         $container->register(\Swift_SendmailTransport::class)
             ->addTag('app.mail_transport');
 
-Notice that each service was given a tag named ``app.mail_transport``. This is
-the custom tag that you'll use in your compiler pass. The compiler pass is what
-makes this tag "mean" something.
+请注意，每个服务都有一个名为 ``app.mail_transport`` 的标签。这是你将在编译器传递中使用的自定义标签。
+编译器传递是使这个标签“意味着什么”的东西。
 
 .. _service-container-compiler-pass-tags:
 
-Create a Compiler Pass
+创建编译器传递
 ~~~~~~~~~~~~~~~~~~~~~~
 
-You can now use a :ref:`compiler pass <components-di-separate-compiler-passes>` to ask the
-container for any services with the ``app.mail_transport`` tag::
+你现在可以使用一个 :ref:`编译器传递 <components-di-separate-compiler-passes>`
+向容器询问带有 ``app.mail_transport`` 标签的任何服务::
 
     // src/DependencyInjection/Compiler/MailTransportPass.php
     namespace App\DependencyInjection\Compiler;
@@ -262,29 +248,28 @@ container for any services with the ``app.mail_transport`` tag::
     {
         public function process(ContainerBuilder $container)
         {
-            // always first check if the primary service is defined
+            // 始终首先检查是否定义了主要服务
             if (!$container->has(TransportChain::class)) {
                 return;
             }
 
             $definition = $container->findDefinition(TransportChain::class);
 
-            // find all service IDs with the app.mail_transport tag
+            // 使用 app.mail_transport 标签查找所有的服务ID
             $taggedServices = $container->findTaggedServiceIds('app.mail_transport');
 
             foreach ($taggedServices as $id => $tags) {
-                // add the transport service to the ChainTransport service
+                // 将每个传输服务添加到TransportChain服务
                 $definition->addMethodCall('addTransport', array(new Reference($id)));
             }
         }
     }
 
-Register the Pass with the Container
+使用容器注册传递
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In order to run the compiler pass when the container is compiled, you have to
-add the compiler pass to the container in a :doc:`bundle extension </bundles/extension>`
-or from your kernel::
+为了在编译容器时运行该编译器传递，你必须从你的内核或在一个
+:doc:`bundle扩展 </bundles/extension>` 中将该编译器传递添加到容器::
 
     // src/Kernel.php
     namespace App;
@@ -305,19 +290,15 @@ or from your kernel::
 
 .. tip::
 
-    When implementing the ``CompilerPassInterface`` in a service extension, you
-    do not need to register it. See the
-    :ref:`components documentation <components-di-compiler-pass>` for more
-    information.
+    如果是在一个服务扩展中实现了 ``CompilerPassInterface`` ，那么你不需要注册它。
+    有关更多信息，请参阅 :ref:`组件文档 <components-di-compiler-pass>`。
 
-Adding Additional Attributes on Tags
+在标签上添加附加属性
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Sometimes you need additional information about each service that's tagged
-with your tag. For example, you might want to add an alias to each member
-of the transport chain.
+有时，你需要有关使用你的标签的标记的每项服务的额外信息。例如，你可能希望为传输链的每个成员添加一个别名。
 
-To begin with, change the ``TransportChain`` class::
+首先，更改 ``TransportChain`` 类::
 
     class TransportChain
     {
@@ -341,11 +322,10 @@ To begin with, change the ``TransportChain`` class::
         }
     }
 
-As you can see, when ``addTransport()`` is called, it takes not only a ``Swift_Transport``
-object, but also a string alias for that transport. So, how can you allow
-each tagged transport service to also supply an alias?
+如你所见，在调用 ``addTransport()`` 时，它不仅需要一个 ``Swift_Transport`` 对象，还需要该传输的别名字符串。
+那么，如何为每个被标记的传输服务都提供一个别名呢？
 
-To answer this, change the service declaration:
+要回答这个问题，请更改该服务声明：
 
 .. configuration-block::
 
@@ -396,9 +376,7 @@ To answer this, change the service declaration:
 
 .. tip::
 
-    In YAML format, you may provide the tag as a simple string as long as
-    you don't need to specify additional attributes. The following definitions
-    are equivalent.
+    在YAML格式中，只要你不需要指定其他属性，就可以将标签简化为一个简单字符串。以下定义是等效的。
 
     .. code-block:: yaml
 
@@ -415,8 +393,7 @@ To answer this, change the service declaration:
                 tags:
                     - { name: 'app.mail_transport' }
 
-Notice that you've added a generic ``alias`` key to the tag. To actually
-use this, update the compiler::
+请注意，你已为标签添加了一个通用的 ``alias`` 键。要实际使用它，请更新编译器::
 
     use Symfony\Component\DependencyInjection\ContainerBuilder;
     use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
@@ -430,7 +407,7 @@ use this, update the compiler::
 
             foreach ($taggedServices as $id => $tags) {
 
-                // a service could have the same tag twice
+                // 一个服务可以拥有相同的标签两次或更多
                 foreach ($tags as $attributes) {
                     $definition->addMethodCall('addTransport', array(
                         new Reference($id),
@@ -441,20 +418,15 @@ use this, update the compiler::
         }
     }
 
-The double loop may be confusing. This is because a service can have more
-than one tag. You tag a service twice or more with the ``app.mail_transport``
-tag. The second foreach loop iterates over the ``app.mail_transport``
-tags set for the current service and gives you the attributes.
+双循环可能令人困惑。这是因为一个服务可以拥有多个标签。你使用 ``app.mail_transport`` 标签将一个服务标记了两次或更多次。
+第二个foreach循环遍历为当前服务设置的 ``app.mail_transport`` 标签，并为你提供相关属性。
 
-Reference Tagged Services
+引用被标记的服务
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Symfony provides a shortcut to inject all services tagged with a specific tag,
-which is a common need in some applications, so you don't have to write a
-compiler pass just for that.
+Symfony提供了一个快捷方式来注入标记有一个特定标签的所有服务，这在某些应用中是常见的需求，因此你不必再为此编写一个编译器传递。
 
-In the following example, all services tagged with ``app.handler`` are passed as
-first  constructor argument to the ``App\HandlerCollection`` service:
+在以下示例中，标记为 ``app.handler`` 的所有服务都将作为第一个构造函数参数传递给 ``App\HandlerCollection`` 服务：
 
 .. configuration-block::
 
@@ -469,7 +441,7 @@ first  constructor argument to the ``App\HandlerCollection`` service:
                 tags: ['app.handler']
 
             App\HandlerCollection:
-                # inject all services tagged with app.handler as first argument
+                # 注入所有使用 app.handler 标签的服务作为第一个参数
                 arguments: [!tagged app.handler]
 
     .. code-block:: xml
@@ -512,8 +484,7 @@ first  constructor argument to the ``App\HandlerCollection`` service:
             // inject all services tagged with app.handler as first argument
             ->addArgument(new TaggedIteratorArgument('app.handler'));
 
-After compilation the ``HandlerCollection`` service is able to iterate over your
-application handlers.
+编译后，``HandlerCollection`` 服务就可以遍历你的 ``app.handler`` 了。
 
 .. code-block:: php
 
@@ -529,7 +500,7 @@ application handlers.
 
 .. tip::
 
-    The collected services can be prioritized using the ``priority`` attribute:
+    可以使用 ``priority`` 属性对收集的服务进行优先级排序：
 
     .. configuration-block::
 
@@ -563,4 +534,4 @@ application handlers.
             $container->register(App\Handler\One::class)
                 ->addTag('app.handler', array('priority' => 20));
 
-    Note that any other custom attributes will be ignored by this feature.
+    请注意，此功能将忽略任何其他自定义属性。
