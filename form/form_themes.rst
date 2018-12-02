@@ -5,24 +5,18 @@
 如何使用表单主题
 ============================
 
-Every part of how a form is rendered can be customized. You're free to change
-how each form "row" renders, change the markup used to render errors, or
-even customize how a ``textarea`` tag should be rendered. Nothing is off-limits,
-and different customizations can be used in different places.
+可以自定义表单渲染方式的每个部分。
+你可以自由更改每个表单的“row”的渲染方式，更改用于渲染错误的标记，甚至可以自定义 ``textarea`` 标签的渲染方式。
+没有什么是禁止的，并且可以在不同的地方使用不同的自定义。
 
-Symfony uses templates to render each and every part of a form, such as
-``label`` tags, ``input`` tags, error messages and everything else.
+Symfony使用模板来渲染一个表单的每个部分，例如 ``label`` 标签、``input`` 标签、错误消息和其他所有内容。
 
-In Twig, each form "fragment" is represented by a Twig block. To customize
-any part of how a form renders, you need to override the appropriate block.
+在Twig中，每个表单“片段”由一个Twig区块来表示。要自定义一个表单渲染方式的任何部分，你需要重写相应的区块。
 
-In PHP, each form "fragment" is rendered via an individual template file.
-To customize any part of how a form renders, override the
-existing template by creating a new one.
+在PHP中，每个表单“片段”都通过一个单独的模板文件进行渲染。要自定义一个表单渲染方式的任何部分，请通过创建新模板来重写现有模板。
 
-To understand how this works, customize the ``form_row`` fragment and
-add a class attribute to the ``div`` element that surrounds each row. To
-do this, create a new template file that will store the new markup:
+要了解其工作原理，请自定义 ``form_row`` 片段并添加一个类属性到围绕每个row的 ``div`` 元素中。
+为此，请创建一个用于存储新标记的新模板文件：
 
 .. code-block:: html+twig
 
@@ -38,142 +32,116 @@ do this, create a new template file that will store the new markup:
     {% endspaceless %}
     {% endblock form_row %}
 
-The ``form_row`` form fragment is used when rendering most fields via the
-``form_row()`` function. To tell the Form component to use your new ``form_row``
-fragment defined above, add the following to the top of the template that
-renders the form:
+当通过 ``form_row`` 函数渲染大多数字段时，就是使用该 ``form_row()`` 表单片段。
+要告诉Form组件使用上面定义的新 ``form_row()`` 片段，请将以下内容添加到渲染表单的模板的顶部：
 
 .. code-block:: html+twig
 
     {# templates/default/new.html.twig #}
     {% form_theme form 'form/fields.html.twig' %}
 
-    {# or if you want to use multiple themes #}
+    {# 或者你想使用多个主题 #}
     {% form_theme form 'form/fields.html.twig' 'form/fields2.html.twig' %}
 
-    {# ... render the form #}
+    {# ... 渲染该表单 #}
 
-The ``form_theme`` tag (in Twig) "imports" the fragments defined in the given
-template and uses them when rendering the form. In other words, when the
-``form_row()`` function is called later in this template, it will use the ``form_row``
-block from your custom theme (instead of the default ``form_row`` block
-that ships with Symfony).
+给定模板中的片段在通过 ``form_theme`` 标签(在Twig中)"导入"后，将会在渲染表单时被应用。
+换句话说，当稍后在此模板中调用 ``form_row()`` 函数时 ，它将使用你的自定义主题中的 ``form_row`` 区块（而不是Symfony附带的默认 ``form_row`` 区块）。
 
-Your custom theme does not have to override all the blocks. When rendering a block
-which is not overridden in your custom theme, the theming engine will fall back
-to the global theme (defined at the bundle level).
+你的自定义主题不必重写所有的区块。渲染一个未在你的自定义主题中重写的区块时，主题引擎将回退到全局主题（在bundle级别定义）。
 
-If several custom themes are provided they will be searched in the listed order
-before falling back to the global theme.
+如果提供了多个自定义主题，则会在回退到全局主题之前按列出的顺序进行搜索对应主题。
 
-To customize any portion of a form, override the appropriate
-fragment. Knowing exactly which block or file to override is the subject of
-the next section.
+要自定义一个表单的任何部分，请重写相应的片段。想确切地知道要重写哪个区块或文件是下一节的主题。
 
-For a more extensive discussion, see :doc:`/form/form_customization`.
+有关更广泛的讨论，请参阅 :doc:`/form/form_customization`。
 
 .. index::
    single: Forms; Template fragment naming
 
 .. _form-template-blocks:
 
-Form Fragment Naming
+表单片段命名
 --------------------
 
-In Symfony, every part of a form that is rendered - HTML form elements, errors,
-labels, etc. - is defined in a base theme, which is a collection of blocks
-in Twig and a collection of template files in PHP.
+在Symfony中，被渲染的一个表单的每个部分（HTML表单元素、错误、标签等）都定义在一个基本主题中，
+基本主题是Twig中的区块集合和PHP中的模板文件集合。
 
-In Twig, every block needed is defined in a single template file (e.g.
-`form_div_layout.html.twig`_) that lives inside the `Twig Bridge`_. Inside this
-file, you can see every block needed to render a form and every default field
-type.
+在Twig中，所需的每个区块都定义在单个模板文件中（例如 `form_div_layout.html.twig`_），它位于 `Twig Bridge`_ 中。
+在此文件中，你可以看到渲染一个表单和每个默认字段类型所需的每个区块。
 
-In PHP, the fragments are individual template files. By default they are located in
-the ``Resources/views/Form`` directory of the FrameworkBundle (`view on GitHub`_).
+在PHP中，片段是单独的模板文件。默认情况下，它们位于FrameworkBundle的 ``Resources/views/Form`` 目录中（`在GitHub上查看`_）。
 
-Each fragment name follows the same basic pattern and is broken up into two pieces,
-separated by a single underscore character (``_``). A few examples are:
+每个片段名称都遵循相同的基本模式，并分为两部分，由单个下划线字符（``_``）分隔。一些例子是：
 
-* ``form_row`` - used by ``form_row()`` to render most fields;
-* ``textarea_widget`` - used by ``form_widget()`` to render a ``textarea`` field
-  type;
-* ``form_errors`` - used by ``form_errors()`` to render errors for a field;
+* ``form_row`` - 用于通过 ``form_row()`` 来渲染大多数字段;
+* ``textarea_widget`` - 用于通过 ``form_widget()`` 来渲染一个 ``textarea`` 字段类型;
+* ``form_errors`` - 用于通过 ``form_errors()`` 来渲染字段的一个错误信息;
 
-Each fragment follows the same basic pattern: ``type_part``. The ``type`` portion
-corresponds to the field *type* being rendered (e.g. ``textarea``, ``checkbox``,
-``date``, etc) whereas the ``part`` portion corresponds to *what* is being
-rendered (e.g. ``label``, ``widget``, ``errors``, etc). By default, there
-are 4 possible *parts* of a form that can be rendered:
+每个片段遵循相同的基本模式：``type_part``。``type`` 部分对应于要渲染的字段
+*类型* （例如 ``textarea``、``checkbox``、``date`` 等等），而 ``part``
+部分对应于正在渲染 *什么* （例如 ``label``、``widget``、``errors`` 等等）。
+一个要被渲染的表单有4个可能的部分：
 
 +-------------+----------------------------+---------------------------------------------------------+
-| ``label``   | (e.g. ``form_label()``)    | renders the field's label                               |
+| ``label``   | (例如 ``form_label()``)    | 渲染给定字段的标签                                      |
 +-------------+----------------------------+---------------------------------------------------------+
-| ``widget``  | (e.g. ``form_widget()``)   | renders the field's HTML representation                 |
+| ``widget``  | (例如 ``form_widget()``)   | 渲染给定字段的HTML内容                                  |
 +-------------+----------------------------+---------------------------------------------------------+
-| ``errors``  | (e.g. ``form_errors()``)   | renders the field's errors                              |
+| ``errors``  | (例如 ``form_errors()``)   | 渲染给定字段的错误信息                                  |
 +-------------+----------------------------+---------------------------------------------------------+
-| ``help``    | (e.g. ``form_help()``)     | renders the field's help                                |
+| ``help``    | (例如 ``form_help()``)     | 渲染给定字段的帮助                                      |
 +-------------+----------------------------+---------------------------------------------------------+
-| ``row``     | (e.g. ``form_row()``)      | renders the field's entire row (label, widget & errors) |
+| ``row``     | (例如 ``form_row()``)      | 渲染给定字段的整行 (label, widget & errors)             |
 +-------------+----------------------------+---------------------------------------------------------+
 
 .. note::
 
-    There are actually 2 other *parts* - ``rows`` and ``rest`` -
-    but you should rarely if ever need to worry about overriding them.
+    实际上有两个其他 *部分* - ``rows`` 和 ``rest`` - 你应该很少需要操心的重写它们。
 
-By knowing the field type (e.g. ``textarea``) and which part you want to
-customize (e.g. ``widget``), you can construct the fragment name that needs
-to be overridden (e.g. ``textarea_widget``).
+通过了解字段类型（例如 ``textarea``）以及你要自定义的部分（例如
+``widget``），你可以命名需要重写的片段名称（例如 ``textarea_widget``）。
 
 .. index::
    single: Forms; Template fragment inheritance
 
-Template Fragment Inheritance
+模板片段继承
 -----------------------------
 
-In some cases, the fragment you want to customize will appear to be missing.
-For example, there is no ``textarea_errors`` fragment in the default themes
-provided with Symfony. So how are the errors for a textarea field rendered?
+在某些情况下，你要自定义的片段似乎缺失。
+例如，Symfony提供的默认主题中没有 ``textarea_errors`` 片段。那么一个文本框字段的错误是如何渲染的呢？
 
-The answer is: via the ``form_errors`` fragment. When Symfony renders the errors
-for a textarea type, it looks first for a ``textarea_errors`` fragment before
-falling back to the ``form_errors`` fragment. Each field type has a *parent*
-type (the parent type of ``textarea`` is ``text``, its parent is ``form``),
-and Symfony uses the fragment for the parent type if the base fragment doesn't
-exist.
+答案是：通过 ``form_errors`` 片段。
+当Symfony为一个文本框类型渲染错误时，它首先查找一个 ``textarea_errors`` 片段，然后回退到
+``form_errors`` 片段。
+每个字段类型都有一个 *父* 类型（``text`` 是 ``textarea`` 的父类型，而其父类型是
+``form``），如果基础片段不存在，Symfony将使用该类型作为父类型。
 
-So, to override the errors for *only* ``textarea`` fields, copy the
-``form_errors`` fragment, rename it to ``textarea_errors`` and customize it. To
-override the default error rendering for *all* fields, copy and customize the
-``form_errors`` fragment directly.
+因此，如果 *仅* 需要重写 ``textarea`` 字段的错误，请复制 ``form_errors`` 片段，将其重命名为
+``textarea_errors`` 并自定义。
+要重写 *所有* 字段的默认错误渲染，请直接复制和自定义 ``form_errors`` 片段。
 
 .. tip::
 
-    The "parent" type of each field type is available in the
-    :doc:`form type reference </reference/forms/types>` for each field type.
+    每种字段类型的“父”类型在每种字段类型的 :doc:`表单类型参考 </reference/forms/types>` 中都可用。
 
 .. index::
    single: Forms; Global Theming
 
 .. _forms-theming-global:
 
-Global Form Theming
+全局表单主题
 -------------------
 
-In the above example, you used the ``form_theme`` helper (in Twig) to "import"
-the custom form fragments into *just* that form. You can also tell Symfony
-to import form customizations across your entire project.
+在上面的例子中，你使用 ``form_theme`` 助手（在Twig中）“导入”的自定义表单片段 *只是* 针对单个表单。
+你还可以告诉Symfony在整个项目中导入表单的自定义。
 
 .. _forms-theming-twig:
 
 Twig
 ....
 
-To automatically include the customized blocks from the ``fields.html.twig``
-template created earlier in *all* templates, modify your application configuration
-file:
+要自动在所有模板中引入先前创建的 ``fields.html.twig`` 模板中的自定义区块，请修改应用的配置文件：
 
 .. configuration-block::
 
@@ -217,27 +185,24 @@ file:
 
 .. note::
 
-    Add your custom theme at the end of the ``form_themes`` list because each
-    theme overrides all the previous themes.
+    请添加自定义主题到 ``form_themes`` 列表的末尾，因为每个主题都会重写前面的所有主题。
 
-Any blocks inside the ``fields.html.twig`` template are now used globally
-to define form output.
+现在，``fields.html.twig`` 模板中的任何区块都可以用于全局的定义表单输出。
 
-.. sidebar::  Customizing Form Output all in a Single File with Twig
+.. sidebar::  使用Twig在单个文件中自定义表单输出
 
-    In Twig, you can also customize a form block right inside the template
-    where that customization is needed:
+    在Twig中，你还可以在需要自定义的模板内部自定义一个表单区块：
 
     .. code-block:: html+twig
 
         {% extends 'base.html.twig' %}
 
-        {# import "_self" as the form theme #}
+        {# 导入 "_self" 作为表单主题 #}
         {% form_theme form _self %}
 
-        {# make the form fragment customization #}
+        {# 创建表单片段的自定义 #}
         {% block form_row %}
-            {# custom field row output #}
+            {# 自定义字段行的输出 #}
         {% endblock form_row %}
 
         {% block content %}
@@ -246,23 +211,18 @@ to define form output.
             {{ form_row(form.task) }}
         {% endblock %}
 
-    The ``{% form_theme form _self %}`` tag allows form blocks to be customized
-    directly inside the template that will use those customizations. Use
-    this method to quickly make form output customizations that will only
-    ever be needed in a single template.
+    ``{% form_theme form _self %}`` 标签允许直接在需要这些自定义的模板中自定义表单区块。
+    使用此方法可以快速创建一个只在单个模板中生效的表单输出自定义。
 
     .. caution::
 
-        This ``{% form_theme form _self %}`` functionality will *only* work
-        if your template extends another. If your template does not, you
-        must point ``form_theme`` to a separate template.
+        *仅当* 你的模板继承另一个模板时，``{% form_theme form _self %}`` 功能才有效。
+        如果你的模板没有继承，则必须将 ``form_theme`` 指向一个单独的模板。
 
 PHP
 ...
 
-To automatically include the customized templates from the ``templates/form``
-directory created earlier in *all* templates, modify your application configuration
-file:
+要自动在 *所有* 模板中引入先前创建的 ``templates/form`` 目录中的自定义模板，请修改应用的配置文件：
 
 .. configuration-block::
 
@@ -311,9 +271,8 @@ file:
             // ...
         ));
 
-Any fragments inside the ``templates/form`` directory are now used
-globally to define form output.
+``templates/form`` 目录中的任何片段现在都用于全局的定义表单输出。
 
 .. _`form_div_layout.html.twig`: https://github.com/symfony/symfony/blob/master/src/Symfony/Bridge/Twig/Resources/views/Form/form_div_layout.html.twig
 .. _`Twig Bridge`: https://github.com/symfony/symfony/tree/master/src/Symfony/Bridge/Twig
-.. _`view on GitHub`: https://github.com/symfony/symfony/tree/master/src/Symfony/Bundle/FrameworkBundle/Resources/views/Form
+.. _`在GitHub上查看`: https://github.com/symfony/symfony/tree/master/src/Symfony/Bundle/FrameworkBundle/Resources/views/Form
