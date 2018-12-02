@@ -4,15 +4,12 @@
 表单事件
 ===========
 
-The Form component provides a structured process to let you customize your
-forms, by making use of the
-:doc:`EventDispatcher component </components/event_dispatcher>`.
-Using form events, you may modify information or fields at different steps
-of the workflow: from the population of the form to the submission of the
-data from the request.
+Form组件提供了一个结构化的过程，可以通过使用
+:doc:`EventDispatcher组件 </components/event_dispatcher>` 来让你自定义表单。
+使用表单事件，你可以在工作流的不同步骤中修改信息或字段：从表单填充到请求中的数据提交。
 
-For example, if you need to add a field depending on request values, you can
-register an event listener to the ``FormEvents::PRE_SUBMIT`` event as follows::
+例如，如果需要根据请求的值来添加一个字段，则可以如下所示向
+``FormEvents::PRE_SUBMIT`` 事件注册一个事件监听器::
 
     // ...
 
@@ -24,41 +21,40 @@ register an event listener to the ``FormEvents::PRE_SUBMIT`` event as follows::
     };
 
     $form = $formFactory->createBuilder()
-        // ... add form fields
+        // ... 添加表单字段
         ->addEventListener(FormEvents::PRE_SUBMIT, $listener);
 
     // ...
 
-The Form Workflow
+表单工作流
 -----------------
 
-The Form Submission Workflow
+表单提交工作流
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. image:: /_images/components/form/general_flow.png
     :align: center
 
-1) Pre-populating the Form (``FormEvents::PRE_SET_DATA`` and ``FormEvents::POST_SET_DATA``)
+1) 预填充表单 (``FormEvents::PRE_SET_DATA`` 和 ``FormEvents::POST_SET_DATA``)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. image:: /_images/components/form/set_data_flow.png
     :align: center
 
-Two events are dispatched during pre-population of a form, when
-:method:`Form::setData() <Symfony\\Component\\Form\\Form::setData>`
-is called: ``FormEvents::PRE_SET_DATA`` and ``FormEvents::POST_SET_DATA``.
+在一个表单的预填充期间会调度两个事件，
+:method:`Form::setData() <Symfony\\Component\\Form\\Form::setData>` 被调用后：
+``FormEvents::PRE_SET_DATA`` 和 ``FormEvents::POST_SET_DATA``。
 
-A) The ``FormEvents::PRE_SET_DATA`` Event
+A) ``FormEvents::PRE_SET_DATA`` 事件
 .........................................
 
-The ``FormEvents::PRE_SET_DATA`` event is dispatched at the beginning of the
-``Form::setData()`` method. It can be used to:
+``Form::setData()`` 方法开始时会调度 ``FormEvents::PRE_SET_DATA`` 事件。它可以用于：
 
-* Modify the data given during pre-population;
-* Modify a form depending on the pre-populated data (adding or removing fields dynamically).
+* 修改预填充期间给出的数据;
+* 根据预填充的数据修改表单（动态的添加或删除字段）。
 
 ===============  ========
-Data Type        Value
+数据类型           值
 ===============  ========
 Model data       ``null``
 Normalized data  ``null``
@@ -67,185 +63,162 @@ View data        ``null``
 
 .. seealso::
 
-    See all form events at a glance in the
-    :ref:`Form Events Information Table <component-form-event-table>`.
+    在 :ref:`表单事件信息表 <component-form-event-table>` 中一目了然地查看所有表单事件。
 
 .. caution::
 
-    During ``FormEvents::PRE_SET_DATA``,
+    在 ``FormEvents::PRE_SET_DATA`` 期间，
     :method:`Form::setData() <Symfony\\Component\\Form\\Form::setData>`
-    is locked and will throw an exception if used. If you wish to modify
-    data, you should use
-    :method:`FormEvent::setData() <Symfony\\Component\\Form\\FormEvent::setData>`
-    instead.
+    被锁定并且如果被使用则将抛出一个异常。如果你希望修改数据，则应使用
+    :method:`FormEvent::setData() <Symfony\\Component\\Form\\FormEvent::setData>`。
 
-.. sidebar:: ``FormEvents::PRE_SET_DATA`` in the Form component
+.. sidebar:: 表单组件中的 ``FormEvents::PRE_SET_DATA``
 
-    The ``Symfony\Component\Form\Extension\Core\Type\CollectionType`` form type relies
-    on the ``Symfony\Component\Form\Extension\Core\EventListener\ResizeFormListener``
-    subscriber, listening to the ``FormEvents::PRE_SET_DATA`` event in order
-    to reorder the form's fields depending on the data from the pre-populated
-    object, by removing and adding all form rows.
+    ``Symfony\Component\Form\Extension\Core\Type\CollectionType`` 表单类型依赖于
+    ``Symfony\Component\Form\Extension\Core\EventListener\ResizeFormListener``
+    订阅器，该订阅器监听了 ``FormEvents::PRE_SET_DATA``
+    事件，以便根据预填充对象中的数据，通过删除和添加所有的表单行(row)来对表单的字段重新排序。
 
-B) The ``FormEvents::POST_SET_DATA`` Event
+B) ``FormEvents::POST_SET_DATA`` 事件
 ..........................................
 
-The ``FormEvents::POST_SET_DATA`` event is dispatched at the end of the
 :method:`Form::setData() <Symfony\\Component\\Form\\Form::setData>`
-method. This event is mostly here for reading data after having pre-populated
-the form.
+方法结束时会调度 ``FormEvents::POST_SET_DATA`` 事件。该事件主要用于在预填充表单后读取数据。
 
 ===============  ====================================================
-Data Type        Value
+数据类型           值
 ===============  ====================================================
-Model data       Model data injected into ``setData()``
-Normalized data  Model data transformed using a model transformer
-View data        Normalized data transformed using a view transformer
+Model data       ``setData()`` 注入的Model data
+Normalized data  使用一个模型转换器转换的Model data
+View data        使用一个视图转换器转换的Normalized data
 ===============  ====================================================
 
 .. seealso::
 
-    See all form events at a glance in the
-    :ref:`Form Events Information Table <component-form-event-table>`.
+    在 :ref:`表单事件信息表 <component-form-event-table>` 中一目了然地查看所有表单事件。
 
-.. sidebar:: ``FormEvents::POST_SET_DATA`` in the Form component
+.. sidebar:: 表单组件中的 ``FormEvents::POST_SET_DATA``
 
-    The ``Symfony\Component\Form\Extension\DataCollector\EventListener\DataCollectorListener``
-    class is subscribed to listen to the ``FormEvents::POST_SET_DATA`` event
-    in order to collect information about the forms from the denormalized
-    model and view data.
+    ``Symfony\Component\Form\Extension\DataCollector\EventListener\DataCollectorListener``
+    类订阅了 ``FormEvents::POST_SET_DATA``
+    事件，以便从非规范化(denormalized)的Model和View数据中收集有关表单的信息。
 
-2) Submitting a Form (``FormEvents::PRE_SUBMIT``, ``FormEvents::SUBMIT`` and ``FormEvents::POST_SUBMIT``)
+2) 提交表单 (``FormEvents::PRE_SUBMIT``, ``FormEvents::SUBMIT`` 和 ``FormEvents::POST_SUBMIT``)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. image:: /_images/components/form/submission_flow.png
     :align: center
 
-Three events are dispatched when
 :method:`Form::handleRequest() <Symfony\\Component\\Form\\Form::handleRequest>`
-or :method:`Form::submit() <Symfony\\Component\\Form\\Form::submit>` are
-called: ``FormEvents::PRE_SUBMIT``, ``FormEvents::SUBMIT``,
-``FormEvents::POST_SUBMIT``.
+或 :method:`Form::submit() <Symfony\\Component\\Form\\Form::submit>`
+方法被调用时，会调度三个事件：``FormEvents::PRE_SUBMIT``、``FormEvents::SUBMIT``、
+``FormEvents::POST_SUBMIT``。
 
-A) The ``FormEvents::PRE_SUBMIT`` Event
+A) ``FormEvents::PRE_SUBMIT`` 事件
 .......................................
 
-The ``FormEvents::PRE_SUBMIT`` event is dispatched at the beginning of the
-:method:`Form::submit() <Symfony\\Component\\Form\\Form::submit>` method.
+:method:`Form::submit() <Symfony\\Component\\Form\\Form::submit>`
+方法开始时会调度 ``FormEvents::PRE_SUBMIT`` 事件。
 
-It can be used to:
+它可以用于：
 
-* Change data from the request, before submitting the data to the form;
-* Add or remove form fields, before submitting the data to the form.
+* 在将数据提交到表单之前更改请求中的数据;
+* 在将数据提交到表单之前添加或删除表单字段。
 
 ===============  ========================================
-Data Type        Value
+数据类型           值
 ===============  ========================================
-Model data       Same as in ``FormEvents::POST_SET_DATA``
-Normalized data  Same as in ``FormEvents::POST_SET_DATA``
-View data        Same as in ``FormEvents::POST_SET_DATA``
+Model data       与在 ``FormEvents::POST_SET_DATA`` 时相同
+Normalized data  与在 ``FormEvents::POST_SET_DATA`` 时相同
+View data        与在 ``FormEvents::POST_SET_DATA`` 时相同
 ===============  ========================================
 
 .. seealso::
 
-    See all form events at a glance in the
-    :ref:`Form Events Information Table <component-form-event-table>`.
+    在 :ref:`表单事件信息表 <component-form-event-table>` 中一目了然地查看所有表单事件。
 
-.. sidebar:: ``FormEvents::PRE_SUBMIT`` in the Form component
+.. sidebar:: 表单组件中 ``FormEvents::PRE_SUBMIT``
 
-    The ``Symfony\Component\Form\Extension\Core\EventListener\TrimListener``
-    subscriber subscribes to the ``FormEvents::PRE_SUBMIT`` event in order to
-    trim the request's data (for string values).
-    The ``Symfony\Component\Form\Extension\Csrf\EventListener\CsrfValidationListener``
-    subscriber subscribes to the ``FormEvents::PRE_SUBMIT`` event in order to
-    validate the CSRF token.
+    ``Symfony\Component\Form\Extension\Core\EventListener\TrimListener``
+    订阅器订阅了 ``FormEvents::PRE_SUBMIT`` 事件，以便修剪(trim)请求中的数据（针对字符串值）。
+    ``Symfony\Component\Form\Extension\Csrf\EventListener\CsrfValidationListener``
+    订阅器订阅了 ``FormEvents::PRE_SUBMIT`` 事件，以便验证CSRF令牌。
 
-B) The ``FormEvents::SUBMIT`` Event
+B) ``FormEvents::SUBMIT`` 事件
 ...................................
 
-The ``FormEvents::SUBMIT`` event is dispatched right before the
-:method:`Form::submit() <Symfony\\Component\\Form\\Form::submit>` method
-transforms back the normalized data to the model and view data.
+在 :method:`Form::submit() <Symfony\\Component\\Form\\Form::submit>`
+方法将Normalized数据转换回Model和View数据之前会调度 ``FormEvents::SUBMIT`` 事件。
 
+它可以被用于在正常化(normalized)的数据内容中修改数据。
 It can be used to change data from the normalized representation of the data.
 
 ===============  ===================================================================================
-Data Type        Value
+数据类型           值
 ===============  ===================================================================================
-Model data       Same as in ``FormEvents::POST_SET_DATA``
+Model data       与在 ``FormEvents::POST_SET_DATA`` 时相同
 Normalized data  Data from the request reverse-transformed from the request using a view transformer
-View data        Same as in ``FormEvents::POST_SET_DATA``
+View data        与在 ``FormEvents::POST_SET_DATA`` 时相同
 ===============  ===================================================================================
 
 .. seealso::
 
-    See all form events at a glance in the
-    :ref:`Form Events Information Table <component-form-event-table>`.
+    在 :ref:`表单事件信息表 <component-form-event-table>` 中一目了然地查看所有表单事件。
 
 .. caution::
 
-    At this point, you cannot add or remove fields to the form.
+    在这个点，你无法在表单中添加或删除字段。
 
-.. sidebar:: ``FormEvents::SUBMIT`` in the Form component
+.. sidebar:: 表单组件中的 ``FormEvents::SUBMIT``
 
-    The ``Symfony\Component\Form\Extension\Core\EventListener\FixUrlProtocolListener``
-    subscribes to the ``FormEvents::SUBMIT`` event in order to prepend a default
-    protocol to URL fields that were submitted without a protocol.
+    ``Symfony\Component\Form\Extension\Core\EventListener\FixUrlProtocolListener``
+    订阅了 ``FormEvents::SUBMIT`` 事件，以便在已提交的数据没有协议时附加一个默认协议到URL字段。
 
-C) The ``FormEvents::POST_SUBMIT`` Event
+C) ``FormEvents::POST_SUBMIT`` 事件
 ........................................
 
-The ``FormEvents::POST_SUBMIT`` event is dispatched after the
-:method:`Form::submit() <Symfony\\Component\\Form\\Form::submit>` once the
-model and view data have been denormalized.
+一旦模型和视图数据被非规范化(denormalized)，``FormEvents::POST_SUBMIT``
+方法就会调度 ``FormEvents::POST_SUBMIT`` 事件。
 
-It can be used to fetch data after denormalization.
+它可用于在非规范化后获取数据。
 
 ===============  =============================================================
-Data Type        Value
+数据类型           值
 ===============  =============================================================
-Model data       Normalized data reverse-transformed using a model transformer
-Normalized data  Same as in ``FormEvents::SUBMIT``
-View data        Normalized data transformed using a view transformer
+Model data       使用一个模型转换器反向转换的Normalized data
+Normalized data  与在 ``FormEvents::SUBMIT`` 时相同
+View data        使用一个视图转换器转换的Normalized data
 ===============  =============================================================
 
 .. seealso::
 
-    See all form events at a glance in the
-    :ref:`Form Events Information Table <component-form-event-table>`.
+    在 :ref:`表单事件信息表 <component-form-event-table>` 中一目了然地查看所有表单事件。
 
 .. caution::
 
-    At this point, you cannot add or remove fields to the current form and its
-    children.
+    在这个点，你无法在当前表单及其子表单中添加或删除字段。
 
-.. sidebar:: ``FormEvents::POST_SUBMIT`` in the Form component
+.. sidebar:: 表单组件中的 ``FormEvents::POST_SUBMIT``
 
-    The ``Symfony\Component\Form\Extension\DataCollector\EventListener\DataCollectorListener``
-    subscribes to the ``FormEvents::POST_SUBMIT`` event in order to collect
-    information about the forms.
-    The ``Symfony\Component\Form\Extension\Validator\EventListener\ValidationListener``
-    subscribes to the ``FormEvents::POST_SUBMIT`` event in order to
-    automatically validate the denormalized object.
+    ``Symfony\Component\Form\Extension\DataCollector\EventListener\DataCollectorListener``
+    订阅了 ``FormEvents::POST_SUBMIT`` 事件以便收集有关表单的信息。
+    ``Symfony\Component\Form\Extension\Validator\EventListener\ValidationListener``
+    订阅了 ``FormEvents::POST_SUBMIT`` 事件以便自动验证非规范化(denormalized)的对象。
 
-Registering Event Listeners or Event Subscribers
+注册事件监听器或事件订阅器
 ------------------------------------------------
 
-In order to be able to use Form events, you need to create an event listener
-or an event subscriber and register it to an event.
+为了能够使用Form事件，你需要创建事件监听器或事件订阅器并将其注册到一个事件。
 
-The name of each of the "form" events is defined as a constant on the
-:class:`Symfony\\Component\\Form\\FormEvents` class.
-Additionally, each event callback (listener or subscriber method) is passed a
-single argument, which is an instance of
-:class:`Symfony\\Component\\Form\\FormEvent`. The event object contains a
-reference to the current state of the form and the current data being
-processed.
+每个“表单”事件的名称在 :class:`Symfony\\Component\\Form\\FormEvents` 类中被定义为一个常量。
+此外，每个事件回调（监听器或订阅器方法）都被传递一个参数，该参数是一个
+:class:`Symfony\\Component\\Form\\FormEvent` 实例。
+事件对象包含对表单当前状态和正在处理的当前数据的引用。
 
 .. _component-form-event-table:
 
 ======================  =============================  ===============
-Name                    ``FormEvents`` Constant        Event's Data
+名称                     ``FormEvents`` 常量             事件的数据
 ======================  =============================  ===============
 ``form.pre_set_data``   ``FormEvents::PRE_SET_DATA``   Model data
 ``form.post_set_data``  ``FormEvents::POST_SET_DATA``  Model data
@@ -254,12 +227,11 @@ Name                    ``FormEvents`` Constant        Event's Data
 ``form.post_submit``    ``FormEvents::POST_SUBMIT``    View data
 ======================  =============================  ===============
 
-Event Listeners
+事件监听器
 ~~~~~~~~~~~~~~~
 
-An event listener may be any type of valid callable. For example, you can
-define an event listener function inline right in the ``addEventListener``
-method of the ``FormFactory``::
+一个事件监听器可以是任何类型的有效可调用对象。
+例如，你可以在 ``FormFactory`` 的 ``addEventListener`` 方法中内联(inline)定义一个事件监听器函数::
 
     // ...
 
@@ -280,9 +252,8 @@ method of the ``FormFactory``::
                 return;
             }
 
-            // checks whether the user has chosen to display their email or not.
-            // If the data was submitted previously, the additional value that is
-            // included in the request variables needs to be removed.
+            // 检查用户是否选择显示他们的电子邮件地址。
+            // 如果之前就提交了数据，则需要删除请求变量中包含的额外的值。
             if (true === $user['show_email']) {
                 $form->add('email', EmailType::class);
             } else {
@@ -294,8 +265,7 @@ method of the ``FormFactory``::
 
     // ...
 
-When you have created a form type class, you can use one of its methods as a
-callback for better readability::
+创建一个表单类型类后，可以使用其中一个方法作为一个回调以提高可读性::
 
     // src/Form/SubscriptionType.php
     namespace App\Form;
@@ -326,14 +296,14 @@ callback for better readability::
         }
     }
 
-Event Subscribers
+事件订阅器
 ~~~~~~~~~~~~~~~~~
 
-Event subscribers have different uses:
+事件订阅器有不同的用途：
 
-* Improving readability;
-* Listening to multiple events;
-* Regrouping multiple listeners inside a single class.
+* 提高可读性;
+* 监听多个事件;
+* 在单个类中重组多个侦听器。
 
 .. code-block:: php
 
@@ -360,8 +330,7 @@ Event subscribers have different uses:
             $user = $event->getData();
             $form = $event->getForm();
 
-            // checks whether the user from the initial data has chosen to
-            // display their email or not.
+            // 检查初始数据中的用户是否选择显示他们的电子邮件。
             if (true === $user->isShowEmail()) {
                 $form->add('email', EmailType::class);
             }
@@ -376,9 +345,8 @@ Event subscribers have different uses:
                 return;
             }
 
-            // checks whether the user has chosen to display their email or not.
-            // If the data was submitted previously, the additional value that
-            // is included in the request variables needs to be removed.
+            // 检查用户是否选择显示他们的电子邮件地址。
+            // 如果之前就提交了数据，则需要删除请求变量中包含的额外的值。
             if (true === $user['show_email']) {
                 $form->add('email', EmailType::class);
             } else {
@@ -388,7 +356,7 @@ Event subscribers have different uses:
         }
     }
 
-To register the event subscriber, use the ``addEventSubscriber()`` method::
+要注册事件订阅器，请使用 ``addEventSubscriber()`` 方法::
 
     use App\Form\EventListener\AddEmailFieldListener;
     use Symfony\Component\Form\Extension\Core\Type\TextType;

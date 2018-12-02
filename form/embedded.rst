@@ -4,18 +4,16 @@
 如何嵌入表单
 ==================
 
-Often, you'll want to build a form that will include fields from many different
-objects. For example, a registration form may contain data belonging to
-a ``User`` object as well as many ``Address`` objects. Fortunately, this
-is easy and natural with the Form component.
+通常，你需要构建一个包含许多不同对象的字段的表单。
+例如，一个注册表单可以包含属于一个 ``User`` 对象以及许多的 ``Address`` 对象的数据。
+幸运的是，使用Form组件这很容易和自然。
 
 .. _forms-embedding-single-object:
 
-Embedding a Single Object
+嵌入单个对象
 -------------------------
 
-Suppose that each ``Task`` belongs to a simple ``Category`` object. Start by
-creating the ``Category`` object::
+假设每个 ``Task`` 都属于一个简单的 ``Category`` 对象。首先创建 ``Category`` 对象::
 
     // src/Entity/Category.php
     namespace App\Entity;
@@ -30,7 +28,7 @@ creating the ``Category`` object::
         public $name;
     }
 
-Next, add a new ``category`` property to the ``Task`` class::
+接下来，向 ``Task`` 类添加一个新的 ``category`` 属性::
 
     // ...
 
@@ -59,12 +57,10 @@ Next, add a new ``category`` property to the ``Task`` class::
 
 .. tip::
 
-    The ``Valid`` Constraint has been added to the property ``category``. This
-    cascades the validation to the corresponding entity. If you omit this constraint
-    the child entity would not be validated.
+    ``Valid`` 约束已被添加到 ``category`` 属性。这将级联的验证相应的实体。
+    如果省略此约束，则不会验证子实体。
 
-Now that your application has been updated to reflect the new requirements,
-create a form class so that a ``Category`` object can be modified by the user::
+现在你的应用已更新以反映新需求，请创建一个表单类，以便用户可以修改一个 ``Category`` 对象::
 
     // src/Form/CategoryType.php
     namespace App\Form;
@@ -89,10 +85,8 @@ create a form class so that a ``Category`` object can be modified by the user::
         }
     }
 
-The end goal is to allow the ``Category`` of a ``Task`` to be modified right
-inside the task form itself. To accomplish this, add a ``category`` field
-to the ``TaskType`` object whose type is an instance of the new ``CategoryType``
-class::
+最终目标是允许在任务表单本身内部修改一个 ``Task`` 的 ``Category``。
+要完成此操作，请将一个 ``category`` 字段添加到其类型为新类的一个实例的 ``TaskType`` 对象::
 
     use Symfony\Component\Form\FormBuilderInterface;
     use App\Form\CategoryType;
@@ -104,10 +98,9 @@ class::
         $builder->add('category', CategoryType::class);
     }
 
-The fields from ``CategoryType`` can now be rendered alongside those from
-the ``TaskType`` class.
+现在可以将 ``CategoryType`` 类的字段与 ``TaskType`` 类中的那些字段一起渲染。
 
-Render the ``Category`` fields in the same way as the original ``Task`` fields:
+以与原始的 ``Task`` 字段相同的方式渲染 ``Category`` 字段：
 
 .. code-block:: html+twig
 
@@ -120,19 +113,15 @@ Render the ``Category`` fields in the same way as the original ``Task`` fields:
 
     {# ... #}
 
-When the user submits the form, the submitted data for the ``Category`` fields
-are used to construct an instance of ``Category``, which is then set on the
-``category`` field of the ``Task`` instance.
+当用户提交表单时，提交的 ``Category`` 字段的数据被用于构造一个 ``Category`` 实例，然后将其设置到 ``Task`` 实例的 ``category`` 字段上。
 
-The ``Category`` instance is accessible naturally via ``$task->getCategory()``
-and can be persisted to the database or used however you need.
+可以通过 ``$task->getCategory()`` 很自然的访问 ``Category`` 实例，可以将其持久保存到数据库中，也可以根据需要使用。
 
-Embedding a Collection of Forms
+嵌入表单集合
 -------------------------------
 
-You can also embed a collection of forms into one form (imagine a ``Category``
-form with many ``Product`` sub-forms). This is done by using the ``collection``
-field type.
+你还可以将一组表单嵌入到一个表单中（想象一个包含许多 ``Product`` 子表单的 ``Category`` 表单）。
+这可以通过使用 ``collection`` 字段类型来完成的。
 
-For more information see the :doc:`/form/form_collections` article and the
-:doc:`CollectionType </reference/forms/types/collection>` reference.
+有关更多信息，请参阅 :doc:`/form/form_collections` 文档和
+:doc:`CollectionType </reference/forms/types/collection>` 参考。

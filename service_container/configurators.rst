@@ -4,22 +4,18 @@
 如何使用配置器配置服务
 ==============================================
 
-The *service configurator* is a feature of the service container that allows
-you to use a callable to configure a service after its instantiation.
+*服务配置器* 是服务容器的一个功能，它允许你在一个服务实例化后使用一个可调用对象来配置该服务。
 
-A service configurator can be used, for example, when you have a service
-that requires complex setup based on configuration settings coming from
-different sources/services. Using an external configurator, you can maintain
-the service implementation cleanly and keep it decoupled from the other
-objects that provide the configuration needed.
+例如，当你的服务需要基于来自不同源/服务的配置设置进行复杂设定时，可以使用一个服务配置器。
+使用一个外部配置器，你可以干净地维护服务实现，并使其与提供所需配置的其他对象解耦。
 
-Another use case is when you have multiple objects that share a common
-configuration or that should be configured in a similar way at runtime.
+另一个用例是当你拥有多个对象，却彼此共享一个通用配置或者应该在运行时中以相同方式进行配置时。
 
-For example, suppose you have an application where you send different types
-of emails to users. Emails are passed through different formatters that
-could be enabled or not depending on some dynamic application settings.
-You start defining a ``NewsletterManager`` class like this::
+例如，假设你有一个可以向用户发送不同类型的电子邮件的应用。
+该电子邮件被传递给不同的启用或未启用的格式化器，具体取决于某些动态的应用设置。
+（Emails are passed through different formatters that could be enabled or not
+depending on some dynamic application settings.）
+首先像这样定义一个 ``NewsletterManager`` 类::
 
     // src/Mail/NewsletterManager.php
     namespace App\Mail;
@@ -36,7 +32,7 @@ You start defining a ``NewsletterManager`` class like this::
         // ...
     }
 
-and also a ``GreetingCardManager`` class::
+还有一个 ``GreetingCardManager`` 类::
 
     // src/Mail/GreetingCardManager.php
     namespace App\Mail;
@@ -53,10 +49,8 @@ and also a ``GreetingCardManager`` class::
         // ...
     }
 
-As mentioned before, the goal is to set the formatters at runtime depending
-on application settings. To do this, you also have an ``EmailFormatterManager``
-class which is responsible for loading and validating formatters enabled
-in the application::
+如前所述，目标是根据应用设置以在运行时中设置格式化器。
+为此，你还有一个 ``EmailFormatterManager`` 类，它负责在应用中加载和验证已启用的格式化器::
 
     // src/Mail/EmailFormatterManager.php
     namespace App\Mail;
@@ -67,7 +61,7 @@ in the application::
 
         public function getEnabledFormatters()
         {
-            // code to configure which formatters to use
+            // 用于配置要使用的格式化器的代码
             $enabledFormatters = array(...);
 
             // ...
@@ -76,9 +70,8 @@ in the application::
         }
     }
 
-If your goal is to avoid having to couple ``NewsletterManager`` and
-``GreetingCardManager`` with ``EmailFormatterManager``, then you might want
-to create a configurator class to configure these instances::
+如果你的目标是避免将 ``NewsletterManager`` 和 ``GreetingCardManager`` 与
+``EmailFormatterManager`` 耦合，那么你可能想创建一个配置器类来配置这些实例::
 
     // src/Mail/EmailConfigurator.php
     namespace App\Mail;
@@ -102,24 +95,21 @@ to create a configurator class to configure these instances::
         // ...
     }
 
-The ``EmailConfigurator``'s job is to inject the enabled formatters into
-``NewsletterManager`` and ``GreetingCardManager`` because they are not aware of
-where the enabled formatters come from. On the other hand, the
-``EmailFormatterManager`` holds the knowledge about the enabled formatters and
-how to load them, keeping the single responsibility principle.
+``EmailConfigurator`` 的工作是将已启用的格式化器注入到 ``NewsletterManager`` 和
+``GreetingCardManager`` 中，因为它们不知道已启用的格式化器来自何处。
+另一方面，``EmailFormatterManager`` 持有已启用的格式化器的信息以及知道如何加载它们，并保持单一责任原则。
 
 .. tip::
 
-    While this example uses a PHP class method, configurators can be any valid
-    PHP callable, including functions, static methods and methods of services.
+    虽然此示例使用了一个PHP类方法，但配置器可以是任何有效的PHP可调用对象，包括函数、静态方法和服务方法。
 
-Using the Configurator
+使用配置器
 ----------------------
 
-You can configure the service configurator using the ``configurator`` option. If
-you're using the :ref:`default services.yaml configuration <service-container-services-load-example>`,
-all the classes are already loaded as services. All you need to do is specify the
-``configurator``:
+你可以使用 ``configurator`` 选项来配置服务配置器。
+如果你使用的是
+:ref:`默认的services.yaml配置 <service-container-services-load-example>`，则所有的类都已作为服务加载。
+你需要做的就是指定 ``configurator``：
 
 .. configuration-block::
 
@@ -129,12 +119,12 @@ all the classes are already loaded as services. All you need to do is specify th
         services:
             # ...
 
-            # Registers all 4 classes as services, including App\Mail\EmailConfigurator
+            # 将所有的4个类注册为服务，包括 App\Mail\EmailConfigurator
             App\:
                 resource: '../src/*'
                 # ...
 
-            # override the services to set the configurator
+            # 重写服务以设置配置器
             App\Mail\NewsletterManager:
                 configurator: 'App\Mail\EmailConfigurator:configure'
 
@@ -184,17 +174,15 @@ all the classes are already loaded as services. All you need to do is specify th
         $container->getDefinition(GreetingCardManager::class)
             ->setConfigurator(array(new Reference(EmailConfigurator::class), 'configure'));
 
-The traditional configurator syntax in YAML files used an array to define
-the service id and the method name:
+在YAML文件中，传统的配置器语法是使用一个数组来定义服务id和方法名称：
 
 .. code-block:: yaml
 
     app.newsletter_manager:
-        # new syntax
+        # 新语法
         configurator: 'App\Mail\EmailConfigurator:configure'
-        # old syntax
+        # 传统语法
         configurator: ['@App\Mail\EmailConfigurator', configure]
 
-That's it! When requesting the ``App\Mail\NewsletterManager`` or
-``App\Mail\GreetingCardManager`` service, the created instance will first be
-passed to the ``EmailConfigurator::configure()`` method.
+仅此而已！在请求 ``App\Mail\NewsletterManager`` 或 ``App\Mail\GreetingCardManager``
+服务时，已创建的实例将首先传递给 ``EmailConfigurator::configure()`` 方法。

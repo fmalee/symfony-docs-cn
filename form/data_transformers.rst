@@ -4,26 +4,21 @@
 如何使用数据转换器
 ============================
 
-    How to Use Data Transformers
-
-Data transformers are used to translate the data for a field into a format that can
-be displayed in a form (and back on submit). They're already used internally for
-many field types. For example, the :doc:`DateType </reference/forms/types/date>` field
-can be rendered as a ``yyyy-MM-dd``-formatted input textbox. Internally, a data transformer
-converts the starting ``DateTime`` value of the field into the ``yyyy-MM-dd`` string
-to render the form, and then back into a ``DateTime`` object on submit.
+数据转换器用于将字段的数据转换为可以在表单中显示的格式（并在提交时转换回来）。它们已经在内部用于许多字段类型。
+例如，:doc:`DateType </reference/forms/types/date>` 字段可以渲染为一个格式化的 ``yyyy-MM-dd`` 输入文本框。
+在内部，数据转换器将 ``DateTime`` 字段的起始值转换为 ``yyyy-MM-dd``
+字符串以渲染表单，然后在提交时再转换回为一个 ``DateTime`` 对象。
 
 .. caution::
 
-    When a form field has the ``inherit_data`` option set, Data Transformers
-    won't be applied to that field.
+    当一个表单字段具有 ``inherit_data`` 选项集时，数据转换器将不会应用于该字段。
 
 .. _simple-example-sanitizing-html-on-user-input:
 
-Simple Example: Transforming String Tags from User Input to an Array
+简单示例：将用户输入的字符串标签转换为数组
 --------------------------------------------------------------------
 
-Suppose you have a Task form with a tags ``text`` type::
+假设你有一个带有 ``text`` 类型的标签的任务表单::
 
     // src/Form/Type/TaskType.php
     namespace App\Form\Type;
@@ -51,12 +46,10 @@ Suppose you have a Task form with a tags ``text`` type::
         // ...
     }
 
-Internally the ``tags`` are stored as an array, but displayed to the user as a
-comma separated string to make them easier to edit.
+``tags`` 在内部存储为数组形式，展示给用户时则是一个方便编辑的以逗号分隔的字符串。
 
-This is a *perfect* time to attach a custom data transformer to the ``tags``
-field. The easiest way to do this is with the :class:`Symfony\\Component\\Form\\CallbackTransformer`
-class::
+这是将一个自定义数据转换器附加到 ``tags`` 字段的 *最佳* 时机。最简单的方法是使用
+:class:`Symfony\\Component\\Form\\CallbackTransformer` 类::
 
     // src/Form/Type/TaskType.php
     namespace App\Form\Type;
@@ -75,11 +68,11 @@ class::
             $builder->get('tags')
                 ->addModelTransformer(new CallbackTransformer(
                     function ($tagsAsArray) {
-                        // transform the array to a string
+                        // 将数组转换为一个字符串
                         return implode(', ', $tagsAsArray);
                     },
                     function ($tagsAsString) {
-                        // transform the string back to an array
+                        // 将字符串转换回一个数组
                         return explode(', ', $tagsAsString);
                     }
                 ))
@@ -89,19 +82,16 @@ class::
         // ...
     }
 
-The ``CallbackTransformer`` takes two callback functions as arguments. The
-first transforms the original value into a format that'll be used to render the
-field. The second does the reverse: it transforms the submitted value back into
-the format you'll use in your code.
+``CallbackTransformer`` 使用两个回调函数作为参数。第一个回调将原始值转换为将用于渲染字段的格式。
+第二个回调是相反的：它将提交的值转换回你将在代码中使用的格式。
 
 .. tip::
 
-    The ``addModelTransformer()`` method accepts *any* object that implements
-    :class:`Symfony\\Component\\Form\\DataTransformerInterface` - so you can create
-    your own classes, instead of putting all the logic in the form (see the next section).
+    ``addModelTransformer()`` 方法接受 *任何* 实现了
+    :class:`Symfony\\Component\\Form\\DataTransformerInterface` 的对象
+    - 因此你可以创建自己的类，而不是将所有逻辑放在表单中（请参阅下一节）。
 
-You can also add the transformer, right when adding the field by changing the format
-slightly::
+你也可以稍微更改格式，以在添加字段时添加转换器::
 
     use Symfony\Component\Form\Extension\Core\Type\TextType;
 
@@ -111,16 +101,14 @@ slightly::
             ->addModelTransformer(...)
     );
 
-Harder Example: Transforming an Issue Number into an Issue Entity
+更难的例子：将问题编号转换为问题实体
 -----------------------------------------------------------------
 
-Say you have a many-to-one relation from the Task entity to an Issue entity (i.e. each
-Task has an optional foreign key to its related Issue). Adding a listbox with all
-possible issues could eventually get *really* long and take a long time to load.
-Instead, you decide you want to add a textbox, where the user can enter the
-issue number.
+假设你具有从Task实体到Issue实体的多对一关系（即每个Task都有一个与其相关Issue的可选外键）。
+添加一个包含所有问题的列表框最终可能会 *很* 长并且需要很长时间才能加载。
+相反，你决定要添加一个文本框，用户可以在其中输入问题编号。
 
-Start by setting up the text field like normal::
+首先像往常一样设置文本字段::
 
     // src/Form/Type/TaskType.php
     namespace App\Form\Type;
@@ -150,18 +138,16 @@ Start by setting up the text field like normal::
         // ...
     }
 
-Good start! But if you stopped here and submitted the form, the Task's ``issue``
-property would be a string (e.g. "55"). How can you transform this into an ``Issue``
-entity on submit?
+不错的开始！但是如果你停在这里并提交了表单，那么Task的 ``issue`` 属性就是一个字符串（例如“55”）。
+那么如何在提交时将其转换为一个 ``Issue`` 实体？
 
-Creating the Transformer
+创建转换器
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-You could use the ``CallbackTransformer`` like earlier. But since this is a bit more
-complex, creating a new transformer class will keep the ``TaskType`` form class simpler.
+你可以像之前一样使用 ``CallbackTransformer``。
+但由于这个用例有点复杂，因此可以创建一个新的转换器类以使 ``TaskType`` 表单类保持简洁。
 
-Create an ``IssueToNumberTransformer`` class: it will be responsible for converting
-to and from the issue number and the ``Issue`` object::
+创建一个 ``IssueToNumberTransformer`` 类：它将负责问题编号和 ``Issue`` 对象之间的转换::
 
     // src/Form/DataTransformer/IssueToNumberTransformer.php
     namespace App\Form\DataTransformer;
@@ -181,7 +167,7 @@ to and from the issue number and the ``Issue`` object::
         }
 
         /**
-         * Transforms an object (issue) to a string (number).
+         * 将对象（issue）转换为字符串（number）。
          *
          * @param  Issue|null $issue
          * @return string
@@ -196,29 +182,29 @@ to and from the issue number and the ``Issue`` object::
         }
 
         /**
-         * Transforms a string (number) to an object (issue).
+         * 将字符串（number）转换为对象（issue）。
          *
          * @param  string $issueNumber
          * @return Issue|null
-         * @throws TransformationFailedException if object (issue) is not found.
+         * @throws TransformationFailedException 如果对象 (issue) 未找到.
          */
         public function reverseTransform($issueNumber)
         {
-            // no issue number? It's optional, so that's ok
+            // 没有问题编号? 它是可选的，所以没问题。
             if (!$issueNumber) {
                 return;
             }
 
             $issue = $this->entityManager
                 ->getRepository(Issue::class)
-                // query for the issue with this id
+                // 使用其ID查询问题
                 ->find($issueNumber)
             ;
 
             if (null === $issue) {
-                // causes a validation error
-                // this message is not shown to the user
-                // see the invalid_message option
+                // 触发一个验证错误
+                // 此消息不会显示给用户
+                // 请参阅 invalid_message 选项
                 throw new TransformationFailedException(sprintf(
                     'An issue with number "%s" does not exist!',
                     $issueNumber
@@ -229,28 +215,23 @@ to and from the issue number and the ``Issue`` object::
         }
     }
 
-Just like in the first example, a transformer has two directions. The ``transform()``
-method is responsible for converting the data used in your code to a format that
-can be rendered in your form (e.g. an ``Issue`` object to its ``id``, a string).
-The ``reverseTransform()`` method does the reverse: it converts the submitted value
-back into the format you want (e.g. convert the ``id`` back to the ``Issue`` object).
+就像在第一个例子中一样，一个转换器有两个方向。
+``transform()`` 方法负责将在代码中使用的数据转换为可以在表单中渲染的格式（例如，将 ``Issue`` 对象为转换为其 ``id`` 字符串）。
+``reverseTransform()`` 方法则相反：它将提交的值转换回你想要的格式（例如，将 ``id`` 转换回 ``Issue`` 对象）。
 
-To cause a validation error, throw a :class:`Symfony\\Component\\Form\\Exception\\TransformationFailedException`.
-But the message you pass to this exception won't be shown to the user. You'll set
-that message with the ``invalid_message`` option (see below).
+要触发一个验证错误，请抛出一个
+:class:`Symfony\\Component\\Form\\Exception\\TransformationFailedException`。
+但是，传递给此异常的消息不会显示给用户。你需要使用 ``invalid_message`` 选项来设置该消息（请参阅下文）。
 
 .. note::
 
-    When ``null`` is passed to the ``transform()`` method, your transformer
-    should return an equivalent value of the type it is transforming to (e.g.
-    an empty string, 0 for integers or 0.0 for floats).
+    当 ``null`` 传递给 ``transform()`` 方法时，转换器应该返回它正在转换的类型的等效值（例如，一个空字符串，整数的0，浮点数的0.0）。
 
-Using the Transformer
+使用转换器
 ~~~~~~~~~~~~~~~~~~~~~
 
-Next, you need to use the ``IssueToNumberTransformer`` object inside if ``TaskType``
-and add it to the ``issue`` field. No problem! Add a ``__construct()`` method
-and type-hint the new class::
+接下来，你需要在 ``TaskType`` 中使用 ``IssueToNumberTransformer`` 对象并将其添加到 ``issue`` 字段中。
+这不是问题！添加 ``__construct()`` 方法并类型约束该新类::
 
     // src/Form/Type/TaskType.php
     namespace App\Form\Type;
@@ -274,7 +255,7 @@ and type-hint the new class::
             $builder
                 ->add('description', TextareaType::class)
                 ->add('issue', TextType::class, array(
-                    // validation message if the data transformer fails
+                    // 数据转换器失败的一个验证消息
                     'invalid_message' => 'That is not a valid issue number',
                 ));
 
@@ -287,52 +268,45 @@ and type-hint the new class::
         // ...
     }
 
-That's it! As long as you're using :ref:`autowire <services-autowire>` and
-:ref:`autoconfigure <services-autoconfigure>`, Symfony will automatically
-know to pass your ``TaskType`` an instance of the ``IssueToNumberTransformer``.
+仅此而已！只要你使用 :ref:`自动装配 <services-autowire>` 和
+:ref:`自动配置 <services-autoconfigure>`，Symfony就会知道将一个
+``IssueToNumberTransformer`` 实例传递到 ``TaskType``。
 
 .. tip::
 
-    For more information about defining form types as services, read
-    :doc:`register your form type as a service </form/form_dependencies>`.
+    有关将表单类型定义为服务的更多信息，请参阅 :doc:`将表单类型注册为服务 </form/form_dependencies>`。
 
-Now, you can use your ``TaskType``::
+现在，你可以使用你的 ``TaskType``::
 
-    // e.g. in a controller somewhere
+    // 例如在某个控制器中
     $form = $this->createForm(TaskType::class, $task);
 
     // ...
 
-Cool, you're done! Your user will be able to enter an issue number into the
-text field and it will be transformed back into an Issue object. This means
-that, after a successful submission, the Form component will pass a real
-``Issue`` object to ``Task::setIssue()`` instead of the issue number.
+很酷，你完工了！你的用户将能够在文本字段中输入问题编号，并将其转换回一个Issue对象。
+这意味着，在成功提交后，Form组件将传递一个实际的 ``Issue`` 对象到 ``Task::setIssue()``，而不是一个问题编号。
 
-If the issue isn't found, a form error will be created for that field and
-its error message can be controlled with the ``invalid_message`` field option.
+如果找不到该问题，将为该字段创建一个表单错误，并且可以使用 ``invalid_message`` 字段选项定制它的错误消息。
 
 .. caution::
 
-    Be careful when adding your transformers. For example, the following is **wrong**,
-    as the transformer would be applied to the entire form, instead of just this
-    field::
+    添加转换器时要小心。例如，下例是 **错误** 的，因为转换器将应用于整个表单，而不仅仅是这个字段::
 
-        // THIS IS WRONG - TRANSFORMER WILL BE APPLIED TO THE ENTIRE FORM
-        // see above example for correct code
+        // **错误示范** - 转换器将应用于整个表单
+        // 请查看上个例子中的正确代码
         $builder->add('issue', TextType::class)
             ->addModelTransformer($transformer);
 
 .. _using-transformers-in-a-custom-field-type:
 
-Creating a Reusable issue_selector Field
+创建一个可复用的issue_selector字段
 ----------------------------------------
 
-In the above example, you applied the transformer to a normal ``text`` field. But
-if you do this transformation a lot, it might be better to
-:doc:`create a custom field type </form/create_custom_field_type>`.
-that does this automatically.
+在上面的示例中，你将转换器应用于一个普通的 ``text`` 字段。
+但是如果你经常进行这种转换，那么最好是
+:doc:`创建一个自定义字段类型 </form/create_custom_field_type>`。此操作会自动完成。
 
-First, create the custom field type class::
+首先，创建自定义字段类型类::
 
     // src/Form/IssueSelectorType.php
     namespace App\Form;
@@ -370,11 +344,11 @@ First, create the custom field type class::
         }
     }
 
-Great! This will act and render like a text field (``getParent()``), but will automatically
-have the data transformer *and* a nice default value for the ``invalid_message`` option.
+很好！它将像一个文本字段（``getParent()``）一样操作和渲染，但会自动拥有数据转换器
+*以及* 附带一个默认值的 ``invalid_message`` 选项。
 
-As long as you're using :ref:`autowire <services-autowire>` and
-:ref:`autoconfigure <services-autoconfigure>`, you can start using the form immediately::
+只要你使用 :ref:`自动装配 <services-autowire>` 和
+:ref:`自动配置 <services-autoconfigure>`，就可以立即开始使用该表单::
 
     // src/Form/Type/TaskType.php
     namespace App\Form\Type;
@@ -398,64 +372,59 @@ As long as you're using :ref:`autowire <services-autowire>` and
 
 .. tip::
 
-    If you're not using ``autowire`` and ``autoconfigure``, see
-    :doc:`/form/create_custom_field_type` for how to configure your new ``IssueSelectorType``.
+    如果你没有使用 ``自动装配`` 和 ``自动配置``，请参阅
+    :doc:`/form/create_custom_field_type` 以知道如何配置你的 ``IssueSelectorType``。
 
 .. _model-and-view-transformers:
 
-About Model and View Transformers
+关于模型和视图转换器
 ---------------------------------
 
-In the above example, the transformer was used as a "model" transformer.
-In fact, there are two different types of transformers and three different
-types of underlying data.
+在上面的例子中，该转换器被用作一个“model”变压器。
+实际上，有两种不同类型的转换器和三种不同类型的底层数据。
 
 .. image:: /_images/form/data-transformer-types.png
    :align: center
 
-In any form, the three different types of data are:
+在任何表单中，三种不同类型的数据分别是：
 
-#. **Model data** - This is the data in the format used in your application
-   (e.g. an ``Issue`` object). If you call ``Form::getData()`` or ``Form::setData()``,
-   you're dealing with the "model" data.
+#. **Model data** - 这是你的应用使用的格式的数据（例如一个 ``Issue`` 对象）。
+   如果你调用了 ``Form::getData()`` 或 ``Form::setData()``，那么你正在处理“model”数据。
 
-#. **Norm Data** - This is a normalized version of your data and is commonly
-   the same as your "model" data (though not in our example). It's not commonly
-   used directly.
+#. **Norm Data** - 这是你的数据的标准化(normalized)版本，
+   通常与“model”数据相同（尽管不在我们的示例中）。它并不常用。
 
-#. **View Data** - This is the format that's used to fill in the form fields
-   themselves. It's also the format in which the user will submit the data. When
-   you call ``Form::submit($data)``, the ``$data`` is in the "view" data format.
+#. **View Data** - 这是用于填充表单字段自身的格式。它也是用户提交的数据的格式。
+   当你调用 ``Form::submit($data)`` 时，该 ``$data`` 处于“view”数据格式。
 
-The two different types of transformers help convert to and from each of these
-types of data:
+两种不同类型的转换器有助于转换为以下每种类型的数据：
 
-**Model transformers**:
-    - ``transform()``: "model data" => "norm data"
-    - ``reverseTransform()``: "norm data" => "model data"
+**模型转换器**:
+    - ``transform()``: "model"数据 => "norm"数据
+    - ``reverseTransform()``: "norm"数据 => "model"数据
 
-**View transformers**:
-    - ``transform()``: "norm data" => "view data"
-    - ``reverseTransform()``: "view data" => "norm data"
+**视图转换器**:
+    - ``transform()``: "norm"数据 => "view"数据
+    - ``reverseTransform()``: "view"数据 => "norm"数据
 
-Which transformer you need depends on your situation.
+你需要哪种转换器取决于你的具体情况。
 
-To use the view transformer, call ``addViewTransformer()``.
+要使用视图转换器，请调用 ``addViewTransformer()``。
 
-So why Use the Model Transformer?
+那么为什么要使用模型转换器呢？
 ---------------------------------
 
+在此示例中，该字段是一个 ``text`` 字段，并且一个文本字段始终是“norm”和“view”格式的一个简单、标量的格式。
+出于这个原因，最合适的转换器是“模型”转换器（它转换为 *norm* 格式 - issue number字符串 - *模型* 格式 - Issue对象）。
 In this example, the field is a ``text`` field, and a text field is always
-expected to be a simple, scalar format in the "norm" and "view" formats. For
-this reason, the most appropriate transformer was the "model" transformer
+expected to be a simple, scalar format in the "norm" and "view" formats.
+For this reason, the most appropriate transformer was the "model" transformer
 (which converts to/from the *norm* format - string issue number - to the *model*
 format - Issue object).
 
-The difference between the transformers is subtle and you should always think
-about what the "norm" data for a field should really be. For example, the
-"norm" data for a ``text`` field is a string, but is a ``DateTime`` object
-for a ``date`` field.
+转换器之间的区别是微妙的，你应该总是考虑一个字段的“norm”数据应该是什么。
+例如，一个 ``text`` 字段的“norm”数据是一个字符串，但是 ``date`` 字段的却是 ``DateTime`` 对象。
 
 .. tip::
 
-    As a general rule, the normalized data should contain as much information as possible.
+    作为一个通用规则，规范化的数据应包含尽可能多的信息。

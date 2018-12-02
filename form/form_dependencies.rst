@@ -1,16 +1,14 @@
 如何从表单内访问服务或配置
 ===================================================
 
-Sometimes, you may need to access a :doc:`service </service_container>` or other
-configuration from inside of your form class. To do this, you have 2 options:
+有时，你可能需要从表单类内部访问 :doc:`服务 </service_container>` 或其他配置。
+为此，你有两个选择：
 
-1) Pass Options to your Form
+1) 传递选项给表单
 ----------------------------
 
-The simplest way to pass services or configuration to your form is via form *options*.
-Suppose you need to access the Doctrine entity manager so that you can make a
-query. First, allow (in fact, require) a new ``entity_manager`` option to be
-passed to your form::
+将服务或配置传递到表单的最简单方法是通过表单 *选项*。假设你需要访问Doctrine实体管理器以便进行一个查询。
+首先，允许（实际上，是要求）将一个新的 ``entity_manager`` 选项传递给你的表单::
 
     // src/Form/TaskType.php
     // ...
@@ -27,8 +25,7 @@ passed to your form::
         }
     }
 
-Now that you've done this, you *must* pass an ``entity_manager`` option when you
-create your form::
+既然你已经完成了这个，你 *必须* 在创建表单时传递一个 ``entity_manager`` 选项::
 
     // src/Controller/DefaultController.php
     use App\Form\TaskType;
@@ -46,8 +43,7 @@ create your form::
         // ...
     }
 
-Finally, the ``entity_manager`` option is accessible in the ``$options`` argument
-of your ``buildForm()`` method::
+最后，可以在 ``buildForm()`` 方法的 ``$options`` 参数中访问 ``entity_manager`` 选项::
 
     // src/Form/TaskType.php
     // ...
@@ -64,17 +60,15 @@ of your ``buildForm()`` method::
         // ...
     }
 
-Use this method to pass *anything* to your form.
+可以使用此方法将 *任何* 内容传递给表单。
 
-2) Define your Form as a Service
+2) 定义表单为服务
 --------------------------------
 
-Alternatively, you can define your form class as a service. This is a good idea if
-you want to re-use the form in several places - registering it as a service makes
-this easier.
+或者，你可以将表单类定义为一个服务。在多个地方复用表单是一个好想法 - 将其注册为服务可以很容易实现。
 
-Suppose you need to access the :ref:`EntityManager <doctrine-entity-manager>` object
-so that you can make a query. First, add this as an argument to your form class::
+假设你需要访问 :ref:`实体管理器 <doctrine-entity-manager>` 对象以便创建一个查询。
+首先，将此作为一个参数添加到表单类::
 
     // src/Form/TaskType.php
 
@@ -93,13 +87,11 @@ so that you can make a query. First, add this as an argument to your form class:
         // ...
     }
 
-If you're using :ref:`autowire <services-autowire>` and
-:ref:`autoconfigure <services-autoconfigure>`, then you don't need to do *anything*
-else: Symfony will automatically know to pass the correct ``EntityManager`` object
-to your ``__construct()`` method.
+如果你正在使用 :ref:`自动装配 <services-autowire>` 和
+:ref:`自动配置 <services-autoconfigure>`，那么你不需要做*任何* 其他事情：
+Symfony会自动将正确的 ``EntityManager`` 对象传递给你的 ``__construct()`` 方法。
 
-If you are **not using autowire and autoconfigure**, register your form as a service
-manually and tag it with ``form.type``:
+如果你 **不使用自动装配和自动配置**，请手动将表单注册为服务并使用 ``form.type`` 标签进行标记：
 
 .. configuration-block::
 
@@ -139,7 +131,7 @@ manually and tag it with ``form.type``:
             ->addTag('form.type')
         ;
 
-That's it! Your controller - where you create the form - doesn't need to change
-at all: Symfony is smart enough to load the ``TaskType`` from the container.
+仅此而已！你的用于创建表单的控制器根本不需要修改：
+Symfony足够聪明，可以从容器中加载 ``TaskType``。
 
-Read :ref:`form-field-service` for more information.
+阅读 :ref:`form-field-service` 以获取更多信息。

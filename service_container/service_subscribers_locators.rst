@@ -7,17 +7,23 @@
     Service Subscribers & Locators
 
 .. versionadded:: 3.3
-    Service subscribers and locators were introduced in Symfony 3.3.
+    服务订阅器和定位器在Symfony 3.3中引入。
 
+有时，一个服务需要访问其他几个服务，而又不确定是否实际使用了所有这些服务。
+在这些情况下，你可能希望服务的实例化是惰性的。
+但是，使用显式依赖注入是不可能的，因为并非所有服务都是 ``lazy``（参见 :doc:`/service_container/lazy_services`）。
 Sometimes, a service needs access to several other services without being sure
-that all of them will actually be used. In those cases, you may want the
-instantiation of the services to be lazy. However, that's not possible using
-the explicit dependency injection since services are not all meant to
+that all of them will actually be used.
+In those cases, you may want the instantiation of the services to be lazy.
+However, that's not possible using the explicit dependency injection since services are not all meant to
 be ``lazy`` (see :doc:`/service_container/lazy_services`).
 
+在控制器中通常可以是这种情况，你可以在构造函数中注入多个服务，但执行的动作仅使用其中一些服务。
+另一个示例是使用一个CommandBus通过Command类名来映射命令处理程序来实现 `命令模式`_ 的应用，
+并在询问它们时使用它们来处理它们各自的命令：
 This can typically be the case in your controllers, where you may inject several
 services in the constructor, but the action executed only uses some of them.
-Another example are applications that implement the `Command pattern`_
+Another example are applications that implement the `命令模式`_
 using a CommandBus to map command handlers by Command class names and use them
 to handle their respective command when it is asked for::
 
@@ -52,22 +58,29 @@ to handle their respective command when it is asked for::
     // ...
     $commandBus->handle(new FooCommand());
 
-Considering that only one command is handled at a time, instantiating all the
-other command handlers is unnecessary. A possible solution to lazy-load the
-handlers could be to inject the main dependency injection container.
+考虑到一次只处理一个命令，实例化所有其他命令处理器是不必要的。
+延迟加载这些处理器的可能解决方案可以是注入主依赖注入容器。
 
+但是，不鼓励注入整个容器，因为它提供了对现有服务的过多访问，并且隐藏了服务的实际依赖性。
+这样做也需要公开服务，而Symfony应用的默认情况并非如此。
 However, injecting the entire container is discouraged because it gives too
 broad access to existing services and it hides the actual dependencies of the
 services. Doing so also requires services to be made public, which isn't the
 case by default in Symfony applications.
 
+**服务订阅器** 旨在通过提供对一组预定义服务的访问来解决此问题，同时仅在实际需要时通过一个
+**服务定位器**（一个单独的延迟加载的容器）实例化它们。
 **Service Subscribers** are intended to solve this problem by giving access to a
 set of predefined services while instantiating them only when actually needed
 through a **Service Locator**, a separate lazy-loaded container.
 
-Defining a Service Subscriber
+定义服务订阅器
 -----------------------------
 
+首先，将 ``CommandBus`` 变成一个
+:class:`Symfony\\Component\\DependencyInjection\\ServiceSubscriberInterface`
+的实现。使用其 ``getSubscribedServices()``
+方法在服务订阅器中包含所需数量的服务，并将容器的类型约束更改为一个PSR-11 ``ContainerInterface``::
 First, turn ``CommandBus`` into an implementation of :class:`Symfony\\Component\\DependencyInjection\\ServiceSubscriberInterface`.
 Use its ``getSubscribedServices()`` method to include as many services as needed
 in the service subscriber and change the type hint of the container to
@@ -112,24 +125,22 @@ a PSR-11 ``ContainerInterface``::
 
 .. tip::
 
-    If the container does *not* contain the subscribed services, double-check
-    that you have :ref:`autoconfigure <services-autoconfigure>` enabled. You
-    can also manually add the ``container.service_subscriber`` tag.
+    如果容器 *未* 包含已订阅的服务，请确认你已经启用 :ref:`自动配置 <services-autoconfigure>`。
+    你也可以手动添加 ``container.service_subscriber`` 标签。
 
-The injected service is an instance of :class:`Symfony\\Component\\DependencyInjection\\ServiceLocator`
-which implements the PSR-11 ``ContainerInterface``, but it is also a callable::
+被注入的服务是一个实现了PSR-11 ``ContainerInterface`` 的
+:class:`Symfony\\Component\\DependencyInjection\\ServiceLocator` 实例，但它也是一个callable::
 
     // ...
     $handler = ($this->locator)($commandClass);
 
     return $handler->handle($command);
 
-Including Services
+引入服务
 ------------------
 
-In order to add a new dependency to the service subscriber, use the
-``getSubscribedServices()`` method to add service types to include in the
-service locator::
+为了向服务订阅器添加新的依赖，请使用 ``getSubscribedServices()``
+方法添加要包含在服务定位器中的服务类型::
 
     use Psr\Log\LoggerInterface;
 
@@ -141,6 +152,7 @@ service locator::
         ];
     }
 
+服务类型也可以用一个服务名称做为键，以便内部使用::
 Service types can also be keyed by a service name for internal use::
 
     use Psr\Log\LoggerInterface;
@@ -153,9 +165,9 @@ Service types can also be keyed by a service name for internal use::
         ];
     }
 
-When extending a class that also implements ``ServiceSubscriberInterface``,
-it's your responsibility to call the parent when overriding the method. This
-typically happens when extending ``AbstractController``::
+在继承一个实现了 ``ServiceSubscriberInterface`` 的类时，你的责任是在重写
+``getSubscribedServices()`` 时调用其父方法。
+这通常出现在继承 ``AbstractController`` 的时候::
 
     use Psr\Log\LoggerInterface;
     use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -171,11 +183,10 @@ typically happens when extending ``AbstractController``::
         }
     }
 
-Optional Services
+可选服务
 ~~~~~~~~~~~~~~~~~
 
-For optional dependencies, prepend the service type with a ``?`` to prevent
-errors if there's no matching service found in the service container::
+对于可选的依赖，如果在服务容器中找不到匹配的服务，则在服务类型前加上一个 ``?`` 以防止出现错误::
 
     use Psr\Log\LoggerInterface;
 
@@ -189,12 +200,14 @@ errors if there's no matching service found in the service container::
 
 .. note::
 
-    Make sure an optional service exists by calling ``has()`` on the service
-    locator before calling the service itself.
+    在调用服务本身之前，通过在服务定位器上调用 ``has()`` 可确认是否存在该可选服务。
 
-Aliased Services
+别名服务
 ~~~~~~~~~~~~~~~~
 
+默认情况下，自动装配用于将服务类型与服务容器中的服务进行匹配。
+如果你不使用自动装配或需要将一个非传统服务添加为依赖，请使用
+``container.service_subscriber`` 标签将一个服务类型映射到一个服务。
 By default, autowiring is used to match a service type to a service from the
 service container. If you don't use autowiring or need to add a non-traditional
 service as a dependency, use the ``container.service_subscriber`` tag to map a
@@ -241,15 +254,14 @@ service type to a service.
 
 .. tip::
 
-    The ``key`` attribute can be omitted if the service name internally is the
-    same as in the service container.
+    如果内部的服务名称与服务容器中的相同，则可以省略 ``key`` 属性。
 
 Defining a Service Locator
+定义服务定位器
 --------------------------
 
-To manually define a service locator, create a new service definition and add
-the ``container.service_locator`` tag to it. Use its ``arguments`` option to
-include as many services as needed in it.
+要手动定义一个服务定位器，请创建新的服务定义并添加 ``container.service_locator`` 标签。
+使用 ``arguments`` 选项可以引入所需数量的服务。
 
 .. configuration-block::
 
@@ -263,8 +275,7 @@ include as many services as needed in it.
                     -
                         App\FooCommand: '@app.command_handler.foo'
                         App\BarCommand: '@app.command_handler.bar'
-                # if you are not using the default service autoconfiguration,
-                # add the following tag to the service definition:
+                # 如果未使用默认的服务自动配置，请将以下标签添加到服务定义中：
                 # tags: ['container.service_locator']
 
     .. code-block:: xml
@@ -312,16 +323,14 @@ include as many services as needed in it.
         ;
 
 .. versionadded:: 4.1
-    The service locator autoconfiguration was introduced in Symfony 4.1. In
-    previous Symfony versions you always needed to add the
-    ``container.service_locator`` tag explicitly.
+    服务定位器自动配置是在Symfony 4.1中引入的。
+    在之前的Symfony版本中，你始终需明确添加 ``container.service_locator`` 标签。
 
 .. note::
 
-    The services defined in the service locator argument must include keys,
-    which later become their unique identifiers inside the locator.
+    服务定位器的参数中定义的服务必须包含键，稍后这些键将在定位器内成为对应服务的唯一标识符。
 
-Now you can use the service locator by injecting it in any other service:
+现在，你可以通过将该服务定位器注入到任何其他服务来使用它：
 
 .. configuration-block::
 
@@ -360,7 +369,11 @@ Now you can use the service locator by injecting it in any other service:
             ->setArguments(array(new Reference('app.command_handler_locator')))
         ;
 
-In :doc:`compiler passes </service_container/compiler_passes>` it's recommended
+在 :doc:`编译器传递 </service_container/compiler_passes>` 中，建议使用
+:method:`Symfony\\Component\\DependencyInjection\\Compiler\\ServiceLocatorTagPass::register`
+方法来创建服务定位器。
+这将为你消除一些样板代码，并将在引用它们的所有服务中共享相同的定位器::
+In :doc:`编译器传递 </service_container/compiler_passes>` it's recommended
 to use the :method:`Symfony\\Component\\DependencyInjection\\Compiler\\ServiceLocatorTagPass::register`
 method to create the service locators. This will save you some boilerplate and
 will share identical locators amongst all the services referencing them::
@@ -380,22 +393,28 @@ will share identical locators amongst all the services referencing them::
         $myService->addArgument(ServiceLocatorTagPass::register($container, $locateableServices));
     }
 
-.. _`Command pattern`: https://en.wikipedia.org/wiki/Command_pattern
+.. _`命令模式`: https://en.wikipedia.org/wiki/Command_pattern
 
-Service Subscriber Trait
+服务订阅器复用(Trait)
 ------------------------
 
 .. versionadded:: 4.2
-    The :class:`Symfony\\Component\\DependencyInjection\\ServiceSubscriberTrait`
-    was introduced in Symfony 4.2.
+    :class:`Symfony\\Component\\DependencyInjection\\ServiceSubscriberTrait`
+    在Symfony的4.2中引入的。
 
+:class:`Symfony\\Component\\DependencyInjection\\ServiceSubscriberTrait` 为
+:class:`Symfony\\Component\\DependencyInjection\\ServiceSubscriberInterface`
+提供了一个实现，用于拥有零参数和一个返回类型的类的所有方法。
+它为那些返回类型的服务提供了一个 ``ServiceLocator``。服务ID是 ``__METHOD__``。
+这允许你基于已类型约束的辅助方法来轻松地向你的服务添加依赖::
 The :class:`Symfony\\Component\\DependencyInjection\\ServiceSubscriberTrait`
 provides an implementation for
 :class:`Symfony\\Component\\DependencyInjection\\ServiceSubscriberInterface`
 that looks through all methods in your class that have no arguments and a return
-type. It provides a ``ServiceLocator`` for the services of those return types.
-The service id is ``__METHOD__``. This allows you to easily add dependencies
-to your services based on type-hinted helper methods::
+type.
+It provides a ``ServiceLocator`` for the services of those return types.
+The service id is ``__METHOD__``.
+This allows you to easily add dependencies to your services based on type-hinted helper methods::
 
     // src/Service/MyService.php
     namespace App\Service;
@@ -426,6 +445,7 @@ to your services based on type-hinted helper methods::
         }
     }
 
+这允许你创建辅助复用，如RouterAware，LoggerAware等...然后用它们来组成你的服务::
 This  allows you to create helper traits like RouterAware, LoggerAware, etc...
 and compose your services with them::
 
@@ -477,3 +497,5 @@ and compose your services with them::
     When creating these helper traits, the service id cannot be ``__METHOD__``
     as this will include the trait name, not the class name. Instead, use
     ``__CLASS__.'::'.__FUNCTION__`` as the service id.
+    在创建这些辅助复用时，服务ID不能是 ``__METHOD__``，而是包含复用名称，而不包括类名。
+    而是，将 ``__CLASS__.'::'.__FUNCTION__`` 用作服务ID。

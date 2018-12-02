@@ -4,32 +4,28 @@
 如何对表单进行单元测试
 ===========================
 
-The Form component consists of 3 core objects: a form type (implementing
-:class:`Symfony\\Component\\Form\\FormTypeInterface`), the
-:class:`Symfony\\Component\\Form\\Form` and the
-:class:`Symfony\\Component\\Form\\FormView`.
+Form组件由3个核心对象组成：一个表单类型（实现了
+:class:`Symfony\\Component\\Form\\FormTypeInterface`）、
+:class:`Symfony\\Component\\Form\\Form` 和
+:class:`Symfony\\Component\\Form\\FormView`。
 
-The only class that is usually manipulated by programmers is the form type class
-which serves as a form blueprint. It is used to generate the ``Form`` and the
-``FormView``. You could test it directly by mocking its interactions with the
-factory but it would be complex. It is better to pass it to FormFactory like it
-is done in a real application. It is simple to bootstrap and you can trust
-the Symfony components enough to use them as a testing base.
+通常由程序员操作的唯一类是作为一个表单蓝图的表单类型类。它用于生成 ``Form`` 和 ``FormView``。
+你可以通过模拟它与工厂的交互来直接测试它，但这样会很复杂。最好将它传递给表单工厂，就像在实际应用中完成一样。
+它可以很简单的来引导(bootstrap)，你可以信任Symfony组件以将它们用作测试基础。
 
-There is already a class that you can benefit from for simple FormTypes
-testing: :class:`Symfony\\Component\\Form\\Test\\TypeTestCase`. It is used to
-test the core types and you can use it to test your types too.
+已经有一个类可以从简单的表单类型测试中受益：
+:class:`Symfony\\Component\\Form\\Test\\TypeTestCase`。
+它用于测试核心类型，你也可以使用它来测试你的类型。
 
 .. note::
 
-    Depending on the way you installed your Symfony or Symfony Form component
-    the tests may not be downloaded. Use the ``--prefer-source`` option with
-    Composer if this is the case.
+    根据你安装Symfony或Symfony Form组件的方式，测试可能无法下载。
+    如果是这种情况，请使用Composer是添加 ``--prefer-source`` 选项。
 
-The Basics
+基础知识
 ----------
 
-The simplest ``TypeTestCase`` implementation looks like the following::
+最简单的 ``TypeTestCase`` 实现如下所示::
 
     // tests/Form/Type/TestedTypeTest.php
     namespace App\Tests\Form\Type;
@@ -48,18 +44,18 @@ The simplest ``TypeTestCase`` implementation looks like the following::
             );
 
             $objectToCompare = new TestObject();
-            // $objectToCompare will retrieve data from the form submission; pass it as the second argument
+            // $objectToCompare 将从表单提交中检索数据; 并将它作为第二个参数传递
             $form = $this->factory->create(TestedType::class, $objectToCompare);
 
             $object = new TestObject();
-            // ...populate $object properties with the data stored in $formData
+            // ...使用 $formData 中存储的数据填充 $object 属性
 
-            // submit the data to the form directly
+            // 直接将数据提交到表单
             $form->submit($formData);
 
             $this->assertTrue($form->isSynchronized());
 
-            // check that $objectToCompare was modified as expected when the form was submitted
+            // 检查表单提交时是否按预期修改了 $objectToCompare
             $this->assertEquals($object, $objectToCompare);
 
             $view = $form->createView();
@@ -71,34 +67,30 @@ The simplest ``TypeTestCase`` implementation looks like the following::
         }
     }
 
-So, what does it test? Here comes a detailed explanation.
+那么，它测试了什么？这里有一个详细的解释。
 
-First you verify if the ``FormType`` compiles. This includes basic class
-inheritance, the ``buildForm()`` function and options resolution. This should
-be the first test you write::
+首先验证 ``FormType`` 是否编译。这包括基类继承，``buildForm()`` 函数和选项的解析。
+这应该是你写的第一个测试::
 
     $form = $this->factory->create(TestedType::class, $objectToCompare);
 
-This test checks that none of your data transformers used by the form
-failed. The :method:`Symfony\\Component\\Form\\FormInterface::isSynchronized`
-method is only set to ``false`` if a data transformer throws an exception::
+此测试检查表单使用的所有数据转换器有没有失败的。如果一个数据转换器抛出异常，则
+:method:`Symfony\\Component\\Form\\FormInterface::isSynchronized`
+方法返回 ``false``::
 
     $form->submit($formData);
     $this->assertTrue($form->isSynchronized());
 
 .. note::
 
-    Don't test the validation: it is applied by a listener that is not
-    active in the test case and it relies on validation configuration.
-    Instead, unit test your custom constraints directly.
+    不要测试验证：它被应用在一个在测试用例中不激活的监听器上，并且它依赖验证配置。
+    相反，你可以直接对自定义约束进行单元测试。
 
-Next, verify the submission and mapping of the form. The test below
-checks if all the fields are correctly specified::
+接下来，验证表单的提交和映射。下面的测试测试检查了所有的字段是否正确被指定::
 
     $this->assertEquals($object, $objectToCompare);
 
-Finally, check the creation of the ``FormView``. You should check if all
-widgets you want to display are available in the children property::
+最后，检查 ``FormView`` 的创建。你应该检查要显示的所有部件是否在子属性中可用::
 
     $view = $form->createView();
     $children = $view->children;
@@ -109,20 +101,18 @@ widgets you want to display are available in the children property::
 
 .. tip::
 
-    Use :ref:`PHPUnit data providers <testing-data-providers>` to test multiple
-    form conditions using the same test code.
+    通过 :ref:`PHPUnit数据提供器 <testing-data-providers>`
+    使用相同的测试代码来测试多个表单条件。
 
-Testings Types from the Service Container
+从服务容器测试类型
 -----------------------------------------
 
-Your form may be used as a service, as it depends on other services (e.g. the
-Doctrine entity manager). In these cases, using the above code won't work, as
-the Form component just instantiates the form type without passing any
-arguments to the constructor.
+你的表单可能被用作一个服务，因为它依赖于一些其他服务（例如Doctrine实体管理器）。
+在这些情况下，使用上面的代码将不起作用，因为Form组件只是实例化表单类型而不会给构造函数传递任何参数。
 
-To solve this, you have to mock the injected dependencies, instantiate your own
-form type and use the :class:`Symfony\\Component\\Form\\PreloadedExtension` to
-make sure the ``FormRegistry`` uses the created instance::
+要解决这个问题，你必须模拟注入的依赖，然后实例化你自己的表单类型，并使用
+:class:`Symfony\\Component\\Form\\PreloadedExtension`
+来确保 ``FormRegistry`` 使用了已创建的实例::
 
     // tests/Form/Type/TestedTypeTest.php
     namespace App\Tests\Form\Type;
@@ -139,7 +129,7 @@ make sure the ``FormRegistry`` uses the created instance::
 
         protected function setUp()
         {
-            // mock any dependencies
+            // 模拟任何依赖
             $this->objectManager = $this->createMock(ObjectManager::class);
 
             parent::setUp();
@@ -147,36 +137,34 @@ make sure the ``FormRegistry`` uses the created instance::
 
         protected function getExtensions()
         {
-            // create a type instance with the mocked dependencies
+            // 使用模拟的依赖来创建一个类型实例
             $type = new TestedType($this->objectManager);
 
             return array(
-                // register the type instances with the PreloadedExtension
+                // 使用 PreloadedExtension 注册该类型实例
                 new PreloadedExtension(array($type), array()),
             );
         }
 
         public function testSubmitValidData()
         {
-            // Instead of creating a new instance, the one created in
-            // getExtensions() will be used.
+            // 不直接创建一个新实例，而是使用在 getExtensions() 中创建的实例。
             $form = $this->factory->create(TestedType::class);
 
-            // ... your test
+            // ... 你的测试
         }
     }
 
-Adding Custom Extensions
+添加自定义扩展
 ------------------------
 
-It often happens that you use some options that are added by
-:doc:`form extensions </form/create_form_type_extension>`. One of the
-cases may be the ``ValidatorExtension`` with its ``invalid_message`` option.
-The ``TypeTestCase`` only loads the core form extension, which means an
+在使用 :doc:`表单扩展 </form/create_form_type_extension>` 时经常会添加的一些选项。
+其中一个案例是使用 ``invalid_message`` 选项的 ``ValidatorExtension``。
+``TypeTestCase`` 只加载核心的表单扩展，这意味着如果你尝试测试一个依赖其他扩展的类，那么
 :class:`Symfony\\Component\\OptionsResolver\\Exception\\InvalidOptionsException`
-will be raised if you try to test a class that depends on other extensions.
-The :method:`Symfony\\Component\\Form\\Test\\TypeTestCase::getExtensions` method
-allows you to return a list of extensions to register::
+将可能被触发。
+:method:`Symfony\\Component\\Form\\Test\\TypeTestCase::getExtensions`
+方法允许你返回一个扩展列表并去注册它们::
 
     // tests/Form/Type/TestedTypeTest.php
     namespace App\Tests\Form\Type;
@@ -196,7 +184,7 @@ allows you to return a list of extensions to register::
         protected function getExtensions()
         {
             $this->validator = $this->createMock(ValidatorInterface::class);
-            // use getMock() on PHPUnit 5.3 or below
+            // 在 PHPUnit 5.3 或更低版本中使用 getMock()
             // $this->validator = $this->getMock(ValidatorInterface::class);
             $this->validator
                 ->method('validate')
@@ -210,11 +198,11 @@ allows you to return a list of extensions to register::
             );
         }
 
-        // ... your tests
+        // ... 你的测试
     }
 
-It is also possible to load custom form types, form type extensions or type
-guessers using the :method:`Symfony\\Component\\Form\\Test\\FormIntegrationTestCase::getTypes`,
+另外，也可以分别使用
+:method:`Symfony\\Component\\Form\\Test\\FormIntegrationTestCase::getTypes`、
 :method:`Symfony\\Component\\Form\\Test\\FormIntegrationTestCase::getTypeExtensions`
-and :method:`Symfony\\Component\\Form\\Test\\FormIntegrationTestCase::getTypeGuessers`
-methods.
+和 :method:`Symfony\\Component\\Form\\Test\\FormIntegrationTestCase::getTypeGuessers`
+方法来加载自定义的表单类型、表单类型扩展以及类型猜测器。

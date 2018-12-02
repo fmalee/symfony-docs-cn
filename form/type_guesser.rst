@@ -4,39 +4,33 @@
 创建自定义类型猜测器
 ==============================
 
-The Form component can guess the type and some options of a form field by
-using type guessers. The component already includes a type guesser using the
-assertions of the Validation component, but you can also add your own custom
-type guessers.
+Form组件可以使用类型猜测器猜测表单字段的类型和一些选项。
+该组件已经内置一个使用Validation组件的断言的类型猜测器，但你也可以添加自己的自定义类型猜测器。
 
-.. sidebar:: Form Type Guessers in the Bridges
+.. sidebar:: Form Type Guessers in the Bridges形式类型的桥梁猜测者
 
-    Symfony also provides some form type guessers in the bridges:
+    Symfony还在桥接中提供了一些表单类型猜测器：
 
-    * :class:`Symfony\\Bridge\\Propel1\\Form\\PropelTypeGuesser` provided by
-      the Propel1 bridge;
-    * :class:`Symfony\\Bridge\\Doctrine\\Form\\DoctrineOrmTypeGuesser`
-      provided by the Doctrine bridge.
+    * :class:`Symfony\\Bridge\\Propel1\\Form\\PropelTypeGuesser` 由Propel1桥接提供;
+    * :class:`Symfony\\Bridge\\Doctrine\\Form\\DoctrineOrmTypeGuesser` 由Doctrine桥接提供.
 
-Create a PHPDoc Type Guesser
+创建一个PHPDoc类型猜测器
 ----------------------------
 
-In this section, you are going to build a guesser that reads information about
-fields from the PHPDoc of the properties. At first, you need to create a class
-which implements :class:`Symfony\\Component\\Form\\FormTypeGuesserInterface`.
-This interface requires four methods:
+在本节中，你将构建一个猜测器，它从属性的PHPDoc中读取有关字段的信息。
+首先，你需要创建一个实现 :class:`Symfony\\Component\\Form\\FormTypeGuesserInterface`
+的类。此接口需要四种方法：
 
 :method:`Symfony\\Component\\Form\\FormTypeGuesserInterface::guessType`
-    Tries to guess the type of a field;
+    试图猜测一个字段的类型;
 :method:`Symfony\\Component\\Form\\FormTypeGuesserInterface::guessRequired`
-    Tries to guess the value of the :ref:`required <reference-form-option-required>`
-    option;
+    试图猜测 :ref:`required <reference-form-option-required>` 选项的值;
 :method:`Symfony\\Component\\Form\\FormTypeGuesserInterface::guessMaxLength`
-    Tries to guess the value of the ``maxlength`` input attribute;
+    试图猜测 ``maxlength`` 输入属性的值;
 :method:`Symfony\\Component\\Form\\FormTypeGuesserInterface::guessPattern`
-    Tries to guess the value of the ``pattern`` input attribute.
+    试图猜测 ``pattern`` 输入属性的值。
 
-Start by creating the class and these methods. Next, you'll learn how to fill each in::
+首先创建该类和这些方法。接下来，你将学习如何填写每个方法::
 
     // src/Form/TypeGuesser/PHPDocTypeGuesser.php
     namespace App\Form\TypeGuesser;
@@ -62,27 +56,23 @@ Start by creating the class and these methods. Next, you'll learn how to fill ea
         }
     }
 
-Guessing the Type
+猜测类型
 ~~~~~~~~~~~~~~~~~
 
-When guessing a type, the method returns either an instance of
-:class:`Symfony\\Component\\Form\\Guess\\TypeGuess` or nothing, to determine
-that the type guesser cannot guess the type.
+在猜测类型时，该方法返回一个 :class:`Symfony\\Component\\Form\\Guess\\TypeGuess`
+实例或什么都没有，以确定该类型猜测器无法猜测对应的类型。
 
-The ``TypeGuess`` constructor requires three options:
+``TypeGuess`` 构造函数需要三个选项：
 
-* The type name (one of the :doc:`form types </reference/forms/types>`);
-* Additional options (for instance, when the type is ``entity``, you also
-  want to set the ``class`` option). If no types are guessed, this should be
-  set to an empty array;
-* The confidence that the guessed type is correct. This can be one of the
-  constants of the :class:`Symfony\\Component\\Form\\Guess\\Guess` class:
-  ``LOW_CONFIDENCE``, ``MEDIUM_CONFIDENCE``, ``HIGH_CONFIDENCE``,
-  ``VERY_HIGH_CONFIDENCE``. After all type guessers have been executed, the
-  type with the highest confidence is used.
+* 类型名称（:doc:`表单类型 </reference/forms/types>` 之一）;
+* 其他选项（例如，当类型是 ``entity`` 时，你还要设置 ``class`` 选项）。
+  如果没有猜到对应类型，则应将其设置为一个空数组;
+* 猜测出来的类型的正确程度。它可以是
+  :class:`Symfony\\Component\\Form\\Guess\\Guess` 类的常量之一：``LOW_CONFIDENCE``、
+  ``MEDIUM_CONFIDENCE``、``HIGH_CONFIDENCE``、``VERY_HIGH_CONFIDENCE``。
+  在执行完所有类型猜测器之后，使用具有最高可信度的类型。
 
-With this knowledge, you can implement the ``guessType()`` method of the
-``PHPDocTypeGuesser``::
+有了这些知识，你就可以实现 ``PHPDocTypeGuesser`` 的 ``guessType()`` 方法::
 
     namespace App\Form\TypeGuesser;
 
@@ -100,19 +90,19 @@ With this knowledge, you can implement the ``guessType()`` method of the
             $annotations = $this->readPhpDocAnnotations($class, $property);
 
             if (!isset($annotations['var'])) {
-                return; // guess nothing if the @var annotation is not available
+                return; // 如果 @var 注释不可用，则不进行猜测
             }
 
-            // otherwise, base the type on the @var annotation
+            // 否则，将基于@var注释获取类型
             switch ($annotations['var']) {
                 case 'string':
-                    // there is a high confidence that the type is text when
-                    // @var string is used
+                    // 类型是文本时，有很高的可信度
+                    // 应用 @var string
                     return new TypeGuess(TextType::class, array(), Guess::HIGH_CONFIDENCE);
 
                 case 'int':
                 case 'integer':
-                    // integers can also be the id of an entity or a checkbox (0 or 1)
+                    // 整数也可以是一个实体的id或一个复选框（0或1）
                     return new TypeGuess(IntegerType::class, array(), Guess::MEDIUM_CONFIDENCE);
 
                 case 'float':
@@ -125,7 +115,7 @@ With this knowledge, you can implement the ``guessType()`` method of the
                     return new TypeGuess(CheckboxType::class, array(), Guess::HIGH_CONFIDENCE);
 
                 default:
-                    // there is a very low confidence that this one is correct
+                    // 如果此处是正确类型，则赋予非常低的可信度
                     return new TypeGuess(TextType::class, array(), Guess::LOW_CONFIDENCE);
             }
         }
@@ -135,7 +125,7 @@ With this knowledge, you can implement the ``guessType()`` method of the
             $reflectionProperty = new \ReflectionProperty($class, $property);
             $phpdoc = $reflectionProperty->getDocComment();
 
-            // parse the $phpdoc into an array like:
+            // 将 $phpdoc 解析为一个数组:
             // array('var' => 'string', 'since' => '1.0')
             $phpdocTags = ...;
 
@@ -145,40 +135,36 @@ With this knowledge, you can implement the ``guessType()`` method of the
         // ...
     }
 
-This type guesser can now guess the field type for a property if it has
-PHPdoc!
+这个类型猜测器现在可以猜测一个属性的字段类型了，如果该属性有PHPdoc的话！
 
-Guessing Field Options
+猜测字段选项
 ~~~~~~~~~~~~~~~~~~~~~~
 
-The other three methods (``guessMaxLength()``, ``guessRequired()`` and
-``guessPattern()``) return a :class:`Symfony\\Component\\Form\\Guess\\ValueGuess`
-instance with the value of the option. This constructor has 2 arguments:
+其他三个方法（``guessMaxLength()``、``guessRequired()`` 和
+``guessPattern()``）返回一个带有选项值的
+:class:`Symfony\\Component\\Form\\Guess\\ValueGuess`
+实例。它的构造函数有2个参数：
 
-* The value of the option;
-* The confidence that the guessed value is correct (using the constants of the
-  ``Guess`` class).
+* 选项的值;
+* 猜测出来的值的正确程度（使用 ``Guess`` 类的常量）。
 
-``null`` is guessed when you believe the value of the option should not be
-set.
+当你认为不应该设置选项的值时，就会被猜测为 ``null``。
 
 .. caution::
 
-    You should be very careful using the ``guessPattern()`` method. When the
-    type is a float, you cannot use it to determine a min or max value of the
-    float (e.g. you want a float to be greater than ``5``, ``4.512313`` is not valid
-    but ``length(4.512314) > length(5)`` is, so the pattern will succeed). In
-    this case, the value should be set to ``null`` with a ``MEDIUM_CONFIDENCE``.
+    你应该非常小心地使用 ``guessPattern()`` 方法。
+    当类型是一个浮点数时，你不能使用它来确定浮点数的最小值或最大值（例如，你希望一个浮点数大于
+    ``5``，``4.512313`` 会无效，但是 ``length(4.512314) > length(5)`` 有效，因此模式将成功）。
+    在这种情况下，应使用一个 ``MEDIUM_CONFIDENCE`` 并将值设置为 ``null``。
 
-Registering a Type Guesser
+注册类型猜测器
 --------------------------
 
-If you're using :ref:`autowire <services-autowire>` and
-:ref:`autoconfigure <services-autoconfigure>`, you're done! Symfony already knows
-and is using your form type guesser.
+如果你正在使用 :ref:`自动装配 <services-autowire>` 和
+:ref:`自动配置 <services-autoconfigure>` ，那么你已经完工了！
+Symfony已经知道并正在使用你的表单类型猜测器。
 
-If you're **not** using autowire and autoconfigure, register your service manually
-and tag it with ``form.type_guesser``:
+如果你 **不** 使用自动装配和自动配置，请手动注册你的服务并使用 ``form.type_guesser`` 标签进行标记：
 
 .. configuration-block::
 
@@ -216,12 +202,12 @@ and tag it with ``form.type_guesser``:
             ->addTag('form.type_guesser')
         ;
 
-.. sidebar:: Registering a Type Guesser in the Component
+.. sidebar:: 在组件中注册类型猜测器
 
-    If you're using the Form component standalone in your PHP project, use
-    :method:`Symfony\\Component\\Form\\FormFactoryBuilder::addTypeGuesser` or
-    :method:`Symfony\\Component\\Form\\FormFactoryBuilder::addTypeGuessers` of
-    the ``FormFactoryBuilder`` to register new type guessers::
+    如果你使用的表单组件独立于你的PHP项目，那么请使用 ``FormFactoryBuilder`` 的
+    :method:`Symfony\\Component\\Form\\FormFactoryBuilder::addTypeGuesser` 或
+    :method:`Symfony\\Component\\Form\\FormFactoryBuilder::addTypeGuessers`
+    来注册新的类型猜测器::
 
         use Symfony\Component\Form\Forms;
         use Acme\Form\PHPDocTypeGuesser;

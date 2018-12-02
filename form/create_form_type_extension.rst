@@ -4,27 +4,22 @@
 如何创建表单类型扩展
 ===================================
 
-Form type extensions are *incredibly* powerful: they allow you to *modify* any
-existing form field types across the entire system.
+表单类型扩展 *令人难以置信* 的强大：它们允许你 *修改* 整个系统中的任何现有表单字段类型。
 
-They have 2 main use-cases:
+他们有两个主要用例：
 
-#. You want to add a **specific feature to a single form type** (such
-   as adding a "download" feature to the ``FileType`` field type);
-#. You want to add a **generic feature to several types** (such as
-   adding a "help" text to every "input text"-like type).
+#. 你想要将一个 **特定功能添加到单个表单类型** （例如向 ``FileType`` 字段类型添加“下载”功能）;
+#. 你希望 **为几种类型添加通用功能** （例如向每个“输入文本”类型添加一个“帮助”文本）。
 
-Imagine that you have a ``Media`` entity, and that each media is associated
-to a file. Your ``Media`` form uses a file type, but when editing the entity,
-you would like to see its image automatically rendered next to the file
-input.
+想象一下，你有一个 ``Media`` 实体，并且每个媒体都与一个文件相关联。
+你的 ``Media`` 表单使用一个文件类型，但在编辑实体时，你希望在文件输入旁边自动渲染其图像。
 
-Defining the Form Type Extension
+定义表单类型扩展
 --------------------------------
 
-First, create the form type extension class extending from
-:class:`Symfony\\Component\\Form\\AbstractTypeExtension` (you can implement
-:class:`Symfony\\Component\\Form\\FormTypeExtensionInterface` instead if you prefer)::
+首先，创建继承自 :class:`Symfony\\Component\\Form\\AbstractTypeExtension`
+的表单类型扩展类（如果你愿意，也可以用实现
+:class:`Symfony\\Component\\Form\\FormTypeExtensionInterface` 来代替）::
 
     // src/Form/Extension/ImageTypeExtension.php
     namespace App\Form\Extension;
@@ -35,61 +30,51 @@ First, create the form type extension class extending from
     class ImageTypeExtension extends AbstractTypeExtension
     {
         /**
-         * Return the class of the type being extended.
+         * 返回被扩展的类型的类。
          */
         public static function getExtendedTypes(): iterable
         {
-            // return FormType::class to modify (nearly) every field in the system
+            // 返回 FormType::class 来修改系统中的（几乎）每个字段
             return array(FileType::class);
         }
     }
 
-The only method you **must** implement is ``getExtendedTypes()``, which is used
-to configure *which* field types you want to modify.
+你 **必须** 实现的唯一的方法是 ``getExtendedTypes()``，该方法用于配置要修改 *哪个* 字段类型。
 
 .. versionadded:: 4.2
-    The ``getExtendedTypes()`` method was introduced in Symfony 4.2.
+    ``getExtendedTypes()`` 方法是在Symfony 4.2中引入的。
 
-Depending on your use case, you may need to override some of the following methods:
+根据你的使用情况，你可能需要重写以下某些方法：
 
 * ``buildForm()``
 * ``buildView()``
 * ``configureOptions()``
 * ``finishView()``
 
-For more information on what those methods do, see the
-:ref:`custom form field type <form-type-methods-explanation>` article.
+有关这些方法的更多信息，请参阅 :ref:`自定义表单字段类型 <form-type-methods-explanation>`。
 
-Registering your Form Type Extension as a Service
+注册表单类型扩展为服务
 -------------------------------------------------
 
-Form type extensions must be registered as services and :doc:`tagged </service_container/tags>`
-with the ``form.type_extension`` tag. If you're using the
-:ref:`default services.yaml configuration <service-container-services-load-example>`,
-this is already done for you, thanks to :ref:`autoconfiguration <services-autoconfigure>`.
+表单类型扩展必须注册为服务并使用 ``form.type_extension`` 标签进行
+:doc:`标记 </service_container/tags>`。如果你使用
+:ref:`默认的services.yaml配置 <service-container-services-load-example>`，得益于
+:ref:`自动配置 <services-autoconfigure>`，你已经完工了。
 
 .. tip::
 
-    There is an optional tag attribute called ``priority``, which defaults to
-    ``0`` and controls the order in which the form type extensions are loaded
-    (the higher the priority, the earlier an extension is loaded). This is
-    useful when you need to guarantee that one extension is loaded before or
-    after another extension. Using this attribute requires you to add the
-    service configuration explicitly.
+    有一个名为 ``priority`` 的默认为 ``0`` 可选标签属性，它控制加载表单类型扩展的顺序（优先级越高，越早加载该扩展）。
+    当你需要保证在另一个扩展之前或之后加载一个扩展时，这就非常有用。
+    要使用此属性，你必须显式的添加服务配置。
 
-Once the extension is registered, any method that you've overridden (e.g.
-``buildForm()``) will be called whenever *any* field of the given type
-(``FileType``) is built.
+注册扩展后，只要构建给定类型(``FileType``)的 *任何* 字段，就会调用任何你已重写的方法（例如 ``buildForm()``）。
 
-Adding the extension Business Logic
+添加扩展的业务逻辑
 -----------------------------------
 
-The goal of your extension is to display a nice image next to file input
-(when the underlying model contains images). For that purpose, suppose that
-you use an approach similar to the one described in
-:doc:`How to handle File Uploads with Doctrine </controller/upload_file>`:
-you have a Media model with a path property, corresponding to the image path in
-the database::
+你的扩展的目标是在文件输入框旁边显示一个漂亮的图像（当底层模型包含图像时）。
+为此，假设你使用类似于 :doc:`如何使用Doctrine处理文件上传 </controller/upload_file>`
+中描述的方法：你有一个带有路径属性的Media模型，对应于数据库中的图像路径::
 
     // src/Entity/Media.php
     namespace App\Entity;
@@ -101,7 +86,7 @@ the database::
         // ...
 
         /**
-         * @var string The path - typically stored in the database
+         * @var string 媒体路径 - 通常存储在数据库中
          */
         private $path;
 
@@ -109,20 +94,19 @@ the database::
 
         public function getWebPath()
         {
-            // ... $webPath being the full image URL, to be used in templates
+            // ... $webPath 是要在模板中使用的完整图像URL
 
             return $webPath;
         }
     }
 
-Your form type extension class will need to do two things in order to extend
-the ``FileType::class`` form type:
+你的表单类型扩展类需要做两件事来继承 ``FileType::class`` 表单类型：
 
-#. Override the ``configureOptions()`` method so that any ``FileType`` field can
-   have an  ``image_property`` option;
-#. Override the ``buildView()`` methods to pass the image URL to the view.
+#. 重写 ``configureOptions()`` 方法，以便任何 ``FileType`` 字段都可以有一个
+   ``image_property`` 选项;
+#. 重写 ``buildView()`` 方法以将图像URL传递给视图。
 
-For example::
+例如::
 
     // src/Form/Extension/ImageTypeExtension.php
     namespace App\Form\Extension;
@@ -138,20 +122,20 @@ For example::
     {
         public static function getExtendedTypes(): iterable
         {
-            // return FormType::class to modify (nearly) every field in the system
+            // 返回 FormType::class 来修改系统中的（几乎）每个字段
             return array(FileType::class);
         }
 
         public function configureOptions(OptionsResolver $resolver)
         {
-            // makes it legal for FileType fields to have an image_property option
+            // 使 FileType 字段具有一个合法的 image_property 选项
             $resolver->setDefined(array('image_property'));
         }
 
         public function buildView(FormView $view, FormInterface $form, array $options)
         {
             if (isset($options['image_property'])) {
-                // this will be whatever class/entity is bound to your form (e.g. Media)
+                // 这是绑定到你的表单的任何类/实体（例如媒体）
                 $parentData = $form->getParent()->getData();
 
                 $imageUrl = null;
@@ -160,23 +144,21 @@ For example::
                     $imageUrl = $accessor->getValue($parentData, $options['image_property']);
                 }
 
-                // sets an "image_url" variable that will be available when rendering this field
+                // 设置一个渲染此字段时可用的 “image_url” 变量
                 $view->vars['image_url'] = $imageUrl;
             }
         }
 
     }
 
-Override the File Widget Template Fragment
+重写File Widget的模板片段
 ------------------------------------------
 
-Each field type is rendered by a template fragment. Those template fragments
-can be overridden in order to customize form rendering. For more information,
-you can refer to the :ref:`form-customization-form-themes` article.
+每个字段类型都由一个模板片段来渲染。你可以重写这些模板片段以自定义表单渲染。
+有关更多信息，请参阅 :ref:`form-customization-form-themes` 文档。
 
-In your extension class, you added a new variable (``image_url``), but
-you still need to take advantage of this new variable in your templates.
-Specifically, you need to override the ``file_widget`` block:
+在你的扩展类中，你添加了一个新变量（``image_url``），但仍需要在模板中利用此新变量。
+具体来说，你需要重写 ``file_widget`` 区块：
 
 .. code-block:: html+twig
 
@@ -194,15 +176,13 @@ Specifically, you need to override the ``file_widget`` block:
         {% endspaceless %}
     {% endblock %}
 
-Be sure to :ref:`configure this form theme template <forms-theming-global>` so that
-the form system sees it.
+请务必 :ref:`配置此表单主题模板 <forms-theming-global>`，以便表单系统能看到它。
 
-Using the Form Type Extension
+使用表单类型扩展
 -----------------------------
 
-From now on, when adding a field of type ``FileType::class`` to your form, you can
-specify an ``image_property`` option that will be used to display an image
-next to the file field. For example::
+从现在开始，在向表单添加一个 ``FileType::class`` 类型的字段时，你可以指定一个
+``image_property`` 选项，该选项将用于在文件字段旁边显示一个图像。例如::
 
     // src/Form/Type/MediaType.php
     namespace App\Form\Type;
@@ -222,27 +202,23 @@ next to the file field. For example::
         }
     }
 
-When displaying the form, if the underlying model has already been associated
-with an image, you will see it displayed next to the file input.
+显示该表单时，如果底层模型已与一个图像关联，你将会看到它显示在文件输入框旁边。
 
-Generic Form Type Extensions
+通用表单类型扩展
 ----------------------------
 
-You can modify several form types at once by specifying their common parent
-(:doc:`/reference/forms/types`). For example, several form types inherit from the
-``TextType`` form type (such as ``EmailType``, ``SearchType``, ``UrlType``, etc.).
-A form type extension applying to ``TextType`` (i.e. whose ``getExtendedType()``
-method returns ``TextType::class``) would apply to all of these form types.
+你可以通过指定它们的公共父级（:doc:`/reference/forms/types`）来一次修改多个表单类型。
+例如，有一些表单类型均继承自 ``TextType`` 表单类型（如 ``EmailType``、``SearchType``、``UrlType`` 等等）。
+应用于 ``TextType``（即，其 ``getExtendedType()`` 方法返回 ``TextType::class``）的一个表单类型扩展将适用于所有这些表单类型。
 
-In the same way, since **most** form types natively available in Symfony inherit
-from the ``FormType`` form type, a form type extension applying to ``FormType``
-would apply to all of these (notable exceptions are the ``ButtonType`` form
-types). Also keep in mind that if you created (or are using) a *custom* form type,
-it's possible that it does *not* extend ``FormType``, and so your form type extension
-may not be applied to it.
+同样的，由于Symfony中本机可用的 **大多数** 表单类型都从 ``FormType``
+表单类型继承，如果一个表单类型扩展应用于 ``FormType``，那么它也就同时在所有这些字段类型上生效（值得注意的例外是
+``ButtonType`` 表单类型）。
 
-Another option is to return multiple form types in the ``getExtendedTypes()``
-method to extend all of them::
+另外请记住，如果你创建（或正在使用）一个 *自定义* 的表单类型，它可能 *没有* 继承
+``FormType``，因此你的表单类型扩展可能不会应用于它。
+
+另一种选择是在 ``getExtendedTypes()`` 方法中返回多个表单类型以扩展这些表单类型::
 
     // ...
     use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
@@ -260,5 +236,4 @@ method to extend all of them::
     }
 
 .. versionadded:: 4.2
-    The feature to extend multiple form types using a single extension class
-    was introduced in Symfony 4.2.
+    Symfony 4.2中引入了使用单个扩展类扩展多个表单类型的功能。

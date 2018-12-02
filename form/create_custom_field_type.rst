@@ -4,20 +4,17 @@
 如何创建自定义表单字段类型
 ======================================
 
-Symfony comes with a bunch of core field types available for building forms.
-However there are situations where you may want to create a custom form field
-type for a specific purpose. This article assumes you need a field definition
-that holds a shipping option, based on the existing choice field. This section
-explains how the field is defined and how you can customize its layout.
+Symfony附带有一堆可用于构建表单的核心字段类型。
+但是，在某些情况下，你可能希望为特定目的创建一个自定义表单字段类型。
+本文假设你需要一个字段定义，其中包含基于现有 ``choice`` 字段的物流（shipping）选项。
+本节将介绍字段如何定义以及如何自定义其布局。
 
-Defining the Field Type
+定义字段类型
 -----------------------
 
-In order to create the custom field type, first you have to create the class
-representing the field. In this situation the class holding the field type
-will be called ``ShippingType`` and the file will be stored in the default location
-for form fields, which is ``App\Form\Type``. Make sure the field extends
-:class:`Symfony\\Component\\Form\\AbstractType`::
+要创建自定义字段类型，首先必须创建表示该字段的类。
+在这个例子中，保存该字段类型的类被命名为 ``ShippingType``，并将该文件存储在表单字段的默认位置，即
+``App\Form\Type``。同时确保该字段继承 :class:`Symfony\\Component\\Form\\AbstractType`::
 
     // src/Form/Type/ShippingType.php
     namespace App\Form\Type;
@@ -47,73 +44,59 @@ for form fields, which is ``App\Form\Type``. Make sure the field extends
 
 .. tip::
 
-    The location of this file is not important - the ``Form\Type`` directory
-    is just a convention.
+    此文件的位置并不重要 - ``Form\Type`` 目录只是一个约定。
 
-Here, the return value of the ``getParent()`` function indicates that you're
-extending the ``ChoiceType`` field. This means that, by default, you inherit
-all of the logic and rendering of that field type. To see some of the logic,
-check out the `ChoiceType`_ class. There are three methods that are particularly
-important:
+``getParent()`` 函数的返回值表示你正在扩展 ``ChoiceType`` 字段。
+这意味着，默认情况下，你继承了该字段类型的所有逻辑和渲染。
+要查看其中一些逻辑，请查看 `ChoiceType`_ 类。这里有三个方法特别重要：
 
 .. _form-type-methods-explanation:
 
 ``buildForm()``
-    Each field type has a ``buildForm()`` method, which is where
-    you configure and build any field(s). Notice that this is the same method
-    you use to setup *your* forms, and it works the same here.
+    每个字段类型都有一个 ``buildForm()`` 方法，你可以在其中配置和构建任何字段。
+    请注意，这与用于设置 *你的* 表单的是同一个方法，在此处的工作方式也相同。
 
 ``buildView()``
-    This method is used to set any extra variables you'll
-    need when rendering your field in a template. For example, in `ChoiceType`_,
-    a ``multiple`` variable is set and used in the template to set (or not
-    set) the ``multiple`` attribute on the ``select`` field. See
-    `Creating a Template for the Field`_ for more details.
+    此方法用于设置在模板中渲染该字段时需要的任何额外变量。
+    例如，在 `ChoiceType`_ 中设置了一个 ``multiple``
+    变量，而该变量在模板中被使用来设置（或不设置）``select`` 字段上的 ``multiple`` 属性。
+    有关更多详细信息，请参阅 `为字段创建一个模板`_。
 
 ``configureOptions()``
-    This defines options for your form type that
-    can be used in ``buildForm()`` and ``buildView()``. There are a lot of
-    options common to all fields (see :doc:`/reference/forms/types/form`),
-    but you can create any others that you need here.
+    这里定义了可以在 ``buildForm()`` 和 ``buildView()`` 中使用的表单类型的选项。
+    所有字段都有许多共同的选项（请参阅 :doc:`/reference/forms/types/form`），但你可以在此处创建所需的任何其他选项。
 
 .. tip::
 
-    If you're creating a field that consists of many fields, then be sure
-    to set your "parent" type as ``form`` or something that extends ``form``.
-    Also, if you need to modify the "view" of any of your child types from
-    your parent type, use the ``finishView()`` method.
+    如果你要创建一个包含许多字段的字段，请务必将“父”类型设置为 ``form`` 或某些继承 ``form`` 的类。
+    此外，如果你需要从你的父类型修改任何子类型的“视图”，请使用 ``finishView()`` 方法。
 
-The goal of this field was to extend the choice type to enable selection of the
-shipping type. This is achieved by fixing the ``choices`` to a list of available
-shipping options.
+此字段的目标是扩展 ``choice`` 类型以启用物流类型的选择选项。
+这是通过将 ``choices`` 修复为可用的运输选项列表来实现的。
 
-Creating a Template for the Field
+为字段创建一个模板
 ---------------------------------
 
-Each field type is rendered by a template fragment, which is determined in part by
-the class name of your type. For more information, see :ref:`form-customization-form-themes`.
+每个字段类型都通过一个模板片段来渲染，该片段的名称由你的类型的类名称来决定。
+有关更多信息，请参阅 :ref:`form-customization-form-themes`。
 
 .. note::
 
-    The first part of the prefix (e.g. ``shipping``) comes from the class name
-    (``ShippingType`` -> ``shipping``). This can be controlled by overriding ``getBlockPrefix()``
-    in ``ShippingType``.
+    前缀的第一部分（例如 ``shipping``）来自类名称（``ShippingType`` -> ``shipping``）。
+    这可以通过重写 ``ShippingType`` 中的 ``getBlockPrefix()`` 来控制。
 
 .. caution::
 
-    When the name of your form class matches any of the built-in field types,
-    your form might not be rendered correctly. A form type named
-    ``App\Form\PasswordType`` will have the same block name as the
-    built-in ``PasswordType`` and won't be rendered correctly. Override the
-    ``getBlockPrefix()`` method to return a unique block prefix (e.g.
-    ``app_password``) to avoid collisions.
+    当你的表单类的名称与任何内置字段类型相同时，表单可能无法正确渲染。名为
+    ``App\Form\PasswordType`` 的表单类型将具有与内置 ``PasswordType``
+    相同的区块名称，并且将无法正确渲染。
+    为避免冲突，请重写 ``getBlockPrefix()`` 方法以返回唯一的区块前缀（例如 ``app_password``）。
 
-In this case, since the parent field is ``ChoiceType``, you don't *need* to do
-any work as the custom field type will automatically be rendered like a ``ChoiceType``.
-But for the sake of this example, suppose that when your field is "expanded"
-(i.e. radio buttons or checkboxes, instead of a select field), you want to
-always render it in a ``ul`` element. In your form theme template (see above
-link for details), create a ``shipping_widget`` block to handle this:
+在这个例子中，由于父字段是 ``ChoiceType``，你 *不*
+再需要做任何工作，因为该自定义字段类型将自动渲染为一个类似 ``ChoiceType`` 的外观。
+但是为了展示这个例子，现在假设你的字段是“expanded”（即单选按钮或复选框，而不是一个选择字段），
+你想要总是在一个 ``ul`` 元素中渲染它。
+在你的表单主题模板中（有关详细信息，请参见上面的链接），创建一个 ``shipping_widget`` 区块来：
 
 .. code-block:: html+twig
 
@@ -130,7 +113,7 @@ link for details), create a ``shipping_widget`` block to handle this:
                 {% endfor %}
                 </ul>
             {% else %}
-                {# let the choice widget render the select tag #}
+                {# 让 choice 部件渲染选择标签 #}
                 {{ block('choice_widget') }}
             {% endif %}
         {% endspaceless %}
@@ -138,26 +121,24 @@ link for details), create a ``shipping_widget`` block to handle this:
 
 .. note::
 
-    Symfony 4.2 deprecated calling ``FormRenderer::searchAndRenderBlock`` for
-    fields that have already been rendered. That's why the previous example
-    includes the ``... if not child.rendered`` statement.
+    Symfony 4.2已弃用(deprecated)为已经渲染的字段调用 ``FormRenderer::searchAndRenderBlock``。
+    这就是为什么前面的例子会引入 ``... if not child.rendered`` 语句。
 
 .. tip::
 
-    You can further customize the template used to render each children of the
-    choice type. The block to override in that case is named "block name" +
-    ``_entry`` + "element name" (``label``, ``errors`` or ``widget``) (e.g. to
-    customize the labels of the children of the Shipping widget you'd need to
-    define ``{% block shipping_entry_label %} ... {% endblock %}``).
+    你可以进一步自定义用于渲染 choice 类型的每个子项的模板。
+    在这种情况下要重写的区块被命名为：
+    “区块名称”+ ``_entry`` +“元素名称”（``label``、``errors`` 或
+    ``widget``）（例如，自定义Shipping部件的子项的标签，你需要定义
+    ``{% block shipping_entry_label %} ... {% endblock %}``）。
 
 .. note::
 
-    Make sure the correct widget prefix is used. In this example the name should
-    be ``shipping_widget`` (see :ref:`form-customization-form-themes`).
-    Further, the main config file should point to the custom form template
-    so that it's used when rendering all forms.
+    确保使用正确的部件前缀。在这个例子中，名称应该是 ``shipping_widget``
+    （请参阅 :ref:`form-customization-form-themes`）。
+    此外，主配置文件应指向自定义表单模板，以便在渲染所有表单时使用它。
 
-    When using Twig this is:
+    使用Twig时，应该是：
 
     .. configuration-block::
 
@@ -194,7 +175,7 @@ link for details), create a ``shipping_widget`` block to handle this:
                 ),
             ));
 
-    For the PHP templating engine, your configuration should look like this:
+    对于PHP模板引擎，你的配置应如下所示：
 
     .. configuration-block::
 
@@ -239,11 +220,10 @@ link for details), create a ``shipping_widget`` block to handle this:
                 ),
             ));
 
-Using the Field Type
+使用字段类型
 --------------------
 
-You can now use your custom field type immediately, by creating a
-new instance of the type in one of your forms::
+你现在可以立即使用你的自定义字段类型，方法是在其中一个表单中创建该类型的一个新实例::
 
     // src/Form/Type/OrderType.php
     namespace App\Form\Type;
@@ -262,18 +242,17 @@ new instance of the type in one of your forms::
         }
     }
 
-But this only works because the ``ShippingType()`` is very simple. What if
-the shipping codes were stored in configuration or in a database? The next
-section explains how more complex field types solve this problem.
+但这只能在 ``ShippingType()`` 非常简单的情况下起作用。
+如果运输代码存储在配置或数据库中，该怎么办？下一节将介绍如何使用更复杂的字段类型来解决此问题。
 
 .. _form-field-service:
 .. _creating-your-field-type-as-a-service:
 
-Accessing Services and Config
+访问服务和配置
 -----------------------------
 
-If you need to access :doc:`services </service_container>` from your form class,
-add a ``__construct()`` method like normal::
+如果你需要从表单类访问 :doc:`服务 </service_container>`，请像往常一样添加一个
+``__construct()`` 方法::
 
     // src/Form/Type/ShippingType.php
     namespace App\Form\Type;
@@ -290,19 +269,19 @@ add a ``__construct()`` method like normal::
             $this->entityManager = $entityManager;
         }
 
-        // use $this->entityManager down anywhere you want ...
+        // 在任何你想要的地方使用 $this->entityManager ...
     }
 
-If you're using the default ``services.yaml`` configuration (i.e. services from the
-``Form/`` are loaded and ``autoconfigure`` is enabled), this will already work!
-See :ref:`service-container-creating-service` for more details.
+如果你正在使用默认的 ``services.yaml`` 配置（即已从 ``Form/``
+加载服务并启用了 ``autoconfigure``），那就已经自动生效！
+有关更多详细信息，请参阅 :ref:`service-container-creating-service`。
 
 .. tip::
 
-    If you're not using :ref:`autoconfigure <services-autoconfigure>`, make sure
-    to :doc:`tag </service_container/tags>` your service with ``form.type``.
+    如果你没有使用 :ref:`自动配置 <services-autoconfigure>`，请务必使用
+    ``form.type`` 标签来 :doc:`标记 </service_container/tags>` 你的服务。
 
-Have fun!
+玩得开心！
 
 .. _`ChoiceType`: https://github.com/symfony/symfony/blob/master/src/Symfony/Component/Form/Extension/Core/Type/ChoiceType.php
 .. _`FieldType`: https://github.com/symfony/symfony/blob/master/src/Symfony/Component/Form/Extension/Core/Type/FieldType.php
