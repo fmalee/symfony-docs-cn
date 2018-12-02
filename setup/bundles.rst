@@ -4,11 +4,8 @@
 升级Symfony主要版本的第三方Bundle
 ==========================================================
 
-Symfony 3 was released on November 2015. Although this version doesn't contain
-any new features, it removes all the backward compatibility layers included in
-the previous 2.8 version. If your bundle uses any deprecated feature and it's
-published as a third-party bundle, applications upgrading to Symfony 3 will no
-longer be able to use it.
+Symfony3于2015年11月发布。虽然此版本不包含任何新功能，但它会删除之前2.8版本中包含的所有向后兼容层。
+如果你的bundle使用任何已弃用的功能并且它作为一个第三方bundle发布，则已升级到Symfony3的应用将无法再使用它。
 
 Allowing to Install Symfony 3 Components
 ----------------------------------------

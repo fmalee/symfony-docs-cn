@@ -4,22 +4,19 @@
 如何创建自定义数据收集器
 =====================================
 
-The :doc:`Symfony Profiler </profiler>` obtains its profiling and debug
-information using some special classes called data collectors. Symfony comes
-bundled with a few of them, but you can also create your own.
+:doc:`Symfony Profiler </profiler>` 使用一些特殊的被称为数据收集器的类来获取它的分析和调试信息。
+Symfony捆绑了其中的一些，但你也可以创建自己的收集器。
 
-Creating a custom Data Collector
+创建自定义的数据收集器
 --------------------------------
 
-A data collector is a PHP class that implements the
-:class:`Symfony\\Component\\HttpKernel\\DataCollector\\DataCollectorInterface`.
-For convenience, your data collectors can also extend from the
-:class:`Symfony\\Component\\HttpKernel\\DataCollector\\DataCollector` class, which
-implements the interface and provides some utilities and the ``$this->data``
-property to store the collected information.
+数据收集器是一个实现了
+:class:`Symfony\\Component\\HttpKernel\\DataCollector\\DataCollectorInterface`
+的PHP类。为方便起见，你的数据收集器也可以从
+:class:`Symfony\\Component\\HttpKernel\\DataCollector\\DataCollector`
+类继承，该类实现对应接口并提供一些工具和 ``$this->data`` 属性来存储收集的信息。
 
-The following example shows a custom collector that stores information about the
-request::
+以下示例显示了存储有关请求的信息的一个自定义收集器::
 
     // src/DataCollector/RequestCollector.php
     namespace App\DataCollector;
@@ -51,55 +48,52 @@ request::
         // ...
     }
 
-:method:`Symfony\\Component\\HttpKernel\\DataCollector\\DataCollectorInterface::collect` method:
-    Stores the collected data in local properties (``$this->data`` if you extend
-    from :class:`Symfony\\Component\\HttpKernel\\DataCollector\\DataCollector`).
-    If the data to collect cannot be obtained through the request or response,
-    inject the needed services in the data collector.
+:method:`Symfony\\Component\\HttpKernel\\DataCollector\\DataCollectorInterface::collect` 方法:
+    将收集的数据存储在本地属性（如果从
+    :class:`Symfony\\Component\\HttpKernel\\DataCollector\\DataCollector`
+    继承，则是 ``$this->data``）中。
+    如果无法通过请求或响应获取要收集的数据，请在数据收集器中注入所需的服务。
 
     .. caution::
 
-        The ``collect()`` method is only called once. It is not used to "gather"
-        data but is there to "pick up" the data that has been stored by your
-        service.
+        ``collect()`` 方法仅被调用一次。
+        它不用于“采集”（gather）数据，而是用于“拾取”你的服务中存储的数据。
 
     .. caution::
 
-        As the profiler serializes data collector instances, you should not
-        store objects that cannot be serialized (like PDO objects) or you need
-        to provide your own ``serialize()`` method.
+        由于分析器序会列化数据收集器的实例，因此不应存储无法序列化的对象（如PDO对象），或者你需要提供自己的
+        ``serialize()`` 方法。
 
-:method:`Symfony\\Component\\HttpKernel\\DataCollector\\DataCollectorInterface::reset` method:
-    It's called between requests to reset the state of the profiler. Use it to
-    remove all the information collected with the ``collect()`` method.
+:method:`Symfony\\Component\\HttpKernel\\DataCollector\\DataCollectorInterface::reset` 方法:
+    它在请求期间被调用，以便重置分析器的状态。
+    在重置分析器状态的请求到重置之间调用它。
+    可以使用它移除利用 ``collect()`` 方法收集的所有信息。
 
-:method:`Symfony\\Component\\HttpKernel\\DataCollector\\DataCollectorInterface::getName` method:
-    Returns the collector identifier, which must be unique in the application.
-    This value is used later to access the collector information (see
-    :doc:`/testing/profiling`) so it's recommended to return a string which is
-    short, lowercased and without white spaces.
+:method:`Symfony\\Component\\HttpKernel\\DataCollector\\DataCollectorInterface::getName` 方法:
+    返回该收集器标识符，该标识符在应用中必须是唯一的。
+    此值将在稍后被用来访问该收集器的信息（请参阅
+    :doc:`/testing/profiling`），因此建议返回一个简短、小写且没有空格的字符串。
 
 .. _data_collector_tag:
 
-Enabling Custom Data Collectors
+启用自定义数据收集器
 -------------------------------
 
-If you're using the :ref:`default services.yaml configuration <service-container-services-load-example>`
-with ``autoconfigure``, then Symfony will automatically see your new data collector!
-Your ``collect()`` method should be called next time your refresh.
+如果你使用的是带 ``autoconfigure`` 的
+:ref:`默认的services.yaml配置 <service-container-services-load-example>`，
+那么Symfony的将自动看到新的数据采集器！下次刷新时会调用你的``collect()`` 方法。
 
-If you're not using ``autoconfigure``, you can also :ref:`manually wire your service <services-explicitly-configure-wire-services>`
-and :doc:`tag </service_container/tags>` it with ``data_collector``.
+如果你不使用 ``autoconfigure``，你也可以
+:ref:`手动装配你的服务 <services-explicitly-configure-wire-services>`，并将它
+:doc:`标记 </service_container/tags>` 为 ``data_collector``。
 
-Adding Web Profiler Templates
+添加Web分析器模板
 -----------------------------
 
-The information collected by your data collector can be displayed both in the
-web debug toolbar and in the web profiler. To do so, you need to create a Twig
-template that includes some specific blocks.
+你的数据收集器收集的信息可以显示在Web调试工具栏和Web分析器中。
+为此，你需要创建一个包含一些特定区块的Twig模板。
 
-However, first you must add some getters in the data collector class to give the
-template access to the collected information::
+但是，首先必须在数据收集器类中添加一些getter，以便模板访问收集的信息::
 
     // src/DataCollector/RequestCollector.php
     namespace App\DataCollector;
@@ -121,9 +115,8 @@ template access to the collected information::
         }
     }
 
-In the simplest case, you just want to display the information in the toolbar
-without providing a profiler panel. This requires to define the ``toolbar``
-block and set the value of two variables called ``icon`` and ``text``:
+在这个最简单的例子中，你只想在工具栏中显示信息而不提供分析器面板。
+这需要定义 ``toolbar`` 区块并设置两个名为 ``icon`` 和 ``text`` 的变量的值：
 
 .. code-block:: html+twig
 
@@ -131,14 +124,13 @@ block and set the value of two variables called ``icon`` and ``text``:
 
     {% block toolbar %}
         {% set icon %}
-            {# this is the content displayed as a panel in the toolbar #}
+            {# 这是在工具栏中显示为一个面板的内容 #}
             <svg xmlns="http://www.w3.org/2000/svg"> ... </svg>
             <span class="sf-toolbar-value">Request</span>
         {% endset %}
 
         {% set text %}
-            {# this is the content displayed when hovering the mouse over
-               the toolbar panel #}
+            {# 这是在鼠标悬停在工具栏面板上时显示的内容 #}
             <div class="sf-toolbar-info-piece">
                 <b>Method</b>
                 <span>{{ collector.method }}</span>
@@ -150,15 +142,14 @@ block and set the value of two variables called ``icon`` and ``text``:
             </div>
         {% endset %}
 
-        {# the 'link' value set to 'false' means that this panel doesn't
-           show a section in the web profiler #}
+        {# 'link' 值设置为 'false' 表示此面板不显示为Web分析器的一个切片 #}
         {{ include('@WebProfiler/Profiler/toolbar_item.html.twig', { link: false }) }}
     {% endblock %}
 
 .. tip::
 
-    Built-in collector templates define all their images as embedded SVG files.
-    This makes them work everywhere without having to mess with web assets links:
+    内置收集器模板将所有图像定义为嵌入式SVG文件。
+    这使得它们可以在任何地方工作，而无需弄乱网络资产链接：
 
     .. code-block:: twig
 
@@ -167,8 +158,7 @@ block and set the value of two variables called ``icon`` and ``text``:
             {# ... #}
         {% endset %}
 
-If the toolbar panel includes extended web profiler information, the Twig template
-must also define additional blocks:
+如果工具栏面板包含扩展的Web分析器信息，则该Twig模板还必须定义其他区块：
 
 .. code-block:: html+twig
 
@@ -189,12 +179,12 @@ must also define additional blocks:
     {% endblock %}
 
     {% block head %}
-        {# Optional. Here you can link to or define your own CSS and JS contents. #}
-        {# Use {{ parent() }} to extend the default styles instead of overriding them. #}
+        {# 可选项。你可以在这里链接或定义自己的CSS和JS内容。 #}
+        {# 使用{{ parent() }} 来扩展默认样式而不是重写它们。 #}
     {% endblock %}
 
     {% block menu %}
-        {# This left-hand menu appears when using the full-screen profiler. #}
+        {# 使用全屏分析器时会出现此左侧菜单。 #}
         <span class="label">
             <span class="icon"><img src="..." alt=""/></span>
             <strong>Request</strong>
@@ -202,7 +192,7 @@ must also define additional blocks:
     {% endblock %}
 
     {% block panel %}
-        {# Optional, for showing the most details. #}
+        {# 可选项，用于显示最多细节。 #}
         <h2>Acceptable Content Types</h2>
         <table>
             <tr>
@@ -217,12 +207,10 @@ must also define additional blocks:
         </table>
     {% endblock %}
 
-The ``menu`` and ``panel`` blocks are the only required blocks to define the
-contents displayed in the web profiler panel associated with this data collector.
-All blocks have access to the ``collector`` object.
+``menu`` 和 ``panel`` 区块是唯一要求的区块，以定义与该数据收集器相关联的网络分析器面板中要显示的内容。
+所有的区块都可以访问该 ``collector`` 对象。
 
-Finally, to enable the data collector template, override your service configuration
-to specify a tag that contains the template:
+最后，要启用数据收集器模板，请重写你的服务配置以指定一个包含该模板的标签：
 
 .. configuration-block::
 
@@ -235,9 +223,9 @@ to specify a tag that contains the template:
                     -
                         name:     data_collector
                         template: 'data_collector/template.html.twig'
-                        # must match the value returned by the getName() method
+                        # 必须匹配 getName() 方法返回的值
                         id:       'app.request_collector'
-                        # optional priority
+                        # 可选的优先级
                         # priority: 300
                 public: false
 
@@ -276,7 +264,6 @@ to specify a tag that contains the template:
             ))
         ;
 
-The position of each panel in the toolbar is determined by the collector priority.
-Priorities are defined as positive or negative integers and they default to ``0``.
-Most built-in collectors use ``255`` as their priority. If you want your collector
-to be displayed before them, use a higher value (like 300).
+工具栏中每个面板的位置由收集器的优先级确定。优先级应定义为正整数或负整数，默认为 ``0``。
+大多数内置收集器都使用 ``255`` 作为其优先级。
+如果你希望在它们之前显示你的收集器，请使用更高的值（如300）。

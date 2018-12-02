@@ -4,55 +4,49 @@
 配置Web服务器
 ========================
 
-The preferred way to develop your Symfony application is to use
-:doc:`PHP's internal web server </setup/built_in_web_server>`. However,
-when using an older PHP version or when running the application in the production
-environment, you'll need to use a fully-featured web server. This article
-describes several ways to use Symfony with Apache or Nginx.
+开发Symfony应用的首选方法是使用 :doc:`PHP的内部Web服务器 </setup/built_in_web_server>`。
+但是，在使用较旧的PHP版本或在生产环境中运行应用时，你需要使用一个功能齐全的Web服务器。
+本文介绍了在Apache或Nginx中使用Symfony的几种方法。
 
-When using Apache, you can configure PHP as an
-:ref:`Apache module <web-server-apache-mod-php>` or with FastCGI using
-:ref:`PHP FPM <web-server-apache-fpm>`. FastCGI also is the preferred way
-to use PHP :ref:`with Nginx <web-server-nginx>`.
+使用Apache时，你可以将PHP配置为一个
+:ref:`Apache模块 <web-server-apache-mod-php>`，或使用
+:ref:`PHP FPM <web-server-apache-fpm>` 来配置FastCGI。
+FastCGI也是 :ref:`在Nginx中 <web-server-nginx>` 使用PHP的首选方式。
 
-.. sidebar:: The public directory
+.. sidebar:: 公共目录
 
-    The public directory is the home of all of your application's public and
-    static files, including images, stylesheets and JavaScript files. It is
-    also where the front controller (``index.php``) lives.
+    公共目录是所有应用的公共和静态文件的主页，包括图像、样式表和脚本文件。
+    它也是前控制器（``index.php``）所在的地方。
 
-    The public directory serves as the document root when configuring your
-    web server. In the examples below, the ``public/`` directory will be the
-    document root. This directory is ``/var/www/project/public/``.
+    配置Web服务器时，公共目录充当文档根目录。
+    在下面的示例中，``public/`` 目录将成为文档根目录。这个目录是 ``/var/www/project/public/``。
 
-    If your hosting provider requires you to change the ``public/`` directory to
-    another location (e.g. ``public_html/``) make sure you
-    :ref:`override the location of the public/ directory <override-web-dir>`.
+    如果你的托管服务提供商要求你将 ``public/``
+    目录更改为其他位置（例如 ``public_html/``），请确保
+    :ref:`重写 public/ 目录的位置 <override-web-dir>`。
 
 .. _web-server-apache-mod-php:
 
-Adding Rewrite Rules
+添加重写规则
 --------------------
 
-The easiest way is to install the Apache recipe by executing the following command:
+最简单的方法是通过执行以下命令来安装Apache指令：
 
 .. code-block:: terminal
 
     $ composer require symfony/apache-pack
 
-This recipe installs a ``.htaccess`` file in the ``public/`` directory that contains
-the rewrite rules.
+该指令在 ``public/`` 目录中安装了一个包含重写规则的 ``.htaccess`` 文件。
 
 .. tip::
 
-    A performance improvement can be achieved by moving the rewrite rules from the ``.htaccess``
-    file into the VirtualHost block of your Apache configuration and then changing
-    ``AllowOverride All`` to ``AllowOverride None`` in your VirtualHost block.
+    通过将重写规则从 ``.htaccess`` 文件移动到Apache配置的 ``VirtualHost`` 区块，然后将
+    ``AllowOverride All`` 更改为 ``AllowOverride None``， 可以实现性能提升。
 
-Apache with mod_php/PHP-CGI
+Apache和mod_php/PHP-CGI
 ---------------------------
 
-The **minimum configuration** to get your application running under Apache is:
+使你的应用在Apache下运行的 **最低配置** 是：
 
 .. code-block:: apache
 
@@ -67,8 +61,8 @@ The **minimum configuration** to get your application running under Apache is:
             Allow from All
         </Directory>
 
-        # uncomment the following lines if you install assets as symlinks
-        # or run into problems when compiling LESS/Sass/CoffeeScript assets
+        # 如果你将资源安装为符号链接
+        # 或在编译 LESS/Sass/CoffeeScript 资产时遇到问题，请取消以下注释行
         # <Directory /var/www/project>
         #     Options FollowSymlinks
         # </Directory>
@@ -79,11 +73,10 @@ The **minimum configuration** to get your application running under Apache is:
 
 .. tip::
 
-    If your system supports the ``APACHE_LOG_DIR`` variable, you may want
-    to use ``${APACHE_LOG_DIR}/`` instead of hardcoding ``/var/log/apache2/``.
+    如果你的系统支持 ``APACHE_LOG_DIR`` 变量，你可能希望使用
+    ``${APACHE_LOG_DIR}/`` 而不是硬编码 ``/var/log/apache2/``。
 
-Use the following **optimized configuration** to disable ``.htaccess`` support
-and increase web server performance:
+使用以下 **优化配置** 来禁用 ``.htaccess`` 以支持并提高Web服务器性能：
 
 .. code-block:: apache
 
@@ -100,22 +93,21 @@ and increase web server performance:
             FallbackResource /index.php
         </Directory>
 
-        # uncomment the following lines if you install assets as symlinks
-        # or run into problems when compiling LESS/Sass/CoffeeScript assets
+        # 如果你将资源安装为符号链接
+        # 或在编译 LESS/Sass/CoffeeScript 资产时遇到问题，请取消以下注释行
         # <Directory /var/www/project>
         #     Options FollowSymlinks
         # </Directory>
 
-        # optionally disable the fallback resource for the asset directories
-        # which will allow Apache to return a 404 error when files are
-        # not found instead of passing the request to Symfony
+        # 可选地禁用资产目录的回退(fallback)资源，
+        # 这将允许Apache在找不到文件时返回一个404错误，而不是将请求传递给Symfony
         <Directory /var/www/project/public/bundles>
             FallbackResource disabled
         </Directory>
         ErrorLog /var/log/apache2/project_error.log
         CustomLog /var/log/apache2/project_access.log combined
 
-        # optionally set the value of the environment variables used in the application
+        # 可选地设置应用中使用的环境变量的值
         #SetEnv APP_ENV prod
         #SetEnv APP_SECRET <app-secret-id>
         #SetEnv DATABASE_URL "mysql://db_user:db_pass@host:3306/db_name"
@@ -123,19 +115,18 @@ and increase web server performance:
 
 .. tip::
 
-    If you are using **php-cgi**, Apache does not pass HTTP basic username and
-    password to PHP by default. To work around this limitation, you should use
-    the following configuration snippet:
+    如果你使用的是 **php-cgi**，Apache默认情况下不会将HTTP基本用户名和密码传递给PHP。
+    要解决此限制，你应使用以下配置代码段：
 
     .. code-block:: apache
 
         RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
-Using mod_php/PHP-CGI with Apache 2.4
+Apache2.4和mod_php/PHP-CGI
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In Apache 2.4, ``Order Allow,Deny`` has been replaced by ``Require all granted``.
-Hence, you need to modify your ``Directory`` permission settings as follows:
+在Apache 2.4中， ``Order Allow,Deny`` 已被替换为 ``Require all granted``。
+因此，你需要修改你的 ``Directory`` 权限设置，如下所示：
 
 .. code-block:: apache
 
@@ -144,43 +135,41 @@ Hence, you need to modify your ``Directory`` permission settings as follows:
         # ...
     </Directory>
 
-For advanced Apache configuration options, read the official `Apache documentation`_.
+有关高级的Apache配置选项，请阅读官方的 `Apache文档`_。
 
 .. _web-server-apache-fpm:
 
-Apache with PHP-FPM
+Apache和PHP-FPM
 -------------------
 
-To make use of PHP-FPM with Apache, you first have to ensure that you have
-the FastCGI process manager ``php-fpm`` binary and Apache's FastCGI module
-installed (for example, on a Debian based system you have to install the
-``libapache2-mod-fastcgi`` and ``php7.1-fpm`` packages).
+要在Apache中使用PHP-FPM，首先必须你拥有FastCGI进程管理器
+``php-fpm`` 的二进制文件和Apache的FastCGI模块（例如，在基于Debian的系统上，你必须安装
+``libapache2-mod-fastcgi`` 和 ``php7.1-fpm`` 包）。
 
-PHP-FPM uses so-called *pools* to handle incoming FastCGI requests. You can
-configure an arbitrary number of pools in the FPM configuration. In a pool
-you configure either a TCP socket (IP and port) or a Unix domain socket to
-listen on. Each pool can also be run under a different UID and GID:
+PHP-FPM使用所谓的 *池* 来处理传入的FastCGI请求。
+你可以在FPM配置中配置任意数量的池。
+在一个池中，你可以配置要监听的TCP套接字（IP和端口）或Unix域套接字。
+每个池也可以在一个不同的UID和GID下运行：
 
 .. code-block:: ini
 
-    ; a pool called www
+    ; 名为 www 的一个池
     [www]
     user = www-data
     group = www-data
 
-    ; use a unix domain socket
+    ; 使用一个Unix域套接字
     listen = /var/run/php/php7.1-fpm.sock
 
-    ; or listen on a TCP socket
+    ; 或监听一个TCP套接字
     listen = 127.0.0.1:9000
 
-Using mod_proxy_fcgi with Apache 2.4
+Apache2.4和mod_proxy_fcgi
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you are running Apache 2.4, you can use ``mod_proxy_fcgi`` to pass
-incoming requests to PHP-FPM. Configure PHP-FPM to listen on a TCP or Unix socket,
-enable ``mod_proxy`` and ``mod_proxy_fcgi`` in your Apache configuration, and
-use the ``SetHandler`` directive to pass requests for PHP files to PHP FPM:
+如果你运行的是Apache 2.4，则可以使用 ``mod_proxy_fcgi`` 将传入的请求传递给PHP-FPM。
+配置PHP-FPM以监听TCP或Unix套接字，在Apache配置中启用
+``mod_proxy`` 和 ``mod_proxy_fcgi``，并使用 ``SetHandler`` 指令将PHP文件的请求传递给PHP-FPM：
 
 .. code-block:: apache
 
@@ -188,36 +177,35 @@ use the ``SetHandler`` directive to pass requests for PHP files to PHP FPM:
         ServerName domain.tld
         ServerAlias www.domain.tld
 
-        # Uncomment the following line to force Apache to pass the Authorization
-        # header to PHP: required for "basic_auth" under PHP-FPM and FastCGI
+        # 取消以下注释行以强制Apache将认证标头传递给PHP：
+        # PHP-FPM和FastCGI中的“basic_auth”的必需要求
         #
         # SetEnvIfNoCase ^Authorization$ "(.+)" HTTP_AUTHORIZATION=$1
 
-        # For Apache 2.4.9 or higher
-        # Using SetHandler avoids issues with using ProxyPassMatch in combination
-        # with mod_rewrite or mod_autoindex
+        # 对于Apache 2.4.9 或更高版本
+        # 使用SetHandler避免了将ProxyPassMatch
+        # 与mod_rewrite或mod_autoindex结合使用时出现的问题
         <FilesMatch \.php$>
             SetHandler proxy:fcgi://127.0.0.1:9000
-            # for Unix sockets, Apache 2.4.10 or higher
+            # Apache 2.4.10 或更高版本的Unix套接字
             # SetHandler proxy:unix:/path/to/fpm.sock|fcgi://dummy
         </FilesMatch>
 
-        # If you use Apache version below 2.4.9 you must consider update or use this instead
+        # 如果你使用2.4.9以下的Apache版本，则必须考虑更新或使用此版本
         # ProxyPassMatch ^/(.*\.php(/.*)?)$ fcgi://127.0.0.1:9000/var/www/project/public/$1
 
-        # If you run your Symfony application on a subpath of your document root, the
-        # regular expression must be changed accordingly:
+        # 如果在文档根目录的子路径上运行Symfony应用，则必须相应地更改此正则表达式：
         # ProxyPassMatch ^/path-to-app/(.*\.php(/.*)?)$ fcgi://127.0.0.1:9000/var/www/project/public/$1
 
         DocumentRoot /var/www/project/public
         <Directory /var/www/project/public>
-            # enable the .htaccess rewrites
+            # 启用 .htaccess 重写
             AllowOverride All
             Require all granted
         </Directory>
 
-        # uncomment the following lines if you install assets as symlinks
-        # or run into problems when compiling LESS/Sass/CoffeeScript assets
+        # 如果你将资源安装为符号链接
+        # 或在编译 LESS/Sass/CoffeeScript 资产时遇到问题，请取消以下注释行
         # <Directory /var/www/project>
         #     Options FollowSymlinks
         # </Directory>
@@ -226,12 +214,11 @@ use the ``SetHandler`` directive to pass requests for PHP files to PHP FPM:
         CustomLog /var/log/apache2/project_access.log combined
     </VirtualHost>
 
-PHP-FPM with Apache 2.2
+Apache2.2和PHP-FPM
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-On Apache 2.2 or lower, you cannot use ``mod_proxy_fcgi``. You have to use
-the `FastCgiExternalServer`_ directive instead. Therefore, your Apache configuration
-should look something like this:
+在Apache 2.2或更低版本，你无法使用 ``mod_proxy_fcgi``。
+你必须使用 `FastCgiExternalServer`_ 指令。因此，你的Apache配置应如下所示：
 
 .. code-block:: apache
 
@@ -246,14 +233,14 @@ should look something like this:
 
         DocumentRoot /var/www/project/public
         <Directory /var/www/project/public>
-            # enable the .htaccess rewrites
+            # 启用 .htaccess 重写
             AllowOverride All
             Order Allow,Deny
             Allow from all
         </Directory>
 
-        # uncomment the following lines if you install assets as symlinks
-        # or run into problems when compiling LESS/Sass/CoffeeScript assets
+        # 如果你将资源安装为符号链接
+        # 或在编译 LESS/Sass/CoffeeScript 资产时遇到问题，请取消以下注释行
         # <Directory /var/www/project>
         #     Options FollowSymlinks
         # </Directory>
@@ -262,8 +249,7 @@ should look something like this:
         CustomLog /var/log/apache2/project_access.log combined
     </VirtualHost>
 
-If you prefer to use a Unix socket, you have to use the ``-socket`` option
-instead:
+如果你更喜欢使用Unix套接字，则必须使用 ``-socket`` 选项来代替：
 
 .. code-block:: apache
 
@@ -274,7 +260,7 @@ instead:
 Nginx
 -----
 
-The **minimum configuration** to get your application running under Nginx is:
+让你的应用在Nginx下运行的 **最低配置** 是：
 
 .. code-block:: nginx
 
@@ -283,7 +269,7 @@ The **minimum configuration** to get your application running under Nginx is:
         root /var/www/project/public;
 
         location / {
-            # try to serve file directly, fallback to index.php
+            # 尝试直接提供文件，否则回退到 index.php
             try_files $uri /index.php$is_args$args;
         }
 
@@ -292,28 +278,26 @@ The **minimum configuration** to get your application running under Nginx is:
             fastcgi_split_path_info ^(.+\.php)(/.*)$;
             include fastcgi_params;
 
-            # optionally set the value of the environment variables used in the application
+            # 可选地设置应用中使用的环境变量的值
             # fastcgi_param APP_ENV prod;
             # fastcgi_param APP_SECRET <app-secret-id>;
             # fastcgi_param DATABASE_URL "mysql://db_user:db_pass@host:3306/db_name";
 
-            # When you are using symlinks to link the document root to the
-            # current version of your application, you should pass the real
-            # application path instead of the path to the symlink to PHP
-            # FPM.
-            # Otherwise, PHP's OPcache may not properly detect changes to
-            # your PHP files (see https://github.com/zendtech/ZendOptimizerPlus/issues/126
-            # for more information).
+            # 当你使用符号链接将文档根目录链接到你的应用的当前版本时，
+            # 你应该将实际的应用路径而不是符号链接的路径传递给PHP-FPM。
+            # 否则，PHP的OPcache可能无法正确检测PHP文件的变更
+            # (查看 https://github.com/zendtech/ZendOptimizerPlus/issues/126
+            # 以获得更多信息).
             fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
             fastcgi_param DOCUMENT_ROOT $realpath_root;
-            # Prevents URIs that include the front controller. This will 404:
+            # 这将阻止包含前端控制器的URI。以下URI将会是404：
             # http://domain.tld/index.php/some-path
-            # Remove the internal directive to allow URIs like this
+            # 移除该内部指令以允许这样的URI
             internal;
         }
 
-        # return 404 for all other php files not matching the front controller
-        # this prevents access to other php files you don't want to be accessible.
+        # 对于与前端控制器不匹配的所有其他php文件，返回404
+        # 这样可以禁止访问你不想被访问的其他php文件。
         location ~ \.php$ {
             return 404;
         }
@@ -324,31 +308,26 @@ The **minimum configuration** to get your application running under Nginx is:
 
 .. note::
 
-    Depending on your PHP-FPM config, the ``fastcgi_pass`` can also be
-    ``fastcgi_pass 127.0.0.1:9000``.
+    根据你的PHP-FPM配置，``fastcgi_pass`` 也可以是 ``fastcgi_pass 127.0.0.1:9000``。
 
 .. tip::
 
-    This executes **only** ``index.php`` in the public directory. All other files
-    ending in ".php" will be denied.
+    在公共目录中 **仅** 执行 ``index.php``。所有其他以 “.php” 结尾的文件将被拒绝。
 
-    If you have other PHP files in your public directory that need to be executed,
-    be sure to include them in the ``location`` block above.
+    如果你的公共目录中有其他需要执行的PHP文件，请务必将它们包含在上面的 ``location`` 区块中。
 
 .. caution::
 
-    After you deploy to production, make sure that you **cannot** access the ``index.php``
-    script (i.e. ``http://example.com/index.php``).
+    部署到生产后，请确保你 *无法* 访问 ``index.php``
+    脚本（即 ``http://example.com/index.php``）。
 
 .. note::
 
-    By default, Symfony applications include several ``.htaccess`` files to
-    configure redirections and to prevent unauthorized access to some sensitive
-    directories. Those files are only useful when using Apache, so you can
-    safely remove them when using Nginx.
+    默认情况下，Symfony应用包含多个 ``.htaccess`` 文件来配置重定向并防止对某些敏感目录的未授权访问。
+    这些文件仅在使用Apache时有用，因此你可以在使用Nginx时安全地删除它们。
 
-For advanced Nginx configuration options, read the official `Nginx documentation`_.
+有关高级Nginx配置选项，请阅读官方的 `Nginx文档`_。
 
-.. _`Apache documentation`: https://httpd.apache.org/docs/
+.. _`Apache文档`: https://httpd.apache.org/docs/
 .. _`FastCgiExternalServer`: https://docs.oracle.com/cd/B31017_01/web.1013/q20204/mod_fastcgi.html#FastCgiExternalServer
-.. _`Nginx documentation`: https://www.nginx.com/resources/wiki/start/topics/recipes/symfony/
+.. _`Nginx文档`: https://www.nginx.com/resources/wiki/start/topics/recipes/symfony/
