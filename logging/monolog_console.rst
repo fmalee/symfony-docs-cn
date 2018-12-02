@@ -4,14 +4,12 @@
 如何配置Monolog显示命令台信息
 ====================================================
 
-It is possible to use the console to print messages for certain
-:doc:`verbosity levels </console/verbosity>` using the
-:class:`Symfony\\Component\\Console\\Output\\OutputInterface` instance that
-is passed when a command gets executed.
+当执行一个命令时，可以使用被传递的
+:class:`Symfony\\Component\\Console\\Output\\OutputInterface`
+实例来控制某些 :doc:`冗余度级别 </console/verbosity>` 消息的打印。
 
-When a lot of logging has to happen, it's cumbersome to print information
-depending on the verbosity settings (``-v``, ``-vv``, ``-vvv``) because the
-calls need to be wrapped in conditions. For example::
+当产生大量的记录时，打印那些依赖于冗余度设置（
+``-v``, ``-vv``, ``-vvv``）的消息就会变得很麻烦，因为调用都需要被封装在条件中。例如::
 
     use Symfony\Component\Console\Input\InputInterface;
     use Symfony\Component\Console\Output\OutputInterface;
@@ -27,12 +25,11 @@ calls need to be wrapped in conditions. For example::
         }
     }
 
-Instead of using these semantic methods to test for each of the verbosity
-levels, the `MonologBridge`_ provides a `ConsoleHandler`_ that listens to
-console events and writes log messages to the console output depending on the
-current log level and the console verbosity.
 
-The example above could then be rewritten as::
+`MonologBridge`_ 不是使用这些语义方法来测试每个冗余度的级别，而是提供了一个
+`ConsoleHandler`_，它监听控制台事件并根据当前日志级别和控制台冗余度将日志消息写入到控制台输出。
+
+然后可以将上面的示例重写为::
 
     use Psr\Log\LoggerInterface;
     use Symfony\Component\Console\Command\Command;
@@ -57,13 +54,12 @@ The example above could then be rewritten as::
         }
     }
 
-Depending on the verbosity level that the command is run in and the user's
-configuration (see below), these messages may or may not be displayed to
-the console. If they are displayed, they are timestamped and colored appropriately.
-Additionally, error logs are written to the error output (php://stderr).
-There is no need to conditionally handle the verbosity settings anymore.
+根据运行命令的冗余度级别和用户的配置（见下文），这些消息可能会也可能不会显示在控制台上。
+如果显示它们，则会对它们加上时间戳并进行适当的着色。
+此外，错误日志将写入到错误输出（php://stderr）。
+无需再有条件地处理冗余度设置。
 
-The Monolog console handler is enabled by default:
+Monolog的控制台处理器默认已启用：
 
 .. configuration-block::
 
@@ -78,7 +74,7 @@ The Monolog console handler is enabled by default:
                     process_psr_3_messages: false
                     channels: ['!event', '!doctrine', '!console']
 
-                    # optionally configure the mapping between verbosity levels and log levels
+                    # 可以有选择的配置冗余度级别和日志级别之间的映射
                     # verbosity_levels:
                     #     VERBOSITY_NORMAL: NOTICE
 
@@ -118,9 +114,9 @@ The Monolog console handler is enabled by default:
             ),
         ));
 
-Now, log messages will be shown on the console based on the log levels and verbosity.
-By default (normal verbosity level), warnings and higher will be shown. But in
-:doc:`full verbosity mode </console/verbosity>`, all messages will be shown.
+现在，日志消息将根据日志级别和冗余度显示在控制台上。
+默认情况下（正常冗余度级别），将显示警告及更高级别。但在
+:doc:`完整冗余度模式 </console/verbosity>` 下，将显示所有消息。
 
 .. _ConsoleHandler: https://github.com/symfony/MonologBridge/blob/master/Handler/ConsoleHandler.php
 .. _MonologBridge: https://github.com/symfony/MonologBridge

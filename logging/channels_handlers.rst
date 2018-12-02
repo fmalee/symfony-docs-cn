@@ -1,31 +1,27 @@
 .. index::
    single: Logging
 
-如何把日志信息写入不同的文件中
+如何将日志信息写入不同的文件
 ======================================
 
-The Symfony Framework organizes log messages into channels. By default, there
-are several channels, including ``doctrine``, ``event``, ``security``, ``request``
-and more. The channel is printed in the log message and can also be used
-to direct different channels to different places/files.
+Symfony框架将日志消息组织到通道中。
+默认有几种渠道，包括 ``doctrine``、``event``、``security``、``request`` 以及更多。
+通道被打印在日志消息中，也可用于将不同的通道定向到不同的位置/文件。
 
-By default, Symfony logs every message into a single file (regardless of
-the channel).
+默认情况下，Symfony将每条消息记录到单个文件中（无论什么通道）。
 
 .. note::
 
-    Each channel corresponds to a logger service (``monolog.logger.XXX``)
-    in the container (use the ``debug:container`` command to see a full list)
-    and those are injected into different services.
+    每个通道都对应于容器中的一个日志服务（``monolog.logger.XXX``），并且可以将它们注入到不同的服务中。
+    可以使用 ``debug:container`` 命令来查看完整列表。
 
 .. _logging-channel-handler:
 
-Switching a Channel to a different Handler
+切换一个通道到其他处理器
 ------------------------------------------
 
-Now, suppose you want to log the ``security`` channel to a different file.
-To do this, create a new handler and configure it to log only messages
-from the ``security`` channel:
+现在，假设你想要将 ``security`` 通道记录到其他文件。
+为此，请创建一个新处理器并将其配置为仅记录来自 ``security`` 通道的消息：
 
 .. configuration-block::
 
@@ -35,13 +31,13 @@ from the ``security`` channel:
         monolog:
             handlers:
                 security:
-                    # log all messages (since debug is the lowest level)
+                    # 记录所有消息（因为 debug 是最低级别）
                     level:    debug
                     type:     stream
                     path:     '%kernel.logs_dir%/security.log'
                     channels: [security]
 
-                # an example of *not* logging security channel messages for this handler
+                # *不* 记录安全通道的消息的处理器的示例
                 main:
                     # ...
                     # channels: ['!security']
@@ -96,42 +92,39 @@ from the ``security`` channel:
 
 .. caution::
 
-    The ``channels`` configuration only works for top level handlers. Handlers
-    that are nested inside a group, buffer, filter, fingers crossed or other
-    such handler will ignore this configuration and will process every message
-    passed to them.
+    ``channels`` 配置仅适用于顶层处理器。
+    嵌套在 ``group``、``buffer``、``filter``、``fingers crossed``
+    或其他此类处理器中的处理器将忽略此配置，然后所有消息都会被传递给它们。
 
-YAML Specification
+YAML规范
 ------------------
 
-You can specify the configuration by many forms:
+你可以通过多种形式来指定配置：
 
 .. code-block:: yaml
 
-    channels: ~    # Include all the channels
+    channels: ~    # 包含所有通道
 
-    channels: foo  # Include only channel 'foo'
-    channels: '!foo' # Include all channels, except 'foo'
+    channels: foo  # 仅包含 'foo' 通道
+    channels: '!foo' # 包含所有通道，除了 'foo'
 
-    channels: [foo, bar]   # Include only channels 'foo' and 'bar'
-    channels: ['!foo', '!bar'] # Include all channels, except 'foo' and 'bar'
+    channels: [foo, bar]   # 仅包含 'foo' 和 'bar' 两个通道
+    channels: ['!foo', '!bar'] # 包含所有通道，除了 'foo' 和 'bar'
 
-Creating your own Channel
+创建自己的通道
 -------------------------
 
-You can change the channel monolog logs to one service at a time. This is done
-either via the :ref:`configuration <monolog-channels-config>` below
-or by tagging your service with :ref:`monolog.logger<dic_tags-monolog>` and
-specifying which channel the service should log to. With the tag, the logger
-that is injected into that service is preconfigured to use the channel you've
-specified.
+你可以每次修改一个monolog的日志通道，将其指向一个服务。
+这可以通过以下 :ref:`配置 <monolog-channels-config>` 完成，也可以使用
+:ref:`monolog.logger<dic_tags-monolog>` 来标记你的服务并指定该服务应该记录到哪个通道。
+使用标签，注入到服务的记录器已被预先配置为使用你指定的通道。
 
 .. _monolog-channels-config:
 
-Configure Additional Channels without Tagged Services
+不标记服务来配置额外通道
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You can also configure additional channels without the need to tag your services:
+你还可以配置额外的通道，而无需标记你的服务：
 
 .. configuration-block::
 
@@ -168,7 +161,5 @@ You can also configure additional channels without the need to tag your services
             ),
         ));
 
-Symfony automatically registers one service per channel (in this example, the
-channel ``foo`` creates a service called ``monolog.logger.foo``). In order to
-inject this service into others, you must update the service configuration to
-:ref:`choose the specific service to inject <services-wire-specific-service>`.
+Symfony自动为每个通道注册一个服务（在此示例中，``foo`` 通道创建了一个名为 ``monolog.logger.foo`` 的服务）。
+要将此服务注入其他服务，你必须更新服务配置以 :ref:`选择要注入的特定服务 <services-wire-specific-service>`。

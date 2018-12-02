@@ -1,14 +1,11 @@
-如何自定义一个日志formatter
+如何自定义一个日志格式化器
 ========================================
 
-Each logging handler uses a ``Formatter`` to format the record before logging
-it. All Monolog handlers use an instance of
-``Monolog\Formatter\LineFormatter`` by default but you can configure a
-different one. Your formatter must implement
-``Monolog\Formatter\FormatterInterface``.
+每个日志处理器在记录之前都使用一个 ``Formatter`` 来格式化日志。
+所有Monolog处理器都默认使用一个 ``Monolog\Formatter\LineFormatter`` 实例，但你可以配置一个不同的实例。
+你的格式化程序必须实现 ``Monolog\Formatter\FormatterInterface``。
 
-For example, to use the built-in ``JsonFormatter``, register it as a service then
-configure your handler to use it:
+例如，要使用内置 ``JsonFormatter`` 函数，请将其注册为服务，然后配置你的处理器以使用它：
 
 .. configuration-block::
 
@@ -20,7 +17,7 @@ configure your handler to use it:
 
             Monolog\Formatter\JsonFormatter: ~
 
-        # config/packages/prod/monolog.yaml (and/or config/packages/dev/monolog.yaml)
+        # config/packages/prod/monolog.yaml (和/或 config/packages/dev/monolog.yaml)
         monolog:
             handlers:
                 file:

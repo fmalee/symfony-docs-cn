@@ -1,20 +1,18 @@
 如何通过处理器向日志消息添加额外数据
 =====================================================
 
-Monolog allows you to process the record before logging it to add some
-extra data. A processor can be applied for the whole handler stack or
-only for a specific handler.
+Monolog允许你在记录之前处理记录以添加一些额外的数据。
+一个处理器(Processor)可以应用于整个处理器（handler）堆栈，也可以仅应用于一个特定处理器。
 
-A processor is a callable receiving the record as its first argument.
-Processors are configured using the ``monolog.processor`` DIC tag. See the
-:ref:`reference about it <dic_tags-monolog-processor>`.
+Processor是一个可调用对象，它接收记录作为其第一个参数。
+可以使用 ``monolog.processor`` DIC标签来配置Processor。请参阅
+:ref:`有关它的参考 <dic_tags-monolog-processor>`。
 
-Adding a Session/Request Token
+添加一个会话/请求令牌
 ------------------------------
 
-Sometimes it is hard to tell which entries in the log belong to which session
-and/or request. The following example will add a unique token for each request
-using a processor::
+有时很难判断日志中的哪些项属于哪个会话和/或请求。
+以下示例将使用一个Processor为每个请求添加一个唯一令牌::
 
     namespace App\Logger;
 
@@ -46,8 +44,7 @@ using a processor::
         }
     }
 
-Next, register your class as a service, as well as a formatter that uses the extra
-information:
+接下来，将你的类注册为服务，以及使用额外信息的一个格式化器：
 
 .. configuration-block::
 
@@ -103,7 +100,7 @@ information:
             ->register(SessionRequestProcessor::class)
             ->addTag('monolog.processor', array('method' => 'processRecord'));
 
-Finally, set the formatter to be used on whatever handler you want:
+最后，在任何你想要的处理器上设置要使用的格式化器：
 
 .. configuration-block::
 
@@ -155,22 +152,21 @@ Finally, set the formatter to be used on whatever handler you want:
             ),
         ));
 
-If you use several handlers, you can also register a processor at the
-handler level or at the channel level instead of registering it globally
-(see the following sections).
+如果使用了多个处理器，还可以在处理器级别或通道级别注册一个Processor，而不是全局注册它（请参阅以下部分）。
 
 .. tip::
 
     .. versionadded:: 2.4
-        The autoconfiguration of Monolog processors was introduced in Monolog bundle 2.4.
+        在Monolog bundle 2.4中引入了Monolog processor的自动配置。
 
-    If you're using the :ref:`default services.yaml configuration <service-container-services-load-example>`,
-    processors implementing :class:`Monolog\\Processor\\ProcessorInterface`
-    are automatically registered as services and tagged with ``monolog.processor``,
-    so you can use them without adding any configuration. The same applies to the
-    built-in :class:`Symfony\\Bridge\\Monolog\\Processor\\TokenProcessor` and
-    :class:`Symfony\\Bridge\\Monolog\\Processor\\WebProcessor` processors, which
-    can be enabled as follows:
+    如果你使用
+    :ref:`默认的services.yaml配置 <service-container-services-load-example>`，则实现了
+    :class:`Monolog\\Processor\\ProcessorInterface`
+    的Processor会自动注册为服务并标记为
+    ``monolog.processor``，因此你可以在不添加任何配置的情况下使用它们。
+    这同样适用于内置的 :class:`Symfony\\Bridge\\Monolog\\Processor\\TokenProcessor` 和
+    :class:`Symfony\\Bridge\\Monolog\\Processor\\WebProcessor`
+    Processor，它们可以按如下方式启用：
 
     .. configuration-block::
 
@@ -178,9 +174,9 @@ handler level or at the channel level instead of registering it globally
 
             # config/services.yaml
             services:
-                # Adds the current security token to log entries
+                # 将当前安全令牌添加到日志项
                 Symfony\Bridge\Monolog\Processor\TokenProcessor: ~
-                # Adds the real client IP to log entries
+                # 将实际客户端IP添加到日志项
                 Symfony\Bridge\Monolog\Processor\WebProcessor: ~
 
         .. code-block:: xml
@@ -211,11 +207,10 @@ handler level or at the channel level instead of registering it globally
             // Adds the real client IP to log entries
             $container->register(WebProcessor::class);
 
-Registering Processors per Handler
+为每个处理器注册Processor
 ----------------------------------
 
-You can register a processor per handler using the ``handler`` option of
-the ``monolog.processor`` tag:
+你可以使用 ``monolog.processor`` 标签的 ``handler`` 选项为每个处理器注册一个Processor：
 
 .. configuration-block::
 
@@ -255,11 +250,10 @@ the ``monolog.processor`` tag:
             ->register(SessionRequestProcessor::class)
             ->addTag('monolog.processor', array('handler' => 'main'));
 
-Registering Processors per Channel
+为每个通道注册Processor
 ----------------------------------
 
-You can register a processor per channel using the ``channel`` option of
-the ``monolog.processor`` tag:
+你可以使用 ``monolog.processor`` 标签的 ``channel`` 选项为每个通道注册一个Processor：
 
 .. configuration-block::
 

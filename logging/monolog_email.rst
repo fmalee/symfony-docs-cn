@@ -4,11 +4,9 @@
 如何配置Monolog来邮寄错误信息
 ========================================
 
-Monolog_ can be configured to send an email when an error occurs with an
-application. The configuration for this requires a few nested handlers
-in order to avoid receiving too many emails. This configuration looks
-complicated at first but each handler is fairly straightforward when
-it is broken down.
+可以将 Monolog_ 配置为在应用发生错误时发送一个电子邮件。
+为此配置需要一些嵌套处理器，以避免收到太多电子邮件。
+这个配置起初看起来很复杂，但每个处理器在分解后都相当直接明了。
 
 .. configuration-block::
 
@@ -19,9 +17,9 @@ it is broken down.
             handlers:
                 main:
                     type:         fingers_crossed
-                    # 500 errors are logged at the critical level
+                    # 在 critical 级别记录500错误
                     action_level: critical
-                    # to also log 400 level errors (but not 404's):
+                    # 也可以记录 400 级别的错误 (但不包含 404):
                     # action_level: error
                     # excluded_404s:
                     #     - ^/
@@ -33,7 +31,7 @@ it is broken down.
                     type:       swift_mailer
                     from_email: 'error@example.com'
                     to_email:   'error@example.com'
-                    # or list of recipients
+                    # 或收件人列表
                     # to_email:   ['dev1@example.com', 'dev2@example.com', ...]
                     subject:    'An Error Occurred! %%message%%'
                     level:      debug
@@ -125,25 +123,21 @@ it is broken down.
             ),
         ));
 
-The ``main`` handler is a ``fingers_crossed`` handler which means that
-it is only triggered when the action level, in this case ``critical`` is reached.
-The ``critical`` level is only triggered for 5xx HTTP code errors. If this level
-is reached once, the ``fingers_crossed`` handler will log all messages
-regardless of their level. The ``handler`` setting means that the output
-is then passed onto the ``deduplicated`` handler.
+``main`` 处理器是一个 ``fingers_crossed``
+处理器，这意味着它只在指定的动作级别才会触发，在这个例子是 ``critical``。
+``critical`` 级别仅在5xx HTTP代码错误时才触发。
+此级别一旦触发，则 ``fingers_crossed`` 处理器将记录所有消息，而不管其级别如何。
+而 ``handler`` 设置意味着该输出随后被传递到 ``deduplicated`` 处理器。
 
 .. tip::
 
-    If you want both 400 level and 500 level errors to trigger an email,
-    set the ``action_level`` to ``error`` instead of ``critical``. See the
-    code above for an example.
+    如果你想要400级和500级错误来触发一个邮件，请设置 ``action_level`` 为
+    ``error``，而不是 ``critical``。有关示例，请参阅上面的代码。
 
-The ``deduplicated`` handler keeps all the messages for a request and
-then passes them onto the nested handler in one go, but only if the records are
-unique over a given period of time (60 seconds by default). If the records are
-duplicates they are discarded. Adding this handler reduces the amount of
-notifications to a manageable level, specially in critical failure scenarios.
-You can adjust the time period using the ``time`` option:
+``deduplicated`` 处理器保留着一个请求的所有消息，然后一次性将它们传递到嵌套处理器，
+但前提是这些记录在一个给定时间段内（默认为60秒）是唯一的。如果给定时间段内有重复记录，则将其丢弃。
+添加此处理器可将通知量减少到可管理级别，特别是在发生严重故障的情况下。
+你可以使用 ``time`` 选项来调整该时间段：
 
 .. configuration-block::
 
@@ -155,7 +149,7 @@ You can adjust the time period using the ``time`` option:
                 # ...
                 deduplicated:
                     type: deduplication
-                    # the time in seconds during which duplicate entries are discarded (default: 60)
+                    # 丢弃重复项的时间（以秒为单位）（默认值：60）
                     time: 10
                     handler: swift
 
@@ -182,13 +176,10 @@ You can adjust the time period using the ``time`` option:
                     'handler' => 'swift',
                  )
 
-The messages are then passed to the ``swift`` handler. This is the handler that
-actually deals with emailing you the error. The settings for this are
-straightforward, the to and from addresses, the formatter, the content type
-and the subject.
+然后将消息传递给 ``swift`` 处理器。这是实际处理邮寄错误消息的处理器。
+对此功能的设置很简单：来往地址、格式化器、内容类型和主题。
 
-You can combine these handlers with other handlers so that the errors still
-get logged on the server as well as the emails being sent:
+你可以将这些处理器与其他处理器结合使用，以便仍在服务器上记录错误的同时发送邮件：
 
 .. configuration-block::
 
@@ -312,8 +303,7 @@ get logged on the server as well as the emails being sent:
             ),
         ));
 
-This uses the ``group`` handler to send the messages to the two
-group members, the ``deduplicated`` and the ``stream`` handlers. The messages will
-now be both written to the log file and emailed.
+这里使用 ``group`` 处理器将消息发送给两个组成员，即 ``deduplicated`` 和 ``stream`` 处理器。
+现在，消息将写入日志文件并同时通过电子邮件发送。
 
 .. _Monolog: https://github.com/Seldaek/monolog

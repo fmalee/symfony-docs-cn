@@ -7,12 +7,10 @@
 ====================================================================
 
 .. versionadded:: 4.1
-    The ability to exclude log messages based on their status codes was
-    introduced in Symfony 4.1 and MonologBundle 3.3.
+    Symfony 4.1和MonologBu​​ndle 3.3中引入了基于状态码排除日志消息的功能。
 
-Sometimes your logs become flooded with unwanted HTTP errors, for example,
-403s and 404s. When using a ``fingers_crossed`` handler, you can exclude
-logging these HTTP codes based on the MonologBundle configuration:
+有时，你的日志会充斥着不需要的HTTP错误，例如403和404。
+使用一个 ``fingers_crossed`` 处理器时，你可以根据MonologBu​​ndle配置排除记录这些HTTP代码：
 
 .. configuration-block::
 

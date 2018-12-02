@@ -8,15 +8,11 @@
 
 .. tip::
 
-    Read :doc:`/logging/monolog_exclude_http_codes` to learn about a similar
-    but more generic feature that allows to exclude logs for any HTTP status
-    code and not only 404 errors.
+    阅读 :doc:`/logging/monolog_exclude_http_codes`，以了解类似但更通用的功能，
+    该功能允许排除任何HTTP状态码的日志，而不仅仅是404错误。
 
-Sometimes your logs become flooded with unwanted 404 HTTP errors, for example,
-when an attacker scans your app for some well-known application paths (e.g.
-`/phpmyadmin`). When using a ``fingers_crossed`` handler, you can exclude
-logging these 404 errors based on a regular expression in the MonologBundle
-configuration:
+有时，你的日志会充斥着不需要的404 HTTP错误，例如，当攻击者扫描你的应用以寻找一些众所周知的应用路径时（例如 `/phpmyadmin`）。
+使用一个 ``fingers_crossed`` 处理器时，你可以根据MonologBu​​ndle配置中的正则表达式来排除记录这些404错误：
 
 .. configuration-block::
 
