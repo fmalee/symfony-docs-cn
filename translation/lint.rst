@@ -5,31 +5,30 @@
 如何在翻译文件中查找错误
 =======================================
 
-Symfony processes all the application translation files as part of the process
-that compiles the application code before executing it. If there's an error in
-any translation file, you'll see an error message explaining the problem.
+Symfony在执行应用代码之前，将所有应用翻译文件作为编译应用代码的进程的一部分来处理。
+因此如果任何翻译文件中存在错误，你将看到一个解释该问题的错误消息。
 
-If you prefer, you can also validate the contents of any YAML and XLIFF
-translation file using the ``lint:yaml`` and ``lint:xliff`` commands:
+如果你愿意，还可以使用 ``lint:yaml`` 和 ``lint:xliff``
+命令来验证任何YAML和XLIFF翻译文件的内容：
 
 .. code-block:: terminal
 
-    # lint a single file
+    # lint 单个文件
     $ ./bin/console lint:yaml translations/messages.en.yaml
     $ ./bin/console lint:xliff translations/messages.en.xlf
 
-    # lint a whole directory
+    # lint 整个目录
     $ ./bin/console lint:yaml translations
     $ ./bin/console lint:xliff translations
 
-    # lint multiple files or directories
+    # lint 多个文件或目录
     $ ./bin/console lint:yaml translations path/to/trans
     $ ./bin/console lint:xliff translations/messages.en.xlf translations/messages.es.xlf
 
 .. versionadded:: 4.2
-    The feature to lint multiple files and directories was introduced in Symfony 4.2.
+    在Symfony 4.2中引入了lint多个文件和目录的功能。
 
-The linter results can be exported to JSON using the ``--format`` option:
+可以使用 ``--format`` 选项将linter的结果导出为JSON：
 
 .. code-block:: terminal
 

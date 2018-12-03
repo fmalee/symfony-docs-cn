@@ -6,13 +6,12 @@
 如何查找丢失或未使用的翻译消息
 ==================================================
 
-When maintaining an application or bundle, you may add or remove translation
-messages and forget to update the message catalogues. The ``debug:translation``
-command helps you to find these missing or unused translation messages templates:
+在维护应用或bundle时，你可以添加或删除翻译消息，也可能会忘记更新翻译消息目录。
+``debug:translation`` 命令可以帮助你找到这些丢失或未使用的翻译消息模板：
 
 .. code-block:: twig
 
-    {# messages can be found when using the trans/transchoice filters and tags #}
+    {# 当使用 trans/transchoice 过滤器和标签时，该消息可以被发现 #}
     {% trans %}Symfony is great{% endtrans %}
 
     {{ 'Symfony is great'|trans }}
@@ -23,20 +22,18 @@ command helps you to find these missing or unused translation messages templates
 
 .. caution::
 
-    The extractors can't find messages translated outside templates, like form
-    labels or controllers. Dynamic translations using variables or expressions
-    in templates are not detected either:
+    提取器无法找到在模板外部翻译的消息，如表单标签或控制器。
+    模板中的使用变量或表达式的动态翻译也无法被检测到：
 
     .. code-block:: twig
 
-        {# this translation uses a Twig variable, so it won't be detected #}
+        {# 该翻译使用一个Twig变量，所以它也无法被检测到 #}
         {% set message = 'Symfony is great' %}
         {{ message|trans }}
 
-Suppose your application's default_locale is ``fr`` and you have configured
-``en`` as the fallback locale (see :ref:`translation-configuration` and
-:ref:`translation-fallback` for how to configure these). And suppose
-you've already setup some translations for the ``fr`` locale:
+假设你的应用的默认语言环境已经配置为 ``fr``，而且 ``en``
+是后备语言环境（有关如何配置这些的文档，请参阅 :ref:`translation-configuration`
+和 :ref:`translation-fallback`）。假设你已经为 ``fr`` 语言环境设置了一些翻译：
 
 .. configuration-block::
 
@@ -67,8 +64,7 @@ you've already setup some translations for the ``fr`` locale:
             'Symfony is great' => 'J\'aime Symfony',
         );
 
-and for the ``en`` locale:
-
+以及 ``en`` 语言环境的翻译：
 .. configuration-block::
 
     .. code-block:: xml
@@ -98,7 +94,7 @@ and for the ``en`` locale:
             'Symfony is great' => 'Symfony is great',
         );
 
-To inspect all messages in the ``fr`` locale for the application, run:
+要检查应用的 ``fr`` 语言环境中的所有消息，请运行：
 
 .. code-block:: terminal
 
@@ -110,15 +106,12 @@ To inspect all messages in the ``fr`` locale for the application, run:
      unused     Symfony is great    J'aime Symfony          Symfony is great
     ---------  ------------------  ----------------------  -------------------------------
 
-It shows you a table with the result when translating the message in the ``fr``
-locale and the result when the fallback locale ``en`` would be used. On top
-of that, it will also show you when the translation is the same as the fallback
-translation (this could indicate that the message was not correctly translated).
-Furthermore, it indicates that the message ``Symfony is great`` is unused
-because it is translated, but you haven't used it anywhere yet.
+它会显示一个表格，该表格包含一个消息在 ``fr`` 语言环境中的翻译效果，以及使用
+``en`` 后备语言环境时该消息的翻译效果。
+最重要的是，它还会显示何时该翻译与后备翻译相同（这可能意味着该消息未正确翻译）。
+此外，它还示意 ``Symfony is great`` 消息未被使用，因为它已被翻译，但你尚未在任何地方使用它。
 
-Now, if you translate the message in one of your templates, you will get this
-output:
+现在，如果你在某个模板中翻译该消息，你将获得以下输出：
 
 .. code-block:: terminal
 
@@ -130,11 +123,9 @@ output:
                 Symfony is great    J'aime Symfony          Symfony is great
     ---------  ------------------  ----------------------  -------------------------------
 
-The state is empty which means the message is translated in the ``fr`` locale
-and used in one or more templates.
+``state`` 为空，表示该消息在 ``fr`` 语言环境中已翻译并已在一个或多个模板中使用。
 
-If you delete the message ``Symfony is great`` from your translation file
-for the ``fr`` locale and run the command, you will get:
+如果从 ``fr`` 语言环境的翻译文件中删除 ``Symfony is great`` 消息，然后再次运行该命令，你将获得：
 
 .. code-block:: terminal
 
@@ -146,14 +137,11 @@ for the ``fr`` locale and run the command, you will get:
      missing    Symfony is great    Symfony is great        Symfony is great
     ---------  ------------------  ----------------------  -------------------------------
 
-The state indicates the message is missing because it is not translated in
-the ``fr`` locale but it is still used in the template. Moreover, the message
-in the ``fr`` locale equals to the message in the ``en`` locale. This is a
-special case because the untranslated message id equals its translation in
-the ``en`` locale.
+``state`` 示意该消息已丢失，因为它未在 ``fr`` 语言环境中翻译，但仍在模板中使用。
+此外，``fr`` 语言环境中的消息和 ``en`` 语言环境中的消息相同。
+这是一种特殊情况，因为未翻译的消息的id的值就是其在 ``en`` 语言环境中的翻译。
 
-If you copy the content of the translation file in the ``en`` locale, to the
-translation file in the ``fr`` locale and run the command, you will get:
+如果将 ``en`` 语言环境中的翻译文件的内容复制到 ``fr`` 语言环境中的翻译文件，然后再运行该命令，你将获得：
 
 .. code-block:: terminal
 
@@ -165,20 +153,16 @@ translation file in the ``fr`` locale and run the command, you will get:
      fallback    Symfony is great    Symfony is great        Symfony is great
     ----------  ------------------  ----------------------  -------------------------------
 
-You can see that the translations of the message are identical in the ``fr``
-and ``en`` locales which means this message was probably copied from French
-to English and maybe you forgot to translate it.
+你可以看到该消息的翻译在 ``fr`` 和 ``en`` 语言环境中是一样的，这意味着此消息可能已从法语复制到英语，但你可能忘记去翻译它。
 
-By default all domains are inspected, but it is possible to specify a single
-domain:
+默认情况下会检查所有的域，但你可以指定单个域：
 
 .. code-block:: terminal
 
     $ php bin/console debug:translation en --domain=messages
 
-When the application has a lot of messages, it is useful to display only the
-unused or only the missing messages, by using the ``--only-unused`` or
-``--only-missing`` options:
+当应用有大量消息时，可以通过使用 ``--only-unused`` 或 ``--only-missing``
+选项来显示仅使用的或仅缺失的消息：
 
 .. code-block:: terminal
 

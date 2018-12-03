@@ -4,8 +4,7 @@
 如何使用用户的语言环境
 ==================================
 
-The locale of the current user is stored in the request and is accessible
-via the ``Request`` object::
+当前用户的语言环境存储在请求中，可通过 ``Request`` 对象访问::
 
     use Symfony\Component\HttpFoundation\Request;
 
@@ -14,53 +13,44 @@ via the ``Request`` object::
         $locale = $request->getLocale();
     }
 
-To set the user's locale, you may want to create a custom event listener so
-that it's set before any other parts of the system (i.e. the translator) need
-it::
+要设置用户的语言环境，你可能需要创建一个自定义事件监听器，以便在系统（即翻译器）的任何其他部分需要它之前设置它::
 
         public function onKernelRequest(GetResponseEvent $event)
         {
             $request = $event->getRequest();
 
-            // some logic to determine the $locale
+            // 一些决定 $locale 的逻辑
             $request->setLocale($locale);
         }
 
 .. note::
 
-    The custom listener must be called **before** ``LocaleListener``, which
-    initializes the locale based on the current request. To do so, set your
-    listener priority to a higher value than ``LocaleListener`` priority (which
-    you can obtain running the ``debug:event kernel.request`` command).
+    自定义监听器必须在 ``LocaleListener`` 之前调用，因为 ``LocaleListener``
+    基于当前请求的语言环境进行初始化。
+    为此，请将该监听器优先级设置为高于 ``LocaleListener``
+    优先级（可以运行 ``debug:event kernel.request`` 命令获得）的值。
 
-Read :doc:`/session/locale_sticky_session` for more information on making
-the user's locale "sticky" to their session.
+阅读 :doc:`/session/locale_sticky_session`，以获取有关将用户的语言环境“粘滞”到其会话的更多信息。
 
 .. note::
 
-    Setting the locale using ``$request->setLocale()`` in the controller is
-    too late to affect the translator. Either set the locale via a listener
-    (like above), the URL (see next) or call ``setLocale()`` directly on the
-    ``translator`` service.
+    在控制器中使用 ``$request->setLocale()`` 来设置语言环境为时已晚，已经无法影响翻译器。
+    可以通过监听器（如上所述）、URL（请参阅下一章节）或直接在``translator``
+    服务中调用 ``setLocale()`` 来设置语言环境。
 
-See the :ref:`translation-locale-url` section below about setting the
-locale via routing.
+请参阅 :ref:`translation-locale-url` 章节，以了解如何通过路由来设置语言环境。
 
 .. _translation-locale-url:
 
-The Locale and the URL
+语言环境和URL
 ----------------------
 
-Since you can store the locale of the user in the session, it may be tempting
-to use the same URL to display a resource in different languages based on
-the user's locale. For example, ``http://www.example.com/contact`` could show
-content in English for one user and French for another user. Unfortunately,
-this violates a fundamental rule of the Web: that a particular URL returns
-the same resource regardless of the user. To further muddy the problem, which
-version of the content would be indexed by search engines?
+由于你可以在会话中存储用户的语言环境，因此可能可以基于用户的语言环境在不同的语言中，使用相同的URL来显示一个资源。
+例如，``http://www.example.com/contact`` 可以为一个用户显示英语内容，为另一个用户显示法语内容。
+不幸的是，这违反了Web的一个通用规则：特定的URL要对用户返回相同的资源，不管是什么（语种的）用户。
+进一步搞砸问题的是，哪个版本的内容可以被搜索引擎检索到？
 
-A better policy is to include the locale in the URL. This is fully-supported
-by the routing system using the special ``_locale`` parameter:
+更好的策略是在URL中包含语言环境。路由系统使用特殊的 ``_locale`` 参数完全支持此功能：
 
 .. configuration-block::
 
@@ -108,31 +98,27 @@ by the routing system using the special ``_locale`` parameter:
 
         return $routes;
 
-When using the special ``_locale`` parameter in a route, the matched locale
-is *automatically set on the Request* and can be retrieved via the
-:method:`Symfony\\Component\\HttpFoundation\\Request::getLocale` method. In
-other words, if a user visits the URI ``/fr/contact``, the locale ``fr`` will
-automatically be set as the locale for the current request.
+在路由中使用特殊的 ``_locale`` 参数时，匹配的语言环境会 *自动设置到请求中*，并可通过
+:method:`Symfony\\Component\\HttpFoundation\\Request::getLocale` 方法检索。
+换句话说，如果用户访问 ``/fr/contact`` URI，则将自动设置为当前请求的语言环境为 ``fr``。
 
-You can now use the locale to create routes to other translated pages in your
-application.
+你现在可以使用语言环境来创建到应用中其他已翻译页面的路由。
 
 .. tip::
 
-    Read :doc:`/routing/service_container_parameters` to learn how to avoid
-    hardcoding the ``_locale`` requirement in all your routes.
+    阅读 :doc:`/routing/service_container_parameters`，以了解如何避免在所有路由中硬编码
+    ``_locale`` 要求。
 
 .. index::
     single: Translations; Fallback and default locale
 
 .. _translation-default-locale:
 
-Setting a Default Locale
+设置默认的语言环境
 ------------------------
 
-What if the user's locale hasn't been determined? You can guarantee that a
-locale is set on each user's request by defining a ``default_locale`` for
-the framework:
+如果用户的语言环境尚未确定怎么办？你可以通过为框架定义一个 ``default_locale``
+来保证为每个用户的请求设置一个语言环境：
 
 .. configuration-block::
 
