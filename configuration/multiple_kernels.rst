@@ -6,55 +6,43 @@
 
 .. caution::
 
-    Creating applications with multiple kernels is no longer recommended by
-    Symfony. Consider creating multiple small applications instead.
+    Symfony不再推荐使用多个内核来创建应用。如果有需求，可以考虑创建多个小应用。
 
-In most Symfony applications, incoming requests are processed by the
-``public/index.php`` front controller, which instantiates the ``src/Kernel.php``
-class to create the application kernel that loads the bundles and handles the
-request to generate the response.
+在大多数Symfony应用中，传入请求由 ``public/index.php``
+前端控制器处理，该控制器实例化 ``src/Kernel.php``
+类以创建加载bundle的应用内核，并处理请求以生成响应。
 
-This single kernel approach is a convenient default, but Symfony applications
-can define any number of kernels. Whereas
-:doc:`environments </configuration/environments>` execute the same application
-with different configurations, kernels can execute different parts of the same
-application.
+这种单内核方法是一种方便的默认方法，但Symfony应用可以定义任意数量的内核。
+:doc:`环境 </configuration/environments>`
+使用不同的配置来执行同一个应用，而内核可以执行同一应用的不同部分。
 
+以下是创建多个内核的一些常见用例：
 These are some of the common use cases for creating multiple kernels:
 
-* An application that defines an API could define two kernels for performance
-  reasons. The first kernel would serve the regular application and the second
-  one would only respond to the API requests, loading less bundles and enabling
-  less features;
-* A highly sensitive application could define two kernels. The first one would
-  only load the routes that match the parts of the application exposed publicly.
-  The second kernel would load the rest of the application and its access would
-  be protected by the web server;
-* A micro-services oriented application could define several kernels to
-  enable/disable services selectively turning a traditional monolith application
-  into several micro-applications.
+* 定义API的应用可以出于性能原因定义两个内核。
+  第一个内核将为常规应用提供服务，第二个内核仅响应API请求，加载较少的bundle并启用较少的功能;
+* 高度敏感的应用可以定义两个内核。第一个只会加载与应用公开的部分相匹配的路由。
+  第二个内核将加载应用的其余部分，其访问权限将受Web服务器的保护;
+* 一个面向微服务的应用可以定义几个内核来启用/禁用服务，有选择地将传统的整体应用转换为几个微应用。
 
-Adding a new Kernel to the Application
+向应用添加新内核
 --------------------------------------
 
-Creating a new kernel in a Symfony application is a three-step process:
+在Symfony应用中创建新内核的过程分为三个步骤：
 
-1. Create a new front controller to load the new kernel;
-2. Create the new kernel class;
-3. Define the configuration loaded by the new kernel.
+1. 创建一个新的前端控制器来加载新内核;
+2. 创建新的内核类;
+3. 定义新内核将要加载的配置。
 
-The following example shows how to create a new kernel for the API of a given
-Symfony application.
+以下示例展示如何为给定Symfony应用的API创建一个新内核。
 
-Step 1) Create a new Front Controller
+步骤 1) 创建一个新的前端控制器
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Instead of creating the new front controller from scratch, it's easier to
-duplicate the existing one. For example, create ``public/api.php`` from
-``public/index.php``.
+不需要从头开始创建新的前端控制器，直接复制现有的前端控制器将更容易。
+例如，依照 ``public/index.php`` 来创建 ``public/api.php``。
 
-Then, update the code of the new front controller to instantiate the new kernel
-class instead of the usual ``Kernel`` class::
+然后，更新新前端控制器的代码以实例化新的内核类而不是常用的 ``Kernel`` 类::
 
     // public/api.php
     // ...
@@ -66,20 +54,17 @@ class instead of the usual ``Kernel`` class::
 
 .. tip::
 
-    Another approach is to keep the existing ``index.php`` front controller, but
-    add an ``if`` statement to load the different kernel based on the URL (e.g.
-    if the URL starts with ``/api``, use the ``ApiKernel``).
+    另一种方法是保留现有的 ``index.php`` 前端控制器，但添加一个 ``if``
+    语句以根据URL来加载不同的内核（例如，如果URL以 ``/api`` 开头，则使用 ``ApiKernel``）。
 
-Step 2) Create the new Kernel Class
+步骤 2) 创建新的内核类
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Now you need to define the ``ApiKernel`` class used by the new front controller.
-The easiest way to do this is by duplicating the existing  ``src/Kernel.php``
-file and make the needed changes.
+现在你需要定义新前端控制器使用的 ``ApiKernel`` 类。
+最简单的方法是复制现有  ``src/Kernel.php`` 文件并进行必要的更改。
 
-In this example, the ``ApiKernel`` will load less bundles than the default
-Kernel. Be sure to also change the location of the cache, logs and configuration
-files so they don't collide with the files from ``src/Kernel.php``::
+在此示例中，``ApiKernel`` 将加载比默认内核更少的bundle。
+请务必同时更改缓存、日志和配置文件的位置，以免它们与 ``src/Kernel.php`` 下的文件发生冲突::
 
     // src/ApiKernel.php
     use Symfony\Component\HttpKernel\Kernel;
@@ -92,7 +77,7 @@ files so they don't collide with the files from ``src/Kernel.php``::
 
         public function registerBundles()
         {
-            // load only the bundles strictly needed for the API...
+            // 仅加载API需要的bundle...
         }
 
         public function getCacheDir()
@@ -107,7 +92,7 @@ files so they don't collide with the files from ``src/Kernel.php``::
 
         public function configureContainer(ContainerBuilder $container, LoaderInterface $loader)
         {
-            // load only the config files strictly needed for the API
+            // 仅加载API需要的配置文件
             $confDir = $this->getProjectDir().'/config';
             $loader->load($confDir.'/api/*'.self::CONFIG_EXTS, 'glob');
             if (is_dir($confDir.'/api/'.$this->environment)) {
@@ -116,72 +101,62 @@ files so they don't collide with the files from ``src/Kernel.php``::
         }
     }
 
-Step 3) Define the Kernel Configuration
+步骤 3) 定义内核配置
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Finally, define the configuration files that the new ``ApiKernel`` will load.
-According to the above code, this config will live in one or multiple files
-stored in ``config/api/`` and ``config/api/ENVIRONMENT_NAME/`` directories.
+最后，定义新 ``ApiKernel`` 要加载的配置文件。
+根据上面的代码，这个配置将存在于一个或多个存储在 ``config/api/`` 和
+``config/api/ENVIRONMENT_NAME/`` 目录中的文件中。
 
-The new configuration files can be created from scratch when you load just a few
-bundles, because it will be small. Otherwise, duplicate the existing
-config files in ``config/packages/`` or better, import them and override the
-needed options.
+当你仅加载少数几个bundle时，可以从头开始创建新配置文件，因为它会很小。
+否则，更好的做法是，复制现有 ``config/packages/`` 中的配置文件，然后导入它们并重写所需的选项。
 
-Executing Commands with a Different Kernel
+用不同的内核执行命令
 ------------------------------------------
 
-The ``bin/console`` script used to run Symfony commands always uses the default
-``Kernel`` class to build the application and load the commands. If you need
-to execute console commands using the new kernel, duplicate the ``bin/console``
-script and rename it (e.g. ``bin/api``).
+用于运行Symfony命令的 ``bin/console`` 脚本始终使用默认 ``Kernel`` 类来构建应用并加载命令。
+如果需要使用新内核执行控制台命令，请复制 ``bin/console`` 脚本并重命名（例如 ``bin/api``）。
 
-Then, replace the ``Kernel`` instantiation by your own kernel instantiation
-(e.g. ``ApiKernel``) and now you can execute commands using the new kernel
-(e.g. ``php bin/api cache:clear``) Now you can use execute commands using the
-new kernel.
+然后，通过你自己的内核实例化（例如 ``ApiKernel``）来替换 ``Kernel``
+实例化，现在你可以使用新内核执行命令（例如 ``php bin/api cache:clear``）。
 
 .. note::
 
-    The commands available for each console script (e.g. ``bin/console`` and
-    ``bin/api``) can differ because they depend on the bundles enabled for each
-    kernel, which could be different.
+    每个控制台脚本（例如 ``bin/console`` 和
+    ``bin/api``）的可用命令可能不同，因为它们依赖于每个内核中被启用的bundle，而这些bundle可能并不一样。
 
-Rendering Templates Defined in a Different Kernel
+在不同内核中定义的渲染模板
 -------------------------------------------------
 
-If you follow the Symfony Best Practices, the templates of the default kernel
-will be stored in ``templates/``. Trying to render those templates in a
-different kernel will result in a *There are no registered paths for namespace
-"__main__"* error.
+如果你遵循Symfony最佳实践，默认内核的模板将存储在 ``templates/``。
+尝试在不同的内核中渲染这些模板将导致 *There are no registered paths for namespace
+"__main__"* 错误。
 
-In order to solve this issue, add the following configuration to your kernel:
+要解决此问题，请将以下配置添加到你的内核：
 
 .. code-block:: yaml
 
     # config/api/twig.yaml
     twig:
         paths:
-            # allows to use api/templates/ dir in the ApiKernel
+            # 允许在 ApiKernel 中使用 api/templates/ 目录
             "%kernel.project_dir%/api/templates": ~
 
-Running Tests Using a Different Kernel
+使用不同的内核来运行测试
 --------------------------------------
 
-In Symfony applications, functional tests extend by default from the
-:class:`Symfony\\Bundle\\FrameworkBundle\\Test\\WebTestCase` class. Inside that
-class, a method called ``getKernelClass()`` tries to find the class of the kernel
-to use to run the application during tests. The logic of this method does not
-support multiple kernel applications, so your tests won't use the right kernel.
+在Symfony应用中，功能测试默认从
+:class:`Symfony\\Bundle\\FrameworkBundle\\Test\\WebTestCase` 类中继承。
+在该类中，一个名为 ``getKernelClass()`` 的方法尝试查找在测试期间用于运行应用的内核类。
+此方法的逻辑不支持多个内核应用，因此你的测试将无法使用正确的内核。
 
-The solution is to create a custom base class for functional tests extending
-from ``WebTestCase`` class and overriding the ``getKernelClass()`` method to
-return the fully qualified class name of the kernel to use::
+解决方案是为功能测试创建一个继承 ``WebTestCase`` 类的自定义基类，该类重写 ``getKernelClass()``
+方法以返回要使用的内核的完全限定类名::
 
     use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-    // tests needing the ApiKernel to work, now must extend this
-    // ApiTestCase class instead of the default WebTestCase class
+    // 需要 ApiKernel 才能运行的测试，
+    // 现在必须继承这个 ApiTestCase 类而不是默认的 WebTestCase 类
     class ApiTestCase extends WebTestCase
     {
         protected static function getKernelClass()
@@ -189,11 +164,9 @@ return the fully qualified class name of the kernel to use::
             return 'App\ApiKernel';
         }
 
-        // this is needed because the KernelTestCase class keeps a reference to
-        // the previously created kernel in its static $kernel property. Thus,
-        // if your functional tests do not run in isolated processes, a later run
-        // test for a different kernel will reuse the previously created instance,
-        // which points to a different kernel
+        // 这是必需的，因为 KernelTestCase 类在其静态 $kernel 属性中保留对先前创建的内核的引用。
+        // 因此，如果你的功能测试不在隔离的进程中运行，
+        // 则对不同内核的后续运行测试将重用先前创建的实例，该实例指向一个不同的内核。
         protected function tearDown()
         {
             parent::tearDown();
@@ -202,12 +175,11 @@ return the fully qualified class name of the kernel to use::
         }
     }
 
-Adding more Kernels to the Application
+向应用添加更多内核
 --------------------------------------
 
-If your application is very complex and you create several kernels, it's better
-to store them in their own directories instead of messing with lots of files in
-the default ``src/`` directory:
+如果你的应用非常复杂并且你创建了多个内核，最好将它们存储在各自的目录中，而不是在默认
+``src/`` 目录中，从而产生一大堆的混乱文件：
 
 .. code-block:: text
 

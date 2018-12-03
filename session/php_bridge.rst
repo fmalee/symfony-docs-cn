@@ -1,15 +1,13 @@
 .. index::
    single: Sessions
 
-使用Symfony会话桥接遗留应用程序
+使用Symfony会话桥接遗留应用
 =================================================
 
-If you're integrating the Symfony full-stack Framework into a legacy application
-that starts the session with ``session_start()``, you may still be able to
-use Symfony's session management by using the PHP Bridge session.
+如果你将Symfony全栈框架集成到使用 ``session_start()``
+来启动会话的遗留应用中，你仍可以使用PHP桥接会话来使用Symfony的会话管理。
 
-If the application has its own PHP save handler, you can specify null
-for the ``handler_id``:
+如果应用有自己的PHP保存处理器，则可以将 ``handler_id`` 指定为 ``null``：
 
 .. configuration-block::
 
@@ -48,10 +46,8 @@ for the ``handler_id``:
             ),
         ));
 
-Otherwise, if the problem is only that you cannot avoid the application
-starting the session with ``session_start()``, you can still make use of
-a Symfony based session save handler by specifying the save handler as in
-the example below:
+否则，如果问题仅在于你无法避免该应用使用 ``session_start()``
+来启动会话，你仍然可以通过指定保存处理器来使用Symfony的基于会话的保存处理器，如下例所示：
 
 .. configuration-block::
 
@@ -92,13 +88,10 @@ the example below:
 
 .. note::
 
-    If the legacy application requires its own session save handler, do not
-    override this. Instead set ``handler_id: ~``. Note that a save handler
-    cannot be changed once the session has been started. If the application
-    starts the session before Symfony is initialized, the save handler will
-    have already been set. In this case, you will need ``handler_id: ~``.
-    Only override the save handler if you are sure the legacy application
-    can use the Symfony save handler without side effects and that the session
-    has not been started before Symfony is initialized.
+    如果遗留应用需要自己的会话保存处理器，请不要重写它，而是设置 ``handler_id: ~``。
+    请注意，一旦启动会话后，就无法更换一个保存处理器。
+    如果该应用在Symfony初始化之前就启动会话，则保存处理器已经被设置。
+    在这种情况下，你就需要 ``handler_id: ~`` 设置。
+    如果你确定遗留应用可以没有副作用的使用Symfony保存处理器，并且在Symfony初始化之前尚未启动会话，那么才可以重写保存处理器。
 
-For more details, see :doc:`/components/http_foundation/session_php_bridge`.
+有关更多详细信息，请参阅 :doc:`/components/http_foundation/session_php_bridge`。

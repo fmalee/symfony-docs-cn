@@ -4,14 +4,11 @@
 如何掌握和创建新环境
 =========================================
 
-Every application is the combination of code and a set of configuration that
-dictates how that code should function. The configuration may define the database
-being used, if something should be cached or how verbose logging should be.
+每个应用都是代码和一组配置的组合，这些配置决定了代码应该如何运行。
+配置可以定义正在使用的数据库，是否应该缓存某些内容或者应该如何详细记录日志。
 
-In Symfony, the idea of "environments" is the idea that the same codebase can be
-run using multiple different configurations. For example, the ``dev`` environment
-should use configuration that makes development easy and friendly, while the
-``prod`` environment should use a set of configuration optimized for speed.
+在Symfony中，“环境”的概念是可以使用多种不同配置运行相同的代码库。
+例如，``dev`` 环境应该使用使开发变得简单和友好的配置，而 ``prod`` 环境应该使用一组针对速度优化过的配置。
 
 .. index::
    single: Environments; Configuration files
@@ -19,21 +16,18 @@ should use configuration that makes development easy and friendly, while the
 不同的环境，不同的配置文件
 -----------------------------------------------------
 
-A typical Symfony application begins with three environments: ``dev``,
-``prod`` and ``test``. As mentioned, each environment represents a way to
-execute the same codebase with different configuration. It should be no
-surprise then that each environment loads its own individual configuration
-files. These different files are organized by environment:
+一个典型的Symfony应用始于三种环境：``dev``、``prod`` 和 ``test``。
+如上所述，每个环境都代表了一种使用不同配置来执行同一代码库的方法。
+因此，每个环境都加载它自己的配置文件应该不足为奇。这些不同的文件一般按环境来组织：
 
-* for the ``dev`` environment: ``config/packages/dev/``
-* for the ``prod`` environment: ``config/packages/prod/``
-* for the ``test`` environment: ``config/packages/test/``
+* 对于 ``dev`` 环境: ``config/packages/dev/``
+* 对于 ``prod`` 环境: ``config/packages/prod/``
+* 对于 ``test`` 环境: ``config/packages/test/``
 
-In reality, each environment differs only somewhat from others. This means that
-all environments share a large base of common configurations. This configuration
-is put in files directly in the ``config/packages/`` directory.
+实际上，每个环境都只是与其他环境略有不同。这意味着所有环境都共享大量常见配置。
+此配置直接放在 ``config/packages/`` 目录中的文件中。
 
-The location of these files is defined by the application's kernel::
+这些文件的位置由应用的内核定义::
 
     // src/Kernel.php
 
@@ -47,21 +41,22 @@ The location of these files is defined by the application's kernel::
             // ...
             $confDir = $this->getProjectDir().'/config';
 
-            // always load all files in /config/packages/
+            // 始终加载在 /config/packages/ 中的所有文件
             $loader->load($confDir.'/packages/*'.self::CONFIG_EXTS, 'glob');
 
-            // then, if available, load the files in the specific environment directory
+            // 然后，加载在对应环境目录用的文件，如果环境可用的话。
             if (is_dir($confDir.'/packages/'.$this->environment)) {
                 $loader->load($confDir.'/packages/'.$this->environment.'/**/*'.self::CONFIG_EXTS, 'glob');
             }
 
-            // load a special services.(yaml/xml/php) and, if available, services_ENVIRONMENT.(yaml/xml/php) file
+            // 加载一个特定的 services(yaml/xml/php) 文件，
+            // 如果可用的话，同时加载 services_ENVIRONMENT.(yaml/xml/php) 文件
             $loader->load($confDir.'/services'.self::CONFIG_EXTS, 'glob');
             $loader->load($confDir.'/services_'.$this->environment.self::CONFIG_EXTS, 'glob');
         }
     }
 
-Take the framework package, installed by default, as an example:
+以默认安装的框架包为例：
 
 * Loaded in all environments, ``config/packages/framework.yaml`` configures the
   framework with some ``secret`` setting;

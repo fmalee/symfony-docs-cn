@@ -1,18 +1,16 @@
 使用MicroKernelTrait构建自己的框架
 =====================================================
 
-The default ``Kernel`` class included in Symfony applications uses a
-:class:`Symfony\\Bundle\\FrameworkBundle\\Kernel\\MicroKernelTrait` to configure
-the bundles, the routes and the service container in the same class.
+Symfony应用中包含的默认``Kernel`` 类，该类使用一个
+:class:`Symfony\\Bundle\\FrameworkBundle\\Kernel\\MicroKernelTrait`
+来在同一类中配置bundle、路由和服务容器。
 
-This micro-kernel approach is flexible, allowing you to control your application
-structure and features.
+这种微内核方法非常灵活，允许你控制应用的结构和功能。
 
-A Single-File Symfony Application
+单文件Symfony应用
 ---------------------------------
 
-Start with a completely empty directory and install these Symfony components
-via Composer:
+从一个完全空目录开始，并通过Composer安装这些Symfony组件：
 
 .. code-block:: bash
 
@@ -20,7 +18,7 @@ via Composer:
       symfony/http-foundation symfony/routing \
       symfony/dependency-injection symfony/framework-bundle
 
-Next, create an ``index.php`` file that defines the kernel class and executes it::
+接下来，创建一个定义内核类并执行它的 ``index.php`` 文件::
 
     use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
     use Symfony\Component\Config\Loader\LoaderInterface;
@@ -45,7 +43,7 @@ Next, create an ``index.php`` file that defines the kernel class and executes it
 
         protected function configureContainer(ContainerBuilder $c, LoaderInterface $loader)
         {
-            // PHP equivalent of config/packages/framework.yaml
+            // 相当于 config/packages/framework.yaml
             $c->loadFromExtension('framework', array(
                 'secret' => 'S0ME_SECRET'
             ));
@@ -53,8 +51,8 @@ Next, create an ``index.php`` file that defines the kernel class and executes it
 
         protected function configureRoutes(RouteCollectionBuilder $routes)
         {
-            // kernel is a service that points to this class
-            // optional 3rd argument is the route name
+            // kernel是指向此类的一个服务
+            // 可选的第三个参数是路由名称
             $routes->add('/random/{limit}', 'Kernel::randomNumber');
         }
 
@@ -72,44 +70,39 @@ Next, create an ``index.php`` file that defines the kernel class and executes it
     $response->send();
     $kernel->terminate($request, $response);
 
-That's it! To test it, you can start the built-in web server:
+仅此而已！要测试它，你可以启动内置Web服务器：
 
 .. code-block:: terminal
 
     $ php -S localhost:8000
 
-Then see the JSON response in your browser:
+然后在浏览器中查看该JSON响应：
 
     http://localhost:8000/random/10
 
-The Methods of a "Micro" Kernel
+“微”内核的方法
 -------------------------------
 
-When you use the ``MicroKernelTrait``, your kernel needs to have exactly three methods
-that define your bundles, your services and your routes:
+当你使用 ``MicroKernelTrait`` 时，你的内核需要有三个方法来定义你的bundle、服务和路由：
 
 **registerBundles()**
-    This is the same ``registerBundles()`` that you see in a normal kernel.
+    这与你在普通内核中看到的 ``registerBundles()`` 相同。
 
 **configureContainer(ContainerBuilder $c, LoaderInterface $loader)**
-    This method builds and configures the container. In practice, you will use
-    ``loadFromExtension`` to configure different bundles (this is the equivalent
-    of what you see in a normal ``config/packages/*`` file). You can also register
-    services directly in PHP or load external configuration files (shown below).
+    此方法用于构建和配置容器。在实践中，你将使用 ``loadFromExtension``
+    来配置不同的bundle（这相当于你在普通 ``config/packages/*`` 文件中看到的）。
+    你还可以直接在PHP中注册服务或加载外部配置文件（如下所示）。
 
 **configureRoutes(RouteCollectionBuilder $routes)**
-    Your job in this method is to add routes to the application. The
-    ``RouteCollectionBuilder`` has methods that make adding routes in PHP more
-    fun. You can also load external routing files (shown below).
+    你在此方法中的工作是向应用添加路由。``RouteCollectionBuilder``
+    具有使在PHP中添加路由更有趣的方法。你还可以加载外部路由文件（如下所示）。
 
-Advanced Example: Twig, Annotations and the Web Debug Toolbar
+高级示例：Twig、注释以及Web调试工具栏
 -------------------------------------------------------------
 
-The purpose of the ``MicroKernelTrait`` is *not* to have a single-file application.
-Instead, its goal to give you the power to choose your bundles and structure.
+``MicroKernelTrait`` 的目标 *不是* 创建一个单文件的应用。相反，它的目标是让你有权选择bundle和结构。
 
-First, you'll probably want to put your PHP classes in an ``src/`` directory. Configure
-your ``composer.json`` file to load from there:
+首先，你可能希望将PHP类放在 ``src/`` 目录中。配置 ``composer.json`` 文件以定义要加载的位置：
 
 .. code-block:: json
 
@@ -124,9 +117,11 @@ your ``composer.json`` file to load from there:
         }
     }
 
-Now, suppose you want to use Twig and load routes via annotations. Instead of
-putting *everything* in ``index.php``, create a new ``src/Kernel.php`` to
-hold the kernel. Now it looks like this::
+然后，运行 ``composer dump-autoload`` 以转储新的自动加载配置。
+
+现在，假设你要使用Twig并通过注释加载路由。
+现在不再将 *一切* 都放入 ``index.php``，创建一个新的 ``src/Kernel.php`` 来保存内核。
+现在它看起来像这样::
 
     // src/Kernel.php
     namespace App;
@@ -159,7 +154,7 @@ hold the kernel. Now it looks like this::
         {
             $loader->load(__DIR__.'/../config/framework.yaml');
 
-            // configure WebProfilerBundle only if the bundle is enabled
+            // 仅在启用了WebProfilerBundle时才配置该bundle
             if (isset($this->bundles['WebProfilerBundle'])) {
                 $c->loadFromExtension('web_profiler', array(
                     'toolbar' => true,
@@ -170,37 +165,36 @@ hold the kernel. Now it looks like this::
 
         protected function configureRoutes(RouteCollectionBuilder $routes)
         {
-            // import the WebProfilerRoutes, only if the bundle is enabled
+            // 仅在启用了WebProfilerRoutes时才导入该bundle
             if (isset($this->bundles['WebProfilerBundle'])) {
                 $routes->import('@WebProfilerBundle/Resources/config/routing/wdt.xml', '/_wdt');
                 $routes->import('@WebProfilerBundle/Resources/config/routing/profiler.xml', '/_profiler');
             }
 
-            // load the annotation routes
+            // 加载注释路由
             $routes->import(__DIR__.'/../src/Controller/', '/', 'annotation');
         }
 
-        // optional, to use the standard Symfony cache directory
+        // 可选项，使用标准的Symfony缓存目录
         public function getCacheDir()
         {
             return __DIR__.'/../var/cache/'.$this->getEnvironment();
         }
 
-        // optional, to use the standard Symfony logs directory
+        // 可选项，使用标准的Symfony日志目录
         public function getLogDir()
         {
             return __DIR__.'/../var/log';
         }
     }
 
-Before continuing, run this command to add support for the new dependencies:
+在继续之前，运行此命令以添加对新依赖的支持：
 
 .. code-block:: terminal
 
     $ composer require symfony/yaml symfony/twig-bundle symfony/web-profiler-bundle doctrine/annotations
 
-Unlike the previous kernel, this loads an external ``config/framework.yaml`` file,
-because the configuration started to get bigger:
+与之前的内核不同，这会加载一个 ``config/framework.yaml`` 外部文件，因为配置开始变多：
 
 .. configuration-block::
 
@@ -236,8 +230,7 @@ because the configuration started to get bigger:
             ),
         ));
 
-This also loads annotation routes from an ``src/Controller/`` directory, which
-has one file in it::
+这也会从一个包含一个文件的 ``src/Controller/`` 目录中加载注释路由::
 
     // src/Controller/MicroController.php
     namespace App\Controller;
@@ -260,8 +253,8 @@ has one file in it::
         }
     }
 
-Template files should live in the ``templates/`` directory at the root of your project.
-This template lives at ``templates/micro/random.html.twig``:
+模板文件应该位于项目根目录的 ``templates/`` 目录中。
+此模板位于 ``templates/micro/random.html.twig``：
 
 .. code-block:: html+twig
 
@@ -276,8 +269,7 @@ This template lives at ``templates/micro/random.html.twig``:
         </body>
     </html>
 
-Finally, you need a front controller to boot and run the application. Create a
-``public/index.php``::
+最后，你需要一个前端控制器来启动和运行该应用。创建一个``public/index.php``::
 
     // public/index.php
 
@@ -286,7 +278,7 @@ Finally, you need a front controller to boot and run the application. Create a
     use Symfony\Component\HttpFoundation\Request;
 
     $loader = require __DIR__.'/../vendor/autoload.php';
-    // auto-load annotations
+    // 自动加载注释
     AnnotationRegistry::registerLoader(array($loader, 'loadClass'));
 
     $kernel = new Kernel('dev', true);
@@ -295,9 +287,8 @@ Finally, you need a front controller to boot and run the application. Create a
     $response->send();
     $kernel->terminate($request, $response);
 
-That's it! This ``/random/10`` URL will work, Twig will render, and you'll even
-get the web debug toolbar to show up at the bottom. The final structure looks like
-this:
+仅此而已！``/random/10`` URL将会生效，Twig将被渲染，你甚至可以将Web调试工具栏显示在底部。
+最终结构如下所示：
 
 .. code-block:: text
 
@@ -321,13 +312,13 @@ this:
     ├─ composer.json
     └─ composer.lock
 
-As before you can use PHP built-in server:
+和之前一样，你可以使用PHP内置服务器：
 
 .. code-block:: terminal
 
     cd public/
     $ php -S localhost:8000 -t public/
 
-Then see webpage in browser:
+然后在浏览器中查看该网页：
 
     http://localhost:8000/random/10

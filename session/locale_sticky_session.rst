@@ -4,18 +4,16 @@
 在用户会话期间保存(Sticky)语言环境
 ==================================================
 
-Symfony stores the locale setting in the Request, which means that this setting
-is not automatically saved ("sticky") across requests. But, you *can* store the locale
-in the session, so that it's used on subsequent requests.
+Symfony将语言环境设置存储在请求中，这意味着此设置不会跨请求自动保存（“sticky”）。
+但是，你 *可以* 将语言环境存储在会话中，以便在后续请求中使用它。
 
 .. _creating-a-LocaleSubscriber:
 
-Creating a LocaleSubscriber
+创建LocaleSubscriber
 ---------------------------
 
-Create and a :ref:`new event subscriber <events-subscriber>`. Typically, ``_locale``
-is used as a routing parameter to signify the locale, though you can determine the
-correct locale however you want::
+创建一个 :ref:`新的事件订阅器 <events-subscriber>`。
+通常，``_locale`` 被用作表示语言环境的路由参数，但你可以根据需要确定正确的语言环境::
 
     // src/EventSubscriber/LocaleSubscriber.php
     namespace App\EventSubscriber;
@@ -40,11 +38,11 @@ correct locale however you want::
                 return;
             }
 
-            // try to see if the locale has been set as a _locale routing parameter
+            // 尝试查看是否已将语言环境设置为一个 _locale 路由参数
             if ($locale = $request->attributes->get('_locale')) {
                 $request->getSession()->set('_locale', $locale);
             } else {
-                // if no explicit locale has been set on this request, use one from the session
+                // 如果未在此请求上显式的设置语言环境，则使用会话中的语言环境
                 $request->setLocale($request->getSession()->get('_locale', $this->defaultLocale));
             }
         }
@@ -52,22 +50,23 @@ correct locale however you want::
         public static function getSubscribedEvents()
         {
             return array(
-                // must be registered before (i.e. with a higher priority than) the default Locale listener
+                // 必须在默认的语言环境监听器之前（即一个更高的优先级）注册
                 KernelEvents::REQUEST => array(array('onKernelRequest', 20)),
             );
         }
     }
 
-If you're using the :ref:`default services.yaml configuration <service-container-services-load-example>`,
-you're done! Symfony will automatically know about the event subscriber and call
-the ``onKernelRequest`` method on each request.
+如果你使用
+:ref:`默认的services.yaml配置 <service-container-services-load-example>`，那么你已经完工了！
+Symfony将自动了解该事件订阅者并在每个请求上调用 ``onKernelRequest`` 方法。
 
-To see it working, either set the ``_locale`` key on the session manually (e.g.
-via some "Change Locale" route & controller), or create a route with a the :ref:`_locale default <translation-locale-url>`.
+要查看它是否正常工作，请手动（例如，通过某些“更改区域设置”的路由和控制器）设置会话上的
+``_locale`` 键，或创建具有 :ref:`默认 _locale <translation-locale-url>` 的路由。
 
-.. sidebar:: Explicitly Configure the Subscriber
+.. sidebar:: 显式的配置订阅器
 
-    You can also explicitly configure it, in order to pass in the :ref:`default_locale <config-framework-default_locale>`:
+    你也可以显式配置它，以便传入
+    :ref:`default_locale <config-framework-default_locale>`：
 
     .. configuration-block::
 
@@ -79,7 +78,7 @@ via some "Change Locale" route & controller), or create a route with a the :ref:
 
                 App\EventSubscriber\LocaleSubscriber:
                     arguments: ['%kernel.default_locale%']
-                    # uncomment the next line if you are not using autoconfigure
+                    # 如果你不使用自动配置，请取消下一行的注释
                     # tags: [kernel.event_subscriber]
 
         .. code-block:: xml
@@ -111,11 +110,9 @@ via some "Change Locale" route & controller), or create a route with a the :ref:
                 // uncomment the next line if you are not using autoconfigure
                 // ->addTag('kernel.event_subscriber');
 
-That's it! Now celebrate by changing the user's locale and seeing that it's
-sticky throughout the request.
+仅此而已！现在可以通过更改用户的语言环境，然后就能在整个请求中看到它是自动保存（sticky）的。
 
-Remember, to get the user's locale, always use the :method:`Request::getLocale <Symfony\\Component\\HttpFoundation\\Request::getLocale>`
-method::
+请记住，要获取用户的语言环境，请始终使用 :method:`Request::getLocale <Symfony\\Component\\HttpFoundation\\Request::getLocale>` 方法::
 
     // from a controller...
     use Symfony\Component\HttpFoundation\Request;
@@ -125,22 +122,17 @@ method::
         $locale = $request->getLocale();
     }
 
-Setting the Locale Based on the User's Preferences
+根据用户的首选项设置语言环境
 --------------------------------------------------
 
-You might want to improve this technique even further and define the locale based on
-the user entity of the logged in user. However, since the ``LocaleSubscriber`` is called
-before the ``FirewallListener``, which is responsible for handling authentication and
-setting the user token on the ``TokenStorage``, you have no access to the user
-which is logged in.
+你可能希望进一步改进此技术，并根据登录用户的用户实体来定义语言环境。
+但是，由于 ``LocaleSubscriber`` 在 ``FirewallListener``（负责在
+``TokenStorage`` 中处理认证和设置用户令牌）之前被调用，因此你无权在该监听器中访问登录的用户。
 
-Suppose you have a ``locale`` property on your ``User`` entity and
-want to use this as the locale for the given user. To accomplish this,
-you can hook into the login process and update the user's session with this
-locale value before they are redirected to their first page.
+假设你的 ``User`` 实体上有一个 ``locale`` 属性，并希望使用它来保持给定用户的语言环境。
+要实现此目的，你可以挂钩到登录进程，并在它们被重定向之前使用此语言环境值更新用户的会话。
 
-To do this, you need an event subscriber on the ``security.interactive_login``
-event::
+为此，你需要一个事件订阅器来订阅 ``security.interactive_login``::
 
     // src/EventSubscriber/UserLocaleSubscriber.php
     namespace App\EventSubscriber;
@@ -151,8 +143,8 @@ event::
     use Symfony\Component\Security\Http\SecurityEvents;
 
     /**
-     * Stores the locale of the user in the session after the
-     * login. This can be used by the LocaleSubscriber afterwards.
+     * 在登录后，在会话中存储用户的语言环境。
+     * 稍后会由LocaleSubscriber使用。
      */
     class UserLocaleSubscriber implements EventSubscriberInterface
     {
@@ -182,6 +174,4 @@ event::
 
 .. caution::
 
-    In order to update the language immediately after a user has changed
-    their language preferences, you also need to update the session when you change
-    the ``User`` entity.
+    为了在用户更改语言首选项后立即更新对应语言，你还需要在更改 ``User`` 实体时更新会话。

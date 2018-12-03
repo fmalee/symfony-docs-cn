@@ -24,10 +24,7 @@
 - `reference`
 - `bundle/` (5)
 - `http_cache` (7)
-- `configuration`
-  - `environments.rst`
-  - `micro_kernel_trait.rst`
-  - `multiple_kernels.rst`
+- `configuration/environments.rst` (暂时不需要)
 - `routing/custom_route_loader.rst` (暂时不需要)
 - `templating/PHP.rst` (暂时不需要)
 - `setup/bundles.rst` (暂时不需要)
@@ -38,20 +35,6 @@
   - `events.rst` (剩余少量没能力翻译)
   - `form_collections.rst`
   - `form_customization.rst`
-- `session`
-  - `locale_sticky_session.rst`
-  - `php_bridge.rst`
-- `testing`
-  - `bootstrap.rst`
-  - `database.rst`
-  - `doctrine.rst`
-  - `http_authentication.rst`
-  - `insulating_clients.rst`
-  - `profiling.rst`
-- `translation`
-  - `debug.rst`
-  - `lint.rst`
-  - `locale.rst`
 
 ### 语法问题
 
@@ -249,6 +232,7 @@
 - `Formatter`：格式化器
 - `Channel`：通道
 - `Collector`：收集器
+- `Insulate`：隔离，绝缘
 
 ## 汉化步骤
 
