@@ -4,42 +4,35 @@
 如何测试与数据库交互的代码
 =================================================
 
-If your code interacts with the database, e.g. reads data from or stores data
-into it, you need to adjust your tests to take this into account. There are
-many ways to deal with this. In a unit test, you can create a mock for
-a ``Repository`` and use it to return expected objects. In a functional test,
-you may need to prepare a test database with predefined values to ensure that
-your test always has the same data to work with.
+如果你的代码与数据库交互，例如从中读取数据或将数据存储到数据库中，则需要调整测试以将其考虑在内。
+有很多方法可以解决这个问题。在单元测试中，你可以创建一个 ``Repository``
+的模拟并使用它来返回预期的对象。
+在功能测试中，你可能需要准备一个具有预定义值的测试数据库，以确保你的测试始终具有相同的数据。
 
 .. note::
 
-    If you want to test your queries directly, see :doc:`/testing/doctrine`.
+    如果要直接测试数据库查询，请参阅 :doc:`/testing/doctrine`。
 
 .. tip::
 
-    A popular technique to improve the performance of tests that interact with
-    the database is to begin a transaction before every test and roll it back
-    after the test has finished. This makes it unnecessary to recreate the
-    database or reload fixtures before every test. A community bundle called
-    `DoctrineTestBundle`_ provides this feature.
+    提高与数据库交互的测试的性能的一种流行技术是在每次测试之前启动事务，并在测试完成后回滚。
+    这使得无需在每次测试之前重新创建数据库或重新加载 fixture。
+    名为 `DoctrineTestBundle`_ 的社区bundle提供了此功能。
 
-Mocking the ``Repository`` in a Unit Test
+在单元测试中模拟 ``Repository``
 -----------------------------------------
 
-If you want to test code which depends on a Doctrine repository in isolation,
-you need to mock the ``Repository``. Normally you inject the ``EntityManager``
-into your class and use it to get the repository. This makes things a little
-more difficult as you need to mock both the ``EntityManager`` and your repository
-class.
+如果要单独测试依赖于一个Doctrine仓库的代码，则需要模拟 ``Repository``。
+但是，通常你是将 ``EntityManager`` 注入到类中并使用它来获取仓库的。
+这就使得事情变得更加复杂，因为你需要同时模拟 ``EntityManager`` 和你的仓库类。
 
 .. tip::
 
-    It is possible (and a good idea) to inject your repository directly by
-    registering your repository as a :doc:`factory service </service_container/factories>`.
-    This is a little bit more work to setup, but makes testing easier as you
-    only need to mock the repository.
+    通过将仓库注册为一个
+    :doc:`工厂服务 </service_container/factories>`，可以（并且一个好主意）让你直接注入该仓库。
+    这需要一些设置工作，但是可以使得测试更容易，因为你只需要模拟该仓库就可以了。
 
-Suppose the class you want to test looks like this::
+假设你要测试的类如下所示::
 
     // src/Salary/SalaryCalculator.php
     namespace App\Salary;
@@ -66,8 +59,7 @@ Suppose the class you want to test looks like this::
         }
     }
 
-Since the ``EntityManagerInterface`` gets injected into the class through the constructor,
-it's easy to pass a mock object within a test::
+由于 ``EntityManagerInterface`` 通过构造函数被注入到类中，因此在测试中传递一个模拟对象很容易::
 
     // tests/Salary/SalaryCalculatorTest.php
     namespace App\Tests\Salary;
@@ -86,17 +78,17 @@ it's easy to pass a mock object within a test::
             $employee->setSalary(1000);
             $employee->setBonus(1100);
 
-            // Now, mock the repository so it returns the mock of the employee
+            // 现在，模拟该仓库，以便返回该 employee 的模拟
             $employeeRepository = $this->createMock(ObjectRepository::class);
-            // use getMock() on PHPUnit 5.3 or below
+            // 在 PHPUnit 5.3 或更低版本中使用 getMock()
             // $employeeRepository = $this->getMock(ObjectRepository::class);
             $employeeRepository->expects($this->any())
                 ->method('find')
                 ->willReturn($employee);
 
-            // Last, mock the EntityManager to return the mock of the repository
+            // 最后，模拟 EntityManager 以返回该仓库的模拟
             $objectManager = $this->createMock(ObjectManager::class);
-            // use getMock() on PHPUnit 5.3 or below
+            // 在 PHPUnit 5.3 或更低版本中使用 getMock()
             // $objectManager = $this->getMock(ObjectManager::class);
             $objectManager->expects($this->any())
                 ->method('getRepository')
@@ -107,28 +99,26 @@ it's easy to pass a mock object within a test::
         }
     }
 
-In this example, you are building the mocks from the inside out, first creating
-the employee which gets returned by the ``Repository``, which itself gets
-returned by the ``EntityManager``. This way, no real class is involved in
-testing.
+在这个例子中，你是从内到外构建模拟，首先创建一个
+`employee`，然后创建返回该 `employee` 的 ``Repository``，最后创建返回该
+``Repository`` 的 ``EntityManager``。
+通过这样处理，测试中就不会涉及真正的类。
 
-Changing Database Settings for Functional Tests
+更改功能测试的数据库设置
 -----------------------------------------------
 
-If you have functional tests, you want them to interact with a real database.
-Most of the time you want to use a dedicated database connection to make sure
-not to overwrite data you entered when developing the application and also
-to be able to clear the database before every test.
+如果你有功能测试，那么会希望它们与一个真实的数据库进行交互。
+大多数情况下，你希望使用一个专用的数据库连接，以确保不会覆盖在开发应用时输入的数据，同时也可以在每次测试之前清除数据库。
 
-To do this, you can override the value of the ``DATABASE_URL`` env var in the
-``phpunit.xml.dist`` to use a different database for your tests:
+为此，你可以在 ``phpunit.xml.dist`` 中重写 ``DATABASE_URL``
+环境变量的值，以便为测试使用不同的数据库：
 
 .. code-block:: xml
 
     <?xml version="1.0" charset="utf-8" ?>
     <phpunit>
         <php>
-            <!-- the value is the Doctrine connection string in DSN format -->
+            <!-- 该值是DSN格式的Doctrine连接字符串 -->
             <env name="DATABASE_URL" value="mysql://USERNAME:PASSWORD@127.0.0.1/DB_NAME" />
         </php>
         <!-- ... -->

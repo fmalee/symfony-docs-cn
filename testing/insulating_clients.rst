@@ -4,8 +4,7 @@
 如何测试几个客户端的交互
 ==============================================
 
-If you need to simulate an interaction between different clients (think of a
-chat for instance), create several clients::
+如果你需要模拟不同客户端之间的交互（例如，聊天室），请创建多个客户端::
 
     // ...
 
@@ -18,9 +17,8 @@ chat for instance), create several clients::
     $this->assertEquals(Response::HTTP_CREATED, $harry->getResponse()->getStatusCode());
     $this->assertRegExp('/Hello/', $sally->getResponse()->getContent());
 
-This works except when your code maintains a global state or if it depends on
-a third-party library that has some kind of global state. In such a case, you
-can insulate your clients::
+该代码可以正常运行，除非你的代码维持一个全局状态或者它依赖于具有某种全局状态的第三方库。
+在这种情况下，你可以隔离（insulate）你的客户端::
 
     // ...
 
@@ -36,18 +34,15 @@ can insulate your clients::
     $this->assertEquals(Response::HTTP_CREATED, $harry->getResponse()->getStatusCode());
     $this->assertRegExp('/Hello/', $sally->getResponse()->getContent());
 
-Insulated clients transparently execute their requests in a dedicated and
-clean PHP process, thus avoiding any side-effects.
+已隔离客户端在专用且干净的PHP进程中透明地执行其请求，从而避免任何副作用。
 
 .. tip::
 
-    As an insulated client is slower, you can keep one client in the main
-    process, and insulate the other ones.
+    由于一个已隔离客户端比较慢，你可以将一个客户端保留在主进程中，然后隔离其他客户端。
 
 .. caution::
 
-    Insulating tests requires some serializing and unserializing operations. If
-    your test includes data that can't be serialized, such as file streams when
-    using the ``UploadedFile`` class, you'll see an exception about
-    *"serialization is not allowed"*. This is a technical limitation of PHP, so
-    the only solution is to disable insulation for those tests.
+    绝缘测试需要一些序列化和反序列化操作。
+    如果你的测试包含无法序列化的数据（例如使用 ``UploadedFile``
+    类时的文件流），你将看到一个关于 *"serialization is not allowed"* 的异常。
+    这是PHP的技术限制，因此唯一的解决方案是不隔离那些测试。

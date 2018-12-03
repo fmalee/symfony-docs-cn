@@ -1,16 +1,14 @@
 如何在运行测试之前自定义引导过程
 ===========================================================
 
-Sometimes when running tests, you need to do additional bootstrap work before
-running those tests. For example, if you're running a functional test and
-have introduced a new translation resource, then you will need to clear your
-cache before running those tests.
+有时在运行测试时，你需要在运行这些测试之前执行额外的引导工作。
+例如，如果你正在运行一个功能测试并已引入新的翻译资源，则需要在运行这些测试之前清除缓存。
 
-To do this, first add a file that executes your bootstrap work::
+为此，首先添加一个执行引导工作的文件::
 
     // tests/bootstrap.php
     if (isset($_ENV['BOOTSTRAP_CLEAR_CACHE_ENV'])) {
-        // executes the "php bin/console cache:clear" command
+        // 执行 "php bin/console cache:clear" 命令
         passthru(sprintf(
             'APP_ENV=%s php "%s/../bin/console" cache:clear --no-warmup',
             $_ENV['BOOTSTRAP_CLEAR_CACHE_ENV'],
@@ -20,8 +18,7 @@ To do this, first add a file that executes your bootstrap work::
 
     require __DIR__.'/../vendor/autoload.php';
 
-Then, configure ``phpunit.xml.dist`` to execute this ``bootstrap.php`` file
-before running the tests:
+然后，配置 ``phpunit.xml.dist`` 以在运行测试之前执行此 ``bootstrap.php`` 文件：
 
 .. code-block:: xml
 
@@ -33,8 +30,7 @@ before running the tests:
         <!-- ... -->
     </phpunit>
 
-Now, you can define in your ``phpunit.xml.dist`` file which environment you want the
-cache to be cleared:
+现在，你可以在你的 ``phpunit.xml.dist`` 文件中定义在要在哪个环境中清除缓存：
 
 .. code-block:: xml
 
@@ -48,5 +44,4 @@ cache to be cleared:
         </php>
     </phpunit>
 
-This now becomes an environment variable (i.e. ``$_ENV``) that's available
-in the custom bootstrap file (``tests/bootstrap.php``).
+现在，该定义成为自定义引导程序文件（``tests/bootstrap.php``）中可用的环境变量（即 ``$_ENV``）。

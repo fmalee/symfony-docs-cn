@@ -4,24 +4,18 @@
 如何在功能测试中模拟HTTP身份认证
 ========================================================
 
-Authenticating requests in functional tests can slow down the entire test suite.
-This could become an issue especially when the tests reproduce the same steps
-that users follow to authenticate, such as submitting a login form or using
-OAuth authentication services.
+在功能测试中认证请求可能会降低整个测试套件的速度。
+这可能会成为一个问题，尤其是当测试重现用户进行认证时的步骤时，例如提交登录表单或使用OAuth认证服务。
 
-This article explains the two most popular techniques to avoid these issues and
-create fast tests when using authentication.
+本文介绍了两种最常用的技术，可以避免这些问题并在使用认证时创建快速的测试。
 
-Using a Faster Authentication Mechanism Only for Tests
+仅为测试使用更快的认证机制
 ------------------------------------------------------
 
-When your application is using a ``form_login`` authentication, you can make
-your tests faster by allowing them to use HTTP authentication. This way your
-tests authenticate with the simple and fast HTTP Basic method whilst your real
-users still log in via the normal login form.
+当你的应用使用 ``form_login`` 认证时，你可以通过允许它们使用HTTP认证来加快测试速度。
+这样处理的话，你的测试使用简单快速的HTTP Basic方法进行认证，而你的真实用户仍然可以通过正常的登录表单来登录。
 
-The trick is to use the ``http_basic`` authentication in your application
-firewall, but only in the configuration file used by tests:
+诀窍是在应用防火墙中使用 ``http_basic`` 认证，但仅在用于测试环境的配置文件中配置：
 
 .. configuration-block::
 
@@ -30,7 +24,7 @@ firewall, but only in the configuration file used by tests:
         # config/packages/test/security.yaml
         security:
             firewalls:
-                # replace 'main' by the name of your own firewall
+                # 用自己的防火墙名称来替换 'main'
                 main:
                     http_basic: ~
 
@@ -56,32 +50,27 @@ firewall, but only in the configuration file used by tests:
             ),
         ));
 
-Tests can now authenticate via HTTP passing the username and password as server
-variables using the second argument of ``createClient()``::
+现在，该测试可以使用 ``createClient()`` 的第二个参数将用户名和密码作为服务器变量来通过HTTP进行认证::
 
     $client = static::createClient(array(), array(
         'PHP_AUTH_USER' => 'username',
         'PHP_AUTH_PW'   => 'pa$$word',
     ));
 
-The username and password can also be passed on a per request basis::
+也可以基于每个请求来传递用户名和密码::
 
     $client->request('DELETE', '/post/12', array(), array(), array(
         'PHP_AUTH_USER' => 'username',
         'PHP_AUTH_PW'   => 'pa$$word',
     ));
 
-Creating the Authentication Token
+创建认证令牌
 ---------------------------------
 
-If your application uses a more advanced authentication mechanism, you can't
-use the previous trick, but it's still possible to make tests faster. The trick
-now is to bypass the authentication process, create the *authentication token*
-yourself and store it in the session.
+如果你的应用使用更高级的认证机制，则无法使用之前的技巧，但仍可以更快地进行测试。
+现在的诀窍是绕过常规认证过程，自己创建 *认证令牌* 并将其存储在会话中。
 
-This technique requires some knowledge of the Security component internals,
-but the following example shows a complete example that you can adapt to your
-needs::
+此技术需要一些安全组件内部的知识，但下面显示了一个完整的示例，你可以根据自己的需求进行调整::
 
     // tests/Controller/DefaultControllerTest.php
     namespace App\Tests\Controller;
@@ -114,12 +103,12 @@ needs::
             $session = $this->client->getContainer()->get('session');
 
             $firewallName = 'secure_area';
-            // if you don't define multiple connected firewalls, the context defaults to the firewall name
-            // See https://symfony.com/doc/current/reference/configuration/security.html#firewall-context
+            // 如果未定义多个已连接防火墙，则上下文默认为该防火墙名称
+            // 请参阅 https://symfony.com/doc/current/reference/configuration/security.html#firewall-context
             $firewallContext = 'secured_area';
 
-            // you may need to use a different token class depending on your application.
-            // for example, when using Guard authentication you must instantiate PostAuthenticationGuardToken
+            // 你可能需要使用一个不同的令牌类，具体取决于你的应用。
+            // 例如，使用安保认证时，你必须实例化 PostAuthenticationGuardToken
             $token = new UsernamePasswordToken('admin', null, $firewallName, array('ROLE_ADMIN'));
             $session->set('_security_'.$firewallContext, serialize($token));
             $session->save();

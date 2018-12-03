@@ -4,18 +4,16 @@
 如何在功能测试中使用分析器
 ============================================
 
-It's highly recommended that a functional test only tests the Response. But if
-you write functional tests that monitor your production servers, you might
-want to write tests on the profiling data as it gives you a great way to check
-various things and enforce some metrics.
+强烈建议在功能测试时仅测试响应。
+但是，如果编写用于监视生产服务器的功能测试，那么你可能希望对分析数据编写测试，因为它为你提供了检查各种内容并强制执行某些指标的好方法。
 
 .. _speeding-up-tests-by-not-collecting-profiler-data:
 
-Enabling the Profiler in Tests
+在测试中启用分析器
 ------------------------------
 
-Collecting data with :doc:`the Symfony Profiler </profiler>` can slow down your
-tests significantly. That's why Symfony disables it by default:
+使用 :doc:`Symfony分析器` 来收集数据可能会显著降低测试速度。
+这就是为什么Symfony会默认禁用它：
 
 .. configuration-block::
 
@@ -57,17 +55,15 @@ tests significantly. That's why Symfony disables it by default:
             ),
         ));
 
-Setting ``collect`` to ``true`` enables the profiler for all tests. However, if
-you need the profiler just in a few tests, you can keep it disabled globally and
-enable the profiler individually on each test by calling
-``$client->enableProfiler()``.
+可以通过设置 ``collect`` 为 ``true`` 来为所有测试启用分析器。
+但是，如果你只需要在几个测试中使用分析器，则可以将其全局禁用，并通过调用
+``$client->enableProfiler()`` 以在每个测试中单独启用分析器。
 
-Testing the Profiler Information
+测试分析器信息
 --------------------------------
 
-The data collected by the Symfony Profiler can be used to check the number of
-database calls, the time spent in the framework, etc. All this information is
-provided by the collectors obtained through the ``$client->getProfile()`` call::
+Symfony分析器收集的数据可用于检查数据库调用的数量，框架中耗费的时间等。
+所有这些信息都是通过调用 ``$client->getProfile()`` 获得的收集器来提供的::
 
     class LuckyControllerTest extends WebTestCase
     {
@@ -75,16 +71,15 @@ provided by the collectors obtained through the ``$client->getProfile()`` call::
         {
             $client = static::createClient();
 
-            // enable the profiler only for the next request (if you make
-            // new requests, you must call this method again)
-            // (it does nothing if the profiler is not available)
+            // 仅为下一个请求启用分析器（如果创建了新请求，则必须再次调用此方法）
+            // （如果分析器不可用，它什么也不做）
             $client->enableProfiler();
 
             $crawler = $client->request('GET', '/lucky/number');
 
-            // ... write some assertions about the Response
+            // ... 写一些关于响应的断言
 
-            // check that the profiler is enabled
+            // 检查是否启用分析器
             if ($profile = $client->getProfile()) {
                 // check the number of requests
                 $this->assertLessThan(
@@ -92,7 +87,7 @@ provided by the collectors obtained through the ``$client->getProfile()`` call::
                     $profile->getCollector('db')->getQueryCount()
                 );
 
-                // check the time spent in the framework
+                // 检查框架中花费的时间
                 $this->assertLessThan(
                     500,
                     $profile->getCollector('time')->getDuration()
@@ -101,9 +96,8 @@ provided by the collectors obtained through the ``$client->getProfile()`` call::
         }
     }
 
-If a test fails because of profiling data (too many DB queries for instance),
-you might want to use the Web Profiler to analyze the request after the tests
-finish. It's easy to achieve if you embed the token in the error message::
+如果由于分析数据导致测试失败（例如，太多数据库查询），你可能希望在测试完成后使用Web分析器来分析请求。
+只要你在错误消息中嵌入令牌，那就很容易实现该目的::
 
     $this->assertLessThan(
         30,
@@ -116,10 +110,8 @@ finish. It's easy to achieve if you embed the token in the error message::
 
 .. note::
 
-    The profiler information is available even if you :doc:`insulate the client </testing/insulating_clients>`
-    or if you use an HTTP layer for your tests.
+    即使你 :doc:`隔离客户端 </testing/insulating_clients>`，或者使用一个HTTP层进行测试，也可以使用分析器信息。
 
 .. tip::
 
-    Read the API for built-in :doc:`data collectors </profiler/data_collector>`
-    to learn more about their interfaces.
+    可以阅读内置 :doc:`数据收集器 </profiler/data_collector>` 的API，以了解有关其接口的更多信息。

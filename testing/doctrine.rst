@@ -4,19 +4,16 @@
 如何测试Doctrine仓库
 =================================
 
-Unit testing Doctrine repositories in a Symfony project is not recommended.
-When you're dealing with a repository, you're really dealing with something
-that's meant to be tested against a real database connection.
+不建议对Symfony项目中的Doctrine仓库进行单元测试。
+当你处理一个仓库时，你是在真实的处理那些东西，因为你正在对一个真实的数据库连接进行测试。
 
-Fortunately, you can easily test your queries against a real database, as
-described below.
+幸运的是，你可以轻松地针对一个真实数据库来测试查询。
 
-Functional Testing
+功能测试
 ------------------
 
-If you need to actually execute a query, you will need to boot the kernel
-to get a valid connection. In this case, you'll extend the ``KernelTestCase``
-to have the Symfony environment available::
+如果你需要真实的执行一个查询，则需要引导内核以获得一个有效连接。
+在这种情况下，你将继承 ``KernelTestCase`` 以使Symfony环境可用::
 
     // tests/Repository/ProductRepositoryTest.php
     namespace App\Tests\Repository;
