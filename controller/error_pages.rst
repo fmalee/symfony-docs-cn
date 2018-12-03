@@ -302,7 +302,7 @@ TwigBundle使用一个监听 ``kernel.exception`` 事件的
 使用此事件实际上比之前解释的要强大得多，但也需要彻底了解Symfony内部。
 比如你的代码抛出了对你的应用域具有特定含义的特殊异常。
 
-``kernel.exception`` 事件可以让你 :doc:`编写自己的事件侦听器 </event_dispatcher>`
+``kernel.exception`` 事件可以让你 :doc:`编写自己的事件监听器 </event_dispatcher>`
 ，让你仔细查看异常并根据它采取不同的操作。
 这些操作可能包括记录异常，将用户重定向到另一个页面或渲染专门的错误页面。
 
