@@ -19,77 +19,28 @@
 ### 未汉化
 
 - https://github.com/sensiolabs/SensioFrameworkExtraBundle/tree/master/Resources/doc
-- `bundle/` (5)
+- `introduction`
 - `compoments`
+- `reference`
+- `bundle/` (5)
+- `http_cache` (7)
 - `configuration`
   - `environments.rst`
   - `micro_kernel_trait.rst`
   - `multiple_kernels.rst`
-- `console`
-  - `style.rst`
-- `create_framework`
+- `routing/custom_route_loader.rst` (暂时不需要)
+- `templating/PHP.rst` (暂时不需要)
+- `setup/bundles.rst` (暂时不需要)
+- `security/custom_authentication_provider.rst` (暂时不需要)
+- `security/ldap.rst` (暂时不需要)
+- `service_container/service_subscribers_locators.rst` (没能力翻译)
 - `form`
-  - `create_custom_field_type.rst`
-  - `create_form_type_extension.rst`
-  - `data_transformers.rst`
-  - `dynamic_form_modification.rst`
-  - `embedded.rst`
-  - `events.rst`
+  - `events.rst` (剩余少量没能力翻译)
   - `form_collections.rst`
   - `form_customization.rst`
-  - `form_dependencies.rst`
-  - `form_themes.rst`
-  - `type_guesser.rst`
-  - `unit_testing.rst`
-- `http_cache`
-  - `cache_invalidation.rst`
-  - `cache_vary.rst`
-  - `esi.rst`
-  - `expiration.rst`
-  - `form_csrf_caching.rst`
-  - `validation.rst`
-  - `varnish.rst`
-- `introduction`
-- `logging`
-- `profiler`
-  - `data_collector.rst`
-- `reference`
-- `routing`
-  - `custom_route_loader.rst`
-  - `external_resources.rst`
-  - `hostname_pattern.rst`
-  - `redirect_in_config.rst`
-- `security`
-  - `access_control.rst`
-  - `custom_authentication_provider.rst`
-  - `form_login.rst`
-  - `impersonating_user.rst`
-  - `json_login_setup.rst`
-  - `ldap.rst`
-  - `multiple_guard_authenticators.rst`
-  - `user_provider.rst`
-- `service_container`
-  - `alias_private.rst`
-  - `autowiring.rst`
-  - `compiler_passes.rst`
-  - `configurators.rst`
-  - `definitions.rst`
-  - `expression_language.rst`
-  - `factories.rst`
-  - `parent_services.rst`
-  - `service_decoration.rst`
-  - `service_subscribers_locators.rst`
-  - `tags.rst`
 - `session`
   - `locale_sticky_session.rst`
   - `php_bridge.rst`
-- `setup`
-  - `built_in_web_server.rst`
-  - `bundles.rst`
-  - `homestead.rst`
-  - `web_server_configuration.rst`
-- `templating`
-  - `PHP.rst`
 - `testing`
   - `bootstrap.rst`
   - `database.rst`
@@ -101,14 +52,6 @@
   - `debug.rst`
   - `lint.rst`
   - `locale.rst`
-- `validation`
-  - `custom_constraint.rst`
-  - `groups.rst`
-  - `raw_values.rst`
-  - `sequence_provider.rst`
-  - `severity.rst`
-  - `translations.rst`
-
 
 ### 语法问题
 
@@ -293,6 +236,19 @@
 - `Skeleton`：骨架
 - `Decorator`：装饰器
 - `Verbosity`：冗余度
+- `Compiler passes`：编译器传递
+- `Bridge`：桥接
+- `Type Guesser`：类型猜测器
+- `Guesser`：猜测器
+- `Fragment`：片段
+- `Block`：区块
+- `Data Transformer`：数据转换器
+- `Transformer`：转换器
+- `Widget`：部件
+- `Prototype`：原型
+- `Formatter`：格式化器
+- `Channel`：通道
+- `Collector`：收集器
 
 ## 汉化步骤
 
