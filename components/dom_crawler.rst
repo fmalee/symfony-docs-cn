@@ -204,12 +204,15 @@ Crawler的一个实例代表一组 :phpclass:`DOMElement` 对象，它们是可�
 
     $attributes = $crawler
         ->filterXpath('//body/p')
-        ->extract(array('_text', 'class'))
+        ->extract(array('_name', '_text', 'class'))
     ;
 
 .. note::
 
-    ``_text`` 特殊属性代表一个节点值。
+    ``_text`` 特殊属性代表一个节点值。而 ``_name`` 表示元素名称（HTML标签名称）。
+
+.. versionadded:: 4.3
+    在Symfony4.3中引入了 ``_name`` 特殊属性。
 
 在列表的每个节点上调用一个匿名函数::
 
