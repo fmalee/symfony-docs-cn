@@ -151,13 +151,12 @@ B) ``FormEvents::SUBMIT`` 事件
 方法将Normalized数据转换回Model和View数据之前会调度 ``FormEvents::SUBMIT`` 事件。
 
 它可以被用于在正常化(normalized)的数据内容中修改数据。
-It can be used to change data from the normalized representation of the data.
 
 ===============  ===================================================================================
 数据类型           值
 ===============  ===================================================================================
 Model data       与在 ``FormEvents::POST_SET_DATA`` 时相同
-Normalized data  Data from the request reverse-transformed from the request using a view transformer
+Normalized data  对使用一个视图转换器的请求进行反向转换而得来的请求数据
 View data        与在 ``FormEvents::POST_SET_DATA`` 时相同
 ===============  ===================================================================================
 
@@ -303,7 +302,7 @@ View data        使用一个视图转换器转换的Normalized data
 
 * 提高可读性;
 * 监听多个事件;
-* 在单个类中重组多个侦听器。
+* 在单个类中重组多个监听器。
 
 .. code-block:: php
 

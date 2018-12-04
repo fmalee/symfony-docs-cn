@@ -4,23 +4,19 @@
 如何自定义表单渲染
 ===============================
 
-Symfony gives you a wide variety of ways to customize how a form is rendered.
-In this guide, you'll learn how to customize every possible part of your
-form with as little effort as possible whether you use Twig or PHP as your
-templating engine.
+Symfony为你提供了多种自定义表单渲染方式的方法。
+在本指南中，你将学习如何使用Twig或PHP作为模板引擎，并尽可能少地自定义表单的每个部分。
 
-Form Rendering Basics
+表单渲染基础
 ---------------------
 
-Recall that the label, error and HTML widget of a form field can
-be rendered by using the ``form_row()`` Twig function or the ``row`` PHP helper
-method:
+回想一下，你可以使用 ``form_row()`` Twig函数或 ``row`` PHP辅助方法来渲染表单字段的标签、错误和HTML部件：
 
 .. code-block:: twig
 
     {{ form_row(form.age) }}
 
-You can also render each of the four parts of the field individually:
+你还可以单独渲染字段的四个部分：
 
 .. code-block:: html+twig
 
@@ -31,9 +27,8 @@ You can also render each of the four parts of the field individually:
         {{ form_help(form.age) }}
     </div>
 
-In both cases, the form label, errors and HTML widget are rendered by using
-a set of markup that ships standard with Symfony. For example, both of the
-above templates would render:
+在这两个例子中，表单的标签、错误和HTML部件都是使用Symfony标配的一组标记来渲染的。
+例如，以上两个模板都会渲染为：
 
 .. code-block:: html
 
@@ -45,94 +40,82 @@ above templates would render:
         <input type="number" id="form_age" name="form[age]" />
     </div>
 
-To quickly prototype and test a form, you can render the entire form with
-just one line:
+要快速的原型化(prototype)并测试表单，你只需使用一行即可渲染整个表单：
 
 .. code-block:: twig
 
-    {# renders all fields #}
+    {# 渲染所有字段 #}
     {{ form_widget(form) }}
 
-    {# renders all fields *and* the form start and end tags #}
+    {# 渲染所有字段 *以及* 表单的开始和结束标签 #}
     {{ form(form) }}
 
-The remainder of this recipe will explain how every part of the form's markup
-can be modified at several different levels. For more information about form
-rendering in general, see :doc:`/form/rendering`.
+本文的剩余部分将解释如何在几个不同的级别中修改表单标记的每个部分。
+有关表单渲染的更多信息，请参阅 :doc:`/form/rendering`。
 
 .. _form-customization-form-themes:
 
-What are Form Themes?
+什么是表单主题？
 ---------------------
 
-Symfony uses form fragments - a small piece of a template that renders just
-one part of a form - to render each part of a form - field labels, errors,
-``input`` text fields, ``select`` tags, etc.
+Symfony使用表单片段（一个只渲染表单的一部分的模板片段）来渲染一个表单的每个部分
+- 字段标签、错误、``input`` 文本字段、``select`` 标签等等。
 
-The fragments are defined as blocks in Twig and as template files in PHP.
+片段在Twig中定义为区块，在PHP中定义为模板文件。
 
-A *theme* is nothing more than a set of fragments that you want to use when
-rendering a form. In other words, if you want to customize one portion of
-how a form is rendered, you'll import a *theme* which contains a customization
-of the appropriate form fragments.
+一个 *主题* 无非就是一组渲染一个表单时要使用的片段。
+换句话说，如果要自定义表单渲染方式的一部分，则可以导入一个包含相应表单片段的自定义的 *主题*。
 
-Symfony comes with some **built-in form themes** that define each and every
-fragment needed to render every part of a form:
+Symfony有一些 **内置表单主题**，用于定义渲染一个表单的每个部分所需的每个片段：
 
-* `form_div_layout.html.twig`_, wraps each form field inside a ``<div>`` element.
-* `form_table_layout.html.twig`_, wraps the entire form inside a ``<table>``
-  element and each form field inside a ``<tr>`` element.
-* `bootstrap_3_layout.html.twig`_, wraps each form field inside a ``<div>`` element
-  with the appropriate CSS classes to apply the default `Bootstrap 3 CSS framework`_
-  styles.
-* `bootstrap_3_horizontal_layout.html.twig`_, it's similar to the previous theme,
-  but the CSS classes applied are the ones used to display the forms horizontally
-  (i.e. the label and the widget in the same row).
-* `bootstrap_4_layout.html.twig`_, same as ``bootstrap_3_layout.html.twig``, but
-  updated for `Bootstrap 4 CSS framework`_ styles.
-* `bootstrap_4_horizontal_layout.html.twig`_, same as ``bootstrap_3_horizontal_layout.html.twig``
-  but updated for Bootstrap 4 styles.
-* `foundation_5_layout.html.twig`_, wraps each form field inside a ``<div>`` element
-  with the appropriate CSS classes to apply the default `Foundation CSS framework`_
-  styles.
+* `form_div_layout.html.twig`_, 将每个表单字段封装在一个 ``<div>`` 元素中。
+* `form_table_layout.html.twig`_, 将整个表单封装在一个 ``<table>``
+  元素内，并将每个表单字段封装在 ``<tr>`` 元素中。
+* `bootstrap_3_layout.html.twig`_, 使用适当的CSS类将每个表单字段封装在一个
+  ``<div>`` 元素中，以应用 `Bootstrap 3 CSS框架`_ 的默认样式。
+* `bootstrap_3_horizontal_layout.html.twig`_, 它类似于前面的主题，
+  但应用的是用于水平显示（即标签和部件处于同一行中）表单的CSS类。
+* `bootstrap_4_layout.html.twig`_, 与 ``bootstrap_3_layout.html.twig``
+  相同，但对应样式已更新为 `Bootstrap 4 CSS框架`_。
+* `bootstrap_4_horizontal_layout.html.twig`_, 与
+  ``bootstrap_3_horizontal_layout.html.twig``
+  相同，但对应样式已更新为 `Bootstrap 4 CSS框架`_。
+* `foundation_5_layout.html.twig`_, 使用适当的CSS类将每个表单字段封装在一个
+  ``<div>`` 元素中，以应用 `Foundation CSS框架`_ 默认样式。
 
 .. caution::
 
-    When you use the Bootstrap form themes and render the fields manually,
-    calling ``form_label()`` for a checkbox/radio field doesn't show anything.
-    Due to Bootstrap internals, the label is already shown by ``form_widget()``.
+    当你使用Bootstrap表单主题并手动渲染字段时，为复选框/单选框字段调用 ``form_label()``
+    将不会显示任何内容。因为在Bootstrap内部， ``form_widget()`` 已经将标签显示出来。
 
 .. tip::
 
-    Read more about the :doc:`Bootstrap 4 form theme </form/bootstrap4>`.
+    阅读有关 :doc:`Bootstrap4 表单主题 </form/bootstrap4>` 的更多信息。
 
-In the next section you will learn how to customize a theme by overriding
-some or all of its fragments.
+在下一节中，你将学习如何通过重写部分或全部片段来自定义一个主题。
 
-For example, when the widget of an ``integer`` type field is rendered, an ``input``
-``number`` field is generated
+例如，当渲染 ``integer`` 类型字段的部件时，将生成字段一个 ``number`` 类型的 ``input`` 字段。
 
 .. code-block:: html+twig
 
     {{ form_widget(form.age) }}
 
-renders:
+渲染:
 
 .. code-block:: html
 
     <input type="number" id="form_age" name="form[age]" required="required" value="33" />
 
-Internally, Symfony uses the ``integer_widget`` fragment to render the field.
-This is because the field type is ``integer`` and you're rendering its ``widget``
-(as opposed to its ``label`` or ``errors``).
+在内部，Symfony使用 ``integer_widget`` 片段来渲染该字段。
+这是因为该字段类型是 ``integer``，并且你正在渲染它的 ``widget``
+（而不是 ``label`` 或 ``errors``）。
 
-In Twig that would default to the block ``integer_widget`` from the `form_div_layout.html.twig`_
-template.
+在Twig中，将使用 `form_div_layout.html.twig`_ 默认模板的 ``integer_widget`` 区块。
 
-In PHP it would rather be the ``integer_widget.html.php`` file located in
-the ``FrameworkBundle/Resources/views/Form`` folder.
+而在PHP中，它将使用 ``FrameworkBundle/Resources/views/Form`` 件夹中的
+``integer_widget.html.php`` 文件。
 
-The default implementation of the ``integer_widget`` fragment looks like this:
+``integer_widget`` 片段的默认实现如下所示：
 
 .. code-block:: twig
 
@@ -142,7 +125,7 @@ The default implementation of the ``integer_widget`` fragment looks like this:
         {{ block('form_widget_simple') }}
     {% endblock integer_widget %}
 
-As you can see, this fragment itself renders another fragment - ``form_widget_simple``:
+如你所见，此片段本身渲染另一个片段 - ``form_widget_simple``：
 
 .. code-block:: html+twig
 
@@ -152,56 +135,47 @@ As you can see, this fragment itself renders another fragment - ``form_widget_si
         <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
     {% endblock form_widget_simple %}
 
-The point is, the fragments dictate the HTML output of each part of a form. To
-customize the form output, you need to identify and override the correct
-fragment. A set of these form fragment customizations is known as a form "theme".
-When rendering a form, you can choose which form theme(s) you want to apply.
+关键是，片段决定了一个表单的每个部分的HTML输出。要自定义该表单输出，你需要标识并重写正确的片段。
+一组这样的表单片段自定义被称为一个表单“主题”。渲染一个表单时，你可以选择要应用的表单主题。
 
-In Twig a theme is a single template file and the fragments are the blocks defined
-in this file.
+在Twig中，一个主题是单个模板文件，片段是此文件中定义的区块。
 
-In PHP a theme is a folder and the fragments are individual template files in
-this folder.
+在PHP中，一个主题是一个文件夹，片段是此文件夹中的单个模板文件。
 
 .. _form-customization-sidebar:
 
-.. sidebar:: Knowing which Block to Customize
+.. sidebar:: 如何区分要自定义的区块
 
-    In this example, the customized fragment name is ``integer_widget`` because
-    you want to override the HTML ``widget`` for all ``integer`` field types. If
-    you need to customize ``textarea`` fields, you would customize ``textarea_widget``.
+    在此示例中，该自定义片段的名称是 ``integer_widget``，因为你要为所有的
+    ``integer`` 字段类型的 ``widget`` 重写HTML。
+    如果你需要自定义的是 ``textarea`` 字段，则可以自定义 ``textarea_widget`` 区块。
 
-    The ``integer`` part comes from the class name: ``IntegerType`` becomes ``integer``,
-    based on a standard.
+    片段名称的 ``integer`` 部分来自类名：``IntegerType``，然后基于一个标准最终变成 ``integer``。
 
-    As you can see, the fragment name is a combination of the field type and
-    which part of the field is being rendered (e.g. ``widget``, ``label``,
-    ``errors``, ``row``). For example, to change how errors are rendered specifically
-    for input fields of type ``text``, you would customize the ``text_errors`` fragment.
+    正如你看到的，该片段名称一个组合，它由字段类型和要渲染该字段的哪个部分（例如 ``widget``、
+    ``label``、``errors``、``row``）组成。
+    例如，要更改针对 ``text`` 类型的输入字段的错误的渲染方式，你可以自定义 ``text_errors`` 片段。
 
-    More commonly, however, you'll want to customize how errors are displayed
-    across *all* fields. You can do this by customizing the ``form_errors``
-    fragment. This takes advantage of field type inheritance. Specifically,
-    since the ``text`` type extends from the ``form`` type, the Form component
-    will first look for the type-specific fragment (e.g. ``text_errors``) before
-    falling back to its parent fragment name if it doesn't exist (e.g. ``form_errors``).
+    但是，更常见的是，你需要自定义针对所有字段中的错误的渲染方式。
+    你可以通过自定义 ``form_errors`` 片段来完成此操作。这里利用了字段类型继承。
+    具体来说，由于 ``text`` 类型从 ``form``
+    类型扩展而来，因此Form组件将首先查找特定类型的片段（例如
+    ``text_errors``），如果该片段不存在，则回退到其父片段名称（例如 ``form_errors``）。
 
-    For more information on this topic, see :ref:`form-template-blocks`.
+    有关此话题的更多信息，请参阅 :ref:`form-template-blocks`。
 
 .. _form-theming-methods:
 
-Form Theming
+表单主题
 ------------
 
-To see the power of form theming, suppose you want to wrap every input ``number``
-field with a ``div`` tag. The key to doing this is to customize the
-``integer_widget`` fragment.
+要明白表单主题的强大功能，假设你想要使用 ``div`` 标签封装每个 ``number`` 输入字段。
+这样做的关键是自定义 ``integer_widget`` 片段。
 
-Form Theming in Twig
+Twig中的表单主题
 --------------------
 
-When customizing the form field block in Twig, you have two options on *where*
-the customized form block can live:
+在Twig中自定义表单字段区块时，根据自定义表单区块存放的 *位置*，你有两个选择：
 
 +--------------------------------------+-----------------------------------+-------------------------------------------+
 | Method                               | Pros                              | Cons                                      |
@@ -211,13 +185,12 @@ the customized form block can live:
 | Inside a separate template           | Can be reused by many templates   | Requires an extra template to be created  |
 +--------------------------------------+-----------------------------------+-------------------------------------------+
 
-Both methods have the same effect but are better in different situations.
+两种方法都具有相同的效果，但它们在不同的解决方案中又各有优异。
 
-Method 1: Inside the same Template as the Form
+方法 1: 在与表单相同的模板内部
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The easiest way to customize the ``integer_widget`` block is to customize it
-directly in the template that's actually rendering the form.
+自定义 ``integer_widget`` 区块的最简单方法是直接在实际渲染表单的模板中对其进行自定义。
 
 .. code-block:: html+twig
 
@@ -233,28 +206,25 @@ directly in the template that's actually rendering the form.
     {% endblock %}
 
     {% block content %}
-        {# ... render the form #}
+        {# ... 渲染该表单 #}
 
         {{ form_row(form.age) }}
     {% endblock %}
 
-By using the special ``{% form_theme form _self %}`` tag, Twig looks inside
-the same template for any overridden form blocks. Assuming the ``form.age``
-field is an ``integer`` type field, when its widget is rendered, the customized
-``integer_widget`` block will be used.
+通过使用特殊的 ``{% form_theme form _self %}``
+标签，Twig可以在同一个模板中查找任何被重写的表单区块。
+假设 ``form.age`` 是一个 ``integer``
+类型的字段，则在渲染该字段的部件时，将使用自定义的 ``integer_widget`` 区块。
 
-The disadvantage of this method is that the customized form block can't be
-reused when rendering other forms in other templates. In other words, this method
-is most useful when making form customizations that are specific to a single
-form in your application. If you want to reuse a form customization across
-several (or all) forms in your application, read on to the next section.
+此方法的缺点是在其他模板中渲染其他表单时，将无法复用该自定义表单区块。
+换句话说，在进行特定于应用的单个表单的表单自定义时，此方法最有用。
+如果要在应用中的多个（或所有）表单中复用一个表单自定义，请继续阅读下一节。
 
-Method 2: Inside a separate Template
+方法 2: 在单独的模板内
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You can also choose to put the customized ``integer_widget`` form block in a
-separate template entirely. The code and end-result are the same, but you
-can now re-use the form customization across many templates:
+你还可以选择完全的将自定义的 ``integer_widget`` 表单区块放在单独的模板中。
+代码和生成结果和上面是一样的，但现在你可以在许多模板中重复使用该表单自定义：
 
 .. code-block:: html+twig
 
@@ -266,9 +236,8 @@ can now re-use the form customization across many templates:
         </div>
     {% endblock %}
 
-Now that you've created the customized form block, you need to tell Symfony
-to use it. Inside the template where you're actually rendering your form,
-tell Symfony to use the template via the ``form_theme`` tag:
+现在你已经创建了自定义表单区块，你需要通知Symfony使用它。
+在你要实际渲染表单的模板内，告诉Symfony通过 ``form_theme`` 标签使用该模板：
 
 .. code-block:: html+twig
 
@@ -276,15 +245,13 @@ tell Symfony to use the template via the ``form_theme`` tag:
 
     {{ form_widget(form.age) }}
 
-When the ``form.age`` widget is rendered, Symfony will use the ``integer_widget``
-block from the new template and the ``input`` tag will be wrapped in the
-``div`` element specified in the customized block.
+当 ``form.age`` 部件被渲染，Symfony的将使用新模板的 ``integer_widget``
+区块，并根据该自定义区块的定义，将 ``input`` 标签将封装在 ``div`` 元素内。
 
-Multiple Templates
+多个模板
 ..................
 
-A form can also be customized by applying several templates. To do this, pass the
-name of all the templates as an array using the ``with`` keyword:
+还可以通过应用多个模板来自定义一个表单。为此，请使用 ``with`` 关键字将所有模板的名称作为数组传递：
 
 .. code-block:: html+twig
 
@@ -292,18 +259,16 @@ name of all the templates as an array using the ``with`` keyword:
 
     {# ... #}
 
-The templates can also be located in different bundles, use the Twig namespaced
-path to reference these templates, e.g. ``@AcmeFormExtra/form/fields.html.twig``.
+模板也可以位于不同的bundle中，使用Twig的命名空间化的路径来引用这些模板，例如
+``@AcmeFormExtra/form/fields.html.twig``。
 
-Disabling usage of globally defined themes
+禁用使用全局定义的主题
 ..........................................
 
-Sometimes you may want to disable the use of the globally defined form themes in order
-to have more control over rendering of a form. You might want this, for example,
-when creating an admin interface for a bundle which can be installed on a wide range
-of Symfony apps (and so you can't control what themes are defined globally).
+有时你可能希望禁用全局定义的表单主题，以便更好地控制表单的渲染。
+例如，在为可以安装在各种Symfony应用上的bundle（此时你无法控制全局定义的主题）创建管理界面时，你可能需要这样做。
 
-You can do this by including the ``only`` keyword after the list form themes:
+你可以通过在表单主题列表后面添加 ``only`` 关键字来执行此操作：
 
 .. code-block:: html+twig
 
@@ -313,11 +278,9 @@ You can do this by including the ``only`` keyword after the list form themes:
 
 .. caution::
 
-    When using the ``only`` keyword, none of Symfony's built-in form themes
-    (``form_div_layout.html.twig``, etc.) will be applied. In order to render
-    your forms correctly, you need to either provide a fully-featured form theme
-    yourself, or extend one of the built-in form themes with Twig's ``use``
-    keyword instead of ``extends`` to re-use the original theme contents.
+    使用 ``only`` 关键字时，不会应用Symfony的内置表单主题（``form_div_layout.html.twig`` 等）。
+    为了正确渲染你的表单，你需要自己提供一个功能齐全的表单主题，或者使用Twig的 ``use``
+    关键字继承其中一个内置表单主题，而不是使用 ``extends`` 来复用原始主题的内容。
 
     .. code-block:: html+twig
 
@@ -326,17 +289,16 @@ You can do this by including the ``only`` keyword after the list form themes:
 
         {# ... #}
 
-Child Forms
+子表单
 ...........
 
-You can also apply a form theme to a specific child of your form:
+你还可以将一个表单主题应用于表单的一个特定子表单：
 
 .. code-block:: html+twig
 
     {% form_theme form.a_child_form 'form/fields.html.twig' %}
 
-This is useful when you want to have a custom theme for a nested form that's
-different than the one of your main form. Specify both your themes:
+当你希望为一个嵌套表单创建一个与主表单不同的自定义主题时，这非常有用。同时指定两个主题：
 
 .. code-block:: html+twig
 
@@ -346,31 +308,27 @@ different than the one of your main form. Specify both your themes:
 
 .. _referencing-base-form-blocks-twig-specific:
 
-Referencing base Form Blocks
+引用基础表单区块
 ----------------------------
 
-So far, to override a particular form block, the best method is to copy
-the default block from `form_div_layout.html.twig`_, paste it into a different template,
-and then customize it. In many cases, you can avoid doing this by referencing
-the base block when customizing it.
+到目前为止，要重写特定的表单区块，最好的方法是从 `form_div_layout.html.twig`_
+复制默认区块，并将其粘贴到不同的模板中，然后对其进行自定义。
+但在许多情况下，你可以通过在自定义时引用基础区块来避免这样做。
 
-This is not a lot of work, but varies slightly depending on if your form block customizations
-are in the same template as the form or a separate template.
+这样就减少了很多工作量，但根据你的表单区块自定义是否与表单位于同一模板，使用方法又略有不同。
 
-Referencing Blocks from inside the same Template as the Form
+在与表单相同的模板内部引用区块
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Import the blocks by adding a ``use`` tag in the template where you're rendering
-the form:
+通过在渲染表单的模板中添加 ``use`` 标签来导入区块：
 
 .. code-block:: twig
 
     {% use 'form_div_layout.html.twig' with integer_widget as base_integer_widget %}
 
-Now, when the blocks from `form_div_layout.html.twig`_ are imported, the
-``integer_widget`` block is called ``base_integer_widget``. This means that when
-you redefine the ``integer_widget`` block, you can reference the default markup
-via ``base_integer_widget``:
+现在，当从 `form_div_layout.html.twig`_ 导入区块时，``integer_widget``
+区块被命名为 ``base_integer_widget``。
+这意味着当你重新定义 ``integer_widget`` 区块时，可以通过 ``base_integer_widget`` 来引用默认标记：
 
 .. code-block:: html+twig
 
@@ -380,11 +338,10 @@ via ``base_integer_widget``:
         </div>
     {% endblock %}
 
-Referencing base Blocks from an external Template
+从外部模板引用基础区块
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If your form customizations live inside an external template, you can reference
-the base block by using the ``parent()`` Twig function:
+如果你的表单自定义位于一个外部模板中，则可以使用 ``parent()`` Twig函数来引用基础区块：
 
 .. code-block:: html+twig
 
@@ -399,22 +356,16 @@ the base block by using the ``parent()`` Twig function:
 
 .. note::
 
-    It is not possible to reference the base block when using PHP as the
-    templating engine. You have to manually copy the content from the base block
-    to your new template file.
+    使用PHP作为模板引擎时，将无法引用基础区块。你必须手动将基础区块中的内容复制到新模板文件中。
 
 .. _twig:
 
-Making Application-wide Customizations
+创建应用范围的自定义
 --------------------------------------
 
-If you'd like a certain form customization to be global to your application,
-you can accomplish this by making the form customizations in an external
-template and then importing it inside your application configuration.
+如果你希望某个表单自定义对你的应用是全局的，那么你可以在外部模板中进行表单自定义，然后再在应用配置中导入它来实现此目的。
 
-By using the following configuration, any customized form blocks inside the
-``form/fields.html.twig`` template will be used globally when a form is
-rendered.
+通过使用以下配置，将在渲染表单时全局使用 ``form/fields.html.twig`` 模板内的任何自定义表单区块。
 
 .. configuration-block::
 
@@ -455,9 +406,8 @@ rendered.
             // ...
         ));
 
-By default, Twig uses a *div* layout when rendering forms. Some people, however,
-may prefer to render forms in a *table* layout. Use the ``form_table_layout.html.twig``
-resource to use such a layout:
+默认情况下，Twig在渲染表单时使用一个 *div* 布局。但是，有些人可能更喜欢在 *table* 布局的表单。
+可以使用 ``form_table_layout.html.twig`` 资源来使用这样的布局：
 
 .. configuration-block::
 
@@ -498,26 +448,22 @@ resource to use such a layout:
             // ...
         ));
 
-If you only want to make the change in one template, add the following line to
-your template file rather than adding the template as a resource:
+如果你只想在单个模板中进行更改，请将以下行添加到你的模板文件中，而不是将该模板添加为一个资源：
 
 .. code-block:: html+twig
 
     {% form_theme form 'form_table_layout.html.twig' %}
 
-Note that the ``form`` variable in the above code is the form view variable
-that you passed to your template.
+请注意，上面代码中的 ``form`` 变量是你传递给模板的表单视图变量。
 
-How to Customize an individual Field
+如何自定义单个字段
 ------------------------------------
 
-So far, you've seen the different ways you can customize the widget output
-of all text field types. You can also customize individual fields. For example,
-suppose you have two ``text`` fields in a ``product`` form - ``name`` and
-``description`` - but you only want to customize one of the fields. This can be
-accomplished by customizing a fragment whose name is a combination of the field's
-``id`` attribute and which part of the field is being customized. For example, to
-customize the ``name`` field only:
+到目前为止，你已经看到了可以为所有文本字段类型的部件输出进行自定义的不同方法。
+你还可以自定义单个字段。例如，假设 ``product`` 表单中有两个 ``text`` 字段 - ``name`` 和
+``description`` - 但你只想自定义其中一个字段。
+这可以通过自定义一个片段来实现，该片段的名称是该字段的 ``id`` 属性和字段的正在自定义对应部分的一个组合。
+例如，要仅自定义 ``name`` 字段：
 
 .. code-block:: html+twig
 
@@ -531,19 +477,17 @@ customize the ``name`` field only:
 
     {{ form_widget(form.name) }}
 
-Here, the ``_product_name_widget`` fragment defines the template to use for the
-field whose *id* is ``product_name`` (and name is ``product[name]``).
+在这里，``_product_name_widget`` 片段定义了用于 *id* 为
+``product_name`` （和名称为 ``product[name]``）的字段的模板。
 
 .. tip::
 
-    The ``product`` portion of the field is the form name, which may be set
-    manually or generated automatically based on your form type name (e.g.
-    ``ProductType`` equates to ``product``). If you're not sure what your
-    form name is, look at the HTML code rendered for your form.
+    该字段的 ``product`` 部分是表单名称，可以手动设置或根据表单类型名称自动生成（例如
+    ``ProductType`` 等同于 ``product``）。
+    如果你不确定表单名称是什么，请查看为已渲染表单的HTML代码。
 
-    If you want to change the ``product`` or ``name`` portion of the block
-    name ``_product_name_widget`` you can set the ``block_name`` option in your
-    form type::
+    如果要更改区块名称 ``_product_name_widget`` 的 ``product`` 或
+    ``name`` 部分，可以在表单类型中设置 ``block_name`` 选项::
 
         use Symfony\Component\Form\FormBuilderInterface;
         use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -557,9 +501,9 @@ field whose *id* is ``product_name`` (and name is ``product[name]``).
             ));
         }
 
-    Then the block name will be ``_product_custom_name_widget``.
+    然后块名称将是 ``_product_custom_name_widget``。
 
-You can also override the markup for an entire field row using the same method:
+你还可以使用相同的方法重写整个字段行的标记：
 
 .. code-block:: html+twig
 
@@ -578,13 +522,12 @@ You can also override the markup for an entire field row using the same method:
 
 .. _form-custom-prototype:
 
-How to Customize a Collection Prototype
+如何自定义集合的原型
 ---------------------------------------
 
-When using a :doc:`collection of forms </form/form_collections>`,
-the prototype can be overridden with a completely custom prototype by
-overriding a block. For example, if your form field is named ``tasks``, you
-will be able to change the widget for each task as follows:
+使用一个 :doc:`表单集合 </form/form_collections>`
+时，可以通过重写一个区块来将原本的原型重写为一个完全自定义的原型。
+例如，如果你的表单字段命名为 ``tasks``，则你可以按下面的方式来更改每个任务的部件：
 
 .. code-block:: html+twig
 
@@ -597,49 +540,44 @@ will be able to change the widget for each task as follows:
         </tr>
     {% endblock %}
 
-Not only can you override the rendered widget, but you can also change the
-complete form row or the label as well. For the ``tasks`` field given above,
-the block names would be the following:
+你不仅可以重写已渲染的部件，还可以更改完整的表单行或标签。
+对于上面给出的 ``tasks`` 字段，区块名称将如下：
 
 ================  =======================
-Part of the Form  Block Name
+表单部分           区块名称
 ================  =======================
 ``label``         ``_tasks_entry_label``
 ``widget``        ``_tasks_entry_widget``
 ``row``           ``_tasks_entry_row``
 ================  =======================
 
-Other common Customizations
+其他常用的自定义
 ---------------------------
 
-So far, this recipe has shown you several different ways to customize a single
-piece of how a form is rendered. The key is to customize a specific fragment that
-corresponds to the portion of the form you want to control (see
-:ref:`naming form blocks <form-customization-sidebar>`).
+到目前为止，本文已经向你展示了用来自定义表单的渲染方式的几种不同的方法。
+这里关键的点是，自定义一个与要控制的表单部分相对应的特定片段（请参阅
+:ref:`命名表单区块 <form-customization-sidebar>`）。
 
-In the next sections, you'll see how you can make several common form customizations.
-To apply these customizations, use one of the methods described in the
-:ref:`form-theming-methods` section.
+在接下来的章节中，你将了解如何创建多种常见的表单自定义。
+要应用这些自定义，请使用 :ref:`form-theming-methods` 章节中描述的其中一个方法。
 
-Customizing Error Output
+自定义错误输出
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. note::
 
-    The Form component only handles *how* the validation errors are rendered,
-    and not the actual validation error messages. The error messages themselves
-    are determined by the validation constraints you apply to your objects.
-    For more information, see the article on :doc:`validation </validation>`.
+    Form组件仅处理验证错误 *如何* 渲染，而不处理实际的验证错误消息。
+    错误消息自身由你应用于对象的验证约束确定。
+    有关更多信息，请参阅 :doc:`验证 </validation>` 文档。
 
-There are many different ways to customize how errors are rendered when a
-form is submitted with errors. The error messages for a field are rendered
-when you use the ``form_errors()`` helper:
+在提交有错误的表单时，有许多不同的方法可以自定义错误的渲染方式。
+使用 ``form_errors()`` 辅助方法，将渲染一个字段的错误消息：
 
 .. code-block:: twig
 
     {{ form_errors(form.age) }}
 
-By default, the errors are rendered inside an unordered list:
+默认情况下，该错误在一个无序列表中渲染：
 
 .. code-block:: html
 
@@ -647,8 +585,7 @@ By default, the errors are rendered inside an unordered list:
         <li>This field is required</li>
     </ul>
 
-To override how errors are rendered for *all* fields, copy, paste
-and customize the ``form_errors`` fragment.
+要为 *所有* 字段重写错误消息的渲染方式，请复制、粘贴，然后自定义 ``form_errors`` 片段。
 
 .. code-block:: html+twig
 
@@ -669,29 +606,26 @@ and customize the ``form_errors`` fragment.
 
 .. tip::
 
-    See :ref:`form-theming-methods` for how to apply this customization.
+    请参阅 :ref:`form-theming-methods` 以了解如何应用此自定义。
 
-You can also customize the error output for just one specific field type.
-To customize *only* the markup used for these errors, follow the same directions
-as above but put the contents in a relative ``_errors`` block (or file in case
-of PHP templates). For example: ``text_errors`` (or ``text_errors.html.php``).
+你还可以仅为一种特定字段类型自定义错误输出。
+要自定义 *仅* 用于这些错误的标记，请按照上述说明进行相同操作，但将内容放在一个相对的
+``_errors`` 区块中（如果是PHP模板，则是放入文件）。
+例如：``text_errors`` （或 ``text_errors.html.php``）。
 
 .. tip::
 
-    See :ref:`form-template-blocks` to find out which specific block or file you
-    have to customize.
+    请参阅表 :ref:`form-template-blocks` 以找出你需要自定义的特定区块或文件。
 
-Certain errors that are more global to your form (i.e. not specific to just one
-field) are rendered separately, usually at the top of your form:
+某些更全局的针对表单（即不仅仅针对一个字段）的错误会单独渲染，通常位于表单的顶部：
 
 .. code-block:: twig
 
     {{ form_errors(form) }}
 
-To customize *only* the markup used for these errors, follow the same directions
-as above, but now check if the ``compound`` variable is set to ``true``. If it
-is ``true``, it means that what's being currently rendered is a collection of
-fields (e.g. a whole form), and not just an individual field.
+要自定义 *仅* 用于这些错误的标记，请按照上述说明进行相同的操作，但现在需要检查
+``compound`` 变量是否设置为 ``true``。
+如果为 ``true``，则意味着当前渲染的是一个字段集合（例如整个表单），而不仅仅是单个字段。
 
 .. code-block:: html+twig
 
@@ -708,20 +642,18 @@ fields (e.g. a whole form), and not just an individual field.
                         {% endfor %}
                     </ul>
                 {% else %}
-                    {# ... display the errors for a single field #}
+                    {# ... 为单个字段显示错误 #}
                 {% endif %}
             {% endif %}
         {% endspaceless %}
     {% endblock form_errors %}
 
-Customizing the "Form Row"
+自定义"表单行"
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-When you can manage it, the easiest way to render a form field is via the
-``form_row()`` function, which renders the label, errors and HTML widget of
-a field. To customize the markup used for rendering *all* form field rows,
-override the ``form_row`` fragment. For example, suppose you want to add a
-class to the ``div`` element around each row:
+当你可以控制它时，渲染一个表单字段的最简单方法是使用 ``form_row()`` 函数，该函数渲染一个字段的标签、错误和HTML部件。
+要自定义用于渲染 *所有* 表单字段行的标记，请重写 ``form_row`` 片段。
+例如，假设你要为每行周围的 ``div`` 元素添加一个样式类：
 
 .. code-block:: html+twig
 
@@ -737,16 +669,14 @@ class to the ``div`` element around each row:
 
 .. tip::
 
-    See :ref:`form-theming-methods` for how to apply this customization.
+    请参阅 :ref:`form-theming-methods` 以了解如何应用此自定义。
 
-Adding a "Required" Asterisk to Field Labels
+向字段标签添加一个“Required”星号
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you want to denote all of your required fields with a required asterisk (``*``),
-you can do this by customizing the ``form_label`` fragment.
+如果要使用一个星号（``*``）来表示所有的必需字段，可以通过自定义 ``form_label`` 片段来完成此操作。
 
-If you're making the form customization inside the same template as your
-form, modify the ``use`` tag and add the following:
+如果你在与表单相同的模板中进行此表单自定义，请修改 ``use`` 标签并添加以下内容：
 
 .. code-block:: html+twig
 
@@ -760,8 +690,7 @@ form, modify the ``use`` tag and add the following:
         {% endif %}
     {% endblock %}
 
-If you're making the form customization inside a separate template, use
-the following:
+如果要在一个单独的模板中进行此表单自定义，请使用以下内容：
 
 .. code-block:: html+twig
 
@@ -777,12 +706,12 @@ the following:
 
 .. tip::
 
-    See :ref:`form-theming-methods` for how to apply this customization.
+    请参阅 :ref:`form-theming-methods` 以了解如何应用此自定义。
 
-.. sidebar:: Using CSS only
+.. sidebar:: 仅使用CSS
 
-    By default, ``label`` tags of required fields are rendered with a
-    ``required`` CSS class. Thus, you can also add an asterisk using CSS only:
+    默认情况下，必需字段的 ``label`` 标签会渲染一个 ``required`` CSS类。
+    因此，你也可以仅使用CSS来完成星号的添加：
 
     .. code-block:: css
 
@@ -790,13 +719,12 @@ the following:
             content: "* ";
         }
 
-Adding "help" Messages
+添加"help"消息
 ~~~~~~~~~~~~~~~~~~~~~~
 
-You can also customize your form widgets to have an optional "help" message.
+你还可以自定义表单部件以获得可选的“help”消息。
 
-If you're making the form customization inside the same template as your
-form, modify the ``use`` tag and add the following:
+如果你在与表单相同的模板中进行此表单自定义，请修改 ``use`` 标签并添加以下内容：
 
 .. code-block:: html+twig
 
@@ -810,8 +738,7 @@ form, modify the ``use`` tag and add the following:
         {% endif %}
     {% endblock %}
 
-If you're making the form customization inside a separate template, use
-the following:
+如果要在一个单独的模板中进行表单自定义，请使用以下内容：
 
 .. code-block:: html+twig
 
@@ -825,7 +752,7 @@ the following:
         {% endif %}
     {% endblock %}
 
-To render a help message below a field, pass in a ``help`` variable:
+要在一个字段下面渲染帮助消息，请传入一个 ``help`` 变量：
 
 .. code-block:: twig
 
@@ -833,22 +760,21 @@ To render a help message below a field, pass in a ``help`` variable:
 
 .. tip::
 
-    See :ref:`form-theming-methods` for how to apply this customization.
+    请参阅 :ref:`form-theming-methods` 以了解如何应用此自定义。
 
-Using Form Variables
+使用表单变量
 --------------------
 
-Most of the functions available for rendering different parts of a form (e.g.
-the form widget, form label, form errors, etc.) also allow you to make certain
-customizations directly. Look at the following example:
+大多数可用于渲染表单不同部分（例如表单部件、表单标签、表单错误等）的函数也允许你直接进行某些自定义。
+请看以下示例：
 
 .. code-block:: twig
 
-    {# render a widget, but add a "foo" class to it #}
+    {# 渲染一个表单部件, 同时添加为它一个 "foo" 样式类 #}
     {{ form_widget(form.name, { 'attr': {'class': 'foo'} }) }}
 
-The array passed as the second argument contains form "variables". For
-more details about this concept in Twig, see :ref:`twig-reference-form-variables`.
+作为第二个参数传递的数组包含着表单“变量”。
+有关Twig中此概念的更多详细信息，请参阅 :ref:`twig-reference-form-variables`。
 
 .. _`form_div_layout.html.twig`: https://github.com/symfony/symfony/blob/master/src/Symfony/Bridge/Twig/Resources/views/Form/form_div_layout.html.twig
 .. _`form_table_layout.html.twig`: https://github.com/symfony/symfony/blob/master/src/Symfony/Bridge/Twig/Resources/views/Form/form_table_layout.html.twig
@@ -856,7 +782,7 @@ more details about this concept in Twig, see :ref:`twig-reference-form-variables
 .. _`bootstrap_3_horizontal_layout.html.twig`: https://github.com/symfony/symfony/blob/master/src/Symfony/Bridge/Twig/Resources/views/Form/bootstrap_3_horizontal_layout.html.twig
 .. _`bootstrap_4_layout.html.twig`: https://github.com/symfony/symfony/blob/master/src/Symfony/Bridge/Twig/Resources/views/Form/bootstrap_4_layout.html.twig
 .. _`bootstrap_4_horizontal_layout.html.twig`: https://github.com/symfony/symfony/blob/master/src/Symfony/Bridge/Twig/Resources/views/Form/bootstrap_4_horizontal_layout.html.twig
-.. _`Bootstrap 3 CSS framework`: https://getbootstrap.com/docs/3.3/
-.. _`Bootstrap 4 CSS framework`: https://getbootstrap.com/docs/4.1/
+.. _`Bootstrap 3 CSS框架`: https://getbootstrap.com/docs/3.3/
+.. _`Bootstrap 4 CSS框架`: https://getbootstrap.com/docs/4.1/
 .. _`foundation_5_layout.html.twig`: https://github.com/symfony/symfony/blob/master/src/Symfony/Bridge/Twig/Resources/views/Form/foundation_5_layout.html.twig
-.. _`Foundation CSS framework`: http://foundation.zurb.com/
+.. _`Foundation CSS框架`: http://foundation.zurb.com/

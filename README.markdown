@@ -13,28 +13,26 @@
   - `e350b3efcfadbb26ab51768e5f6a2bcb07d9dc14`（2018-10-26）
   - `df318b284e22352b7678daeaa32ab06eb0fbcc0c`（2018-10-25）
   - `b43a26fc1c8408de31e79f1abf91e0201e92e487`（2018-10-19）
+- [SensioFrameworkExtraBundle](https://github.com/sensiolabs/SensioFrameworkExtraBundle/tree/master/Resources/doc)
+  - `1032c7077fd1a6f24f98b5a8377938000859f35d`（2018-12-03）
 
 ## 汉化进度
 
 ### 未汉化
 
-- https://github.com/sensiolabs/SensioFrameworkExtraBundle/tree/master/Resources/doc
+- [常用Bundle](https://symfony.com/doc/bundles/)
 - `introduction`
 - `compoments`
 - `reference`
 - `bundle/` (5)
 - `http_cache` (7)
-- `configuration/environments.rst` (暂时不需要)
-- `routing/custom_route_loader.rst` (暂时不需要)
-- `templating/PHP.rst` (暂时不需要)
-- `setup/bundles.rst` (暂时不需要)
-- `security/custom_authentication_provider.rst` (暂时不需要)
-- `security/ldap.rst` (暂时不需要)
-- `service_container/service_subscribers_locators.rst` (没能力翻译)
-- `form`
-  - `events.rst` (剩余少量没能力翻译)
-  - `form_collections.rst`
-  - `form_customization.rst`
+- `service_container/service_subscribers_locators.rst`
+- `configuration/environments.rst`
+- `routing/custom_route_loader.rst`
+- `templating/PHP.rst`
+- `setup/bundles.rst`
+- `security/custom_authentication_provider.rst`
+- `security/ldap.rst`
 
 ### 语法问题
 
