@@ -37,7 +37,23 @@ Messenger组件
    负责检索、反序列化并将消息转发给处理器。例如，这可以是消息队列拉取器或API端点。
 
 **Handler**:
-   责处理适用于该业务逻辑的消息。
+   负责处理适用于该业务逻辑的消息。
+   这些处理器将被 ``HandleMessageMiddleware`` 中间件调用。
+
+**Middleware**:
+  中间件可以在通过总线派遣时访问消息及其封装器器（信封）。
+  字面意思是“中间的软件”，它们与应用的核心问题（业务逻辑）无关。
+  相反，它们是贯穿整个应用并影响整个消息总线的交叉(cross)关注点。
+  例如：记录日志，验证一个消息，启动事务，...
+  他们还负责调用链中的下一个中间件，这意味着他们可以调整信封，添加邮票或甚至替换它，以及打断中间件链。
+
+**Envelope**
+  特定于Messenger的概念，它通过将消息封装到消息总线内，从而在消息总线内部提供充分的灵活性，允许通过
+  *envelope stamps* 在内部添加有用的信息。
+
+**Envelope Stamps**
+  需要附加到你的消息的信息片段：
+  用于传输的序列化器上下文，标识接收到的消息的标记，或你的中间件或传输层可以使用的任何类型的元数据。
 
 总线
 -----
@@ -46,9 +62,9 @@ Messenger组件
 
 在Symfony的FrameworkBundle中使用消息总线时，会为你配置以下中间件：
 
-#. ``LoggingMiddleware`` (记录消息的处理)
-#. ``SendMessageMiddleware`` (启用异步处理)
-#. ``HandleMessageMiddleware`` (调用注册的处理器)
+#. :class:`Symfony\\Component\\Messenger\\Middleware\\LoggingMiddleware` (记录消息的处理)
+#. :class:`Symfony\\Component\\Messenger\\Middleware\\SendMessageMiddleware` (启用异步处理)
+#. :class:`Symfony\\Component\\Messenger\\Middleware\\HandleMessageMiddleware` (调用注册的处理器)
 
 例如::
 
@@ -67,7 +83,7 @@ Messenger组件
 
 .. note::
 
-    每个中间件都需要实现 ``MiddlewareInterface``。
+    每个中间件都需要实现 :class:`Symfony\\Component\\Messenger\\Middleware\\MiddlewareInterface`。
 
 处理器
 --------
@@ -134,7 +150,7 @@ Messenger组件
             if (null !== $envelope->get(ReceivedStamp::class)) {
                 // 刚刚收到消息...
 
-                // 例如，你可以添加另一个项目
+                // 例如，你可以添加另一个邮票
                 $envelope = $envelope->with(new AnotherStamp(/* ... */));
             }
 
@@ -143,7 +159,13 @@ Messenger组件
     }
 
 如果刚刚收到消息（即具有 `ReceivedStamp` 邮票），上面的示例将使用额外的邮票将消息转发到下一个中​​间件。
-你可以通过实现 :class:`Symfony\\Component\\Messenger\\Stamp\\StampInterface` 来创建自己的项目。
+你可以通过实现 :class:`Symfony\\Component\\Messenger\\Stamp\\StampInterface` 来创建自己的邮票。
+
+.. note::
+
+    如果使用
+    :class:`Symfony\\Component\\Messenger\\Transport\\Serialization\\Serializer`
+    基础序列化器进行传输，则必须使用Symfony的Serializer组件对任何邮票进行序列化。
 
 传输系统
 ----------
@@ -153,7 +175,8 @@ Messenger组件
 自定义发件人
 ~~~~~~~~~~~~~~~
 
-使用 ``SenderInterface``，你可以创建自己的消息发件人。
+通过使用
+:class:`Symfony\\Component\\Messenger\\Transport\\Sender\\SenderInterface`，你可以创建自己的消息发件人。
 想象一下，你已经有一个 ``ImportantAction`` 消息通过消息总线并由处理器处理。
 现在，你还希望将此消息作为电子邮件发送。
 

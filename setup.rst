@@ -107,20 +107,12 @@
 -------------------------------------
 
 Symfony 提供了一个名为“Security Checker”的工具来检查你的项目的依赖项是否包含任何已知的安全漏洞。
-运行此命令将其安装在你的应用中：
-
-.. code-block:: terminal
-
-    $ cd my-project/
-    $ composer require sensiolabs/security-checker --dev
-
-从现在开始，只要你在应用中安装或更新任何依赖项，就会自动运行此工具。
-如果依赖项包含漏洞，你将看到明确的消息。
+请查看 `安全检查器`_ 的集成说明以进行设置。
 
 Symfony 演示程序
 -------------------------------------
 
-`Symfony 演示程序`_ 是一个功能齐全的应用，它展示了开发Symfony应用的推荐方法。
+`Symfony演示程序`_ 是一个功能齐全的应用，它展示了开发Symfony应用的推荐方法。
 它是Symfony新手的一个很好的学习工具，它的代码包含大量的注释和有用的备注。
 
 要查看其代码并在本地安装，请参阅 `symfony/symfony-demo`_。
@@ -150,5 +142,6 @@ Symfony 演示程序
 
 .. _`Stellar Development with Symfony`: http://symfonycasts.com/screencast/symfony
 .. _`Composer`: https://getcomposer.org/
-.. _`Symfony 演示程序`: https://github.com/symfony/demo
+.. _`安全检查器`: https://github.com/sensiolabs/security-checker#integration
+.. _`Symfony演示程序`: https://github.com/symfony/demo
 .. _`symfony/symfony-demo`: https://github.com/symfony/demo

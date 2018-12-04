@@ -91,6 +91,46 @@ Webpack Encore包含一个 ``reset()`` 对象，允许重置当前配置的状�
 
     $ yarn encore dev --config-name firstConfig
 
+不使用命令行界面生成Webpack配置对象
+----------------------------------------------------------------------------------
+
+通常，你可以通过从命令行界面调用Encore来使用你的 ``webpack.config.js`` 文件。
+但有时，不使用Encore的工具（例如像 `Karma`_ 这样的测试运行器）可能需要访问生成的Webpack配置。
+
+问题是，如果你尝试在不使用 ``encore`` 命令的情况下生成Webpack配置对象，你将遇到以下错误：
+
+.. code-block:: text
+
+    Error: Encore.setOutputPath() cannot be called yet because the runtime environment doesn't appear to be configured. Make sure you're using the encore executable or call Encore.configureRuntimeEnvironment() first if you're purposely not calling Encore directly.
+
+这条消息背后的原因是Encore在能够创建配置对象之前需要知道一些事情，最重要的是目标的环境。
+
+要解决此问题，你可以使用 ``configureRuntimeEnvironment``。
+但必须在要求 ``webpack.config.js`` **之前** 从JavaScript文件中调用此方法。
+
+例如：
+
+.. code-block:: javascript
+
+    const Encore = require('@symfony/webpack-encore');
+
+    // 设置运行时的环境
+    Encore.configureRuntimeEnvironment('dev');
+
+    // 获取 Webpack 的配置对象
+    const webpackConfig = require('./webpack.config');
+
+如果有需要，你还可以将通常在命令行界面中使用的所有选项传递给该方法：
+
+.. code-block:: javascript
+
+    Encore.configureRuntimeEnvironment('dev-server', {
+        // 使用与CLI工具相同的选项，但它们的名称使用驼峰命名法。
+        https: true,
+        keepPublicPath: true,
+    });
+
 .. _`配置选项`: https://webpack.js.org/configuration/
 .. _`watchOptions`: https://webpack.js.org/configuration/watch/#watchoptions
 .. _`配置数组`: https://github.com/webpack/docs/wiki/configuration#multiple-configurations
+.. _`Karma`: https://karma-runner.github.io

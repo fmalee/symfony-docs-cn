@@ -53,6 +53,6 @@ Twig函数，则无需执行任何其他操作！这些函数会自动读取文�
     +     .configureSplitChunks(function(splitChunks) {
     +         // 修改配置
     +         splitChunks.minSize = 0;
-    +     }
+    +     })
 
 .. _`Webpack中的SplitChunksPlugin`: https://webpack.js.org/plugins/split-chunks-plugin/

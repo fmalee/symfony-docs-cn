@@ -175,7 +175,7 @@ Doctrine只能通过你配置在模型类中元数据（metadata）来获知这�
 
         /**
          * @ORM\OneToMany(
-         *      targetEntity="Comment",
+         *      targetEntity="App\Entity\Comment",
          *      mappedBy="post",
          *      orphanRemoval=true
          * )

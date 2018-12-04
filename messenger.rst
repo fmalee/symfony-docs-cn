@@ -622,7 +622,7 @@ Serializer实例来进行序列化和反序列化之外::
             ),
         ));
 
-请注意，如果服务是抽象的，则每个总线将创建一个不同的服务实例。
+请注意，如果服务是抽象的，则将为每个总线创建不同的服务实例。
 
 使用中间件工厂
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -642,9 +642,9 @@ Serializer实例来进行序列化和反序列化之外::
                     command_bus:
                         middleware:
                             # 使用默认配置的实体管理器名称
-                            - doctrine_transaction_middleware
+                            - doctrine_transaction
                             # 使用另一个实体管理器
-                            - doctrine_transaction_middleware: ['custom']
+                            - doctrine_transaction: ['custom']
 
     .. code-block:: xml
 
@@ -662,9 +662,9 @@ Serializer实例来进行序列化和反序列化之外::
                 <framework:messenger>
                     <framework:bus name="command_bus">
                         <!-- Using the default configured entity manager name -->
-                        <framework:middleware id="doctrine_transaction_middleware" />
+                        <framework:middleware id="doctrine_transaction" />
                         <!-- Using another entity manager -->
-                        <framework:middleware id="doctrine_transaction_middleware">
+                        <framework:middleware id="doctrine_transaction">
                             <framework:argument>custom</framework:argument>
                         </framework:middleware>
                     </framework:bus>
@@ -681,9 +681,9 @@ Serializer实例来进行序列化和反序列化之外::
                     'command_bus' => array(
                         'middleware' => array(
                             // Using the default configured entity manager name
-                            'doctrine_transaction_middleware',
+                            'doctrine_transaction',
                             // Using another entity manager
-                            array('id' => 'doctrine_transaction_middleware', 'arguments' => array('custom')),
+                            array('id' => 'doctrine_transaction', 'arguments' => array('custom')),
                         ),
                     ),
                 ),

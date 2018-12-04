@@ -32,6 +32,9 @@ Symfony框架通过 ``bin/console`` 脚本(如，广为人知的 ``bin/console c
 
     class CreateUserCommand extends Command
     {
+        // 命令的名称（"bin/console"之后的部分）
+        protected static $defaultName = 'app:create-user';
+
         protected function configure()
         {
             // ...
@@ -53,9 +56,6 @@ Symfony框架通过 ``bin/console`` 脚本(如，广为人知的 ``bin/console c
     protected function configure()
     {
         $this
-            // 命令的名称 ("bin/console" 后面的部分)
-            ->setName('app:create-user')
-
             // 运行 "php bin/console list" 后展示的简短介绍
             ->setDescription('Creates a new user.')
 

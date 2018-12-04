@@ -228,7 +228,7 @@
             $fileName = md5(uniqid()).'.'.$file->guessExtension();
 
             try {
-                $file->move($this->getTargetDir(), $fileName);
+                $file->move($this->getTargetDirectory(), $fileName);
             } catch (FileException $e) {
                 // ... handle exception if something happens during file upload
             }

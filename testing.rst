@@ -127,12 +127,6 @@ PHPUnit由Symfony应用的根目录中的 ``phpunit.xml.dist`` 文件配置。
 你的第一个功能测试
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-首先，在项目中安装BrowserKit组件：
-
-.. code-block:: terminal
-
-    $ composer require --dev symfony/browser-kit
-
 功能测试是PHP文件，通常位于bundle的 ``tests/Controller`` 目录中。
 如果要测试由 ``PostController`` 类处理的页面，
 首先要创建一个继承特殊 ``WebTestCase`` 类的新 ``PostControllerTest.php`` 文件。

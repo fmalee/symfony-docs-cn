@@ -47,9 +47,9 @@ Finder类使用流式接口，因此所有方法都返回该Finder实例。
 
 .. tip::
 
-    Finder实例是一个PHP :phpclass:`Iterator`。
+    Finder实例是一个PHP :phpclass:`IteratorAggregate`。
     因此，除了使用 ``foreach`` 迭代Finder之外，你还可以使用 :phpfunction:`iterator_to_array`
-    方法将其转换为数组，或者使用 :phpfunction:`iterator_count` 来获取该项的数量。
+    函数将其转换为数组，或者使用 :phpfunction:`iterator_count` 来获取该项的数量。
 
 .. caution::
 

@@ -169,18 +169,18 @@ Symfony的安全系统是非常强大的，但在设置它时也可能令人迷�
     $ php bin/console make:fixtures
 
     The class name of the fixtures to create (e.g. AppFixtures):
-    > UserFixture
+    > UserFixtures
 
 使用此服务对密码进行加密：
 
 .. code-block:: diff
 
-    // src/DataFixtures/UserFixture.php
+    // src/DataFixtures/UserFixtures.php
 
     + use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
     // ...
 
-    class UserFixture extends Fixture
+    class UserFixtures extends Fixture
     {
     +     private $passwordEncoder;
 

@@ -448,7 +448,7 @@ Symfony定义了几个Twig函数来管理工作流并减少模板中域逻辑的
     {% endfor %}
 
     {# 检查对象是否在某个特定位置 #}
-    {% if workflow_has_marked_place(post, 'to_review') %}
+    {% if workflow_has_marked_place(post, 'review') %}
         <p>This post is ready for review.</p>
     {% endif %}
 

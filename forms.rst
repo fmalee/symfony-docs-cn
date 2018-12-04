@@ -625,11 +625,10 @@ Symfony标配了大量的字段类型，涵盖了你所能遇到的全部常规�
     :maxdepth: 1
     :glob:
 
-    form/*
-
-* :doc:`/controller/upload_file`
-* :doc:`/reference/forms/types`
-* :doc:`/http_cache/form_csrf_caching`
+    /form/*
+    /controller/upload_file
+    /reference/forms/types
+    /http_cache/form_csrf_caching
 
 .. _`Symfony Form component`: https://github.com/symfony/form
 .. _`DateTime`: https://php.net/manual/en/class.datetime.php

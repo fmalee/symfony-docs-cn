@@ -12,11 +12,8 @@
 
 .. code-block:: terminal
 
-    # 下载最新的测试版
-    $ composer create-project symfony/skeleton my_project "4.0.*" -s beta
-
     # 下载绝对最新提交
-    $ composer create-project symfony/skeleton my_project "4.0.*" -s dev
+    $ composer create-project symfony/skeleton my_project -s dev
 
 一旦命令完成执行，你将在 ``my_project/`` 目录中创建一个新的Symfony项目。
 

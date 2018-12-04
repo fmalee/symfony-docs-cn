@@ -9,6 +9,32 @@
 
 .. configuration-block::
 
+    .. code-block:: php-annotations
+
+        // src/Controller/DefaultController.php
+        namespace App\Controller;
+
+        use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+        use Symfony\Component\Routing\Annotation\Route;
+
+        class DefaultController extends AbstractController
+        {
+            /**
+             * @Route(
+             *     "/contact",
+             *     name="contact",
+             *     condition="context.getMethod() in ['GET', 'HEAD'] and request.headers.get('User-Agent') matches '/firefox/i'"
+             * )
+             *
+             * 表达式还可以包含配置参数
+             * 条件: "request.headers.get('User-Agent') matches '%app.allowed_browsers%'"
+             */
+            public function contact()
+            {
+                // ...
+            }
+        }
+
     .. code-block:: yaml
 
         # config/routes.yaml
@@ -16,7 +42,7 @@
             path:       /contact
             controller: 'App\Controller\DefaultController::contact'
             condition:  "context.getMethod() in ['GET', 'HEAD'] and request.headers.get('User-Agent') matches '/firefox/i'"
-            # 表达式还可以包含配置参数
+            # expressions can also include config parameters
             # condition: "request.headers.get('User-Agent') matches '%app.allowed_browsers%'"
 
     .. code-block:: xml
