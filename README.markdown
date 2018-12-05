@@ -26,6 +26,7 @@
 - [常用Bundle](https://symfony.com/doc/bundles/)
 - `introduction`
 - `compoments`
+  - `serializer` (翻译小半)
 - `reference`
 - `bundle/` (5)
 - `http_cache` (7)

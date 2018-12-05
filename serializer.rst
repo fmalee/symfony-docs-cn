@@ -54,23 +54,23 @@ Symfony提供了一个序列化器，用于序列化/反序列化对象和不同
 以及以下的规范化器：
 
 * :class:`Symfony\\Component\\Serializer\\Normalizer\\ObjectNormalizer` 处理典型的数据对象
-* :class:`Symfony\\Component\\Serializer\\Normalizer\\DateTimeNormalizer` 处理
-  实现了 :phpclass:`DateTimeInterface` 接口的对象
-* :class:`Symfony\\Component\\Serializer\\Normalizer\\DataUriNormalizer` 可以
-  在 `Data URIs`_ 中转换 :phpclass:`SplFileInfo` 对象
+* :class:`Symfony\\Component\\Serializer\\Normalizer\\DateTimeNormalizer`
+  处理实现了 :phpclass:`DateTimeInterface` 接口的对象
+* :class:`Symfony\\Component\\Serializer\\Normalizer\\DataUriNormalizer`
+  可以在 `Data URIs`_ 中转换 :phpclass:`SplFileInfo` 对象
 * :class:`Symfony\\Component\\Serializer\\Normalizer\\JsonSerializableNormalizer`
   处理实现了 :phpclass:`JsonSerializable` 接口的对象
-* :class:`Symfony\\Component\\Serializer\\Normalizer\\ArrayDenormalizer` 使用
-  像 `MyObject[]` （注意 `[]` 后缀）这样的格式来反规范化对象的数组
+* :class:`Symfony\\Component\\Serializer\\Normalizer\\ArrayDenormalizer`
+  使用像 `MyObject[]` （注意 `[]` 后缀）这样的格式来反规范化对象的数组
 
-自定义 规范化器 和/或 编码器 也可以通过将它们标记为
+自定义的 规范化器 和/或 编码器 也可以通过将它们标记为
 :ref:`serializer.normalizer <reference-dic-tags-serializer-normalizer>` 和
 :ref:`serializer.encoder <reference-dic-tags-serializer-encoder>` 来加载。
 也可以设置标签的优先级以决定匹配顺序。
 
 下面是一个关于如何加载 :class:`Symfony\\Component\\Serializer\\Normalizer\\GetSetMethodNormalizer` 的示例，
-当数据对象总是使用getter（``getXxx()``）、issers（``isXxx()``）或hassers（``hasXxx()``）来读取属性和
-用setter（``setXxx()``）来改变属性时，它是 `ObjectNormalizer` 的更快替代品：
+当数据对象总是使用getter（``getXxx()``）、issers（``isXxx()``）或hassers（``hasXxx()``
+）来读取属性，以及用setter（``setXxx()``）来改变属性时，它是 `ObjectNormalizer` 的更快替代品：
 
 .. configuration-block::
 
