@@ -4,43 +4,36 @@
 Twig模板表单函数和变量参考
 ==================================================
 
-When working with forms in a template, there are two powerful things at
-your disposal:
+在一个模板中处理表单时，你可以使用两个强大的功能：
 
-* :ref:`Functions <reference-form-twig-functions>` for rendering each part
-  of a form;
-* :ref:`Variables <twig-reference-form-variables>` for getting *any* information
-  about any field.
+* 用于渲染表单的每个部分的 :ref:`函数 <reference-form-twig-functions>`;
+* 用于获取任何字段的 *任何* 信息的 :ref:`变量 <twig-reference-form-variables>`。
 
-You'll use functions often to render your fields. Variables, on the other
-hand, are less commonly-used, but infinitely powerful since you can access
-a fields label, id attribute, errors and anything else about the field.
+你将经常使用函数来渲染字段。
+另一方面，变量不太常用，但是无限强大，因为你可以访问字段的标签、id属性、错误以及有关该字段的任何其他内容。
 
 .. _reference-form-twig-functions:
 
-Form Rendering Functions
+表单渲染函数
 ------------------------
 
-This reference manual covers all the possible Twig functions available for
-rendering forms. There are several different functions available and
-each is responsible for rendering a different part of a form (e.g. labels,
-errors, widgets, etc).
+本参考手册涵盖了可用于渲染表单的所有可用的Twig函数。
+有几种不同的函数可用，每种函数都负责渲染表单的不同部分（例如标签、错误、部件等）
 
 .. _reference-forms-twig-form:
 
 form(view, variables)
 ---------------------
 
-Renders the HTML of a complete form.
+渲染一个完整表单的HTML。
 
 .. code-block:: twig
 
-    {# render the form and change the submission method #}
+    {# 渲染表单并更改提交方法 #}
     {{ form(form, {'method': 'GET'}) }}
 
-You will mostly use this helper for prototyping or if you use custom form
-themes. If you need more flexibility in rendering the form, you should use
-the other helpers to render individual parts of the form instead:
+你将主要使用此辅助函数进行原型设计(prototyping)或使用自定义表单主题。
+如果在渲染表单时需要更大的灵活性，则应使用其他辅助函数来渲染表单的各个部分：
 
 .. code-block:: twig
 
@@ -58,13 +51,12 @@ the other helpers to render individual parts of the form instead:
 form_start(view, variables)
 ---------------------------
 
-Renders the start tag of a form. This helper takes care of printing the
-configured method and target action of the form. It will also include the
-correct ``enctype`` property if the form contains upload fields.
+渲染表单的开始标签。此辅助函数负责打印已配置的方法和表单的动作。
+如果表单包含上传字段，它还将包含正确的 ``enctype`` 属性。
 
 .. code-block:: twig
 
-    {# render the start tag and change the submission method #}
+    {# 渲染开始标签并更改提交方法 #}
     {{ form_start(form, {'method': 'GET'}) }}
 
 .. _reference-forms-twig-end:
@@ -72,18 +64,17 @@ correct ``enctype`` property if the form contains upload fields.
 form_end(view, variables)
 -------------------------
 
-Renders the end tag of a form.
+渲染表单的结束标签。
 
 .. code-block:: twig
 
     {{ form_end(form) }}
 
-This helper also outputs ``form_rest()`` unless you set ``render_rest``
-to false:
+除非你设置 ``render_rest`` 为 ``false``，否则此助手也将输出 ``form_rest()``：
 
 .. code-block:: twig
 
-    {# don't render unrendered fields #}
+    {# 不渲染未手动渲染的字段 #}
     {{ form_end(form, {'render_rest': false}) }}
 
 .. _reference-forms-twig-label:
@@ -91,14 +82,13 @@ to false:
 form_label(view, label, variables)
 ----------------------------------
 
-Renders the label for the given field. You can optionally pass the specific
-label you want to display as the second argument.
+渲染给定字段的标签。你可以在第二个参数中传入需要显示的特定标签。
 
 .. code-block:: twig
 
     {{ form_label(form.name) }}
 
-    {# The two following syntaxes are equivalent #}
+    {# 以下两种语法是等效的 #}
     {{ form_label(form.name, 'Your Name', {'label_attr': {'class': 'foo'}}) }}
 
     {{ form_label(form.name, null, {
@@ -106,21 +96,20 @@ label you want to display as the second argument.
         'label_attr': {'class': 'foo'}
     }) }}
 
-See ":ref:`twig-reference-form-variables`" to learn about the ``variables``
-argument.
+请参阅 ":ref:`twig-reference-form-variables`" 以了解 ``variables`` 参数。
 
 .. _reference-forms-twig-errors:
 
 form_errors(view)
 -----------------
 
-Renders any errors for the given field.
+渲染给定字段的任何错误。
 
 .. code-block:: twig
 
     {{ form_errors(form.name) }}
 
-    {# render any "global" errors #}
+    {# 渲染任何"全局"错误 #}
     {{ form_errors(form) }}
 
 .. _reference-forms-twig-widget:
@@ -128,72 +117,63 @@ Renders any errors for the given field.
 form_widget(view, variables)
 ----------------------------
 
-Renders the HTML widget of a given field. If you apply this to an entire
-form or collection of fields, each underlying form row will be rendered.
+渲染给定字段的HTML部件。如果将此应用于整个表单或字段集合，则将渲染每个底层表单行。
 
 .. code-block:: twig
 
-    {# render a widget, but add a "foo" class to it #}
+    {# 渲染一个部件，同时添加一个“foo”样式类 #}
     {{ form_widget(form.name, {'attr': {'class': 'foo'}}) }}
 
-The second argument to ``form_widget()`` is an array of variables. The most
-common variable is ``attr``, which is an array of HTML attributes to apply
-to the HTML widget. In some cases, certain types also have other template-related
-options that can be passed. These are discussed on a type-by-type basis.
-The ``attributes`` are not applied recursively to child fields if you're
-rendering many fields at once (e.g. ``form_widget(form)``).
+``form_widget()`` 的第二个参数是一个变量数组。
+最常见的变量是 ``attr``，它是应用于HTML部件的一个HTML属性数组。
+在某些情况下，某些类型还具有可以传递与模板相关的其他选项。
+这些是逐个类型讨论的。如果你一次（例如 ``form_widget(form)``）渲染多个字段，则
+``attributes`` 不会递归地应用于子字段。
 
-See ":ref:`twig-reference-form-variables`" to learn more about the ``variables``
-argument.
+请参阅 ":ref:`twig-reference-form-variables`" 以了解 ``variables`` 参数。
 
 .. _reference-forms-twig-row:
 
 form_row(view, variables)
 -------------------------
 
-Renders the "row" of a given field, which is the combination of the field's
-label, errors and widget.
+渲染给定字段的“行”，即该字段的标签、错误和部件的组合。
 
 .. code-block:: twig
 
-    {# render a field row, but display a label with text "foo" #}
+    {# 渲染一个字段行，同时显示带有“foo”文本的标签 #}
     {{ form_row(form.name, {'label': 'foo'}) }}
 
-The second argument to ``form_row()`` is an array of variables. The templates
-provided in Symfony only allow to override the label as shown in the example
-above.
+``form_row()`` 的第二个参数是一个变量数组。Symfony提供的模板仅允许重写标签，如上例所示。
 
-See ":ref:`twig-reference-form-variables`" to learn about the ``variables``
-argument.
+请参阅 ":ref:`twig-reference-form-variables`" 以了解 ``variables`` 参数。
 
 .. _reference-forms-twig-rest:
 
 form_rest(view, variables)
 --------------------------
 
-This renders all fields that have not yet been rendered for the given form.
-It's a good idea to always have this somewhere inside your form as it'll
-render hidden fields for you and make any fields you forgot to render more
-obvious (since it'll render the field for you).
+这将渲染尚未为给定表单渲染的所有剩余字段。
+总是将它放置在你的表单中的某个地方是一个好主意，因为它会为你渲染隐藏的字段，并让那些你忘记渲染的任何字段更加明显
+（因为它会为你渲染该字段）。
 
 .. code-block:: twig
 
     {{ form_rest(form) }}
 
-Form Tests Reference
+表单测试参考
 --------------------
 
-Tests can be executed by using the ``is`` operator in Twig to create a
-condition. Read `the Twig documentation`_ for more information.
+可以使用Twig中的 ``is`` 运算符以创建条件来执行测试。
+阅读 `Twig文档`_ 以获取更多信息。
 
 .. _form-twig-selectedchoice:
 
 selectedchoice(selected_value)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This test will check if the current choice is equal to the ``selected_value``
-or if the current choice is in the array (when ``selected_value`` is an
-array).
+此测试将检查当前选择是否等于 ``selected_value`` ，或当
+``selected_value`` 是一个数组时，当前选择是否在该数组中。
 
 .. code-block:: twig
 
@@ -204,18 +184,18 @@ array).
 rootform
 ~~~~~~~~
 
-This test will check if the current ``form`` does not have a parent form view.
+此测试将检查当前的 ``form`` 是否有一个父表单视图。
 
 .. code-block:: twig
 
-    {# DON'T DO THIS: this simple check can't differentiate between a form having
-       a parent form view and a form defining a nested form field called 'parent' #}
+    {# DON'T DO THIS: 这个简单的检查不能区分具有父表单视图的表单与
+       一个定义了名为“parent”的嵌套表单字段的表单之间的却别 #}
 
     {% if form.parent is null %}
         {{ form_errors(form) }}
     {% endif %}
 
-   {# DO THIS: this check is always reliable, even if the form defines a field called 'parent' #}
+   {# DO THIS：此检查始终可靠，即使该表单定义了一个名为“parent”的字段。 #}
 
     {% if form is rootform %}
         {{ form_errors(form) }}
@@ -223,29 +203,26 @@ This test will check if the current ``form`` does not have a parent form view.
 
 .. _`twig-reference-form-variables`:
 
-More about Form Variables
+表单变量
 -------------------------
 
 .. tip::
 
-    For a full list of variables, see: :ref:`reference-form-twig-variables`.
+    有关变量的完整列表，请参阅 :ref:`reference-form-twig-variables`。
 
-In almost every Twig function above, the final argument is an array of "variables"
-that are used when rendering that one part of the form. For example, the
-following would render the "widget" for a field and modify its attributes
-to include a special class:
+在上面的几乎每个Twig函数中，在渲染表单的一部分时，最后一个参数都是一个“变量”数组。
+例如，以下内容将渲染字段的“部件”并修改其属性以包含一个特殊样式类：
 
 .. code-block:: twig
 
-    {# render a widget, but add a "foo" class to it #}
+    {# 渲染一个部件，同时添加一个“foo”样式类 #}
     {{ form_widget(form.name, { 'attr': {'class': 'foo'} }) }}
 
-The purpose of these variables - what they do & where they come from - may
-not be immediately clear, but they're incredibly powerful. Whenever you
-render any part of a form, the block that renders it makes use of a number
-of variables. By default, these blocks live inside `form_div_layout.html.twig`_.
+这些变量的目的 - 它们的作用以及它们来自何处 - 可能不会立即明确，但它们非常强大。
+每当渲染表单的任何部分时，渲染它的区块都会使用许多变量。
+默认情况下，这些区块位于 `form_div_layout.html.twig`_ 中。
 
-Look at the ``form_label`` as an example:
+看一下这个 ``form_label`` 例子：
 
 .. code-block:: twig
 
@@ -273,51 +250,40 @@ Look at the ``form_label`` as an example:
         </label>
     {% endblock form_label %}
 
-This block makes use of several variables: ``compound``, ``label_attr``,
-``required``, ``label``, ``name`` and ``translation_domain``. These variables
-are made available by the form rendering system. But more importantly, these
-are the variables that you can override when calling ``form_label()`` (since
-in this example, you're rendering the label).
+该区块利用几个变量：``compound``、``label_attr``、``required``、``label``、``name``
+以及 ``translation_domain``。这些变量由表单渲染系统提供。
+但更重要的是，这些是你在调用 ``form_label()`` （因为在此示例中，你正在渲染标签）时可以重写的变量。
 
-The exact variables available to override depends on which part of the form
-you're rendering (e.g. label versus widget) and which field you're rendering
-(e.g. a ``choice`` widget has an extra ``expanded`` option). If you get
-comfortable with looking through `form_div_layout.html.twig`_, you'll always
-be able to see what options you have available.
+可以重写的确切变量取决于你要渲染的表单的对应部分（例如标签与部件）以及你正在渲染的字段（例如，
+``choice`` 部件有额外的 ``expanded`` 选项）。
+如果你能自在的浏览 `form_div_layout.html.twig`_，你将始终能够看到可用的选项。
 
 .. tip::
 
-    Behind the scenes, these variables are made available to the ``FormView``
-    object of your form when the Form component calls ``buildView()`` and
-    ``finishView()`` on each "node" of your form tree. To see what "view"
-    variables a particular field has, find the source code for the form
-    field (and its parent fields) and look at the above two functions.
+    在幕后，当Form组件在你的表单树的每个“节点”上调用 ``buildView()`` 和 ``finishView()``
+    时，这些变量都在该表单的 ``FormView`` 对象上可用。
+    要查看一个特定字段具有的“视图”变量，请查找表单字段（及其父字段）的源代码，并浏览上述两个函数。
 
 .. note::
 
-    If you're rendering an entire form at once (or an entire embedded form),
-    the ``variables`` argument will only be applied to the form itself and
-    not its children. In other words, the following will **not** pass a
-    "foo" class attribute to all of the child fields in the form:
+    如果你一次渲染整个表单（或整个嵌入表单），则 ``variables``
+    参数将仅应用于表单本身而不是其子字段。
+    换句话说，以下内容 **不会** 将“foo”样式类属性传递给表单中的所有子字段：
 
     .. code-block:: twig
 
-        {# does **not** work - the variables are not recursive #}
+        {# **不会** 生效 - 变量不是递归的 #}
         {{ form_widget(form, { 'attr': {'class': 'foo'} }) }}
 
 .. _reference-form-twig-variables:
 
-Form Variables Reference
+表单变量参考
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-The following variables are common to every field type. Certain field types
-may have even more variables and some variables here only really apply to
-certain types.
+以下变量对于每种字段类型都是通用的。某些字段类型可能包含更多变量，而某些变量则仅适用于某些类型。
 
-Assuming you have a ``form`` variable in your template and you want to
-reference the variables on the ``name`` field, accessing the variables is
-done by using a public ``vars`` property on the
-:class:`Symfony\\Component\\Form\\FormView` object:
+假设模板中有一个 ``form`` 变量并且你想在 ``name`` 字段上引用该变量，则可以通过在
+:class:`Symfony\\Component\\Form\\FormView` 对象上使用一个 ``vars`` 公有属性来访问该变量:
 
 .. code-block:: html+twig
 
@@ -327,58 +293,56 @@ done by using a public ``vars`` property on the
     </label>
 
 +------------------------+-------------------------------------------------------------------------------------+
-| Variable               | Usage                                                                               |
+| 变量                   | 用法                                                                                |
 +========================+=====================================================================================+
-| ``form``               | The current ``FormView`` instance.                                                  |
+| ``form``               | 当前的 ``FormView`` 实例。                                                          |
 +------------------------+-------------------------------------------------------------------------------------+
-| ``id``                 | The ``id`` HTML attribute to be rendered.                                           |
+| ``id``                 | 要渲染的 ``id`` HTML属性。                                                          |
 +------------------------+-------------------------------------------------------------------------------------+
-| ``name``               | The name of the field (e.g. ``title``) - but not the ``name``                       |
-|                        | HTML attribute, which is ``full_name``.                                             |
+| ``name``               | 字段的名称（例如 ``title``） - 但不是 ``name`` HTML属性，``full_name`` 才是。       |
 +------------------------+-------------------------------------------------------------------------------------+
-| ``full_name``          | The ``name`` HTML attribute to be rendered.                                         |
+| ``full_name``          | 要渲染的 ``name`` HTML属性。                                                        |
 +------------------------+-------------------------------------------------------------------------------------+
-| ``errors``             | An array of any errors attached to *this* specific field                            |
-|                        | (e.g. ``form.title.errors``).                                                       |
-|                        | Note that you can't use ``form.errors`` to determine if a form is valid,            |
-|                        | since this only returns "global" errors: some individual fields may have errors.    |
-|                        | Instead, use the ``valid`` option.                                                  |
+| ``errors``             | 附加到 *此* 特定字段的一个任何错误的数组（例如 ``form.title.errors``）。            |
+|                        | 请注意，不能使用 ``form.errors`` 来确定一个表单是否有效，                           |
+|                        | 因为此变量只会返回“全局”的错误：某些单独的字段可能有错误。                          |
+|                        | 所以，请使用 ``valid`` 选项。                                                       |
 +------------------------+-------------------------------------------------------------------------------------+
-| ``submitted``          | Returns ``true`` or ``false`` depending on whether the whole form is submitted      |
+| ``submitted``          | 返回 ``true`` 或 ``false``，这取决于整个表单是否提交。                              |
 +------------------------+-------------------------------------------------------------------------------------+
-| ``valid``              | Returns ``true`` or ``false`` depending on whether the whole form is valid.         |
+| ``valid``              | 返回 ``true`` 或 ``false``，这取决于整个表单是否有效。                              |
 +------------------------+-------------------------------------------------------------------------------------+
-| ``value``              | The value that will be used when rendering (commonly the ``value`` HTML attribute). |
+| ``value``              | 渲染时要使用的值（通常是 ``value`` HTML属性）。                                     |
 +------------------------+-------------------------------------------------------------------------------------+
-| ``disabled``           | If ``true``, ``disabled="disabled"`` is added to the field.                         |
+| ``disabled``           | 如果为 ``true``，将在该字段添加 ``disabled="disabled``。                            |
 +------------------------+-------------------------------------------------------------------------------------+
-| ``required``           | If ``true``, a ``required`` attribute is added to the field to activate HTML5       |
-|                        | validation. Additionally, a ``required`` class is added to the label.               |
+| ``required``           | 如果是 ``true``，则在该字段中添加一个 ``required`` 属性以激活HTML5验证。            |
+|                        | 另外，在标签中添加了一个 ``required`` 样式类。                                      |
 +------------------------+-------------------------------------------------------------------------------------+
-| ``label``              | The string label that will be rendered.                                             |
+| ``label``              | 要渲染的字符串标签。                                                                |
 +------------------------+-------------------------------------------------------------------------------------+
-| ``multipart``          | If ``true``, ``form_enctype`` will render ``enctype="multipart/form-data"``.        |
-|                        | This only applies to the root form element.                                         |
+| ``multipart``          | 如果是 ``true``，``form_enctype`` 将渲染 ``enctype="multipart/form-data"``。        |
+|                        | 此变量仅适用于根表单元素。                                                          |
 +------------------------+-------------------------------------------------------------------------------------+
-| ``attr``               | A key-value array that will be rendered as HTML attributes on the field.            |
+| ``attr``               | 一个键值对数组，将在字段上渲染为HTML属性。                                          |
 +------------------------+-------------------------------------------------------------------------------------+
-| ``label_attr``         | A key-value array that will be rendered as HTML attributes on the label.            |
+| ``label_attr``         | 一个键值对数组，将在标签上渲染为HTML属性。                                          |
 +------------------------+-------------------------------------------------------------------------------------+
-| ``compound``           | Whether or not a field is actually a holder for a group of children fields          |
-|                        | (for example, a ``choice`` field, which is actually a group of checkboxes.          |
+| ``compound``           | 该字段是否实际上是一组子字段的持有者。                                              |
+|                        | 另外，在标签中添加了一个 ``required`` 样式类。                                      |
 +------------------------+-------------------------------------------------------------------------------------+
-| ``block_prefixes``     | An array of all the names of the parent types.                                      |
+| ``block_prefixes``     | 父类型的所有名称的数组。                                                            |
 +------------------------+-------------------------------------------------------------------------------------+
-| ``translation_domain`` | The domain of the translations for this form.                                       |
+| ``translation_domain`` | 此表单的翻译域。                                                                    |
 +------------------------+-------------------------------------------------------------------------------------+
-| ``cache_key``          | A unique key which is used for caching.                                             |
+| ``cache_key``          | 用于缓存的一个唯一键。                                                              |
 +------------------------+-------------------------------------------------------------------------------------+
-| ``data``               | The normalized data of the type.                                                    |
+| ``data``               | 类型的规范化数据。                                                                  |
 +------------------------+-------------------------------------------------------------------------------------+
-| ``method``             | The method of the current form (POST, GET, etc.).                                   |
+| ``method``             | 当前表单的方法（POST，GET等）。                                                     |
 +------------------------+-------------------------------------------------------------------------------------+
-| ``action``             | The action of the current form.                                                     |
+| ``action``             | 当前表单的动作。                                                                    |
 +------------------------+-------------------------------------------------------------------------------------+
 
 .. _`form_div_layout.html.twig`: https://github.com/symfony/symfony/blob/master/src/Symfony/Bridge/Twig/Resources/views/Form/form_div_layout.html.twig
-.. _`the Twig documentation`: https://twig.symfony.com/doc/2.x/templates.html#test-operator
+.. _`Twig文档`: https://twig.symfony.com/doc/2.x/templates.html#test-operator

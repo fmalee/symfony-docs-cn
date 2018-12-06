@@ -1,7 +1,7 @@
 .. index::
    single: Forms; Fields; CollectionType
 
-CollectionType Field
+CollectionType字段
 ====================
 
 This field type is used to render a "collection" of some field or form.

@@ -83,7 +83,7 @@
     }
 
 ``CallbackTransformer`` 使用两个回调函数作为参数。第一个回调将原始值转换为将用于渲染字段的格式。
-第二个回调是相反的：它将提交的值转换回你将在代码中使用的格式。
+第二个回调是则相反：它将提交的值转换回你将在代码中使用的格式。
 
 .. tip::
 
@@ -283,7 +283,7 @@
 
     // ...
 
-很酷，你完工了！你的用户将能够在文本字段中输入问题编号，并将其转换回一个Issue对象。
+很酷，你完工了！你的用户将能够在文本字段中输入问题编号，并将其转换回一个 ``Issue`` 对象。
 这意味着，在成功提交后，Form组件将传递一个实际的 ``Issue`` 对象到 ``Task::setIssue()``，而不是一个问题编号。
 
 如果找不到该问题，将为该字段创建一个表单错误，并且可以使用 ``invalid_message`` 字段选项定制它的错误消息。
@@ -391,7 +391,7 @@
 #. **Model data** - 这是你的应用使用的格式的数据（例如一个 ``Issue`` 对象）。
    如果你调用了 ``Form::getData()`` 或 ``Form::setData()``，那么你正在处理“model”数据。
 
-#. **Norm Data** - 这是你的数据的标准化(normalized)版本，
+#. **Norm Data** - 这是你的数据的规范化版本，
    通常与“model”数据相同（尽管不在我们的示例中）。它并不常用。
 
 #. **View Data** - 这是用于填充表单字段自身的格式。它也是用户提交的数据的格式。
@@ -414,13 +414,8 @@
 那么为什么要使用模型转换器呢？
 ---------------------------------
 
-在此示例中，该字段是一个 ``text`` 字段，并且一个文本字段始终是“norm”和“view”格式的一个简单、标量的格式。
-出于这个原因，最合适的转换器是“模型”转换器（它转换为 *norm* 格式 - issue number字符串 - *模型* 格式 - Issue对象）。
-In this example, the field is a ``text`` field, and a text field is always
-expected to be a simple, scalar format in the "norm" and "view" formats.
-For this reason, the most appropriate transformer was the "model" transformer
-(which converts to/from the *norm* format - string issue number - to the *model*
-format - Issue object).
+在此示例中，该字段是一个 ``text`` 字段，而一个文本字段在“norm”和“view”格式中始终是一个简单、标量的格式。
+出于这个原因，最合适的转换器是“模型”转换器，即 *norm* 格式(问题编号字符串)和 *模型* 格式(Issue对象)之间的转换。
 
 转换器之间的区别是微妙的，你应该总是考虑一个字段的“norm”数据应该是什么。
 例如，一个 ``text`` 字段的“norm”数据是一个字符串，但是 ``date`` 字段的却是 ``DateTime`` 对象。
