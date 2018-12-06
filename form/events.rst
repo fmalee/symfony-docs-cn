@@ -41,9 +41,9 @@ Form组件提供了一个结构化的过程，可以通过使用
 .. image:: /_images/components/form/set_data_flow.png
     :align: center
 
-在一个表单的预填充期间会调度两个事件，
-:method:`Form::setData() <Symfony\\Component\\Form\\Form::setData>` 被调用后：
-``FormEvents::PRE_SET_DATA`` 和 ``FormEvents::POST_SET_DATA``。
+在一个表单的预填充期间（
+:method:`Form::setData() <Symfony\\Component\\Form\\Form::setData>`
+被调用后）会调度两个事件：``FormEvents::PRE_SET_DATA`` 和 ``FormEvents::POST_SET_DATA``。
 
 A) ``FormEvents::PRE_SET_DATA`` 事件
 .........................................
@@ -74,8 +74,8 @@ View data        ``null``
 
 .. sidebar:: 表单组件中的 ``FormEvents::PRE_SET_DATA``
 
-    ``Symfony\Component\Form\Extension\Core\Type\CollectionType`` 表单类型依赖于
-    ``Symfony\Component\Form\Extension\Core\EventListener\ResizeFormListener``
+    :class:`Symfony\\Component\\Form\\Extension\\Core\\Type\\CollectionType` 表单类型依赖于
+    :class:`Symfony\\Component\\Form\\Extension\\Core\\EventListener\\ResizeFormListener`
     订阅器，该订阅器监听了 ``FormEvents::PRE_SET_DATA``
     事件，以便根据预填充对象中的数据，通过删除和添加所有的表单行(row)来对表单的字段重新排序。
 
@@ -99,7 +99,7 @@ View data        使用一个视图转换器转换的Normalized data
 
 .. sidebar:: 表单组件中的 ``FormEvents::POST_SET_DATA``
 
-    ``Symfony\Component\Form\Extension\DataCollector\EventListener\DataCollectorListener``
+    :class:`Symfony\\Component\\Form\\Extension\\DataCollector\\EventListener\\DataCollectorListener`
     类订阅了 ``FormEvents::POST_SET_DATA``
     事件，以便从非规范化(denormalized)的Model和View数据中收集有关表单的信息。
 
@@ -139,9 +139,9 @@ View data        与在 ``FormEvents::POST_SET_DATA`` 时相同
 
 .. sidebar:: 表单组件中 ``FormEvents::PRE_SUBMIT``
 
-    ``Symfony\Component\Form\Extension\Core\EventListener\TrimListener``
+    :class:`Symfony\\Component\\Form\\Extension\\Core\\EventListener\\TrimListener`
     订阅器订阅了 ``FormEvents::PRE_SUBMIT`` 事件，以便修剪(trim)请求中的数据（针对字符串值）。
-    ``Symfony\Component\Form\Extension\Csrf\EventListener\CsrfValidationListener``
+    :class:`Symfony\\Component\\Form\\Extension\\Csrf\\EventListener\\CsrfValidationListener`
     订阅器订阅了 ``FormEvents::PRE_SUBMIT`` 事件，以便验证CSRF令牌。
 
 B) ``FormEvents::SUBMIT`` 事件
@@ -170,7 +170,7 @@ View data        与在 ``FormEvents::POST_SET_DATA`` 时相同
 
 .. sidebar:: 表单组件中的 ``FormEvents::SUBMIT``
 
-    ``Symfony\Component\Form\Extension\Core\EventListener\FixUrlProtocolListener``
+    :class:`Symfony\\Component\\Form\\Extension\\Core\\EventListener\\FixUrlProtocolListener`
     订阅了 ``FormEvents::SUBMIT`` 事件，以便在已提交的数据没有协议时附加一个默认协议到URL字段。
 
 C) ``FormEvents::POST_SUBMIT`` 事件
@@ -199,9 +199,9 @@ View data        使用一个视图转换器转换的Normalized data
 
 .. sidebar:: 表单组件中的 ``FormEvents::POST_SUBMIT``
 
-    ``Symfony\Component\Form\Extension\DataCollector\EventListener\DataCollectorListener``
+    :class:`Symfony\\Component\\Form\\Extension\\DataCollector\\EventListener\\DataCollectorListener`
     订阅了 ``FormEvents::POST_SUBMIT`` 事件以便收集有关表单的信息。
-    ``Symfony\Component\Form\Extension\Validator\EventListener\ValidationListener``
+    :class:`Symfony\\Component\\Form\\Extension\\Validator\\EventListener\\ValidationListener`
     订阅了 ``FormEvents::POST_SUBMIT`` 事件以便自动验证非规范化(denormalized)的对象。
 
 注册事件监听器或事件订阅器

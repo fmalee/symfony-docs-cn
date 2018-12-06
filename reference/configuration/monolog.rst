@@ -1,36 +1,34 @@
 .. index::
     pair: Monolog; Configuration reference
 
-Logging配置参考(MonologBundle)
+日志配置参考(MonologBundle)
 ===============================================
 
-The MonologBundle integrates the Monolog :doc:`logging </logging>` library in
-Symfony applications. All these options are configured under the ``monolog`` key
-in your application configuration.
+Symfony应用中的MonologBundle集成了Monolog :doc:`日志 </logging>` 库。
+所有这些选项都在应用配置中的 ``monolog`` 键下配置。
 
 .. code-block:: terminal
 
-    # displays the default config values defined by Symfony
+    # 显示Symfony定义的默认配置值
     $ php bin/console config:dump-reference monolog
 
-    # displays the actual config values used by your application
+    # 显示应用使用的实际配置值
     $ php bin/console debug:config monolog
 
 .. note::
 
-    When using XML, you must use the ``http://symfony.com/schema/dic/monolog``
-    namespace and the related XSD schema is available at:
+    使用XML时，必须使用 ``http://symfony.com/schema/dic/monolog``
+    命名空间，并且相关的XSD架构可在以下位置使用：
     ``http://symfony.com/schema/dic/monolog/monolog-1.0.xsd``
+
 
 .. tip::
 
-    For a full list of handler types and related configuration options, see
-    `Monolog Configuration`_.
+    有关处理器类型和相关配置选项的完整列表，请参阅 `Monolog配置`_。
 
 .. note::
 
-    When the profiler is enabled, a handler is added to store the logs'
-    messages in the profiler. The profiler uses the name "debug" so it
-    is reserved and cannot be used in the configuration.
+    启用分析器后，将添加一个处理器以将日志的消息存储在分析器中。
+    分析器使用了“debug”名称，因此它是保留的(reserved)，并且不能在配置中使用。
 
-.. _`Monolog Configuration`: https://github.com/symfony/monolog-bundle/blob/master/DependencyInjection/Configuration.php
+.. _`Monolog配置`: https://github.com/symfony/monolog-bundle/blob/master/DependencyInjection/Configuration.php

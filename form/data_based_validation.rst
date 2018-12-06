@@ -21,7 +21,7 @@
         ));
     }
 
-这将在提交表单之后，执行验证之前，调用类 ``Client`` 上的 ``determineValidationGroups()`` 静态方法。
+这将在提交表单之后、执行验证之前，调用类 ``Client`` 上的 ``determineValidationGroups()`` 静态方法。
 该表单对象将作为参数传递给该方法（参见下一个示例）。你还可以通过使用一个  ``Closure`` 内联定义整个逻辑::
 
     use App\Entity\Client;

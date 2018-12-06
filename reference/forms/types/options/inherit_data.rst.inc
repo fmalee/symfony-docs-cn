@@ -1,15 +1,12 @@
 inherit_data
 ~~~~~~~~~~~~
 
-**type**: ``boolean`` **default**: ``false``
+**类型**: ``boolean`` **默认**: ``false``
 
-This option determines if the form will inherit data from its parent form.
-This can be useful if you have a set of fields that are duplicated across
-multiple forms. See :doc:`/form/inherit_data_option`.
+此选项确定表单是否将从其父表单继承数据。
+如果你有一组重复的跨多个表单的字段，这将非常有用。请参阅 :doc:`/form/inherit_data_option`。
 
 .. caution::
 
-    When a field has the ``inherit_data`` option set, it uses the data of
-    the parent form as is. This means that
-    :doc:`Data Transformers </form/data_transformers>` won't be
-    applied to that field.
+    当一个字段具有 ``inherit_data`` 选项集时，它将按原样使用父表单的数据。
+    这意味着 :doc:`数据转换器 </form/data_transformers>` 不会应用于该字段。

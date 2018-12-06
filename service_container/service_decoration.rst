@@ -115,7 +115,7 @@
 
             App\DecoratingMailer:
                 decorates: App\Mailer
-                # 传递就服务为一个参数
+                # 传递旧服务为一个参数
                 arguments: ['@App\DecoratingMailer.inner']
 
     .. code-block:: xml

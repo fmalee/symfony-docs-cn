@@ -1,11 +1,10 @@
 .. index::
    single: Forms; Fields; FormType
 
-FormType Field
+FormType字段
 ==============
 
-The ``FormType`` predefines a couple of options that are then available
-on all types for which ``FormType`` is the parent.
+``FormType`` 预定义了几个选项，这些选项可适用于所有父类型是 ``FormType`` 的类型。
 
 +-----------+--------------------------------------------------------------------+
 | Options   | - `action`_                                                        |
@@ -46,7 +45,7 @@ on all types for which ``FormType`` is the parent.
 | Class     | :class:`Symfony\\Component\\Form\\Extension\\Core\\Type\\FormType` |
 +-----------+--------------------------------------------------------------------+
 
-Field Options
+字段选项
 -------------
 
 .. _form-option-action:
@@ -58,13 +57,12 @@ Field Options
 allow_extra_fields
 ~~~~~~~~~~~~~~~~~~
 
-**type**: ``boolean`` **default**: ``false``
+**类型**: ``boolean`` **默认**: ``false``
 
-Usually, if you submit extra fields that aren't configured in your form,
-you'll get a "This form should not contain extra fields." validation error.
+通常，如果提交了未在表单中配置的额外字段，你会获得一个
+"This form should not contain extra fields." 的验证错误。
 
-You can silence this validation error by enabling the ``allow_extra_fields``
-option on the form.
+你可以通过启用表单上的 ``allow_extra_fields`` 选项来消除此验证错误。
 
 .. include:: /reference/forms/types/options/by_reference.rst.inc
 
@@ -83,14 +81,14 @@ option on the form.
 .. include:: /reference/forms/types/options/empty_data.rst.inc
     :end-before: DEFAULT_PLACEHOLDER
 
-The actual default value of this option depends on other field options:
+此选项的实际默认值取决于其他字段选项：
 
-* If ``data_class`` is set and ``required`` is ``true``, then ``new $data_class()``;
-* If ``data_class`` is set and ``required`` is ``false``, then ``null``;
-* If ``data_class`` is not set and ``compound`` is ``true``, then ``array()``
-  (empty array);
-* If ``data_class`` is not set and ``compound`` is ``false``, then ``''``
-  (empty string).
+* 如果 ``data_class`` 已设置并且 ``required`` 为 ``true``, 那么默认值为 ``new $data_class()``;
+* 如果 ``data_class`` 已设置并且 ``required`` 为 ``false``, 那么默认值为 ``null``;
+* 如果 ``data_class`` 未设置并且 ``compound`` 为 ``true``, 那么默认值为 ``array()``
+  (空数组);
+* 如果 ``data_class`` 未设置并且 ``compound`` 为 ``false``, 那么默认值为 ``''``
+  (空字符串).
 
 .. include:: /reference/forms/types/options/empty_data.rst.inc
     :start-after: DEFAULT_PLACEHOLDER
@@ -139,14 +137,14 @@ The actual default value of this option depends on other field options:
 
 .. include:: /reference/forms/types/options/validation_groups.rst.inc
 
-Inherited Options
+继承选项
 -----------------
 
-The following options are defined in the
-:class:`Symfony\\Component\\Form\\Extension\\Core\\Type\\BaseType` class.
-The ``BaseType`` class is the parent class for both the ``form`` type and
-the :doc:`ButtonType </reference/forms/types/button>`, but it is not part
-of the form type tree (i.e. it cannot be used as a form type on its own).
+在 :class:`Symfony\\Component\\Form\\Extension\\Core\\Type\\BaseType`
+类中定义了下面的选项。
+``BaseType`` 类是 ``form`` 和
+:doc:`ButtonType </reference/forms/types/button>`
+两个类型的父类，但它不是表单类型树的一部分（即，它不能被用来作为它自身的一个表单类型）。
 
 .. include:: /reference/forms/types/options/attr.rst.inc
 

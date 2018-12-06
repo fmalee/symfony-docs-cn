@@ -1,31 +1,29 @@
 .. index::
     single: Configuration reference; WebProfiler
 
-Profiler配置参考 (WebProfilerBundle)
+分析器配置参考 (WebProfilerBundle)
 ====================================================
 
-The WebProfilerBundle is a **development tool** that provides detailed technical
-information about each request execution and displays it in both the web debug
-toolbar and the :doc:`profiler </profiler>`. All these options are configured
-under the ``web_profiler`` key in your application configuration.
+WebProfilerBundle是一个 **开发工具**，提供有关每个请求执行的详细技术信息，并在Web调试工具栏和
+:doc:`分析器 </profiler>` 中显示。所有这些选项都在应用配置中的 ``web_profiler`` 键下配置。
 
 .. code-block:: terminal
 
-    # displays the default config values defined by Symfony
+    # 显示Symfony定义的默认配置值
     $ php bin/console config:dump-reference web_profiler
 
-    # displays the actual config values used by your application
+    # 显示应用使用的实际配置值
     $ php bin/console debug:config web_profiler
 
 .. note::
 
-    When using XML, you must use the ``http://symfony.com/schema/dic/webprofiler``
-    namespace and the related XSD schema is available at:
+    使用XML时，必须使用 ``http://symfony.com/schema/dic/webprofiler``
+    命名空间，并且相关的XSD架构可在以下位置使用：
     ``http://symfony.com/schema/dic/webprofiler/webprofiler-1.0.xsd``
 
 .. caution::
 
-    The web debug toolbar is not available for responses of type ``StreamedResponse``.
+    Web调试工具栏不适用于 ``StreamedResponse`` 类型的响应。
 
 配置
 -------------
@@ -39,34 +37,27 @@ under the ``web_profiler`` key in your application configuration.
 toolbar
 ~~~~~~~
 
-**type**: ``boolean`` **default**: ``false``
+**类型**: ``boolean`` **默认值**: ``false``
 
-It enables and disables the toolbar entirely. Usually you set this to ``true``
-in the ``dev`` and ``test`` environments and to ``false`` in the ``prod``
-environment.
+它控制工具栏的启用和禁用。
+通常在 ``dev`` 与 ``test`` 环境将其设置为 ``true``，在 ``prod`` 环境中设置为 ``false``。
 
 .. _intercept_redirects:
 
 intercept_redirects
 ~~~~~~~~~~~~~~~~~~~
 
-**type**: ``boolean`` **default**: ``false``
+**类型**: ``boolean`` **默认值**: ``false``
 
-If a redirect occurs during an HTTP response, the browser follows it automatically
-and you won't see the toolbar or the profiler of the original URL, only the
-redirected URL.
+如果在HTTP响应期间发生重定向，浏览器会自动跟踪它，而你将看不到原始URL的工具栏或分析器，只看到重定向的URL。
 
-When setting this option to ``true``, the browser *stops* before making any
-redirection and shows you the URL which is going to redirect to, its toolbar,
-and its profiler. Once you've inspected the toolbar/profiler data, you can click
-on the given link to perform the redirect.
+当此选项设置为 ``true`` 时，浏览器会在进行任何重定向之前 *停止* 重定向，并显示要重定向到的URL、其工具栏以及及其分析器。
+检查完工具栏/分析器的数据后，可以单击给定链接以执行该重定向。
 
 excluded_ajax_paths
 ~~~~~~~~~~~~~~~~~~~
 
-**type**: ``string`` **default**: ``'^/((index|app(_[\w]+)?)\.php/)?_wdt'``
+**类型**: ``string`` **默认值**: ``'^/((index|app(_[\w]+)?)\.php/)?_wdt'``
 
-When the toolbar logs Ajax requests, it matches their URLs against this regular
-expression. If the URL matches, the request is not displayed in the toolbar. This
-is useful when the application makes lots of Ajax requests or they are heavy and
-you want to exclude some of them.
+当工具栏记录Ajax请求时，它会根据此正则表达式匹配其URL。如果URL匹配，则该请求不会显示在工具栏中。
+当应用发出大量Ajax请求或者它们很繁重(heavy)并且你想要排除其中一些URL时，这很有用。

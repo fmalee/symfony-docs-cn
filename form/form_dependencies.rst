@@ -88,7 +88,7 @@
     }
 
 如果你正在使用 :ref:`自动装配 <services-autowire>` 和
-:ref:`自动配置 <services-autoconfigure>`，那么你不需要做*任何* 其他事情：
+:ref:`自动配置 <services-autoconfigure>`，那么你不需要做 *任何* 其他事情：
 Symfony会自动将正确的 ``EntityManager`` 对象传递给你的 ``__construct()`` 方法。
 
 如果你 **不使用自动装配和自动配置**，请手动将表单注册为服务并使用 ``form.type`` 标签进行标记：

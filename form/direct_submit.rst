@@ -18,7 +18,7 @@
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // perform some action...
+            // 执行一些动作...
 
             return $this->redirectToRoute('task_success');
         }
@@ -54,7 +54,7 @@
             $form->submit($request->request->get($form->getName()));
 
             if ($form->isSubmitted() && $form->isValid()) {
-                // perform some action...
+                // 执行一些动作...
 
                 return $this->redirectToRoute('task_success');
             }

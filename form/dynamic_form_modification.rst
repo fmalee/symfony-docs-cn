@@ -394,9 +394,6 @@
 
 此处的关键，是要为新字段所依赖的字段添加一个 ``POST_SUBMIT`` 监听器。
 如果向一个子表单（例如 ``sport``）添加了一个 ``POST_SUBMIT`` 监听器，并将新表单添加到父表单，则表单组件将自动检测新字段并将其映射到客户端提交的数据中。
-If you add a ``POST_SUBMIT`` listener to a form child (e.g. ``sport``),
-and add new children to the parent form,
-the Form component will detect the new field automatically and map it to the submitted client data.
 
 该类型现在看起来像这样::
 

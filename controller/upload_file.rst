@@ -230,7 +230,7 @@
             try {
                 $file->move($this->getTargetDirectory(), $fileName);
             } catch (FileException $e) {
-                // ... handle exception if something happens during file upload
+                // ... 如果在文件上传过程中发生了某些事，则处理异常
             }
 
             return $fileName;

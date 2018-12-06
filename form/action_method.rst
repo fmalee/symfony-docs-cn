@@ -120,7 +120,7 @@
 
 .. note::
 
-    如果表单的方法不是GET或POST，而是PUT、PATCH或DELETE，Symfony将插入一个名叫 ``_method``
+    如果表单的方法不是GET或POST，而是PUT、PATCH或DELETE，Symfony将插入一个名为 ``_method``
     的隐藏字段来存储该方法。
     表单将在正常的POST请求中提交，但Symfony的路由器能够检测 ``_method`` 参数并将其解释为PUT、PATCH或DELETE请求。
     请参阅 :ref:`configuration-framework-http_method_override` 选项。

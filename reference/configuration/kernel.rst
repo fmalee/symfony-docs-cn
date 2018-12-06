@@ -4,29 +4,28 @@
 内核配置
 =========================
 
-Some configuration can be done on the kernel class itself (located by default at
-``src/Kernel.php``). You can do this by overriding specific methods in
-the parent :class:`Symfony\\Component\\HttpKernel\\Kernel` class.
+某些配置可以在内核类本身中完成（默认情况下位于 ``src/Kernel.php``）。
+你可以通过重写父 :class:`Symfony\\Component\\HttpKernel\\Kernel` 类中的特定方法来完成此操作。
 
-Configuration
+配置
 -------------
 
-* `Charset`_
-* `Kernel Name`_
-* `Project Directory`_
-* `Cache Directory`_
-* `Log Directory`_
+* `字符集`_
+* `内核名称`_
+* `项目目录`_
+* `缓存目录`_
+* `日志目录`_
 
 .. _configuration-kernel-charset:
 
-Charset
+字符集
 ~~~~~~~
 
-**type**: ``string`` **default**: ``UTF-8``
+**类型**: ``string`` **默认值**: ``UTF-8``
 
-This returns the charset that is used in the application. To change it,
-override the :method:`Symfony\\Component\\HttpKernel\\Kernel::getCharset`
-method and return another charset, for instance::
+这将返回应用中使用的字符集。要更改它，请重写
+:method:`Symfony\\Component\\HttpKernel\\Kernel::getCharset`
+方法并返回另一个字符集，例如::
 
     // src/Kernel.php
     use Symfony\Component\HttpKernel\Kernel as BaseKernel;
@@ -40,37 +39,33 @@ method and return another charset, for instance::
         }
     }
 
-Kernel Name
+内核名称
 ~~~~~~~~~~~
 
-**type**: ``string`` **default**: ``src`` (i.e. the directory name holding
-the kernel class)
+**类型**: ``string`` **默认值**: ``src`` (即保存内核类的目录名)
 
 .. versionadded:: 4.2
-    The ``kernel.name`` parameter and the ``Kernel::getName()`` method were
-    deprecated in Symfony 4.2. If you need a unique ID for your kernels use the
-    ``kernel.container_class`` parameter or the ``Kernel::getContainerClass()`` method.
+    ``kernel.name`` 参数和 ``Kernel::getName()`` 方法在Symfony4.2中已弃用。
+    如果你需要内核的唯一ID，请使用 ``kernel.container_class``
+    参数或 ``Kernel::getContainerClass()`` 方法。
 
-To change this setting, override the :method:`Symfony\\Component\\HttpKernel\\Kernel::getName`
-method. Alternatively, move your kernel into a different directory. For
-example, if you moved the kernel into a ``foo/`` directory (instead of ``src/``),
-the kernel name will be ``foo``.
+要更改此设置，请重写 :method:`Symfony\\Component\\HttpKernel\\Kernel::getName`
+方法。或者，将内核移动到其他目录中。例如，如果将内核移动到
+``foo/`` 目录（而不是 ``src/``）中，则内核名称将变为 ``foo``。
 
-The name of the kernel isn't usually directly important - it's used in the
-generation of cache files - and you probably will only change it when
-:doc:`using applications with multiple kernels </configuration/multiple_kernels>`.
+内核的名称通常不重要 - 它用于生成缓存文件 - 你可能只会在
+:doc:`使用多个内核的应用 </configuration/multiple_kernels>` 时才需要改它。
 
-Project Directory
+项目目录
 ~~~~~~~~~~~~~~~~~
 
-**type**: ``string`` **default**: the directory of the project ``composer.json``
+**类型**: ``string`` **默认值**: ``composer.json`` 项目的目录
 
-This returns the root directory of your Symfony project. It's calculated as
-the directory where the main ``composer.json`` file is stored.
+这将返回Symfony项目的根目录。它被计算为存储主 ``composer.json`` 文件的目录。
 
-If for some reason the ``composer.json`` file is not stored at the root of your
-project, you can override the :method:`Symfony\\Component\\HttpKernel\\Kernel::getProjectDir`
-method to return the right project directory::
+如果 ``composer.json`` 文件由于某种原因未存储在项目的根目录中，则可以重写
+:method:`Symfony\\Component\\HttpKernel\\Kernel::getProjectDir`
+方法以返回正确的项目目录::
 
     // src/Kernel.php
     use Symfony\Component\HttpKernel\Kernel as BaseKernel;
@@ -86,20 +81,20 @@ method to return the right project directory::
         }
     }
 
-Cache Directory
+缓存目录
 ~~~~~~~~~~~~~~~
 
-**type**: ``string`` **default**: ``$this->rootDir/cache/$this->environment``
+**类型**: ``string`` **默认值**: ``$this->rootDir/cache/$this->environment``
 
-This returns the path to the cache directory. To change it, override the
-:method:`Symfony\\Component\\HttpKernel\\Kernel::getCacheDir` method. Read
-":ref:`override-cache-dir`" for more information.
+这将返回缓存目录的路径。要更改它，请重写
+:method:`Symfony\\Component\\HttpKernel\\Kernel::getCacheDir`
+方法。有关详细信息，请阅读 :ref:`override-cache-dir`。
 
-Log Directory
+日志目录
 ~~~~~~~~~~~~~
 
-**type**: ``string`` **default**: ``$this->rootDir/log``
+**类型**: ``string`` **默认值**: ``$this->rootDir/log``
 
-This returns the path to the log directory. To change it, override the
-:method:`Symfony\\Component\\HttpKernel\\Kernel::getLogDir` method. Read
-":ref:`override-logs-dir`" for more information.
+这将返回日志目录的路径。要更改它，请重写
+:method:`Symfony\\Component\\HttpKernel\\Kernel::getLogDir` 方法。
+有关详细信息，请阅读 :ref:`override-logs-dir`。

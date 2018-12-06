@@ -7,7 +7,7 @@
 Form组件可以使用类型猜测器猜测表单字段的类型和一些选项。
 该组件已经内置一个使用Validation组件的断言的类型猜测器，但你也可以添加自己的自定义类型猜测器。
 
-.. sidebar:: Form Type Guessers in the Bridges形式类型的桥梁猜测者
+.. sidebar:: 桥接中的表单类型猜测器
 
     Symfony还在桥接中提供了一些表单类型猜测器：
 

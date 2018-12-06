@@ -74,7 +74,7 @@ Symfony的自动装配被设计为可预测的：如果不清楚应该传递哪�
             # ...
 
             App\Service\TwitterClient:
-                # 其余的得感谢_defaults，但每个服务的值都可以被覆盖
+                # 其余的得感谢_defaults，但每个服务的值都可以被重写
                 autowire: true
                 # 不是必需的，但是对我们的示例有所帮助
                 public: true
@@ -131,7 +131,7 @@ Symfony的自动装配被设计为可预测的：如果不清楚应该传递哪�
          */
         public function tweet()
         {
-            // 从POST'ed 数据获取 $user, $key, $status
+            // 从POST过来的数据获取 $user, $key, $status
 
             $twitterClient = $this->container->get(TwitterClient::class);
             $twitterClient->tweet($user, $key, $status);
@@ -193,7 +193,7 @@ Symfony的自动装配被设计为可预测的：如果不清楚应该传递哪�
         services:
             # ...
 
-            # id不是一个类，因此不会用于自动装配
+            # 该id不是一个类，因此不会用于自动装配
             app.rot13.transformer:
                 class: App\Util\Rot13Transformer
                 # ...
@@ -320,8 +320,8 @@ Symfony的自动装配被设计为可预测的：如果不清楚应该传递哪�
         $container->autowire(Rot13Transformer::class);
         $container->setAlias(TransformerInterface::class, Rot13Transformer::class);
 
-得益于 ``App\Util\TransformerInterface`` 别名，自动装配子系统知道在
-``TransformerInterface`` 处理时应该注入 ``App\Util\Rot13Transformer`` 服务。
+得益于 ``App\Util\TransformerInterface`` 别名，自动装配子系统知道在处理
+``TransformerInterface`` 时应该注入 ``App\Util\Rot13Transformer`` 服务。
 
 .. tip::
 
@@ -346,7 +346,7 @@ Symfony的自动装配被设计为可预测的：如果不清楚应该传递哪�
 自动装配子系统将无法决定使用哪一个服务。请记住，自动装配不是魔术，它只是查找id与类型约束匹配的服务。
 因此，你需要通过创建一个对应正确的服务ID的别名来选择一个默认服务（请参阅 :ref:`autowiring-interface-alias`）。
 
-如果你想 ``Rot13Transformer`` 成为用于自动装配的服务，请创建该别名：
+如果你想 ``Rot13Transformer`` 成为用于自动装配的服务，请为该服务创建别名：
 
 .. configuration-block::
 
@@ -456,7 +456,7 @@ Symfony的自动装配被设计为可预测的：如果不清楚应该传递哪�
 控制器动作方法的自动装配
 ------------------------------------
 
-如果你正在使用Symfony Framework，你还可以为控制器动作方法自动装配参数。
+如果你正在使用Symfony Framework，你还可以为控制器的动作方法自动装配参数。
 这是自动装配的特殊情况，是为方便起见而存在。
 有关详细信息，请参阅 :ref:`controller-accessing-services`。
 
