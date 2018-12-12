@@ -259,6 +259,8 @@
 - `Channel`：通道
 - `Collector`：收集器
 - `Insulate`：隔离，绝缘
+- `Owning Side`：拥有方
+- `Inverse Side`：从属方
 
 ## 汉化步骤
 
