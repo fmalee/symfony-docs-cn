@@ -193,7 +193,7 @@ ManyToOne / OneToMany
             </entity>
         </doctrine-mapping>
 
-该ManyToOne映射是必需的。
+该 ``ManyToOne`` 映射是必需的。
 它告诉Doctrine使用 ``product`` 表上的 ``category_id`` 列将该表中的每条记录与 ``category`` 表中的记录相关联。
 
 接下来，由于 *一个* ``Category`` 对象将涉及 *许多* ``Product`` 对象，
@@ -345,7 +345,7 @@ Doctrine为你管理这种关系的持久性：
 你需要将整个 ``Category`` *对象* （而不是类别的id）设置到 ``Product``。
 保存时，Doctrine会处理其余的事情。
 
-.. sidebar:: 从反面更新关系
+.. sidebar:: 从从属方更新关系
 
     可以通过调用 ``$category->addProduct()`` 来改变关系吗？
     可以的，因为 ``make:entity`` 命令帮助了我们实现了它。
@@ -469,7 +469,7 @@ Doctrine默默地进行第二次查询以找到与 ``Product`` 相关的 ``Categ
 
 .. _associations-inverse-side:
 
-从反面设置信息
+从从属方设置信息
 -----------------------------------------
 
 到目前为止，你已通过调用 ``$product->setCategory($category)`` 更新了这段关系。
