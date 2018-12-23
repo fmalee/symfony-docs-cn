@@ -1,54 +1,46 @@
 .. index::
    single: EventDispatcher
 
-The Generic Event Object
+通用事件对象
 ========================
 
-The base :class:`Symfony\\Component\\EventDispatcher\\Event` class provided
-by the EventDispatcher component is deliberately sparse to allow the creation
-of API specific event objects by inheritance using OOP. This allows for
-elegant and readable code in complex applications.
+EventDispatcher组件提供了一个刻意保持简洁的 :class:`Symfony\\Component\\EventDispatcher\\Event`
+基类，以允许通过使用OOP继承来创建特定事件对象的API。它让复杂应用中的代码保持优雅和可读。
 
-The :class:`Symfony\\Component\\EventDispatcher\\GenericEvent` is available
-for convenience for those who wish to use just one event object throughout
-their application. It is suitable for most purposes straight out of the
-box, because it follows the standard observer pattern where the event object
-encapsulates an event 'subject', but has the addition of optional extra
-arguments.
+:class:`Symfony\\Component\\EventDispatcher\\GenericEvent`
+对于那些希望在整个应用中只使用一个事件对象的人来说，它是方便的。
+它适用于大多数直接开箱即用的目的，因为它遵循标准的观察者(observer)模式，其中事件对象封装了一个事件“主题”，但添加了可选的额外参数。
 
-:class:`Symfony\\Component\\EventDispatcher\\GenericEvent` adds some more
-methods in addition to the base class
-:class:`Symfony\\Component\\EventDispatcher\\Event`
+除了 :class:`Symfony\\Component\\EventDispatcher\\Event`
+基类之外，:class:`Symfony\\Component\\EventDispatcher\\GenericEvent` 还添加了一些方法：
 
 * :method:`Symfony\\Component\\EventDispatcher\\GenericEvent::__construct`:
-  Constructor takes the event subject and any arguments;
+  构造函数接受事件主题和任何参数;
 
 * :method:`Symfony\\Component\\EventDispatcher\\GenericEvent::getSubject`:
-  Get the subject;
+  获取主题;
 
 * :method:`Symfony\\Component\\EventDispatcher\\GenericEvent::setArgument`:
-  Sets an argument by key;
+  通过键来设置参数;
 
 * :method:`Symfony\\Component\\EventDispatcher\\GenericEvent::setArguments`:
-  Sets arguments array;
+  设置参数数组;
 
 * :method:`Symfony\\Component\\EventDispatcher\\GenericEvent::getArgument`:
-  Gets an argument by key;
+  通过键来获取参数;
 
 * :method:`Symfony\\Component\\EventDispatcher\\GenericEvent::getArguments`:
-  Getter for all arguments;
+  获取所有参数;
 
 * :method:`Symfony\\Component\\EventDispatcher\\GenericEvent::hasArgument`:
-  Returns true if the argument key exists;
+  如果给定的参数键存在，则返回 ``true``;
 
-The ``GenericEvent`` also implements :phpclass:`ArrayAccess` on the event
-arguments which makes it very convenient to pass extra arguments regarding
-the event subject.
+``GenericEvent`` 还在事件的参数上实现
+:phpclass:`ArrayAccess`，这使得传递关于事件主题的额外参数变得非常方便。
 
-The following examples show use-cases to give a general idea of the flexibility.
-The examples assume event listeners have been added to the dispatcher.
+以下示例展示了可以大致了解其灵活性的用例。这些示例假定对应事件监听器已添加到调度器中。
 
-Passing a subject::
+传递一个主题::
 
     use Symfony\Component\EventDispatcher\GenericEvent;
 
@@ -65,8 +57,7 @@ Passing a subject::
         }
     }
 
-Passing and processing arguments using the :phpclass:`ArrayAccess` API to
-access the event arguments::
+使用 :phpclass:`ArrayAccess` API来访问事件的参数，以传递和处理参数::
 
     use Symfony\Component\EventDispatcher\GenericEvent;
 
@@ -81,14 +72,14 @@ access the event arguments::
         public function handler(GenericEvent $event)
         {
             if (isset($event['type']) && $event['type'] === 'foo') {
-                // ... do something
+                // ... 做一些事情
             }
 
             $event['counter']++;
         }
     }
 
-Filtering data::
+过滤数据::
 
     use Symfony\Component\EventDispatcher\GenericEvent;
 
