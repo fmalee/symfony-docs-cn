@@ -93,7 +93,7 @@ Encore中的所有内容都是通过项目根目录下的 ``webpack.config.js`` 
                 {{ encore_entry_link_tags('app') }}
 
                 <!-- 渲染一个link标签（如果你的模块引入了任何CSS）
-                     <link rel="stylesheet" src="/build/app.css"> -->
+                     <link rel="stylesheet" href="/build/app.css"> -->
             {% endblock %}
         </head>
         <body>
@@ -172,8 +172,8 @@ jQuery和 ``greet.js`` 已自动添加到输出的文件（``app.js``）中。
 导入和导出语句
 --------------------------------
 
-除了使用如上所示的 ``require`` 和 ``module.exports``，JavaScript还有一种替代语法，这是一种更为公认的标准。
-你可以随你心意选择，它们都做同一件事情。
+除了使用如上所示的 ``require`` 和 ``module.exports``，JavaScript还提供了基于
+`ECMAScript 6 modules`_ 的替代语法，其中包括使用动态导入的功能。
 
 要使用替代语法导出值，请使用 ``exports``：
 
@@ -329,3 +329,4 @@ Encore支持更多功能！有关你可以执行的操作的完整列表，请�
 或者，返回 :ref:`Encore文档列表 <encore-toc>`。
 
 .. _`Encore的index.js文件`: https://github.com/symfony/webpack-encore/blob/master/index.js
+.. _`ECMAScript 6 modules`: https://hacks.mozilla.org/2015/08/es6-in-depth-modules/

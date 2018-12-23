@@ -85,7 +85,7 @@ Symfony框架通过 ``bin/console`` 脚本(如，广为人知的 ``bin/console c
         {
             $this
                 // ...
-                ->addArgument('password', $this->requirePassword ? InputArgument::OPTIONAL : InputArgument::REQUIRED, 'User password')
+                ->addArgument('password', $this->requirePassword ? InputArgument::REQUIRED : InputArgument::OPTIONAL, 'User password')
             ;
         }
     }

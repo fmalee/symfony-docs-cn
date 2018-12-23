@@ -90,12 +90,12 @@
 
 .. code-block:: terminal
 
-    $ git checkout -b improve_install_article upstream/2.8
+    $ git checkout -b improve_install_article upstream/3.4
 
-在此示例中，分支的名称是 ``improve_install_article``，并且该 ``upstream/2.8``
-值告诉Git基于 ``upstream`` 远程的 ``2.8`` 分支创建此分支，该分支是原始的Symfony文档仓库。
+在此示例中，分支的名称是 ``improve_install_article``，并且该 ``upstream/3.4``
+值告诉Git基于 ``upstream`` 远程的 ``3.4`` 分支创建此分支，该分支是原始的Symfony文档仓库。
 
-修复应始终基于包含错误的最旧维护分支。现在是 ``2.8`` 分支。
+修复应始终基于包含错误的最旧维护分支。现在是 ``3.4`` 分支。
 如果你正在书写新功能，请切换到包含它的第一个Symfony版本，例如 ``upstream/3.1``。
 不确定是哪个分支？没关系！只需使用 ``upstream/master`` 分支。
 
@@ -126,7 +126,7 @@
 .. image:: /_images/contributing/docs-pull-request-change-base.png
    :align: center
 
-在此示例中，**base fork** 应该是 ``symfony/symfony-docs``，并且 **base** 分支应该是 ``2.8``，
+在此示例中，**base fork** 应该是 ``symfony/symfony-docs``，并且 **base** 分支应该是 ``3.4``，
 就是选择你更改的那个分支。
 **head fork** 应该是你的分叉副本 ``symfony-docs``，**compare** 分支应该是 ``improve_install_article``，
 这是你所创建的分支的名称以及你做修改的地方。
@@ -167,7 +167,7 @@
     # 基于最早维护的版本创建一个新分支
     $ cd projects/symfony-docs/
     $ git fetch upstream
-    $ git checkout -b my_changes upstream/2.8
+    $ git checkout -b my_changes upstream/3.4
 
     # ... 做修改工作
 
@@ -190,18 +190,18 @@
 检查你的更改
 -------------------
 
-`Platform.sh`_ 会在单独环境中自动构建和部署每个GitHub拉取请求 ，你可以在浏览器上访问该环境以查看更改。
+`SymfonyCloud`_ 会在单独环境中自动构建和部署每个GitHub拉取请求，你可以在浏览器上访问该环境以查看更改。
 
-.. image:: /_images/contributing/docs-pull-request-platformsh.png
+.. image:: /_images/contributing/docs-pull-request-symfonycloud.png
    :align: center
-   :alt:   Platform.sh Pull Request Deployment
+   :alt:   SymfonyCloud Pull Request Deployment
 
-要访问 `Platform.sh`_ 环境的URL，请转到GitHub上的Pull Request页面，单击 **Show all checks** 链接，
-最后单击 ``Details`` 显示Platform.sh服务的链接。
+要访问 `SymfonyCloud`_ 环境的URL，请转到GitHub上的Pull Request页面，单击 **Show all checks** 链接，
+最后单击 ``Details`` 来显示SymfonyCloud服务的链接。
 
 .. note::
 
-    Platform.sh仅自动构建对维护分支的拉取请求。查阅维护分支的 `路线图`_ 。
+    SymfonyCloud仅自动构建对维护分支的拉取请求。查阅维护分支的 `路线图`_ 。
 
 在本地构建文档
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -239,7 +239,7 @@
 与Symfony的源代码一致，文档仓库被拆分为多个分支，对应于Symfony本身的不同版本。
 而 ``master`` 分支对应的是代码开发分支的文档。
 
-除非你书写在Symfony 2.8之后引入的功能，否则你的更改应始终基于 ``2.8`` 分支。
+除非你书写在Symfony3.4之后引入的功能，否则你的更改应始终基于 ``3.4`` 分支。
 文档管理员将使用必要的Git-magic将你的更改应用于文档的所有活动分支。
 
 如果我想在没有完全完成的情况下提交作品怎么办？
@@ -268,7 +268,7 @@
 .. _`SymfonyConnect`: https://connect.symfony.com/
 .. _`Symfony文档徽章`: https://connect.symfony.com/badge/36/symfony-documentation-contributor
 .. _`sync your fork`: https://help.github.com/articles/syncing-a-fork
-.. _`Platform.sh`: https://platform.sh
+.. _`SymfonyCloud`: https://symfony.com/cloud
 .. _`路线图`: https://symfony.com/roadmap
 .. _`pip`: https://pip.pypa.io/en/stable/
 .. _`pip安装`: https://pip.pypa.io/en/stable/installing/

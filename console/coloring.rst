@@ -7,7 +7,7 @@
 
     默认情况下，Windows命令控制台不支持输出着色。
     控制台组件禁用Windows系统的输出着色，但如果你的命令调用其他发出(emit)颜色序列的脚本，则它们将错误地显示为原始转义字符。
-    安装 `Cmder`_、`ConEmu`_、`ANSICON`_ 或 `Mintty`_ （默认情况下在GitBash和Cygwin中使用）免费应用，
+    安装 `Cmder`_、`ConEmu`_、`ANSICON`_、`Mintty`_ （默认情况下在GitBash和Cygwin中使用）或 `Hyper`_ 免费应用，
     为Windows命令控制台添加着色支持。
 
 使用颜色样式
@@ -70,3 +70,4 @@
 .. _ConEmu: https://conemu.github.io/
 .. _ANSICON: https://github.com/adoxa/ansicon/releases
 .. _Mintty: https://mintty.github.io/
+.. _Hyper: https://hyper.is/

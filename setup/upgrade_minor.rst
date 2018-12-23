@@ -43,7 +43,7 @@
 
 .. code-block:: terminal
 
-    $ composer update "symfony/*" --with-all-dependencies
+    $ composer update "symfony/*"
 
 .. include:: /setup/_update_dep_errors.rst.inc
 

@@ -274,6 +274,6 @@
 
 生成的代码如下::
 
-    $this->services[Foo:class] = new Baz(new Bar(new Foo()));
+    $this->services[Foo::class] = new Baz(new Bar(new Foo()));
 
 .. _装饰器模式: https://en.wikipedia.org/wiki/Decorator_pattern

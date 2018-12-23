@@ -54,13 +54,14 @@
     use Symfony\Component\Validator\Constraint;
     use Symfony\Component\Validator\ConstraintValidator;
     use Symfony\Component\Validator\Exception\UnexpectedTypeException;
+    use Symfony\Component\Validator\Exception\UnexpectedValueException;
 
     class ContainsAlphanumericValidator extends ConstraintValidator
     {
         public function validate($value, Constraint $constraint)
         {
             if (!$constraint instanceof ContainsAlphanumeric) {
-               throw new UnexpectedTypeException($constraint, ContainsAlphanumeric::class);
+                throw new UnexpectedTypeException($constraint, ContainsAlphanumeric::class);
             }
 
             // 自定义约束应该忽略null和空值，以允许其他约束（NotBlank、NotNull等）处理
@@ -69,7 +70,11 @@
             }
 
             if (!is_string($value)) {
-                throw new UnexpectedTypeException($value, 'string');
+                // 如果你的验证器无法处理传递的类型，则可以抛出此异常以将其标记为无效
+                throw new UnexpectedValueException($value, 'string');
+
+                // 使用管道分隔多个类型
+                // throw new UnexpectedValueException($value, 'string|int');
             }
 
             if (!preg_match('/^[a-zA-Z0-9]+$/', $value, $matches)) {
@@ -85,6 +90,9 @@
 ``buildViolation()`` 方法将错误消息作为其参数并返回一个
 :class:`Symfony\\Component\\Validator\\Violation\\ConstraintViolationBuilderInterface`
 实例。最后调用 ``addViolation()`` 方法增加了违规的上下文。
+
+.. versionadded:: 4.2
+    在Symfony4.2中引入了 ``UnexpectedValueException``。
 
 使用新的验证器
 -----------------------

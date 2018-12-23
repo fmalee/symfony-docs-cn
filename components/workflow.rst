@@ -58,7 +58,7 @@ Workflow组件
 一个注册表还将帮助你确定一个工作流是否支持你正尝试使用的对象::
 
     use Symfony\Component\Workflow\Registry;
-    use Symfony\Component\Workflow\WorkflowInterface\InstanceOfSupportStrategy;
+    use Symfony\Component\Workflow\SupportStrategy\InstanceOfSupportStrategy;
     use Acme\Entity\BlogPost;
     use Acme\Entity\Newsletter;
 

@@ -91,7 +91,7 @@ Yarn也会创建/更新 ``yarn.lock``（如果你使用npm5+，则调用 ``packa
 
 .. code-block:: css
 
-    // assets/css/app.css
+    /* assets/css/app.css */
     body {
         background-color: lightgray;
     }

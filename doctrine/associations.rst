@@ -128,8 +128,8 @@ ManyToOne / OneToMany
     >
     (press enter again to finish)
 
-该操作改变了 *两个* 变化。
-首先，向 ``Product`` 实体添加新的 ``category`` 属性（以及getter和setter方法）：
+这使得 *两个* 实体发生了改变。首先，它为 ``Product`` 实体添加了一个新的 ``category``
+属性（以及getter和setter方法）：
 
 .. configuration-block::
 

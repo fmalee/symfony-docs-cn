@@ -70,6 +70,8 @@
     为了能将参数传递给 ``BlogType`` 构造函数，你需要将其
     :doc:`注册为服务并应用form.type标签 </form/form_dependencies>`。
 
+.. _forms-empty-data-closure:
+
 选项2：提供一个闭包
 ---------------------------
 
