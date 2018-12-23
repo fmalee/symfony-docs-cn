@@ -2,127 +2,104 @@
    single: EventDispatcher
    single: Components; EventDispatcher
 
-The EventDispatcher Component
+EventDispatcher组件
 =============================
 
-    The EventDispatcher component provides tools that allow your application
-    components to communicate with each other by dispatching events and
-    listening to them.
+    EventDispatcher组件提供的工具允许应用组件通过调度事件并监听它们来相互通信。
 
-Introduction
+介绍
 ------------
 
-Object-oriented code has gone a long way to ensuring code extensibility.
-By creating classes that have well defined responsibilities, your code becomes
-more flexible and a developer can extend them with subclasses to modify
-their behaviors. But if they want to share the changes with other developers
-who have also made their own subclasses, code inheritance is no longer the
-answer.
+面向对象的代码在确保代码可扩展方面已经走了很长的路。
+通过创建具有明确定义职责的类，你的代码变得更加灵活，而且开发人员可以使用子类扩展它们以修改其行为。
+但是，如果他们想与已经创建自己的子类的其他开发人员共享更改，则代码继承不再是答案。
 
-Consider the real-world example where you want to provide a plugin system
-for your project. A plugin should be able to add methods, or do something
-before or after a method is executed, without interfering with other plugins.
-This is not an easy problem to solve with single inheritance, and even if
-multiple inheritance was possible with PHP, it comes with its own drawbacks.
+思考一下你希望为你的项目提供插件系统的实际示例。
+一个插件应该能够添加方法，或者在执行一个方法之前或之后进行某些操作而不会干扰其他插件。
+使用单继承不再能简单的解决这些问题，即使PHP可以实现多重继承，它也有其自身的缺点。
 
-The Symfony EventDispatcher component implements the `Mediator`_ and `Observer`_
-design patterns to make all these things possible and to make your projects
-truly extensible.
+Symfony的EventDispatcher组件实现了 `中介者`_ 和 `观察者`_
+设计模式，使所有这些设想成为可能，并让你的项目真正可扩展。
 
-Take an example from :doc:`the HttpKernel component </components/http_kernel>`.
-Once a ``Response`` object has been created, it may be useful to allow other
-elements in the system to modify it (e.g. add some cache headers) before
-it's actually used. To make this possible, the Symfony kernel throws an
-event - ``kernel.response``. Here's how it works:
+以 :doc:`HttpKernel组件 </components/http_kernel>` 为例。
+一旦创建了一个 ``Response`` 对象，它将允许系统中的其他元素在实际使用之前修改它（例如添加一些缓存头）。
+为了实现这一点，Symfony内核抛出一个事件 - ``kernel.response``。以下是它的工作原理：
 
-* A *listener* (PHP object) tells a central *dispatcher* object that it
-  wants to listen to the ``kernel.response`` event;
+* 一个 *监听器* （PHP对象）告诉了一个中心 *调度器* 对象，它希望监听 ``kernel.response`` 事件;
 
-* At some point, the Symfony kernel tells the *dispatcher* object to dispatch
-  the ``kernel.response`` event, passing with it an ``Event`` object that
-  has access to the ``Response`` object;
+* 在某些时候，Symfony内核告诉 *调度器* 对象调度 ``kernel.response``
+  事件，并向其传递一个可以访问 ``Response`` 对象的 ``Event`` 对象;
 
-* The dispatcher notifies (i.e. calls a method on) all listeners of the
-  ``kernel.response`` event, allowing each of them to make modifications
-  to the ``Response`` object.
+* 该调度器通知（即调用一个方法）
+  ``kernel.response`` 事件的所有监听器，并允许每个监听器对 ``Response`` 对象进行修改。
 
 .. index::
    single: EventDispatcher; Events
 
-Installation
+安装
 ------------
 
 .. code-block:: terminal
 
     $ composer require symfony/event-dispatcher
 
-Alternatively, you can clone the `<https://github.com/symfony/event-dispatcher>`_ repository.
+或者，你可以克隆 `<https://github.com/symfony/event-dispatcher>`_ 仓库。
 
 .. include:: /components/require_autoload.rst.inc
 
-Usage
+用法
 -----
 
 .. seealso::
 
-    This article explains how to use the EventDispatcher features as an
-    independent component in any PHP application. Read the :doc:`/event_dispatcher`
-    article to learn about how to use it in Symfony applications.
+    本文介绍如何在任何PHP应用中将EventDispatcher功能用作独立组件。
+    请阅读 :doc:`/event_dispatcher` 一文，了解如何在Symfony应用中使用它。
 
-Events
+事件
 ~~~~~~
 
-When an event is dispatched, it's identified by a unique name (e.g.
-``kernel.response``), which any number of listeners might be listening to.
-An :class:`Symfony\\Component\\EventDispatcher\\Event` instance is also
-created and passed to all of the listeners. As you'll see later, the ``Event``
-object itself often contains data about the event being dispatched.
+当一个事件被调度时，它由一个唯一名称（例如 ``kernel.response``）标识，任意数量的监听器可能正在监听该名称。
+还会创建一个 :class:`Symfony\\Component\\EventDispatcher\\Event`
+实例并将其传递给所有监听器。正如你稍后将看到的，``Event`` 对象本身通常包含有关正在调度的事件的数据。
 
 .. index::
    pair: EventDispatcher; Naming conventions
 
-Naming Conventions
+命名约定
 ..................
 
-The unique event name can be any string, but optionally follows a few
-naming conventions:
+唯一的事件名称可以是任何字符串，但可以选择遵循一些命名约定：
 
-* Use only lowercase letters, numbers, dots (``.``) and underscores (``_``);
-* Prefix names with a namespace followed by a dot (e.g. ``order.``, ``user.*``);
-* End names with a verb that indicates what action has been taken (e.g.
-  ``order.placed``).
+* 仅使用小写字母、数字、点号（``.``）以及下划线（``_``）;
+
+* 使用一个命名空间前缀，后跟一个点号（例如 ``order.``、``user.*``）;
+
+* 使用一个表示已采取的动作的动词后缀（例如 ``order.placed``）。
 
 .. index::
    single: EventDispatcher; Event subclasses
 
-Event Names and Event Objects
+事件名称和事件对象
 .............................
 
-When the dispatcher notifies listeners, it passes an actual ``Event`` object
-to those listeners. The base ``Event`` class contains a method for stopping
-:ref:`event propagation <event_dispatcher-event-propagation>`, but not much
-else.
+当调度器通知监听器时，它会将一个实际的 ``Event`` 对象传递给这些监听器。
+``Event`` 基类包含一个停止
+:ref:`事件传播 <event_dispatcher-event-propagation>` 的方法，不再包含其他方法。
 
 .. seealso::
 
-    Read ":doc:`/components/event_dispatcher/generic_event`" for more
-    information about this base event object.
+    有关此基础事件对象的更多信息，请阅读 :doc:`/components/event_dispatcher/generic_event`。
 
-Often times, data about a specific event needs to be passed along with the
-``Event`` object so that the listeners have the needed information. In such
-case, a special subclass that has additional methods for retrieving and
-overriding information can be passed when dispatching an event. For example,
-the ``kernel.response`` event uses a
-:class:`Symfony\\Component\\HttpKernel\\Event\\FilterResponseEvent`, which
-contains methods to get and even replace the ``Response`` object.
+通常，有关一个特定事件的数据需要与 ``Event`` 对象一起传递，以便对应监听器具有其所需的信息。
+在这种情况下，可以在调度事件时传递一个具有用于检索和重写信息的额外方法的特殊子类。
+例如，``kernel.response`` 事件使用了一个包含获取甚至替换 ``Response`` 对象的方法的
+:class:`Symfony\\Component\\HttpKernel\\Event\\FilterResponseEvent`。
 
-The Dispatcher
+调度器
 ~~~~~~~~~~~~~~
 
-The dispatcher is the central object of the event dispatcher system. In
-general, a single dispatcher is created, which maintains a registry of
-listeners. When an event is dispatched via the dispatcher, it notifies all
-listeners registered with that event::
+调度器是事件调度器系统的核心对象。通常情况下，会创建单个维护着一个监听器注册表的调度器。
+通过该调度器来调度一个事件时，它会通知所有注册到该事件的监听器::
 
     use Symfony\Component\EventDispatcher\EventDispatcher;
 
@@ -131,48 +108,39 @@ listeners registered with that event::
 .. index::
    single: EventDispatcher; Listeners
 
-Connecting Listeners
+连接监听器
 ~~~~~~~~~~~~~~~~~~~~
 
-To take advantage of an existing event, you need to connect a listener to
-the dispatcher so that it can be notified when the event is dispatched.
-A call to the dispatcher's ``addListener()`` method associates any valid
-PHP callable to an event::
+要使用现有事件，你需要将一个监听器连接到调度器，以便在调度事件时通知它。
+一个对调度器的 ``addListener()`` 方法的调用，会将任何有效的PHP可调用对象关联到一个事件::
 
     $listener = new AcmeListener();
     $dispatcher->addListener('acme.foo.action', array($listener, 'onFooAction'));
 
-The ``addListener()`` method takes up to three arguments:
+``addListener()`` 方法最多需要三个参数：
 
-#. The event name (string) that this listener wants to listen to;
-#. A PHP callable that will be executed when the specified event is dispatched;
-#. An optional priority, defined as a positive or negative integer (defaults to
-   ``0``). The higher the number, the earlier the listener is called. If two
-   listeners have the same priority, they are executed in the order that they
-   were added to the dispatcher.
+#. 此监听器要监听的事件名称（字符串）;
+#. 在调度指定事件时将执行的一个PHP可调用对象;
+#. 一个定义为正整数或负整数（默认为 ``0``）的可选优先级。
+   数字越大，该监听器越早调用。如果两个监听器具有相同的优先级，则按照将它们添加到调度器的顺序执行。
 
 .. note::
 
-    A `PHP callable`_ is a PHP variable that can be used by the
-    ``call_user_func()`` function and returns ``true`` when passed to the
-    ``is_callable()`` function. It can be a ``\Closure`` instance, an object
-    implementing an ``__invoke()`` method (which is what closures are in fact),
-    a string representing a function or an array representing an object
-    method or a class method.
+    `PHP可调用对象`_ 是一个能够由 ``call_user_func()`` 函数使用的PHP变量，并在传递给
+    ``is_callable()`` 函数时返回 ``true``。它可以是一个 ``\Closure`` 实例，一个实现
+    ``__invoke()`` 方法的对象（实际上是闭包），一个表示函数的字符串或一个表示对象方法或类方法的数组。
 
-    So far, you've seen how PHP objects can be registered as listeners.
-    You can also register PHP `Closures`_ as event listeners::
+    到目前为止，你已经了解了如何将PHP对象注册为监听器。你还可以将PHP `闭包`_ 注册为事件监听器::
 
         use Symfony\Component\EventDispatcher\Event;
 
         $dispatcher->addListener('acme.foo.action', function (Event $event) {
-            // will be executed when the acme.foo.action event is dispatched
+            // 将在调度 acme.foo.action 事件时执行
         });
 
-Once a listener is registered with the dispatcher, it waits until the event
-is notified. In the above example, when the ``acme.foo.action`` event is dispatched,
-the dispatcher calls the ``AcmeListener::onFooAction()`` method and passes
-the ``Event`` object as the single argument::
+一旦监听器注册到调度器，它就会一直等待被通知事件。
+在上面的示例中，当 ``acme.foo.action`` 事件被调度时，调度器将调用
+``AcmeListener::onFooAction()`` 方法并将 ``Event`` 对象作为单个参数传递::
 
     use Symfony\Component\EventDispatcher\Event;
 
@@ -186,17 +154,14 @@ the ``Event`` object as the single argument::
         }
     }
 
-The ``$event`` argument is the event object that was passed when dispatching the
-event. In many cases, a special event subclass is passed with extra
-information. You can check the documentation or implementation of each event to
-determine which instance is passed.
+``$event`` 参数是调度事件时所传递的事件对象。在许多案例中，一个包含额外信息的特殊事件子类会一起传递。
+你可以检查每个事件的文档或实现，以确定传递的具体实例。
 
-.. sidebar:: Registering Event Listeners and Subscribers in the Service Container
+.. sidebar:: 在服务容器中注册事件监听器和订阅器
 
-    Registering service definitions and tagging them with the
-    ``kernel.event_listener`` and ``kernel.event_subscriber`` tags is not enough
-    to enable the event listeners and event subscribers. You must also register
-    a compiler pass called ``RegisterListenersPass()`` in the container builder::
+    仅注册服务的定义并将它们标记为 ``kernel.event_listener`` 和 ``kernel.event_subscriber``
+    标签，还不足以启用事件监听器和事件订阅器。你还必须在容器构建器中注册一个名为
+    ``RegisterListenersPass()`` 的编译器传递::
 
         use Symfony\Component\DependencyInjection\ContainerBuilder;
         use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
@@ -205,51 +170,45 @@ determine which instance is passed.
         use Symfony\Component\EventDispatcher\DependencyInjection\RegisterListenersPass;
 
         $containerBuilder = new ContainerBuilder(new ParameterBag());
-        // register the compiler pass that handles the 'kernel.event_listener'
-        // and 'kernel.event_subscriber' service tags
+        // 注册处理 'kernel.event_listener' 和
+        // 'kernel.event_subscriber' 服务标签的编译器传递
         $containerBuilder->addCompilerPass(new RegisterListenersPass());
 
         $containerBuilder->register('event_dispatcher', EventDispatcher::class);
 
-        // registers an event listener
+        // 注册一个事件监听器
         $containerBuilder->register('listener_service_id', \AcmeListener::class)
             ->addTag('kernel.event_listener', array(
                 'event' => 'acme.foo.action',
                 'method' => 'onFooAction',
             ));
 
-        // registers an event subscriber
+        // 注册一个事件订阅器
         $containerBuilder->register('subscriber_service_id', \AcmeSubscriber::class)
             ->addTag('kernel.event_subscriber');
 
-    By default, the listeners pass assumes that the event dispatcher's service
-    id is ``event_dispatcher``, that event listeners are tagged with the
-    ``kernel.event_listener`` tag and that event subscribers are tagged
-    with the ``kernel.event_subscriber`` tag. You can change these default
-    values by passing custom values to the constructor of ``RegisterListenersPass``.
+    默认情况下，*监听器传递* 假设：事件调度器的服务id是 ``event_dispatcher``，事件监听器使用
+    ``kernel.event_listener`` 标签来标记，并且事件订阅器使用 ``kernel.event_subscriber``
+    标签进行标记。你可以通过将自定义值传递给 ``RegisterListenersPass`` 的构造函数来更改这些默认值。
 
 .. _event_dispatcher-closures-as-listeners:
 
 .. index::
    single: EventDispatcher; Creating and dispatching an event
 
-Creating and Dispatching an Event
+创建和调度事件
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In addition to registering listeners with existing events, you can create
-and dispatch your own events. This is useful when creating third-party
-libraries and also when you want to keep different components of your own
-system flexible and decoupled.
+除了使用现有事件来注册监听器之外，你还可以创建和调度自己的事件。
+这在创建第三方库以及你希望保持自己系统的不同组件的灵活性和分离性时非常有用。
 
 .. _creating-an-event-object:
 
-Creating an Event Class
+创建事件类
 .......................
 
-Suppose you want to create a new event - ``order.placed`` - that is dispatched
-each time a customer orders a product with your application. When dispatching
-this event, you'll pass a custom event instance that has access to the placed
-order. Start by creating this custom event class and documenting it::
+假设你要创建一个新事件 - ``order.placed`` - 每次客户使用你的应用订购产品时都会调度该事件。
+调度此事件时，你将传递一个可以访问已下订单的自定义事件实例。首先创建此自定义事件类并编写它::
 
     namespace Acme\Store\Event;
 
@@ -257,8 +216,7 @@ order. Start by creating this custom event class and documenting it::
     use Acme\Store\Order;
 
     /**
-     * The order.placed event is dispatched each time an order is created
-     * in the system.
+     * 每次在系统中创建一个订单时，都会调度 order.placed 事件。
      */
     class OrderPlacedEvent extends Event
     {
@@ -277,60 +235,53 @@ order. Start by creating this custom event class and documenting it::
         }
     }
 
-Each listener now has access to the order via the ``getOrder()`` method.
+现在，每个监听器都可以通过 ``getOrder()`` 方法来访问订单。
 
 .. note::
 
-    If you don't need to pass any additional data to the event listeners, you
-    can also use the default
-    :class:`Symfony\\Component\\EventDispatcher\\Event` class. In such case,
-    you can document the event and its name in a generic ``StoreEvents`` class,
-    similar to the :class:`Symfony\\Component\\HttpKernel\\KernelEvents`
-    class.
+    如果你不需要将任何额外数据传递给事件监听器，则可以使用默认的
+    :class:`Symfony\\Component\\EventDispatcher\\Event` 类。
+    在这种情况下，你可以在一个通用的 ``StoreEvents`` 类中记录事件及其名称，类似于
+    :class:`Symfony\\Component\\HttpKernel\\KernelEvents` 类。
 
-Dispatch the Event
+调度事件
 ..................
 
-The :method:`Symfony\\Component\\EventDispatcher\\EventDispatcher::dispatch`
-method notifies all listeners of the given event. It takes two arguments:
-the name of the event to dispatch and the ``Event`` instance to pass to
-each listener of that event::
+:method:`Symfony\\Component\\EventDispatcher\\EventDispatcher::dispatch`
+方法会通知给定事件的所有监听器。
+它需要两个参数：要调度的事件的名称以及要传递给该事件的每个监听器的 ``Event`` 实例::
 
     use Acme\Store\Order;
     use Acme\Store\Event\OrderPlacedEvent;
 
-    // the order is somehow created or retrieved
+    // 以某种方式创建或检索订单
     $order = new Order();
     // ...
 
-    // creates the OrderPlacedEvent and dispatches it
+    // 创建 OrderPlacedEvent 并调度它
     $event = new OrderPlacedEvent($order);
     $dispatcher->dispatch(OrderPlacedEvent::NAME, $event);
 
-Notice that the special ``OrderPlacedEvent`` object is created and passed to
-the ``dispatch()`` method. Now, any listener to the ``order.placed``
-event will receive the ``OrderPlacedEvent``.
+请注意，特定的 ``OrderPlacedEvent`` 对象已创建并传递给 ``dispatch()`` 方法。
+现在，任何监听 ``order.placed`` 事件的监听器都会接收到 ``OrderPlacedEvent``。
 
 .. index::
    single: EventDispatcher; Event subscribers
 
 .. _event_dispatcher-using-event-subscribers:
 
-Using Event Subscribers
+使用事件订阅器
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-The most common way to listen to an event is to register an *event listener*
-with the dispatcher. This listener can listen to one or more events and
-is notified each time those events are dispatched.
+监听事件的最常用方法是向调度器注册一个 *事件监听器*。
+此监听器可以监听一个或多个事件，并在每次这些事件被调度时得到通知。
 
-Another way to listen to events is via an *event subscriber*. An event
-subscriber is a PHP class that's able to tell the dispatcher exactly which
-events it should subscribe to. It implements the
+监听事件的另一种方式是通过 *事件订阅器*。
+事件订阅器是一个能够告诉调度器它应该订阅哪些事件的PHP类。它实现了一个需要一个名为
+:method:`Symfony\\Component\\EventDispatcher\\EventSubscriberInterface::getSubscribedEvents`
+的静态方法的
 :class:`Symfony\\Component\\EventDispatcher\\EventSubscriberInterface`
-interface, which requires a single static method called
-:method:`Symfony\\Component\\EventDispatcher\\EventSubscriberInterface::getSubscribedEvents`.
-Take the following example of a subscriber that subscribes to the
-``kernel.response`` and ``order.placed`` events::
+接口。以订阅了 ``kernel.response`` 和 ``order.placed`` 事件的订阅器为例::
 
     namespace Acme\Store\Event;
 
@@ -368,11 +319,8 @@ Take the following example of a subscriber that subscribes to the
         }
     }
 
-This is very similar to a listener class, except that the class itself can
-tell the dispatcher which events it should listen to. To register a subscriber
-with the dispatcher, use the
-:method:`Symfony\\Component\\EventDispatcher\\EventDispatcher::addSubscriber`
-method::
+这与一个监听器类非常相似，除了它的类本身可以告诉调度器它应该监听哪些事件外。要向调度器注册订阅器，请使用
+:method:`Symfony\\Component\\EventDispatcher\\EventDispatcher::addSubscriber` 方法::
 
     use Acme\Store\Event\StoreSubscriber;
     // ...
@@ -380,33 +328,26 @@ method::
     $subscriber = new StoreSubscriber();
     $dispatcher->addSubscriber($subscriber);
 
-The dispatcher will automatically register the subscriber for each event
-returned by the ``getSubscribedEvents()`` method. This method returns an array
-indexed by event names and whose values are either the method name to call
-or an array composed of the method name to call and a priority (a positive or
-negative integer that defaults to ``0``).
+调度器将自动为通过 ``getSubscribedEvents()`` 方法返回的每个事件注册该订阅器。
+此方法返回由事件名称索引的数组，其值是要调用的方法名称或由要调用的方法名称和优先级（一个正或负整数，默认为 ``0``）组成的数组。
 
-The example above shows how to register several listener methods for the same
-event in subscriber and also shows how to pass the priority of each listener
-method. The higher the number, the earlier the method is called. In the above
-example, when the ``kernel.response`` event is triggered, the methods
-``onKernelResponsePre()`` and ``onKernelResponsePost()`` are called in that
-order.
+上面的示例展示了如何为订阅器中的同一事件注册多个监听器方法，还展示了如何传递每个监听器方法的优先级。
+优先级数字越大，该方法调用越早。在上面的例子中，当 ``kernel.response``
+事件被触发，``onKernelResponsePre()`` 和 ``onKernelResponsePost()`` 将按顺序被调用。
 
 .. index::
    single: EventDispatcher; Stopping event flow
 
 .. _event_dispatcher-event-propagation:
 
-Stopping Event Flow/Propagation
+停止事件流/传播
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In some cases, it may make sense for a listener to prevent any other listeners
-from being called. In other words, the listener needs to be able to tell
-the dispatcher to stop all propagation of the event to future listeners
-(i.e. to not notify any more listeners). This can be accomplished from
-inside a listener via the
-:method:`Symfony\\Component\\EventDispatcher\\Event::stopPropagation` method::
+在某些情况下，一个监听器可能会阻止任何其他监听器被调用。
+换句话说，该监听器需要能够告诉调度器停止将事件传播给后面的监听器（即不通知任何更多的监听器）的方法。
+这可以通过
+:method:`Symfony\\Component\\EventDispatcher\\Event::stopPropagation`
+方法从监听器内部完成::
 
     use Acme\Store\Event\OrderPlacedEvent;
 
@@ -417,12 +358,11 @@ inside a listener via the
         $event->stopPropagation();
     }
 
-Now, any listeners to ``order.placed`` that have not yet been called will
-*not* be called.
+现在，任何尚未调用的监听 ``order.placed`` 的监听器都 *不会* 被调用。
 
-It is possible to detect if an event was stopped by using the
+可以通过使用返回布尔值的
 :method:`Symfony\\Component\\EventDispatcher\\Event::isPropagationStopped`
-method which returns a boolean value::
+方法来检测一个事件是否已停止::
 
     // ...
     $dispatcher->dispatch('foo.event', $event);
@@ -435,54 +375,50 @@ method which returns a boolean value::
 
 .. _event_dispatcher-dispatcher-aware-events:
 
-EventDispatcher Aware Events and Listeners
+EventDispatcher感知事件和监听器
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The ``EventDispatcher`` always passes the dispatched event, the event's
-name and a reference to itself to the listeners. This can lead to some advanced
-applications of the ``EventDispatcher`` including dispatching other events inside
-listeners, chaining events or even lazy loading listeners into the dispatcher object.
+``EventDispatcher`` 始终传递被调度的事件、该事件的名称以及一个本身的引用到监听器。
+这可能引出一些 ``EventDispatcher``
+的高级应用，包括在监听器内部调度其他事件、事件链，甚至延迟加载监听器到调度器对象中。
 
 .. index::
    single: EventDispatcher; Dispatcher shortcuts
 
 .. _event_dispatcher-shortcuts:
 
-Dispatcher Shortcuts
+调度器快捷方式
 ~~~~~~~~~~~~~~~~~~~~
 
-If you do not need a custom event object, you can rely on a plain
-:class:`Symfony\\Component\\EventDispatcher\\Event` object. You do not even
-need to pass this to the dispatcher as it will create one by default unless you
-specifically pass one::
+如果你不需要一个自定义事件对象，则可以依赖一个原生的
+:class:`Symfony\\Component\\EventDispatcher\\Event` 对象。
+你甚至不需要将该对象传递给调度器，因为它将默认创建一个，除非你特别传递一个::
 
     $dispatcher->dispatch('order.placed');
 
-Moreover, the event dispatcher always returns whichever event object that
-was dispatched, i.e. either the event that was passed or the event that
-was created internally by the dispatcher. This allows for nice shortcuts::
+此外，事件调度器始终返回调度的任何事件对象，即传递的事件或调度器内部创建的事件。
+这就产生了一个友好的快捷方式::
 
     if (!$dispatcher->dispatch('foo.event')->isPropagationStopped()) {
         // ...
     }
 
-Or::
+或者::
 
     $event = new OrderPlacedEvent($order);
     $order = $dispatcher->dispatch('bar.event', $event)->getOrder();
 
-and so on.
+等等。
 
 .. index::
    single: EventDispatcher; Event name introspection
 
 .. _event_dispatcher-event-name-introspection:
 
-Event Name Introspection
+事件名称自省
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-The ``EventDispatcher`` instance, as well as the name of the event that
-is dispatched, are passed as arguments to the listener::
+``EventDispatcher`` 实例以及被调度事件的名称，都会作为参数传递给监听器::
 
     use Symfony\Component\EventDispatcher\Event;
     use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -491,21 +427,20 @@ is dispatched, are passed as arguments to the listener::
     {
         public function myEventListener(Event $event, $eventName, EventDispatcherInterface $dispatcher)
         {
-            // ... do something with the event name
+            // ... 用事件名称做一些事情
         }
     }
 
-Other Dispatchers
+其他调度器
 -----------------
 
-Besides the commonly used ``EventDispatcher``, the component comes
-with some other dispatchers:
+除了常用的 ``EventDispatcher``，本组件还附带一些其他调度器：
 
 * :doc:`/components/event_dispatcher/container_aware_dispatcher`
 * :doc:`/components/event_dispatcher/immutable_dispatcher`
 * :doc:`/components/event_dispatcher/traceable_dispatcher`
 
-Learn More
+扩展阅读
 ----------
 
 .. toctree::
@@ -515,11 +450,11 @@ Learn More
     /components/event_dispatcher/*
     /event_dispatcher/*
 
-* :ref:`The kernel.event_listener tag <dic-tags-kernel-event-listener>`
-* :ref:`The kernel.event_subscriber tag <dic-tags-kernel-event-subscriber>`
+* :ref:`kernel.event_listener标签 <dic-tags-kernel-event-listener>`
+* :ref:`kernel.event_subscriber标签 <dic-tags-kernel-event-subscriber>`
 
-.. _Mediator: https://en.wikipedia.org/wiki/Mediator_pattern
-.. _Observer: https://en.wikipedia.org/wiki/Observer_pattern
-.. _Closures: https://php.net/manual/en/functions.anonymous.php
-.. _PHP callable: https://php.net/manual/en/language.pseudo-types.php#language.types.callback
+.. _中介者: https://en.wikipedia.org/wiki/Mediator_pattern
+.. _观察者: https://en.wikipedia.org/wiki/Observer_pattern
+.. _闭包: https://php.net/manual/en/functions.anonymous.php
+.. _PHP可调用对象: https://php.net/manual/en/language.pseudo-types.php#language.types.callback
 .. _Packagist: https://packagist.org/packages/symfony/event-dispatcher

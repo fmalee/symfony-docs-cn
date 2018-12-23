@@ -1,10 +1,10 @@
 .. index::
    single: EventDispatcher; Service container aware
 
-The Container Aware Event Dispatcher
+容器感知事件调度器
 ====================================
 
 .. caution::
 
-    The ``ContainerAwareEventDispatcher`` was removed in Symfony 4.0. Use
-    ``EventDispatcher`` with closure-proxy injection instead.
+    将在Symfony4.0去除 ``ContainerAwareEventDispatcher``。
+    改为使用具有 closure-proxy 注入的 ``EventDispatcher``。

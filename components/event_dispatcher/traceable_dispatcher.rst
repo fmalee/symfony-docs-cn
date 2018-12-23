@@ -2,19 +2,17 @@
     single: EventDispatcher; Debug
     single: EventDispatcher; Traceable
 
-The Traceable Event Dispatcher
+可追踪事件调度器
 ==============================
 
-The :class:`Symfony\\Component\\EventDispatcher\\Debug\\TraceableEventDispatcher`
-is an event dispatcher that wraps any other event dispatcher and can then
-be used to determine which event listeners have been called by the dispatcher.
-Pass the event dispatcher to be wrapped and an instance of the
-:class:`Symfony\\Component\\Stopwatch\\Stopwatch` to its constructor::
+:class:`Symfony\\Component\\EventDispatcher\\Debug\\TraceableEventDispatcher`
+是一个封装任何其他事件调度器的事件调度器，它可用于确定该调度器调用了哪些事件监听器。
+将要封装的事件调度器及一个 :class:`Symfony\\Component\\Stopwatch\\Stopwatch` 实例传递给其构造函数::
 
     use Symfony\Component\EventDispatcher\Debug\TraceableEventDispatcher;
     use Symfony\Component\Stopwatch\Stopwatch;
 
-    // the event dispatcher to debug
+    // 要调试的事件调度器
     $dispatcher = ...;
 
     $traceableEventDispatcher = new TraceableEventDispatcher(
@@ -22,12 +20,11 @@ Pass the event dispatcher to be wrapped and an instance of the
         new Stopwatch()
     );
 
-Now, the ``TraceableEventDispatcher`` can be used like any other event dispatcher
-to register event listeners and dispatch events::
+现在，可以像任何其他事件调度器一样使用 ``TraceableEventDispatcher`` 来注册事件监听器以及调度事件::
 
     // ...
 
-    // registers an event listener
+    // 注册一个事件监听器
     $eventListener = ...;
     $priority = ...;
     $traceableEventDispatcher->addListener(
@@ -36,16 +33,15 @@ to register event listeners and dispatch events::
         $priority
     );
 
-    // dispatches an event
+    // 调度一个事件
     $event = ...;
     $traceableEventDispatcher->dispatch('event.the_name', $event);
 
-After your application has been processed, you can use the
+处理完你的应用之后，可以使用
 :method:`Symfony\\Component\\EventDispatcher\\Debug\\TraceableEventDispatcherInterface::getCalledListeners`
-method to retrieve an array of event listeners that have been called in
-your application. Similarly, the
+方法来检索已在应用中调用的事件监听器数组。同样，
 :method:`Symfony\\Component\\EventDispatcher\\Debug\\TraceableEventDispatcherInterface::getNotCalledListeners`
-method returns an array of event listeners that have not been called::
+方法返回一个尚未调用的事件监听器数组::
 
     // ...
 
