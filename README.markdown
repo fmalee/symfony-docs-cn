@@ -8,6 +8,7 @@
 
 - `master`
   - `1310e0dc917f676f75662d6fe1053b3adaa695b6`（2018-12-04）
+    - `components/dom_crawler.rst`
 - `4.2`
   - `78123c8c25a67e8aa8e53ff5bb33252c79bdabae`（2018-12-23）
   - `2086b162ba7b8e310a38fb108468cab6dd0d18fa`（2018-12-04）
