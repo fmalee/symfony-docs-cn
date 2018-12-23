@@ -59,7 +59,6 @@ Symfony的自动装配被设计为可预测的：如果不清楚应该传递哪�
 这意味着你可以立即使用它们而无需 *任何* 配置。
 
 但是，为了更好地了解自动装配，以下示例显式的配置了这两个服务。
-另外，为了简单起见，配置 ``TwitterClient`` 为 :ref:`共有 <container-public>` 服务：
 
 .. configuration-block::
 
@@ -76,8 +75,6 @@ Symfony的自动装配被设计为可预测的：如果不清楚应该传递哪�
             App\Service\TwitterClient:
                 # 其余的得感谢_defaults，但每个服务的值都可以被重写
                 autowire: true
-                # 不是必需的，但是对我们的示例有所帮助
-                public: true
 
             App\Util\Rot13Transformer:
                 autowire: true
@@ -94,7 +91,7 @@ Symfony的自动装配被设计为可预测的：如果不清楚应该传递哪�
                 <defaults autowire="true" autoconfigure="true" public="false" />
                 <!-- ... -->
 
-                <service id="App\Service\TwitterClient" autowire="true" public="true" />
+                <service id="App\Service\TwitterClient" autowire="true" />
 
                 <service id="App\Util\Rot13Transformer" autowire="true" />
             </services>
@@ -110,8 +107,7 @@ Symfony的自动装配被设计为可预测的：如果不清楚应该传递哪�
 
         // the autowire method is new in Symfony 3.3
         // in earlier versions, use register() and then call setAutowired(true)
-        $container->autowire(TwitterClient::class)
-            ->setPublic(true);
+        $container->autowire(TwitterClient::class);
 
         $container->autowire(Rot13Transformer::class)
             ->setPublic(false);
@@ -129,11 +125,10 @@ Symfony的自动装配被设计为可预测的：如果不清楚应该传递哪�
         /**
          * @Route("/tweet", methods={"POST"})
          */
-        public function tweet()
+        public function tweet(TwitterClient $twitterClient)
         {
             // 从POST过来的数据获取 $user, $key, $status
 
-            $twitterClient = $this->container->get(TwitterClient::class);
             $twitterClient->tweet($user, $key, $status);
 
             // ...

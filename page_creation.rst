@@ -81,14 +81,6 @@
 #. *创建控制器*: 这是一个构建页面并最终返回 ``Response`` 对象的函数。
    你将在 :doc:`控制器 </controller>` 章节了解有关信息，包括如何返回JSON响应。
 
-.. tip::
-
-    要更快地创建控制器，让Symfony为你生成它：
-
-    .. code-block:: terminal
-
-        $ php bin/console make:controller
-
 .. _annotation-routes:
 
 注释路由

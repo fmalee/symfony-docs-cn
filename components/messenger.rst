@@ -70,12 +70,12 @@ Messenger组件
 
     use App\Message\MyMessage;
     use Symfony\Component\Messenger\MessageBus;
-    use Symfony\Component\Messenger\Handler\Locator\HandlerLocator;
+    use Symfony\Component\Messenger\Handler\HandlersLocator;
     use Symfony\Component\Messenger\Middleware\HandleMessageMiddleware;
 
     $bus = new MessageBus([
-        new HandleMessageMiddleware(new HandlerLocator([
-            MyMessage::class => $handler,
+        new HandleMessageMiddleware(new HandlersLocator([
+            MyMessage::class => ['dummy' => $handler],
         ])),
     ]);
 
@@ -131,7 +131,7 @@ Messenger组件
    一个由特定发件人发送的用于标记消息的邮票，允许从
    :class:`Symfony\\Component\\Messenger\\Transport\\Sender\\SendersLocator`
    访问发件人的FQCN和别名（如果可用）。
-#. :class:`Symfony\\Component\\Messenger\\Stamp\\ReceivedStamp`，
+#. :class:`Symfony\\Component\\Messenger\\Stamp\\HandledStamp`，
    一个由特定处理器处理的用于标记消息的邮票。允许访问处理器的返回值，该处理器可从
    :class:`Symfony\\Component\\Messenger\\Handler\\HandlersLocator`
    调用其名称及别名（如果可用）。
@@ -147,7 +147,7 @@ Messenger组件
     {
         public function handle(Envelope $envelope, StackInterface $stack): Envelope
         {
-            if (null !== $envelope->get(ReceivedStamp::class)) {
+            if (null !== $envelope->last(ReceivedStamp::class)) {
                 // 刚刚收到消息...
 
                 // 例如，你可以添加另一个邮票
@@ -158,8 +158,14 @@ Messenger组件
         }
     }
 
-如果刚刚收到消息（即具有 `ReceivedStamp` 邮票），上面的示例将使用额外的邮票将消息转发到下一个中​​间件。
-你可以通过实现 :class:`Symfony\\Component\\Messenger\\Stamp\\StampInterface` 来创建自己的邮票。
+*如果* 刚收到消息（即至少有一个 ``ReceivedStamp``
+邮票），上面的例子将把消息转发到下一个带有附加标记的中间件。你可以通过实现
+:class:`Symfony\\Component\\Messenger\\Stamp\\StampInterface` 来创建自己的邮票。
+
+如果要检查一个信封上的所有邮票，请使用 ``$envelope->all()``
+方法，该方法返回按类型（FQCN）分组的所有邮票。
+或者，你可以使用FQCN作为此方法的第一个参数来迭代所有特定类型的邮票（例如
+``$envelope->all(ReceivedStamp::class)``）。
 
 .. note::
 

@@ -154,59 +154,6 @@ Processor是一个可调用对象，它接收记录作为其第一个参数。
 
 如果使用了多个处理器，还可以在处理器级别或通道级别注册一个Processor，而不是全局注册它（请参阅以下部分）。
 
-.. tip::
-
-    .. versionadded:: 2.4
-        在Monolog bundle 2.4中引入了Monolog processor的自动配置。
-
-    如果你使用
-    :ref:`默认的services.yaml配置 <service-container-services-load-example>`，则实现了
-    :class:`Monolog\\Processor\\ProcessorInterface`
-    的Processor会自动注册为服务并标记为
-    ``monolog.processor``，因此你可以在不添加任何配置的情况下使用它们。
-    这同样适用于内置的 :class:`Symfony\\Bridge\\Monolog\\Processor\\TokenProcessor` 和
-    :class:`Symfony\\Bridge\\Monolog\\Processor\\WebProcessor`
-    Processor，它们可以按如下方式启用：
-
-    .. configuration-block::
-
-        .. code-block:: yaml
-
-            # config/services.yaml
-            services:
-                # 将当前安全令牌添加到日志项
-                Symfony\Bridge\Monolog\Processor\TokenProcessor: ~
-                # 将实际客户端IP添加到日志项
-                Symfony\Bridge\Monolog\Processor\WebProcessor: ~
-
-        .. code-block:: xml
-
-            <!-- config/services.xml -->
-            <?xml version="1.0" encoding="UTF-8" ?>
-            <container xmlns="http://symfony.com/schema/dic/services"
-                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                xsi:schemaLocation="http://symfony.com/schema/dic/services
-                    http://symfony.com/schema/dic/services/services-1.0.xsd">
-
-                <services>
-                    <!-- Adds the current security token to log entries -->
-                    <service id="Symfony\Bridge\Monolog\Processor\TokenProcessor" />
-                    <!-- Adds the real client IP to log entries -->
-                    <service id="Symfony\Bridge\Monolog\Processor\WebProcessor" />
-                </services>
-            </container>
-
-        .. code-block:: php
-
-            // config/services.php
-            use Symfony\Bridge\Monolog\Processor\TokenProcessor;
-            use Symfony\Bridge\Monolog\Processor\WebProcessor;
-
-            // Adds the current security token to log entries
-            $container->register(TokenProcessor::class);
-            // Adds the real client IP to log entries
-            $container->register(WebProcessor::class);
-
 为每个处理器注册Processor
 ----------------------------------
 

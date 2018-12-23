@@ -70,18 +70,22 @@
     use Symfony\Component\Validator\Constraints\Length;
     use Symfony\Component\Validator\Constraints\NotBlank;
     use Symfony\Component\Form\Extension\Core\Type\TextType;
+    use Symfony\Component\Form\FormBuilderInterface;
 
-    $builder
-       ->add('firstName', TextType::class, array(
-           'constraints' => new Length(array('min' => 3)),
-       ))
-       ->add('lastName', TextType::class, array(
-           'constraints' => array(
-               new NotBlank(),
-               new Length(array('min' => 3)),
-           ),
-       ))
-    ;
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder
+           ->add('firstName', TextType::class, array(
+               'constraints' => new Length(array('min' => 3)),
+           ))
+           ->add('lastName', TextType::class, array(
+               'constraints' => array(
+                   new NotBlank(),
+                   new Length(array('min' => 3)),
+               ),
+           ))
+        ;
+    }
 
 .. tip::
 

@@ -11,7 +11,12 @@
 
 .. caution::
 
-    当一个表单字段具有 ``inherit_data`` 选项集时，数据转换器将不会应用于该字段。
+    当一个表单字段的 ``inherit_data`` 选项设置为 ``true`` 时，数据转换器将不会应用于该字段。
+
+.. seealso::
+
+    如果你需要将一个值映射到表单字段并返回，而不是转换该值的表示，则应使用一个数据映射器。
+    请参阅 :doc:`/form/data_mappers`。
 
 .. _simple-example-sanitizing-html-on-user-input:
 

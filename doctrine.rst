@@ -638,7 +638,7 @@ Doctrine足够聪明，可以知道它应该是 *插入* 还是 *更新* 你的�
             FROM App\Entity\Product p
             WHERE p.price > :price
             ORDER BY p.price ASC'
-        )->setParameter('price', 1000);
+        )->setParameter('price', $price);
 
         // 返回一个数组形式的产品对象
         return $query->execute();
@@ -659,7 +659,7 @@ Doctrine足够聪明，可以知道它应该是 *插入* 还是 *更新* 你的�
             ORDER BY p.price ASC
             ';
         $stmt = $conn->prepare($sql);
-        $stmt->execute(['price' => 1000]);
+        $stmt->execute(['price' => $price]);
 
         // 返回一个数组形式的数组（即原始数据集）
         return $stmt->fetchAll();

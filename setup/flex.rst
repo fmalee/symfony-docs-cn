@@ -87,7 +87,7 @@ Symfony发布了一个新的“骨架”项目，这是一个推荐用于创建�
 
 .. code-block:: terminal
 
-    $ composer create-project symfony/skeleton:4.1.* my-project
+    $ composer create-project symfony/skeleton my-project
 
 .. note::
 
