@@ -199,7 +199,7 @@ Symfony代码标准的细节
 
 * 给异常添加 ``Exception`` 后缀;
 
-* 使用大骆峰拼写法命名PHP文件（例如``EnvVarProcessor.php``），
+* 使用大骆峰拼写法命名PHP文件（例如 ``EnvVarProcessor.php``），
   以蛇形拼写法命名Twig模板和Web资源（``section_layout.html.twig``、``index.scss``）;
 
 * 对于PHPDocs的类型约束和类型转换(casting)，使用 ``bool`` (代替 ``boolean`` 或 ``Boolean``)，
