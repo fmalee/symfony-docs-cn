@@ -2,111 +2,99 @@
    single: Stopwatch
    single: Components; Stopwatch
 
-The Stopwatch Component
+Stopwatch组件
 =======================
 
-    The Stopwatch component provides a way to profile code.
+    Stopwatch组件提供了一种分析代码的方法。
 
-Installation
+安装
 ------------
 
 .. code-block:: terminal
 
     $ composer require symfony/stopwatch
 
-Alternatively, you can clone the `<https://github.com/symfony/stopwatch>`_ repository.
+或者，你可以克隆 `<https://github.com/symfony/stopwatch>`_ 仓库。
 
 .. include:: /components/require_autoload.rst.inc
 
-Usage
+用法
 -----
 
-The Stopwatch component provides an easy and consistent way to measure execution
-time of certain parts of code so that you don't constantly have to parse
-microtime by yourself. Instead, use the
-:class:`Symfony\\Component\\Stopwatch\\Stopwatch` class::
+Stopwatch组件提供了一种简单而一致的方法来统计代码的某些部分的执行时间，这样你可以直接使用 :class:`Symfony\\Component\\Stopwatch\\Stopwatch` 类而不必经常自己解析 ``microtime``::
 
     use Symfony\Component\Stopwatch\Stopwatch;
 
     $stopwatch = new Stopwatch();
-    // starts event named 'eventName'
+    // 开启一个名为 'eventName' 的事件
     $stopwatch->start('eventName');
-    // ... some code goes here
+    // ... 这里是一些代码
     $event = $stopwatch->stop('eventName');
 
-The :class:`Symfony\\Component\\Stopwatch\\StopwatchEvent` object can be retrieved
-from the  :method:`Symfony\\Component\\Stopwatch\\Stopwatch::start`,
-:method:`Symfony\\Component\\Stopwatch\\Stopwatch::stop`,
-:method:`Symfony\\Component\\Stopwatch\\Stopwatch::lap` and
-:method:`Symfony\\Component\\Stopwatch\\Stopwatch::getEvent` methods.
-The latter should be used when you need to retrieve the duration of an event
-while it is still running.
+:class:`Symfony\\Component\\Stopwatch\\StopwatchEvent` 对象可以从
+:method:`Symfony\\Component\\Stopwatch\\Stopwatch::start`、
+:method:`Symfony\\Component\\Stopwatch\\Stopwatch::stop`、
+:method:`Symfony\\Component\\Stopwatch\\Stopwatch::lap` 以及
+:method:`Symfony\\Component\\Stopwatch\\Stopwatch::getEvent` 方法中检索到。
+当你需要在事件仍在运行时检索事件的持续时间，应使用后面的方法。
 
 .. tip::
 
-    By default, the stopwatch truncates any sub-millisecond time measure to ``0``,
-    so you can't measure microseconds or nanoseconds. If you need more precision,
-    pass ``true`` to the ``Stopwatch`` class constructor to enable full precision::
+    默认情况下，Stopwatch会将任何亚毫秒时间度量截断为 ``0``，因此你无法测量微秒或纳秒。
+    如果需要更高的精度，请传递 ``true`` 给 ``Stopwatch`` 类的构造函数以启用完全精度::
 
         $stopwatch = new Stopwatch(true);
 
-The stopwatch can be reset to its original state at any given time with the
-:method:`Symfony\\Component\\Stopwatch\\Stopwatch::reset` method, which deletes
-all the data measured so far.
+使用 :method:`Symfony\\Component\\Stopwatch\\Stopwatch::reset`
+方法可以在任何给定时间将Stopwatch重置为其原始状态，从而删除到目前为止测量的所有数据。
 
-You can also provide a category name to an event::
+你还可以为一个事件提供分类名称::
 
     $stopwatch->start('eventName', 'categoryName');
 
-You can consider categories as a way of tagging events. For example, the
-Symfony Profiler tool uses categories to nicely color-code different events.
+你可以将分类视为标记事件的一个方式。例如，Symfony分析器工具使用类别以对不同事件进行很好的颜色编码。
 
 .. tip::
 
-    When you want to show events in the Symfony profiler, autowire
-    ``Symfony\Component\Stopwatch\Stopwatch`` into your service. Each category
-    is shown on a separate line.
+    如果要在Symfony分析器中显示事件，请自动装配 ``Symfony\Component\Stopwatch\Stopwatch``
+    到你的服务。而每个类别都将显示在单独的行中。
 
-Periods
+周期
 -------
 
-As you know from the real world, all stopwatches come with two buttons:
-one to start and stop the stopwatch, and another to measure the lap time.
-This is exactly what the :method:`Symfony\\Component\\Stopwatch\\Stopwatch::lap`
-method does::
+从现实世界来看，所有秒表都有两个按钮：一个用于启动和停止秒表，另一个用于测量圈数。这正是
+:method:`Symfony\\Component\\Stopwatch\\Stopwatch::lap` 方法的作用::
 
     $stopwatch = new Stopwatch();
-    // starts event named 'foo'
+    // 开启一个名为 'foo' 的事件
     $stopwatch->start('foo');
-    // ... some code goes here
+    // ... 这里是一些代码
     $stopwatch->lap('foo');
-    // ... some code goes here
+    // ... 这里是一些代码
     $stopwatch->lap('foo');
-    // ... some other code goes here
+    // ... 这里是一些其他代码
     $event = $stopwatch->stop('foo');
 
-Lap information is stored as "periods" within the event. To get lap information
-call::
+圈数(Lap)信息在事件中存储为“周期(period)”。要获取圈数信息，可以调用::
 
     $event->getPeriods();
 
-In addition to periods, you can get other useful information from the event object.
-For example::
+除了period，你还可以从事件对象中获取其他有用信息。例如::
 
-    $event->getCategory();   // returns the category the event was started in
-    $event->getOrigin();     // returns the event start time in milliseconds
-    $event->ensureStopped(); // stops all periods not already stopped
-    $event->getStartTime();  // returns the start time of the very first period
-    $event->getEndTime();    // returns the end time of the very last period
-    $event->getDuration();   // returns the event duration, including all periods
-    $event->getMemory();     // returns the max memory usage of all periods
+    $event->getCategory();   // 返回事件开始的类别
+    $event->getOrigin();     // 以毫秒为单位返回事件开始的时间
+    $event->ensureStopped(); // 停止所有尚未停止的周期
+    $event->getStartTime();  // 返回第一个周期的开始时间
+    $event->getEndTime();    // 返回最后一个周期的结束时间
+    $event->getDuration();   // 返回事件的持续时间，包括所有周期
+    $event->getMemory();     // 返回所有周期的最大内存使用量
 
-Sections
---------
+切片
+-------
 
-Sections are a way to logically split the timeline into groups. You can see
-how Symfony uses sections to nicely visualize the framework lifecycle in the
-Symfony Profiler tool. Here is a basic usage example using sections::
+切片(Section)是一种逻辑上将时间线分组的方法。
+你可以看到Symfony如何在Symfony分析器工具中使用section来很好地可视化框架的生命周期。
+以下是使用切片的基本用法示例::
 
     $stopwatch = new Stopwatch();
 
@@ -116,8 +104,8 @@ Symfony Profiler tool. Here is a basic usage example using sections::
 
     $events = $stopwatch->getSectionEvents('routing');
 
-You can reopen a closed section by calling the :method:`Symfony\\Component\\Stopwatch\\Stopwatch::openSection`
-method and specifying the id of the section to be reopened::
+你可以通过调用 :method:`Symfony\\Component\\Stopwatch\\Stopwatch::openSection`
+方法并指定切片的ID来重新打开已关闭的切片::
 
     $stopwatch->openSection('routing');
     $stopwatch->start('building_config_tree');
