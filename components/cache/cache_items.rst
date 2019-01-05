@@ -3,110 +3,91 @@
     single: Cache Expiration
     single: Cache Exceptions
 
-Cache Items
+缓存项
 ===========
 
-Cache items are the information units stored in the cache as a key/value pair.
-In the Cache component they are represented by the
-:class:`Symfony\\Component\\Cache\\CacheItem` class.
+缓存项是存储在缓存中作为键/值对的信息单元。在Cache组件中，它们用
+:class:`Symfony\\Component\\Cache\\CacheItem` 类来表示。
 
-Cache Item Keys and Values
+缓存项的键和值
 --------------------------
 
-The **key** of a cache item is a plain string which acts as its
-identifier, so it must be unique for each cache pool. You can freely choose the
-keys, but they should only contain letters (A-Z, a-z), numbers (0-9) and the
-``_`` and ``.`` symbols. Other common symbols (such as ``{``, ``}``, ``(``,
-``)``, ``/``, ``\``, ``@`` and ``:``) are reserved by the PSR-6 standard for future
-uses.
+缓存项的 **键** 是一个纯字符串，它充当其标识符，因此它对于每个缓存池必须是唯一的。
+你可以自由的选择键，但它们只应包含字母（AZ，az）、数字（0-9）、``_`` 以及 ``.`` 符号。
+其他常见的符号（``{``、``}``、``(``、``)``、``/``、``\``、``@`` 以及
+``:``）由为供将来使用的PSR-6标准保留。
 
-The **value** of a cache item can be any data represented by a type which is
-serializable by PHP, such as basic types (string, integer, float, boolean, null),
-arrays and objects.
+缓存项的 **值** 是可以通过PHP来序列化的类型来表示的任何数据，例如基本类型（字符串、整数、浮点数、布尔值、空值），数组和对象。
 
-Creating Cache Items
+创建缓存项
 --------------------
 
-Cache items are created with the ``getItem($key)`` method of the cache pool. The
-argument is the key of the item::
+使用缓存池的 ``getItem($key)`` 方法来创建缓存项。参数是缓存项的键::
 
-    // $cache pool object was created before
+    // $cache池对象之前就创建了
     $productsCount = $cache->getItem('stats.products_count');
 
-Then, use the ``Psr\\Cache\\CacheItemInterface::set`` method to set
-the data stored in the cache item::
+然后，使用 ``Psr\\Cache\\CacheItemInterface::set`` 方法来设置存储在缓存项中的数据::
 
-    // storing a simple integer
+    // 储存一个简单的整数
     $productsCount->set(4711);
     $cache->save($productsCount);
 
-    // storing an array
+    // 储存一个数组
     $productsCount->set(array(
         'category1' => 4711,
         'category2' => 2387,
     ));
     $cache->save($productsCount);
 
-The key and the value of any given cache item can be obtained with the
-corresponding *getter* methods::
+可以使用相应的 *getter* 方法来获取任何给定缓存项的键和值::
 
     $cacheItem = $cache->getItem('exchange_rate');
     // ...
     $key = $cacheItem->getKey();
     $value = $cacheItem->get();
 
-Cache Item Expiration
+缓存项到期
 ~~~~~~~~~~~~~~~~~~~~~
 
-By default cache items are stored permanently. In practice, this "permanent
-storage" can vary greatly depending on the type of cache being used, as
-explained in the :doc:`/components/cache/cache_pools` article.
+默认情况下，缓存项永久存储。实际上，如 :doc:`/components/cache/cache_pools`
+文档中所述的那样，这种“永久存储”可能会根据所使用的缓存类型而有很大差异。
 
-However, in some applications it's common to use cache items with a shorter
-lifespan. Consider for example an application which caches the latest news just
-for one minute. In those cases, use the ``expiresAfter()`` method to set the
-number of seconds to cache the item::
+但是，在某些应用中，通常使用生命周期较短的缓存项。
+例如，某个应用的最新消息只缓存一分钟。在这些情况下，使用 ``expiresAfter()``
+方法来设置缓存项的秒数::
 
     $latestNews = $cache->getItem('latest_news');
-    $latestNews->expiresAfter(60);  // 60 seconds = 1 minute
+    $latestNews->expiresAfter(60);  // 60秒 = 1分钟
 
-    // this method also accepts \DateInterval instances
+    // 此参数还接收 \DateInterval 实例
     $latestNews->expiresAfter(DateInterval::createFromDateString('1 hour'));
 
-Cache items define another related method called ``expiresAt()`` to set the
-exact date and time when the item will expire::
+缓存项还定义了另一个相关方法，``expiresAt()`` 用于设置缓存项到期时的确切日期和时间::
 
     $mostPopularNews = $cache->getItem('popular_news');
     $mostPopularNews->expiresAt(new \DateTime('tomorrow'));
 
-Cache Item Hits and Misses
+缓存项的命中和未命中
 --------------------------
 
-Using a cache mechanism is important to improve the application performance, but
-it should not be required to make the application work. In fact, the PSR-6
-standard states that caching errors should not result in application failures.
+使用缓存机制对于提高应用性能很重要，但不应该影响应用的正常运行。事实上，PSR-6标准规定缓存错误不应导致应用失败。
 
-In practice this means that the ``getItem()`` method always returns an object
-which implements the ``Psr\Cache\CacheItemInterface`` interface, even when the
-cache item doesn't exist. Therefore, you don't have to deal with ``null`` return
-values and you can safely store in the cache values such as ``false`` and ``null``.
+实际上，这意味着 ``getItem()`` 方法总是返回一个实现了 ``Psr\Cache\CacheItemInterface``
+接口的对象，即使该缓存项不存在也是如此。因此，你不必处理 ``null``
+返回值，并且可以安全地存储缓存值，例如 ``false`` 和 ``null``。
 
-In order to decide if the returned object is correct or not, caches use the
-concept of hits and misses:
+为了确定返回的对象是否正确，缓存使用命中和未命中的概念：
 
-* **Cache Hits** occur when the requested item is found in the cache, its value
-  is not corrupted or invalid and it hasn't expired;
-* **Cache Misses** are the opposite of hits, so they occur when the item is not
-  found in the cache, its value is corrupted or invalid for any reason or the
-  item has expired.
+* **缓存命中** 当在缓存中找到所请求的缓存项、其值未损坏或无效且未过期时，会发生缓存命中;
+* **缓存未命中** 缓存未命中与命中相反，因此当在缓存中找不到缓存项、其值因任何原因损坏或无效或项目已过期时，都会发生缓存未命中。
 
-Cache item objects define a boolean ``isHit()`` method which returns ``true``
-for cache hits::
+缓存项对象定义一个布尔 ``isHit()`` 方法，如果缓存命中，该方法返回 ``true``::
 
     $latestNews = $cache->getItem('latest_news');
 
     if (!$latestNews->isHit()) {
-        // do some heavy computation
+        // 做一个繁重计算
         $news = ...;
         $cache->save($latestNews->set($news));
     } else {

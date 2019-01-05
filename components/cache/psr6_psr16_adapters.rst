@@ -3,84 +3,79 @@
    single: Performance
    single: Components; Cache
 
-Adapters For Interoperability between PSR-6 and PSR-16 Cache
+适用于在PSR-6和PSR-16缓存之间交互的适配器
 ============================================================
 
-Sometimes, you may have a Cache object that implements the :ref:`PSR-16 <cache-component-psr16-caching>`
-standard, but need to pass it to an object that expects a :ref:`PSR-6 <cache-component-psr6-caching>`
-cache adapter. Or, you might have the opposite situation. The cache component contains
-two classes for bidirectional interoperability between PSR-6 and PSR-16 caches.
+有时，你可能有一个实现了 :ref:`PSR-16 <cache-component-psr16-caching>`
+标准的缓存对象，但需要将其传递给一个需要 :ref:`PSR-6 <cache-component-psr6-caching>`
+缓存适配器的对象。或者，你可能会遇到相反的情况。缓存组件包含用于PSR-6和PSR-16缓存之间的双向交互的两个类。
 
-Using a PSR-16 Cache Object as a PSR-6 Cache
+将PSR-16缓存对象作为一个PSR-6缓存
 --------------------------------------------
 
-Suppose you want to work with a class that requires a PSR-6 Cache pool object. For
-example::
+假设你要使用一个需要PSR-6缓存池对象的类。例如::
 
     use Psr\Cache\CacheItemPoolInterface;
 
-    // just a made-up class for the example
+    // 只是举个例子
     class GitHubApiClient
     {
         // ...
 
-        // this requires a PSR-6 cache object
+        // 这里需要一个PSR-6缓存对象
         public function __construct(CacheItemPoolInterface $cachePool)
         {
             // ...
         }
     }
 
-But, you already have a PSR-16 cache object, and you'd like to pass this to the class
-instead. No problem! The Cache component provides the
-:class:`Symfony\\Component\\Cache\\Adapter\\SimpleCacheAdapter` class for exactly
-this use-case::
+但是，你已经拥有一个PSR-16缓存对象，而你希望将其传递给 ``GitHubApiClient``
+类。没问题！缓存组件为此用例提供了
+:class:`Symfony\\Component\\Cache\\Adapter\\SimpleCacheAdapter` 类::
 
     use Symfony\Component\Cache\Simple\FilesystemCache;
     use Symfony\Component\Cache\Adapter\SimpleCacheAdapter;
 
-    // the PSR-16 cache object that you want to use
+    // 要使用的PSR-16缓存对象
     $psr16Cache = new FilesystemCache();
 
-    // a PSR-6 cache that uses your cache internally!
+    // 在内部使用你的缓存的一个PSR-6缓存！
     $psr6Cache = new SimpleCacheAdapter($psr16Cache);
 
-    // now use this wherever you want
+    // 现在你在哪使用都行
     $githubApiClient = new GitHubApiClient($psr6Cache);
 
-Using a PSR-6 Cache Object as a PSR-16 Cache
+将PSR-6缓存对象作为一个PSR-16缓存
 --------------------------------------------
 
-Suppose you want to work with a class that requires a PSR-16 Cache object. For
-example::
+假设你要使用一个需要PSR-16缓存对象的类。例如::
 
     use Psr\SimpleCache\CacheInterface;
 
-    // just a made-up class for the example
+    // 只是举个例子
     class GitHubApiClient
     {
         // ...
 
-        // this requires a PSR-16 cache object
+        // 这里需要一个PSR-16缓存对象
         public function __construct(CacheInterface $cache)
         {
             // ...
         }
     }
 
-But, you already have a PSR-6 cache pool object, and you'd like to pass this to
-the class instead. No problem! The Cache component provides the
-:class:`Symfony\\Component\\Cache\\Simple\\Psr6Cache` class for exactly
-this use-case::
+但是，你已经拥有一个PSR-6缓存对象，而你希望将其传递给 ``GitHubApiClient``
+类。没问题！缓存组件为此用例提供了
+:class:`Symfony\\Component\\Cache\\Simple\\Psr6Cache` 类::
 
     use Symfony\Component\Cache\Adapter\FilesystemAdapter;
     use Symfony\Component\Cache\Simple\Psr6Cache;
 
-    // the PSR-6 cache object that you want to use
+    // 要使用的PSR-6缓存对象
     $psr6Cache = new FilesystemAdapter();
 
-    // a PSR-16 cache that uses your cache internally!
+    // 在内部使用你的缓存的一个PSR-16缓存！
     $psr16Cache = new Psr6Cache($psr6Cache);
 
-    // now use this wherever you want
+    // 现在你在哪使用都行
     $githubApiClient = new GitHubApiClient($psr16Cache);

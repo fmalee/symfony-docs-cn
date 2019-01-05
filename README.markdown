@@ -42,6 +42,7 @@
 
 ## 术语约定
 
+- `Application`：应用
 - `Route`：路由
 - `Controller`：控制器
 - `Services`：服务
@@ -133,6 +134,11 @@
 - `Owning Side`：拥有方
 - `Inverse Side`：从属方
 - `Data Mapper` 数据映射器
+- `Cache Pool` 缓存池
+- `Cache Item` 缓存项
+- `Cache Adapter` 缓存适配器
+- `Cache Hit` 缓存命中
+- `Cache Misse` 缓存未命中
 
 ### 导航调整
 

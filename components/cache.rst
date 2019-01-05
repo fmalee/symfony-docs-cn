@@ -5,85 +5,81 @@
 
 .. _`cache-component`:
 
-The Cache Component
+Cache组件
 ===================
 
-    The Cache component provides an extended `PSR-6`_ implementation as well as
-    a `PSR-16`_ "Simple Cache" implementation for adding cache to your applications.
-    It is designed for performance and resiliency, and ships with ready to use
-    adapters for the most common caching backends, including proxies for adapting
-    from/to `Doctrine Cache`_.
+    Cache组件提供扩展的 `PSR-6`_ 实现以及一个 `PSR-16`_ “简单缓存”实现，用于向应用添加缓存。
+    它专为提高性能和弹性而设计，附带最常见的缓存后端适配器，包括用于 `Doctrine Cache`_ 的代理。
 
-Installation
+安装
 ------------
 
 .. code-block:: terminal
 
     $ composer require symfony/cache
 
-Alternatively, you can clone the `<https://github.com/symfony/cache>`_ repository.
+或者，你可以克隆 `<https://github.com/symfony/cache>`_ 仓库。
 
 .. include:: /components/require_autoload.rst.inc
 
-Cache (PSR-6) Versus Simple Cache (PSR-16)
+缓存（PSR-6）& 简单缓存（PSR-16）
 ------------------------------------------
 
-This component includes *two* different approaches to caching:
+本组件包括 *两种* 不同的缓存方法：
 
-:ref:`PSR-6 Caching <cache-component-psr6-caching>`:
-     A fully-featured cache system, which includes cache "pools", more advanced
-     cache "items", and :ref:`cache tagging for invalidation <cache-component-tags>`.
+:ref:`PSR-6缓存 <cache-component-psr6-caching>`:
+     一个功能齐全的缓存系统，包括缓存“池”、更高级的缓存“项”以及
+     :ref:`用于实现失效的缓存标签 <cache-component-tags>`。
 
-:ref:`PSR-16 Simple Caching <cache-component-psr16-caching>`:
-    A simple way to store, fetch and remove items from a cache.
+:ref:`PSR-16简单缓存 <cache-component-psr16-caching>`:
+    一种从缓存中存储、获取和删除缓存项的简单方法。
 
-Both methods support the *same* cache adapters and will give you very similar performance.
+两种方法都支持 *相同* 的缓存适配器，并且可以提供非常相近的性能。
 
 .. tip::
 
-    The component also contains adapters to convert between PSR-6 and PSR-16 caches.
-    See :doc:`/components/cache/psr6_psr16_adapters`.
+    本组件还包含用于在PSR-6和PSR-16缓存之间进行转换的适配器。请参阅
+    :doc:`/components/cache/psr6_psr16_adapters`。
 
 .. _cache-component-psr16-caching:
 
-Simple Caching (PSR-16)
+简单缓存（PSR-16）
 -----------------------
 
-This part of the component is an implementation of `PSR-16`_, which means that its
-basic API is the same as defined in the standard. First, create a cache object from
-one of the built-in cache classes. For example, to create a filesystem-based cache,
-instantiate :class:`Symfony\\Component\\Cache\\Simple\\FilesystemCache`::
+本组件的这一部分是 `PSR-16`_ 的一个实现，这意味着它的基本API与标准中定义的相同。
+首先，从其中一个内置缓存类中创建缓存对象。例如，要创建基于文件系统的缓存，请实例化
+:class:`Symfony\\Component\\Cache\\Simple\\FilesystemCache`::
 
     use Symfony\Component\Cache\Simple\FilesystemCache;
 
     $cache = new FilesystemCache();
 
-Now you can create, retrieve, update and delete items using this object::
+现在，你可以使用此对象创建、检索、更新和删除缓存项::
 
-    // save a new item in the cache
+    // 在缓存中保存新项
     $cache->set('stats.products_count', 4711);
 
-    // or set it with a custom ttl
+    // 或者用自定义TTL设置
     // $cache->set('stats.products_count', 4711, 3600);
 
-    // retrieve the cache item
+    // 检索缓存项
     if (!$cache->has('stats.products_count')) {
-        // ... item does not exists in the cache
+        // ... 缓存中不存在对应项
     }
 
-    // retrieve the value stored by the item
+    // 检索该缓存项存储的值
     $productsCount = $cache->get('stats.products_count');
 
-    // or specify a default value, if the key doesn't exist
+    // 或者指定默认值（如果该键不存在）
     // $productsCount = $cache->get('stats.products_count', 100);
 
-    // remove the cache key
+    // 删除缓存键
     $cache->delete('stats.products_count');
 
-    // clear *all* cache keys
+    // 清除 *所有* 缓存键
     $cache->clear();
 
-You can also work with multiple items at once::
+你还可以同时处理多个缓存项::
 
     $cache->setMultiple(array(
         'stats.products_count' => 4711,
@@ -100,17 +96,16 @@ You can also work with multiple items at once::
         'stats.users_count',
     ));
 
-Available Simple Cache (PSR-16) Classes
+可用的简单缓存（PSR-16）类
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The following cache adapters are available:
+有以下可用的缓存适配器：
 
 .. tip::
 
-    To find out more about each of these classes, you can read the
-    :doc:`PSR-6 Cache Pool </components/cache/cache_pools>` page. These "Simple"
-    (PSR-16) cache classes aren't identical to the PSR-6 Adapters on that page, but
-    each share constructor arguments and use-cases.
+    要了解有关每个类的更多信息，可以阅读
+    :doc:`PSR-6缓存池 </components/cache/cache_pools>` 文档。
+    这些“简单”的（PSR-16）缓存类与该文档中的PSR-6适配器不同，但它们都共享构造函数参数和用例。
 
 * :class:`Symfony\\Component\\Cache\\Simple\\ApcuCache`
 * :class:`Symfony\\Component\\Cache\\Simple\\ArrayCache`
@@ -127,59 +122,54 @@ The following cache adapters are available:
 
 .. _cache-component-psr6-caching:
 
-More Advanced Caching (PSR-6)
+更高级的缓存（PSR-6）
 -----------------------------
 
-To use the more-advanced, PSR-6 Caching abilities, you'll need to learn its key
-concepts:
+要使用更高级的PSR-6缓存功能，你需要了解其关键概念：
 
-**Item**
-    A single unit of information stored as a key/value pair, where the key is
-    the unique identifier of the information and the value is its contents;
-**Pool**
-    A logical repository of cache items. All cache operations (saving items,
-    looking for items, etc.) are performed through the pool. Applications can
-    define as many pools as needed.
-**Adapter**
-    It implements the actual caching mechanism to store the information in the
-    filesystem, in a database, etc. The component provides several ready to use
-    adapters for common caching backends (Redis, APCu, Doctrine, PDO, etc.)
+**项(Item)**
+    作为键/值对存储的单个信息单元，其中键是信息的唯一标识符，值是其内容;
+**池(Pool)**
+    缓存项的逻辑仓库。所有缓存操作（保存项、查找项等）都通过池执行。应用可根据需要定义任意数量的池。
+**适配器(Adapter)**
+    它实现了将信息存储在文件系统、数据库等中的实际缓存机制。
+    本组件为常见的缓存后端提供了几个现成的适配器（Redis，APCu，Doctrine，PDO等）。
 
-Basic Usage (PSR-6)
+基本用法（PSR-6）
 -------------------
 
-This part of the component is an implementation of `PSR-6`_, which means that its
-basic API is the same as defined in the standard. Before starting to cache information,
-create the cache pool using any of the built-in adapters. For example, to create
-a filesystem-based cache, instantiate :class:`Symfony\\Component\\Cache\\Adapter\\FilesystemAdapter`::
+本组件的这一部分是 `PSR-6`_ 的一个实现，这意味着它的基本API与标准中定义的相同。
+在开始缓存信息之前，请使用任何内置适配器来创建缓存池。
+例如，要创建基于文件系统的缓存，请实例化
+:class:`Symfony\\Component\\Cache\\Adapter\\FilesystemAdapter`::
 
     use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 
     $cache = new FilesystemAdapter();
 
-Now you can create, retrieve, update and delete items using this cache pool::
+现在，你可以使用此缓存池来创建、检索、更新和删除缓存项::
 
-    // create a new item by trying to get it from the cache
+    // 通过尝试从缓存中获取新项来创建新项
     $productsCount = $cache->getItem('stats.products_count');
 
-    // assign a value to the item and save it
+    // 为缓存项指定值并保存它
     $productsCount->set(4711);
     $cache->save($productsCount);
 
-    // retrieve the cache item
+    // 检索缓存项
     $productsCount = $cache->getItem('stats.products_count');
     if (!$productsCount->isHit()) {
-        // ... item does not exists in the cache
+        // ... 缓存中不存在对应项
     }
-    // retrieve the value stored by the item
+    // 检索缓存项中存储的值
     $total = $productsCount->get();
 
-    // remove the cache item
+    // 删除缓存项
     $cache->deleteItem('stats.products_count');
 
-For a list of all of the supported adapters, see :doc:`/components/cache/cache_pools`.
+关于所有受支持的适配器的列表，请参阅缓 :doc:`/components/cache/cache_pools`。
 
-Advanced Usage (PSR-6)
+高级用法（PSR-6）
 ----------------------
 
 .. toctree::

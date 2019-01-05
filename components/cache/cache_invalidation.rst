@@ -2,99 +2,88 @@
     single: Cache; Invalidation
     single: Cache; Tags
 
-Cache Invalidation
+缓存失效
 ==================
 
-Cache invalidation is the process of removing all cached items related to a
-change in the state of your model. The most basic kind of invalidation is direct
-items deletion. But when the state of a primary resource has spread across
-several cached items, keeping them in sync can be difficult.
+缓存失效是删除与你的模型状态更改相关的所有缓存项的过程。
+最基本的失效类型是直接删除缓存项。但是当主要资源的状态分散在多个缓存项中时，要保持它们同步可能很困难。
 
-The Symfony Cache component provides two mechanisms to help solving this problem:
+Symfony的缓存组件提供了两种机制来帮助解决此问题：
 
-* :ref:`Tags-based invalidation <cache-component-tags>` for managing data dependencies;
-* :ref:`Expiration based invalidation <cache-component-expiration>` for time related dependencies.
+* :ref:`基于标签的失效 <cache-component-tags>` 用来管理数据依赖;
+* :ref:`基于过期的失效 <cache-component-expiration>` 用来管理相关依赖.
 
 .. _cache-component-tags:
 
-Using Cache Tags
+使用缓存标签
 ----------------
 
-To benefit from tags-based invalidation, you need to attach the proper tags to
-each cached item. Each tag is a plain string identifier that you can use at any
-time to trigger the removal of all items associated with this tag.
+要从基于标签的失效中受益，你需要将适当的标签附加到每个缓存项中。
+每个标签都是一个纯字符串标识符，你可以随时使用它来触发与此标签关联的所有缓存项的删除。
 
-To attach tags to cached items, you need to use the
-:method:`Symfony\\Component\\Cache\\CacheItem::tag` method that is implemented by
-cache items, as returned by cache adapters::
+要将标签附加到缓存项，你需要使用由缓存适配器返回的缓存项实现的
+:method:`Symfony\\Component\\Cache\\CacheItem::tag` 方法::
 
     $item = $cache->getItem('cache_key');
     // ...
-    // add one or more tags
+    // 添加一个或更多标签
     $item->tag('tag_1');
     $item->tag(array('tag_2', 'tag_3'));
     $cache->save($item);
 
-If ``$cache`` implements :class:`Symfony\\Component\\Cache\\Adapter\\TagAwareAdapterInterface`,
-you can invalidate the cached items by calling
-:method:`Symfony\\Component\\Cache\\Adapter\\TagAwareAdapterInterface::invalidateTags`::
+如果 ``$cache`` 实现了
+:class:`Symfony\\Component\\Cache\\Adapter\\TagAwareAdapterInterface`，则可以通过调用
+:method:`Symfony\\Component\\Cache\\Adapter\\TagAwareAdapterInterface::invalidateTags`
+方法来使缓存项无效::
 
-    // invalidate all items related to `tag_1` or `tag_3`
+    // 使所有与“tag_1”或“tag_3”相关的缓存项无效
     $cache->invalidateTags(array('tag_1', 'tag_3'));
 
-    // if you know the cache key, you can also delete the item directly
+    // 如果知道缓存键，也可以直接删除该项
     $cache->deleteItem('cache_key');
 
-    // If you don't remember the item key, you can use the getKey() method
+    // 如果不记得缓存项的键，可以使用 getKey() 方法
     $cache->deleteItem($item->getKey());
 
-Using tags invalidation is very useful when tracking cache keys becomes difficult.
+在跟踪缓存键变得困难时，使用标签失效会非常有用。
 
-Tag Aware Adapters
+标签感知适配器
 ~~~~~~~~~~~~~~~~~~
 
-To store tags, you need to wrap a cache adapter with the
-:class:`Symfony\\Component\\Cache\\Adapter\\TagAwareAdapter` class or implement
-:class:`Symfony\\Component\\Cache\\Adapter\\TagAwareAdapterInterface` and its only
+要存储标签，你需要使用
+:class:`Symfony\\Component\\Cache\\Adapter\\TagAwareAdapter` 类或实现了
+:class:`Symfony\\Component\\Cache\\Adapter\\TagAwareAdapterInterface`
+及其唯一
 :method:`Symfony\\Component\\Cache\\Adapter\\TagAwareAdapterInterface::invalidateTags`
-method.
+方法封装的缓存适配器。
 
-The :class:`Symfony\\Component\\Cache\\Adapter\\TagAwareAdapter` class implements
-instantaneous invalidation (time complexity is ``O(N)`` where ``N`` is the number
-of invalidated tags). It needs one or two cache adapters: the first required
-one is used to store cached items; the second optional one is used to store tags
-and their invalidation version number (conceptually similar to their latest
-invalidation date). When only one adapter is used, items and tags are all stored
-in the same place. By using two adapters, you can e.g. store some big cached items
-on the filesystem or in the database and keep tags in a Redis database to sync all
-your fronts and have very fast invalidation checks::
+:class:`Symfony\\Component\\Cache\\Adapter\\TagAwareAdapter`
+类实现瞬间失效（时间复杂度是 ``O(N)``，其中 ``N`` 为无效标签的数量）。
+它需要一个或两个缓存适配器：第一个必需的缓存适配器用于存储缓存项;
+第二个可选适配器用于存储标签及其无效版本号（概念上类似于其最新的无效日期）。
+当只使用一个适配器时，缓存的项和标签都存储在同一个地方。通过使用两个适配器，你可以将一些大的缓存项存储在文件系统或数据库中，并将标签保存在一个Redis数据库中，以同步你的所有前端并进行非常快速的失效检查::
 
     use Symfony\Component\Cache\Adapter\TagAwareAdapter;
     use Symfony\Component\Cache\Adapter\FilesystemAdapter;
     use Symfony\Component\Cache\Adapter\RedisAdapter;
 
     $cache = new TagAwareAdapter(
-        // Adapter for cached items
+        // 用于储存缓存项的适配器
         new FilesystemAdapter(),
-        // Adapter for tags
+        // 用于储存标签的适配器
         new RedisAdapter('redis://localhost')
     );
 
 .. note::
 
-    Since Symfony 3.4, :class:`Symfony\\Component\\Cache\\Adapter\\TagAwareAdapter`
-    implements :class:`Symfony\\Component\\Cache\\PruneableInterface`,
-    enabling manual
-    :ref:`pruning of expired cache entries <component-cache-cache-pool-prune>` by
-    calling its :method:`Symfony\\Component\\Cache\\Adapter\\TagAwareAdapter::prune`
-    method (assuming the wrapped adapter itself implements
-    :class:`Symfony\\Component\\Cache\\PruneableInterface`).
+    从Symfony3.4开始，:class:`Symfony\\Component\\Cache\\Adapter\\TagAwareAdapter` 实现了
+    :class:`Symfony\\Component\\Cache\\PruneableInterface`，已允许通过调用其 ``prune()``
+    方法来手动 :ref:`清理过期的缓存项 <component-cache-cache-pool-prune>`。
 
 .. _cache-component-expiration:
 
-Using Cache Expiration
+使用缓存过期
 ----------------------
 
-If your data is valid only for a limited period of time, you can specify their
-lifetime or their expiration date with the PSR-6 interface, as explained in the
-:doc:`/components/cache/cache_items` article.
+如果你的数据仅在有限的时间段内有效，则可以如
+:doc:`/components/cache/cache_items` 文档中所述，使用PSR-6接口来指定其生命周期或到期日期。
