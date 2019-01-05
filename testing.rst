@@ -19,7 +19,7 @@ Symfony与一个名为 `PHPUnit`_ 的独立库集成，为你提供丰富的测�
 
     $ composer require --dev symfony/phpunit-bridge
 
-每个测试 - 无论是单元测试还是功能测试 - 都是一个PHP类，应该存在于应用程序的 ``tests/`` 目录中。
+每个测试 - 无论是单元测试还是功能测试 - 都是一个PHP类，应该存在于应用的 ``tests/`` 目录中。
 如果遵循此规则，则可以使用以下命令运行应用的所有测试：
 
 .. code-block:: terminal
@@ -45,7 +45,7 @@ PHPUnit由Symfony应用的根目录中的 ``phpunit.xml.dist`` 文件配置。
 ----------
 
 单元测试是针对单个PHP类的测试，也称为 *单元*。
-如果要测试应用程序的整体行为，请参阅有关功 :ref:`功能测试 <functional-tests>` 的章节。
+如果要测试应用的整体行为，请参阅有关功 :ref:`功能测试 <functional-tests>` 的章节。
 
 编写Symfony单元测试与编写标准PHPUnit单元测试没有什么不同。
 例如，假设你在app bundle的 ``Util/`` 目录中有一个名为 ``Calculator`` 的非常简单的类::

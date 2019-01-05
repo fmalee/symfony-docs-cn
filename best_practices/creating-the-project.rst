@@ -62,7 +62,7 @@
     └─ vendor/
 
 这种层级式的文件和目录是符合Symfony推荐的命名约定的，可以令你的程序结构化。每个目录的推荐用法如下：
-这些文件和目录的层次结构是Symfony为构建应用程序而提出的约定。
+这些文件和目录的层次结构是Symfony为构建应用而提出的约定。
 建议保留这种结构，因为它是易于导航，大多数目录名称都是不言自明的，
 但你可以：:doc:`重写Symfony的默认目录结构 </configuration/override_dir_structure>`：
 
@@ -71,7 +71,7 @@
 
 Symfony 2.0推出之后，多数开发者很自然地用Symfony 1.x的方式去划分程序的逻辑模块。
 这就是为何很多Symfony应用都把它们的代码按逻辑功能进行拆分的原因：UserBundle、ProductBundle、InvoiceBundle等等。
-当Symfony 2.0发布时，大多数开发人员自然采用了将应用程序划分为逻辑模块的symfony 1.x方式。
+当Symfony 2.0发布时，大多数开发人员自然采用了将应用划分为逻辑模块的symfony 1.x方式。
 
 但bundle的真义在于，它是作为软件的一个“可被复用”的独立构成而存在。
 如果UserBundle不能 *“原封不动地”* 使用在别的Symfony程序中，它不应该成为bundle。

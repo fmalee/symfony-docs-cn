@@ -17,7 +17,7 @@ Symfony通过 `SwiftMailerBundle`_ 提供基于流行的 `Swift Mailer`_ 库的�
 
     $ composer require symfony/swiftmailer-bundle
 
-如果你的应用程序未使用Symfony Flex，请按照 `SwiftMailerBundle`_ 上的安装说明进行操作。
+如果你的应用未使用Symfony Flex，请按照 `SwiftMailerBundle`_ 上的安装说明进行操作。
 
 .. _swift-mailer-configuration:
 

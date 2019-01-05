@@ -188,13 +188,13 @@ E) 其他任务！
 不使用 ``composer.json`` 文件部署
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Symfony应用程序提供了 ``kernel.project_dir`` 参数和相关的
+Symfony应用提供了 ``kernel.project_dir`` 参数和相关的
 :method:`Symfony\\Component\\HttpKernel\\Kernel::getProjectDir` 方法。
 你可以使用此方法对文件路径执行相对于项目根目录的操作。
 查找项目根目录的逻辑基于主 ``composer.json`` 文件的位置。
 
 如果部署的方式不使用Composer，你可能已经了删除 ``composer.json`` 文件，那么该应用将无法在生产服务器上运行。
-解决方案是覆盖应用程序内核中的 ``getProjectDir()``  方法并返回项目的根目录::
+解决方案是覆盖应用内核中的 ``getProjectDir()``  方法并返回项目的根目录::
 
     // src/Kernel.php
     // ...

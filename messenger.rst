@@ -10,7 +10,7 @@ Symfony的信使提供一个消息总线和一些路由功能，以便在你的�
 安装
 ------------
 
-在使用 :doc:`Symfony Flex </setup/flex>` 的应用程序中，运行此命令以在使用之前安装信使：
+在使用 :doc:`Symfony Flex </setup/flex>` 的应用中，运行此命令以在使用之前安装信使：
 
 .. code-block:: terminal
 

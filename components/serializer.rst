@@ -1479,7 +1479,7 @@ this is already set up and you only need to provide the configuration. Otherwise
         array('json' => new JsonEncoder())
     );
 
-现在配置你的鉴别器类映射。考虑一个定义扩展的类GitHubCodeRepository 和BitBucketCodeRepository类的应用程序：
+现在配置你的鉴别器类映射。考虑一个定义扩展的类GitHubCodeRepository 和BitBucketCodeRepository类的应用：
 Now configure your discriminator class mapping. Consider an application that
 defines an abstract ``CodeRepository`` class extended by ``GitHubCodeRepository``
 and ``BitBucketCodeRepository`` classes:
