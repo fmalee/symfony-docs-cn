@@ -66,8 +66,8 @@ Swift Mailer库通过创建、配置然后发送 ``Swift_Message`` 对象来工�
                 ),
                 'text/html'
             )
-            /*
-             * 如果你还想要包含一个纯文本版本的信息
+
+            // 如果没有为电子邮件定义一个文本版本，则可以删除以下代码
             ->addPart(
                 $this->renderView(
                     'emails/registration.txt.twig',
@@ -75,7 +75,6 @@ Swift Mailer库通过创建、配置然后发送 ``Swift_Message`` 对象来工�
                 ),
                 'text/plain'
             )
-            */
         ;
 
         $mailer->send($message);

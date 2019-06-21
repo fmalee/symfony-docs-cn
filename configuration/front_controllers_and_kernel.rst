@@ -5,7 +5,8 @@
 了解前端控制器、内核和环境如何协同工作
 =============================================================================
 
-:doc:`/configuration/environments` 一节介绍了Symfony如何使用环境来运行具有不同配置设置的应用的基础知识。
+:ref:`配置环境 <configuration-environments>`
+一文介绍了Symfony如何使用环境来运行具有不同配置设置的应用的基础知识。
 本节将更深入地解释当你的应用启动(bootstrapped)时会发生什么。
 要深入了解这个过程，你需要了解三个可以协同工作的部分：
 
@@ -96,14 +97,85 @@ Symfony默认提供的内核位于 ``src/Kernel.php`` 文件。
     ``Kernel`` 可以提供更多内容，例如 :doc:`重写默认目录结构 </configuration/override_dir_structure>`。
     但是，通过实施多个 ``Kernel`` 实现，你无需动态更改此类内容的可能性很高。
 
+.. index::
+   single: Configuration; Debug mode
+
+调试模式
+~~~~~~~~~~
+
+``Kernel`` 构造函数的第二个参数指定应用是否应以“调试模式”运行。无论
+:ref:`配置环境 <configuration-environments>` 如何，Symfony应用都可以在调试模式设置为
+``true`` 或 ``false`` 的情况下运行。
+
+这会影响应用中的许多内容，例如在错误页面上显示堆栈跟踪，或者是否在每个请求上动态的重建缓存文件。
+虽然不是必需的，但调试模式通常在 ``dev`` 和 ``test`` 环境下被设置为
+``true``，而 ``prod`` 环境下则为 ``false``。
+
+与 :ref:`配置环境 <selecting-the-active-environment>` 类似，你也可以使用
+:ref:`.env文件 <config-dot-env>` 来启用/禁用调试模式：
+
+.. code-block:: bash
+
+    # .env
+    # 将其设置为1以启用调试模式
+    APP_DEBUG=0
+
+此值可以在运行命令之前通过传递 ``APP_DEBUG`` 值来进行重写：
+
+.. code-block:: terminal
+
+    # 使用 .env 文件中定义的调试模式
+    $ php bin/console command_name
+
+    # 忽略 .env 文件并为此命令启用调试模式
+    $ APP_DEBUG=1 php bin/console command_name
+
+.. deprecated:: 4.2
+
+    在以前的Symfony版本中，你可以使用 ``--no-debug``
+    命令选项来配置调试模式，但该选项在Symfony 4.2中已弃用。
+
+在内部，调试模式的值将成为 :doc:`服务容器 </service_container>` 内部使用的 ``kernel.debug``
+参数。如果你查看应用的配置文件，你将看到所使用的参数，例如，打开Twig的调试模式：
+
+.. configuration-block::
+
+    .. code-block:: yaml
+
+        # config/packages/twig.yaml
+        twig:
+            debug: '%kernel.debug%'
+
+    .. code-block:: xml
+
+        <?xml version="1.0" encoding="UTF-8" ?>
+        <container xmlns="http://symfony.com/schema/dic/services"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns:twig="http://symfony.com/schema/dic/twig"
+            xsi:schemaLocation="http://symfony.com/schema/dic/services
+                https://symfony.com/schema/dic/services/services-1.0.xsd
+                http://symfony.com/schema/dic/twig
+                https://symfony.com/schema/dic/twig/twig-1.0.xsd">
+
+            <twig:config debug="%kernel.debug%"/>
+
+        </container>
+
+    .. code-block:: php
+
+        $container->loadFromExtension('twig', [
+            'debug' => '%kernel.debug%',
+            // ...
+        ]);
+
 环境
 ----------------
 
 如上所述，``Kernel`` 必须实现另一种方法 -  :method:`Symfony\\Bundle\\FrameworkBundle\\Kernel\\MicroKernelTrait::configureContainer`。
 此方法负责从正确的 *环境* 加载应用的配置。
 
-在 :doc:`前面的文章</configuration/environments>` 中已经全面的介绍了环境，你可能记得，
-Symfony默认使用三个环境 - ``dev``、``prod`` 和 ``test``。
+:ref:`配置环境 <configuration-environments>` 允许使用不同的配置来执行相同的代码。
+Symfony默认提供三个环境，分别叫做 ``dev``、``prod`` 和 ``test``。
 
 从技术上讲，这些名称只不过是从前端控制器传递给 ``Kernel`` 的构造函数的字符串。
 然后可以在 ``configureContainer()`` 方法中使用此名称来确定要加载的配置文件。
@@ -112,5 +184,45 @@ Symfony的默认 ``Kernel`` 类通过首先加载在 ``config/packages/*`` 中�
 然后该文件在 ``config/packages/ENVIRONMENT_NAME/`` 中被找到。
 如果你需要更复杂的加载配置的方式，那么你可以自由地以不同方式实现此方法。
 
-.. _模式: https://en.wikipedia.org/wiki/Front_Controller_pattern
-.. _装饰: https://en.wikipedia.org/wiki/Decorator_pattern
+.. index::
+   single: Environments; Cache directory
+
+环境和缓存目录
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Symfony以多种方式利用缓存：应用配置、路由配置、Twig模板等都缓存到存储在文件系统的文件中的PHP对象中。
+
+默认情况下，这些缓存的文件主要存储在 ``var/cache/`` 目录中。但是，每个环境都会缓存自己的文件集：
+
+.. code-block:: text
+
+    your-project/
+    ├─ var/
+    │  ├─ cache/
+    │  │  ├─ dev/   # *dev* 环境的缓存目录
+    │  │  └─ prod/  # *prod* 环境的缓存目录
+    │  ├─ ...
+
+有时，检查缓存文件以了解某些内容是如何工作的可能会对调试很有帮助。
+这样做时，请记住查看你正在使用的环境的对应目录（最常见的是在开发和调试时的
+``dev/``）。虽然它可以变化，但 ``var/cache/dev/`` 目录会包含以下内容：
+
+``appDevDebugProjectContainer.php``
+    “服务容器”的缓存，表示缓存的应用配置。
+
+``appDevUrlGenerator.php``
+    从路由配置生成的PHP类，并在生成URL时使用。
+
+``appDevUrlMatcher.php``
+    用于路由匹配的PHP类 - 在这里查看用于匹配传入URL到不同路由的已编译的正则表达式逻辑。
+
+``twig/``
+    该目录包含所有Twig模板的缓存。
+
+.. note::
+
+    你可以更改缓存目录位置和名称。有关更多信息，请阅读
+    :doc:`/configuration/override_dir_structure` 一文。
+
+.. _`模式`: https://en.wikipedia.org/wiki/Front_Controller_pattern
+.. _`装饰`: https://en.wikipedia.org/wiki/Decorator_pattern

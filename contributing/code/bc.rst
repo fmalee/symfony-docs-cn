@@ -1,4 +1,4 @@
-我们的向后兼容性承诺
+Our Backward Compatibility Promise
 ==================================
 
 Ensuring smooth upgrades of your projects is our first priority. That's why
@@ -94,7 +94,7 @@ public methods and properties.
 .. caution::
 
     Classes, properties and methods that bear the tag ``@internal`` as well as
-    the classes located in the various ``*\\Tests\\`` namespaces are an
+    the classes located in the various ``*\Tests\`` namespaces are an
     exception to this rule. They are meant for internal use only and should
     not be accessed by your own code.
 

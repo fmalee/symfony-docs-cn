@@ -66,8 +66,7 @@ Symfony有一个内置的数据库会话存储解决方案：
 
 .. tip::
 
-    :doc:`使用配置文件中的环境变量 </configuration/environment_variables>`
-    来配置数据库凭据，让你的应用更安全。
+    :ref:`使用配置文件中的环境变量 <config-env-vars>` 来配置数据库凭据，让你的应用更安全。
 
 接下来，告诉Symfony将你的服务用作会话处理器：
 

@@ -1,4 +1,4 @@
-Symfony Local Web Server
+Symfony本地Web服务器
 ========================
 
 You can run Symfony applications with any web server (Apache, nginx, the
@@ -11,11 +11,11 @@ other features that sooner or later you'll need when developing web projects.
 Moreover, the server is not tied to Symfony and you can also use it with any
 PHP application and even with HTML/SPA (single page applications).
 
-Installation
+安装
 ------------
 
-The Symfony server is distributed as a free installable binary without any
-dependency and support for Linux, macOS and Windows. Go to `symfony.com/download`_
+The Symfony server is distributed as a free installable binary, without any
+dependency, and has support for Linux, macOS and Windows. Go to `symfony.com/download`_
 and follow the instructions for your operating system.
 
 .. note::
@@ -57,7 +57,7 @@ run the Symfony server in the background:
     # show the latest log messages
     $ symfony server:log
 
-Enabling TLS
+启用TLS
 ------------
 
 Browsing the secure version of your applications locally is important to detect
@@ -104,7 +104,7 @@ root directory:
     directory to set the same PHP version for a group of projects under that
     directory.
 
-Run command if you don't remember all the PHP versions installed on your
+Run the command below if you don't remember all the PHP versions installed on your
 computer:
 
 .. code-block:: terminal

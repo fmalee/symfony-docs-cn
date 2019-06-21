@@ -233,7 +233,7 @@
 环境变量和动态值
 ----------------------------------------
 
-请参阅 :doc:`/configuration/environment_variables`。
+请参阅 :ref:`config-env-vars`。
 
 .. _component-di-parameters-constants:
 

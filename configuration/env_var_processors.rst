@@ -1,133 +1,13 @@
 .. index::
-    single: Environment Variables; env vars
-
-如何使用Symfony的环境变量配置
-=======================================================
-
-在 :doc:`/configuration` 中，你学习了如何管理应用配置。
-在本文中，你将学习如何使用环境变量（或简称“env vars”）来配置其中一些选项，
-这是配置敏感选项（如凭据和密码）的常见做法。
-
-.. _config-env-vars:
-
-在配置文件中引用环境变量
----------------------------
-
-首先，使用shell环境或项目根目录下的 ``.env`` 文件来定义环境变量的值。
-例如，考虑安装 ``doctrine`` 指令时定义的 ``DATABASE_URL``
-环境变量（按照惯例，环境变量名称总是大写的）：
-
-.. code-block:: bash
-
-    # .env
-    DATABASE_URL="mysql://db_user:db_password@127.0.0.1:3306/db_name"
-
-然后，你可以在任何配置选项中引用这些环境变量，并用 ``env()`` 来包含它们的名称。 它们的实际值将在运行时中解析（每个请求一次），这样即使在编译之后也可以动态地重新配置转储（dumped）容器：
-
-.. configuration-block::
-
-    .. code-block:: yaml
-
-        # config/packages/doctrine.yaml
-        doctrine:
-            dbal:
-                url: '%env(DATABASE_URL)%'
-            # ...
-
-    .. code-block:: xml
-
-        <!-- config/packages/doctrine.xml -->
-        <?xml version="1.0" encoding="UTF-8" ?>
-        <container xmlns="http://symfony.com/schema/dic/services"
-            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xmlns:doctrine="http://symfony.com/schema/dic/doctrine"
-            xsi:schemaLocation="http://symfony.com/schema/dic/services
-                https://symfony.com/schema/dic/services/services-1.0.xsd
-                http://symfony.com/schema/dic/doctrine
-                https://symfony.com/schema/dic/doctrine/doctrine-1.0.xsd">
-
-            <doctrine:config>
-                <doctrine:dbal
-                    url="%env(DATABASE_URL)%"
-                />
-            </doctrine:config>
-
-        </container>
-
-    .. code-block:: php
-
-        // config/packages/doctrine.php
-        $container->loadFromExtension('doctrine', [
-            'dbal' => [
-                'url' => '%env(DATABASE_URL)%',
-            ]
-        ]);
-
-你也可以给 ``env()`` 参数一个默认值，只要要相应的环境变量 *没有* 找到，该值将被使用：
-
-.. configuration-block::
-
-    .. code-block:: yaml
-
-        # config/services.yaml
-        parameters:
-            env(DATABASE_HOST): localhost
-
-    .. code-block:: xml
-
-        <!-- config/services.xml -->
-        <?xml version="1.0" encoding="UTF-8" ?>
-        <container xmlns="http://symfony.com/schema/dic/services"
-            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://symfony.com/schema/dic/services https://symfony.com/schema/dic/services/services-1.0.xsd">
-
-            <parameters>
-                <parameter key="env(DATABASE_HOST)">localhost</parameter>
-            </parameters>
-        </container>
-
-    .. code-block:: php
-
-        // config/services.php
-        $container->setParameter('env(DATABASE_HOST)', 'localhost');
-
-.. _configuration-env-var-in-prod:
-
-在生产中配置环境变量
------------------------------------------------
-
-在开发期间，你将使用 ``.env`` 文件来配置环境变量。
-在生产服务器上，建议在Web服务器级别配置它们。
-如果你使用的是Apache或Nginx，则可以使用以下某项：
-
-.. configuration-block::
-
-    .. code-block:: apache
-
-        <VirtualHost *:80>
-            # ...
-
-            SetEnv DATABASE_URL "mysql://db_user:db_password@127.0.0.1:3306/db_name"
-        </VirtualHost>
-
-    .. code-block:: nginx
-
-        fastcgi_param DATABASE_URL "mysql://db_user:db_password@127.0.0.1:3306/db_name";
-
-.. caution::
-
-    请注意，转储(dumping) ``$_SERVER`` 和 ``$_ENV`` 变量或输出
-    ``phpinfo()`` 内容将会显示环境变量的值，从而暴露敏感信息（如数据库凭据）。
-
-    环境变量的值也暴露在 :doc:`Symfony分析器 </profiler>` 的Web界面中。
-    在实践中，这应该不是问题，因为必须 *永远* 不在生产中启用Web分析器。
+    single: Environment Variable Processors; env vars
 
 环境变量处理器
--------------------------------
+===============================
 
-默认情况下，环境变量的值被视为字符串。
-但是，你的代码可能需要其他数据类型，如整数或布尔值。
-Symfony通过 *处理器* 解决了这个问题，处理器修改了给定环境变量的内容。
+:ref:`使用环境变量来配置Symfony应用 <config-env-vars>` 是隐藏敏感配置（例如数据库凭据）和使应用真正动态的常见做法。
+
+环境变量的主要问题是它们的值只能是字符串，而你的应用可能需要其他数据类型（整数，布尔值等）。
+Symfony用“环境变量处理器”解决了这个问题，它改变了给定环境变量的原始内容。
 以下示例使用整数处理器将 ``HTTP_PORT`` 环境变量的值转换为整数：
 
 .. configuration-block::
@@ -164,6 +44,9 @@ Symfony通过 *处理器* 解决了这个问题，处理器修改了给定环境
                 'http_port' => '%env(int:HTTP_PORT)%',
             ],
         ]);
+
+内置环境变量处理器
+----------------------------------------
 
 Symfony提供以下环境变量处理器：
 
@@ -486,7 +369,7 @@ Symfony提供以下环境变量处理器：
         auth: '%env(json:file:resolve:AUTH_FILE)%'
 
 自定义环境变量处理器
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--------------------------------------
 
 也可以为环境变量添加自己的处理器。
 首先，创建一个实现
@@ -515,26 +398,3 @@ Symfony提供以下环境变量处理器：
 ``container.env_var_processor`` 标签 :doc:`标记它 </service_container/tags>`。
 如果你使用 :ref:`默认的services.yaml配置 <service-container-services-load-example>`，
 :ref:`自动配置 <services-autoconfigure>` 已经为你完成该操作了。
-
-常量
----------
-
-该容器还支持将PHP常量设置为参数。有关详细信息，请参阅 :ref:`component-di-parameters-constants`。
-
-其他配置
----------------------------
-
-你可以在 ``config/packages/`` 中混合任何你喜欢的配置格式（YAML，XML和PHP）。
-导入PHP文件使你可以灵活地在容器中添加所需的任何内容。
-例如，你可以创建一个 ``drupal.php`` 文件，在该文件中根据Drupal的数据库配置设置数据库URL::
-
-    // config/packages/drupal.php
-
-    // 导入 Drupal 的配置
-    include_once('/path/to/drupal/sites/default/settings.php');
-
-    // 设置一个 app.database_url 参数
-    $container->setParameter('app.database_url', $db_url);
-
-.. _`SetEnv`: http://httpd.apache.org/docs/current/env.html
-.. _`fastcgi_param`: http://nginx.org/en/docs/http/ngx_http_fastcgi_module.html#fastcgi_param

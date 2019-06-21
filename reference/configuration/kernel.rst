@@ -100,7 +100,7 @@
 **类型**: ``string`` **默认值**: ``$this->rootDir/cache/$this->environment``
 
 这将返回Symfony项目的缓存目录的绝对路径。它是根据当前
-:doc:`环境 </configuration/environments>` 自动计算的。
+:ref:`环境 </configuration/environments>` 自动计算的。
 
 该值通过 ``kernel.cache_dir`` 配置参数和
 :method:`Symfony\\Component\\HttpKernel\\Kernel::getCacheDir` 方法公开。
@@ -112,7 +112,7 @@
 **类型**: ``string`` **默认值**: ``$this->rootDir/log``
 
 这将返回Symfony项目的日志目录的绝对路径。它是根据当前
-:doc:`环境 </configuration/environments>` 自动计算的。
+:ref:`环境 </configuration/environments>` 自动计算的。
 
 该值通过 ``kernel.log_dir`` 配置参数和
 :method:`Symfony\\Component\\HttpKernel\\Kernel::getLogDir` 方法公开。

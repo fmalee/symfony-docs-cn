@@ -32,7 +32,6 @@
   * :doc:`发布流程 </contributing/community/releases>`
   * :doc:`尊重审查意见 </contributing/community/review-comments>`
   * :doc:`社区审查 </contributing/community/reviews>`
-  * :doc:`其他资源 </contributing/community/other>`
 
 * **多样化**
 

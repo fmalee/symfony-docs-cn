@@ -9,4 +9,3 @@
     reviews
     mentoring
     speaker-mentoring
-    other

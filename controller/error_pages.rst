@@ -15,7 +15,7 @@
 
     $ composer require twig
 
-在 :doc:`开发环境 </configuration/environments>` 中，
+在 :ref:`开发环境 </configuration/environments>` 中，
 Symfony捕获所有异常并显示一个包含大量调试信息的特殊 **异常页面**，以帮助你发现问题的症结：
 
 .. image:: /_images/controller/error_pages/exceptions-in-dev-environment.png

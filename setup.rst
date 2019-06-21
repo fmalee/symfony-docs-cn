@@ -37,11 +37,10 @@
 （请参阅 :doc:`配置一个Web服务器来运行Symfony </setup/web_server_configuration>`）。
 但是对于开发来说，使用 :doc:`Symfony的本地服务器 <setup/symfony_server>` 会更方便。
 
-.. note::
+此本地服务器提供对HTTP/2、TLS/SSL、自动生成安全证书和许多其他功能的支持。
+它适用于任何PHP应用，而不仅适用于Symfony项目，因此它是一个非常有用的开发工具。
 
-    如果你想要使用虚拟机(VM)，可以参考 :doc:`Homestead </setup/homestead>`。
-
-进入你的新项目并且运行内置服务器：
+安装后，进入新项目并启动本地Web服务器：
 
 .. code-block:: terminal
 
@@ -57,15 +56,9 @@
     使用 :doc:`Symfony 运行环境检测 </reference/requirements>` 工具来确保
     你的系统已经安装好所需的环境。
 
-.. tip::
+.. note::
 
-    如果你是使用 VM，那么需要让服务器绑定所有的IP地址:
-
-    .. code-block:: terminal
-
-        $ php bin/console server:start 0.0.0.0:8000
-
-    你永远不应该在一台电脑上直接监听所有的接口(IP)，因为这样的话会让网络直接访问到你的电脑。
+    如果你想将虚拟机（VM）与Vagrant一​​起使用，请参阅 :doc:`Homestead </setup/homestead>`。
 
 使用 Git 保存项目
 ---------------------------

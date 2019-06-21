@@ -23,8 +23,6 @@
 创建缓存项
 --------------------
 
-The only way to create cache items is via cache pools. When using the Cache
-Contracts, they are passed as arguments to the recomputation callback::
 创建缓存项的唯一方法是通过缓存池。
 使用缓存契约时，它们作为一个参数传递给重新计算(recomputation)回调::
 
@@ -38,7 +36,7 @@ Contracts, they are passed as arguments to the recomputation callback::
     // $cache池对象之前就创建了
     $productsCount = $cache->getItem('stats.products_count');
 
-然后，使用 ``Psr\\Cache\\CacheItemInterface::set``
+然后，使用 ``Psr\Cache\CacheItemInterface::set``
 方法来设置存储在缓存项中的数据（此步骤在使用缓存契约时自动完成）::
 
     // 储存一个简单的整数

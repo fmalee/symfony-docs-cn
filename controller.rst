@@ -79,7 +79,9 @@
 控制器基类 & 服务
 ------------------------------------
 
-为了让生活更美好，Symfony附带了一个名为 :class:`Symfony\\Bundle\\FrameworkBundle\\Controller\\AbstractController` 的可选控制器基类。你可以继承它以访问一些 `辅助方法`_。
+为了帮助开发，symfony提供了一个可选的控制器基类，名为
+:class:`Symfony\\Bundle\\FrameworkBundle\\Controller\\AbstractController`。
+你可以继承通过它以访问一些 `辅助方法`_。
 
 在控制器类的顶部添加 ``use`` 语句，然后修改 ``LuckyController`` 以继承它：
 
@@ -318,7 +320,7 @@ Symfony会自动给你传递所需的服务::
 
 如果你需要读取查询参数、获取请求标头或访问上传的文件，该怎么办？
 所有这些信息都存储在Symfony的 ``Request`` 对象中。
-要在控制器中获取它，只需将Request添加为参数并对其该类进行类类型约束::
+要在控制器中访问它，只需将Request添加为参数并对其该类进行类类型约束::
 
     use Symfony\Component\HttpFoundation\Request;
 
@@ -481,12 +483,12 @@ Symfony会将 ``Request`` 对象传递给任何使用 ``Request`` 类进行类�
 
 ``Request`` 类有几个公共属性和方法，可返回有关请求的所有信息。
 
-与 ``Request`` 类似，``Response`` 对象也有一个公共 ``headers`` 属性。
-这是一个 :class:`Symfony\\Component\\HttpFoundation\\ResponseHeaderBag`，
-它有一些很好的方法来获取和设置响应头。
-标头(header)已经被规范化，因此使用 ``Content-Type`` 等同于 ``content-type`` 或甚至 ``content_type``。
+与 ``Request`` 类似，``Response`` 对象有一个公共 ``headers`` 属性。此对象属于
+:class:`Symfony\\Component\\HttpFoundation\\ResponseHeaderBag`
+类型，并提供获取和设置响应标头的方法。该标头的名称已经被规范化。因此，``Content-Type``
+的名称等同于 ``content-type`` 或 ``content_type``的名称。
 
-对一个控制器的唯一要求是返回一个 ``Response`` 对象::
+在Symfony中，控制器需要返回一个 ``Response`` 对象::
 
     use Symfony\Component\HttpFoundation\Response;
 
@@ -497,15 +499,15 @@ Symfony会将 ``Request`` 对象传递给任何使用 ``Request`` 类进行类�
     $response = new Response('<style> ... </style>');
     $response->headers->set('Content-Type', 'text/css');
 
-有一些特殊的类可以使设置某些类型的响应更容易。
-其中一些在下面提到。要了解有关 ``Request`` 和 ``Response`` （以及特殊 ``Response`` 类）的更多信息，
-请参阅 :ref:`HttpFoundation组件文档 <component-http-foundation-request>`。
+为了方便这一点，内置了不同的响应对象来处理不同的响应类型。其中一些会在下面提到。
+要了解有关 ``Request`` 和 ``Response``（以及不同的 ``Response`` 类）的更多信息 ，请参阅
+:ref:`HttpFoundation组件文档 <component-http-foundation-request>`。
 
 返回JSON响应
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 要从控制器返回JSON，请使用 ``json()`` 辅助方法。
-这将返回一个特殊的 ``JsonResponse`` 对象，该对象自动对数据进行编码::
+这将返回一个 ``JsonResponse`` 对象，该对象自动对数据进行编码::
 
     // ...
     public function index()
@@ -554,11 +556,13 @@ Symfony会将 ``Request`` 对象传递给任何使用 ``Request`` 类进行类�
 总结
 --------------
 
-当你创建了一个页面，你需要在页面中编写一些业务逻辑的代码。
-在symfony中，这些就是控制器，它是一个能够做任何事情的PHP函数，目的是把最终的 ``Response`` 对象返回给用户。
+在Symfony中，控制器通常是一个类方法，用于接受请求并返回一个 ``Response``
+对象。使用一个URL进行映射时，控制器变为可访问状态，并且可以查看其响应。
 
-为了简化操作，你可以会继承 ``AbstractController`` 基类，
-因为这样可以快捷的访问一些方法（如 ``render()`` 和 ``redirectToRoute()``）。
+为了方便控制器的开发，Symfony提供了一个
+``AbstractController``。它可用于扩展控制器类，以允许访问一些常用的实用工具，如
+``render()`` 和 ``redirectToRoute()``。``AbstractController`` 还提供了
+``createNotFoundException()`` 工具，用于一个返回页面未找到的响应。
 
 在其他文章中，你将学习如何使用控制器内部的特定服务，这些服务将帮助你持久化并从数据库中获取对象，处理表单提交，处理缓存等。
 

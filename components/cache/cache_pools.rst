@@ -102,7 +102,7 @@
 ~~~~~~~~~~~~~~~~~~
 
 保存缓存项的最常用方法是将项立即存储在缓存中的
-``Psr\\Cache\\CacheItemPoolInterface::save``（如果项已保存，返回
+``Psr\Cache\CacheItemPoolInterface::save``（如果项已保存，返回
 ``true``，如果发生了一些错误，则返回 ``false``）::
 
     // ...
@@ -111,9 +111,9 @@
     $isSaved = $cache->save($userFriends);
 
 有时你可能不希望立即保存对象以提高应用性能。在这些情况下，使用
-``Psr\\Cache\\CacheItemPoolInterface::saveDeferred``
+``Psr\Cache\CacheItemPoolInterface::saveDeferred``
 方法将缓存项标记为“准备好持久化”，然后在准备好将其全部持久化时调用
-``Psr\\Cache\\CacheItemPoolInterface::commit`` 方法::
+``Psr\Cache\CacheItemPoolInterface::commit`` 方法::
 
     // ...
     $isQueued = $cache->saveDeferred($userFriends);
@@ -131,19 +131,19 @@
 ~~~~~~~~~~~~~~~~~~~~
 
 缓存池包含删除其中一些或全部缓存项的方法。最常见的是
-``Psr\\Cache\\CacheItemPoolInterface::deleteItem``，
+``Psr\Cache\CacheItemPoolInterface::deleteItems``，
 该方法删除由给定键标识的缓存项（当项成功删除或不存在给定缓存项时返回 ``true``，否则返回 ``false``）::
 
     // ...
     $isDeleted = $cache->deleteItem('user_'.$userId);
 
-可以使用 ``Psr\\Cache\\CacheItemPoolInterface::deleteItems``
+可以使用 ``Psr\Cache\CacheItemPoolInterface::deleteItem``
 方法来同时删除多个缓存项（仅当所有项都已删除时才返回 ``true``，即使其中任何一个或部分项不存在）::
 
     // ...
     $areDeleted = $cache->deleteItems(['category1', 'category2']);
 
-最后，要删除存储在池中的所有缓存项，请使用 ``Psr\\Cache\\CacheItemPoolInterface::clear``
+最后，要删除存储在池中的所有缓存项，请使用 ``Psr\Cache\CacheItemPoolInterface::clear``
 方法（在成功删除所有项时返回 ``true``）::
 
     // ...
@@ -183,7 +183,7 @@
 某些缓存池不包含用于清理(Pruning)过期缓存项的自动机制。
 例如 :ref:`FilesystemAdapter <component-cache-filesystem-adapter>`
 缓存不会删除过期的缓存项，*直到该项被明确请求并确定过期为止*，例如，调用了
-``Psr\\Cache\\CacheItemPoolInterface::getItem``。
+``Psr\Cache\CacheItemPoolInterface::getItem``。
 在某些工作负载下，这可能导致过时的缓存条目在过期后持续存在，从而导致过多的过期缓存项大量消耗磁盘或内存空间。
 
 这个缺点已经通过引入 :class:`Symfony\\Component\\Cache\\PruneableInterface`

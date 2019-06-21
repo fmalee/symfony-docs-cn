@@ -199,7 +199,7 @@
 
         # config/services.yaml
 
-        # 把它放在注册你的所有服务的 `App\` 行之后
+        # 把它放在注册你的所有服务的 "App\" 行之后
         command_handlers:
             namespace: App\MessageHandler\
             resource: '%kernel.project_dir%/src/MessageHandler/*CommandHandler.php'
