@@ -31,6 +31,9 @@ Symfony如何使用表决器
 或继承 :class:`Symfony\\Component\\Security\\Core\\Authorization\\Voter\\Voter`，
 它们使得创建表决器更加容易::
 
+    use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+    use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
+
     abstract class Voter implements VoterInterface
     {
         abstract protected function supports($attribute, $subject);
@@ -107,7 +110,7 @@ Symfony如何使用表决器
         protected function supports($attribute, $subject)
         {
             // 如果该属性不是我们支持属性之一，则返回 false
-            if (!in_array($attribute, array(self::VIEW, self::EDIT))) {
+            if (!in_array($attribute, [self::VIEW, self::EDIT])) {
                 return false;
             }
 
@@ -275,20 +278,20 @@ Symfony将在实例化你的表决器时自动传递 ``security.helper`` 服务�
             xmlns:srv="http://symfony.com/schema/dic/services"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd"
+                https://symfony.com/schema/dic/services/services-1.0.xsd"
         >
 
             <config>
-                <access-decision-manager strategy="unanimous" allow-if-all-abstain="false"  />
+                <access-decision-manager strategy="unanimous" allow-if-all-abstain="false"/>
             </config>
         </srv:container>
 
     .. code-block:: php
 
         // config/packages/security.php
-        $container->loadFromExtension('security', array(
-            'access_decision_manager' => array(
+        $container->loadFromExtension('security', [
+            'access_decision_manager' => [
                 'strategy' => 'unanimous',
                 'allow_if_all_abstain' => false,
-            ),
-        ));
+            ],
+        ]);

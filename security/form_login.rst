@@ -40,12 +40,12 @@ form_login设置
             xmlns:srv="http://symfony.com/schema/dic/services"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <config>
                 <firewall name="main">
-                    <anonymous />
-                    <form-login login-path="login" check-path="login" />
+                    <anonymous/>
+                    <form-login login-path="login" check-path="login"/>
                 </firewall>
             </config>
         </srv:container>
@@ -53,17 +53,17 @@ form_login设置
     .. code-block:: php
 
         // config/packages/security.php
-        $container->loadFromExtension('security', array(
-            'firewalls' => array(
-                'main' => array(
+        $container->loadFromExtension('security', [
+            'firewalls' => [
+                'main' => [
                     'anonymous'  => null,
-                    'form_login' => array(
+                    'form_login' => [
                         'login_path' => 'login',
                         'check_path' => 'login',
-                    ),
-                ),
-            ),
-        ));
+                    ],
+                ],
+            ],
+        ]);
 
 .. tip::
 
@@ -71,7 +71,7 @@ form_login设置
     但该路由不能有强制性通配符 - 例如 ``/login/{foo}``，在那里，``foo`` 没有默认值。
 
 现在，当安全系统启动认证进程时，它会将用户重定向到 ``/login`` 登录表单。
-实现此登录表单是你的工作。首先，在bundle中创建一个新的 ``SecurityController``::
+实现此登录表单是你的工作。首先，创建一个新的 ``SecurityController``::
 
     // src/Controller/SecurityController.php
     namespace App\Controller;
@@ -96,7 +96,7 @@ form_login设置
         class SecurityController extends AbstractController
         {
             /**
-             * @Route("/login", name="login")
+             * @Route("/login", name="login", methods={"GET", "POST"})
              */
             public function login()
             {
@@ -109,6 +109,7 @@ form_login设置
         login:
             path:       /login
             controller: App\Controller\SecurityController::login
+            methods: GET|POST
 
     .. code-block:: xml
 
@@ -117,26 +118,23 @@ form_login设置
         <routes xmlns="http://symfony.com/schema/routing"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/routing
-                http://symfony.com/schema/routing/routing-1.0.xsd">
+                https://symfony.com/schema/routing/routing-1.0.xsd">
 
-            <route id="login" path="/login">
-                <default key="_controller">App\Controller\SecurityController::login</default>
-            </route>
+            <route id="login" path="/login" controller="App\Controller\SecurityController::login" methods="GET|POST"/>
         </routes>
 
     ..  code-block:: php
 
         // config/routes.php
         use App\Controller\SecurityController;
-        use Symfony\Component\Routing\RouteCollection;
-        use Symfony\Component\Routing\Route;
+        use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
-        $routes = new RouteCollection();
-        $routes->add('login', new Route('/login', array(
-            '_controller' => array(SecurityController::class, 'login'),
-        )));
-
-        return $routes;
+        return function (RoutingConfigurator $routes) {
+            $routes->add('login', '/login')
+                ->controller([SecurityController::class, 'login'])
+                ->methods(['GET', 'POST'])
+            ;
+        };
 
 很好！接下来，添加逻辑到 ``login()`` 以显示登录表单::
 
@@ -151,10 +149,10 @@ form_login设置
         // 用户最后一次输入的用户名
         $lastUsername = $authenticationUtils->getLastUsername();
 
-        return $this->render('security/login.html.twig', array(
+        return $this->render('security/login.html.twig', [
             'last_username' => $lastUsername,
             'error'         => $error,
-        ));
+        ]);
     }
 
 .. note::
@@ -182,14 +180,14 @@ form_login设置
 
     <form action="{{ path('login') }}" method="post">
         <label for="username">Username:</label>
-        <input type="text" id="username" name="_username" value="{{ last_username }}" />
+        <input type="text" id="username" name="_username" value="{{ last_username }}"/>
 
         <label for="password">Password:</label>
-        <input type="password" id="password" name="_password" />
+        <input type="password" id="password" name="_password"/>
 
         {#
             如果要控制用户认证成功后重定向的URL（更多详细信息稍后说明）
-            <input type="hidden" name="_target_path" value="/account" />
+            <input type="hidden" name="_target_path" value="/account"/>
         #}
 
         <button type="submit">login</button>
@@ -260,14 +258,14 @@ form_login设置
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:srv="http://symfony.com/schema/dic/services"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <config>
                 <!-- ... -->
 
                 <firewall name="secured_area">
                     <!-- ... -->
-                    <form-login csrf-token-generator="security.csrf.token_manager" />
+                    <form-login csrf-token-generator="security.csrf.token_manager"/>
                 </firewall>
             </config>
         </srv:container>
@@ -275,19 +273,19 @@ form_login设置
     .. code-block:: php
 
         // config/packages/security.php
-        $container->loadFromExtension('security', array(
+        $container->loadFromExtension('security', [
             // ...
 
-            'firewalls' => array(
-                'secured_area' => array(
+            'firewalls' => [
+                'secured_area' => [
                     // ...
-                    'form_login' => array(
+                    'form_login' => [
                         // ...
                         'csrf_token_generator' => 'security.csrf.token_manager',
-                    ),
-                ),
-            ),
-        ));
+                    ],
+                ],
+            ],
+        ]);
 
 .. _csrf-login-template:
 
@@ -340,7 +338,7 @@ form_login设置
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xmlns:srv="http://symfony.com/schema/dic/services"
                 xsi:schemaLocation="http://symfony.com/schema/dic/services
-                    http://symfony.com/schema/dic/services/services-1.0.xsd">
+                    https://symfony.com/schema/dic/services/services-1.0.xsd">
 
                 <config>
                     <!-- ... -->
@@ -357,20 +355,20 @@ form_login设置
         .. code-block:: php
 
             // config/packages/security.php
-            $container->loadFromExtension('security', array(
+            $container->loadFromExtension('security', [
                 // ...
 
-                'firewalls' => array(
-                    'secured_area' => array(
+                'firewalls' => [
+                    'secured_area' => [
                         // ...
-                        'form_login' => array(
+                        'form_login' => [
                             // ...
                             'csrf_parameter' => '_csrf_security_token',
                             'csrf_token_id'  => 'a_private_string',
-                        ),
-                    ),
-                ),
-            ));
+                        ],
+                    ],
+                ],
+            ]);
 
 成功后重定向
 -------------------------
@@ -410,13 +408,13 @@ form_login设置
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:srv="http://symfony.com/schema/dic/services"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <config>
                 <!-- ... -->
 
                 <firewall name="main">
-                    <form-login default-target-path="after_login_route_name" />
+                    <form-login default-target-path="after_login_route_name"/>
                 </firewall>
             </config>
         </srv:container>
@@ -424,20 +422,20 @@ form_login设置
     .. code-block:: php
 
         // config/packages/security.php
-        $container->loadFromExtension('security', array(
+        $container->loadFromExtension('security', [
             // ...
 
-            'firewalls' => array(
-                'main' => array(
+            'firewalls' => [
+                'main' => [
                     // ...
 
-                    'form_login' => array(
+                    'form_login' => [
                         // ...
                         'default_target_path' => 'after_login_route_name',
-                    ),
-                ),
-            ),
-        ));
+                    ],
+                ],
+            ],
+        ]);
 
 始终重定向到默认页面
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -466,14 +464,14 @@ form_login设置
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:srv="http://symfony.com/schema/dic/services"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <config>
                 <!-- ... -->
 
                 <firewall name="main">
                     <!-- ... -->
-                    <form-login always-use-default-target-path="true" />
+                    <form-login always-use-default-target-path="true"/>
                 </firewall>
             </config>
         </srv:container>
@@ -481,20 +479,20 @@ form_login设置
     .. code-block:: php
 
         // config/packages/security.php
-        $container->loadFromExtension('security', array(
+        $container->loadFromExtension('security', [
             // ...
 
-            'firewalls' => array(
-                'main' => array(
+            'firewalls' => [
+                'main' => [
                     // ...
 
-                    'form_login' => array(
+                    'form_login' => [
                         // ...
                         'always_use_default_target_path' => true,
-                    ),
-                ),
-            ),
-        ));
+                    ],
+                ],
+            ],
+        ]);
 
 .. _control-the-redirect-url-from-inside-the-form:
 
@@ -518,8 +516,8 @@ form_login设置
     <form action="{{ path('login') }}" method="post">
         {# ... #}
 
-        <input type="hidden" name="_target_path" value="{{ path('account') }}" />
-        <input type="submit" name="login" />
+        <input type="hidden" name="_target_path" value="{{ path('account') }}"/>
+        <input type="submit" name="login"/>
     </form>
 
 使用 ``Referer`` 中的URL
@@ -552,14 +550,14 @@ form_login设置
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:srv="http://symfony.com/schema/dic/services"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <config>
                 <!-- ... -->
 
                 <firewall name="main">
                     <!-- ... -->
-                    <form-login use-referer="true" />
+                    <form-login use-referer="true"/>
                 </firewall>
             </config>
         </srv:container>
@@ -567,19 +565,19 @@ form_login设置
     .. code-block:: php
 
         // config/packages/security.php
-        $container->loadFromExtension('security', array(
+        $container->loadFromExtension('security', [
             // ...
 
-            'firewalls' => array(
-                'main' => array(
+            'firewalls' => [
+                'main' => [
                     // ...
-                    'form_login' => array(
+                    'form_login' => [
                         // ...
                         'use_referer' => true,
-                    ),
-                ),
-            ),
-        ));
+                    ],
+                ],
+            ],
+        ]);
 
 .. note::
 
@@ -616,14 +614,14 @@ form_login设置
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:srv="http://symfony.com/schema/dic/services"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <config>
                 <!-- ... -->
 
                 <firewall name="main">
                     <!-- ... -->
-                    <form-login failure-path="login_failure_route_name" />
+                    <form-login failure-path="login_failure_route_name"/>
                 </firewall>
             </config>
         </srv:container>
@@ -631,19 +629,19 @@ form_login设置
     .. code-block:: php
 
         // config/packages/security.php
-        $container->loadFromExtension('security', array(
+        $container->loadFromExtension('security', [
             // ...
 
-            'firewalls' => array(
-                'main' => array(
+            'firewalls' => [
+                'main' => [
                     // ...
-                    'form_login' => array(
+                    'form_login' => [
                         // ...
                         'failure_path' => 'login_failure_route_name',
-                    ),
-                ),
-            ),
-        ));
+                    ],
+                ],
+            ],
+        ]);
 
 也可以通过 ``_failure_path`` 请求参数来设置此选项：
 
@@ -657,8 +655,8 @@ form_login设置
     <form action="{{ path('login') }}" method="post">
         {# ... #}
 
-        <input type="hidden" name="_failure_path" value="{{ path('forgot_password') }}" />
-        <input type="submit" name="login" />
+        <input type="hidden" name="_failure_path" value="{{ path('forgot_password') }}"/>
+        <input type="submit" name="login"/>
     </form>
 
 自定义目标页面和失败请求参数
@@ -690,15 +688,15 @@ form_login设置
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:srv="http://symfony.com/schema/dic/services"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <config>
                 <!-- ... -->
 
                 <firewall name="main">
                     <!-- ... -->
-                    <form-login target-path-parameter="go_to" />
-                    <form-login failure-path-parameter="back_to" />
+                    <form-login target-path-parameter="go_to"/>
+                    <form-login failure-path-parameter="back_to"/>
                 </firewall>
             </config>
         </srv:container>
@@ -706,19 +704,19 @@ form_login设置
     .. code-block:: php
 
         // config/packages/security.php
-        $container->loadFromExtension('security', array(
+        $container->loadFromExtension('security', [
             // ...
 
-            'firewalls' => array(
-                'main' => array(
+            'firewalls' => [
+                'main' => [
                     // ...
-                    'form_login' => array(
+                    'form_login' => [
                         'target_path_parameter' => 'go_to',
                         'failure_path_parameter' => 'back_to',
-                    ),
-                ),
-            ),
-        ));
+                    ],
+                ],
+            ],
+        ]);
 
 使用上面的配置，查询字符串参数和隐藏的表单字段现在已经完全自定义：
 
@@ -732,9 +730,9 @@ form_login设置
     <form action="{{ path('login') }}" method="post">
         {# ... #}
 
-        <input type="hidden" name="go_to" value="{{ path('dashboard') }}" />
-        <input type="hidden" name="back_to" value="{{ path('forgot_password') }}" />
-        <input type="submit" name="login" />
+        <input type="hidden" name="go_to" value="{{ path('dashboard') }}"/>
+        <input type="hidden" name="back_to" value="{{ path('forgot_password') }}"/>
+        <input type="submit" name="login"/>
     </form>
 
 .. _`登录CSRF攻击`: https://en.wikipedia.org/wiki/Cross-site_request_forgery#Forging_login_requests

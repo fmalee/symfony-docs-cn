@@ -62,7 +62,7 @@ depending on some dynamic application settings.）
         public function getEnabledFormatters()
         {
             // 用于配置要使用的格式化器的代码
-            $enabledFormatters = array(...);
+            $enabledFormatters = [...];
 
             // ...
 
@@ -126,10 +126,10 @@ depending on some dynamic application settings.）
 
             # 重写服务以设置配置器
             App\Mail\NewsletterManager:
-                configurator: 'App\Mail\EmailConfigurator:configure'
+                configurator: ['@App\Mail\EmailConfigurator', 'configure']
 
             App\Mail\GreetingCardManager:
-                configurator: 'App\Mail\EmailConfigurator:configure'
+                configurator: ['@App\Mail\EmailConfigurator', 'configure']
 
     .. code-block:: xml
 
@@ -138,17 +138,17 @@ depending on some dynamic application settings.）
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <services>
-                <prototype namespace="App\" resource="../src/*" />
+                <prototype namespace="App\" resource="../src/*"/>
 
                 <service id="App\Mail\NewsletterManager">
-                    <configurator service="App\Mail\EmailConfigurator" method="configure" />
+                    <configurator service="App\Mail\EmailConfigurator" method="configure"/>
                 </service>
 
                 <service id="App\Mail\GreetingCardManager">
-                    <configurator service="App\Mail\EmailConfigurator" method="configure" />
+                    <configurator service="App\Mail\EmailConfigurator" method="configure"/>
                 </service>
             </services>
         </container>
@@ -169,20 +169,10 @@ depending on some dynamic application settings.）
         $this->registerClasses($definition, 'App\\', '../src/*');
 
         $container->getDefinition(NewsletterManager::class)
-            ->setConfigurator(array(new Reference(EmailConfigurator::class), 'configure'));
+            ->setConfigurator([new Reference(EmailConfigurator::class), 'configure']);
 
         $container->getDefinition(GreetingCardManager::class)
-            ->setConfigurator(array(new Reference(EmailConfigurator::class), 'configure'));
-
-在YAML文件中，传统的配置器语法是使用一个数组来定义服务id和方法名称：
-
-.. code-block:: yaml
-
-    app.newsletter_manager:
-        # 新语法
-        configurator: 'App\Mail\EmailConfigurator:configure'
-        # 传统语法
-        configurator: ['@App\Mail\EmailConfigurator', configure]
+            ->setConfigurator([new Reference(EmailConfigurator::class), 'configure']);
 
 仅此而已！在请求 ``App\Mail\NewsletterManager`` 或 ``App\Mail\GreetingCardManager``
 服务时，已创建的实例将首先传递给 ``EmailConfigurator::configure()`` 方法。

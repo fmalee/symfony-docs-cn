@@ -22,21 +22,6 @@ Twig快捷方式（或者是以某种其他方式 :ref:`通过entrypoints.json�
 
 这将启动服务器于：``https://localhost:9000``。
 
-.. note::
-
-    此Webpack服务器独立于 :doc:`Symfony的开发Web服务器 </setup/built_in_web_server>`，你需要单独运行它们。
-
-VM中使用dev-server
-----------------------------
-
-如果你在虚拟机内部使用 ``dev-server``，则需要绑定到所有IP地址并允许任何主机访问该服务器：
-
-.. code-block:: terminal
-
-    $ ./node_modules/.bin/encore dev-server --host 0.0.0.0 --disable-host-check
-
-你现在可以使用虚拟机的IP地址的8000端口访问开发服务器 - 例如 http://192.168.1.1:8080。
-
 热模块更换（HMR）
 --------------------------
 

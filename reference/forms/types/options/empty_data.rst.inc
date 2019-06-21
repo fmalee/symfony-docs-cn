@@ -16,10 +16,10 @@ It does not set an initial value if none is provided when the form is rendered i
 这意味着它可以帮助你处理带有空白字段的表单提交。
 例如，如果你希望在未选中任何值时将 ``name`` 字段显式的设置为 ``John Doe``，则可以这样操作::
 
-    $builder->add('name', null, array(
+    $builder->add('name', null, [
         'required'   => false,
         'empty_data' => 'John Doe',
-    ));
+    ]);
 
 这仍将渲染一个空文本框，但在提交时将如果该字段仍为空，则设置为 ``John Doe`` 值。
 也可以使用 ``data`` 或 ``placeholder`` 选项在已渲染表单中显示此初始值。

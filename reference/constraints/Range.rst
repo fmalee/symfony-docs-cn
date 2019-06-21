@@ -1,22 +1,20 @@
 Range
 =====
 
-Validates that a given number is *between* some minimum and maximum number.
+Validates that a given number or ``DateTime`` object is *between* some minimum and maximum.
 
-+----------------+---------------------------------------------------------------------+
-| Applies to     | :ref:`property or method <validation-property-target>`              |
-+----------------+---------------------------------------------------------------------+
-| Options        | - `min`_                                                            |
-|                | - `max`_                                                            |
-|                | - `minMessage`_                                                     |
-|                | - `maxMessage`_                                                     |
-|                | - `invalidMessage`_                                                 |
-|                | - `payload`_                                                        |
-+----------------+---------------------------------------------------------------------+
-| Class          | :class:`Symfony\\Component\\Validator\\Constraints\\Range`          |
-+----------------+---------------------------------------------------------------------+
-| Validator      | :class:`Symfony\\Component\\Validator\\Constraints\\RangeValidator` |
-+----------------+---------------------------------------------------------------------+
+==========  ===================================================================
+Applies to  :ref:`property or method <validation-property-target>`
+Options     - `groups`_
+            - `invalidMessage`_
+            - `max`_
+            - `maxMessage`_
+            - `min`_
+            - `minMessage`_
+            - `payload`_
+Class       :class:`Symfony\\Component\\Validator\\Constraints\\Range`
+Validator   :class:`Symfony\\Component\\Validator\\Constraints\\RangeValidator`
+==========  ===================================================================
 
 Basic Usage
 -----------
@@ -43,7 +41,7 @@ you might add the following:
              *      maxMessage = "You cannot be taller than {{ limit }}cm to enter"
              * )
              */
-             protected $height;
+            protected $height;
         }
 
     .. code-block:: yaml
@@ -64,7 +62,7 @@ you might add the following:
         <?xml version="1.0" encoding="UTF-8" ?>
         <constraint-mapping xmlns="http://symfony.com/schema/dic/constraint-mapping"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping http://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
+            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping https://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
 
             <class name="App\Entity\Participant">
                 <property name="height">
@@ -83,19 +81,19 @@ you might add the following:
         // src/Entity/Participant.php
         namespace App\Entity;
 
-        use Symfony\Component\Validator\Mapping\ClassMetadata;
         use Symfony\Component\Validator\Constraints as Assert;
+        use Symfony\Component\Validator\Mapping\ClassMetadata;
 
         class Participant
         {
             public static function loadValidatorMetadata(ClassMetadata $metadata)
             {
-                $metadata->addPropertyConstraint('height', new Assert\Range(array(
-                    'min'        => 120,
-                    'max'        => 180,
+                $metadata->addPropertyConstraint('height', new Assert\Range([
+                    'min' => 120,
+                    'max' => 180,
                     'minMessage' => 'You must be at least {{ limit }}cm tall to enter',
                     'maxMessage' => 'You cannot be taller than {{ limit }}cm to enter',
-                )));
+                ]));
             }
         }
 
@@ -143,7 +141,7 @@ date must lie within the current year like this:
         <?xml version="1.0" encoding="UTF-8" ?>
         <constraint-mapping xmlns="http://symfony.com/schema/dic/constraint-mapping"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping http://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
+            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping https://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
 
             <class name="App\Entity\Event">
                 <property name="startDate">
@@ -160,17 +158,17 @@ date must lie within the current year like this:
         // src/Entity/Event.php
         namespace App\Entity;
 
-        use Symfony\Component\Validator\Mapping\ClassMetadata;
         use Symfony\Component\Validator\Constraints as Assert;
+        use Symfony\Component\Validator\Mapping\ClassMetadata;
 
         class Event
         {
             public static function loadValidatorMetadata(ClassMetadata $metadata)
             {
-                $metadata->addPropertyConstraint('startDate', new Assert\Range(array(
+                $metadata->addPropertyConstraint('startDate', new Assert\Range([
                     'min' => 'first day of January',
                     'max' => 'first day of January next year',
-                )));
+                ]));
             }
         }
 
@@ -213,7 +211,7 @@ dates. If you want to fix the timezone, append it to the date string:
         <?xml version="1.0" encoding="UTF-8" ?>
         <constraint-mapping xmlns="http://symfony.com/schema/dic/constraint-mapping"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping http://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
+            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping https://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
 
             <class name="App\Entity\Event">
                 <property name="startDate">
@@ -230,17 +228,17 @@ dates. If you want to fix the timezone, append it to the date string:
         // src/Entity/Person.php
         namespace App\Entity;
 
-        use Symfony\Component\Validator\Mapping\ClassMetadata;
         use Symfony\Component\Validator\Constraints as Assert;
+        use Symfony\Component\Validator\Mapping\ClassMetadata;
 
         class Event
         {
             public static function loadValidatorMetadata(ClassMetadata $metadata)
             {
-                $metadata->addPropertyConstraint('startDate', new Assert\Range(array(
+                $metadata->addPropertyConstraint('startDate', new Assert\Range([
                     'min' => 'first day of January UTC',
                     'max' => 'first day of January next year UTC',
-                )));
+                ]));
             }
         }
 
@@ -283,7 +281,7 @@ can check that a delivery date starts within the next five hours like this:
         <?xml version="1.0" encoding="UTF-8" ?>
         <constraint-mapping xmlns="http://symfony.com/schema/dic/constraint-mapping"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping http://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
+            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping https://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
 
             <class name="App\Entity\Order">
                 <property name="deliveryDate">
@@ -300,74 +298,24 @@ can check that a delivery date starts within the next five hours like this:
         // src/Entity/Order.php
         namespace App\Entity;
 
-        use Symfony\Component\Validator\Mapping\ClassMetadata;
         use Symfony\Component\Validator\Constraints as Assert;
+        use Symfony\Component\Validator\Mapping\ClassMetadata;
 
         class Order
         {
             public static function loadValidatorMetadata(ClassMetadata $metadata)
             {
-                $metadata->addPropertyConstraint('deliveryDate', new Assert\Range(array(
+                $metadata->addPropertyConstraint('deliveryDate', new Assert\Range([
                     'min' => 'now',
                     'max' => '+5 hours',
-                )));
+                ]));
             }
         }
 
 Options
 -------
 
-min
-~~~
-
-**type**: ``integer``
-
-This required option is the "min" value. Validation will fail if the given
-value is **less** than this min value.
-
-max
-~~~
-
-**type**: ``integer``
-
-This required option is the "max" value. Validation will fail if the given
-value is **greater** than this max value.
-
-minMessage
-~~~~~~~~~~
-
-**type**: ``string`` **default**: ``This value should be {{ limit }} or more.``
-
-The message that will be shown if the underlying value is less than the
-`min`_ option.
-
-You can use the following parameters in this message:
-
-+-----------------+-----------------------------+
-| Parameter       | Description                 |
-+=================+=============================+
-| ``{{ value }}`` | The current (invalid) value |
-+-----------------+-----------------------------+
-| ``{{ limit }}`` | The lower limit             |
-+-----------------+-----------------------------+
-
-maxMessage
-~~~~~~~~~~
-
-**type**: ``string`` **default**: ``This value should be {{ limit }} or less.``
-
-The message that will be shown if the underlying value is more than the
-`max`_ option.
-
-You can use the following parameters in this message:
-
-+-----------------+-----------------------------+
-| Parameter       | Description                 |
-+=================+=============================+
-| ``{{ value }}`` | The current (invalid) value |
-+-----------------+-----------------------------+
-| ``{{ limit }}`` | The upper limit             |
-+-----------------+-----------------------------+
+.. include:: /reference/constraints/_groups-option.rst.inc
 
 invalidMessage
 ~~~~~~~~~~~~~~
@@ -379,11 +327,61 @@ the `is_numeric`_ PHP function).
 
 You can use the following parameters in this message:
 
-+-----------------+-----------------------------+
-| Parameter       | Description                 |
-+=================+=============================+
-| ``{{ value }}`` | The current (invalid) value |
-+-----------------+-----------------------------+
+===============  ==============================================================
+Parameter        Description
+===============  ==============================================================
+``{{ value }}``  The current (invalid) value
+===============  ==============================================================
+
+max
+~~~
+
+**type**: ``number`` or ``string`` (date format)
+
+This required option is the "max" value. Validation will fail if the given
+value is **greater** than this max value.
+
+maxMessage
+~~~~~~~~~~
+
+**type**: ``string`` **default**: ``This value should be {{ limit }} or less.``
+
+The message that will be shown if the underlying value is more than the
+`max`_ option.
+
+You can use the following parameters in this message:
+
+===============  ==============================================================
+Parameter        Description
+===============  ==============================================================
+``{{ limit }}``  The upper limit
+``{{ value }}``  The current (invalid) value
+===============  ==============================================================
+
+min
+~~~
+
+**type**: ``number`` or ``string`` (date format)
+
+This required option is the "min" value. Validation will fail if the given
+value is **less** than this min value.
+
+minMessage
+~~~~~~~~~~
+
+**type**: ``string`` **default**: ``This value should be {{ limit }} or more.``
+
+The message that will be shown if the underlying value is less than the
+`min`_ option.
+
+You can use the following parameters in this message:
+
+===============  ==============================================================
+Parameter        Description
+===============  ==============================================================
+``{{ limit }}``  The lower limit
+``{{ value }}``  The current (invalid) value
+===============  ==============================================================
 
 .. include:: /reference/constraints/_payload-option.rst.inc
 

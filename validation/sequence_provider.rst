@@ -70,15 +70,15 @@
         <?xml version="1.0" encoding="UTF-8" ?>
         <constraint-mapping xmlns="http://symfony.com/schema/dic/constraint-mapping"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping http://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
+            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping https://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
 
             <class name="App\Entity\User">
                 <property name="username">
-                    <constraint name="NotBlank" />
+                    <constraint name="NotBlank"/>
                 </property>
 
                 <property name="password">
-                    <constraint name="NotBlank" />
+                    <constraint name="NotBlank"/>
                 </property>
 
                 <getter property="passwordSafe">
@@ -102,8 +102,8 @@
         // src/Entity/User.php
         namespace App\Entity;
 
-        use Symfony\Component\Validator\Mapping\ClassMetadata;
         use Symfony\Component\Validator\Constraints as Assert;
+        use Symfony\Component\Validator\Mapping\ClassMetadata;
 
         class User
         {
@@ -112,12 +112,12 @@
                 $metadata->addPropertyConstraint('username', new Assert\NotBlank());
                 $metadata->addPropertyConstraint('password', new Assert\NotBlank());
 
-                $metadata->addGetterConstraint('passwordSafe', new Assert\IsTrue(array(
+                $metadata->addGetterConstraint('passwordSafe', new Assert\IsTrue([
                     'message' => 'The password cannot match your first name',
-                    'groups'  => array('Strict'),
-                )));
+                    'groups'  => ['Strict'],
+                ]));
 
-                $metadata->setGroupSequence(array('User', 'Strict'));
+                $metadata->setGroupSequence(['User', 'Strict']);
             }
         }
 
@@ -133,10 +133,16 @@
     如果使用 ``Default``，你将获得无限的递归（因为
     ``Default`` 组引用了组序列，而该序列又包含引用了相同组序列的 ``Default`` 组，...）。
 
+.. caution::
+
+    在序列（前面示例中的 ``Strict``）中使用一个组来调用 ``validate()`` 将 **仅**
+    对该组进行验证，而不对序列中的所有组进行验证。这是因为序列现在被称为 ``Default`` 组验证。
+
 你还可以在 ``validation_groups`` 表单选项中定义一个组序列::
 
-    use Symfony\Component\Validator\Constraints\GroupSequence;
     use Symfony\Component\Form\AbstractType;
+    use Symfony\Component\OptionsResolver\OptionsResolver;
+    use Symfony\Component\Validator\Constraints\GroupSequence;
     // ...
 
     class MyType extends AbstractType
@@ -203,11 +209,11 @@
         <?xml version="1.0" encoding="UTF-8" ?>
         <constraint-mapping xmlns="http://symfony.com/schema/dic/constraint-mapping"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping http://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
+            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping https://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
 
             <class name="App\Entity\User">
                 <property name="name">
-                    <constraint name="NotBlank" />
+                    <constraint name="NotBlank"/>
                 </property>
 
                 <property name="creditCard">
@@ -243,10 +249,10 @@
             public static function loadValidatorMetadata(ClassMetadata $metadata)
             {
                 $metadata->addPropertyConstraint('name', new Assert\NotBlank());
-                $metadata->addPropertyConstraint('creditCard', new Assert\CardScheme(array(
-                    'schemes' => array('VISA'),
-                    'groups'  => array('Premium'),
-                )));
+                $metadata->addPropertyConstraint('creditCard', new Assert\CardScheme([
+                    'schemes' => ['VISA'],
+                    'groups'  => ['Premium'],
+                ]));
             }
         }
 
@@ -269,11 +275,11 @@
         {
             // 当返回一个简单数组时，如果任何组中存在一个违规，则不再验证其余的组。
             // 例如，如果'User'验证失败，则'Premium'和'Api'不会被验证：
-            return array('User', 'Premium', 'Api');
+            return ['User', 'Premium', 'Api'];
 
             // 当返回一个嵌套数组时，将验证每个数组中包含的所有组。
             // 例如，如果'User'验证失败，'Premium'还是会被验证（并且你也将会得到它的违规），但'Api'将不会被验证：
-            return array(array('User', 'Premium'), 'Api');
+            return [['User', 'Premium'], 'Api'];
         }
     }
 
@@ -309,10 +315,10 @@
         <constraint-mapping xmlns="http://symfony.com/schema/dic/constraint-mapping"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping
-                http://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
+                https://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
 
             <class name="App\Entity\User">
-                <group-sequence-provider />
+                <group-sequence-provider/>
                 <!-- ... -->
             </class>
         </constraint-mapping>

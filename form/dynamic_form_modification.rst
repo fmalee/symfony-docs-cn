@@ -45,9 +45,9 @@
 
         public function configureOptions(OptionsResolver $resolver)
         {
-            $resolver->setDefaults(array(
+            $resolver->setDefaults([
                 'data_class' => Product::class,
-            ));
+            ]);
         }
     }
 
@@ -125,17 +125,17 @@
     // src/Form/EventListener/AddNameFieldSubscriber.php
     namespace App\Form\EventListener;
 
-    use Symfony\Component\Form\FormEvent;
-    use Symfony\Component\Form\FormEvents;
     use Symfony\Component\EventDispatcher\EventSubscriberInterface;
     use Symfony\Component\Form\Extension\Core\Type\TextType;
+    use Symfony\Component\Form\FormEvent;
+    use Symfony\Component\Form\FormEvents;
 
     class AddNameFieldSubscriber implements EventSubscriberInterface
     {
         public static function getSubscribedEvents()
         {
             // 告诉调度器你要监听 form.pre_set_data 事件并且应该调用 preSetData 方法。
-            return array(FormEvents::PRE_SET_DATA => 'preSetData');
+            return [FormEvents::PRE_SET_DATA => 'preSetData'];
         }
 
         public function preSetData(FormEvent $event)
@@ -187,11 +187,11 @@
     namespace App\Form\Type;
 
     use Symfony\Component\Form\AbstractType;
-    use Symfony\Component\Form\FormBuilderInterface;
-    use Symfony\Component\Form\FormEvents;
-    use Symfony\Component\Form\FormEvent;
-    use Symfony\Component\Form\Extension\Core\Type\TextType;
     use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+    use Symfony\Component\Form\Extension\Core\Type\TextType;
+    use Symfony\Component\Form\FormBuilderInterface;
+    use Symfony\Component\Form\FormEvent;
+    use Symfony\Component\Form\FormEvents;
 
     class FriendMessageFormType extends AbstractType
     {
@@ -213,11 +213,16 @@
     use Symfony\Component\Security\Core\Security;
     // ...
 
-    private $security;
-
-    public function __construct(Security $security)
+    class FriendMessageFormType extends AbstractType
     {
-        $this->security = $security;
+        private $security;
+
+        public function __construct(Security $security)
+        {
+            $this->security = $security;
+        }
+
+        // ....
     }
 
 自定义表单类型
@@ -226,12 +231,11 @@
 现在你已掌握了所有的基础知识，你可以使用安全助手的功能来填充监听器的逻辑::
 
     // src/Form/Type/FriendMessageFormType.php
-
     use App\Entity\User;
     use Doctrine\ORM\EntityRepository;
     use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-    use Symfony\Component\Form\Extension\Core\Type\TextType;
     use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+    use Symfony\Component\Form\Extension\Core\Type\TextType;
     use Symfony\Component\Security\Core\Security;
     // ...
 
@@ -267,14 +271,14 @@
 
                 $form = $event->getForm();
 
-                $formOptions = array(
+                $formOptions = [
                     'class' => User::class,
                     'choice_label' => 'fullName',
                     'query_builder' => function (UserRepository $userRepository) use ($user) {
                         // 在你的仓库上调用一个返回查询构建器的方法
                         // return $userRepository->createFriendsQueryBuilder($user);
                     },
-                );
+                ];
 
                 // 创建该字段，这类似于 $builder->add()
                 // 字段名称, 字段类型, 字段选项
@@ -337,11 +341,11 @@
     // src/Form/Type/SportMeetupType.php
     namespace App\Form\Type;
 
+    use Symfony\Bridge\Doctrine\Form\Type\EntityType;
     use Symfony\Component\Form\AbstractType;
     use Symfony\Component\Form\FormBuilderInterface;
     use Symfony\Component\Form\FormEvent;
     use Symfony\Component\Form\FormEvents;
-    use Symfony\Bridge\Doctrine\Form\Type\EntityType;
     // ...
 
     class SportMeetupType extends AbstractType
@@ -349,10 +353,10 @@
         public function buildForm(FormBuilderInterface $builder, array $options)
         {
             $builder
-                ->add('sport', EntityType::class, array(
+                ->add('sport', EntityType::class, [
                     'class'       => 'App\Entity\Sport',
                     'placeholder' => '',
-                ))
+                ])
             ;
 
             $builder->addEventListener(
@@ -364,13 +368,13 @@
                     $data = $event->getData();
 
                     $sport = $data->getSport();
-                    $positions = null === $sport ? array() : $sport->getAvailablePositions();
+                    $positions = null === $sport ? [] : $sport->getAvailablePositions();
 
-                    $form->add('position', EntityType::class, array(
+                    $form->add('position', EntityType::class, [
                         'class' => 'App\Entity\Position',
                         'placeholder' => '',
                         'choices' => $positions,
-                    ));
+                    ]);
                 }
             );
         }
@@ -401,8 +405,8 @@
     namespace App\Form\Type;
 
     use App\Entity\Sport;
-    use Symfony\Component\Form\FormInterface;
     use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+    use Symfony\Component\Form\FormInterface;
     // ...
 
     class SportMeetupType extends AbstractType
@@ -410,20 +414,20 @@
         public function buildForm(FormBuilderInterface $builder, array $options)
         {
             $builder
-                ->add('sport', EntityType::class, array(
+                ->add('sport', EntityType::class, [
                     'class'       => 'App\Entity\Sport',
                     'placeholder' => '',
-                ));
+                ]);
             ;
 
             $formModifier = function (FormInterface $form, Sport $sport = null) {
-                $positions = null === $sport ? array() : $sport->getAvailablePositions();
+                $positions = null === $sport ? [] : $sport->getAvailablePositions();
 
-                $form->add('position', EntityType::class, array(
+                $form->add('position', EntityType::class, [
                     'class' => 'App\Entity\Position',
                     'placeholder' => '',
                     'choices' => $positions,
-                ));
+                ]);
             };
 
             $builder->addEventListener(
@@ -465,10 +469,10 @@
     // src/Controller/MeetupController.php
     namespace App\Controller;
 
-    use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-    use Symfony\Component\HttpFoundation\Request;
     use App\Entity\SportMeetup;
     use App\Form\Type\SportMeetupType;
+    use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+    use Symfony\Component\HttpFoundation\Request;
     // ...
 
     class MeetupController extends AbstractController
@@ -484,7 +488,7 @@
 
             return $this->render(
                 'meetup/create.html.twig',
-                array('form' => $form->createView())
+                ['form' => $form->createView()]
             );
         }
 

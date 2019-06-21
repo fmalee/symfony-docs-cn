@@ -11,14 +11,10 @@
 
 .. code-block:: twig
 
-    {# 当使用 trans/transchoice 过滤器和标签时，该消息可以被发现 #}
+    {# 当使用 trans 过滤器和标签时，该消息可以被发现 #}
     {% trans %}Symfony is great{% endtrans %}
 
     {{ 'Symfony is great'|trans }}
-
-    {{ 'Symfony is great'|transchoice(1) }}
-
-    {% transchoice 1 %}Symfony is great{% endtranschoice %}
 
 .. caution::
 
@@ -39,7 +35,7 @@
 
     .. code-block:: xml
 
-        <!-- translations/messages.fr.xliff -->
+        <!-- translations/messages.fr.xlf -->
         <?xml version="1.0"?>
         <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
             <file source-language="en" datatype="plaintext" original="file.ext">
@@ -60,16 +56,17 @@
     .. code-block:: php
 
         // translations/messages.fr.php
-        return array(
+        return [
             'Symfony is great' => 'J\'aime Symfony',
-        );
+        ];
 
 以及 ``en`` 语言环境的翻译：
+
 .. configuration-block::
 
     .. code-block:: xml
 
-        <!-- translations/messages.en.xliff -->
+        <!-- translations/messages.en.xlf -->
         <?xml version="1.0"?>
         <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
             <file source-language="en" datatype="plaintext" original="file.ext">
@@ -90,9 +87,9 @@
     .. code-block:: php
 
         // translations/messages.en.php
-        return array(
+        return [
             'Symfony is great' => 'Symfony is great',
-        );
+        ];
 
 要检查应用的 ``fr`` 语言环境中的所有消息，请运行：
 

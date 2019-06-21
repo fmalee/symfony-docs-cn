@@ -16,7 +16,7 @@ using `PHPUnit`_. Create a PHPUnit configuration file in
     <?xml version="1.0" encoding="UTF-8"?>
     <phpunit
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/5.1/phpunit.xsd"
+        xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/5.1/phpunit.xsd"
         backupGlobals="false"
         colors="true"
         bootstrap="vendor/autoload.php"
@@ -50,20 +50,20 @@ resolver. Modify the framework to make use of them::
 
     // ...
 
-    use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
-    use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
     use Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface;
+    use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
+    use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
 
     class Framework
     {
         protected $matcher;
-        protected $resolver;
+        protected $controllerResolver;
         protected $argumentResolver;
 
         public function __construct(UrlMatcherInterface $matcher, ControllerResolverInterface $resolver, ArgumentResolverInterface $argumentResolver)
         {
             $this->matcher = $matcher;
-            $this->resolver = $resolver;
+            $this->controllerResolver = $resolver;
             $this->argumentResolver = $argumentResolver;
         }
 
@@ -135,8 +135,7 @@ Execute this test by running ``phpunit`` in the ``example.com`` directory:
 After the test ran, you should see a green bar. If not, you have a bug
 either in the test or in the framework code!
 
-Adding a unit test for any exception thrown in a controller means expecting a
-response code of 500::
+Adding a unit test for any exception thrown in a controller::
 
     public function testErrorHandling()
     {
@@ -151,8 +150,8 @@ Last, but not the least, let's write a test for when we actually have a proper
 Response::
 
     use Symfony\Component\HttpFoundation\Response;
-    use Symfony\Component\HttpKernel\Controller\ControllerResolver;
     use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
+    use Symfony\Component\HttpKernel\Controller\ControllerResolver;
     // ...
 
     public function testControllerResponse()
@@ -164,13 +163,13 @@ Response::
         $matcher
             ->expects($this->once())
             ->method('match')
-            ->will($this->returnValue(array(
+            ->will($this->returnValue([
                 '_route' => 'foo',
                 'name' => 'Fabien',
                 '_controller' => function ($name) {
                     return new Response('Hello '.$name);
                 }
-            )))
+            ]))
         ;
         $matcher
             ->expects($this->once())

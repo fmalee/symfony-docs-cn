@@ -52,8 +52,8 @@ implements the :class:`Symfony\\Component\\Config\\Definition\\ConfigurationInte
 
     namespace Acme\DatabaseConfiguration;
 
-    use Symfony\Component\Config\Definition\ConfigurationInterface;
     use Symfony\Component\Config\Definition\Builder\TreeBuilder;
+    use Symfony\Component\Config\Definition\ConfigurationInterface;
 
     class DatabaseConfiguration implements ConfigurationInterface
     {
@@ -68,7 +68,8 @@ implements the :class:`Symfony\\Component\\Config\\Definition\\ConfigurationInte
         }
     }
 
-.. versionadded:: 4.2
+.. deprecated:: 4.2
+
     Not passing the root node name to ``TreeBuilder`` was deprecated in Symfony 4.2.
 
 Adding Node Definitions to the Tree
@@ -146,7 +147,7 @@ values::
     $rootNode
         ->children()
             ->enumNode('delivery')
-                ->values(array('standard', 'expedited', 'priority'))
+                ->values(['standard', 'expedited', 'priority'])
             ->end()
         ->end()
     ;
@@ -287,8 +288,8 @@ Or the following XML configuration:
 
 .. code-block:: xml
 
-    <connection table="symfony" user="root" password="null" />
-    <connection table="foo" user="root" password="pa$$" />
+    <connection table="symfony" user="root" password="null"/>
+    <connection table="foo" user="root" password="pa$$"/>
 
 The processed configuration is::
 
@@ -356,9 +357,9 @@ same YAML configuration shown before or the following XML configuration:
 .. code-block:: xml
 
     <connection name="sf_connection"
-        table="symfony" user="root" password="null" />
+        table="symfony" user="root" password="null"/>
     <connection name="default"
-        table="foo" user="root" password="pa$$" />
+        table="foo" user="root" password="pa$$"/>
 
 In both cases, the processed configuration maintains the ``sf_connection`` and
 ``default`` keys::
@@ -395,7 +396,7 @@ has a certain value:
     (``null``, ``true``, ``false``), provide a replacement value in case
     the value is ``*.``
 
-.. code-block:: php
+The following example shows these methods in practice::
 
     $rootNode
         ->children()
@@ -475,14 +476,14 @@ In YAML you may have:
 .. code-block:: yaml
 
     # This value is only used for the search results page.
-    entries_per_page:     25
+    entries_per_page: 25
 
 and in XML:
 
 .. code-block:: xml
 
     <!-- entries-per-page: This value is only used for the search results page. -->
-    <config entries-per-page="25" />
+    <config entries-per-page="25"/>
 
 Optional Sections
 -----------------
@@ -501,9 +502,9 @@ methods::
     // is equivalent to
 
     $arrayNode
-        ->treatFalseLike(array('enabled' => false))
-        ->treatTrueLike(array('enabled' => true))
-        ->treatNullLike(array('enabled' => true))
+        ->treatFalseLike(['enabled' => false])
+        ->treatTrueLike(['enabled' => true])
+        ->treatNullLike(['enabled' => true])
         ->children()
             ->booleanNode('enabled')
                 ->defaultFalse()
@@ -732,7 +733,7 @@ By changing a string value into an associative array with ``name`` as the key::
             ->arrayNode('connection')
                 ->beforeNormalization()
                     ->ifString()
-                    ->then(function ($v) { return array('name' => $v); })
+                    ->then(function ($v) { return ['name' => $v]; })
                 ->end()
                 ->children()
                     ->scalarNode('name')->isRequired()
@@ -757,7 +758,7 @@ The builder is used for adding advanced validation rules to node definitions, li
                     ->scalarNode('driver')
                         ->isRequired()
                         ->validate()
-                            ->ifNotInArray(array('mysql', 'sqlite', 'mssql'))
+                            ->ifNotInArray(['mysql', 'sqlite', 'mssql'])
                             ->thenInvalid('Invalid database driver %s')
                         ->end()
                     ->end()
@@ -790,9 +791,6 @@ for the node, instead of the node's original value.
 
 Configuring the Node Path Separator
 -----------------------------------
-
-.. versionadded:: 4.1
-    The option to configure the node path separator was introduced in Symfony 4.1.
 
 Consider the following config builder example::
 
@@ -840,9 +838,9 @@ any value is not of the expected type, is mandatory and yet undefined, or
 could not be validated in some other way, an exception will be thrown.
 Otherwise the result is a clean array of configuration values::
 
-    use Symfony\Component\Yaml\Yaml;
-    use Symfony\Component\Config\Definition\Processor;
     use Acme\DatabaseConfiguration;
+    use Symfony\Component\Config\Definition\Processor;
+    use Symfony\Component\Yaml\Yaml;
 
     $config = Yaml::parse(
         file_get_contents(__DIR__.'/src/Matthias/config/config.yaml')
@@ -851,7 +849,7 @@ Otherwise the result is a clean array of configuration values::
         file_get_contents(__DIR__.'/src/Matthias/config/config_extra.yaml')
     );
 
-    $configs = array($config, $extraConfig);
+    $configs = [$config, $extraConfig];
 
     $processor = new Processor();
     $databaseConfiguration = new DatabaseConfiguration();

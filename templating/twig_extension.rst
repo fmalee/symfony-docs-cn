@@ -41,9 +41,9 @@
     {
         public function getFilters()
         {
-            return array(
-                new TwigFilter('price', array($this, 'formatPrice')),
-            );
+            return [
+                new TwigFilter('price', [$this, 'formatPrice']),
+            ];
         }
 
         public function formatPrice($number, $decimals = 0, $decPoint = '.', $thousandsSep = ',')
@@ -67,9 +67,9 @@
     {
         public function getFunctions()
         {
-            return array(
-                new TwigFunction('area', array($this, 'calculateArea')),
-            );
+            return [
+                new TwigFunction('area', [$this, 'calculateArea']),
+            ];
         }
 
         public function calculateArea(int $width, int $length)
@@ -97,12 +97,21 @@
 
 你现在可以在任何Twig模板中使用这个过滤器。
 
+.. tip::
+
+    运行以下命令以验证你的扩展所创建的过滤器和函数是否已成功注册：
+
+    .. code-block:: terminal
+
+        $ php bin/console debug:twig
+
 .. _lazy-loaded-twig-extensions:
 
 创建延迟加载的Twig扩展
 ------------------------------------
 
 .. versionadded:: 1.26
+
     Twig 1.26中引入了对延迟加载扩展的支持。
 
 在Twig扩展类中包含自定义过滤器/函数的代码是创建扩展的最简单方法。
@@ -112,7 +121,7 @@
 但是，如果扩展定义了许多复杂的依赖关系（例如建立数据库连接），那么性能损失可能很大。
 
 这就是为什么Twig允许将扩展定义与它的实现分离的原因。
-按照与之前相同的示例，第一个更改是从扩展中删除 ``priceFilter()`` 方法并更新在
+按照与之前相同的示例，第一个更改是从扩展中删除 ``formatPrice()`` 方法并更新在
 ``getFilters()`` 中定义的可调用(callable)PHP代码::
 
     // src/Twig/AppExtension.php
@@ -126,15 +135,15 @@
     {
         public function getFilters()
         {
-            return array(
+            return [
                 // 此过滤器的逻辑现在在不同的类中实现
-                new TwigFilter('price', array(AppRuntime::class, 'priceFilter')),
-            );
+                new TwigFilter('price', [AppRuntime::class, 'formatPrice']),
+            ];
         }
     }
 
 然后，创建新的 ``AppRuntime`` 类（``Runtime`` 不是必需的，但这些类按惯例使用该后缀）
-并包含之前的 ``priceFilter()`` 方法的逻辑::
+并包含之前的 ``formatPrice()`` 方法的逻辑::
 
     // src/Twig/AppRuntime.php
     namespace App\Twig;
@@ -149,7 +158,7 @@
             // 但在你自己的扩展中，你需要使用这个构造函数注入服务
         }
 
-        public function priceFilter($number, $decimals = 0, $decPoint = '.', $thousandsSep = ',')
+        public function formatPrice($number, $decimals = 0, $decPoint = '.', $thousandsSep = ',')
         {
             $price = number_format($number, $decimals, $decPoint, $thousandsSep);
             $price = '$'.$price;

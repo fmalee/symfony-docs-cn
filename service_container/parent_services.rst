@@ -10,6 +10,9 @@
     // src/Repository/BaseDoctrineRepository.php
     namespace App\Repository;
 
+    use Doctrine\Common\Persistence\ObjectManager;
+    use Psr\Log\LoggerInterface;
+
     // ...
     abstract class BaseDoctrineRepository
     {
@@ -83,14 +86,14 @@
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <services>
                 <service id="App\Repository\BaseDoctrineRepository" abstract="true">
-                    <argument type="service" id="doctrine.orm.entity_manager" />
+                    <argument type="service" id="doctrine.orm.entity_manager"/>
 
                     <call method="setLogger">
-                        <argument type="service" id="logger" />
+                        <argument type="service" id="logger"/>
                     </call>
                 </service>
 
@@ -110,16 +113,16 @@
     .. code-block:: php
 
         // config/services.php
-        use App\Repository\DoctrineUserRepository;
-        use App\Repository\DoctrinePostRepository;
         use App\Repository\BaseDoctrineRepository;
+        use App\Repository\DoctrinePostRepository;
+        use App\Repository\DoctrineUserRepository;
         use Symfony\Component\DependencyInjection\ChildDefinition;
         use Symfony\Component\DependencyInjection\Reference;
 
         $container->register(BaseDoctrineRepository::class)
             ->setAbstract(true)
             ->addArgument(new Reference('doctrine.orm.entity_manager'))
-            ->addMethodCall('setLogger', array(new Reference('logger')))
+            ->addMethodCall('setLogger', [new Reference('logger')])
         ;
 
         // extend the App\Repository\BaseDoctrineRepository service
@@ -186,7 +189,7 @@
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <services>
                 <!-- ... -->
@@ -198,14 +201,14 @@
                 >
                     <!-- appends the '@app.username_checker' argument to the parent
                          argument list -->
-                    <argument type="service" id="app.username_checker" />
+                    <argument type="service" id="app.username_checker"/>
                 </service>
 
                 <service id="App\Repository\DoctrinePostRepository"
                     parent="App\Repository\BaseDoctrineRepository"
                 >
                     <!-- overrides the first argument (using the index attribute) -->
-                    <argument index="0" type="service" id="doctrine.custom_entity_manager" />
+                    <argument index="0" type="service" id="doctrine.custom_entity_manager"/>
                 </service>
 
                 <!-- ... -->
@@ -215,9 +218,9 @@
     .. code-block:: php
 
         // config/services.php
-        use App\Repository\DoctrineUserRepository;
-        use App\Repository\DoctrinePostRepository;
         use App\Repository\BaseDoctrineRepository;
+        use App\Repository\DoctrinePostRepository;
+        use App\Repository\DoctrineUserRepository;
         use Symfony\Component\DependencyInjection\ChildDefinition;
         use Symfony\Component\DependencyInjection\Reference;
         // ...

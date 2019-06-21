@@ -46,8 +46,6 @@ Installation
 
     $ composer require symfony/asset
 
-Alternatively, you can clone the `<https://github.com/symfony/asset>`_ repository.
-
 .. include:: /components/require_autoload.rst.inc
 
 Usage
@@ -225,8 +223,8 @@ If you are also using the :doc:`HttpFoundation </components/http_foundation>`
 component in your project (for instance, in a Symfony application), the ``PathPackage``
 class can take into account the context of the current request::
 
-    use Symfony\Component\Asset\PathPackage;
     use Symfony\Component\Asset\Context\RequestStackContext;
+    use Symfony\Component\Asset\PathPackage;
     // ...
 
     $pathPackage = new PathPackage(
@@ -292,10 +290,10 @@ constructor::
     use Symfony\Component\Asset\UrlPackage;
     // ...
 
-    $urls = array(
+    $urls = [
         '//static1.example.com/images/',
         '//static2.example.com/images/',
-    );
+    ];
     $urlPackage = new UrlPackage($urls, new StaticVersionStrategy('v1'));
 
     echo $urlPackage->getUrl('/logo.png');
@@ -315,12 +313,12 @@ account the context of the current request. In this case, only the request
 scheme is considered, in order to select the appropriate base URL (HTTPs or
 protocol-relative URLs for HTTPs requests, any base URL for HTTP requests)::
 
-    use Symfony\Component\Asset\UrlPackage;
     use Symfony\Component\Asset\Context\RequestStackContext;
+    use Symfony\Component\Asset\UrlPackage;
     // ...
 
     $urlPackage = new UrlPackage(
-        array('http://example.com/', 'https://example.com/'),
+        ['http://example.com/', 'https://example.com/'],
         new StaticVersionStrategy('v1'),
         new RequestStackContext($requestStack)
     );
@@ -341,19 +339,19 @@ In the following example, all packages use the same versioning strategy, but
 they all have different base paths::
 
     use Symfony\Component\Asset\Package;
+    use Symfony\Component\Asset\Packages;
     use Symfony\Component\Asset\PathPackage;
     use Symfony\Component\Asset\UrlPackage;
-    use Symfony\Component\Asset\Packages;
     // ...
 
     $versionStrategy = new StaticVersionStrategy('v1');
 
     $defaultPackage = new Package($versionStrategy);
 
-    $namedPackages = array(
+    $namedPackages = [
         'img' => new UrlPackage('http://img.example.com/', $versionStrategy),
         'doc' => new PathPackage('/somewhere/deep/for/documents', $versionStrategy),
-    );
+    ];
 
     $packages = new Packages($defaultPackage, $namedPackages);
 
@@ -374,9 +372,6 @@ document inside a template::
 
 Local Files and Other Protocols
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. versionadded:: 4.2
-    The support for other protocols was introduced in Symfony 4.2.
 
 In addition to HTTP this component supports other protocols (such as ``file://``
 and ``ftp://``). This allows for example to serve local files in order to

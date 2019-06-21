@@ -20,7 +20,10 @@ When building a console application it may be useful to display tabular data:
 To display a table, use :class:`Symfony\\Component\\Console\\Helper\\Table`,
 set the headers, set the rows and then render the table::
 
+    use Symfony\Component\Console\Command\Command;
     use Symfony\Component\Console\Helper\Table;
+    use Symfony\Component\Console\Input\InputInterface;
+    use Symfony\Component\Console\Output\OutputInterface;
     // ...
 
     class SomeCommand extends Command
@@ -29,13 +32,13 @@ set the headers, set the rows and then render the table::
         {
             $table = new Table($output);
             $table
-                ->setHeaders(array('ISBN', 'Title', 'Author'))
-                ->setRows(array(
-                    array('99921-58-10-7', 'Divine Comedy', 'Dante Alighieri'),
-                    array('9971-5-0210-0', 'A Tale of Two Cities', 'Charles Dickens'),
-                    array('960-425-059-0', 'The Lord of the Rings', 'J. R. R. Tolkien'),
-                    array('80-902734-1-6', 'And Then There Were None', 'Agatha Christie'),
-                ))
+                ->setHeaders(['ISBN', 'Title', 'Author'])
+                ->setRows([
+                    ['99921-58-10-7', 'Divine Comedy', 'Dante Alighieri'],
+                    ['9971-5-0210-0', 'A Tale of Two Cities', 'Charles Dickens'],
+                    ['960-425-059-0', 'The Lord of the Rings', 'J. R. R. Tolkien'],
+                    ['80-902734-1-6', 'And Then There Were None', 'Agatha Christie'],
+                ])
             ;
             $table->render();
         }
@@ -46,13 +49,13 @@ You can add a table separator anywhere in the output by passing an instance of
 
     use Symfony\Component\Console\Helper\TableSeparator;
 
-    $table->setRows(array(
-        array('99921-58-10-7', 'Divine Comedy', 'Dante Alighieri'),
-        array('9971-5-0210-0', 'A Tale of Two Cities', 'Charles Dickens'),
+    $table->setRows([
+        ['99921-58-10-7', 'Divine Comedy', 'Dante Alighieri'],
+        ['9971-5-0210-0', 'A Tale of Two Cities', 'Charles Dickens'],
         new TableSeparator(),
-        array('960-425-059-0', 'The Lord of the Rings', 'J. R. R. Tolkien'),
-        array('80-902734-1-6', 'And Then There Were None', 'Agatha Christie'),
-    ));
+        ['960-425-059-0', 'The Lord of the Rings', 'J. R. R. Tolkien'],
+        ['80-902734-1-6', 'And Then There Were None', 'Agatha Christie'],
+    ]);
 
 .. code-block:: terminal
 
@@ -85,16 +88,12 @@ You can optionally display titles at the top and the bottom of the table::
     | 80-902734-1-6 | And Then There Were None | Agatha Christie  |
     +---------------+--------- Page 1/2 -------+------------------+
 
-.. versionadded:: 4.2
-    The ``setHeaderTitle()`` and ``setFooterTitle()`` methods were introduced
-    in Symfony 4.2.
-
 By default the width of the columns is calculated automatically based on their
 contents. Use the :method:`Symfony\\Component\\Console\\Helper\\Table::setColumnWidths`
 method to set the column widths explicitly::
 
     // ...
-    $table->setColumnWidths(array(10, 0, 30));
+    $table->setColumnWidths([10, 0, 30]);
     $table->render();
 
 In this example, the first column width will be ``10``, the last column width
@@ -150,9 +149,6 @@ The output of this command will be:
     | 0-7   |            |                                |
     |                (the rest of rows...)                |
     +-------+------------+--------------------------------+
-
-.. versionadded:: 4.2
-    The ``setColumnMaxWidth()`` method was introduced in Symfony 4.2.
 
 The table style can be changed to any built-in styles via
 :method:`Symfony\\Component\\Console\\Helper\\Table::setStyle`::
@@ -210,9 +206,6 @@ which outputs:
     │ 80-902734-1-6 │ And Then There Were None │ Agatha Christie  │
     └───────────────┴──────────────────────────┴──────────────────┘
 
-.. versionadded:: 4.1
-    The ``box`` style was introduced in Symfony 4.1.
-
 You can also set the style to ``box-double``::
 
     $table->setStyle('box-double');
@@ -230,9 +223,6 @@ which outputs:
     ║ 960-425-059-0 │ The Lord of the Rings    │ J. R. R. Tolkien ║
     ║ 80-902734-1-6 │ And Then There Were None │ Agatha Christie  ║
     ╚═══════════════╧══════════════════════════╧══════════════════╝
-
-.. versionadded:: 4.1
-    The ``box-double`` style was introduced in Symfony 4.1.
 
 If the built-in styles do not fit your need, define your own::
 
@@ -263,17 +253,6 @@ Here is a full list of things you can customize:
 *  :method:`Symfony\\Component\\Console\\Helper\\TableStyle::setBorderFormat`
 *  :method:`Symfony\\Component\\Console\\Helper\\TableStyle::setPadType`
 
-.. versionadded:: 4.1
-    The ``setDefaultCrossingChars`` method was introduced in Symfony 4.1.
-    It replaces the deprecated ``setHorizontalBorderChar`` method.
-
-    Also, the ``setVerticalBorderChars`` method was introduced. Use this instead
-    of the deprecated ``setVerticalBorderChar`` method.
-
-    The ``setCrossingChars()`` and ``setDefaultCrossingChar()`` methods are also
-    new. Previously you could only use the now deprecated ``setCrossingChar()``
-    method.
-
 .. tip::
 
     You can also register a style globally::
@@ -292,17 +271,17 @@ Spanning Multiple Columns and Rows
 To make a table cell that spans multiple columns you can use a :class:`Symfony\\Component\\Console\\Helper\\TableCell`::
 
     use Symfony\Component\Console\Helper\Table;
-    use Symfony\Component\Console\Helper\TableSeparator;
     use Symfony\Component\Console\Helper\TableCell;
+    use Symfony\Component\Console\Helper\TableSeparator;
 
     $table = new Table($output);
     $table
-        ->setHeaders(array('ISBN', 'Title', 'Author'))
-        ->setRows(array(
-            array('99921-58-10-7', 'Divine Comedy', 'Dante Alighieri'),
+        ->setHeaders(['ISBN', 'Title', 'Author'])
+        ->setRows([
+            ['99921-58-10-7', 'Divine Comedy', 'Dante Alighieri'],
             new TableSeparator(),
-            array(new TableCell('This value spans 3 columns.', array('colspan' => 3))),
-        ))
+            [new TableCell('This value spans 3 columns.', ['colspan' => 3])],
+        ])
     ;
     $table->render();
 
@@ -323,10 +302,10 @@ This results in:
     You can create a multiple-line page title using a header cell that spans
     the entire table width::
 
-        $table->setHeaders(array(
-            array(new TableCell('Main table title', array('colspan' => 3))),
-            array('ISBN', 'Title', 'Author'),
-        ))
+        $table->setHeaders([
+            [new TableCell('Main table title', ['colspan' => 3])],
+            ['ISBN', 'Title', 'Author'],
+        ])
         // ...
 
     This generates:
@@ -348,15 +327,15 @@ In a similar way you can span multiple rows::
 
     $table = new Table($output);
     $table
-        ->setHeaders(array('ISBN', 'Title', 'Author'))
-        ->setRows(array(
-            array(
+        ->setHeaders(['ISBN', 'Title', 'Author'])
+        ->setRows([
+            [
                 '978-0521567817',
                 'De Monarchia',
-                new TableCell("Dante Alighieri\nspans multiple rows", array('rowspan' => 2)),
-            ),
-            array('978-0804169127', 'Divine Comedy'),
-        ))
+                new TableCell("Dante Alighieri\nspans multiple rows", ['rowspan' => 2]),
+            ],
+            ['978-0804169127', 'Divine Comedy'],
+        ])
     ;
     $table->render();
 
@@ -378,9 +357,6 @@ you to create any table layout you may wish.
 
 Modifying Rendered Tables
 -------------------------
-
-.. versionadded:: 4.1
-    The feature to modify rendered tables was introduced in Symfony 4.1.
 
 The ``render()`` method requires passing the entire table contents. However,
 sometimes that information is not available beforehand because it's generated

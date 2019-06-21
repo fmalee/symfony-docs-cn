@@ -17,6 +17,8 @@
 
 有一些有用的方法来处理服务定义::
 
+    use Symfony\Component\DependencyInjection\Definition;
+
     // 找出是否存在一个 “app.mailer” 定义
     $container->hasDefinition('app.mailer');
     // 找出是否存在一个 “app.mailer” 定义或别名
@@ -48,8 +50,8 @@
 
 ``Definition`` 类的第一个可选参数是从容器中获取服务时返回的对象的完全限定类名::
 
-    use App\Config\UserConfigManager;
     use App\Config\CustomConfigManager;
+    use App\Config\UserConfigManager;
     use Symfony\Component\DependencyInjection\Definition;
 
     $definition = new Definition(UserConfigManager::class);
@@ -69,10 +71,10 @@
     use Symfony\Component\DependencyInjection\Definition;
     use Symfony\Component\DependencyInjection\Reference;
 
-    $definition = new Definition(DoctrineConfigManager::class, array(
+    $definition = new Definition(DoctrineConfigManager::class, [
         new Reference('doctrine'), // 一个其他服务的引用
         '%app.config_table_name%',  // 将被解析为一个容器参数的值
-    ));
+    ]);
 
     // 获取为 此定义 配置的所有参数
     $constructorArguments = $definition->getArguments();
@@ -103,7 +105,7 @@
     $methodCalls = $definition->getMethodCalls();
 
     // 配置一个新的方法调用
-    $definition->addMethodCall('setLogger', array(new Reference('logger')));
+    $definition->addMethodCall('setLogger', [new Reference('logger')]);
 
     // 用被传递的数组替换所有先前配置的方法调用
     $definition->setMethodCalls($methodCalls);

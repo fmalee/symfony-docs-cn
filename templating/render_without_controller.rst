@@ -22,6 +22,7 @@
             controller:   Symfony\Bundle\FrameworkBundle\Controller\TemplateController
             defaults:
                 template: static/privacy.html.twig
+            methods: GET
 
     .. code-block:: xml
 
@@ -29,10 +30,12 @@
         <?xml version="1.0" encoding="UTF-8" ?>
         <routes xmlns="http://symfony.com/schema/routing"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://symfony.com/schema/routing http://symfony.com/schema/routing/routing-1.0.xsd">
+            xsi:schemaLocation="http://symfony.com/schema/routing https://symfony.com/schema/routing/routing-1.0.xsd">
 
-            <route id="acme_privacy" path="/privacy">
-                <default key="_controller">Symfony\Bundle\FrameworkBundle\Controller\TemplateController</default>
+            <route id="acme_privacy"
+                path="/privacy"
+                controller="Symfony\Bundle\FrameworkBundle\Controller\TemplateController"
+                methods="GET">
                 <default key="template">static/privacy.html.twig</default>
             </route>
         </routes>
@@ -40,24 +43,26 @@
     .. code-block:: php
 
         // config/routes.php
-        use Symfony\Component\Routing\RouteCollection;
-        use Symfony\Component\Routing\Route;
+        use Symfony\Bundle\FrameworkBundle\Controller\TemplateController;
+        use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
-        $routes = new RouteCollection();
-        $routes->add('acme_privacy', new Route('/privacy', array(
-            '_controller' => 'Symfony\Bundle\FrameworkBundle\Controller\TemplateController',
-            'template'    => 'static/privacy.html.twig',
-        )));
+        return function (RoutingConfigurator $routes) {
+            $routes->add('acme_privacy', '/privacy')
+                ->controller(TemplateController::class)
+                ->methods(['GET'])
+                ->defaults([
+                    'template'  => 'static/privacy.html.twig',
+                ])
+            ;
+        };
 
-        return $routes;
-
-``TemplateController`` 会简单地渲染任何模板，就像传递的 ``template`` 默认值。
+``TemplateController`` 会将你传递的任何模板渲染为 ``template`` 默认值。
 
 在模板中渲染嵌入式控制器时，你也可以使用此技巧。
 但是，由于在模板中渲染一个控制器的目的通常是在自定义控制器中准备一些数据，因此这可能仅在你要缓存此页面的部分时才有用
 （请参阅 :ref:`templating-no-controller-caching`）。
 
-.. code-block:: html+twig
+.. code-block:: twig
 
     {{ render(url('acme_privacy')) }}
 
@@ -81,6 +86,7 @@
                 template:  'static/privacy.html.twig'
                 maxAge:    86400
                 sharedAge: 86400
+            methods: GET
 
     .. code-block:: xml
 
@@ -88,10 +94,12 @@
         <?xml version="1.0" encoding="UTF-8" ?>
         <routes xmlns="http://symfony.com/schema/routing"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://symfony.com/schema/routing http://symfony.com/schema/routing/routing-1.0.xsd">
+            xsi:schemaLocation="http://symfony.com/schema/routing https://symfony.com/schema/routing/routing-1.0.xsd">
 
-            <route id="acme_privacy" path="/privacy">
-                <default key="_controller">Symfony\Bundle\FrameworkBundle\Controller\TemplateController</default>
+            <route id="acme_privacy"
+                path="/privacy"
+                controller="Symfony\Bundle\FrameworkBundle\Controller\TemplateController"
+                methods="GET">
                 <default key="template">static/privacy.html.twig</default>
                 <default key="maxAge">86400</default>
                 <default key="sharedAge">86400</default>
@@ -101,18 +109,20 @@
     .. code-block:: php
 
         // config/routes.php
-        use Symfony\Component\Routing\RouteCollection;
-        use Symfony\Component\Routing\Route;
+        use Symfony\Bundle\FrameworkBundle\Controller\TemplateController;
+        use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
-        $routes = new RouteCollection();
-        $routes->add('acme_privacy', new Route('/privacy', array(
-            '_controller' => 'Symfony\Bundle\FrameworkBundle\Controller\TemplateController',
-            'template'    => 'static/privacy.html.twig',
-            'maxAge'      => 86400,
-            'sharedAge'   => 86400,
-        )));
-
-        return $routes;
+        return function (RoutingConfigurator $routes) {
+            $routes->add('acme_privacy', '/privacy')
+                ->controller(TemplateController::class)
+                ->methods(['GET'])
+                ->defaults([
+                    'template'  => 'static/privacy.html.twig',
+                    'maxAge'    => 86400,
+                    'sharedAge' => 86400,
+                ])
+            ;
+        };
 
 ``maxAge`` 和 ``sharedAge`` 的值被用于修改在控制器中创建的响应对象。
 有关缓存的更多信息，请参阅 :doc:`/http_cache`。

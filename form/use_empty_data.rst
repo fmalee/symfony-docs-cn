@@ -39,8 +39,8 @@
     // src/Form/Type/BlogType.php
 
     // ...
-    use Symfony\Component\Form\AbstractType;
     use App\Entity\Blog;
+    use Symfony\Component\Form\AbstractType;
     use Symfony\Component\OptionsResolver\OptionsResolver;
 
     class BlogType extends AbstractType
@@ -55,9 +55,9 @@
 
         public function configureOptions(OptionsResolver $resolver)
         {
-            $resolver->setDefaults(array(
+            $resolver->setDefaults([
                 'empty_data' => new Blog($this->someDependency),
-            ));
+            ]);
         }
     }
 
@@ -79,15 +79,15 @@
 
 闭包必须接受一个 ``FormInterface`` 实例作为第一个参数::
 
-    use Symfony\Component\OptionsResolver\OptionsResolver;
     use Symfony\Component\Form\FormInterface;
+    use Symfony\Component\OptionsResolver\OptionsResolver;
     // ...
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'empty_data' => function (FormInterface $form) {
                 return new Blog($form->get('title')->getData());
             },
-        ));
+        ]);
     }

@@ -12,7 +12,7 @@ Symfony应用中包含的默认``Kernel`` 类，该类使用一个
 
 从一个完全空目录开始，并通过Composer安装这些Symfony组件：
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ composer require symfony/config symfony/http-kernel \
       symfony/http-foundation symfony/routing \
@@ -36,31 +36,31 @@ Symfony应用中包含的默认``Kernel`` 类，该类使用一个
 
         public function registerBundles()
         {
-            return array(
+            return [
                 new Symfony\Bundle\FrameworkBundle\FrameworkBundle()
-            );
+            ];
         }
 
         protected function configureContainer(ContainerBuilder $c, LoaderInterface $loader)
         {
             // 相当于 config/packages/framework.yaml
-            $c->loadFromExtension('framework', array(
+            $c->loadFromExtension('framework', [
                 'secret' => 'S0ME_SECRET'
-            ));
+            ]);
         }
 
         protected function configureRoutes(RouteCollectionBuilder $routes)
         {
             // kernel是指向此类的一个服务
             // 可选的第三个参数是路由名称
-            $routes->add('/random/{limit}', 'Kernel::randomNumber');
+            $routes->add('/random/{limit}', 'kernel::randomNumber');
         }
 
         public function randomNumber($limit)
         {
-            return new JsonResponse(array(
+            return new JsonResponse([
                 'number' => random_int(0, $limit),
-            ));
+            ]);
         }
     }
 
@@ -70,11 +70,11 @@ Symfony应用中包含的默认``Kernel`` 类，该类使用一个
     $response->send();
     $kernel->terminate($request, $response);
 
-仅此而已！要测试它，你可以启动内置Web服务器：
+仅此而已！要测试它，你可以启动 :doc:`Symfony本地Web服务器 </setup/symfony_server>`：
 
 .. code-block:: terminal
 
-    $ php -S localhost:8000
+    $ symfony server:start
 
 然后在浏览器中查看该JSON响应：
 
@@ -138,10 +138,10 @@ Symfony应用中包含的默认``Kernel`` 类，该类使用一个
 
         public function registerBundles()
         {
-            $bundles = array(
+            $bundles = [
                 new \Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
                 new \Symfony\Bundle\TwigBundle\TwigBundle(),
-            );
+            ];
 
             if ($this->getEnvironment() == 'dev') {
                 $bundles[] = new Symfony\Bundle\WebProfilerBundle\WebProfilerBundle();
@@ -156,10 +156,10 @@ Symfony应用中包含的默认``Kernel`` 类，该类使用一个
 
             // 仅在启用了WebProfilerBundle时才配置该bundle
             if (isset($this->bundles['WebProfilerBundle'])) {
-                $c->loadFromExtension('web_profiler', array(
+                $c->loadFromExtension('web_profiler', [
                     'toolbar' => true,
                     'intercept_redirects' => false,
-                ));
+                ]);
             }
         }
 
@@ -212,23 +212,23 @@ Symfony应用中包含的默认``Kernel`` 类，该类使用一个
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:framework="http://symfony.com/schema/dic/symfony"
-            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd
-                http://symfony.com/schema/dic/symfony http://symfony.com/schema/dic/symfony/symfony-1.0.xsd">
+            xsi:schemaLocation="http://symfony.com/schema/dic/services https://symfony.com/schema/dic/services/services-1.0.xsd
+                http://symfony.com/schema/dic/symfony https://symfony.com/schema/dic/symfony/symfony-1.0.xsd">
 
             <framework:config secret="S0ME_SECRET">
-                <framework:profiler only-exceptions="false" />
+                <framework:profiler only-exceptions="false"/>
             </framework:config>
         </container>
 
     .. code-block:: php
 
         // config/framework.php
-        $container->loadFromExtension('framework', array(
+        $container->loadFromExtension('framework', [
             'secret' => 'S0ME_SECRET',
-            'profiler' => array(
+            'profiler' => [
                 'only_exceptions' => false,
-            ),
-        ));
+            ],
+        ]);
 
 这也会从一个包含一个文件的 ``src/Controller/`` 目录中加载注释路由::
 
@@ -247,9 +247,9 @@ Symfony应用中包含的默认``Kernel`` 类，该类使用一个
         {
             $number = random_int(0, $limit);
 
-            return $this->render('micro/random.html.twig', array(
+            return $this->render('micro/random.html.twig', [
                 'number' => $number,
-            ));
+            ]);
         }
     }
 
@@ -272,14 +272,13 @@ Symfony应用中包含的默认``Kernel`` 类，该类使用一个
 最后，你需要一个前端控制器来启动和运行该应用。创建一个``public/index.php``::
 
     // public/index.php
-
     use App\Kernel;
     use Doctrine\Common\Annotations\AnnotationRegistry;
     use Symfony\Component\HttpFoundation\Request;
 
     $loader = require __DIR__.'/../vendor/autoload.php';
     // 自动加载注释
-    AnnotationRegistry::registerLoader(array($loader, 'loadClass'));
+    AnnotationRegistry::registerLoader([$loader, 'loadClass']);
 
     $kernel = new Kernel('dev', true);
     $request = Request::createFromGlobals();
@@ -312,12 +311,12 @@ Symfony应用中包含的默认``Kernel`` 类，该类使用一个
     ├─ composer.json
     └─ composer.lock
 
-和之前一样，你可以使用PHP内置服务器：
+和之前一样，你可以使用 :doc:`Symfony本地Web服务器 </setup/symfony_server>`：
 
 .. code-block:: terminal
 
     cd public/
-    $ php -S localhost:8000 -t public/
+    $ symfony server:start
 
 然后在浏览器中查看该网页：
 

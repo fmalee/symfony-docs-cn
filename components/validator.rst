@@ -14,8 +14,6 @@ Validator组件
 
     $ composer require symfony/validator
 
-或者，你可以克隆 `<https://github.com/symfony/validator>`_ 仓库。
-
 .. include:: /components/require_autoload.rst.inc
 
 用法
@@ -32,15 +30,15 @@ Validator组件行为基于两个概念：
 
 以下示例显示如何验证字符串的长度至少为10个字符::
 
-    use Symfony\Component\Validator\Validation;
     use Symfony\Component\Validator\Constraints\Length;
     use Symfony\Component\Validator\Constraints\NotBlank;
+    use Symfony\Component\Validator\Validation;
 
     $validator = Validation::createValidator();
-    $violations = $validator->validate('Bernhard', array(
-        new Length(array('min' => 10)),
+    $violations = $validator->validate('Bernhard', [
+        new Length(['min' => 10]),
         new NotBlank(),
-    ));
+    ]);
 
     if (0 !== count($violations)) {
         // 有错误，现在你可以显示它们
@@ -59,9 +57,6 @@ Validator组件行为基于两个概念：
     if (0 !== count($violations->findByCodes(UniqueEntity::NOT_UNIQUE_ERROR))) {
         // 处理此特定错误（显示一些消息，发送邮件等）
     }
-
-.. versionadded:: 3.3
-    ``findByCodes()`` 方法是在Symfony 3.3中引入的。
 
 检索一个验证器实例
 -------------------------------

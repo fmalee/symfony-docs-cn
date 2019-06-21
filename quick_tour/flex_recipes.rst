@@ -87,11 +87,12 @@ Twig: 渲染一个模板
     +            'name' => $name,
     +        ]);
          }
+    }
 
 通过继承 ``AbstractController``，你可以访问许多的快捷方法和工具，比如 ``render()``。
 创建新模板：
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {# templates/default/index.html.twig #}
     <h1>Hello {{ name }}</h1>
@@ -101,7 +102,7 @@ Twig: 渲染一个模板
 
 但是，现在该页面 *只* 包含 ``h1`` 标签。 通过继承 ``base.html.twig`` 来给它一个HTML布局：
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {# templates/default/index.html.twig #}
     {% extends 'base.html.twig' %}
@@ -130,18 +131,18 @@ Symfony *最酷* 的一个功能现在还没有安装，我们来解决这个问
 哦，当你安装更多库时，你将获得更多调试工具（如一个显示数据查询的工具栏图标）。
 
 使用分析器非常简单，因为它配置了 *自身*，这要归功于 Flex 的指令。
-还有什么可以轻松安装的吗？
+还有什么可以安装的吗？
 
 富API支持
 ----------------
 
-你在构建API吗？ 你可以从任何控制器轻松的返回JSON::
+你在构建API吗？ 你可以从任何控制器返回JSON::
 
     // src/Controller/DefaultController.php
     namespace App\Controller;
 
-    use Symfony\Component\Routing\Annotation\Route;
     use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+    use Symfony\Component\Routing\Annotation\Route;
 
     class DefaultController extends AbstractController
     {
@@ -159,7 +160,7 @@ Symfony *最酷* 的一个功能现在还没有安装，我们来解决这个问
         }
     }
 
-但是对于一个 *真正* 全功能(rich) API，请尝试安装 `Api Platform`_：
+但是对于一个 *真正* 全功能(rich) API，请尝试安装 `API Platform`_：
 
 .. code-block:: terminal
 
@@ -221,8 +222,10 @@ Symfony *最酷* 的一个功能现在还没有安装，我们来解决这个问
      ...
     ------------------------------ -------- -------------------------------------
 
-轻松删除指令
----------------------
+.. _ easily-remove-recipes:
+
+删除指令
+----------------
 
 还不确定吗？ 没问题：那现在就删除它：
 
@@ -241,5 +244,5 @@ Flex 将\ *卸载*\该指令：删除对应文件并取消更改对你的应用�
 请阅读 :doc:`/quick_tour/the_architecture` 以继续下去。
 
 .. _`https://flex.symfony.com`: https://flex.symfony.com
-.. _`Api Platform`: https://api-platform.com/
+.. _`API Platform`: https://api-platform.com/
 .. _`Twig`: https://twig.symfony.com/

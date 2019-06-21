@@ -4,17 +4,15 @@ DateTime
 Validates that a value is a valid "datetime", meaning a string (or an object
 that can be cast into a string) that follows a specific format.
 
-+----------------+------------------------------------------------------------------------+
-| Applies to     | :ref:`property or method <validation-property-target>`                 |
-+----------------+------------------------------------------------------------------------+
-| Options        | - `format`_                                                            |
-|                | - `message`_                                                           |
-|                | - `payload`_                                                           |
-+----------------+------------------------------------------------------------------------+
-| Class          | :class:`Symfony\\Component\\Validator\\Constraints\\DateTime`          |
-+----------------+------------------------------------------------------------------------+
-| Validator      | :class:`Symfony\\Component\\Validator\\Constraints\\DateTimeValidator` |
-+----------------+------------------------------------------------------------------------+
+==========  ===================================================================
+Applies to  :ref:`property or method <validation-property-target>`
+Options     - `format`_
+            - `groups`_
+            - `message`_
+            - `payload`_
+Class       :class:`Symfony\\Component\\Validator\\Constraints\\DateTime`
+Validator   :class:`Symfony\\Component\\Validator\\Constraints\\DateTimeValidator`
+==========  ===================================================================
 
 Basic Usage
 -----------
@@ -34,7 +32,7 @@ Basic Usage
              * @Assert\DateTime
              * @var string A "Y-m-d H:i:s" formatted value
              */
-             protected $createdAt;
+            protected $createdAt;
         }
 
     .. code-block:: yaml
@@ -51,11 +49,11 @@ Basic Usage
         <?xml version="1.0" encoding="UTF-8" ?>
         <constraint-mapping xmlns="http://symfony.com/schema/dic/constraint-mapping"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping http://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
+            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping https://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
 
             <class name="App\Entity\Author">
                 <property name="createdAt">
-                    <constraint name="DateTime" />
+                    <constraint name="DateTime"/>
                 </property>
             </class>
         </constraint-mapping>
@@ -65,8 +63,8 @@ Basic Usage
         // src/Entity/Author.php
         namespace App\Entity;
 
-        use Symfony\Component\Validator\Mapping\ClassMetadata;
         use Symfony\Component\Validator\Constraints as Assert;
+        use Symfony\Component\Validator\Mapping\ClassMetadata;
 
         class Author
         {
@@ -94,6 +92,8 @@ format
 This option allows to validate a custom date format. See
 :phpmethod:`DateTime::createFromFormat` for formatting options.
 
+.. include:: /reference/constraints/_groups-option.rst.inc
+
 message
 ~~~~~~~
 
@@ -103,10 +103,10 @@ This message is shown if the underlying data is not a valid datetime.
 
 You can use the following parameters in this message:
 
-+------------------+------------------------------------------------+
-| Parameter        | Description                                    |
-+==================+================================================+
-| ``{{ value }}``  | The current (invalid) value                    |
-+------------------+------------------------------------------------+
+===============  ==============================================================
+Parameter        Description
+===============  ==============================================================
+``{{ value }}``  The current (invalid) value
+===============  ==============================================================
 
 .. include:: /reference/constraints/_payload-option.rst.inc

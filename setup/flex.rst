@@ -108,17 +108,17 @@ Symfony发布了一个新的“骨架”项目，这是一个推荐用于创建�
     your-project/
     ├── assets/
     ├── bin/
-    │   └── console
+    │   └── console
     ├── config/
-    │   ├── bundles.php
-    │   ├── packages/
-    │   ├── routes.yaml
-    │   └── services.yaml
+    │   ├── bundles.php
+    │   ├── packages/
+    │   ├── routes.yaml
+    │   └── services.yaml
     ├── public/
-    │   └── index.php
+    │   └── index.php
     ├── src/
-    │   ├── ...
-    │   └── Kernel.php
+    │   ├── ...
+    │   └── Kernel.php
     ├── templates/
     ├── tests/
     ├── translations/
@@ -195,7 +195,6 @@ Symfony发布了一个新的“骨架”项目，这是一个推荐用于创建�
 
 #. 将原始PHP源代码从 ``src/AppBundle/*`` 移动到 ``src/``，
    但bundle的特定文件（如 ``AppBundle.php`` 和 ``DependencyInjection/``） 除外。
-   删除 ``src/AppBundle/``。
 
    除了移动文件之外，还要更新如 `本示例所示`_ 的 ``composer.json`` 的 ``autoload`` 和 ``autoload-dev`` 的值，
    以便使用 ``App\`` 和 ``App\Tests\`` 作为应用的命名名空间（高级IDE可以自动执行此操作）。
@@ -209,13 +208,51 @@ Symfony发布了一个新的“骨架”项目，这是一个推荐用于创建�
 
 #. 将那些资源的源（例如SCSS文件）移动到 ``assets/`` 并使用 :doc:`Webpack Encore </frontend>` 来管理和编译它们。
 
+#. ``SYMFONY_DEBUG`` 和 ``SYMFONY_ENV`` 环境变量分别替换为 ``APP_DEBUG`` 和
+   ``APP_ENV``。将它们的值复制到新变量，然后删除以前的变量。
+
 #. 创建新的 ``public/index.php`` 前端控制器（`复制Symfony的index.php源代码`_）。
    如果在 ``web/app.php`` 和 ``web/app_dev.php`` 文件中进行了任何自定义，则将这些更改复制到新文件中。
    你现在可以删除 ``web/`` 旧目录了。
 
 #. 更新 ``bin/console`` 脚本（`复制Symfony的bin/console源代码`_）并根据原始控制台脚本来更改对应内容。
 
+#. 移除 ``src/AppBundle/``.
+
+#. 将原始源代码从 ``src/{App,...}Bundle/`` 移动到 ``src/``，并更新每个PHP文件的名称空间为
+   ``App\...``（高级IDE可以自动执行此操作）。
+
 #. 删除 ``bin/symfony_requirements`` 脚本，如果需要替代功能，请使用新的 `Symfony Requirements Checker`_。
+
+#. 更新 ``.gitignore`` 文件以用 ``var/log/``替换现有的 ``var/logs/`` 条目，这是日志目录的新名称。
+
+自定义Flex路径
+----------------------
+
+Flex指令对项目的目录结构做了一些假设（assumption）。可以通过在你的
+``composer.json`` 文件的 ``extra`` 部分下添加密钥来自定义其中一些假设。
+例如，告诉Flex将任何PHP类复制到 ``src/App``，而不是 ``src``：
+
+.. code-block:: json
+
+    {
+        "...": "...",
+
+        "extra": {
+            "src-dir": "src/App"
+        }
+    }
+
+可配置的路径是：
+
+* ``bin-dir``: 默认为 ``bin/``
+* ``config-dir``: 默认为 ``config/``
+* ``src-dir`` 默认为 ``src/``
+* ``var-dir`` 默认为 ``var/``
+* ``public-dir`` 默认为 ``public/``
+
+如果自定义这些路径，则从一个指令复制的某些文件仍可能包含对原始路径的引用。
+换句话说：你可能需要在安装一个指令后手动更新某些内容。
 
 .. _`Symfony Flex`: https://github.com/symfony/flex
 .. _`Symfony安装器`: https://github.com/symfony/symfony-installer

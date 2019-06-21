@@ -46,17 +46,21 @@
 
     $ php bin/console debug:autowiring
 
-    # 这只是输出的一个*小*样本......
-    ==========================================================  ==================================
-    Class/Interface Type                                        Alias Service ID
-    ==========================================================  ==================================
-    Psr\Cache\CacheItemPoolInterface                            alias for "cache.app.recorder"
-    Psr\Log\LoggerInterface                                     alias for "monolog.logger"
-    Symfony\Component\EventDispatcher\EventDispatcherInterface  alias for "debug.event_dispatcher"
-    Symfony\Component\HttpFoundation\RequestStack               alias for "request_stack"
-    Symfony\Component\HttpFoundation\Session\SessionInterface   alias for "session"
-    Symfony\Component\Routing\RouterInterface                   alias for "router.default"
-    ==========================================================  ==================================
+      # 这只是输出的一个*小*样本......
+
+      Describes a logger instance.
+      Psr\Log\LoggerInterface (monolog.logger)
+
+      Request stack that controls the lifecycle of requests.
+      Symfony\Component\HttpFoundation\RequestStack (request_stack)
+
+      Interface for the session.
+      Symfony\Component\HttpFoundation\Session\SessionInterface (session)
+
+      RouterInterface is the interface that all Router classes must implement.
+      Symfony\Component\Routing\RouterInterface (router.default)
+
+      [...]
 
 当你在控制器方法或 :ref:`自己的服务 <service-container-creating-service>` 中使用这些类型约束时，
 Symfony将自动传递与该类型相匹配的服务对象。
@@ -146,7 +150,7 @@ Symfony将自动传递与该类型相匹配的服务对象。
                 # 这会为每个类创建一个服务，其id是完全限定的类名
                 App\:
                     resource: '../src/*'
-                    exclude: '../src/{Entity,Migrations,Tests,Kernel.php}'
+                    exclude: '../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
 
                 # ...
 
@@ -157,13 +161,13 @@ Symfony将自动传递与该类型相匹配的服务对象。
             <container xmlns="http://symfony.com/schema/dic/services"
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xsi:schemaLocation="http://symfony.com/schema/dic/services
-                    http://symfony.com/schema/dic/services/services-1.0.xsd">
+                    https://symfony.com/schema/dic/services/services-1.0.xsd">
 
                 <services>
                     <!-- Default configuration for services in *this* file -->
-                    <defaults autowire="true" autoconfigure="true" public="false" />
+                    <defaults autowire="true" autoconfigure="true" public="false"/>
 
-                    <prototype namespace="App\" resource="../src/*" exclude="../src/{Entity,Migrations,Tests}" />
+                    <prototype namespace="App\" resource="../src/*" exclude="../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}"/>
                 </services>
             </container>
 
@@ -182,15 +186,12 @@ Symfony将自动传递与该类型相匹配的服务对象。
             ;
 
             // $this is a reference to the current loader
-            $this->registerClasses($definition, 'App\\', '../src/*', '../src/{Entity,Migrations,Tests}');
+            $this->registerClasses($definition, 'App\\', '../src/*', '../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}');
 
     .. tip::
 
         ``resource`` 和 ``exclude`` 选项的值可以是任何有效的 `glob模式`_。
         ``exclude`` 选项的值也可以是glob模式的数组。
-
-        .. versionadded:: 4.2
-            在Symfony 4.2中引入了将glob模式的数组传递给 ``exclude`` 选项的功能。
 
     得益于这种配置，你可以自动使用 ``src/`` 目录中的任何类作为服务，而无需手动配置它。
     稍后，你将在 :ref:`service-psr4-loader` 中了解更多相关信息。
@@ -247,18 +248,21 @@ Symfony将自动传递与该类型相匹配的服务对象。
 
     $ php bin/console debug:autowiring
 
-这个命令是你最好的朋友。但这只是输出的一小部分：
+      # 只是输出的一 *小* 部分...
 
-=============================================================== =====================================
-类/接口的类型                                                     服务ID的别名
-=============================================================== =====================================
-``Psr\Cache\CacheItemPoolInterface``                            alias for "cache.app.recorder"
-``Psr\Log\LoggerInterface``                                     alias for "monolog.logger"
-``Symfony\Component\EventDispatcher\EventDispatcherInterface``  alias for "debug.event_dispatcher"
-``Symfony\Component\HttpFoundation\RequestStack``               alias for "request_stack"
-``Symfony\Component\HttpFoundation\Session\SessionInterface``   alias for "session"
-``Symfony\Component\Routing\RouterInterface``                   alias for "router.default"
-=============================================================== =====================================
+      Describes a logger instance.
+      Psr\Log\LoggerInterface (monolog.logger)
+
+      Request stack that controls the lifecycle of requests.
+      Symfony\Component\HttpFoundation\RequestStack (request_stack)
+
+      Interface for the session.
+      Symfony\Component\HttpFoundation\Session\SessionInterface (session)
+
+      RouterInterface is the interface that all Router classes must implement.
+      Symfony\Component\Routing\RouterInterface (router.default)
+
+      [...]
 
 处理多个服务
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -392,13 +396,13 @@ Symfony将自动传递与该类型相匹配的服务对象。
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <services>
                 <!-- ... -->
 
                 <!-- Same as before -->
-                <prototype namespace="App\" resource="../src/*" exclude="../src/{Entity,Migrations,Tests}" />
+                <prototype namespace="App\" resource="../src/*" exclude="../src/{Entity,Migrations,Tests}"/>
 
                 <!-- Explicitly configure the service -->
                 <service id="App\Updates\SiteUpdateManager">
@@ -465,7 +469,7 @@ Symfony将自动传递与该类型相匹配的服务对象。
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <parameters>
                 <parameter key="admin_email">manager@example.com</parameter>
@@ -513,11 +517,11 @@ Symfony将自动传递与该类型相匹配的服务对象。
     {
         // ...
 
-        // 只有在继承了控制器基类的控制器中才有效
-        $adminEmail = $this->container->getParameter('admin_email');
+        // 此快捷方式仅适在扩展了AbstractController基类的情况下才有效
+        $adminEmail = $this->getParameter('admin_email');
 
-        // 也可以用快捷方式!
-        // $adminEmail = $this->getParameter('admin_email');
+        // 这是前一个快捷方式的等效代码：
+        // $adminEmail = $this->container->get('parameter_bag')->get('admin_email');
     }
 
 有关参数的详细信息，请参阅 :doc:`/service_container/parameters`。
@@ -576,14 +580,14 @@ Symfony将自动传递与该类型相匹配的服务对象。
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <services>
                 <!-- ... same code as before -->
 
                 <!-- Explicitly configure the service -->
                 <service id="App\Service\MessageGenerator">
-                    <argument key="$logger" type="service" id="monolog.logger.request" />
+                    <argument key="$logger" type="service" id="monolog.logger.request"/>
                 </service>
             </services>
         </container>
@@ -646,7 +650,7 @@ Symfony将自动传递与该类型相匹配的服务对象。
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <services>
                 <defaults autowire="true" autoconfigure="true" public="false">
@@ -676,35 +680,29 @@ Symfony将自动传递与该类型相匹配的服务对象。
 
         // config/services.php
         use App\Controller\LuckyController;
-        use Symfony\Component\DependencyInjection\Reference;
         use Psr\Log\LoggerInterface;
+        use Symfony\Component\DependencyInjection\Reference;
 
         $container->register(LuckyController::class)
             ->setPublic(true)
-            ->setBindings(array(
+            ->setBindings([
                 '$adminEmail' => 'manager@example.com',
                 '$requestLogger' => new Reference('monolog.logger.request'),
                 LoggerInterface::class => new Reference('monolog.logger.request'),
                 // optionally you can define both the name and type of the argument to match
                 'string $adminEmail' => 'manager@example.com',
                 LoggerInterface::class.' $requestLogger' => new Reference('monolog.logger.request'),
-            ))
+            ])
         ;
 
 通过将 ``bind`` 键放在 ``_defaults`` 下，你可以为在此文件中定义的 *任何* 服务指定 *任意* 参数的值！
 你可以按名称（例如 ``$adminEmail``），按类型（例如 ``Psr\Log\LoggerInterface``）
 或两者（例如 ``Psr\Log\LoggerInterface $requestLogger``）来绑定参数。
 
-.. versionadded:: 4.2
-    在Symfony 4.2中引入了按名称和类型绑定参数的功能。
-
 ``bind`` 配置也可以应用于特定服务或一次加载多个服务（即 :ref:`service-psr4-loader`）。
 
 将容器参数作为服务获取
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. versionadded:: 4.1
-    Symfony 4.1中引入了将容器参数作为服务获取的功能。
 
 如果某些服务或控制器需要大量容器参数，
 有比使用 ``services._defaults.bind`` 选项绑定所有这些参数更容易的替代方法：
@@ -814,7 +812,7 @@ Symfony将自动传递与该类型相匹配的服务对象。
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <services>
                 <!-- ... same code as before -->
@@ -853,12 +851,12 @@ Symfony将自动传递与该类型相匹配的服务对象。
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <services>
                 <!-- ... -->
 
-                <prototype namespace="App\" resource="../src/*" exclude="../src/{Entity,Migrations,Tests}" />
+                <prototype namespace="App\" resource="../src/*" exclude="../src/{Entity,Migrations,Tests}"/>
             </services>
         </container>
 
@@ -980,49 +978,49 @@ Symfony将自动传递与该类型相匹配的服务对象。
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <services>
                 <!-- ... -->
 
                 <service id="site_update_manager.superadmin" class="App\Updates\SiteUpdateManager" autowire="false">
-                    <argument type="service" id="App\Service\MessageGenerator" />
-                    <argument type="service" id="mailer" />
+                    <argument type="service" id="App\Service\MessageGenerator"/>
+                    <argument type="service" id="mailer"/>
                     <argument>superadmin@example.com</argument>
                 </service>
 
                 <service id="site_update_manager.normal_users" class="App\Updates\SiteUpdateManager" autowire="false">
-                    <argument type="service" id="App\Service\MessageGenerator" />
-                    <argument type="service" id="mailer" />
+                    <argument type="service" id="App\Service\MessageGenerator"/>
+                    <argument type="service" id="mailer"/>
                     <argument>contact@example.com</argument>
                 </service>
 
-                <service id="App\Updates\SiteUpdateManager" alias="site_update_manager.superadmin" />
+                <service id="App\Updates\SiteUpdateManager" alias="site_update_manager.superadmin"/>
             </services>
         </container>
 
     .. code-block:: php
 
         // config/services.php
-        use App\Updates\SiteUpdateManager;
         use App\Service\MessageGenerator;
+        use App\Updates\SiteUpdateManager;
         use Symfony\Component\DependencyInjection\Reference;
 
         $container->register('site_update_manager.superadmin', SiteUpdateManager::class)
             ->setAutowired(false)
-            ->setArguments(array(
+            ->setArguments([
                 new Reference(MessageGenerator::class),
                 new Reference('mailer'),
                 'superadmin@example.com'
-            ));
+            ]);
 
         $container->register('site_update_manager.normal_users', SiteUpdateManager::class)
             ->setAutowired(false)
-            ->setArguments(array(
+            ->setArguments([
                 new Reference(MessageGenerator::class),
                 new Reference('mailer'),
                 'contact@example.com'
-            ));
+            ]);
 
         $container->setAlias(SiteUpdateManager::class, 'site_update_manager.superadmin')
 
@@ -1048,6 +1046,5 @@ Symfony将自动传递与该类型相匹配的服务对象。
     /service_container/*
 
 .. _`service-oriented architecture`: https://en.wikipedia.org/wiki/Service-oriented_architecture
-.. _`Symfony Standard Edition (version 3.3) services.yaml`: https://github.com/symfony/symfony-standard/blob/3.3/app/config/services.yml
 .. _`glob模式`: https://en.wikipedia.org/wiki/Glob_(programming)
 .. _`Symfony Fundamentals screencast series`: https://symfonycasts.com/screencast/symfony-fundamentals

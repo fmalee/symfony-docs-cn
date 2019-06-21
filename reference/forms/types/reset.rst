@@ -19,13 +19,15 @@ A button that resets all fields to their original values.
 | Class                | :class:`Symfony\\Component\\Form\\Extension\\Core\\Type\\ResetType` |
 +----------------------+---------------------------------------------------------------------+
 
+.. include:: /reference/forms/types/options/_debug_form.rst.inc
+
 Inherited Options
 -----------------
 
 attr
 ~~~~
 
-**type**: ``array`` **default**: ``array()``
+**type**: ``array`` **default**: ``[]``
 
 If you want to add extra attributes to the HTML representation of the button,
 you can use ``attr`` option. It's an associative array with HTML attribute
@@ -34,9 +36,9 @@ as a key. This can be useful when you need to set a custom class for the button:
     use Symfony\Component\Form\Extension\Core\Type\ResetType;
     // ...
 
-    $builder->add('save', ResetType::class, array(
-        'attr' => array('class' => 'save'),
-    ));
+    $builder->add('save', ResetType::class, [
+        'attr' => ['class' => 'save'],
+    ]);
 
 .. include:: /reference/forms/types/options/button_disabled.rst.inc
 

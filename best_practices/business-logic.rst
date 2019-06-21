@@ -49,7 +49,7 @@ Symfony程序中，业务逻辑是指你为自己的不与框架本身重合（�
     }
 
 如果你使用的是默认的 :ref:`默认的services.yaml配置 <service-container-services-load-example>`，
-则此类将自动注册为ID为 ``App\Utils\Slugger`` 的服务（如果已在你的代码中导入该类，则只需简洁的 ``Slugger::class``）。
+则此类将自动注册为ID为 ``App\Utils\Slugger`` 的服务（为了防止书写出错，可以在你的代码中导入此类并填写为 ``Slugger::class``）。
 
 .. best-practice::
 
@@ -93,7 +93,7 @@ Symfony程序中，业务逻辑是指你为自己的不与框架本身重合（�
 这是有争议的，而且在我们的实验中，YAML 和 XML 的使用即便在开发者中亦存在争议，YAML略微占先。
 两种格式拥有相同的性能，所以使用谁最终取决于个人口味。
 
-我们推荐 YAML 是因为它对初学者友好且简洁。你当然可以选择你喜欢的格式。
+我们推荐YAML是因为它对新手很友好而且简洁，但你可以使用你喜欢的任何格式。
 
 使用持久层
 -------------
@@ -103,6 +103,14 @@ Symfony 是一个HTTP框架，它只关心为每一个HTTP请求生成一个HTTP
 对此，你可以选择自己的类库或策略来达到目的。
 
 实际上，很多 Symfony 应用使用依赖于独立的 `Doctrine项目`_ 的实体和仓库来定义其模型。
+
+Symfony中默认情况下不启用Doctrine支持。
+因此，如果要使用Doctrine，你需要通过执行以下命令来安装 :doc:`Doctrine ORM支持</doctrine>`：
+
+.. code-block:: terminal
+
+    $ composer require symfony/orm-pack
+
 就像在业务逻辑中建议的那样，我们推荐把 Doctrine 实体存放在 ``src/Entity/`` 目录下。
 
 我们的示例博客应用中定义的三个实体就是一个很好的例子：
@@ -131,8 +139,8 @@ Doctrine只能通过你配置在模型类中元数据（metadata）来获知这�
 
     namespace App\Entity;
 
-    use Doctrine\ORM\Mapping as ORM;
     use Doctrine\Common\Collections\ArrayCollection;
+    use Doctrine\ORM\Mapping as ORM;
 
     /**
      * @ORM\Entity
@@ -201,12 +209,11 @@ Data Fixtures
 
 .. code-block:: terminal
 
-    $ composer require "doctrine/doctrine-fixtures-bundle"
+    $ composer require --dev doctrine/doctrine-fixtures-bundle
 
 然后，该 bundle 会自动启用，但仅适用于 ``dev`` 和 ``test`` 环境::
 
     // config/bundles.php
-
     return [
         // ...
         Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle::class => ['dev' => true, 'test' => true],
@@ -237,6 +244,7 @@ Symfony源代码遵循PHP社区定义的 `PSR-1`_ 和 `PSR-2`_ 编码标准。
 
 .. _`完整定义`: https://en.wikipedia.org/wiki/Business_logic
 .. _`Doctrine项目`: http://www.doctrine-project.org/
+.. _`Doctrine ORM支持`: https://symfony.com/doc/current/doctrine.html
 .. _`fixture类`: https://symfony.com/doc/current/bundles/DoctrineFixturesBundle/index.html#writing-simple-fixtures
 .. _`PSR-1`: https://www.php-fig.org/psr/psr-1/
 .. _`PSR-2`: https://www.php-fig.org/psr/psr-2/

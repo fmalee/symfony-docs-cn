@@ -59,7 +59,7 @@
         }
     }
 
-由于 ``EntityManagerInterface`` 通过构造函数被注入到类中，因此在测试中传递一个模拟对象很容易::
+由于 ``EntityManagerInterface`` 通过构造函数被注入到类中，因此可以在测试中传递一个模拟对象::
 
     // tests/Salary/SalaryCalculatorTest.php
     namespace App\Tests\Salary;
@@ -119,7 +119,7 @@
     <phpunit>
         <php>
             <!-- 该值是DSN格式的Doctrine连接字符串 -->
-            <env name="DATABASE_URL" value="mysql://USERNAME:PASSWORD@127.0.0.1/DB_NAME" />
+            <env name="DATABASE_URL" value="mysql://USERNAME:PASSWORD@127.0.0.1/DB_NAME"/>
         </php>
         <!-- ... -->
     </phpunit>

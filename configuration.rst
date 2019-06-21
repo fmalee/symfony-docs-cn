@@ -41,25 +41,25 @@ Symfony应用可以安装第三方软件包（bundles，库等），为项目引
             <container xmlns="http://symfony.com/schema/dic/services"
                 xmlns:framework="http://symfony.com/schema/dic/framework"
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd
-                    http://symfony.com/schema/dic/framework http://symfony.com/schema/dic/framework/framework-1.0.xsd"
+                xsi:schemaLocation="http://symfony.com/schema/dic/services https://symfony.com/schema/dic/services/services-1.0.xsd
+                    http://symfony.com/schema/dic/framework https://symfony.com/schema/dic/framework/framework-1.0.xsd"
             >
                 <framework:config secret="%env(APP_SECRET)%">
-                    <!--<framework:csrf-protection enabled="true“ />-->
-                    <!--<framework:esi enabled="true" />-->
-                    <!--<framework:fragments enabled="true" />-->
+                    <!--<framework:csrf-protection enabled="true"/>-->
+                    <!--<framework:esi enabled="true"/>-->
+                    <!--<framework:fragments enabled="true"/>-->
 
                     <!-- Enables session support. Note that the session will ONLY be started if you read or write from it.
                          Remove or comment this section to explicitly disable session support. -->
-                    <framework:session />
+                    <framework:session/>
 
-                    <framework:php-errors log="true" />
+                    <framework:php-errors log="true"/>
                 </framework:config>
             </container>
 
     .. code-block:: php
 
-        # config/packages/framework.php
+        // config/packages/framework.php
         $container->loadFromExtension('framework', [
             'secret' => '%env(APP_SECRET)%',
             //'default_locale' => 'en',
@@ -137,9 +137,9 @@ Symfony应用可以安装第三方软件包（bundles，库等），为项目引
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:framework="http://symfony.com/schema/dic/symfony"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd
+                https://symfony.com/schema/dic/services/services-1.0.xsd
                 http://symfony.com/schema/dic/symfony
-                http://symfony.com/schema/dic/symfony/symfony-1.0.xsd">
+                https://symfony.com/schema/dic/symfony/symfony-1.0.xsd">
 
             <parameters>
                 <parameter key="locale">en</parameter>
@@ -175,9 +175,9 @@ Symfony应用可以安装第三方软件包（bundles，库等），为项目引
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:framework="http://symfony.com/schema/dic/symfony"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd
+                https://symfony.com/schema/dic/services/services-1.0.xsd
                 http://symfony.com/schema/dic/symfony
-                http://symfony.com/schema/dic/symfony/symfony-1.0.xsd">
+                https://symfony.com/schema/dic/symfony/symfony-1.0.xsd">
 
             <!-- any string surrounded by two % is replaced by that parameter value -->
             <framework:config default-locale="%locale%">
@@ -188,19 +188,19 @@ Symfony应用可以安装第三方软件包（bundles，库等），为项目引
     .. code-block:: php
 
         // config/packages/translation.php
-        $container->loadFromExtension('framework', array(
+        $container->loadFromExtension('framework', [
             // any string surrounded by two % is replaced by that parameter value
             'default_locale' => '%locale%',
 
             // ...
-        ));
+        ]);
 
 你可以在任何配置文件的 ``parameters`` 键下定义所需的任何参数名称。
 要引用参数，请用两个 ``%`` 包裹该名称 - 例如 ``%locale%``。
 
 .. seealso::
 
-    你还可以动态设置参数，例如环境变量。请参见 :doc:`/configuration/external_parameters`。
+    你还可以动态设置参数，例如环境变量。请参见 :doc:`/configuration/environment_variables`。
 
 有关参数的更多信息 - 包括如何在控制器内部引用它们 - 请参阅 :ref:`service-container-parameters`。
 
@@ -240,7 +240,7 @@ Symfony应用可以安装第三方软件包（bundles，库等），为项目引
 例如，你的本地计算机上的数据库凭据可能与你的同事不同。
 ``.env`` 文件应包含所有环境变量的合理的、非秘密的默认值，并 *应该* 提交到你的仓库。
 
-要使用计算机特定值或敏感值覆盖这些变量，请创建一个 ``env.local`` 文件。
+要使用计算机特定值或敏感值覆盖这些变量，请创建一个 ``.env.local`` 文件。
 此文件 **不会提交到共享仓库**，而是仅存储在你的计算机上。
 事实上，Symfony附带的 ``.gitignore`` 文件阻止了它的提交。
 
@@ -250,8 +250,7 @@ Symfony应用可以安装第三方软件包（bundles，库等），为项目引
 
 * ``.env.{environment}.local``: 例如，``.env.prod.local`` 将在 ``prod`` 环境中加载，但 *不会* 提交到你的仓库。
 
-如果你决定在生产环境中设置实际的环境变量，则在Symfony检测到存在实际的
-``APP_ENV`` 环境变量且被设置为 ``prod`` 的情况下，将不会加载这些 ``.env`` 文件。
+如果你决定在生产环境中设置实际的环境变量，这些 ``.env`` 文件 *仍然* 会被加载，只不过其中的变量值会被使用实际的环境变量值所替代。
 
 环境 & 其他配置文件
 -------------------------------------

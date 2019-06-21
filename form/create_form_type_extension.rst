@@ -35,14 +35,11 @@
         public static function getExtendedTypes(): iterable
         {
             // 返回 FormType::class 来修改系统中的（几乎）每个字段
-            return array(FileType::class);
+            return [FileType::class];
         }
     }
 
 你 **必须** 实现的唯一的方法是 ``getExtendedTypes()``，该方法用于配置要修改 *哪个* 字段类型。
-
-.. versionadded:: 4.2
-    ``getExtendedTypes()`` 方法是在Symfony 4.2中引入的。
 
 根据你的使用情况，你可能需要重写以下某些方法：
 
@@ -68,6 +65,14 @@
     要使用此属性，你必须显式的添加服务配置。
 
 注册扩展后，只要构建给定类型(``FileType``)的 *任何* 字段，就会调用任何你已重写的方法（例如 ``buildForm()``）。
+
+.. tip::
+
+    运行以下命令以验证表单类型扩展是否已在应用中成功注册：
+
+    .. code-block:: terminal
+
+        $ php bin/console debug:form
 
 添加扩展的业务逻辑
 -----------------------------------
@@ -112,24 +117,24 @@
     namespace App\Form\Extension;
 
     use Symfony\Component\Form\AbstractTypeExtension;
-    use Symfony\Component\Form\FormView;
-    use Symfony\Component\Form\FormInterface;
-    use Symfony\Component\PropertyAccess\PropertyAccess;
-    use Symfony\Component\OptionsResolver\OptionsResolver;
     use Symfony\Component\Form\Extension\Core\Type\FileType;
+    use Symfony\Component\Form\FormInterface;
+    use Symfony\Component\Form\FormView;
+    use Symfony\Component\OptionsResolver\OptionsResolver;
+    use Symfony\Component\PropertyAccess\PropertyAccess;
 
     class ImageTypeExtension extends AbstractTypeExtension
     {
         public static function getExtendedTypes(): iterable
         {
             // 返回 FormType::class 来修改系统中的（几乎）每个字段
-            return array(FileType::class);
+            return [FileType::class];
         }
 
         public function configureOptions(OptionsResolver $resolver)
         {
             // 使 FileType 字段具有一个合法的 image_property 选项
-            $resolver->setDefined(array('image_property'));
+            $resolver->setDefined(['image_property']);
         }
 
         public function buildView(FormView $view, FormInterface $form, array $options)
@@ -155,7 +160,7 @@
 ------------------------------------------
 
 每个字段类型都由一个模板片段来渲染。你可以重写这些模板片段以自定义表单渲染。
-有关更多信息，请参阅 :ref:`form-customization-form-themes` 文档。
+有关更多信息，请参阅 :ref:`表单片段命名 <form-fragment-naming>` 规则。
 
 在你的扩展类中，你添加了一个新变量（``image_url``），但仍需要在模板中利用此新变量。
 具体来说，你需要重写 ``file_widget`` 区块：
@@ -188,9 +193,9 @@
     namespace App\Form\Type;
 
     use Symfony\Component\Form\AbstractType;
-    use Symfony\Component\Form\FormBuilderInterface;
-    use Symfony\Component\Form\Extension\Core\Type\TextType;
     use Symfony\Component\Form\Extension\Core\Type\FileType;
+    use Symfony\Component\Form\Extension\Core\Type\TextType;
+    use Symfony\Component\Form\FormBuilderInterface;
 
     class MediaType extends AbstractType
     {
@@ -198,7 +203,7 @@
         {
             $builder
                 ->add('name', TextType::class)
-                ->add('file', FileType::class, array('image_property' => 'webPath'));
+                ->add('file', FileType::class, ['image_property' => 'webPath']);
         }
     }
 
@@ -231,9 +236,6 @@
 
         public static function getExtendedTypes(): iterable
         {
-            return array(DateTimeType::class, DateType::class, TimeType::class);
+            return [DateTimeType::class, DateType::class, TimeType::class];
         }
     }
-
-.. versionadded:: 4.2
-    Symfony 4.2中引入了使用单个扩展类扩展多个表单类型的功能。

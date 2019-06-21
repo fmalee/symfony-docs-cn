@@ -11,9 +11,9 @@
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'validation_groups' => false,
-        ));
+        ]);
     }
 
 请注意，执行此操作时，表单仍将运行基本的完整性检查，例如上传的文件是否过大或是否提交了不存在的字段。

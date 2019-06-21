@@ -13,11 +13,11 @@ an *authenticated* token if the supplied credentials were found to be valid.
 The listener should then store the authenticated token using
 :class:`the token storage <Symfony\\Component\\Security\\Core\\Authentication\\Token\\Storage\\TokenStorageInterface>`::
 
-    use Symfony\Component\Security\Http\Firewall\ListenerInterface;
-    use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-    use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface;
     use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+    use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface;
+    use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
     use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+    use Symfony\Component\Security\Http\Firewall\ListenerInterface;
 
     class SomeAuthenticationListener implements ListenerInterface
     {
@@ -74,7 +74,7 @@ The default authentication manager is an instance of
     use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
     // instances of Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface
-    $providers = array(...);
+    $providers = [...];
 
     $authenticationManager = new AuthenticationProviderManager($providers);
 
@@ -127,18 +127,18 @@ to create a hash of the password and returns an authenticated token if the
 password was valid::
 
     use Symfony\Component\Security\Core\Authentication\Provider\DaoAuthenticationProvider;
-    use Symfony\Component\Security\Core\User\UserChecker;
-    use Symfony\Component\Security\Core\User\InMemoryUserProvider;
     use Symfony\Component\Security\Core\Encoder\EncoderFactory;
+    use Symfony\Component\Security\Core\User\InMemoryUserProvider;
+    use Symfony\Component\Security\Core\User\UserChecker;
 
     $userProvider = new InMemoryUserProvider(
-        array(
-            'admin' => array(
+        [
+            'admin' => [
                 // password is "foo"
                 'password' => '5FZ2Z8QIkA7UTZ4BYkoC+GsReLf569mSKDsfods6LYQ8t+a8EW9oaircfMpmaLbPBh4FOBiiFyLfuZmTSUwzZg==',
-                'roles'    => array('ROLE_ADMIN'),
-            ),
-        )
+                'roles'    => ['ROLE_ADMIN'],
+            ],
+        ]
     );
 
     // for some extra checks: is account enabled, locked, expired, etc.
@@ -181,11 +181,11 @@ receives an array of encoders::
     $defaultEncoder = new MessageDigestPasswordEncoder('sha512', true, 5000);
     $weakEncoder = new MessageDigestPasswordEncoder('md5', true, 1);
 
-    $encoders = array(
+    $encoders = [
         User::class       => $defaultEncoder,
         LegacyUser::class => $weakEncoder,
         // ...
-    );
+    ];
     $encoderFactory = new EncoderFactory($encoders);
 
 Each encoder should implement :class:`Symfony\\Component\\Security\\Core\\Encoder\\PasswordEncoderInterface`

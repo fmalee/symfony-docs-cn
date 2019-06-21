@@ -38,12 +38,35 @@ and :method:`Symfony\\Component\\Config\\Loader\\LoaderInterface::load`.
 
 Take these lines from the ``routes.yaml``:
 
-.. code-block:: yaml
+.. configuration-block::
 
-    # config/routes.yaml
-    controllers:
-        resource: ../src/Controller/
-        type: annotation
+    .. code-block:: yaml
+
+        # config/routes.yaml
+        controllers:
+            resource: ../src/Controller/
+            type: annotation
+
+    .. code-block:: xml
+
+        <!-- config/routes.xml -->
+        <?xml version="1.0" encoding="UTF-8" ?>
+        <routes xmlns="http://symfony.com/schema/routing"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://symfony.com/schema/routing
+                https://symfony.com/schema/routing/routing-1.0.xsd">
+
+            <import resource="../src/Controller" type="annotation"/>
+        </routes>
+
+    .. code-block:: php
+
+        // config/routes.php
+        use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
+
+        return function (RoutingConfigurator $routes) {
+            $routes->import('../src/Controller', 'annotation');
+        };
 
 When the main loader parses this, it tries all registered delegate loaders and calls
 their :method:`Symfony\\Component\\Config\\Loader\\LoaderInterface::supports`
@@ -75,7 +98,7 @@ and configure the service and method to call:
 
         # config/routes.yaml
         admin_routes:
-            resource: 'admin_route_loader:loadRoutes'
+            resource: 'admin_route_loader::loadRoutes'
             type: service
 
     .. code-block:: xml
@@ -85,27 +108,30 @@ and configure the service and method to call:
         <routes xmlns="http://symfony.com/schema/routing"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/routing
-                http://symfony.com/schema/routing/routing-1.0.xsd">
+                https://symfony.com/schema/routing/routing-1.0.xsd">
 
-            <import resource="admin_route_loader:loadRoutes" type="service"/>
+            <import resource="admin_route_loader::loadRoutes" type="service"/>
         </routes>
 
     .. code-block:: php
 
         // config/routes.php
-        use Symfony\Component\Routing\RouteCollection;
+        use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
-        $routes = new RouteCollection();
-        $routes->addCollection(
-            $loader->import("admin_route_loader:loadRoutes", "service")
-        );
+        return function (RoutingConfigurator $routes) {
+            $routes->import('admin_route_loader::loadRoutes', 'service');
+        };
 
-        return $routes;
-
-In this example, the routes are loaded by calling the ``loadRoutes()`` method of
-the service whose ID is ``admin_route_loader``. Your service doesn't have to
+In this example, the routes are loaded by calling the ``loadRoutes()`` method
+of the service whose ID is ``admin_route_loader``. Your service doesn't have to
 extend or implement any special class, but the called method must return a
 :class:`Symfony\\Component\\Routing\\RouteCollection` object.
+
+.. note::
+
+    The routes defined using service route loaders will be automatically
+    cached by the framework. So whenever your service should load new routes,
+    don't forget to clear the cache.
 
 Creating a custom Loader
 ------------------------
@@ -144,12 +170,12 @@ you do. The resource name itself is not actually used in the example::
 
             // prepare a new route
             $path = '/extra/{parameter}';
-            $defaults = array(
+            $defaults = [
                 '_controller' => 'App\Controller\ExtraController::extra',
-            );
-            $requirements = array(
+            ];
+            $requirements = [
                 'parameter' => '\d+',
-            );
+            ];
             $route = new Route($path, $defaults, $requirements);
 
             // add the new route to the route collection
@@ -173,8 +199,8 @@ have to create an ``extra()`` method in the ``ExtraController``::
     // src/Controller/ExtraController.php
     namespace App\Controller;
 
-    use Symfony\Component\HttpFoundation\Response;
     use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+    use Symfony\Component\HttpFoundation\Response;
 
     class ExtraController extends AbstractController
     {
@@ -204,13 +230,13 @@ Now define a service for the ``ExtraLoader``:
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <services>
                 <!-- ... -->
 
                 <service id="App\Routing\ExtraLoader">
-                    <tag name="routing.loader" />
+                    <tag name="routing.loader"/>
                 </service>
             </services>
         </container>
@@ -220,8 +246,7 @@ Now define a service for the ``ExtraLoader``:
         // config/services.php
         use App\Routing\ExtraLoader;
 
-        $container
-            ->autowire(ExtraLoader::class)
+        $container->autowire(ExtraLoader::class)
             ->addTag('routing.loader')
         ;
 
@@ -230,7 +255,7 @@ as potential route loaders and added as specialized route loaders to the
 ``routing.loader`` *service*, which is an instance of
 :class:`Symfony\\Bundle\\FrameworkBundle\\Routing\\DelegatingLoader`.
 
-Using the custom Loader
+Using the Custom Loader
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 If you did nothing else, your custom routing loader would *not* be called.
@@ -252,20 +277,19 @@ What remains to do is adding a few lines to the routing configuration:
         <routes xmlns="http://symfony.com/schema/routing"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/routing
-                http://symfony.com/schema/routing/routing-1.0.xsd">
+                https://symfony.com/schema/routing/routing-1.0.xsd">
 
-            <import resource="." type="extra" />
+            <import resource="." type="extra"/>
         </routes>
 
     .. code-block:: php
 
         // config/routes.php
-        use Symfony\Component\Routing\RouteCollection;
+        use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
-        $routes = new RouteCollection();
-        $routes->addCollection($loader->import('.', 'extra'));
-
-        return $routes;
+        return function (RoutingConfigurator $routes) {
+            $routes->import('.', 'extra');
+        };
 
 The important part here is the ``type`` key. Its value should be ``extra`` as
 this is the type which the ``ExtraLoader`` supports and this will make sure
@@ -278,7 +302,7 @@ for the ``ExtraLoader``, so it is set to ``.`` (a single dot).
     cached by the framework. So whenever you change something in the loader
     class itself, don't forget to clear the cache.
 
-More advanced Loaders
+More Advanced Loaders
 ---------------------
 
 If your custom route loader extends from

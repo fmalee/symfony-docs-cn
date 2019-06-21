@@ -1,6 +1,6 @@
 .. index::
     single: Cache Pool
-    single: APC Cache, APCu Cache
+    single: APCu Cache
     single: Array Cache
     single: Chain Cache
     single: Doctrine Cache
@@ -22,8 +22,9 @@
 创建缓存池
 --------------------
 
-缓存池是通过 **缓存适配器** 创建的，缓存适配器是实现
-:class:`Symfony\\Component\\Cache\\Adapter\\AdapterInterface`
+缓存池是通过 **缓存适配器** 创建的，缓存适配器是实现了
+:class:`Symfony\\Contracts\\Cache\\CacheInterface` 和
+``Psr\\Cache\\CacheItemPoolInterface``
 的类。本组件提供了几个可在你的应用中使用的适配器。
 
 .. toctree::
@@ -32,8 +33,48 @@
 
     adapters/*
 
+使用缓存契约
+-------------------------
+
+:class:`Symfony\\Contracts\\Cache\\CacheInterface`
+允许仅使用两个方法和一个回调来获取、存储和删除缓存项::
+
+    use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+    use Symfony\Contracts\Cache\ItemInterface;
+
+    $cache = new FilesystemAdapter();
+
+    // 可调用只会在高速缓存未命中时执行。
+    $value = $cache->get('my_cache_key', function (ItemInterface $item) {
+        $item->expiresAfter(3600);
+
+        // ... 做一些HTTP请求或繁重的计算
+        $computedValue = 'foobar';
+
+        return $computedValue;
+    });
+
+    echo $value; // 'foobar'
+
+    // ... 并删除缓存键
+    $cache->delete('my_cache_key');
+
+开箱即用，使用此接口的锁定和提前到期来提供踩踏保护(stampede protection)。
+可以通过 :method:`Symfony\\Contracts\\Cache\\CacheInterface::get()`
+方法的第三个参数 “beta” 来控制提前到期。有关更多信息，请参阅
+:doc:`/components/cache` 一文。
+
+可以通过调用 :method:`Symfony\\Contracts\\Cache\\ItemInterface::isHit()`
+方法来在回调内检测提前到期：如果返回 ``true``，则表示我们当前正在重新计算其到期日期之前的值。
+
+对于高级用例，回调可以接受通过引用传递的第二个参数 ``bool &$save``。
+通过在回调中设置 ``$save`` 为 ``false``，你可以指示在后端的缓存池 *不要* 存储返回的值。
+
+使用PSR-6
+-----------
+
 查找缓存项
------------------------
+~~~~~~~~~~~~~~~~~~~~~~~
 
 缓存池定义了三种查找缓存项的方法。最常见的方法是返回给定键标识的缓存项的 ``getItem($key)``::
 
@@ -45,10 +86,10 @@
 如果没有为给定键定义任何项，该方法不会返回一个 ``null`` 值，而是返回一个实现
 :class:`Symfony\\Component\\Cache\\CacheItem` 类的空对象。
 
-如果需要同时获取多个缓存项，请使用 ``getItems(array($key1, $key2, ...))`` 方法::
+如果需要同时获取多个缓存项，请使用 ``getItems([$key1, $key2, ...])` 方法::
 
     // ...
-    $stocks = $cache->getItems(array('AAPL', 'FB', 'GOOGL', 'MSFT'));
+    $stocks = $cache->getItems(['AAPL', 'FB', 'GOOGL', 'MSFT']);
 
 同样，如果该键不表示任何有效的缓存项，不会获得一个 ``null`` 值，而是返回一个空的 ``CacheItem`` 对象。
 
@@ -58,7 +99,7 @@
     $hasBadges = $cache->hasItem('user_'.$userId.'_badges');
 
 保存缓存项
-------------------
+~~~~~~~~~~~~~~~~~~
 
 保存缓存项的最常用方法是将项立即存储在缓存中的
 ``Psr\\Cache\\CacheItemPoolInterface::save``（如果项已保存，返回
@@ -87,7 +128,7 @@
 ``false``。``commit()`` 方法在成功保存所有待处理项时返回 ``true``，否则返回 ``false``。
 
 删除缓存项
---------------------
+~~~~~~~~~~~~~~~~~~~~
 
 缓存池包含删除其中一些或全部缓存项的方法。最常见的是
 ``Psr\\Cache\\CacheItemPoolInterface::deleteItem``，
@@ -100,7 +141,7 @@
 方法来同时删除多个缓存项（仅当所有项都已删除时才返回 ``true``，即使其中任何一个或部分项不存在）::
 
     // ...
-    $areDeleted = $cache->deleteItems(array('category1', 'category2'));
+    $areDeleted = $cache->deleteItems(['category1', 'category2']);
 
 最后，要删除存储在池中的所有缓存项，请使用 ``Psr\\Cache\\CacheItemPoolInterface::clear``
 方法（在成功删除所有项时返回 ``true``）::
@@ -133,9 +174,6 @@
 
         # 清除 "cache.validation" 以及 "cache.app" 池
         $ php bin/console cache:pool:clear cache.validation cache.app
-
-.. versionadded:: 4.1
-    在Symfony 4.1中引入了 ``cache:pool:delete`` 命令。
 
 .. _component-cache-cache-pool-prune:
 
@@ -174,13 +212,13 @@
     use Symfony\Component\Cache\Adapter\PdoAdapter;
     use Symfony\Component\Cache\Adapter\PhpFilesAdapter;
 
-    $cache = new ChainAdapter(array(
+    $cache = new ChainAdapter([
         new ApcuAdapter(),       // 未实现 PruneableInterface
         new FilesystemAdapter(), // 已经实现 PruneableInterface
         new PdoAdapter(),        // 已经实现 PruneableInterface
         new PhpFilesAdapter(),   // 已经实现 PruneableInterface
         // ...
-    ));
+    ]);
 
     // prune()将代理对PdoAdapter、FilesystemAdapter以及PhpFilesAdapter的调用，
     // 同时静默跳过ApcuAdapter

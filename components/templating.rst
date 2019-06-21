@@ -20,8 +20,6 @@ Installation
 
     $ composer require symfony/templating
 
-Alternatively, you can clone the `<https://github.com/symfony/templating>`_ repository.
-
 .. include:: /components/require_autoload.rst.inc
 
 Usage
@@ -41,15 +39,15 @@ template reference (:class:`Symfony\\Component\\Templating\\TemplateReferenceInt
 It also needs a template loader (:class:`Symfony\\Component\\Templating\\Loader\\LoaderInterface`)
 which uses the template reference to actually find and load the template::
 
+    use Symfony\Component\Templating\Loader\FilesystemLoader;
     use Symfony\Component\Templating\PhpEngine;
     use Symfony\Component\Templating\TemplateNameParser;
-    use Symfony\Component\Templating\Loader\FilesystemLoader;
 
     $filesystemLoader = new FilesystemLoader(__DIR__.'/views/%name%');
 
     $templating = new PhpEngine(new TemplateNameParser(), $filesystemLoader);
 
-    echo $templating->render('hello.php', array('firstname' => 'Fabien'));
+    echo $templating->render('hello.php', ['firstname' => 'Fabien']);
 
 .. code-block:: html+php
 
@@ -83,9 +81,9 @@ can then be included by other templates. As the ``$view`` variable is an
 instance of ``PhpEngine``, you can use the ``render()`` method (which was used
 to render the template originally) inside the template to render another template::
 
-    <?php $names = array('Fabien', ...) ?>
+    <?php $names = ['Fabien', ...] ?>
     <?php foreach ($names as $name) : ?>
-        <?= $view->render('hello.php', array('firstname' => $name)) ?>
+        <?= $view->render('hello.php', ['firstname' => $name]) ?>
     <?php endforeach ?>
 
 Global Variables
@@ -178,7 +176,7 @@ using the Templating component. To do that, create a new class which
 implements the :class:`Symfony\\Component\\Templating\\EngineInterface`. This
 requires 3 method:
 
-* :method:`render($name, array $parameters = array()) <Symfony\\Component\\Templating\\EngineInterface::render>`
+* :method:`render($name, array $parameters = []) <Symfony\\Component\\Templating\\EngineInterface::render>`
   - Renders a template
 * :method:`exists($name) <Symfony\\Component\\Templating\\EngineInterface::exists>`
   - Checks if the template exists
@@ -197,13 +195,13 @@ choose which one to use for the template, the
 method is used::
 
     use Acme\Templating\CustomEngine;
-    use Symfony\Component\Templating\PhpEngine;
     use Symfony\Component\Templating\DelegatingEngine;
+    use Symfony\Component\Templating\PhpEngine;
 
-    $templating = new DelegatingEngine(array(
+    $templating = new DelegatingEngine([
         new PhpEngine(...),
         new CustomEngine(...),
-    ));
+    ]);
 
 Learn More
 ----------

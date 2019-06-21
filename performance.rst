@@ -69,7 +69,7 @@ OPcache存储已编译的PHP文件，以避免为每个请求重新编译它们�
     opcache.validate_timestamps=0
 
 每次部署后，你必须清空并重新生成OPcache的缓存。否则，你将看不到应用中所做的更新。
-由于在PHP中CLI和Web进程不共享相同的OPcache，你无法通过在终端中执行某些命令来清除Web服务器OPcache。
+鉴于在PHP中，CLI和Web进程不共享相同的OPcache，你无法通过在终端中执行某些命令来清除Web服务器OPcache。
 以下是一些可能的解决方案：
 
 1. 重启Web服务器;
@@ -94,6 +94,10 @@ OPcache存储已编译的PHP文件，以避免为每个请求重新编译它们�
     ; save the results for 10 minutes (600 seconds)
     realpath_cache_ttl=600
 
+.. note::
+
+    启用 `open_basedir`_ 配置选项后，PHP会禁用 ``realpath`` 缓存。
+
 .. _performance-optimize-composer-autoloader:
 
 优化 Composer 的自动加载
@@ -105,7 +109,7 @@ OPcache存储已编译的PHP文件，以避免为每个请求重新编译它们�
 
 执行此命令以生成类映射（并使其成为部署过程的一部分）：
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ composer dump-autoload --optimize --no-dev --classmap-authoritative
 
@@ -117,7 +121,6 @@ OPcache存储已编译的PHP文件，以避免为每个请求重新编译它们�
 ----------
 
 * :doc:`/http_cache/varnish`
-* :doc:`/http_cache/form_csrf_caching`
 
 .. _`字节码缓存`: https://en.wikipedia.org/wiki/List_of_PHP_accelerators
 .. _`OPcache`: https://php.net/manual/en/book.opcache.php
@@ -127,3 +130,4 @@ OPcache存储已编译的PHP文件，以避免为每个请求重新编译它们�
 .. _`APCu Polyfill component`: https://github.com/symfony/polyfill-apcu
 .. _`APCu PHP functions`: https://php.net/manual/en/ref.apcu.php
 .. _`cachetool`: https://github.com/gordalina/cachetool
+.. _`open_basedir`: https://php.net/manual/ini.core.php#ini.open-basedir

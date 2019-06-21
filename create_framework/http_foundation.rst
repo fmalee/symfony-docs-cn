@@ -9,10 +9,9 @@ top of the Symfony components is better than creating a framework from scratch.
 
 .. note::
 
-    We won't talk about the obvious and traditional benefits of using a
-    framework when working on big applications with more than a few
-    developers; the Internet has already plenty of good resources on that
-    topic.
+    We won't talk about the traditional benefits of using a framework when
+    working on big applications with more than a few developers; the Internet
+    has already plenty of good resources on that topic.
 
 Even if the "application" we wrote in the previous chapter was simple enough,
 it suffers from a few problems::
@@ -52,7 +51,7 @@ As you can see for yourself, the simple code we had written first is not that
 simple anymore if we want to avoid PHP warnings/notices and make the code
 more secure.
 
-Beyond security, this code is not even easily testable. Even if there is not
+Beyond security, this code can be complex to test. Even if there is not
 much to test, it strikes me that writing unit tests for the simplest possible
 snippet of PHP code is not natural and feels ugly. Here is a tentative PHPUnit
 unit test for the above code::
@@ -78,7 +77,7 @@ unit test for the above code::
 
     If our application were just slightly bigger, we would have been able to
     find even more problems. If you are curious about them, read the
-    :doc:`/introduction/from_flat_php_to_symfony2` chapter of the book.
+    :doc:`/introduction/from_flat_php_to_symfony` chapter of the book.
 
 At this point, if you are not convinced that security and testing are indeed
 two very good reasons to stop writing code the old way and adopt a framework
@@ -87,9 +86,9 @@ reading this book now and go back to whatever code you were working on before.
 
 .. note::
 
-    Of course, using a framework should give you more than just security and
-    testability, but the more important thing to keep in mind is that the
-    framework you choose must allow you to write better code faster.
+    Using a framework should give you more than just security and testability,
+    but the more important thing to keep in mind is that the framework you
+    choose must allow you to write better code faster.
 
 Going OOP with the HttpFoundation Component
 -------------------------------------------
@@ -126,10 +125,10 @@ containing the new requirement.
 .. sidebar:: Class Autoloading
 
     When installing a new dependency, Composer also generates a
-    ``vendor/autoload.php`` file that allows any class to be easily
-    `autoloaded`_. Without autoloading, you would need to require the file
-    where a class is defined before being able to use it. But thanks to
-    `PSR-4`_, we can just let Composer and PHP do the hard work for us.
+    ``vendor/autoload.php`` file that allows any class to be `autoloaded`_.
+    Without autoloading, you would need to require the file where a class
+    is defined before being able to use it. But thanks to `PSR-4`_,
+    we can just let Composer and PHP do the hard work for us.
 
 Now, let's rewrite our application by using the ``Request`` and the
 ``Response`` classes::
@@ -256,7 +255,7 @@ code in production without a proxy, it becomes trivially easy to abuse your
 system. That's not the case with the ``getClientIp()`` method as you must
 explicitly trust your reverse proxies by calling ``setTrustedProxies()``::
 
-    Request::setTrustedProxies(array('10.0.0.1'));
+    Request::setTrustedProxies(['10.0.0.1']);
 
     if ($myIp === $request->getClientIp()) {
         // the client is a known one, so give it some more privilege

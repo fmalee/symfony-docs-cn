@@ -49,8 +49,7 @@ Symfony框架通过 ``bin/console`` 脚本(如，广为人知的 ``bin/console c
 配置命令
 -----------------------
 
-首先，你必须在 ``configure()`` 方法中配置命令的名称。
-然后，你可以选择定义帮助信息以及 :doc:`输入选项和参数 </console/input>`::
+你可以选择定义一个描述、帮助消息以及 :doc:`输入选项和参数 </console/input>`::
 
     // ...
     protected function configure()
@@ -68,6 +67,10 @@ Symfony框架通过 ``bin/console`` 脚本(如，广为人知的 ``bin/console c
 如果你的命令定义了自己的构造函数，请先设置属性然后再调用父构造函数，
 以使这些属性在 ``configure()`` 方法中生效::
 
+    // ...
+    use Symfony\Component\Console\Command\Command;
+    use Symfony\Component\Console\Input\InputArgument;
+
     class CreateUserCommand extends Command
     {
         // ...
@@ -81,7 +84,7 @@ Symfony框架通过 ``bin/console`` 脚本(如，广为人知的 ``bin/console c
             parent::__construct();
         }
 
-        public function configure()
+        protected function configure()
         {
             $this
                 // ...
@@ -136,9 +139,6 @@ Symfony框架通过 ``bin/console`` 脚本(如，广为人知的 ``bin/console c
         $output->write('create a user.');
     }
 
-.. versionadded:: 4.1
-    Symfony 4.1中引入了 ``write()`` 和 ``writeln()`` 方法中PHP迭代器的支持。
-
 现在，尝试执行命令：
 
 .. code-block:: terminal
@@ -154,9 +154,6 @@ Symfony框架通过 ``bin/console`` 脚本(如，广为人知的 ``bin/console c
 
 输出切片
 ~~~~~~~~~~~~~~~
-
-.. versionadded:: 4.1
-    输出切片在Symfony 4.1中引入。
 
 常规控制台输出可以分割为多个独立区域，称为“输出切片”。
 需要清除和覆盖输出信息时，可以创建一个或多个切片。
@@ -249,8 +246,8 @@ Section 可以通过使用 :method:`Symfony\\Component\\Console\\Output\\Console
 想象一下，你有一个要将访问的 ``App\Service\UserManager`` 服务::
 
     // ...
-    use Symfony\Component\Console\Command\Command;
     use App\Service\UserManager;
+    use Symfony\Component\Console\Command\Command;
 
     class CreateUserCommand extends Command
     {
@@ -320,7 +317,7 @@ Symfony提供了几种工具来帮助你测试命令。
 
             $command = $application->find('app:create-user');
             $commandTester = new CommandTester($command);
-            $commandTester->execute(array(
+            $commandTester->execute([
                 'command'  => $command->getName(),
 
                 // 传递参数给该辅助方法
@@ -328,7 +325,7 @@ Symfony提供了几种工具来帮助你测试命令。
 
                 // 传递选项时，键前缀为两个破折号，
                 // 例如: '--some-option' => 'option_value',
-            ));
+            ]);
 
             // 控制台中命令的输出
             $output = $commandTester->getDisplay();
@@ -347,6 +344,14 @@ Symfony提供了几种工具来帮助你测试命令。
     在独立项目中使用Console组件时，
     请使用 :class:`Symfony\\Component\\Console\\Application <Symfony\\Component\\Console\\Application>`
     并继承常规的 ``\PHPUnit\Framework\TestCase``。
+
+记录命令错误
+----------------------
+
+运行命令时每当抛出一个异常，Symfony都会为其添加一条日志消息，包括整个失败的命令。
+此外，Symfony注册了一个 :doc:`事件订阅器 </event_dispatcher>` 以监听
+:ref:`ConsoleEvents::TERMINATE 事件 <console-events-terminate>`，并在命令不是以 ``0``
+退出状态完成时添加一条日志消息。
 
 扩展阅读
 ----------

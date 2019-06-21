@@ -33,9 +33,9 @@ Doctrine允许你指定自定义DQL函数。
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:doctrine="http://symfony.com/schema/dic/doctrine"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd
+                https://symfony.com/schema/dic/services/services-1.0.xsd
                 http://symfony.com/schema/dic/doctrine
-                http://symfony.com/schema/dic/doctrine/doctrine-1.0.xsd">
+                https://symfony.com/schema/dic/doctrine/doctrine-1.0.xsd">
 
             <doctrine:config>
                 <doctrine:orm>
@@ -53,28 +53,28 @@ Doctrine允许你指定自定义DQL函数。
     .. code-block:: php
 
         // config/packages/doctrine.php
-        use App\DQL\StringFunction;
-        use App\DQL\SecondStringFunction;
-        use App\DQL\NumericFunction;
         use App\DQL\DatetimeFunction;
+        use App\DQL\NumericFunction;
+        use App\DQL\SecondStringFunction;
+        use App\DQL\StringFunction;
 
-        $container->loadFromExtension('doctrine', array(
-            'orm' => array(
+        $container->loadFromExtension('doctrine', [
+            'orm' => [
                 // ...
-                'dql' => array(
-                    'string_functions' => array(
+                'dql' => [
+                    'string_functions' => [
                         'test_string'   => StringFunction::class,
                         'second_string' => SecondStringFunction::class,
-                    ),
-                    'numeric_functions' => array(
+                    ],
+                    'numeric_functions' => [
                         'test_numeric' => NumericFunction::class,
-                    ),
-                    'datetime_functions' => array(
+                    ],
+                    'datetime_functions' => [
                         'test_datetime' => DatetimeFunction::class,
-                    ),
-                ),
-            ),
-        ));
+                    ],
+                ],
+            ],
+        ]);
 
 .. note::
 
@@ -105,9 +105,9 @@ Doctrine允许你指定自定义DQL函数。
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xmlns:doctrine="http://symfony.com/schema/dic/doctrine"
                 xsi:schemaLocation="http://symfony.com/schema/dic/services
-                    http://symfony.com/schema/dic/services/services-1.0.xsd
+                    https://symfony.com/schema/dic/services/services-1.0.xsd
                     http://symfony.com/schema/dic/doctrine
-                    http://symfony.com/schema/dic/doctrine/doctrine-1.0.xsd">
+                    https://symfony.com/schema/dic/doctrine/doctrine-1.0.xsd">
 
                 <doctrine:config>
                     <doctrine:orm>
@@ -130,22 +130,22 @@ Doctrine允许你指定自定义DQL函数。
             // config/packages/doctrine.php
             use App\DQL\DatetimeFunction;
 
-            $container->loadFromExtension('doctrine', array(
-                'doctrine' => array(
-                    'orm' => array(
+            $container->loadFromExtension('doctrine', [
+                'doctrine' => [
+                    'orm' => [
                         // ...
-                        'entity_managers' => array(
-                            'example_manager' => array(
+                        'entity_managers' => [
+                            'example_manager' => [
                                 // place your functions here
-                                'dql' => array(
-                                    'datetime_functions' => array(
+                                'dql' => [
+                                    'datetime_functions' => [
                                         'test_datetime' => DatetimeFunction::class,
-                                    ),
-                                ),
-                            ),
-                        ),
-                    ),
-                ),
-            ));
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ]);
 
 .. _`DQL用户定义的函数`: http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/cookbook/dql-user-defined-functions.html

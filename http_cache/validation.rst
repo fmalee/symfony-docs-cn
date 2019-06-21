@@ -29,18 +29,7 @@ page again (see below for an implementation example).
 Like with expiration, there are two different HTTP headers that can be used
 to implement the validation model: ``ETag`` and ``Last-Modified``.
 
-.. sidebar:: Expiration and Validation
-
-    You can use both validation and expiration within the same ``Response``.
-    As expiration wins over validation, you can benefit from the best of
-    both worlds. In other words, by using both expiration and validation, you
-    can instruct the cache to serve the cached content, while checking back
-    at some interval (the expiration) to verify that the content is still valid.
-
-    .. tip::
-
-        You can also define HTTP caching headers for expiration and validation by using
-        annotations. See the `FrameworkExtraBundle documentation`_.
+.. include:: /http_cache/_expiration-and-validation.rst.inc
 
 .. index::
     single: Cache; Etag header
@@ -62,6 +51,7 @@ To see a simple implementation, generate the ETag as the md5 of the content::
     // src/Controller/DefaultController.php
     namespace App\Controller;
 
+    use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
     use Symfony\Component\HttpFoundation\Request;
 
     class DefaultController extends AbstractController
@@ -125,9 +115,9 @@ header value::
     namespace App\Controller;
 
     // ...
-    use Symfony\Component\HttpFoundation\Response;
-    use Symfony\Component\HttpFoundation\Request;
     use App\Entity\Article;
+    use Symfony\Component\HttpFoundation\Request;
+    use Symfony\Component\HttpFoundation\Response;
 
     class ArticleController extends AbstractController
     {
@@ -185,8 +175,8 @@ exposing a simple and efficient pattern::
     namespace App\Controller;
 
     // ...
-    use Symfony\Component\HttpFoundation\Response;
     use Symfony\Component\HttpFoundation\Request;
+    use Symfony\Component\HttpFoundation\Response;
 
     class ArticleController extends AbstractController
     {
@@ -216,10 +206,10 @@ exposing a simple and efficient pattern::
             $comments = ...;
 
             // or render a template with the $response you've already started
-            return $this->render('article/show.html.twig', array(
+            return $this->render('article/show.html.twig', [
                 'article' => $article,
                 'comments' => $comments,
-            ), $response);
+            ], $response);
         }
     }
 
@@ -230,4 +220,3 @@ headers that must not be present for ``304`` responses (see
 
 .. _`expiration model`: https://tools.ietf.org/html/rfc2616#section-13.2
 .. _`validation model`: http://tools.ietf.org/html/rfc2616#section-13.3
-.. _`FrameworkExtraBundle documentation`: https://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/annotations/cache.html

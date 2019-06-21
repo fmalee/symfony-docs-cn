@@ -18,8 +18,6 @@ Installation
 
     $ composer require symfony/http-kernel
 
-Alternatively, you can clone the `<https://github.com/symfony/http-kernel>`_ repository.
-
 .. include:: /components/require_autoload.rst.inc
 
 The Workflow of a Request
@@ -47,12 +45,12 @@ This is a simplified overview of the request workflow in Symfony applications:
 #. The **browser** displays the **resource** to the **user**.
 
 Typically, some sort of framework or system is built to handle all the repetitive
-tasks (e.g. routing, security, etc) so that a developer can easily build
-each *page* of the application. Exactly *how* these systems are built varies
-greatly. The HttpKernel component provides an interface that formalizes
-the process of starting with a request and creating the appropriate response.
-The component is meant to be the heart of any application or framework, no
-matter how varied the architecture of that system::
+tasks (e.g. routing, security, etc) so that a developer can build each *page* of
+the application. Exactly *how* these systems are built varies greatly. The HttpKernel
+component provides an interface that formalizes the process of starting with a
+request and creating the appropriate response. The component is meant to be the
+heart of any application or framework, no matter how varied the architecture of
+that system::
 
     namespace Symfony\Component\HttpKernel;
 
@@ -103,12 +101,12 @@ not take many steps. You create an
 (explained below). To complete your working kernel, you'll add more event
 listeners to the events discussed below::
 
-    use Symfony\Component\HttpFoundation\Request;
-    use Symfony\Component\HttpKernel\HttpKernel;
     use Symfony\Component\EventDispatcher\EventDispatcher;
+    use Symfony\Component\HttpFoundation\Request;
     use Symfony\Component\HttpFoundation\RequestStack;
     use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
     use Symfony\Component\HttpKernel\Controller\ControllerResolver;
+    use Symfony\Component\HttpKernel\HttpKernel;
 
     // create the Request object
     $request = Request::createFromGlobals();
@@ -174,7 +172,7 @@ to the login page or a 403 Access Denied response.
 If a ``Response`` is returned at this stage, the process skips directly to
 the :ref:`kernel.response <component-http-kernel-kernel-response>` event.
 
-Other listeners simply initialize things or add more information to the request.
+Other listeners initialize things or add more information to the request.
 For example, a listener might determine and set the locale on the ``Request``
 object.
 
@@ -549,7 +547,7 @@ below for more details).
     There are two main listeners to ``kernel.exception`` when using the
     Symfony Framework.
 
-    **ExceptionListener in HttpKernel**
+    **ExceptionListener in the HttpKernel Component**
 
     The first comes core to the HttpKernel component
     and is called :class:`Symfony\\Component\\HttpKernel\\EventListener\\ExceptionListener`.
@@ -578,7 +576,7 @@ below for more details).
        controller to render is passed as a constructor argument to this listener.
        This controller will return the final ``Response`` for this error page.
 
-    **ExceptionListener in Security**
+    **ExceptionListener in the Security Component**
 
     The other important listener is the
     :class:`Symfony\\Component\\Security\\Http\\Firewall\\ExceptionListener`.
@@ -604,17 +602,18 @@ each event has their own event object:
 
 .. _component-http-kernel-event-table:
 
-=====================  ================================  ===================================================================================
-Name                   ``KernelEvents`` Constant         Argument passed to the listener
-=====================  ================================  ===================================================================================
-kernel.request         ``KernelEvents::REQUEST``         :class:`Symfony\\Component\\HttpKernel\\Event\\GetResponseEvent`
-kernel.controller      ``KernelEvents::CONTROLLER``      :class:`Symfony\\Component\\HttpKernel\\Event\\FilterControllerEvent`
-kernel.view            ``KernelEvents::VIEW``            :class:`Symfony\\Component\\HttpKernel\\Event\\GetResponseForControllerResultEvent`
-kernel.response        ``KernelEvents::RESPONSE``        :class:`Symfony\\Component\\HttpKernel\\Event\\FilterResponseEvent`
-kernel.finish_request  ``KernelEvents::FINISH_REQUEST``  :class:`Symfony\\Component\\HttpKernel\\Event\\FinishRequestEvent`
-kernel.terminate       ``KernelEvents::TERMINATE``       :class:`Symfony\\Component\\HttpKernel\\Event\\PostResponseEvent`
-kernel.exception       ``KernelEvents::EXCEPTION``       :class:`Symfony\\Component\\HttpKernel\\Event\\GetResponseForExceptionEvent`
-=====================  ================================  ===================================================================================
+===========================  ======================================  ===================================================================================
+Name                         ``KernelEvents`` Constant               Argument passed to the listener
+===========================  ======================================  ===================================================================================
+kernel.request               ``KernelEvents::REQUEST``               :class:`Symfony\\Component\\HttpKernel\\Event\\GetResponseEvent`
+kernel.controller            ``KernelEvents::CONTROLLER``            :class:`Symfony\\Component\\HttpKernel\\Event\\FilterControllerEvent`
+kernel.controller_arguments  ``KernelEvents::CONTROLLER_ARGUMENTS``  :class:`Symfony\\Component\\HttpKernel\\Event\\FilterControllerArgumentsEvent`
+kernel.view                  ``KernelEvents::VIEW``                  :class:`Symfony\\Component\\HttpKernel\\Event\\GetResponseForControllerResultEvent`
+kernel.response              ``KernelEvents::RESPONSE``              :class:`Symfony\\Component\\HttpKernel\\Event\\FilterResponseEvent`
+kernel.finish_request        ``KernelEvents::FINISH_REQUEST``        :class:`Symfony\\Component\\HttpKernel\\Event\\FinishRequestEvent`
+kernel.terminate             ``KernelEvents::TERMINATE``             :class:`Symfony\\Component\\HttpKernel\\Event\\PostResponseEvent`
+kernel.exception             ``KernelEvents::EXCEPTION``             :class:`Symfony\\Component\\HttpKernel\\Event\\GetResponseForExceptionEvent`
+===========================  ======================================  ===================================================================================
 
 .. _http-kernel-working-example:
 
@@ -643,12 +642,12 @@ else that can be used to create a working example::
     use Symfony\Component\Routing\RouteCollection;
 
     $routes = new RouteCollection();
-    $routes->add('hello', new Route('/hello/{name}', array(
+    $routes->add('hello', new Route('/hello/{name}', [
         '_controller' => function (Request $request) {
             return new Response(
                 sprintf("Hello %s", $request->get('name'))
             );
-        })
+        }]
     ));
 
     $request = Request::createFromGlobals();

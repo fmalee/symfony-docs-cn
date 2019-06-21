@@ -22,11 +22,7 @@ Symfony不是手动审查代码，而是确保你提供的代码与预期的代�
 Symfony代码标准的细节
 ----------------------------------
 
-如果你想详细了解Symfony编码标准，这里有一个包含下述大多数特性的简短示例：
-
-.. code-block:: html+php
-
-    <?php
+如果你想详细了解Symfony编码标准，这里有一个包含下述大多数特性的简短示例::
 
     /*
      * This file is part of the Symfony package.
@@ -66,7 +62,7 @@ Symfony代码标准的细节
          */
         public function someDeprecatedMethod()
         {
-            @trigger_error(sprintf('The %s() method is deprecated since version 2.8 and will be removed in 3.0. Use Acme\Baz::someMethod() instead.', __METHOD__), E_USER_DEPRECATED);
+            @trigger_error(sprintf('The %s() method is deprecated since vendor-name/package-name 2.8 and will be removed in 3.0. Use Acme\Baz::someMethod() instead.', __METHOD__), E_USER_DEPRECATED);
 
             return Baz::someMethod();
         }
@@ -81,12 +77,12 @@ Symfony代码标准的细节
          *
          * @throws \RuntimeException When an invalid option is provided
          */
-        private function transformText($dummy, array $options = array())
+        private function transformText($dummy, array $options = [])
         {
-            $defaultOptions = array(
+            $defaultOptions = [
                 'some_default' => 'values',
                 'another_default' => 'more values',
-            );
+            ];
 
             foreach ($options as $option) {
                 if (!in_array($option, $defaultOptions)) {
@@ -242,7 +238,7 @@ Symfony代码标准的细节
 
 * Symfony是在MIT许可下发布的，该许可块必须出现在命名空间之前的每个PHP文件的顶部。
 
-.. _`PHP CS Fixer`: http://cs.sensiolabs.org/
+.. _`PHP CS Fixer`: https://cs.symfony.com/
 .. _`PSR-0`: https://www.php-fig.org/psr/psr-0/
 .. _`PSR-1`: https://www.php-fig.org/psr/psr-1/
 .. _`PSR-2`: https://www.php-fig.org/psr/psr-2/

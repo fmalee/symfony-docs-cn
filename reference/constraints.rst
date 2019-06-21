@@ -59,6 +59,7 @@
    constraints/All
    constraints/UserPassword
    constraints/Valid
+   constraints/Traverse
 
 验证器旨在根据 *约束* 验证对象。
 在现实生活中，一个约束可能是：“蛋糕不能被烧掉”。在Symfony中，约束类似：它们是条件为真的断言。

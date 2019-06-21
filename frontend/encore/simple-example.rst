@@ -22,7 +22,7 @@ Encore：设置你的项目
 
 Encore的工作（通过WebPack）很简单：读取并跟进 *所有* 的 ``require``
 语句，并创建包含你的应用 *所有* 需求的一个最终的 ``app.js`` （和 ``app.css``）。
-当然，Encore可以做更多的事情：压缩文件，预处理Sass/LESS，支持React、Vue.js等等。
+Encore可以做更多的事情：压缩文件，预处理Sass/LESS，支持React、Vue.js等等。
 
 配置Encore/Webpack
 --------------------------
@@ -80,7 +80,7 @@ Encore中的所有内容都是通过项目根目录下的 ``webpack.config.js`` 
 接下来，将它们包含在基本布局文件中。
 来自WebpackEncoreBundle的两个Twig助手可以为你完成大部分工作：
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {# templates/base.html.twig #}
     <!DOCTYPE html>
@@ -204,7 +204,7 @@ jQuery和 ``greet.js`` 已自动添加到输出的文件（``app.js``）中。
 特定于页面的JavaScript或CSS（多个条目）
 --------------------------------------------------
 
-到目前为止，你只有一个最终的JavaScript文件：``app.js``。对于简单的应用或SPA（单页应用），这可能没问题！
+到目前为止，你只有一个最终的JavaScript文件：``app.js``。对于小应用或SPA（单页应用），这可能没问题！
 但是，随着应用的增长，你可能希望拥有特定于页面的JavaScript或CSS（例如结帐，帐户等）。
 要处理此问题，请为每个页面创建一个新的“entry”脚本文件：
 

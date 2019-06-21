@@ -14,9 +14,8 @@
     除非你有两个合理的不同认证系统及其用户（比如一个是主站的表单登陆系统，还有一个是基于API的令牌系统），
     我们推荐只使用一个防火墙入口 ，并且开启其下的 ``anonymous`` 选项。、
 
-大多数应用只有一个身份验证系统和一组用户。
-因此，你只需要 *一个* 防火墙项。
-当然也有例外，特别是如果你的网站上有网页和API部分。但关键是要保持简单。
+大多数应用只有一个身份验证系统和一组用户。因此，你只需要 *一个* 防火墙项。
+如果你的站点上有Web和API部分，则需要更多防火墙项。但关键是要保持简单。
 
 此外，你应该使用防火墙下的 ``anonymous`` 键。
 如果你需要要求用户登录站点的不同部分（或几乎 *所有* 部分），请使用 ``access_control`` 区域。
@@ -87,12 +86,11 @@ Symfony为你提供了几种实施授权的方法，包括 :doc:`security.yaml <
 @Security注释
 ------------------------
 
-在控制器里，实施访问控制时，尽量使用@Security注释。位于动作上方的它们，不光容易理解，还容易替换。
+要在逐个控制器的基础上控制访问，请尽可能使用 ``@Security`` 注释。
+将其置于每个动作之上使其保持一致且更易读。
 
 在我们这个程序中，你需要使用 ``ROLE_ADMIN`` 授权，才能创建一个新贴子。
-使用 ``@Security`` 时，代码会像下面这样：
-
-.. code-block:: php
+使用 ``@Security`` 时，代码会像下面这样::
 
     use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
     use Symfony\Component\Routing\Annotation\Route;
@@ -132,17 +130,17 @@ Symfony为你提供了几种实施授权的方法，包括 :doc:`security.yaml <
 它会自动查询所需的 ``Post`` 对象并将其作为 ``$post`` 参数传递给控制器。
 这使得在表达式中使用 ``post`` 变量成为可能。
 
-这有一个主要缺点：注释中的表达式不能轻易地在应用的其他部分中重用。
+这有一个主要缺点：注释中的表达式不能在应用的其他部分中重用。
 想象一下，你想在模板中添加一个只有作者才能看到的链接。
 现在，你需要使用Twig语法重复表达式代码：
 
-.. code-block:: html+jinja
+.. code-block:: html+twig
 
     {% if app.user and app.user.email == post.authorEmail %}
         <a href=""> ... </a>
     {% endif %}
 
-最简单的解决方案 - 如果你的逻辑足够简单 - 就是在 ``Post`` 实体中添加一个新方法，检查给定用户是否是其作者::
+如果你的逻辑足够简单，较好的解决方案就是在 ``Post`` 实体中添加一个新方法，检查给定用户是否是其作者::
 
     // src/Entity/Post.php
     // ...
@@ -177,7 +175,7 @@ Symfony为你提供了几种实施授权的方法，包括 :doc:`security.yaml <
         // ...
     }
 
-.. code-block:: html+jinja
+.. code-block:: html+twig
 
     {% if post.isAuthor(app.user) %}
         <a href=""> ... </a>
@@ -330,7 +328,7 @@ Symfony为你提供了几种实施授权的方法，包括 :doc:`security.yaml <
         $this->denyAccessUnlessGranted('edit', $post);
 
         // use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-        // use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface
+        // use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
         //
         // ...
         //

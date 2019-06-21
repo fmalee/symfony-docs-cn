@@ -36,9 +36,9 @@
         $entityManager = $this->getDoctrine()->getManager();
 
         $task = ...;
-        $form = $this->createForm(TaskType::class, $task, array(
+        $form = $this->createForm(TaskType::class, $task, [
             'entity_manager' => $entityManager,
-        ));
+        ]);
 
         // ...
     }
@@ -71,7 +71,6 @@
 首先，将此作为一个参数添加到表单类::
 
     // src/Form/TaskType.php
-
     use Doctrine\ORM\EntityManagerInterface;
     // ...
 
@@ -110,12 +109,12 @@ Symfony会自动将正确的 ``EntityManager`` 对象传递给你的 ``__constru
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <services>
                 <service id="App\Form\TaskType">
                     <argument type="service" id="doctrine.orm.entity_manager"/>
-                    <tag name="form.type" />
+                    <tag name="form.type"/>
                 </service>
             </services>
         </container>

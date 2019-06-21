@@ -21,12 +21,12 @@ Symfony有一个内置的数据库会话存储解决方案：
 
             Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler:
                 arguments:
-                    - 'mysql:dbname=mydatabase, host=myhost'
+                    - 'mysql:dbname=mydatabase; host=myhost; port=myport'
                     - { db_username: myuser, db_password: mypassword }
 
                     # 如果你正在使用Doctrine并希望重用该连接，那么：
                     # 注释上面的2行并取消下行的注释
-                    # - !service { class: PDO, factory: 'database_connection:getWrappedConnection' }
+                    # - !service { class: PDO, factory: ['@database_connection', 'getWrappedConnection'] }
                     # 如果你遇到事务问题（例如登录后），请取消下行的注释
                     # - { lock_mode: 1 }
 
@@ -38,8 +38,8 @@ Symfony有一个内置的数据库会话存储解决方案：
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:framework="http://symfony.com/schema/dic/symfony"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd
-                http://symfony.com/schema/dic/symfony/symfony-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd
+                https://symfony.com/schema/dic/symfony/symfony-1.0.xsd">
 
             <services>
                 <service id="Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler" public="false">
@@ -58,17 +58,16 @@ Symfony有一个内置的数据库会话存储解决方案：
         use Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler;
 
         $storageDefinition = $container->autowire(PdoSessionHandler::class)
-            ->setArguments(array(
-                'mysql:dbname=mydatabase, host=myhost',
-                array('db_username' => 'myuser', 'db_password' => 'mypassword'),
-            ))
+            ->setArguments([
+                'mysql:dbname=mydatabase; host=myhost; port=myport',
+                ['db_username' => 'myuser', 'db_password' => 'mypassword'],
+            ])
         ;
 
 .. tip::
 
-    将数据库凭据配置为
-    :doc:`使用环境变量定义的参数 </configuration/external_parameters>`，
-    以使应用更安全。
+    :doc:`使用配置文件中的环境变量 </configuration/environment_variables>`
+    来配置数据库凭据，让你的应用更安全。
 
 接下来，告诉Symfony将你的服务用作会话处理器：
 
@@ -96,13 +95,13 @@ Symfony有一个内置的数据库会话存储解决方案：
         use Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler;
 
         // ...
-        $container->loadFromExtension('framework', array(
+        $container->loadFromExtension('framework', [
             // ...
-            'session' => array(
+            'session' => [
                 // ...
                 'handler_id' => PdoSessionHandler::class,
-            ),
-        ));
+            ],
+        ]);
 
 配置表名和列名
 --------------------------------------
@@ -120,7 +119,7 @@ Symfony有一个内置的数据库会话存储解决方案：
 
             Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler:
                 arguments:
-                    - 'mysql:dbname=mydatabase, host=myhost'
+                    - 'mysql:dbname=mydatabase; host=myhost; port=myport'
                     - { db_table: 'sessions', db_username: 'myuser', db_password: 'mypassword' }
 
     .. code-block:: xml
@@ -130,7 +129,7 @@ Symfony有一个内置的数据库会话存储解决方案：
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <services>
                 <service id="Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler" public="false">
@@ -147,15 +146,14 @@ Symfony有一个内置的数据库会话存储解决方案：
     .. code-block:: php
 
         // config/services.php
-
         use Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler;
         // ...
 
         $container->autowire(PdoSessionHandler::class)
-            ->setArguments(array(
-                'mysql:dbname=mydatabase, host=myhost',
-                array('db_table' => 'sessions', 'db_username' => 'myuser', 'db_password' => 'mypassword')
-            ))
+            ->setArguments([
+                'mysql:dbname=mydatabase; host=myhost; port=myport',
+                ['db_table' => 'sessions', 'db_username' => 'myuser', 'db_password' => 'mypassword']
+            ])
         ;
 
 这些是你可以配置的参数：

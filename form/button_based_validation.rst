@@ -21,9 +21,9 @@
 
     $form = $this->createFormBuilder($task)
         // ...
-        ->add('previousStep', SubmitType::class, array(
+        ->add('previousStep', SubmitType::class, [
             'validation_groups' => false,
-        ))
+        ])
         ->getForm();
 
 现在表单将跳过你的验证约束。但它仍将验证基本的完整性约束，例如检查上传的文件是否太大，或者你是否尝试在数字字段中提交文本。

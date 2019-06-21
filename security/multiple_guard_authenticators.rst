@@ -19,7 +19,7 @@
 
         # config/packages/security.yaml
         security:
-             # ...
+            # ...
             firewalls:
                 default:
                     anonymous: ~
@@ -37,12 +37,12 @@
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:srv="http://symfony.com/schema/dic/services"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <config>
                 <!-- ... -->
                 <firewall name="default">
-                    <anonymous />
+                    <anonymous/>
                     <guard entry-point="App\Security\LoginFormAuthenticator">
                         <authenticator>App\Security\LoginFormAuthenticator</authenticator>
                         <authenticator>App\Security\FacebookConnectAuthenticator</authenticator>
@@ -54,24 +54,24 @@
     .. code-block:: php
 
         // config/packages/security.php
-        use App\Security\LoginFormAuthenticator;
         use App\Security\FacebookConnectAuthenticator;
+        use App\Security\LoginFormAuthenticator;
 
-        $container->loadFromExtension('security', array(
+        $container->loadFromExtension('security', [
             // ...
-            'firewalls' => array(
-                'default' => array(
+            'firewalls' => [
+                'default' => [
                     'anonymous' => null,
-                    'guard' => array(
+                    'guard' => [
                         'entry_point' => '',
-                        'authenticators' => array(
+                        'authenticators' => [
                             LoginFormAuthenticator::class,
-                            FacebookConnectAuthenticator::class'
-                        ),
-                    ),
-                ),
-            ),
-        ));
+                            FacebookConnectAuthenticator::class,
+                        ],
+                    ],
+                ],
+            ],
+        ]);
 
 这种方法有一个限制，就是你必须恰好使用同一个入口点。
 
@@ -113,7 +113,7 @@
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:srv="http://symfony.com/schema/dic/services"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <config>
                 <!-- ... -->
@@ -123,14 +123,14 @@
                     </guard>
                 </firewall>
                 <firewall name="default">
-                    <anonymous />
+                    <anonymous/>
                     <guard>
                         <authenticator>App\Security\LoginFormAuthenticator</authenticator>
                     </guard>
                 </firewall>
-                <rule path="^/login" role="IS_AUTHENTICATED_ANONYMOUSLY" />
-                <rule path="^/api" role="ROLE_API_USER" />
-                <rule path="^/" role="ROLE_USER" />
+                <rule path="^/login" role="IS_AUTHENTICATED_ANONYMOUSLY"/>
+                <rule path="^/api" role="ROLE_API_USER"/>
+                <rule path="^/" role="ROLE_USER"/>
             </config>
         </srv:container>
 
@@ -140,29 +140,29 @@
         use App\Security\ApiTokenAuthenticator;
         use App\Security\LoginFormAuthenticator;
 
-        $container->loadFromExtension('security', array(
+        $container->loadFromExtension('security', [
             // ...
-            'firewalls' => array(
-                'api' => array(
+            'firewalls' => [
+                'api' => [
                     'pattern' => '^/api',
-                    'guard' => array(
-                        'authenticators' => array(
+                    'guard' => [
+                        'authenticators' => [
                             ApiTokenAuthenticator::class,
-                        ),
-                    ),
-                ),
-                'default' => array(
+                        ],
+                    ],
+                ],
+                'default' => [
                     'anonymous' => null,
-                    'guard' => array(
-                        'authenticators' => array(
+                    'guard' => [
+                        'authenticators' => [
                             LoginFormAuthenticator::class,
-                        ),
-                    ),
-                ),
-            ),
-            'access_control' => array(
-                array('path' => '^/login', 'role' => 'IS_AUTHENTICATED_ANONYMOUSLY'),
-                array('path' => '^/api', 'role' => 'ROLE_API_USER'),
-                array('path' => '^/', 'role' => 'ROLE_USER'),
-            ),
-        ));
+                        ],
+                    ],
+                ],
+            ],
+            'access_control' => [
+                ['path' => '^/login', 'role' => 'IS_AUTHENTICATED_ANONYMOUSLY'],
+                ['path' => '^/api', 'role' => 'ROLE_API_USER'],
+                ['path' => '^/', 'role' => 'ROLE_USER'],
+            ],
+        ]);

@@ -3,16 +3,14 @@ Currency
 
 Validates that a value is a valid `3-letter ISO 4217`_ currency name.
 
-+----------------+---------------------------------------------------------------------------+
-| Applies to     | :ref:`property or method<validation-property-target>`                     |
-+----------------+---------------------------------------------------------------------------+
-| Options        | - `message`_                                                              |
-|                | - `payload`_                                                              |
-+----------------+---------------------------------------------------------------------------+
-| Class          | :class:`Symfony\\Component\\Validator\\Constraints\\Currency`             |
-+----------------+---------------------------------------------------------------------------+
-| Validator      | :class:`Symfony\\Component\\Validator\\Constraints\\CurrencyValidator`    |
-+----------------+---------------------------------------------------------------------------+
+==========  ===================================================================
+Applies to  :ref:`property or method <validation-property-target>`
+Options     - `groups`_
+            - `message`_
+            - `payload`_
+Class       :class:`Symfony\\Component\\Validator\\Constraints\\Currency`
+Validator   :class:`Symfony\\Component\\Validator\\Constraints\\CurrencyValidator`
+==========  ===================================================================
 
 Basic Usage
 -----------
@@ -51,11 +49,11 @@ a valid currency, you could do the following:
         <?xml version="1.0" encoding="UTF-8" ?>
         <constraint-mapping xmlns="http://symfony.com/schema/dic/constraint-mapping"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping http://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
+            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping https://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
 
             <class name="App\Entity\Order">
                 <property name="currency">
-                    <constraint name="Currency" />
+                    <constraint name="Currency"/>
                 </property>
             </class>
         </constraint-mapping>
@@ -65,8 +63,8 @@ a valid currency, you could do the following:
         // src/Entity/Order.php
         namespace App\Entity;
 
-        use Symfony\Component\Validator\Mapping\ClassMetadata;
         use Symfony\Component\Validator\Constraints as Assert;
+        use Symfony\Component\Validator\Mapping\ClassMetadata;
 
         class Order
         {
@@ -81,6 +79,8 @@ a valid currency, you could do the following:
 Options
 -------
 
+.. include:: /reference/constraints/_groups-option.rst.inc
+
 message
 ~~~~~~~
 
@@ -90,11 +90,11 @@ This is the message that will be shown if the value is not a valid currency.
 
 You can use the following parameters in this message:
 
-+------------------+------------------------------------------------+
-| Parameter        | Description                                    |
-+==================+================================================+
-| ``{{ value }}``  | The current (invalid) value                    |
-+------------------+------------------------------------------------+
+===============  ==============================================================
+Parameter        Description
+===============  ==============================================================
+``{{ value }}``  The current (invalid) value
+===============  ==============================================================
 
 .. include:: /reference/constraints/_payload-option.rst.inc
 

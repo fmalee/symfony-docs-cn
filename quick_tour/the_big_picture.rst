@@ -36,14 +36,14 @@ Symfony *拥抱* 最佳实践，保持着向后兼容（是的，更新总是一
     ├─ var/
     └─ vendor/
 
-我们现在可以在浏览器中运行项目了吗？当然！
-你可以安装 :doc:`Nginx 或 Apache </setup/web_server_configuration>` 并配置他们的文档根目录到 ``public/`` 目录。
-但是，为了便于开发，Symfony 配有自己的服务器。
-安装和运行方式：
+我们现在可以在浏览器中运行项目了吗？是的！你可以安装
+:doc:`Nginx 或 Apache </setup/web_server_configuration>`
+并配置他们的文档根目录到 ``public/``
+目录。但是，为了便于开发，Symfony 配有自己的服务器。安装和运行方式：
 
 .. code-block:: terminal
 
-    $ composer require server --dev
+    $ composer require --dev server
     $ php bin/console server:start
 
 在浏览器中打开 ``http://localhost:8000`` 试试你的新应用吧！

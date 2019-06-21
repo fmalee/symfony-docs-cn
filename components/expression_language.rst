@@ -16,8 +16,6 @@ Installation
 
     $ composer require symfony/expression-language
 
-Alternatively, you can clone the `<https://github.com/symfony/expression-language>`_ repository.
-
 .. include:: /components/require_autoload.rst.inc
 
 How can the Expression Engine Help Me?
@@ -101,9 +99,9 @@ PHP type (including objects)::
 
     var_dump($expressionLanguage->evaluate(
         'fruit.variety',
-        array(
+        [
             'fruit' => $apple,
-        )
+        ]
     ));
 
 This will print "Honeycrisp". For more information, see the :doc:`/components/expression_language/syntax`

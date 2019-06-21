@@ -9,7 +9,7 @@
 
 
 拥有灵活性是更加重要的。你把页面的URL从 ``/blog`` 改为 ``/news`` 时需要做些什么？
-你需要追踪并更新多少链接，才能做出这种改变？如果你使用Symfony的路由，改变起来很容易。
+你需要追踪并更新多少链接，才能做出这种改变？如果你使用Symfony的路由，那么改变应该是微不足道的。
 
 .. index::
    single: Routing; Basics
@@ -19,9 +19,9 @@
 创建路由
 ---------------
 
-*路由* 是从URL路径到控制器的映射。假设你想要一条完全匹配 ``/blog`` 的路由，以及另一条可以匹配 *任何* 网址的动态路由，例如 ``/blog/my-post`` 或  ``/blog/all-about-symfony``。
+*路由* 是从URL路径到属性（即控制器）的映射。假设你想要一条完全匹配 ``/blog`` 的路由，以及另一条可以匹配 *任何* 网址的动态路由，例如 ``/blog/my-post`` 或  ``/blog/all-about-symfony``。
 
-路由可以在YAML，XML和PHP中配置。所有格式都提供相同的功能和性能，因此请选择你喜欢的格式。
+路由可以在YAML，XML、PHP或注释中配置。所有格式都提供相同的功能和性能，因此请选择你喜欢的格式。
 如果选择PHP注释，请在应用中运行此命令，以添加对它们的支持：
 
 .. code-block:: terminal
@@ -54,6 +54,7 @@
 
             /**
              * 匹配 /blog/*
+             * 但不匹配 /blog/slug/extra-part
              *
              * @Route("/blog/{slug}", name="blog_show")
              */
@@ -70,10 +71,13 @@
 
         # config/routes.yaml
         blog_list:
+            # 确切的匹配 /blog
             path:     /blog
             controller: App\Controller\BlogController::list
 
         blog_show:
+            # 匹配 /blog/*
+            # 但不匹配 /blog/slug/extra-part
             path:     /blog/{slug}
             controller: App\Controller\BlogController::show
 
@@ -84,13 +88,16 @@
         <routes xmlns="http://symfony.com/schema/routing"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/routing
-                http://symfony.com/schema/routing/routing-1.0.xsd">
+                https://symfony.com/schema/routing/routing-1.0.xsd">
 
-            <route id="blog_list" controller="App\Controller\BlogController::list" path="/blog" >
+            <!-- Matches /blog exactly -->
+            <route id="blog_list" path="/blog" controller="App\Controller\BlogController::list">
                 <!-- settings -->
             </route>
 
-            <route id="blog_show" controller="App\Controller\BlogController::show" path="/blog/{slug}">
+            <!-- Matches /blog/* -->
+            <!-- but not /blog/slug/extra-part -->
+            <route id="blog_show" path="/blog/{slug}" controller="App\Controller\BlogController::show">
                 <!-- settings -->
             </route>
         </routes>
@@ -98,19 +105,20 @@
     .. code-block:: php
 
         // config/routes.php
-        use Symfony\Component\Routing\RouteCollection;
-        use Symfony\Component\Routing\Route;
         use App\Controller\BlogController;
+        use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
-        $routes = new RouteCollection();
-        $routes->add('blog_list', new Route('/blog', array(
-            '_controller' => [BlogController::class, 'list']
-        )));
-        $routes->add('blog_show', new Route('/blog/{slug}', array(
-            '_controller' => [BlogController::class, 'show']
-        )));
-
-        return $routes;
+        return function (RoutingConfigurator $routes) {
+            // Matches /blog exactly
+            $routes->add('blog_list', '/blog')
+                ->controller([BlogController::class, 'list'])
+            ;
+            // Matches /blog/*
+            // but not /blog/slug/extra-part
+            $routes->add('blog_show', '/blog/{slug}')
+                ->controller([BlogController::class, 'show'])
+            ;
+        };
 
 感谢这两条路由:
 
@@ -122,6 +130,11 @@
 
 每当路由路径中有 ``{placeholder}`` 时，该部分就成为通配符：它匹配 *任何* 值。
 你的控制器现在 *也可以* 有一个名为 ``$placeholder`` 的参数（通配符和参数名称 *必须保持一致*）。
+
+.. caution::
+
+    但是默认情况下，斜杠 ``/`` 这种占位符值会被忽略，因为路由器将其用作不同占位符之间的分隔符。
+    要了解有关此内容的更多信息，可以阅读 如何 :ref:`routing/slash_in_parameter`。
 
 每个路由同样都有一个内部名称：``blog_list`` 和 ``blog_show``。
 这些可以是任何东西（只要它们都是唯一的）并且还没有任何意义。你稍后将使用它们来 :ref:`生成URL <routing-generate>`。
@@ -135,9 +148,6 @@
 
 本地化路由 (i18n)
 ------------------------
-
-.. versionadded:: 4.1
-    在Symfony 4.1中引入了本地化路由的功能。
 
 路由可以本地化以支持每个 :doc:`locale </translation/locale>` 的唯一路径。
 Symfony提供了一种方便的方式来声明本地化路由而无需重复。
@@ -182,7 +192,7 @@ Symfony提供了一种方便的方式来声明本地化路由而无需重复。
         <routes xmlns="http://symfony.com/schema/routing"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/routing
-                http://symfony.com/schema/routing/routing-1.0.xsd">
+                https://symfony.com/schema/routing/routing-1.0.xsd">
 
             <route id="about_us" controller="App\Controller\CompanyController::about">
                 <path locale="nl">/over-ons</path>
@@ -193,11 +203,16 @@ Symfony提供了一种方便的方式来声明本地化路由而无需重复。
     .. code-block:: php
 
         // config/routes.php
-        namespace Symfony\Component\Routing\Loader\Configurator;
+        use App\Controller\CompanyController;
+        use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
         return function (RoutingConfigurator $routes) {
-            $routes->add('about_us', ['nl' => '/over-ons', 'en' => '/about-us'])
-                ->controller('App\Controller\CompanyController::about');
+            $routes->add('about_us', [
+                'nl' => '/over-ons',
+                'en' => '/about-us',
+            ])
+                ->controller([CompanyController::class, 'about'])
+            ;
         };
 
 当本地化路由在请求期间被匹配时，Symfony会自动感知应使用哪个本地配置。
@@ -208,9 +223,6 @@ Symfony提供了一种方便的方式来声明本地化路由而无需重复。
     如果应用使用完整语言(full language)+语言环境(territory locales)例如 ``fr_FR``，``fr_BE``），
     你可以在路由中只使用语言部分(language part)（例如 ``fr``）。
     当你希望为共享相同语言的不同语言环境使用相同的路由路径时，这样处理可以防止必须定义多个路径。
-
-.. versionadded:: 4.2
-    Symfony 4.2中引入了回退语言部分的功能。
 
 国际化应用的一个常见要求是为所有路由添加一个语言环境前缀。
 这可以通过为每个语言环境定义不同的前缀来完成（如果你愿意，可以为默认语言环境设置一个空前缀）：
@@ -234,7 +246,7 @@ Symfony提供了一种方便的方式来声明本地化路由而无需重复。
         <routes xmlns="http://symfony.com/schema/routing"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/routing
-                http://symfony.com/schema/routing/routing-1.0.xsd">
+                https://symfony.com/schema/routing/routing-1.0.xsd">
 
             <import resource="../src/Controller/" type="annotation">
                 <!-- don't prefix URLs for English, the default locale -->
@@ -246,15 +258,17 @@ Symfony提供了一种方便的方式来声明本地化路由而无需重复。
     .. code-block:: php
 
         // config/routes/annotations.php
-        use Symfony\Component\Routing\RouteCollection;
+        use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
-        $routes = $loader->import('../src/Controller/', 'annotation');
-
-        // don't prefix URLs for English, the default locale
-        $app->addPrefix('/', array('_locale' => 'en'));
-        $app->addPrefix('/nl', array('_locale' => 'nl'));
-
-        return $routes;
+        return function (RoutingConfigurator $routes) {
+            $routes->import('../src/Controller/', 'annotation')
+                ->prefix([
+                    // don't prefix URLs for English, the default locale
+                    'en' => '',
+                    'nl' => '/nl'
+                ])
+            ;
+        };
 
 .. _routing-requirements:
 
@@ -321,7 +335,7 @@ Symfony提供了一种方便的方式来声明本地化路由而无需重复。
         <routes xmlns="http://symfony.com/schema/routing"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/routing
-                http://symfony.com/schema/routing/routing-1.0.xsd">
+                https://symfony.com/schema/routing/routing-1.0.xsd">
 
             <route id="blog_list" path="/blog/{page}" controller="App\Controller\BlogController::list">
                 <requirement key="page">\d+</requirement>
@@ -333,20 +347,16 @@ Symfony提供了一种方便的方式来声明本地化路由而无需重复。
     .. code-block:: php
 
         // config/routes.php
-        use Symfony\Component\Routing\RouteCollection;
-        use Symfony\Component\Routing\Route;
         use App\Controller\BlogController;
+        use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
-        $routes = new RouteCollection();
-        $routes->add('blog_list', new Route('/blog/{page}', array(
-            '_controller' => [BlogController::class, 'list'],
-        ), array(
-            'page' => '\d+'
-        )));
-
-        // ...
-
-        return $routes;
+        return function (RoutingConfigurator $routes) {
+            $routes->add('blog_list', '/blog/{page}')
+                ->controller([BlogController::class, 'list'])
+                ->requirements(['page' => '\d+'])
+            ;
+            // ...
+        };
 
 ``\d+`` 是一个匹配任意长度数字的正则表达式。现在：
 
@@ -395,10 +405,9 @@ URL                       路由            参数
         <routes xmlns="http://symfony.com/schema/routing"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/routing
-                http://symfony.com/schema/routing/routing-1.0.xsd">
+                https://symfony.com/schema/routing/routing-1.0.xsd">
 
-            <route id="blog_list" path="/blog/{page<\d+>}"
-                   controller="App\Controller\BlogController::list" />
+            <route id="blog_list" path="/blog/{page<\d+>}" controller="App\Controller\BlogController::list"/>
 
             <!-- ... -->
         </routes>
@@ -406,21 +415,15 @@ URL                       路由            参数
     .. code-block:: php
 
         // config/routes.php
-        use Symfony\Component\Routing\RouteCollection;
-        use Symfony\Component\Routing\Route;
         use App\Controller\BlogController;
+        use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
-        $routes = new RouteCollection();
-        $routes->add('blog_list', new Route('/blog/{page<\d+>}', array(
-            '_controller' => [BlogController::class, 'list'],
-        )));
-
-        // ...
-
-        return $routes;
-
-.. versionadded:: 4.1
-    Symfony 4.1中引入了内联规则的功能。
+        return function (RoutingConfigurator $routes) {
+            $routes->add('blog_list', '/blog/{page<\d+>}')
+                ->controller([BlogController::class, 'list'])
+            ;
+            // ...
+        };
 
 要了解其他路由匹配条件（如HTTP方法、主机名和动态表达式），请参阅 :doc:`/routing/requirements`。
 
@@ -475,7 +478,7 @@ URL                       路由            参数
         <routes xmlns="http://symfony.com/schema/routing"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/routing
-                http://symfony.com/schema/routing/routing-1.0.xsd">
+                https://symfony.com/schema/routing/routing-1.0.xsd">
 
             <route id="blog_list" path="/blog/{page}" controller="App\Controller\BlogController::list">
                 <default key="page">1</default>
@@ -489,25 +492,16 @@ URL                       路由            参数
     .. code-block:: php
 
         // config/routes.php
-        use Symfony\Component\Routing\RouteCollection;
-        use Symfony\Component\Routing\Route;
         use App\Controller\BlogController;
+        use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
-        $routes = new RouteCollection();
-        $routes->add('blog_list', new Route(
-            '/blog/{page}',
-            array(
-                '_controller' => [BlogController::class, 'list'],
-                'page'        => 1,
-            ),
-            array(
-                'page' => '\d+'
-            )
-        ));
-
-        // ...
-
-        return $routes;
+        return function (RoutingConfigurator $routes) {
+            $routes->add('blog_list', '/blog/{page}')
+                ->controller([BlogController::class, 'list'])
+                ->defaults(['page' => 1])
+                ->requirements(['page' => '\d+'])
+            ;
+        };
 
 现在，当用户访问 ``/blog`` 时， ``blog_list`` 路由将会匹配，``$page`` 的值将会默认为 ``1``。
 
@@ -549,10 +543,9 @@ URL                       路由            参数
         <routes xmlns="http://symfony.com/schema/routing"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/routing
-                http://symfony.com/schema/routing/routing-1.0.xsd">
+                https://symfony.com/schema/routing/routing-1.0.xsd">
 
-            <route id="blog_list" path="/blog/{page <\d+>?1}"
-                   controller="App\Controller\BlogController::list" />
+            <route id="blog_list" path="/blog/{page <\d+>?1}" controller="App\Controller\BlogController::list"/>
 
             <!-- ... -->
         </routes>
@@ -560,25 +553,18 @@ URL                       路由            参数
     .. code-block:: php
 
         // config/routes.php
-        use Symfony\Component\Routing\RouteCollection;
-        use Symfony\Component\Routing\Route;
         use App\Controller\BlogController;
+        use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
-        $routes = new RouteCollection();
-        $routes->add('blog_list', new Route('/blog/{page<\d+>?1}', array(
-            '_controller' => [BlogController::class, 'list'],
-        )));
-
-        // ...
-
-        return $routes;
+        return function (RoutingConfigurator $routes) {
+            $routes->add('blog_list', '/blog/{page<\d+>?1}')
+                ->controller([BlogController::class, 'list'])
+            ;
+        };
 
 .. tip::
 
     要为任何一个占位符提供 ``null`` 默认值，就不要在 ``?`` 字符之后添加任何内容（例如 ``/blog/{page?}``）。
-
-.. versionadded:: 4.1
-    Symfony 4.1中引入了内联默认值的功能。
 
 列出所有路由
 --------------------------
@@ -592,7 +578,7 @@ URL                       路由            参数
     ------------------------------ -------- -------------------------------------
      Name                           Method   Path
     ------------------------------ -------- -------------------------------------
-     app_lucky_number              ANY    /lucky/number/{max}
+     app_lucky_number               ANY      /lucky/number/{max}
      ...
     ------------------------------ -------- -------------------------------------
 
@@ -636,14 +622,14 @@ URL                       路由            参数
 
         # config/routes.yaml
         article_show:
-          path:     /articles/{_locale}/{year}/{slug}.{_format}
-          controller: App\Controller\ArticleController::show
-          defaults:
-              _format: html
-          requirements:
-              _locale:  en|fr
-              _format:  html|rss
-              year:     \d+
+            path:     /articles/{_locale}/{year}/{slug}.{_format}
+            controller: App\Controller\ArticleController::show
+            defaults:
+                _format: html
+            requirements:
+                _locale:  en|fr
+                _format:  html|rss
+                year:     \d+
 
     .. code-block:: xml
 
@@ -652,7 +638,7 @@ URL                       路由            参数
         <routes xmlns="http://symfony.com/schema/routing"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/routing
-                http://symfony.com/schema/routing/routing-1.0.xsd">
+                https://symfony.com/schema/routing/routing-1.0.xsd">
 
             <route id="article_show"
                 path="/articles/{_locale}/{year}/{slug}.{_format}"
@@ -669,24 +655,22 @@ URL                       路由            参数
     .. code-block:: php
 
         // config/routes.php
-        use Symfony\Component\Routing\RouteCollection;
-        use Symfony\Component\Routing\Route;
         use App\Controller\ArticleController;
+        use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
-        $routes = new RouteCollection();
-        $routes->add(
-            'article_show',
-            new Route('/articles/{_locale}/{year}/{slug}.{_format}', array(
-                '_controller' => [ArticleController::class, 'show'],
-                '_format'     => 'html',
-            ), array(
-                '_locale' => 'en|fr',
-                '_format' => 'html|rss',
-                'year'    => '\d+',
-            ))
-        );
-
-        return $routes;
+        return function (RoutingConfigurator $routes) {
+            $routes->add('article_show', '/articles/{_locale}/{year}/{slug}.{_format}')
+                ->controller([ArticleController::class, 'show'])
+                ->defaults([
+                    '_format' => 'html',
+                ])
+                ->requirements([
+                    '_locale' => 'en|fr',
+                    '_format' => 'html|rss',
+                    'year'    => '\d+',
+                ])
+            ;
+        };
 
 如你所见，只有当URL的 ``{_locale}`` 部分为 ``en`` 或 ``fr`` 且 ``{year}`` 为数字时，此路由才会匹配。
 此路由还显示了如何在占位符之间使用点(``.``)而不是斜杠(``/``)。
@@ -751,9 +735,6 @@ Symfony遵循这个逻辑，在带有和不带尾部斜杠的URL之间重定向�
     如果你的应用为每个路径（``/foo`` 和 ``/foo/``）定义了不同的路由，
     则不会发生此自动重定向，并且始终匹配正确的路由。
 
-.. versionadded:: 4.1
-    在Symfony 4.1中引入了从 ``/foo/`` 到 ``/foo`` 的 ``301`` 自动重定向。在之前的Symfony版本中，则是产生 ``404`` 响应。
-
 .. index::
    single: Routing; Controllers
    single: Controller; String naming format
@@ -784,7 +765,7 @@ Symfony遵循这个逻辑，在带有和不带尾部斜杠的URL之间重定向�
 （例如 ``slug = my-blog-post``）。
 有了这些信息，就可以在控制器中生成一个URL::
 
-    class MainController extends AbstractController
+    class BlogController extends AbstractController
     {
         public function show($slug)
         {
@@ -793,7 +774,7 @@ Symfony遵循这个逻辑，在带有和不带尾部斜杠的URL之间重定向�
             // /blog/my-blog-post
             $url = $this->generateUrl(
                 'blog_show',
-                array('slug' => 'my-blog-post')
+                ['slug' => 'my-blog-post']
             );
         }
     }
@@ -802,7 +783,6 @@ Symfony遵循这个逻辑，在带有和不带尾部斜杠的URL之间重定向�
 :class:`Symfony\\Component\\Routing\\Generator\\UrlGeneratorInterface` 服务::
 
     // src/Service/SomeService.php
-
     use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
     class SomeService
@@ -818,7 +798,7 @@ Symfony遵循这个逻辑，在带有和不带尾部斜杠的URL之间重定向�
         {
             $url = $this->router->generate(
                 'blog_show',
-                array('slug' => 'my-blog-post')
+                ['slug' => 'my-blog-post']
             );
             // ...
         }
@@ -833,10 +813,10 @@ Symfony遵循这个逻辑，在带有和不带尾部斜杠的URL之间重定向�
 ``generate()`` 方法采用由通配符组成的数组来生成URI。
 但是如果你传递额外的内容，它们将作为查询字符串添加到URI::
 
-    $this->router->generate('blog', array(
+    $this->router->generate('blog', [
         'page' => 2,
         'category' => 'Symfony',
-    ));
+    ]);
     // /blog/2?category=Symfony
 
 生成本地化URL
@@ -845,9 +825,9 @@ Symfony遵循这个逻辑，在带有和不带尾部斜杠的URL之间重定向�
 当路由已本地化时，Symfony默认使用当前请求的区域语言来生成URL。
 为了生成不同语言环境的URL，你必须在参数数组中传递 ``_locale``::
 
-    $this->router->generate('about_us', array(
+    $this->router->generate('about_us', [
         '_locale' => 'nl',
-    ));
+    ]);
     // 生成结果: /over-ons
 
 从模板中生成URL
@@ -867,7 +847,7 @@ Symfony遵循这个逻辑，在带有和不带尾部斜杠的URL之间重定向�
 
     use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-    $this->generateUrl('blog_show', array('slug' => 'my-blog-post'), UrlGeneratorInterface::ABSOLUTE_URL);
+    $this->generateUrl('blog_show', ['slug' => 'my-blog-post'], UrlGeneratorInterface::ABSOLUTE_URL);
     // http://www.example.com/blog/my-blog-post
 
 .. note::
@@ -888,7 +868,7 @@ Symfony遵循这个逻辑，在带有和不带尾部斜杠的URL之间重定向�
 
     public function show($slug)
     {
-        // ..
+        // ...
     }
 
 但是你的路由路径中没有 ``{slug}`` 通配符（例如 ``/blog/show``）。
@@ -901,9 +881,9 @@ Symfony遵循这个逻辑，在带有和不带尾部斜杠的URL之间重定向�
 （这是必需的，因为该路由有一个 ``{slug}``）。
 要解决此问题，请在生成路径时传递一个 ``slug`` 值::
 
-    $this->generateUrl('blog_show', array('slug' => 'slug-value'));
+    $this->generateUrl('blog_show', ['slug' => 'slug-value']);
 
-    // or, in Twig
+    // 或者在Twig中
     // {{ path('blog_show', {'slug': 'slug-value'}) }}
 
 继续阅读
@@ -920,6 +900,3 @@ Symfony遵循这个逻辑，在带有和不带尾部斜杠的URL之间重定向�
     :glob:
 
     routing/*
-
-.. _`JMSI18nRoutingBundle`: https://github.com/schmittjoh/JMSI18nRoutingBundle
-.. _`BeSimpleI18nRoutingBundle`: https://github.com/BeSimple/BeSimpleI18nRoutingBundle

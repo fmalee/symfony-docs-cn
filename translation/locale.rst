@@ -70,10 +70,10 @@
         <routes xmlns="http://symfony.com/schema/routing"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/routing
-                http://symfony.com/schema/routing/routing-1.0.xsd">
+                https://symfony.com/schema/routing/routing-1.0.xsd">
 
             <route id="contact" path="/{_locale}/contact">
-                <default key="_controller">App\Controller\ContactContorller::index</default>
+                controller="App\Controller\ContactController::index">
                 <requirement key="_locale">en|fr|de</requirement>
             </route>
         </routes>
@@ -81,22 +81,17 @@
     .. code-block:: php
 
         // config/routes.php
-        use Symfony\Component\Routing\RouteCollection;
-        use Symfony\Component\Routing\Route;
         use App\Controller\ContactController;
+        use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
-        $routes = new RouteCollection();
-        $routes->add('contact', new Route(
-            '/{_locale}/contact',
-            array(
-                '_controller' => array(ContactController::class, 'index']),
-            ),
-            array(
-                '_locale' => 'en|fr|de',
-            )
-        ));
-
-        return $routes;
+        return function (RoutingConfigurator $routes) {
+            $routes->add('contact', '/{_locale}/contact')
+                ->controller([ContactController::class, 'index'])
+                ->requirements([
+                    '_locale' => 'en|fr|de',
+                ])
+            ;
+        };
 
 在路由中使用特殊的 ``_locale`` 参数时，匹配的语言环境会 *自动设置到请求中*，并可通过
 :method:`Symfony\\Component\\HttpFoundation\\Request::getLocale` 方法检索。
@@ -136,16 +131,16 @@
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:framework="http://symfony.com/schema/dic/symfony"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd
+                https://symfony.com/schema/dic/services/services-1.0.xsd
                 http://symfony.com/schema/dic/symfony
-                http://symfony.com/schema/dic/symfony/symfony-1.0.xsd">
+                https://symfony.com/schema/dic/symfony/symfony-1.0.xsd">
 
-            <framework:config default-locale="en" />
+            <framework:config default-locale="en"/>
         </container>
 
     .. code-block:: php
 
         // config/packages/translation.php
-        $container->loadFromExtension('framework', array(
+        $container->loadFromExtension('framework', [
             'default_locale' => 'en',
-        ));
+        ]);

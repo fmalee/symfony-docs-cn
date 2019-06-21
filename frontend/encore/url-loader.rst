@@ -8,7 +8,7 @@ Webpack Encore通过Webpack的 `URL Loader`_ 插件提供此功能，但默认�
 
 .. code-block:: terminal
 
-    $ yarn add --dev url-loader
+    $ yarn add url-loader --dev
 
 然后在你的 ``webpack.config.js`` 中启用它：
 

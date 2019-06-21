@@ -35,8 +35,8 @@ method of the validator builder::
 In this example, the validation metadata is retrieved executing the
 ``loadValidatorMetadata()`` method of the class::
 
-    use Symfony\Component\Validator\Mapping\ClassMetadata;
     use Symfony\Component\Validator\Constraints as Assert;
+    use Symfony\Component\Validator\Mapping\ClassMetadata;
 
     class User
     {
@@ -45,10 +45,10 @@ In this example, the validation metadata is retrieved executing the
         public static function loadValidatorMetadata(ClassMetadata $metadata)
         {
             $metadata->addPropertyConstraint('name', new Assert\NotBlank());
-            $metadata->addPropertyConstraint('name', new Assert\Length(array(
+            $metadata->addPropertyConstraint('name', new Assert\Length([
                 'min' => 5,
                 'max' => 20,
-            )));
+            ]));
         }
     }
 

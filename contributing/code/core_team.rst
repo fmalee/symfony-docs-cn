@@ -50,10 +50,6 @@ In addition, there are other groups created to manage specific topics:
 活跃的核心成员
 ~~~~~~~~~~~~~~~~~~~
 
-.. role:: leader
-.. role:: merger
-.. role:: decider
-
 * **项目负责人**:
 
   * **Fabien Potencier** (`fabpot`_).
@@ -63,9 +59,8 @@ In addition, there are other groups created to manage specific topics:
   * **Tobias Schultze** (`Tobion`_) can merge into the Routing_,
     OptionsResolver_ and PropertyAccess_ components;
 
-  * **Nicolas Grekas** (`nicolas-grekas`_) can merge into the Cache_, Debug_,
-    Process_, PropertyAccess_, VarDumper_ components, PhpUnitBridge_ and
-    the DebugBundle_;
+  * **Nicolas Grekas** (`nicolas-grekas`_) can merge into all components,
+    bridges and bundles;
 
   * **Christophe Coevoet** (`stof`_) can merge into all components, bridges and
     bundles;
@@ -76,7 +71,8 @@ In addition, there are other groups created to manage specific topics:
   * **Jakub Zalas** (`jakzal`_) can merge into the DomCrawler_ and Intl_
     components;
 
-  * **Christian Flothmann** (`xabbuh`_) can merge into the Yaml_ component;
+  * **Christian Flothmann** (`xabbuh`_) can merge into the Yaml_, and Form_
+    components;
 
   * **Javier Eguiluz** (`javiereguiluz`_) can merge into the WebProfilerBundle_;
 
@@ -114,6 +110,7 @@ In addition, there are other groups created to manage specific topics:
   * **Wouter De Jong** (`wouterj`_);
   * **Jules Pietri** (`HeahDude`_);
   * **Javier Eguiluz** (`javiereguiluz`_).
+  * **Oskar Stark** (`OskarStark`_).
 
 前核心成员
 ~~~~~~~~~~~~~~~~~~~
@@ -259,3 +256,4 @@ discretion of the **Project Leader**.
 .. _`michaelcullum`: https://github.com/michaelcullum
 .. _`wouterj`: https://github.com/wouterj
 .. _`HeahDude`: https://github.com/HeahDude
+.. _`OskarStark`: https://github.com/OskarStark

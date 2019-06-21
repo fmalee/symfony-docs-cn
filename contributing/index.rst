@@ -8,6 +8,6 @@
     code/index
     documentation/index
     community/index
-    code_of_conduct/index
+    diversity/index
 
 .. include:: /contributing/map.rst.inc

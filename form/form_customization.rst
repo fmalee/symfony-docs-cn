@@ -4,786 +4,385 @@
 如何自定义表单渲染
 ===============================
 
-Symfony为你提供了多种自定义表单渲染方式的方法。
-在本指南中，你将学习如何使用Twig或PHP作为模板引擎，并尽可能少地自定义表单的每个部分。
+Symfony为你提供了几种自定义表单渲染方式的方法。
+在本文中，你将学习如何对表单的一个或多个字段进行独家定制。
+如果你需要以相同的方式自定义所有表单，请创建一个 :doc:`表单主题 </form/form_themes>`
+或使用任何内置主题，例如 :doc:`Symfony表单的Bootstrap主题 </form/bootstrap4>`。
 
-表单渲染基础
----------------------
+.. _form-rendering-basics:
 
-回想一下，你可以使用 ``form_row()`` Twig函数或 ``row``
-PHP辅助方法来同时渲染表单字段的标签、错误和HTML部件：
+表单渲染函数
+------------------------
 
-.. code-block:: twig
-
-    {{ form_row(form.age) }}
-
-你还可以单独渲染字段的四个部分：
-
-.. code-block:: html+twig
-
-    <div>
-        {{ form_label(form.age) }}
-        {{ form_errors(form.age) }}
-        {{ form_widget(form.age) }}
-        {{ form_help(form.age) }}
-    </div>
-
-在这两个例子中，表单的标签、错误和HTML部件都是使用Symfony标配的一组标记来渲染的。
-例如，以上两个模板都会渲染为：
-
-.. code-block:: html
-
-    <div>
-        <label for="form_age">Age</label>
-        <ul>
-            <li>This field is required</li>
-        </ul>
-        <input type="number" id="form_age" name="form[age]" />
-    </div>
-
-要快速的原型化(prototype)并测试表单，你只需使用一行即可渲染整个表单：
+就足以渲染整个表单，包括其所有字段和错误消息：
 
 .. code-block:: twig
 
-    {# 渲染所有字段 #}
-    {{ form_widget(form) }}
-
-    {# 渲染所有字段 *以及* 表单的开始和结束标签 #}
+    {# $form->createView()form 是从控制器传递的变量，通过调用 $form->createView() 方法创建 #}
     {{ form(form) }}
 
-本文的剩余部分将解释如何在几个不同的级别中修改表单标记的每个部分。
-有关表单渲染的更多信息，请参阅 :doc:`/form/rendering`。
-
-.. _form-customization-form-themes:
-
-什么是表单主题？
----------------------
-
-Symfony使用表单片段（一个只渲染表单的一部分的模板片段）来渲染一个表单的每个部分
-- 字段标签、错误、``input`` 文本字段、``select`` 标签等等。
-
-片段在Twig中定义为区块，在PHP中定义为模板文件。
-
-一个 *主题* 无非就是一组渲染一个表单时要使用的片段。
-换句话说，如果要自定义表单渲染方式的一部分，则可以导入一个包含相应表单片段的自定义的 *主题*。
-
-Symfony有一些 **内置表单主题**，用于定义渲染一个表单的每个部分所需的每个片段：
-
-* `form_div_layout.html.twig`_, 将每个表单字段封装在一个 ``<div>`` 元素中。
-* `form_table_layout.html.twig`_, 将整个表单封装在一个 ``<table>``
-  元素内，并将每个表单字段封装在 ``<tr>`` 元素中。
-* `bootstrap_3_layout.html.twig`_, 使用适当的CSS类将每个表单字段封装在一个
-  ``<div>`` 元素中，以应用 `Bootstrap 3 CSS框架`_ 的默认样式。
-* `bootstrap_3_horizontal_layout.html.twig`_, 它类似于前面的主题，
-  但应用的是用于水平显示（即标签和部件处于同一行中）表单的CSS类。
-* `bootstrap_4_layout.html.twig`_, 与 ``bootstrap_3_layout.html.twig``
-  相同，但对应样式已更新为 `Bootstrap 4 CSS框架`_。
-* `bootstrap_4_horizontal_layout.html.twig`_, 与
-  ``bootstrap_3_horizontal_layout.html.twig``
-  相同，但对应样式已更新为 `Bootstrap 4 CSS框架`_。
-* `foundation_5_layout.html.twig`_, 使用适当的CSS类将每个表单字段封装在一个
-  ``<div>`` 元素中，以应用 `Foundation CSS框架`_ 默认样式。
-
-.. caution::
-
-    当你使用Bootstrap表单主题并手动渲染字段时，为复选框/单选框字段调用 ``form_label()``
-    将不会显示任何内容。因为在Bootstrap内部， ``form_widget()`` 已经将标签显示出来。
-
-.. tip::
-
-    阅读有关 :doc:`Bootstrap4 表单主题 </form/bootstrap4>` 的更多信息。
-
-在下一节中，你将学习如何通过重写部分或全部片段来自定义一个主题。
-
-例如，当渲染 ``integer`` 类型字段的部件时，将生成一个 ``number`` 类型的 ``input`` 字段。
+下一步是使用 :ref:`form_start() <reference-forms-twig-start>`、
+:ref:`form_end() <reference-forms-twig-end>`、
+:ref:`form_errors() <reference-forms-twig-errors>` 以及
+:ref:`form_row() <reference-forms-twig-row>`
+等Twig函数来渲染不同的表单部分，以便你可以添加自定义的HTML元素和属性：
 
 .. code-block:: html+twig
 
-    {{ form_widget(form.age) }}
+    {{ form_start(form) }}
+        <div class="my-custom-class-for-errors">
+            {{ form_errors(form) }}
+        </div>
 
-渲染:
+        <div class="row">
+            <div class="col">
+                {{ form_row(form.task) }}
+            </div>
+            <div class="col" id="some-custom-id">
+                {{ form_row(form.dueDate) }}
+            </div>
+        </div>
+    {{ form_end(form) }}
 
-.. code-block:: html
+``form_row()`` 函数输出整个字段内容，包括标签、帮助消息、HTML元素和错误消息。
+所有这些都可以使用其他Twig函数进一步自定义，如下图所示：
 
-    <input type="number" id="form_age" name="form[age]" required="required" value="33" />
+.. raw:: html
 
-在内部，Symfony使用 ``integer_widget`` 片段来渲染该字段。
-这是因为该字段的类型是 ``integer``，并且你正在渲染它的 ``widget``
-（而不是 ``label`` 或 ``errors``）。
+    <object data="../_images/form/form-field-parts.svg" type="image/svg+xml"></object>
 
-在Twig中，将使用 `form_div_layout.html.twig`_ 默认模板的 ``integer_widget`` 区块。
+:ref:`form_label() <reference-forms-twig-label>`、
+:ref:`form_widget() <reference-forms-twig-widget>`、
+:ref:`form_help() <reference-forms-twig-help>` 以及
+:ref:`form_errors() <reference-forms-twig-errors>`
+等Twig函数可以让你完全控制每个表单字段的渲染，这样你就可以完全自定义它们：
 
-而在PHP中，它将使用 ``FrameworkBundle/Resources/views/Form`` 件夹中的
-``integer_widget.html.php`` 文件。
+.. code-block:: html+twig
 
-``integer_widget`` 片段的默认实现如下所示：
+    <div class="form-control">
+        <i class="fa fa-calendar"></i> {{ form_label(form.dueDate) }}
+        {{ form_widget(form.dueDate) }}
+
+        <small>{{ form_help(form.dueDate) }}</small>
+
+        <div class="form-error">
+            {{ form_errors(form.dueDate) }}
+        </div>
+    </div>
+
+.. note::
+
+    在本文的后面部分，你可以找到这些Twig函数的完整参考以及更多用法示例。
+
+表单渲染参数
+------------------------
+
+上一节中提到的一些Twig函数允许传递变量来配置它们的行为。例如，``form_label()``
+函数允许你定义自定义标签以重写表单中定义的标签：
 
 .. code-block:: twig
 
-    {# form_div_layout.html.twig #}
-    {% block integer_widget %}
-        {% set type = type|default('number') %}
-        {{ block('form_widget_simple') }}
-    {% endblock integer_widget %}
+    {{ form_label(form.task, 'My Custom Task Label') }}
 
-如你所见，此片段本身渲染另一个片段 - ``form_widget_simple``：
+某些 :doc:`表单字段类型 </reference/forms/types>` 具有可以传递给部件的额外渲染选项。
+每种类型都记录了这些选项，但有一个常见选项  ``attr``，它允许你修改表单元素上的HTML属性。
+下面将 ``task_field`` CSS类添加到渲染的输入文本字段中：
 
-.. code-block:: html+twig
+.. code-block:: twig
 
-    {# form_div_layout.html.twig #}
-    {% block form_widget_simple %}
-        {% set type = type|default('text') %}
-        <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
-    {% endblock form_widget_simple %}
+    {{ form_widget(form.task, {'attr': {'class': 'task_field'}}) }}
 
-关键是，片段决定了一个表单的每个部分的HTML输出。要自定义该表单输出，你需要标识并重写正确的片段。
-一组这样的表单片段自定义被称为一个表单“主题”。渲染一个表单时，你可以选择要应用的表单主题。
+.. note::
 
-在Twig中，一个主题是单个模板文件，片段是此文件中定义的区块。
+    如果你一次渲染整个表单（或整个嵌入式表单），则 ``variables``
+    参数将仅应用于表单本身而不是其子元素。换句话说，以下内容
+    **不会** 将 “foo” 类属性传递给表单中的所有子字段：
 
-在PHP中，一个主题是一个文件夹，片段是此文件夹中的单个模板文件。
+    .. code-block:: twig
 
-.. _form-customization-sidebar:
+        {# **不会** 生效 - 变量不是递归的 #}
+        {{ form_widget(form, { 'attr': {'class': 'foo'} }) }}
 
-.. sidebar:: 如何辨别要自定义的区块
+如果需要“手动”渲染表单字段，则可以使用其 ``vars`` 属性访问字段（例如 ``id``、``name``
+和 ``label``）的各个值。例如，获取 ``id``：
 
-    在此示例中，该自定义片段的名称是 ``integer_widget``，因为你要为所有的
-    ``integer`` 字段类型的 ``widget`` 重写HTML。
-    如果你需要自定义的是 ``textarea`` 字段，则可以自定义 ``textarea_widget`` 区块。
+.. code-block:: twig
 
-    片段名称的 ``integer`` 部分来自类名：``IntegerType``，然后基于一个标准最终变成 ``integer``。
+    {{ form.task.vars.id }}
 
-    正如你看到的，该片段名称一个组合，它由字段类型和要渲染该字段的哪个部分（例如 ``widget``、
-    ``label``、``errors``、``row``）组成。
-    例如，要更改针对 ``text`` 类型的输入字段的错误的渲染方式，你可以自定义 ``text_errors`` 片段。
+.. note::
 
-    但是，更常见的是，你需要自定义针对所有字段中的错误的渲染方式。
-    你可以通过自定义 ``form_errors`` 片段来完成此操作。这里利用了字段类型继承。
-    具体来说，由于 ``text`` 类型从 ``form``
-    类型扩展而来，因此Form组件将首先查找特定类型的片段（例如
-    ``text_errors``），如果该片段不存在，则回退到其父片段名称（例如 ``form_errors``）。
-
-    有关此话题的更多信息，请参阅 :ref:`form-template-blocks`。
-
-.. _form-theming-methods:
+    在本文后面，你可以找到这些Twig变量及其描述的完整参考。
 
 表单主题
-------------
+-----------
 
-要明白表单主题的强大功能，假设你想要使用 ``div`` 标签封装每个 ``number`` 输入字段。
-达到目的关键是自定义 ``integer_widget`` 片段。
+前面部分中展示的Twig函数和变量可以帮助你自定义表单的一个或多个字段。
+但是，此自定义无法应用于应用的其余表单。
 
-Twig中的表单主题
---------------------
+如果要以相同方式来自定义所有表单（例如，将生成的HTML代码调整为应用中使用的CSS框架），则必须创建一个
+:doc:`表单主题 </form/form_themes>`。
 
-在Twig中自定义表单字段区块时，根据自定义表单区块存放的 *位置*，你有两个选择：
+.. _reference-form-twig-functions-variables:
 
-+------------------------+--------------------+----------------------+
-| 方法                   | 优点               | 缺点                 |
-+========================+====================+======================+
-| 在与表单相同的模板内部 | 快捷方便           | 无法在其他模板中复用 |
-+------------------------+--------------------+----------------------+
-| 在单独的模板内部       | 可以被许多模板复用 | 需要创建额外的模板   |
-+------------------------+--------------------+----------------------+
-
-两种方法都具有相同的效果，但它们在不同的解决方案中又各有优异。
-
-方法 1: 在与表单相同的模板内部
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-自定义 ``integer_widget`` 区块的最简单方法是直接在实际渲染表单的模板中对其进行自定义。
-
-.. code-block:: html+twig
-
-    {% extends 'base.html.twig' %}
-
-    {% form_theme form _self %}
-
-    {% block integer_widget %}
-        <div class="integer_widget">
-            {% set type = type|default('number') %}
-            {{ block('form_widget_simple') }}
-        </div>
-    {% endblock %}
-
-    {% block content %}
-        {# ... 渲染该表单 #}
-
-        {{ form_row(form.age) }}
-    {% endblock %}
-
-通过使用特殊的 ``{% form_theme form _self %}``
-标签，Twig可以在同一个模板中查找任何被重写的表单区块。
-假设 ``form.age`` 是一个 ``integer``
-类型的字段，则在渲染该字段的部件时，将使用自定义的 ``integer_widget`` 区块。
-
-此方法的缺点是在其他模板中渲染其他表单时，将无法复用该自定义表单区块。
-换句话说，在进行特定于应用的单个表单的表单自定义时，此方法最有用。
-如果要在应用中的多个（或所有）表单中复用一个表单自定义，请继续阅读下一节。
-
-方法 2: 在单独的模板内部
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-你还可以选择完全的将自定义的 ``integer_widget`` 表单区块放在单独的模板中。
-代码和生成结果和上面是一样的，但现在你可以在许多模板中重复使用该表单自定义：
-
-.. code-block:: html+twig
-
-    {# templates/form/fields.html.twig #}
-    {% block integer_widget %}
-        <div class="integer_widget">
-            {% set type = type|default('number') %}
-            {{ block('form_widget_simple') }}
-        </div>
-    {% endblock %}
-
-现在你已经创建了自定义表单区块，你需要通知Symfony使用它。
-在你要实际渲染表单的模板内，告诉Symfony通过 ``form_theme`` 标签使用该模板：
-
-.. code-block:: html+twig
-
-    {% form_theme form 'form/fields.html.twig' %}
-
-    {{ form_widget(form.age) }}
-
-当 ``form.age`` 部件被渲染，Symfony的将使用新模板的 ``integer_widget``
-区块，并根据该自定义区块的定义，将 ``input`` 标签将封装在 ``div`` 元素内。
-
-多个模板
-..................
-
-还可以通过应用多个模板来自定义一个表单。为此，请使用 ``with`` 关键字将所有模板的名称作为数组传递：
-
-.. code-block:: html+twig
-
-    {% form_theme form with ['common.html.twig', 'form/fields.html.twig'] %}
-
-    {# ... #}
-
-模板也可以位于不同的bundle中，使用Twig的命名空间化的路径来引用这些模板，例如
-``@AcmeFormExtra/form/fields.html.twig``。
-
-禁用使用全局定义的主题
-..........................................
-
-有时你可能希望禁用全局定义的表单主题，以便更好地控制表单的渲染。
-例如，在为可以安装在各种Symfony应用上的bundle（此时你无法控制全局定义的主题）创建管理界面时，你可能需要这样做。
-
-你可以通过在表单主题列表后面添加 ``only`` 关键字来执行此操作：
-
-.. code-block:: html+twig
-
-    {% form_theme form with ['common.html.twig', 'form/fields.html.twig'] only %}
-
-    {# ... #}
-
-.. caution::
-
-    使用 ``only`` 关键字时，不会应用Symfony的内置表单主题（``form_div_layout.html.twig`` 等）。
-    为了正确渲染你的表单，你需要自己提供一个功能齐全的表单主题，或者使用Twig的 ``use``
-    关键字继承其中一个内置表单主题，而不是使用 ``extends`` 来复用原始主题的内容。
-
-    .. code-block:: html+twig
-
-        {# templates/form/common.html.twig #}
-        {% use "form_div_layout.html.twig" %}
-
-        {# ... #}
-
-子表单
-...........
-
-你还可以将一个表单主题应用于表单的一个特定子表单：
-
-.. code-block:: html+twig
-
-    {% form_theme form.a_child_form 'form/fields.html.twig' %}
-
-当你希望为一个嵌套表单创建一个与主表单不同的自定义主题时，这非常有用。同时指定两个主题：
-
-.. code-block:: html+twig
-
-    {% form_theme form 'form/fields.html.twig' %}
-
-    {% form_theme form.a_child_form 'form/fields_child.html.twig' %}
-
-.. _referencing-base-form-blocks-twig-specific:
-
-引用基础表单区块
-----------------------------
-
-到目前为止，要重写特定的表单区块，最好的方法是从 `form_div_layout.html.twig`_
-复制默认区块，并将其粘贴到不同的模板中，然后对其进行自定义。
-但在许多情况下，你可以通过在自定义时引用基础区块来避免这样做。
-
-这样就减少了很多工作量，但根据你的表单区块自定义是否与表单位于同一模板，使用方法又略有不同。
-
-在与表单相同的模板内部引用区块
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-通过在渲染表单的模板中添加 ``use`` 标签来导入区块：
-
-.. code-block:: twig
-
-    {% use 'form_div_layout.html.twig' with integer_widget as base_integer_widget %}
-
-现在，当从 `form_div_layout.html.twig`_ 导入区块时，``integer_widget``
-区块被命名为 ``base_integer_widget``。
-这意味着当你重新定义 ``integer_widget`` 区块时，可以通过 ``base_integer_widget`` 来引用默认标记：
-
-.. code-block:: html+twig
-
-    {% block integer_widget %}
-        <div class="integer_widget">
-            {{ block('base_integer_widget') }}
-        </div>
-    {% endblock %}
-
-从外部模板引用基础区块
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-如果你的表单自定义位于一个外部模板中，则可以使用 ``parent()`` Twig函数来引用基础区块：
-
-.. code-block:: html+twig
-
-    {# templates/form/fields.html.twig #}
-    {% extends 'form_div_layout.html.twig' %}
-
-    {% block integer_widget %}
-        <div class="integer_widget">
-            {{ parent() }}
-        </div>
-    {% endblock %}
-
-.. note::
-
-    使用PHP作为模板引擎时，将无法引用基础区块。你必须手动将基础区块中的内容复制到新模板文件中。
-
-.. _twig:
-
-创建应用范围的自定义
+表单函数和变量参考
 --------------------------------------
 
-如果你希望某个表单自定义对你的应用是全局的，那么你可以在外部模板中进行表单自定义，然后再在应用配置中导入它来实现此目的。
+.. _reference-form-twig-functions:
 
-通过使用以下配置，将在渲染表单时全局使用 ``form/fields.html.twig`` 模板内的任何自定义表单区块。
+函数
+~~~~~~~~~
 
-.. configuration-block::
+.. _reference-forms-twig-form:
 
-    .. code-block:: yaml
+form(form_view, variables)
+..........................
 
-        # config/packages/twig.yaml
-        twig:
-            form_themes:
-                - 'form/fields.html.twig'
-            # ...
-
-    .. code-block:: xml
-
-        <!-- config/packages/twig.xml -->
-        <?xml version="1.0" encoding="UTF-8" ?>
-        <container xmlns="http://symfony.com/schema/dic/services"
-            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xmlns:twig="http://symfony.com/schema/dic/twig"
-            xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd
-                http://symfony.com/schema/dic/twig
-                http://symfony.com/schema/dic/twig/twig-1.0.xsd">
-
-            <twig:config>
-                <twig:form-theme>form/fields.html.twig</twig:form-theme>
-                <!-- ... -->
-            </twig:config>
-        </container>
-
-    .. code-block:: php
-
-        // config/packages/twig.php
-        $container->loadFromExtension('twig', array(
-            'form_themes' => array(
-                'form/fields.html.twig',
-            ),
-
-            // ...
-        ));
-
-默认情况下，Twig在渲染表单时使用一个 *div* 布局。但是，有些人可能更喜欢在 *table* 布局的表单。
-可以使用 ``form_table_layout.html.twig`` 资源来使用这样的布局：
-
-.. configuration-block::
-
-    .. code-block:: yaml
-
-        # config/packages/twig.yaml
-        twig:
-            form_themes:
-                - 'form_table_layout.html.twig'
-            # ...
-
-    .. code-block:: xml
-
-        <!-- config/packages/twig.xml -->
-        <?xml version="1.0" encoding="UTF-8" ?>
-        <container xmlns="http://symfony.com/schema/dic/services"
-            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xmlns:twig="http://symfony.com/schema/dic/twig"
-            xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd
-                http://symfony.com/schema/dic/twig
-                http://symfony.com/schema/dic/twig/twig-1.0.xsd">
-
-            <twig:config>
-                <twig:form-theme>form_table_layout.html.twig</twig:form-theme>
-                <!-- ... -->
-            </twig:config>
-        </container>
-
-    .. code-block:: php
-
-        // config/packages/twig.php
-        $container->loadFromExtension('twig', array(
-            'form_themes' => array(
-                'form_table_layout.html.twig',
-            ),
-
-            // ...
-        ));
-
-如果你只想在单个模板中进行更改，请将以下行添加到你的模板文件中，而不是将该模板添加为一个资源：
-
-.. code-block:: html+twig
-
-    {% form_theme form 'form_table_layout.html.twig' %}
-
-请注意，上面代码中的 ``form`` 变量是你传递给模板的表单视图变量。
-
-如何自定义单个字段
-------------------------------------
-
-到目前为止，你已经看到了可以为所有文本字段类型的部件输出进行自定义的不同方法。
-你还可以自定义单个字段。例如，假设 ``product`` 表单中有两个 ``text`` 字段 - ``name`` 和
-``description`` - 但你只想自定义其中一个字段。
-这可以通过自定义一个片段来实现，该片段的名称是该字段的 ``id`` 属性和字段的正在自定义对应部分的一个组合。
-例如，要仅自定义 ``name`` 字段：
-
-.. code-block:: html+twig
-
-    {% form_theme form _self %}
-
-    {% block _product_name_widget %}
-        <div class="text_widget">
-            {{ block('form_widget_simple') }}
-        </div>
-    {% endblock %}
-
-    {{ form_widget(form.name) }}
-
-在这里，``_product_name_widget`` 片段定义了用于 *id* 为
-``product_name`` （和名称为 ``product[name]``）的字段的模板。
-
-.. tip::
-
-    该字段的 ``product`` 部分是表单名称，可以手动设置或根据表单类型名称自动生成（例如
-    ``ProductType`` 等同于 ``product``）。
-    如果你不确定表单名称是什么，请查看已渲染表单的HTML代码。
-
-    如果要更改区块名称 ``_product_name_widget`` 的 ``product`` 或
-    ``name`` 部分，可以在表单类型中设置 ``block_name`` 选项::
-
-        use Symfony\Component\Form\FormBuilderInterface;
-        use Symfony\Component\Form\Extension\Core\Type\TextType;
-
-        public function buildForm(FormBuilderInterface $builder, array $options)
-        {
-            // ...
-
-            $builder->add('name', TextType::class, array(
-                'block_name' => 'custom_name',
-            ));
-        }
-
-    然后块名称将是 ``_product_custom_name_widget``。
-
-你还可以使用相同的方法重写整个字段行的标记：
-
-.. code-block:: html+twig
-
-    {% form_theme form _self %}
-
-    {% block _product_name_row %}
-        <div class="name_row">
-            {{ form_label(form) }}
-            {{ form_errors(form) }}
-            {{ form_widget(form) }}
-            {{ form_help(form) }}
-        </div>
-    {% endblock %}
-
-    {{ form_row(form.name) }}
-
-.. _form-custom-prototype:
-
-如何自定义集合的原型
----------------------------------------
-
-使用一个 :doc:`表单集合 </form/form_collections>`
-时，可以通过重写一个区块来将原本的原型重写为一个完全自定义的原型。
-例如，如果你的表单字段命名为 ``tasks``，则你可以按下面的方式来更改每个任务的部件：
-
-.. code-block:: html+twig
-
-    {% form_theme form _self %}
-
-    {% block _tasks_entry_widget %}
-        <tr>
-            <td>{{ form_widget(form.task) }}</td>
-            <td>{{ form_widget(form.dueDate) }}</td>
-        </tr>
-    {% endblock %}
-
-你不仅可以重写已渲染的部件，还可以更改完整的表单行或标签。
-对于上面给出的 ``tasks`` 字段，区块名称将如下：
-
-================  =======================
-表单部分           区块名称
-================  =======================
-``label``         ``_tasks_entry_label``
-``widget``        ``_tasks_entry_widget``
-``row``           ``_tasks_entry_row``
-================  =======================
-
-其他常用的自定义
----------------------------
-
-到目前为止，本文已经向你展示了用来自定义表单的渲染方式的几种不同的方法。
-这里关键的点是，自定义一个与要控制的表单部分相对应的特定片段（请参阅
-:ref:`命名表单区块 <form-customization-sidebar>`）。
-
-在接下来的章节中，你将了解如何创建多种常见的表单自定义。
-要应用这些自定义，请使用 :ref:`form-theming-methods` 章节中描述的其中一个方法。
-
-自定义错误输出
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. note::
-
-    Form组件仅处理验证错误 *如何* 渲染，而不处理实际的验证错误消息。
-    错误消息自身由你应用于对象的验证约束确定。
-    有关更多信息，请参阅 :doc:`验证 </validation>` 文档。
-
-在提交有错误的表单时，有许多不同的方法可以自定义错误的渲染方式。
-使用 ``form_errors()`` 辅助方法，将渲染一个字段的错误消息：
+渲染一个完整表单的HTML。
 
 .. code-block:: twig
 
-    {{ form_errors(form.age) }}
+    {# 渲染表单并更改提交方法 #}
+    {{ form(form, {'method': 'GET'}) }}
 
-默认情况下，该错误在一个无序列表中渲染：
-
-.. code-block:: html
-
-    <ul>
-        <li>This field is required</li>
-    </ul>
-
-要为 *所有* 字段重写错误消息的渲染方式，请复制、粘贴，然后自定义 ``form_errors`` 片段。
-
-.. code-block:: html+twig
-
-    {% form_theme form _self %}
-
-    {# form_errors.html.twig #}
-    {% block form_errors %}
-        {% spaceless %}
-            {% if errors|length > 0 %}
-            <ul>
-                {% for error in errors %}
-                    <li>{{ error.message }}</li>
-                {% endfor %}
-            </ul>
-            {% endif %}
-        {% endspaceless %}
-    {% endblock form_errors %}
-
-.. tip::
-
-    请参阅 :ref:`form-theming-methods` 以了解如何应用此自定义。
-
-你还可以仅为一种特定字段类型自定义错误输出。
-要自定义 *仅* 用于这些错误的标记，请按照上述说明进行相同操作，但将内容放在一个相对的
-``_errors`` 区块中（如果是PHP模板，则是放入文件）。
-例如：``text_errors`` （或 ``text_errors.html.php``）。
-
-.. tip::
-
-    请参阅表 :ref:`form-template-blocks` 以找出你需要自定义的特定区块或文件。
-
-某些更全局的针对表单（即不仅仅针对一个字段）的错误会单独渲染，通常位于表单的顶部：
+你将主要使用此辅助函数进行原型设计(prototyping)或使用自定义表单主题。
+如果在渲染表单时需要更大的灵活性，则应使用其他辅助函数来渲染表单的各个部分：
 
 .. code-block:: twig
 
+    {{ form_start(form) }}
+        {{ form_errors(form) }}
+
+        {{ form_row(form.name) }}
+        {{ form_row(form.dueDate) }}
+
+        {{ form_row(form.submit, { 'label': 'Submit me' }) }}
+    {{ form_end(form) }}
+
+.. _reference-forms-twig-start:
+
+form_start(form_view, variables)
+................................
+
+渲染表单的开始标签。此辅助函数负责打印已配置的方法和表单的动作。
+如果表单包含上传字段，它还将包含正确的 ``enctype`` 属性。
+
+.. code-block:: twig
+
+    {# 渲染开始标签并更改提交方法 #}
+    {{ form_start(form, {'method': 'GET'}) }}
+
+.. _reference-forms-twig-end:
+
+form_end(form_view, variables)
+..............................
+
+渲染表单的结束标签。
+
+.. code-block:: twig
+
+    {{ form_end(form) }}
+
+除非你设置 ``render_rest`` 为 ``false``，否则此助手也将输出
+``form_rest()``（这将在本文后面解释）：
+
+.. code-block:: twig
+
+    {# 不渲染未手动渲染的字段 #}
+    {{ form_end(form, {'render_rest': false}) }}
+
+.. _reference-forms-twig-label:
+
+form_label(form_view, label, variables)
+.......................................
+
+渲染给定字段的标签。你可以在第二个参数中传入需要显示的特定标签。
+
+.. code-block:: twig
+
+    {{ form_label(form.name) }}
+
+    {# 以下两种语法是等效的 #}
+    {{ form_label(form.name, 'Your Name', {'label_attr': {'class': 'foo'}}) }}
+
+    {{ form_label(form.name, null, {
+        'label': 'Your name',
+        'label_attr': {'class': 'foo'}
+    }) }}
+
+请参阅 ":ref:`twig-reference-form-variables`" 以了解 ``variables`` 参数。
+
+.. _reference-forms-twig-help:
+
+form_help(form_view)
+....................
+
+渲染给定字段的帮助文本。
+
+.. code-block:: twig
+
+    {{ form_help(form.name) }}
+
+.. _reference-forms-twig-errors:
+
+form_errors(form_view)
+......................
+
+渲染给定字段的任何错误。
+
+.. code-block:: twig
+
+    {# 仅渲染与此字段相关的错误消息 #}
+    {{ form_errors(form.name) }}
+
+    {# 渲染与任何表单字段无关的任何“全局”错误 #}
     {{ form_errors(form) }}
 
-要自定义 *仅* 用于这些错误的标记，请按照上述说明进行相同的操作，但现在需要检查
-``compound`` 变量是否设置为 ``true``。
-如果为 ``true``，则意味着当前渲染的是一个字段集合（例如整个表单），而不仅仅是单个字段。
+.. _reference-forms-twig-widget:
 
-.. code-block:: html+twig
+form_widget(form_view, variables)
+.................................
 
-    {% form_theme form _self %}
-
-    {# form_errors.html.twig #}
-    {% block form_errors %}
-        {% spaceless %}
-            {% if errors|length > 0 %}
-                {% if compound %}
-                    <ul>
-                        {% for error in errors %}
-                            <li>{{ error.message }}</li>
-                        {% endfor %}
-                    </ul>
-                {% else %}
-                    {# ... 为单个字段显示错误 #}
-                {% endif %}
-            {% endif %}
-        {% endspaceless %}
-    {% endblock form_errors %}
-
-自定义"表单行"
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-当你可以控制它时，渲染一个表单字段的最简单方法是使用 ``form_row()`` 函数，该函数渲染一个字段的标签、错误和HTML部件。
-要自定义用于渲染 *所有* 表单字段行的标记，请重写 ``form_row`` 片段。
-例如，假设你要为每行周围的 ``div`` 元素添加一个样式类：
-
-.. code-block:: html+twig
-
-    {# form_row.html.twig #}
-    {% block form_row %}
-        <div class="form_row">
-            {{ form_label(form) }}
-            {{ form_errors(form) }}
-            {{ form_widget(form) }}
-            {{ form_help(form) }}
-        </div>
-    {% endblock form_row %}
-
-.. tip::
-
-    请参阅 :ref:`form-theming-methods` 以了解如何应用此自定义。
-
-向字段标签添加一个“Required”星号
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-如果要使用一个星号（``*``）来表示所有的必需字段，可以通过自定义 ``form_label`` 片段来完成此操作。
-
-如果你在与表单相同的模板中进行此表单自定义，请修改 ``use`` 标签并添加以下内容：
-
-.. code-block:: html+twig
-
-    {% use 'form_div_layout.html.twig' with form_label as base_form_label %}
-
-    {% block form_label %}
-        {{ block('base_form_label') }}
-
-        {% if label is not same as(false) and required %}
-            <span class="required" title="This field is required">*</span>
-        {% endif %}
-    {% endblock %}
-
-如果要在一个单独的模板中进行此表单自定义，请使用以下内容：
-
-.. code-block:: html+twig
-
-    {% extends 'form_div_layout.html.twig' %}
-
-    {% block form_label %}
-        {{ parent() }}
-
-        {% if label is not same as(false) and required %}
-            <span class="required" title="This field is required">*</span>
-        {% endif %}
-    {% endblock %}
-
-.. tip::
-
-    请参阅 :ref:`form-theming-methods` 以了解如何应用此自定义。
-
-.. sidebar:: 仅使用CSS
-
-    默认情况下，必需字段的 ``label`` 标签会渲染一个 ``required`` CSS类。
-    因此，你也可以仅使用CSS来完成星号的添加：
-
-    .. code-block:: css
-
-        label.required:before {
-            content: "* ";
-        }
-
-添加"help"消息
-~~~~~~~~~~~~~~~~~~~~~~
-
-你还可以自定义表单部件以获得可选的“help”消息。
-
-如果你在与表单相同的模板中进行此表单自定义，请修改 ``use`` 标签并添加以下内容：
-
-.. code-block:: html+twig
-
-    {% use 'form_div_layout.html.twig' with form_widget_simple as base_form_widget_simple %}
-
-    {% block form_widget_simple %}
-        {{ block('base_form_widget_simple') }}
-
-        {% if help is defined %}
-            <span class="help-block">{{ help }}</span>
-        {% endif %}
-    {% endblock %}
-
-如果要在一个单独的模板中进行表单自定义，请使用以下内容：
-
-.. code-block:: html+twig
-
-    {% extends 'form_div_layout.html.twig' %}
-
-    {% block form_widget_simple %}
-        {{ parent() }}
-
-        {% if help is defined %}
-            <span class="help-block">{{ help }}</span>
-        {% endif %}
-    {% endblock %}
-
-要在一个字段下面渲染帮助消息，请传入一个 ``help`` 变量：
+渲染给定字段的HTML部件。如果将此应用于整个表单或字段集合，则将渲染每个底层表单行。
 
 .. code-block:: twig
 
-    {{ form_widget(form.title, {'help': 'foobar'}) }}
+    {# 渲染一个部件，同时添加一个“foo”样式类 #}
+    {{ form_widget(form.name, {'attr': {'class': 'foo'}}) }}
 
-.. tip::
+``form_widget()`` 的第二个参数是一个变量数组。
+最常见的变量是 ``attr``，它是应用于HTML部件的一个HTML属性数组。
+在某些情况下，某些类型还具有可以传递与模板相关的其他选项。
+这些是逐个类型讨论的。如果你一次（例如 ``form_widget(form)``）渲染多个字段，则
+``attributes`` 不会递归地应用于子字段。
 
-    请参阅 :ref:`form-theming-methods` 以了解如何应用此自定义。
+请参阅 ":ref:`twig-reference-form-variables`" 以了解 ``variables`` 参数。
 
-使用表单变量
---------------------
+.. _reference-forms-twig-row:
 
-大多数可用于渲染表单不同部分（例如表单部件、表单标签、表单错误等）的函数也允许你直接进行某些自定义。
-请看以下示例：
+form_row(form_view, variables)
+..............................
+
+渲染给定字段的“行”，即该字段的标签、错误、帮助和部件的组合。
 
 .. code-block:: twig
 
-    {# 渲染一个表单部件, 同时添加为它一个 "foo" 样式类 #}
-    {{ form_widget(form.name, { 'attr': {'class': 'foo'} }) }}
+    {# 渲染一个字段行，同时显示带有“foo”文本的标签 #}
+    {{ form_row(form.name, {'label': 'foo'}) }}
 
-作为第二个参数传递的数组包含着表单“变量”。
-有关Twig中此概念的更多详细信息，请参阅 :ref:`twig-reference-form-variables`。
+``form_row()`` 的第二个参数是一个变量数组。Symfony提供的模板仅允许重写标签，如上例所示。
 
-.. _`form_div_layout.html.twig`: https://github.com/symfony/symfony/blob/master/src/Symfony/Bridge/Twig/Resources/views/Form/form_div_layout.html.twig
-.. _`form_table_layout.html.twig`: https://github.com/symfony/symfony/blob/master/src/Symfony/Bridge/Twig/Resources/views/Form/form_table_layout.html.twig
-.. _`bootstrap_3_layout.html.twig`: https://github.com/symfony/symfony/blob/master/src/Symfony/Bridge/Twig/Resources/views/Form/bootstrap_3_layout.html.twig
-.. _`bootstrap_3_horizontal_layout.html.twig`: https://github.com/symfony/symfony/blob/master/src/Symfony/Bridge/Twig/Resources/views/Form/bootstrap_3_horizontal_layout.html.twig
-.. _`bootstrap_4_layout.html.twig`: https://github.com/symfony/symfony/blob/master/src/Symfony/Bridge/Twig/Resources/views/Form/bootstrap_4_layout.html.twig
-.. _`bootstrap_4_horizontal_layout.html.twig`: https://github.com/symfony/symfony/blob/master/src/Symfony/Bridge/Twig/Resources/views/Form/bootstrap_4_horizontal_layout.html.twig
-.. _`Bootstrap 3 CSS框架`: https://getbootstrap.com/docs/3.3/
-.. _`Bootstrap 4 CSS框架`: https://getbootstrap.com/docs/4.1/
-.. _`foundation_5_layout.html.twig`: https://github.com/symfony/symfony/blob/master/src/Symfony/Bridge/Twig/Resources/views/Form/foundation_5_layout.html.twig
-.. _`Foundation CSS框架`: http://foundation.zurb.com/
+请参阅 ":ref:`twig-reference-form-variables`" 以了解 ``variables`` 参数。
+
+.. _reference-forms-twig-rest:
+
+form_rest(form_view, variables)
+...............................
+
+这将渲染尚未为给定表单渲染的所有剩余字段。
+总是将它放置在你的表单中的某个地方是一个好主意，因为它会为你渲染隐藏的字段，
+从而更容易发现那些你忘记渲染的任何字段（因为它会为你渲染该字段）。
+
+.. code-block:: twig
+
+    {{ form_rest(form) }}
+
+测试
+~~~~~
+
+可以使用Twig中的 ``is`` 运算符以创建条件来执行测试。
+阅读 `Twig文档`_ 以获取更多信息。
+
+.. _form-twig-selectedchoice:
+
+selectedchoice(selected_value)
+..............................
+
+此测试将检查当前选择是否等于 ``selected_value`` ，或当
+``selected_value`` 是一个数组时，当前选择是否在该数组中。
+
+.. code-block:: html+twig
+
+    <option {% if choice is selectedchoice(value) %}selected="selected"{% endif %} ...>
+
+.. _form-twig-rootform:
+
+rootform
+........
+
+此测试将检查当前的 ``form`` 是否有一个父表单视图。
+
+.. code-block:: twig
+
+    {# DON'T DO THIS: 这个简单的检查不能区分具有父表单视图的表单与
+       一个定义了名为“parent”的嵌套表单字段的表单之间的却别 #}
+
+    {% if form.parent is null %}
+        {{ form_errors(form) }}
+    {% endif %}
+
+   {# DO THIS：此检查始终可靠，即使该表单定义了一个名为“parent”的字段。 #}
+
+    {% if form is rootform %}
+        {{ form_errors(form) }}
+    {% endif %}
+
+.. _twig-reference-form-variables:
+.. _reference-form-twig-variables:
+
+表单变量参考
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+以下变量对于每种字段类型都是通用的。某些字段类型可能会定义更多变量，而某些变量仅适用于某些类型。
+要了解每种类型可用的确切变量，请查看你的 :doc:`表单主题 </form/form_themes>` 所使用的模板代码。
+
+假设模板中有一个 ``form`` 变量并且你想在 ``name`` 字段上引用该变量，则可以通过在
+:class:`Symfony\\Component\\Form\\FormView` 对象上使用一个 ``vars`` 公有属性来访问该变量:
+
+.. code-block:: html+twig
+
+    <label for="{{ form.name.vars.id }}"
+        class="{{ form.name.vars.required ? 'required' }}">
+        {{ form.name.vars.label }}
+    </label>
+
+======================  ======================================================================================
+变量                    用法
+======================  ======================================================================================
+``action``              当前表单的动作。
+``attr``                一个键值对数组，将在字段上渲染为HTML属性。
+``block_prefixes``      父类型的所有名称的数组。
+``cache_key``           用于缓存的一个唯一键。
+``compound``            该字段是否实际上是一组子字段的持有者。
+                        （例如，一个 ``choice`` 字段实际上是一组复选框）。
+``data``                类型的规范化数据。
+``disabled``            如果为 ``true``，将在该字段添加 ``disabled="disabled``。
+``errors``              附加到 *此* 特定字段的一个任何错误的数组（例如 ``form.title.errors``）。
+                        请注意，不能使用 ``form.errors`` 来确定一个表单是否有效，
+                        因为此变量只会返回“全局”的错误：某些单独的字段可能有错误。
+                        所以，请使用 ``valid`` 选项。
+``form``                当前的 ``FormView`` 实例。
+``full_name``           要渲染的 ``name`` HTML属性。
+``help``                The help message that will be rendered.
+``id``                  要渲染的 ``id`` HTML属性。
+``label``               要渲染的字符串标签。
+``label_attr``          一个键值对数组，将在标签上渲染为HTML属性。
+``method``              当前表单的方法（POST，GET等）。
+``multipart``           如果是 ``true``，``form_enctype`` 将渲染 ``enctype="multipart/form-data"``。
+``name``                字段的名称（例如 ``title``） - 但不是 ``name`` HTML属性，``full_name`` 才是。
+``required``            如果是 ``true``，则在该字段中添加一个 ``required`` 属性以激活HTML5验证。
+                        另外，在标签中添加了一个 ``required`` 样式类。
+``submitted``           返回 ``true`` 或 ``false``，这取决于整个表单是否提交。
+``translation_domain``  此表单的翻译域。
+``valid``               返回 ``true`` 或 ``false``，这取决于整个表单是否有效。
+``value``               渲染时要使用的值（通常是 ``value`` HTML属性）。
+                        此变量仅适用于根表单元素。
+======================  ======================================================================================
+
+.. tip::
+
+    在幕后，当表单组件在表单树的每个“节点”上调用 ``buildView()`` 和 ``finishView()``
+    时，这些变量对表单的 ``FormView`` 对象可用。
+    要查看特定字段具有哪些“view”变量，请查找表单字段（及其父字段）的源代码，并查看上面的两个函数。
+
+.. _`Twig文档`: https://twig.symfony.com/doc/2.x/templates.html#test-operator

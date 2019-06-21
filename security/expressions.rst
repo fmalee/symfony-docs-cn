@@ -40,7 +40,7 @@
     用户拥有的角色数组，包括 :ref:`角色层级 <security-role-hierarchy>`
     但不包括 ``IS_AUTHENTICATED_*`` 属性（请参阅下面的函数）。
 ``object``
-     被作为第二个参数传递到 ``isGranted()`` 的对象（如果有的话）。
+    被作为第二个参数传递到 ``isGranted()`` 的对象（如果有的话）。
 ``token``
     令牌对象。
 ``trust_resolver``

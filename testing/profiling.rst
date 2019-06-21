@@ -32,13 +32,13 @@
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:framework="http://symfony.com/schema/dic/symfony"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd
-                        http://symfony.com/schema/dic/symfony http://symfony.com/schema/dic/symfony/symfony-1.0.xsd">
+            xsi:schemaLocation="http://symfony.com/schema/dic/services https://symfony.com/schema/dic/services/services-1.0.xsd
+                        http://symfony.com/schema/dic/symfony https://symfony.com/schema/dic/symfony/symfony-1.0.xsd">
 
             <!-- ... -->
 
             <framework:config>
-                <framework:profiler enabled="true" collect="false" />
+                <framework:profiler enabled="true" collect="false"/>
             </framework:config>
         </container>
 
@@ -47,13 +47,13 @@
         // config/packages/test/web_profiler.php
 
         // ...
-        $container->loadFromExtension('framework', array(
+        $container->loadFromExtension('framework', [
             // ...
-            'profiler' => array(
+            'profiler' => [
                 'enabled' => true,
                 'collect' => false,
-            ),
-        ));
+            ],
+        ]);
 
 可以通过设置 ``collect`` 为 ``true`` 来为所有测试启用分析器。
 但是，如果你只需要在几个测试中使用分析器，则可以将其全局禁用，并通过调用
@@ -64,6 +64,8 @@
 
 Symfony分析器收集的数据可用于检查数据库调用的数量，框架中耗费的时间等。
 所有这些信息都是通过调用 ``$client->getProfile()`` 获得的收集器来提供的::
+
+    use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
     class LuckyControllerTest extends WebTestCase
     {
@@ -97,7 +99,7 @@ Symfony分析器收集的数据可用于检查数据库调用的数量，框架�
     }
 
 如果由于分析数据导致测试失败（例如，太多数据库查询），你可能希望在测试完成后使用Web分析器来分析请求。
-只要你在错误消息中嵌入令牌，那就很容易实现该目的::
+可以通过在错误消息中嵌入令牌来实现::
 
     $this->assertLessThan(
         30,

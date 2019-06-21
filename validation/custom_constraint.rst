@@ -91,21 +91,18 @@
 :class:`Symfony\\Component\\Validator\\Violation\\ConstraintViolationBuilderInterface`
 实例。最后调用 ``addViolation()`` 方法增加了违规的上下文。
 
-.. versionadded:: 4.2
-    在Symfony4.2中引入了 ``UnexpectedValueException``。
-
 使用新的验证器
 -----------------------
 
-使用自定义验证器看起来与使用Symfony本身提供的验证器相同：
+你可以像使用Symfony自身提供的验证器那样使用自定义验证器：
 
 .. configuration-block::
 
     .. code-block:: php-annotations
 
         // src/Entity/AcmeEntity.php
-        use Symfony\Component\Validator\Constraints as Assert;
         use App\Validator\Constraints as AcmeAssert;
+        use Symfony\Component\Validator\Constraints as Assert;
 
         class AcmeEntity
         {
@@ -135,12 +132,12 @@
         <?xml version="1.0" encoding="UTF-8" ?>
         <constraint-mapping xmlns="http://symfony.com/schema/dic/constraint-mapping"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping http://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
+            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping https://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
 
             <class name="App\Entity\AcmeEntity">
                 <property name="name">
-                    <constraint name="NotBlank" />
-                    <constraint name="App\Validator\Constraints\ContainsAlphanumeric" />
+                    <constraint name="NotBlank"/>
+                    <constraint name="App\Validator\Constraints\ContainsAlphanumeric"/>
                 </property>
             </class>
         </constraint-mapping>
@@ -148,9 +145,9 @@
     .. code-block:: php
 
         // src/Entity/AcmeEntity.php
-        use Symfony\Component\Validator\Mapping\ClassMetadata;
-        use Symfony\Component\Validator\Constraints\NotBlank;
         use App\Validator\Constraints\ContainsAlphanumeric;
+        use Symfony\Component\Validator\Constraints\NotBlank;
+        use Symfony\Component\Validator\Mapping\ClassMetadata;
 
         class AcmeEntity
         {
@@ -177,7 +174,7 @@
 类约束验证器
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-除了验证一个类的属性之外，一个约束也可以通过在其 ``Constraint`` 类中提供一个目标来验证一个类::
+除了验证单个属性外，约束还可以将整个类作为其范围（scope）。你只需要将其添加到 ``Constraint`` 类中：
 
     public function getTargets()
     {
@@ -203,14 +200,14 @@
     ``atPath()`` 方法定义了与验证错误相关联的属性。
     可以使用任何 :doc:`有效的PropertyAccess语法 </components/property_access>` 来定义该属性。
 
-请注意，一个类约束验证器应该用于类本身，而不是属性：
+一个类约束验证器应该用于类本身，而不是属性：
 
 .. configuration-block::
 
     .. code-block:: php-annotations
 
         /**
-         * @AcmeAssert\ContainsAlphanumeric
+         * @AcmeAssert\ProtocolClass
          */
         class AcmeEntity
         {
@@ -222,11 +219,11 @@
         # config/validator/validation.yaml
         App\Entity\AcmeEntity:
             constraints:
-                - App\Validator\Constraints\ContainsAlphanumeric: ~
+                - App\Validator\Constraints\ProtocolClass: ~
 
     .. code-block:: xml
 
         <!-- config/validator/validation.xml -->
         <class name="App\Entity\AcmeEntity">
-            <constraint name="App\Validator\Constraints\ContainsAlphanumeric" />
+            <constraint name="App\Validator\Constraints\ProtocolClass"/>
         </class>

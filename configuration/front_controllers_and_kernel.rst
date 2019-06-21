@@ -82,7 +82,7 @@ Symfony默认提供的内核位于 ``src/Kernel.php`` 文件。
 方法并可通过 :method:`Symfony\\Component\\HttpKernel\\Kernel::getEnvironment`
 获得 - 来决定启用哪些包。
 
-当然，你可以自由创建自己的、替代的或其他 ``Kernel`` 变体。
+你可以自由创建自己的、替代的或其他 ``Kernel`` 变体。
 你所需要的只是调整你的（或添加一个新的）前端控制器以使用新内核。
 
 .. note::
@@ -110,7 +110,7 @@ Symfony默认使用三个环境 - ``dev``、``prod`` 和 ``test``。
 
 Symfony的默认 ``Kernel`` 类通过首先加载在 ``config/packages/*`` 中找到的配置文件来实现该方法，
 然后该文件在 ``config/packages/ENVIRONMENT_NAME/`` 中被找到。
-当然，如果你需要更复杂的加载配置的方式，那么你可以自由地以不同方式实现此方法。
+如果你需要更复杂的加载配置的方式，那么你可以自由地以不同方式实现此方法。
 
 .. _模式: https://en.wikipedia.org/wiki/Front_Controller_pattern
 .. _装饰: https://en.wikipedia.org/wiki/Decorator_pattern

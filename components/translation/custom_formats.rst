@@ -30,14 +30,14 @@ new class that implements the
 method will get a filename and parse it into an array. Then, it will
 create the catalog that will be returned::
 
-    use Symfony\Component\Translation\MessageCatalogue;
     use Symfony\Component\Translation\Loader\LoaderInterface;
+    use Symfony\Component\Translation\MessageCatalogue;
 
     class MyFormatLoader implements LoaderInterface
     {
         public function load($resource, $locale, $domain = 'messages')
         {
-            $messages = array();
+            $messages = [];
             $lines = file($resource);
 
             foreach ($lines as $line) {
@@ -80,12 +80,12 @@ must be created. To write the dump contents into a file, extending the
 :class:`Symfony\\Component\\Translation\\Dumper\\FileDumper` class
 will save a few lines::
 
-    use Symfony\Component\Translation\MessageCatalogue;
     use Symfony\Component\Translation\Dumper\FileDumper;
+    use Symfony\Component\Translation\MessageCatalogue;
 
     class MyFormatDumper extends FileDumper
     {
-        public function formatCatalogue(MessageCatalogue $messages, $domain, array $options = array())
+        public function formatCatalogue(MessageCatalogue $messages, $domain, array $options = [])
         {
             $output = '';
 
@@ -122,4 +122,4 @@ YAML file are dumped into a text file with the custom format::
     $translations = $loader->load(__DIR__ . '/translations/messages.fr_FR.yaml' , 'fr_FR');
 
     $dumper = new MyFormatDumper();
-    $dumper->dump($translations, array('path' => __DIR__.'/dumps'));
+    $dumper->dump($translations, ['path' => __DIR__.'/dumps']);

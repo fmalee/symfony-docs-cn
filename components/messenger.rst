@@ -21,14 +21,14 @@ Messenger组件
 
     $ composer require symfony/messenger
 
-或者，你可以克隆 `<https://github.com/symfony/messenger>`_ 仓库。
-
 .. include:: /components/require_autoload.rst.inc
 
 概念
 --------
 
-.. image:: /_images/components/messenger/overview.png
+.. raw:: html
+
+    <object data="../_images/components/messenger/overview.svg" type="image/svg+xml"></object>
 
 **Sender**:
    负责序列化和发送消息到 *某些东西*。这些东西可以是消息代理(broker)或第三方API。
@@ -69,8 +69,8 @@ Messenger组件
 例如::
 
     use App\Message\MyMessage;
-    use Symfony\Component\Messenger\MessageBus;
     use Symfony\Component\Messenger\Handler\HandlersLocator;
+    use Symfony\Component\Messenger\MessageBus;
     use Symfony\Component\Messenger\Middleware\HandleMessageMiddleware;
 
     $bus = new MessageBus([
@@ -97,10 +97,10 @@ Messenger组件
 
     class MyMessageHandler
     {
-       public function __invoke(MyMessage $message)
-       {
-           // 消息处理...
-       }
+        public function __invoke(MyMessage $message)
+        {
+            // 消息处理...
+        }
     }
 
 向消息添加元数据（信封）
@@ -139,9 +139,9 @@ Messenger组件
 你将收到该信封，而不是直接处理中间件中的消息。因此，你可以检查信封内容及其邮票，或添加任何信封::
 
     use App\Message\Stamp\AnotherStamp;
-    use Symfony\Component\Messenger\Stamp\ReceivedStamp;
     use Symfony\Component\Messenger\Middleware\MiddlewareInterface;
     use Symfony\Component\Messenger\Middleware\StackInterface;
+    use Symfony\Component\Messenger\Stamp\ReceivedStamp;
 
     class MyOwnMiddleware implements MiddlewareInterface
     {
@@ -181,49 +181,48 @@ Messenger组件
 自定义发件人
 ~~~~~~~~~~~~~~~
 
-通过使用
-:class:`Symfony\\Component\\Messenger\\Transport\\Sender\\SenderInterface`，你可以创建自己的消息发件人。
 想象一下，你已经有一个 ``ImportantAction`` 消息通过消息总线并由处理器处理。
 现在，你还希望将此消息作为电子邮件发送。
 
-首先，创建发件人::
+通过使用 :class:`Symfony\\Component\\Messenger\\Transport\\Sender\\SenderInterface`，
+你可以创建自己的消息发件人::
 
     namespace App\MessageSender;
 
     use App\Message\ImportantAction;
-    use Symfony\Component\Messenger\Transport\Sender\SenderInterface;
     use Symfony\Component\Messenger\Envelope;
+    use Symfony\Component\Messenger\Transport\Sender\SenderInterface;
 
     class ImportantActionToEmailSender implements SenderInterface
     {
-       private $mailer;
-       private $toEmail;
+        private $mailer;
+        private $toEmail;
 
-       public function __construct(\Swift_Mailer $mailer, string $toEmail)
-       {
-           $this->mailer = $mailer;
-           $this->toEmail = $toEmail;
-       }
+        public function __construct(\Swift_Mailer $mailer, string $toEmail)
+        {
+            $this->mailer = $mailer;
+            $this->toEmail = $toEmail;
+        }
 
-       public function send(Envelope $envelope): Envelope
-       {
-           $message = $envelope->getMessage();
+        public function send(Envelope $envelope): Envelope
+        {
+            $message = $envelope->getMessage();
 
-           if (!$message instanceof ImportantAction) {
-               throw new \InvalidArgumentException(sprintf('This transport only supports "%s" messages.', ImportantAction::class));
-           }
+            if (!$message instanceof ImportantAction) {
+                throw new \InvalidArgumentException(sprintf('This transport only supports "%s" messages.', ImportantAction::class));
+            }
 
-           $this->mailer->send(
-               (new \Swift_Message('Important action made'))
-                   ->setTo($this->toEmail)
-                   ->setBody(
-                       '<h1>Important action</h1><p>Made by '.$message->getUsername().'</p>',
-                       'text/html'
-                   )
-           );
+            $this->mailer->send(
+                (new \Swift_Message('Important action made'))
+                    ->setTo($this->toEmail)
+                    ->setBody(
+                        '<h1>Important action</h1><p>Made by '.$message->getUsername().'</p>',
+                        'text/html'
+                    )
+            );
 
-           return $envelope;
-       }
+            return $envelope;
+        }
     }
 
 自定义收件人
@@ -235,43 +234,41 @@ Messenger组件
 现在，你希望与第三方或旧版应用集成，但不能使用API​​，而是需要使用带有新订单的共享CSV文件。
 
 你将阅读此CSV文件并调度一个 ``NewOrder`` 消息。
-你需要做的就是编写自定义CSV收件人，Symfony将完成剩下的工作。
-
-首先，创建收件人::
+你需要做的就是编写自定义CSV收件人::
 
     namespace App\MessageReceiver;
 
     use App\Message\NewOrder;
+    use Symfony\Component\Messenger\Envelope;
     use Symfony\Component\Messenger\Transport\Receiver\ReceiverInterface;
     use Symfony\Component\Serializer\SerializerInterface;
-    use Symfony\Component\Messenger\Envelope;
 
     class NewOrdersFromCsvFileReceiver implements ReceiverInterface
     {
-       private $serializer;
-       private $filePath;
+        private $serializer;
+        private $filePath;
 
-       public function __construct(SerializerInterface $serializer, string $filePath)
-       {
-           $this->serializer = $serializer;
-           $this->filePath = $filePath;
-       }
+        public function __construct(SerializerInterface $serializer, string $filePath)
+        {
+            $this->serializer = $serializer;
+            $this->filePath = $filePath;
+        }
 
-       public function receive(callable $handler): void
-       {
-           $ordersFromCsv = $this->serializer->deserialize(file_get_contents($this->filePath), 'csv');
+        public function receive(callable $handler): void
+        {
+            $ordersFromCsv = $this->serializer->deserialize(file_get_contents($this->filePath), 'csv');
 
-           foreach ($ordersFromCsv as $orderFromCsv) {
-               $order = new NewOrder($orderFromCsv['id'], $orderFromCsv['account_id'], $orderFromCsv['amount']);
+            foreach ($ordersFromCsv as $orderFromCsv) {
+                $order = new NewOrder($orderFromCsv['id'], $orderFromCsv['account_id'], $orderFromCsv['amount']);
 
-               $handler(new Envelope($order));
-           }
-       }
+                $handler(new Envelope($order));
+            }
+        }
 
-       public function stop(): void
-       {
-           // noop
-       }
+        public function stop(): void
+        {
+            // noop
+        }
     }
 
 同一总线上的收件人和发件人
@@ -281,6 +278,16 @@ Messenger组件
 :class:`Symfony\\Component\\Messenger\\Stamp\\ReceivedStamp` 邮票到消息信封，而
 :class:`Symfony\\Component\\Messenger\\Middleware\\SendMessageMiddleware`
 中间件将知道它不应将这些消息再路由回一个传输系统。
+
+扩展阅读
+----------
+
+.. toctree::
+    :maxdepth: 1
+    :glob:
+
+    /messenger
+    /messenger/*
 
 .. _关于命令总线的博客: https://matthiasnoback.nl/tags/command%20bus/
 .. _SimpleBus项目: http://simplebus.io

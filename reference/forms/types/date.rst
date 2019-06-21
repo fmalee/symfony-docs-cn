@@ -47,11 +47,13 @@ and can understand a number of different input formats via the `input`_ option.
 | Class                | :class:`Symfony\\Component\\Form\\Extension\\Core\\Type\\DateType`          |
 +----------------------+-----------------------------------------------------------------------------+
 
+.. include:: /reference/forms/types/options/_debug_form.rst.inc
+
 Basic Usage
 -----------
 
-This field type is highly configurable, but easy to use. The most important
-options are ``input`` and ``widget``.
+This field type is highly configurable. The most important options
+are ``input`` and ``widget``.
 
 Suppose that you have a ``publishedAt`` field whose underlying date is a
 ``DateTime`` object. The following configures the ``date`` type for that
@@ -60,12 +62,17 @@ field as **three different choice fields**::
     use Symfony\Component\Form\Extension\Core\Type\DateType;
     // ...
 
-    $builder->add('publishedAt', DateType::class, array(
+    $builder->add('publishedAt', DateType::class, [
         'widget' => 'choice',
-    ));
+    ]);
 
-If your underlying date is *not* a ``DateTime`` object (e.g. it's a unix timestamp),
-configure the `input`_ option.
+If your underlying date is *not* a ``DateTime`` object (e.g. it's a unix
+timestamp or a ``DateTimeImmutable`` object), configure the `input`_ option::
+
+    $builder->add('publishedAt', DateType::class, [
+        'widget' => 'choice',
+        'input'  => 'datetime_immutable'
+    ]);
 
 Rendering a single HTML5 Textbox
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -77,10 +84,10 @@ use the ``single_text`` widget::
     use Symfony\Component\Form\Extension\Core\Type\DateType;
     // ...
 
-    $builder->add('publishedAt', DateType::class, array(
+    $builder->add('publishedAt', DateType::class, [
         // renders it as a single text box
         'widget' => 'single_text',
-    ));
+    ]);
 
 This will render as an ``input type="date"`` HTML5 field, which means that **some -
 but not all - browsers will add nice date picker functionality to the field**. If you
@@ -93,7 +100,7 @@ make the following changes::
     use Symfony\Component\Form\Extension\Core\Type\DateType;
     // ...
 
-    $builder->add('publishedAt', DateType::class, array(
+    $builder->add('publishedAt', DateType::class, [
         'widget' => 'single_text',
 
         // prevents rendering it as type="date", to avoid HTML5 date pickers
@@ -101,7 +108,7 @@ make the following changes::
 
         // adds a class that can be selected in JavaScript
         'attr' => ['class' => 'js-datepicker'],
-    ));
+    ]);
 
 Then, add the following JavaScript code in your template to initialize the date
 picker:
@@ -145,18 +152,18 @@ If your widget option is set to ``choice``, then this field will be represented
 as a series of ``select`` boxes. When the placeholder value is a string,
 it will be used as the **blank value** of all select boxes::
 
-    $builder->add('dueDate', DateType::class, array(
+    $builder->add('dueDate', DateType::class, [
         'placeholder' => 'Select a value',
-    ));
+    ]);
 
 Alternatively, you can use an array that configures different placeholder
 values for the year, month and day fields::
 
-    $builder->add('dueDate', DateType::class, array(
-        'placeholder' => array(
+    $builder->add('dueDate', DateType::class, [
+        'placeholder' => [
             'year' => 'Year', 'month' => 'Month', 'day' => 'Day',
-        )
-    ));
+        ]
+    ]);
 
 .. _reference-forms-type-date-format:
 

@@ -2,25 +2,17 @@ NotBlank
 ========
 
 Validates that a value is not blank - meaning not equal to a blank string,
-a blank array, ``null`` or ``false``::
+a blank array, ``false`` or ``null``. To check that a value is not equal to
+``null``, see the :doc:`/reference/constraints/NotNull` constraint.
 
-    if (false === $value || (empty($value) && '0' != $value)) {
-        // validation will fail
-    }
-
-To force that a value is simply not equal to ``null``, see the
-:doc:`/reference/constraints/NotNull` constraint.
-
-+----------------+------------------------------------------------------------------------+
-| Applies to     | :ref:`property or method <validation-property-target>`                 |
-+----------------+------------------------------------------------------------------------+
-| Options        | - `message`_                                                           |
-|                | - `payload`_                                                           |
-+----------------+------------------------------------------------------------------------+
-| Class          | :class:`Symfony\\Component\\Validator\\Constraints\\NotBlank`          |
-+----------------+------------------------------------------------------------------------+
-| Validator      | :class:`Symfony\\Component\\Validator\\Constraints\\NotBlankValidator` |
-+----------------+------------------------------------------------------------------------+
+==========  ===================================================================
+Applies to  :ref:`property or method <validation-property-target>`
+Options     - `groups`_
+            - `message`_
+            - `payload`_
+Class       :class:`Symfony\\Component\\Validator\\Constraints\\NotBlank`
+Validator   :class:`Symfony\\Component\\Validator\\Constraints\\NotBlankValidator`
+==========  ===================================================================
 
 Basic Usage
 -----------
@@ -59,11 +51,11 @@ class were not blank, you could do the following:
         <?xml version="1.0" encoding="UTF-8" ?>
         <constraint-mapping xmlns="http://symfony.com/schema/dic/constraint-mapping"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping http://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
+            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping https://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
 
             <class name="App\Entity\Author">
                 <property name="firstName">
-                    <constraint name="NotBlank" />
+                    <constraint name="NotBlank"/>
                 </property>
             </class>
         </constraint-mapping>
@@ -73,8 +65,8 @@ class were not blank, you could do the following:
         // src/Entity/Author.php
         namespace App\Entity;
 
-        use Symfony\Component\Validator\Mapping\ClassMetadata;
         use Symfony\Component\Validator\Constraints as Assert;
+        use Symfony\Component\Validator\Mapping\ClassMetadata;
 
         class Author
         {
@@ -87,6 +79,8 @@ class were not blank, you could do the following:
 Options
 -------
 
+.. include:: /reference/constraints/_groups-option.rst.inc
+
 message
 ~~~~~~~
 
@@ -96,10 +90,10 @@ This is the message that will be shown if the value is blank.
 
 You can use the following parameters in this message:
 
-+-----------------+-----------------------------+
-| Parameter       | Description                 |
-+=================+=============================+
-| ``{{ value }}`` | The current (invalid) value |
-+-----------------+-----------------------------+
+===============  ==============================================================
+Parameter        Description
+===============  ==============================================================
+``{{ value }}``  The current (invalid) value
+===============  ==============================================================
 
 .. include:: /reference/constraints/_payload-option.rst.inc

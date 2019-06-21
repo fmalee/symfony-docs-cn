@@ -27,7 +27,7 @@
 
 假设你要将一组颜色保存到数据库中。为此，你使用了一个不可变颜色对象::
 
-    // src/App/Painting/Color.php
+    // src/Painting/Color.php
     namespace App\Painting;
 
     final class Color
@@ -69,21 +69,23 @@
     中所述的那样，使用一个闭包来配置 ``empty_data`` 选项。
 
 必须将红色、绿色和蓝色表单字段映射到构造函数参数，同时 ``Color`` 实例必须映射到红色、绿色和蓝色表单字段。
-认识一个熟悉的模式？现在是数据映射器的时间！
-form fields. Recognize a familiar pattern? It's time for a data mapper!
+意识到一个熟悉的模式？现在是数据映射器的时间！
+创建一个数据映射器的最简单方法是在表单类型中实现
+:class:`Symfony\\Component\\Form\\DataMapperInterface`::
 
-.. code-block:: php
-
-    // src/App/Form/DataMapper/ColorMapper.php
-    namespace App\Form\DataMapper;
+    // src/Form/ColorType.php
+    namespace App\Form;
 
     use App\Painting\Color;
+    use Symfony\Component\Form\AbstractType;
     use Symfony\Component\Form\DataMapperInterface;
     use Symfony\Component\Form\Exception\UnexpectedTypeException;
     use Symfony\Component\Form\FormInterface;
 
-    final class ColorMapper implements DataMapperInterface
+    final class ColorType extends AbstractType implements DataMapperInterface
     {
+        // ...
+
         /**
          * @param Color|null $data
          */
@@ -130,35 +132,35 @@ form fields. Recognize a familiar pattern? It's time for a data mapper!
 使用映射器
 ----------------
 
-你已准备好为 ``ColorType`` 表单使用数据映射器。可以使用
+创建数据映射器后，你需要配置表单以使用它。这是通过
 :method:`Symfony\\Component\\Form\\FormConfigBuilderInterface::setDataMapper`
-方法来配置数据映射器::
+方法来实现的::
 
-    // src/App/Form/Type/ColorType.php
+    // src/Form/Type/ColorType.php
     namespace App\Form\Type;
 
-    use App\Form\DataMapper\ColorMapper;
-    use Symfony\Component\Form\AbstractType;
+    // ...
     use Symfony\Component\Form\Extension\Core\Type\IntegerType;
     use Symfony\Component\Form\FormBuilderInterface;
     use Symfony\Component\OptionsResolver\OptionsResolver;
 
-    final class ColorType extends AbstractType
+    final class ColorType extends AbstractType implements DataMapperInterface
     {
         public function buildForm(FormBuilderInterface $builder, array $options)
         {
             $builder
-                ->add('red', IntegerType::class, array(
+                ->add('red', IntegerType::class, [
                     // 强制类型的严格性以确保 Color 类的构造函数不会中断
                     'empty_data' => '0',
-                ))
-                ->add('green', IntegerType::class, array(
+                ])
+                ->add('green', IntegerType::class, [
                     'empty_data' => '0',
-                ))
-                ->add('blue', IntegerType::class, array(
+                ])
+                ->add('blue', IntegerType::class, [
                     'empty_data' => '0',
-                ))
-                ->setDataMapper(new ColorMapper())
+                ])
+                // 为此FormType配置数据映射器
+                ->setDataMapper($this)
             ;
         }
 
@@ -167,16 +169,38 @@ form fields. Recognize a familiar pattern? It's time for a data mapper!
             // 在创建一个新颜色时，初始数据应为 null
             $resolver->setDefault('empty_data', null);
         }
+
+        // ...
     }
 
-酷！现在使用 ``ColorType`` 表单时，自定义的 ``ColorMapper`` 将立即创建一个新的 ``Color`` 对象。
+酷！当使用 ``ColorType`` 表单时，自定义的数据映射器方法将会创建一个新的 ``Color`` 对象。
 
 .. caution::
 
     当一个表单拥有一个设置为 ``true`` 的 ``inherit_data`` 选项时，它将不使用数据映射器并让其父表单来映射内部值。
 
-.. tip::
+.. sidebar:: 有状态的数据映射器
 
-    你还可以在 ``ColorType`` 中实现 ``DataMapperInterface``，并直接在表单类型中添加
-    ``mapDataToForms()`` 和 ``mapFormsToData()``，以避免创建一个新类。
-    然后你就必须调用 ``$builder->setDataMapper($this)``。
+    有时候，数据映射器需要访问服务或需要维护其状态。
+    在这种情况下，你无法在表单类型自身中实现这些方法。
+    创建一个单独的类，实现 ``DataMapperInterface`` 并在表单类型中初始化它::
+
+        // src/Form/Type/ColorType.php
+
+        // ...
+        use App\Form\DataMapper\ColorMapper;
+
+        final class ColorType extends AbstractType
+        {
+            public function buildForm(FormBuilderInterface $builder, array $options)
+            {
+                $builder
+                    // ...
+
+                    // 初始化数据映射器类，例如传递某种状态
+                    ->setDataMapper(new ColorMapper($options['opacity']))
+                ;
+            }
+
+            // ...
+        }

@@ -50,13 +50,13 @@ Doctrine定义了两种可以监听Doctrine事件的对象：监听器和订阅�
                 <!-- ... -->
 
                 <service id="App\EventListener\SearchIndexer">
-                    <tag name="doctrine.event_listener" event="postPersist" />
+                    <tag name="doctrine.event_listener" event="postPersist"/>
                 </service>
                 <service id="App\EventListener\SearchIndexer2">
-                    <tag name="doctrine.event_listener" event="postPersist" connection="default" />
+                    <tag name="doctrine.event_listener" event="postPersist" connection="default"/>
                 </service>
                 <service id="App\EventListener\SearchIndexerSubscriber">
-                    <tag name="doctrine.event_subscriber" connection="default" />
+                    <tag name="doctrine.event_subscriber" connection="default"/>
                 </service>
             </services>
         </container>
@@ -68,16 +68,16 @@ Doctrine定义了两种可以监听Doctrine事件的对象：监听器和订阅�
         use App\EventListener\SearchIndexerSubscriber;
 
         $container->autowire(SearchIndexer::class)
-            ->addTag('doctrine.event_listener', array('event' => 'postPersist'))
+            ->addTag('doctrine.event_listener', ['event' => 'postPersist'])
         ;
         $container->autowire(SearchIndexer2::class)
-            ->addTag('doctrine.event_listener', array(
+            ->addTag('doctrine.event_listener', [
                 'event' => 'postPersist',
                 'connection' => 'default',
-            ))
+            ])
         ;
         $container->autowire(SearchIndexerSubscriber::class)
-            ->addTag('doctrine.event_subscriber', array('connection' => 'default'))
+            ->addTag('doctrine.event_subscriber', ['connection' => 'default'])
         ;
 
 创建监听器类
@@ -89,9 +89,9 @@ Doctrine定义了两种可以监听Doctrine事件的对象：监听器和订阅�
     // src/EventListener/SearchIndexer.php
     namespace App\EventListener;
 
+    use App\Entity\Product;
     // 对于Doctrine < 2.4: use Doctrine\ORM\Event\LifecycleEventArgs;
     use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
-    use App\Entity\Product;
 
     class SearchIndexer
     {
@@ -119,7 +119,7 @@ Doctrine定义了两种可以监听Doctrine事件的对象：监听器和订阅�
 .. tip::
 
     在Doctrine 2.4中，引入了一个名为实体监听器的功能。
-    它是用于实体的生命周期监听器类。你可以在 `Doctrine文档`_ 中阅读相关内容。
+    它是用于实体的生命周期监听器类。你可以在 `DoctrineBundle文档`_ 中阅读相关内容。
 
 创建订阅器类
 -----------------------------
@@ -130,20 +130,20 @@ Doctrine事件订阅器必须实现该 ``Doctrine\Common\EventSubscriber`` 接�
     // src/EventListener/SearchIndexerSubscriber.php
     namespace App\EventListener;
 
+    use App\Entity\Product;
     use Doctrine\Common\EventSubscriber;
     // 对于 Doctrine < 2.4: use Doctrine\ORM\Event\LifecycleEventArgs;
     use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
-    use App\Entity\Product;
     use Doctrine\ORM\Events;
 
     class SearchIndexerSubscriber implements EventSubscriber
     {
         public function getSubscribedEvents()
         {
-            return array(
+            return [
                 Events::postPersist,
                 Events::postUpdate,
-            );
+            ];
         }
 
         public function postUpdate(LifecycleEventArgs $args)
@@ -185,12 +185,6 @@ Doctrine事件订阅器必须实现该 ``Doctrine\Common\EventSubscriber`` 接�
 
 这就是为什么最好尽可能使用实体监听器而不是订阅器。
 
-.. versionadded:: 4.2
-    从Symfony 4.2开始，Doctrine实体监听器总是惰性的。在以前的Symfony版本中，此行为是可配置的。
-
-.. _`事件系统`: http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/events.html
-.. _`Doctrine文档`: https://symfony.com/doc/current/bundles/DoctrineBundle/entity-listeners.html
-
 事件监听器的优先级
 ------------------------------
 
@@ -220,10 +214,10 @@ Doctrine事件订阅器必须实现该 ``Doctrine\Common\EventSubscriber`` 接�
 
             <services>
                 <service id="App\EventListener\MyHighPriorityListener" autowire="true">
-                    <tag name="doctrine.event_listener" event="postPersist" priority="10" />
+                    <tag name="doctrine.event_listener" event="postPersist" priority="10"/>
                 </service>
                 <service id="App\EventListener\MyLowPriorityListener" autowire="true">
-                    <tag name="doctrine.event_listener" event="postPersist" priority="1" />
+                    <tag name="doctrine.event_listener" event="postPersist" priority="1"/>
                 </service>
             </services>
         </container>
@@ -231,15 +225,18 @@ Doctrine事件订阅器必须实现该 ``Doctrine\Common\EventSubscriber`` 接�
     .. code-block:: php
 
         // config/services.php
-        use AppBundle\EventListener\MyHighPriorityListener;
-        use AppBundle\EventListener\MyLowPriorityListener;
+        use App\EventListener\MyHighPriorityListener;
+        use App\EventListener\MyLowPriorityListener;
 
         $container
             ->autowire(MyHighPriorityListener::class)
-            ->addTag('doctrine.event_listener', array('event' => 'postPersist', 'priority' => 10))
+            ->addTag('doctrine.event_listener', ['event' => 'postPersist', 'priority' => 10])
         ;
 
         $container
             ->autowire(MyLowPriorityListener::class)
-            ->addTag('doctrine.event_listener', array('event' => 'postPersist', 'priority' => 1))
+            ->addTag('doctrine.event_listener', ['event' => 'postPersist', 'priority' => 1])
         ;
+
+.. _`事件系统`: http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/events.html
+.. _`DoctrineBundle文档`: https://symfony.com/doc/current/bundles/DoctrineBundle/entity-listeners.html

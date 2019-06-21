@@ -4,10 +4,8 @@ help
 **type**: ``string`` **default**: null
 
 Allows you to define a help message for the form field, which by default is
-rendered below the field.
+rendered below the field::
 
-.. code-block:: php
-
-    $builder->add('zip_code', null, array(
+    $builder->add('zipCode', null, [
         'help' => 'The ZIP/Postal code for your credit card\'s billing address.',
-    ));
+    ]);

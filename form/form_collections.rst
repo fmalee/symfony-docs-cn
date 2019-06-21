@@ -78,8 +78,8 @@
 
 然后，创建一个表单类，以便用户可以修改一个 ``Tag`` 对象::
 
-    // src/Form/Type/TagType.php
-    namespace App\Form\Type;
+    // src/Form/TagType.php
+    namespace App\Form;
 
     use App\Entity\Tag;
     use Symfony\Component\Form\AbstractType;
@@ -95,9 +95,9 @@
 
         public function configureOptions(OptionsResolver $resolver)
         {
-            $resolver->setDefaults(array(
+            $resolver->setDefaults([
                 'data_class' => Tag::class,
-            ));
+            ]);
         }
     }
 
@@ -107,14 +107,14 @@
 请注意，你使用 :doc:`CollectionType </reference/forms/types/collection>`
 字段嵌入了一个 ``TagType`` 表单集合::
 
-    // src/Form/Type/TaskType.php
-    namespace App\Form\Type;
+    // src/Form/TaskType.php
+    namespace App\Form;
 
     use App\Entity\Task;
     use Symfony\Component\Form\AbstractType;
+    use Symfony\Component\Form\Extension\Core\Type\CollectionType;
     use Symfony\Component\Form\FormBuilderInterface;
     use Symfony\Component\OptionsResolver\OptionsResolver;
-    use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
     class TaskType extends AbstractType
     {
@@ -122,17 +122,17 @@
         {
             $builder->add('description');
 
-            $builder->add('tags', CollectionType::class, array(
+            $builder->add('tags', CollectionType::class, [
                 'entry_type' => TagType::class,
-                'entry_options' => array('label' => false),
-            ));
+                'entry_options' => ['label' => false],
+            ]);
         }
 
         public function configureOptions(OptionsResolver $resolver)
         {
-            $resolver->setDefaults(array(
+            $resolver->setDefaults([
                 'data_class' => Task::class,
-            ));
+            ]);
         }
     }
 
@@ -141,11 +141,11 @@
     // src/Controller/TaskController.php
     namespace App\Controller;
 
-    use App\Entity\Task;
     use App\Entity\Tag;
-    use App\Form\Type\TaskType;
-    use Symfony\Component\HttpFoundation\Request;
+    use App\Entity\Task;
+    use App\Form\TaskType;
     use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+    use Symfony\Component\HttpFoundation\Request;
 
     class TaskController extends AbstractController
     {
@@ -171,9 +171,9 @@
                 // ... 可以做一些表单处理，比如保存Task和Tag对象
             }
 
-            return $this->render('task/new.html.twig', array(
+            return $this->render('task/new.html.twig', [
                 'form' => $form->createView(),
-            ));
+            ]);
         }
     }
 
@@ -237,7 +237,7 @@
 ``This form should not contain extra fields`` 错误。要使其更灵活，请将 ``allow_add``
 选项添加到你的集合字段::
 
-    // src/Form/Type/TaskType.php
+    // src/Form/TaskType.php
 
     // ...
     use Symfony\Component\Form\FormBuilderInterface;
@@ -246,11 +246,11 @@
     {
         $builder->add('description');
 
-        $builder->add('tags', CollectionType::class, array(
+        $builder->add('tags', CollectionType::class, [
             'entry_type' => TagType::class,
-            'entry_options' => array('label' => false),
+            'entry_options' => ['label' => false],
             'allow_add' => true,
-        ));
+        ]);
     }
 
 除了告诉该字段接受任意数量的提交对象外，``allow_add`` 还可以为你提供一个 *"原型"* 变量。
@@ -275,7 +275,7 @@
     ``form_widget()``、``form_row()`` 或 ``form_label()``。
     你甚至可以选择仅渲染其中一个字段（例如 ``name`` 字段）：
 
-    .. code-block:: html+twig
+    .. code-block:: twig
 
         {{ form_widget(form.tags.vars.prototype.name)|e }}
 
@@ -387,17 +387,17 @@
 
 接下来，向 ``tags`` 字段添加一个 ``by_reference`` 选项并将其设置为 ``false``::
 
-    // src/Form/Type/TaskType.php
+    // src/Form/TaskType.php
 
     // ...
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         // ...
 
-        $builder->add('tags', CollectionType::class, array(
+        $builder->add('tags', CollectionType::class, [
             // ...
             'by_reference' => false,
-        ));
+        ]);
     }
 
 通过这两个更改，在提交表单时，通过调用 ``addTag()`` 方法将每个新的 ``Tag`` 对象添加到 ``Task`` 类中。
@@ -439,7 +439,7 @@
 
         .. code-block:: yaml
 
-            # src/Resources/config/doctrine/Task.orm.yml
+            # src/Resources/config/doctrine/Task.orm.yaml
             App\Entity\Task:
                 type: entity
                 # ...
@@ -455,13 +455,13 @@
             <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
-                                http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+                                https://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
                 <entity name="App\Entity\Task">
                     <!-- ... -->
                     <one-to-many field="tags" target-entity="Tag">
                         <cascade>
-                            <cascade-persist />
+                            <cascade-persist/>
                         </cascade>
                     </one-to-many>
                 </entity>
@@ -477,6 +477,7 @@
 
         // src/Entity/Task.php
 
+        // ...
         public function addTag(Tag $tag)
         {
             // 对于一个 many-to-many 关联关系:
@@ -509,17 +510,17 @@
 
 首先在表单类型中添加 ``allow_delete`` 选项::
 
-    // src/Form/Type/TaskType.php
+    // src/Form/TaskType.php
 
     // ...
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         // ...
 
-        $builder->add('tags', CollectionType::class, array(
+        $builder->add('tags', CollectionType::class, [
             // ...
             'allow_delete' => true,
-        ));
+        ]);
     }
 
 现在，你需要将一些代码放入到 ``Task`` 的 ``removeTag()`` 方法中::
@@ -589,7 +590,7 @@
     和已删除的 ``Tag`` 之间的关系被完全移除。
 
     在Doctrine中，你会拥有一个关系的两个方向：拥有方和从属方。
-    通常在这个例子中，你将拥有一个多对多关系，并且已删除的标签将消失并被正确的持久化（也可以毫不费力地完成添加新标签的工作）。
+    通常在这个例子中，你将拥有一个多对一关系，并且已删除的标签将消失并被正确的持久化（也可以毫不费力地完成添加新标签的工作）。
 
     但是如果你在Task实体上有一个一对多关系，或是拥有一个 ``mappedBy`` 的多对多关系（意味着Task是“从属”方），
     那么你需要做更多的工作以确保已删除的标签被正确持久化。
@@ -598,7 +599,6 @@
     这里假设你有某个处理任务“更新”的 ``edit()`` 动作::
 
         // src/Controller/TaskController.php
-
         use App\Entity\Task;
         use Doctrine\Common\Collections\ArrayCollection;
 
@@ -641,7 +641,7 @@
                 $entityManager->flush();
 
                 // 重定向回编辑页面
-                return $this->redirectToRoute('task_edit', array('id' => $id));
+                return $this->redirectToRoute('task_edit', ['id' => $id]);
             }
 
             // 渲染表单模板

@@ -10,18 +10,16 @@ To force that a value is *not* equal, see :doc:`/reference/constraints/NotEqualT
     equal. Use :doc:`/reference/constraints/IdenticalTo` to compare with
     ``===``.
 
-+----------------+-----------------------------------------------------------------------+
-| Applies to     | :ref:`property or method<validation-property-target>`                 |
-+----------------+-----------------------------------------------------------------------+
-| Options        | - `value`_                                                            |
-|                | - `message`_                                                          |
-|                | - `payload`_                                                          |
-|                | - `propertyPath`_                                                     |
-+----------------+-----------------------------------------------------------------------+
-| Class          | :class:`Symfony\\Component\\Validator\\Constraints\\EqualTo`          |
-+----------------+-----------------------------------------------------------------------+
-| Validator      | :class:`Symfony\\Component\\Validator\\Constraints\\EqualToValidator` |
-+----------------+-----------------------------------------------------------------------+
+==========  ===================================================================
+Applies to  :ref:`property or method <validation-property-target>`
+Options     - `groups`_
+            - `message`_
+            - `payload`_
+            - `propertyPath`_
+            - `value`_
+Class       :class:`Symfony\\Component\\Validator\\Constraints\\EqualTo`
+Validator   :class:`Symfony\\Component\\Validator\\Constraints\\EqualToValidator`
+==========  ===================================================================
 
 Basic Usage
 -----------
@@ -70,12 +68,12 @@ and that the ``age`` is ``20``, you could do the following:
         <?xml version="1.0" encoding="UTF-8" ?>
         <constraint-mapping xmlns="http://symfony.com/schema/dic/constraint-mapping"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping http://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
+            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping https://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
 
             <class name="App\Entity\Person">
                 <property name="firstName">
                     <constraint name="EqualTo">
-                        <value>Mary</value>
+                        Mary
                     </constraint>
                 </property>
                 <property name="age">
@@ -91,8 +89,8 @@ and that the ``age`` is ``20``, you could do the following:
         // src/Entity/Person.php
         namespace App\Entity;
 
-        use Symfony\Component\Validator\Mapping\ClassMetadata;
         use Symfony\Component\Validator\Constraints as Assert;
+        use Symfony\Component\Validator\Mapping\ClassMetadata;
 
         class Person
         {
@@ -100,16 +98,16 @@ and that the ``age`` is ``20``, you could do the following:
             {
                 $metadata->addPropertyConstraint('firstName', new Assert\EqualTo('Mary'));
 
-                $metadata->addPropertyConstraint('age', new Assert\EqualTo(array(
+                $metadata->addPropertyConstraint('age', new Assert\EqualTo([
                     'value' => 20,
-                )));
+                ]));
             }
         }
 
 Options
 -------
 
-.. include:: /reference/constraints/_comparison-value-option.rst.inc
+.. include:: /reference/constraints/_groups-option.rst.inc
 
 message
 ~~~~~~~
@@ -120,16 +118,16 @@ This is the message that will be shown if the value is not equal.
 
 You can use the following parameters in this message:
 
-+-------------------------------+-----------------------------+
-| Parameter                     | Description                 |
-+===============================+=============================+
-| ``{{ value }}``               | The current (invalid) value |
-+-------------------------------+-----------------------------+
-| ``{{ compared_value }}``      | The expected value          |
-+-------------------------------+-----------------------------+
-| ``{{ compared_value_type }}`` | The expected value type     |
-+-------------------------------+-----------------------------+
+=============================  ================================================
+Parameter                      Description
+=============================  ================================================
+``{{ compared_value }}``       The expected value
+``{{ compared_value_type }}``  The expected value type
+``{{ value }}``                The current (invalid) value
+=============================  ================================================
 
 .. include:: /reference/constraints/_payload-option.rst.inc
 
 .. include:: /reference/constraints/_comparison-propertypath-option.rst.inc
+
+.. include:: /reference/constraints/_comparison-value-option.rst.inc

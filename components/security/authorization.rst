@@ -44,12 +44,12 @@
 ``unanimous``
     只有在没有表决器拒绝访问的情况下，才授予访问权限;
 
-.. code-block:: php
+可用选项的详细用法::
 
     use Symfony\Component\Security\Core\Authorization\AccessDecisionManager;
 
     // Symfony\Component\Security\Core\Authorization\Voter\VoterInterface 的实例
-    $voters = array(...);
+    $voters = [...];
 
     // "affirmative", "consensus", "unanimous" 之一
     $strategy = ...;
@@ -92,9 +92,7 @@ AuthenticatedVoter
 :class:`Symfony\\Component\\Security\\Core\\Authorization\\Voter\\AuthenticatedVoter`
 表决器支持 ``IS_AUTHENTICATED_FULLY``、``IS_AUTHENTICATED_REMEMBERED``
 和 ``IS_AUTHENTICATED_ANONYMOUSLY``
-属性，并基于认证的当前级别授予访问权限，即，该用户是完全认证还是仅根据“记住我”的cookie认证，甚至是匿名认证？
-
-.. code-block:: php
+属性，并基于认证的当前级别授予访问权限，即，该用户是完全认证还是仅根据“记住我”的cookie认证，甚至是匿名认证？::
 
     use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolver;
     use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
@@ -110,7 +108,7 @@ AuthenticatedVoter
     // 任何对象
     $object = ...;
 
-    $vote = $authenticatedVoter->vote($token, $object, array('IS_AUTHENTICATED_FULLY'));
+    $vote = $authenticatedVoter->vote($token, $object, ['IS_AUTHENTICATED_FULLY']);
 
 RoleVoter
 ~~~~~~~~~
@@ -124,7 +122,7 @@ RoleVoter
 
     $roleVoter = new RoleVoter('ROLE_');
 
-    $roleVoter->vote($token, $object, array('ROLE_ADMIN'));
+    $roleVoter->vote($token, $object, ['ROLE_ADMIN']);
 
 RoleHierarchyVoter
 ~~~~~~~~~~~~~~~~~~
@@ -139,19 +137,53 @@ RoleHierarchyVoter
     use Symfony\Component\Security\Core\Authorization\Voter\RoleHierarchyVoter;
     use Symfony\Component\Security\Core\Role\RoleHierarchy;
 
-    $hierarchy = array(
-        'ROLE_SUPER_ADMIN' => array('ROLE_ADMIN', 'ROLE_USER'),
-    );
+    $hierarchy = [
+        'ROLE_SUPER_ADMIN' => ['ROLE_ADMIN', 'ROLE_USER'],
+    ];
 
     $roleHierarchy = new RoleHierarchy($hierarchy);
 
     $roleHierarchyVoter = new RoleHierarchyVoter($roleHierarchy);
 
+ExpressionVoter
+~~~~~~~~~~~~~~~
+
+:class:`Symfony\\Component\\Security\\Core\\Authorization\\Voter\\ExpressionVoter`
+基于对通过 :doc:`ExpressionLanguage组件 </components/expression_language>`
+创建的表达式的评估来允许访问。这些表达式可以访问许多
+:ref:`特殊的安全变量 <security-expression-variables>`::
+
+    use Symfony\Component\ExpressionLanguage\Expression;
+    use Symfony\Component\Security\Core\Authorization\Voter\ExpressionVoter;
+
+    // Symfony\Component\Security\Core\Authorization\ExpressionLanguage;
+    $expressionLanguage = ...;
+
+    // Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolverInterface 的实例
+    $trustResolver = ...;
+
+    // Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface
+    $authorizationChecker = ...;
+
+    $expressionVoter = new ExpressionVoter($expressionLanguage, $trustResolver, $authorizationChecker);
+
+    // Symfony\Component\Security\Core\Authentication\Token\TokenInterface 的实例
+    $token = ...;
+
+    // 任何对象
+    $object = ...;
+
+    $expression = new Expression(
+        '"ROLE_ADMIN" in roles or (not is_anonymous() and user.isSuperAdmin())'
+    )
+
+    $vote = $expressionVoter->vote($token, $object, [$expression]);
+
 .. note::
 
     当你创建自己的表决器时，你可以使用它的构造函数来注入一个决策所需的任何依赖。
 
-Roles
+角色
 -----
 
 角色是表达用户具有的某种权利的对象。
@@ -186,13 +218,13 @@ Roles
 它使用一个访问映射（应是 :class:`Symfony\\Component\\Security\\Http\\AccessMapInterface`
 的一个实例）来完成工作，而该映射包含一个请求匹配器和一个当前用户访问应用所需的相应的属性集::
 
-    use Symfony\Component\Security\Http\AccessMap;
     use Symfony\Component\HttpFoundation\RequestMatcher;
+    use Symfony\Component\Security\Http\AccessMap;
     use Symfony\Component\Security\Http\Firewall\AccessListener;
 
     $accessMap = new AccessMap();
     $requestMatcher = new RequestMatcher('^/admin');
-    $accessMap->add($requestMatcher, array('ROLE_ADMIN'));
+    $accessMap->add($requestMatcher, ['ROLE_ADMIN']);
 
     $accessListener = new AccessListener(
         $securityContext,

@@ -4,14 +4,14 @@
 通用事件对象
 ========================
 
-EventDispatcher组件提供了一个刻意保持简洁的 :class:`Symfony\\Component\\EventDispatcher\\Event`
+EventDispatcher组件提供了一个刻意保持简洁的 :class:`Symfony\\Contracts\\EventDispatcher\\Event`
 基类，以允许通过使用OOP继承来创建特定事件对象的API。它让复杂应用中的代码保持优雅和可读。
 
 :class:`Symfony\\Component\\EventDispatcher\\GenericEvent`
 对于那些希望在整个应用中只使用一个事件对象的人来说，它是方便的。
 它适用于大多数直接开箱即用的目的，因为它遵循标准的观察者(observer)模式，其中事件对象封装了一个事件“主题”，但添加了可选的额外参数。
 
-除了 :class:`Symfony\\Component\\EventDispatcher\\Event`
+除了 :class:`Symfony\\Contracts\\EventDispatcher\\Event`
 基类之外，:class:`Symfony\\Component\\EventDispatcher\\GenericEvent` 还添加了一些方法：
 
 * :method:`Symfony\\Component\\EventDispatcher\\GenericEvent::__construct`:
@@ -63,7 +63,7 @@ EventDispatcher组件提供了一个刻意保持简洁的 :class:`Symfony\\Compo
 
     $event = new GenericEvent(
         $subject,
-        array('type' => 'foo', 'counter' => 0)
+        ['type' => 'foo', 'counter' => 0]
     );
     $dispatcher->dispatch('foo', $event);
 
@@ -83,7 +83,7 @@ EventDispatcher组件提供了一个刻意保持简洁的 :class:`Symfony\\Compo
 
     use Symfony\Component\EventDispatcher\GenericEvent;
 
-    $event = new GenericEvent($subject, array('data' => 'Foo'));
+    $event = new GenericEvent($subject, ['data' => 'Foo']);
     $dispatcher->dispatch('foo', $event);
 
     class FooListener

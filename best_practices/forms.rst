@@ -18,11 +18,11 @@ Form组件允许你在控制器代码中构建表单。当你不需要在别处�
 
     use App\Entity\Post;
     use Symfony\Component\Form\AbstractType;
+    use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+    use Symfony\Component\Form\Extension\Core\Type\EmailType;
+    use Symfony\Component\Form\Extension\Core\Type\TextareaType;
     use Symfony\Component\Form\FormBuilderInterface;
     use Symfony\Component\OptionsResolver\OptionsResolver;
-    use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-    use Symfony\Component\Form\Extension\Core\Type\EmailType;
-    use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 
     class PostType extends AbstractType
     {
@@ -96,9 +96,9 @@ Symfony表单组件允许你在表单类中把按钮作为字段来添加。这�
 
     use App\Entity\Post;
     use App\Form\PostType;
-    use Symfony\Component\HttpFoundation\Request;
     use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
     use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+    use Symfony\Component\HttpFoundation\Request;
 
     class PostController extends AbstractController
     {
@@ -126,7 +126,7 @@ Symfony表单组件允许你在表单类中把按钮作为字段来添加。这�
     {{ form_start(form) }}
         {{ form_widget(form) }}
 
-        <input type="submit" class="btn" value="Create" />
+        <input type="submit" class="btn" value="Create"/>
     {{ form_end(form) }}
 
 验证
@@ -163,7 +163,7 @@ Symfony表单组件允许你在表单类中把按钮作为字段来添加。这�
 
 最简单的方法之一——在开发过程中特别有用——就是渲染表单标签并使用 ``form_widget()`` 函数函数来渲染出所有字段：
 
-.. code-block:: html+twig
+.. code-block:: twig
 
     {{ form_start(form, {attr: {class: 'my-form-class'} }) }}
         {{ form_widget(form) }}

@@ -44,10 +44,9 @@
         <routes xmlns="http://symfony.com/schema/routing"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/routing
-                http://symfony.com/schema/routing/routing-1.0.xsd">
+                https://symfony.com/schema/routing/routing-1.0.xsd">
 
-            <route id="blog_list" path="/blog/{page}">
-                <default key="_controller">App\Controller\BlogController::list</default>
+            <route id="blog_list" path="/blog/{page}" controller="App\Controller\BlogController::list">
                 <requirement key="page">\d+</requirement>
             </route>
 
@@ -57,19 +56,18 @@
     .. code-block:: php
 
         // config/routes.php
-        use Symfony\Component\Routing\RouteCollection;
-        use Symfony\Component\Routing\Route;
+        use App\Controller\BlogController;
+        use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
-        $routes = new RouteCollection();
-        $routes->add('blog_list', new Route('/blog/{page}', array(
-            '_controller' => 'App\Controller\BlogController::list',
-        ), array(
-            'page' => '\d+',
-        )));
-
-        // ...
-
-        return $routes;
+        return function (RoutingConfigurator $routes) {
+            $routes->add('blog_list', '/blog/{page}')
+                ->controller([BlogController::class, 'list'])
+                ->requirements([
+                    'page' => '\d+',
+                ])
+            ;
+            // ...
+        };
 
 得益于 ``\d+`` 要求（即任意长度的“数字”），``/blog/2`` 将匹配这这个路由，但
 ``/blog/some-string`` 将不会匹配。
@@ -99,6 +97,7 @@
              */
             public function homepage($_locale)
             {
+                // ...
             }
         }
 
@@ -119,10 +118,9 @@
         <routes xmlns="http://symfony.com/schema/routing"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/routing
-                http://symfony.com/schema/routing/routing-1.0.xsd">
+                https://symfony.com/schema/routing/routing-1.0.xsd">
 
-            <route id="homepage" path="/{_locale}">
-                <default key="_controller">App\Controller\MainController::homepage</default>
+            <route id="homepage" path="/{_locale}" controller="App\Controller\MainController::homepage">
                 <default key="_locale">en</default>
                 <requirement key="_locale">en|fr</requirement>
             </route>
@@ -131,18 +129,20 @@
     .. code-block:: php
 
         // config/routes.php
-        use Symfony\Component\Routing\RouteCollection;
-        use Symfony\Component\Routing\Route;
+        use App\Controller\MainController;
+        use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
-        $routes = new RouteCollection();
-        $routes->add('homepage', new Route('/{_locale}', array(
-            '_controller' => 'App\Controller\MainController::homepage',
-            '_locale'     => 'en',
-        ), array(
-            '_locale' => 'en|fr',
-        )));
-
-        return $routes;
+        return function (RoutingConfigurator $routes) {
+            $routes->add('homepage', '/{_locale}')
+                ->controller([MainController::class, 'homepage'])
+                ->defaults([
+                    '_locale' => 'en',
+                ])
+                ->requirements([
+                    '_locale' => 'en|fr',
+                ])
+            ;
+        };
 
 对于传入请求，URL的 ``{_locale}`` 部分会与正则表达式 ``(en|fr)`` 进行匹配。
 
@@ -212,12 +212,12 @@
         api_post_show:
             path:       /api/posts/{id}
             controller: App\Controller\BlogApiController::show
-            methods:    [GET, HEAD]
+            methods:    GET|HEAD
 
         api_post_edit:
             path:       /api/posts/{id}
             controller: App\Controller\BlogApiController::edit
-            methods:    [PUT]
+            methods:    PUT
 
     .. code-block:: xml
 
@@ -226,33 +226,48 @@
         <routes xmlns="http://symfony.com/schema/routing"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/routing
-                http://symfony.com/schema/routing/routing-1.0.xsd">
+                https://symfony.com/schema/routing/routing-1.0.xsd">
 
-            <route id="api_post_show" path="/api/posts/{id}" methods="GET|HEAD">
-                <default key="_controller">App\Controller\BlogApiController::show</default>
-            </route>
+            <route id="api_post_show"
+                path="/api/posts/{id}"
+                controller="App\Controller\BlogApiController::show"
+                methods="GET|HEAD"/>
 
-            <route id="api_post_edit" path="/api/posts/{id}" methods="PUT">
-                <default key="_controller">App\Controller\BlogApiController::edit</default>
-            </route>
+            <route id="api_post_edit"
+                path="/api/posts/{id}"
+                controller="App\Controller\BlogApiController::edit"
+                methods="PUT"/>
         </routes>
 
     .. code-block:: php
 
         // config/routes.php
-        use Symfony\Component\Routing\RouteCollection;
-        use Symfony\Component\Routing\Route;
+        use App\Controller\BlogApiController;
+        use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
-        $routes = new RouteCollection();
-        $routes->add('api_post_show', new Route('/api/posts/{id}', array(
-            '_controller' => 'App\Controller\BlogApiController::show',
-        ), array(), array(), '', array(), array('GET', 'HEAD')));
+        return function (RoutingConfigurator $routes) {
+            $routes->add('api_post_show', '/api/posts/{id}')
+                ->controller([BlogApiController::class, 'show'])
+                ->methods(['GET', 'HEAD'])
+            ;
+            $routes->add('api_post_edit', '/api/posts/{id}')
+                ->controller([BlogApiController::class, 'edit'])
+                ->methods(['PUT'])
+            ;
 
-        $routes->add('api_post_edit', new Route('/api/posts/{id}', array(
-            '_controller' => 'App\Controller\BlogApiController::edit',
-        ), array(), array(), '', array(), array('PUT')));
-
-        return $routes;
+            // or use collection
+            $api = $routes->collection('api_post_')
+                ->prefix('/api/posts/{id}')
+            ;
+            $api->add('show')
+                ->controller([BlogApiController::class, 'show'])
+                ->methods(['GET', 'HEAD'])
+            ;
+            $api->add('edit')
+                ->controller([BlogApiController::class, 'edit'])
+                ->methods(['PUT'])
+            ;
+        };
 
 尽管这两个路由具有相同的路径（``/api/posts/{id}``），但第一个路由仅匹配
 ``GET``或 ``HEAD`` 请求，第二个路由仅匹配 ``PUT`` 请求。

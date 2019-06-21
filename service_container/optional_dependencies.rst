@@ -18,13 +18,13 @@
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <services>
                 <!-- ... -->
 
                 <service id="App\Newsletter\NewsletterManager">
-                    <argument type="service" id="logger" on-invalid="null" />
+                    <argument type="service" id="logger" on-invalid="null"/>
                 </service>
             </services>
         </container>
@@ -33,8 +33,8 @@
 
         // config/services.php
         use App\Newsletter\NewsletterManager;
-        use Symfony\Component\DependencyInjection\Reference;
         use Symfony\Component\DependencyInjection\ContainerInterface;
+        use Symfony\Component\DependencyInjection\Reference;
 
         // ...
 
@@ -61,8 +61,7 @@
 
         # config/services.yaml
         services:
-            app.newsletter_manager:
-                class: App\Newsletter\NewsletterManager
+            App\Newsletter\NewsletterManager:
                 calls:
                     - [setLogger, ['@?logger']]
 
@@ -73,13 +72,9 @@
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <services>
-                <service id="app.mailer">
-                <!-- ... -->
-                </service>
-
                 <service id="App\Newsletter\NewsletterManager">
                     <call method="setLogger">
                         <argument type="service" id="logger" on-invalid="ignore"/>
@@ -92,17 +87,17 @@
 
         // config/services.php
         use App\Newsletter\NewsletterManager;
-        use Symfony\Component\DependencyInjection\Reference;
         use Symfony\Component\DependencyInjection\ContainerInterface;
+        use Symfony\Component\DependencyInjection\Reference;
 
         $container
             ->register(NewsletterManager::class)
-            ->addMethodCall('setLogger', array(
+            ->addMethodCall('setLogger', [
                 new Reference(
                     'logger',
                     ContainerInterface::IGNORE_ON_INVALID_REFERENCE
                 ),
-            ))
+            ])
         ;
 
 .. note::

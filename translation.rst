@@ -8,12 +8,10 @@
 对于文本，这意味着使用能够将文本（或“消息”）翻译成用户语言的函数来包装每个文本::
 
     // 文本始终以英语输出
-    dump('Hello World');
-    die();
+    echo 'Hello World';
 
     // 文本将以用户指定语言或默认英语输出
-    dump($translator->trans('Hello World'));
-    die();
+    echo $translator->trans('Hello World');
 
 .. note::
 
@@ -71,9 +69,9 @@
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:framework="http://symfony.com/schema/dic/symfony"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd
+                https://symfony.com/schema/dic/services/services-1.0.xsd
                 http://symfony.com/schema/dic/symfony
-                http://symfony.com/schema/dic/symfony/symfony-1.0.xsd">
+                https://symfony.com/schema/dic/symfony/symfony-1.0.xsd">
 
             <framework:config default-locale="en">
                 <framework:translator>
@@ -86,11 +84,11 @@
     .. code-block:: php
 
         // config/packages/translation.php
-        $container->loadFromExtension('framework', array(
+        $container->loadFromExtension('framework', [
             'default_locale' => 'en',
-            'translator' => array('fallbacks' => array('en')),
+            'translator' => ['fallbacks' => ['en']],
             // ...
-        ));
+        ]);
 
 翻译中使用的语言环境是存储在请求中的。这通常通过路由上的 ``_locale`` 属性来设置
 （请参 :ref:`translation-locale-url`）。
@@ -105,8 +103,7 @@
 例如，假设你正在从控制器内部翻译一个简单消息::
 
     // ...
-    use Symfony\Component\HttpFoundation\Response;
-    use Symfony\Component\Translation\TranslatorInterface;
+    use Symfony\Contracts\Translation\TranslatorInterface;
 
     public function index(TranslatorInterface $translator)
     {
@@ -146,52 +143,40 @@
     .. code-block:: php
 
         // translations/messages.fr.php
-        return array(
-            'Symfony is great' => 'J\'aime Symfony',
-        );
+        return [
+            'Symfony is great' => "J'aime Symfony",
+        ];
 
 有关这些文件的位置信息，请参阅 :ref:`translation-resource-locations`。
 
 现在，如果用户语言环境的语言是法语（例如 ``fr_FR`` 或 ``fr_BE``），则该消息将被翻译成 ``J'aime Symfony``。
-你还可以在 :ref:`模板 <translation-tags>` 中翻译消息。
+你还可以在 `templates <模板中的翻译>` 中翻译消息。
 
 翻译流程
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-为了能翻译一条信息，Symfony执行以下流程：
+为了能翻译一条信息，Symfony在使用 ``trans()`` 方法时执行以下过程：
 
 * 确定存储在请求中的当前用户的 ``locale``;
 
 * 从为 ``locale`` 定义的翻译资源（例如 ``fr_FR``）加载一个翻译消息的目录（例如，大集合）。
   来自 :ref:`后备语言环境 <translation-fallback>` 的消息也会加载并添加到该目录（如果它们尚不存在）。
-  最终结果是生成了一个“翻译大词典”。
+  最终结果是生成了一个“翻译大词典”。此目录在生产中会缓存，以最大限度地降低性能影响。
 
 * 如果该消息位于目录中，则返回翻译消息。如果不存在，则翻译器返回原始消息。
 
-使用 ``trans()`` 方法时，Symfony会在相应的消息目录中查找确切的字符串并返回它（如果存在）。
+.. _message-placeholders:
+.. _pluralization:
 
-消息占位符
---------------------
+消息格式
+--------------
 
 有时，需要翻译包含一个变量的消息::
 
-    use Symfony\Component\HttpFoundation\Response;
-    use Symfony\Component\Translation\TranslatorInterface;
+    // ...
+    $translated = $translator->trans('Hello '.$name);
 
-    public function index(TranslatorInterface $translator, $name)
-    {
-        $translated = $translator->trans('Hello '.$name);
-
-        // ...
-    }
-
-但是，为此字符串创建翻译是不可能的，因为翻译器将尝试查找确切的消息，包括变量部分（例如 *"Hello Ryan"* 或 *"Hello Fabien"*）。
-
-有关如何处理此情况的详细信息，请参阅组件文档中的 :ref:`component-translation-placeholders`。
-有关如何在模板中执行此操作，请参阅 :ref:`translation-tags`。
-
-复数
--------------
+但是，为此字符串创建翻译是不可能的，因为翻译器将尝试查找包含可变部分的消息（例如“Hello Ryan”或“Hello Fabien”）。
 
 另一个复杂因素是，可能你的翻译基于某些变量会在单复数之间变化：
 
@@ -200,110 +185,24 @@
     There is one apple.
     There are 5 apples.
 
-要处理这个问题，使用 :method:`Symfony\\Component\\Translation\\Translator::transChoice`
-方法或在 :ref:`模板 <translation-tags>` 中使用``transchoice`` 标签/过滤器。
+为了管理这些情况，Symfony通过使用PHP的 :phpclass:`MessageFormatter` 类来遵循 `ICU MessageFormat`_
+语法。可以 :doc:`/translation/message_format` 中阅读有关此内容的更多信息。
 
-有关更多信息，请参阅翻译组件文档中的 :ref:`component-translation-pluralization`。
+.. versionadded:: 4.2
+
+   在Symfony 4.2中引入了对ICU MessageFormat的支持。在此之前，通过
+   :method:`Symfony\\Component\\Translation\\Translator::transChoice` 方法来管理多元化。
 
 模板中的翻译
 -------------------------
 
 大多数情况下，翻译发生在模板中。Symfony为Twig和PHP模板提供原生支持。
 
-.. _translation-tags:
+.. code-block:: html+twig
 
-Twig模板
-~~~~~~~~~~~~~~
+    <h1>{% trans %}Symfony is great!{% endtrans %}</h1>
 
-Symfony提供专门的Twig标签（``trans`` 和 ``transchoice``）来帮助 *静态文本块* 的消息翻译：
-
-.. code-block:: twig
-
-    {% trans %}Hello %name%{% endtrans %}
-
-    {% transchoice count %}
-        {0} There are no apples|{1} There is one apple|]1,Inf[ There are %count% apples
-    {% endtranschoice %}
-
-``transchoice`` 标签自动从当前上下文获取 ``%count%`` 变量并将其传递给翻译器。
-只有在 ``%var%`` 模式后使用一个占位符时，此机制才有效。
-
-.. caution::
-
-    使用标签在Twig模板中进行翻译时，需要占位符的 ``%var%`` 表示法。
-
-.. tip::
-
-    如果你需要在字符串中使用百分比字符（``%``），请将其翻倍：``{% trans %}Percent: %percent%%%{% endtrans %}``
-
-你还可以指定消息域并传递一些额外的变量：
-
-.. code-block:: twig
-
-    {% trans with {'%name%': 'Fabien'} from 'app' %}Hello %name%{% endtrans %}
-
-    {% trans with {'%name%': 'Fabien'} from 'app' into 'fr' %}Hello %name%{% endtrans %}
-
-    {% transchoice count with {'%name%': 'Fabien'} from 'app' %}
-        {0} %name%, there are no apples|{1} %name%, there is one apple|]1,Inf[ %name%, there are %count% apples
-    {% endtranschoice %}
-
-.. _translation-filters:
-
-``trans`` 和 ``transchoice`` 过滤器可用于翻译 *变量文本* 和复杂表达式：
-
-.. code-block:: twig
-
-    {{ message|trans }}
-
-    {{ message|transchoice(5) }}
-
-    {{ message|trans({'%name%': 'Fabien'}, 'app') }}
-
-    {{ message|transchoice(5, {'%name%': 'Fabien'}, 'app') }}
-
-.. tip::
-
-    使用翻译标签或过滤器具有相同的效果，但有一个细微差别：自动输出转义仅适用于使用过滤器的翻译。
-    换句话说，如果你需要确保翻译消息 *未* 输出转义，则必须在翻译过滤器后应用 ``raw`` 过滤器：
-
-    .. code-block:: twig
-
-            {# 标签之间翻译的文本永远不会被转义 #}
-            {% trans %}
-                <h3>foo</h3>
-            {% endtrans %}
-
-            {% set message = '<h3>foo</h3>' %}
-
-            {# 默认情况下，通过过滤器翻译的字符串和变量将被转义 #}
-            {{ message|trans|raw }}
-            {{ '<h3>bar</h3>'|trans|raw }}
-
-.. tip::
-
-    你可以使用单个标签为整个Twig模板设置翻译域：
-
-    .. code-block:: twig
-
-           {% trans_default_domain 'app' %}
-
-    请注意，这仅影响当前模板，而不影响任何“引用”模板（为了避免副作用）。
-
-PHP模板
-~~~~~~~~~~~~~
-
-可以通过 ``translator`` 助手在PHP模板中访问翻译服务：
-
-.. code-block:: html+php
-
-    <?= $view['translator']->trans('Symfony is great') ?>
-
-    <?= $view['translator']->transChoice(
-        '{0} There are no apples|{1} There is one apple|]1,Inf[ There are %count% apples',
-        10,
-        array('%count%' => 10)
-    ) ?>
+要了解Twig中针对翻译的有关标签和过滤器的详细信息，请参阅 :doc:`/translation/templates`。
 
 自动提取翻译内容和更新目录
 -------------------------------------------------------------------
@@ -313,11 +212,11 @@ Symfony包含一个名为 ``translation:update`` 的命令，可以帮助你完�
 
 .. code-block:: terminal
 
-    # 使用在 app/Resources/ 模板中找到的缺失字符串来更新法语翻译文件
-    $ ./bin/console translation:update --dump-messages --force fr
+    # 使用在 templates/ 中找到的缺失字符串来更新法语翻译文件
+    $ php bin/console translation:update --dump-messages --force fr
 
     # 使用AppBundle中找到的缺失字符串更新英文翻译文件
-    $ ./bin/console translation:update --dump-messages --force en AppBundle
+    $ php bin/console translation:update --dump-messages --force en AppBundle
 
 .. note::
 
@@ -334,13 +233,11 @@ Symfony包含一个名为 ``translation:update`` 的命令，可以帮助你完�
 
 Symfony在以下默认位置查找消息文件（即翻译）：
 
-* ``translations/`` 目录 (在项目的根目录);
+#. ``translations/`` 目录 (在项目的根目录);
+#. ``src/Resources/<bundle name>/translations/`` 目录;
+#. ``Resources/translations/`` 目录（任何bundle中）.
 
-* ``src/Resources/<bundle name>/translations/`` 目录;
-
-* ``Resources/translations/`` 目录（任何bundle中）.
-
-.. versionadded:: 4.2
+.. deprecated:: 4.2
     在Symfony 4.2中不推荐使用 ``src/Resources/<bundle name>/translations/`` 目录来存储翻译。
     而是使用 ``default_path`` 选项中定义的目录（默认情况下为 ``translations/``）。
 
@@ -389,9 +286,9 @@ Symfony在以下默认位置查找消息文件（即翻译）：
                 xmlns:framework="http://symfony.com/schema/dic/symfony"
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-Instance"
                 xsi:schemaLocation="http://symfony.com/schema/dic/services
-                    http://symfony.com/schema/dic/services/services-1.0.xsd
+                    https://symfony.com/schema/dic/services/services-1.0.xsd
                     http://symfony.com/schema/dic/symfony
-                    http://symfony.com/schema/dic/symfony/symfony-1.0.xsd"
+                    https://symfony.com/schema/dic/symfony/symfony-1.0.xsd"
             >
 
                 <framework:config>
@@ -404,13 +301,13 @@ Symfony在以下默认位置查找消息文件（即翻译）：
         .. code-block:: php
 
             // config/packages/translation.php
-            $container->loadFromExtension('framework', array(
-                'translator' => array(
-                    'paths' => array(
+            $container->loadFromExtension('framework', [
+                'translator' => [
+                    'paths' => [
                         '%kernel.project_dir%/custom/path/to/translations',
-                    ),
-                ),
-            ));
+                    ],
+                ],
+            ]);
 
 .. note::
 
@@ -425,6 +322,11 @@ Symfony在以下默认位置查找消息文件（即翻译）：
     .. code-block:: terminal
 
         $ php bin/console cache:clear
+
+处理用户的语言环境
+--------------------------
+
+翻译根据用户的语言环境进行。阅读 :doc:`/translation/locale` 以了解有关如何处理它的更多信息。
 
 .. _translation-fallback:
 
@@ -442,12 +344,8 @@ Symfony在以下默认位置查找消息文件（即翻译）：
 
 .. note::
 
-    有关详细信息，请参阅 :ref:`reference-framework-translator-logging`.
-
-处理用户的语言环境
---------------------------
-
-翻译根据用户的语言环境进行。阅读 :doc:`/translation/locale` 以了解有关如何处理它的更多信息。
+    当Symfony无法在给定的语言环境中找到翻译时，它会将缺少的翻译添加到日志文件中。有关详细信息，请参阅
+    :ref:`reference-framework-translator-logging`。
 
 翻译数据库内容
 ----------------------------
@@ -467,9 +365,7 @@ Symfony在以下默认位置查找消息文件（即翻译）：
 使用Symfony翻译组件，创建国际化应用不再是一个痛苦的过程，并归结为几个步骤：
 
 * 通过在 :method:`Symfony\\Component\\Translation\\Translator::trans`
-  或 :method:`Symfony\\Component\\Translation\\Translator::transChoice`
-  方法中封装每个消息，在应用中抽象消息
-  （在 :doc:`/components/translation/usage` 中了解这一点）;
+  方法中封装每个消息，以在应用中抽象消息;
 
 * 通过创建翻译消息文件将每个消息翻译成多个语言环境。Symfony发现并处理每个文件，因为它的名称遵循特定的约定;
 
@@ -481,11 +377,14 @@ Symfony在以下默认位置查找消息文件（即翻译）：
 .. toctree::
     :maxdepth: 1
 
+    translation/message_format
+    translation/templates
     translation/locale
     translation/debug
     translation/lint
 
 .. _`i18n`: https://en.wikipedia.org/wiki/Internationalization_and_localization
+.. _`ICU MessageFormat`: http://userguide.icu-project.org/formatparse/messages
 .. _`ISO 3166-1 alpha-2`: https://en.wikipedia.org/wiki/ISO_3166-1#Current_codes
 .. _`ISO 639-1`: https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
 .. _`Translatable Extension`: http://atlantic18.github.io/DoctrineExtensions/doc/translatable.html

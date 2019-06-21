@@ -7,7 +7,7 @@
 .. code-block:: html+twig
 
     <script>
-    var route = "{{ path('blog_show', {'slug': 'my-blog-post'})|escape('js') }}";
+        let route = "{{ path('blog_show', {'slug': 'my-blog-post'})|escape('js') }}";
     </script>
 
 但是，如果你 *确实* 需要在纯JavaScript中生成路由，请考虑使用
@@ -16,9 +16,9 @@
 .. code-block:: html+twig
 
     <script>
-    var url = Routing.generate('blog_show', {
-        'slug': 'my-blog-post'
-    });
+        let url = Routing.generate('blog_show', {
+            'slug': 'my-blog-post'
+        });
     </script>
 
 .. _`FOSJsRoutingBundle`: https://github.com/FriendsOfSymfony/FOSJsRoutingBundle

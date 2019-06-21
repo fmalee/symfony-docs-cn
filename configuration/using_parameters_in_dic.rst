@@ -48,15 +48,15 @@
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:my-bundle="http://example.org/schema/dic/my_bundle">
 
-            <my-bundle:config logging="true" />
+            <my-bundle:config logging="true"/>
             <!-- true, as expected -->
 
-            <my-bundle:config logging="%kernel.debug%" />
+            <my-bundle:config logging="%kernel.debug%"/>
             <!-- true/false (depends on 2nd parameter of Kernel),
                  as expected, because %kernel.debug% inside configuration
                  gets evaluated before being passed to the extension -->
 
-            <my-bundle:config />
+            <my-bundle:config/>
             <!-- passes the string "%kernel.debug%".
                  Which is always considered as true.
                  The Configurator does not know anything about
@@ -65,26 +65,25 @@
 
     .. code-block:: php
 
-        $container->loadFromExtension('my_bundle', array(
+        $container->loadFromExtension('my_bundle', [
                 'logging' => true,
                 // true, as expected
             )
-        );
+        ];
 
-        $container->loadFromExtension('my_bundle', array(
+        $container->loadFromExtension('my_bundle', [
                 'logging' => "%kernel.debug%",
                 // true/false (depends on 2nd parameter of Kernel),
                 // as expected, because %kernel.debug% inside configuration
                 // gets evaluated before being passed to the extension
             )
-        );
+        ];
 
         $container->loadFromExtension('my_bundle');
         // passes the string "%kernel.debug%".
         // Which is always considered as true.
         // The Configurator does not know anything about
         // "%kernel.debug%" being a parameter.
-
 为了支持这个用例，``Configuration`` 类必须通过扩展注入此参数，如下所示::
 
     namespace App\DependencyInjection;
@@ -116,9 +115,6 @@
             return $treeBuilder;
         }
     }
-
-.. versionadded:: 4.2
-    不将根节点名称传递给 ``TreeBuilder`` 在4.2中已弃用。
 
 通过 ``Extension`` 类在 ``Configuration`` 的构造函数中设置它::
 

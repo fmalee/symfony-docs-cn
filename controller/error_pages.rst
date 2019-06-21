@@ -8,6 +8,13 @@
 在Symfony应用中，所有错误都被视为异常，无论它们只是 “404 Not Found”
 错误还是由于在代码中抛出异常而触发的致命错误。
 
+如果你的应用安装了 `TwigBundle`_，则一个特殊控制器会处理这些异常。
+此控制器显示错误的调试信息并允许自定义错误页面，因此请运行此命令以确保安装了该软件包：
+
+.. code-block:: terminal
+
+    $ composer require twig
+
 在 :doc:`开发环境 </configuration/environments>` 中，
 Symfony捕获所有异常并显示一个包含大量调试信息的特殊 **异常页面**，以帮助你发现问题的症结：
 
@@ -145,24 +152,21 @@ Symfony捕获所有异常并显示一个包含大量调试信息的特殊 **异�
         <routes xmlns="http://symfony.com/schema/routing"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/routing
-                http://symfony.com/schema/routing/routing-1.0.xsd">
+                https://symfony.com/schema/routing/routing-1.0.xsd">
 
-            <import resource="@TwigBundle/Resources/config/routing/errors.xml"
-                prefix="/_error" />
+            <import resource="@TwigBundle/Resources/config/routing/errors.xml" prefix="/_error"/>
         </routes>
 
     .. code-block:: php
 
         // config/routes/dev/twig.php
-        use Symfony\Component\Routing\RouteCollection;
+        use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
-        $routes = new RouteCollection();
-        $routes->addCollection(
-            $loader->import('@TwigBundle/Resources/config/routing/errors.xml')
-        );
-        $routes->addPrefix("/_error");
-
-        return $routes;
+        return function (RoutingConfigurator $routes) {
+            $routes->import('@TwigBundle/Resources/config/routing/errors.xml')
+                ->prefix('/_error')
+            ;
+        };
 
 添加此路由后，你可以使用这些URL来预览给定状态代码的HTML或给定状态代码和格式的 *错误* 页面。
 
@@ -200,9 +204,9 @@ Symfony捕获所有异常并显示一个包含大量调试信息的特殊 **异�
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:twig="http://symfony.com/schema/dic/twig"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd
+                https://symfony.com/schema/dic/services/services-1.0.xsd
                 http://symfony.com/schema/dic/twig
-                http://symfony.com/schema/dic/twig/twig-1.0.xsd">
+                https://symfony.com/schema/dic/twig/twig-1.0.xsd">
 
             <twig:config>
                 <twig:exception-controller>App\Controller\ExceptionController::showException</twig:exception-controller>
@@ -213,10 +217,10 @@ Symfony捕获所有异常并显示一个包含大量调试信息的特殊 **异�
     .. code-block:: php
 
         // config/packages/twig.php
-        $container->loadFromExtension('twig', array(
+        $container->loadFromExtension('twig', [
             'exception_controller' => 'App\Controller\ExceptionController::showException',
             // ...
-        ));
+        ]);
 
 TwigBundle使用一个监听 ``kernel.exception`` 事件的
 :class:`Symfony\\Component\\HttpKernel\\EventListener\\ExceptionListener`
@@ -264,11 +268,11 @@ TwigBundle使用一个监听 ``kernel.exception`` 事件的
             <container xmlns="http://symfony.com/schema/dic/services"
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xsi:schemaLocation="http://symfony.com/schema/dic/services
-                    http://symfony.com/schema/dic/services/services-1.0.xsd">
+                    https://symfony.com/schema/dic/services/services-1.0.xsd">
 
                 <services>
                     <!-- ... be sure autowiring is enabled -->
-                    <defaults autowire="true" />
+                    <defaults autowire="true"/>
                     <!-- ... -->
 
                     <service id="App\Controller\CustomExceptionController" public="true">
@@ -323,6 +327,7 @@ TwigBundle使用一个监听 ``kernel.exception`` 事件的
     （例如 :class:`Symfony\\Component\\Security\\Core\\Exception\\AccessDeniedException`），
     并采取措施，例如将用户重定向到登录页面，将其记录下来以及其他事情。
 
+.. _`TwigBundle`: https://github.com/symfony/twig-bundle
 .. _`WebfactoryExceptionsBundle`: https://github.com/webfactory/exceptions-bundle
 .. _`Symfony Standard Edition`: https://github.com/symfony/symfony-standard/
 .. _`ExceptionListener`: https://github.com/symfony/symfony/blob/master/src/Symfony/Component/Security/Http/Firewall/ExceptionListener.php

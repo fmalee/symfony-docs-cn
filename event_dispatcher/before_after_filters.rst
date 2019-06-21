@@ -44,7 +44,7 @@
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <parameters>
                 <parameter key="tokens" type="collection">
@@ -57,10 +57,10 @@
     .. code-block:: php
 
         // config/services.php
-        $container->setParameter('tokens', array(
+        $container->setParameter('tokens', [
             'client1' => 'pass1',
             'client2' => 'pass2',
-        ));
+        ]);
 
 标记控制器以便检查
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -96,16 +96,16 @@
 创建事件订阅器
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-接下来，你需要创建一个事件监听器，它将保存你希望在控制器之前执行的逻辑。
-如果你不熟悉事件监听器，可以在 :doc:`/event_dispatcher` 中了解有关它们的更多信息::
+接下来，你需要创建一个事件订阅器，它将保存你希望在控制器之前执行的逻辑。
+如果你不熟悉事件订阅器，可以在 :doc:`/event_dispatcher` 中了解有关它们的更多信息::
 
     // src/EventSubscriber/TokenSubscriber.php
     namespace App\EventSubscriber;
 
     use App\Controller\TokenAuthenticatedController;
-    use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-    use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
     use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+    use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
+    use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
     use Symfony\Component\HttpKernel\KernelEvents;
 
     class TokenSubscriber implements EventSubscriberInterface
@@ -140,9 +140,9 @@
 
         public static function getSubscribedEvents()
         {
-            return array(
+            return [
                 KernelEvents::CONTROLLER => 'onKernelController',
-            );
+            ];
         }
     }
 
@@ -208,10 +208,10 @@ Symfony负责其余的工作。你的 ``TokenSubscriber`` 上的 ``onKernelContr
 
     public static function getSubscribedEvents()
     {
-        return array(
+        return [
             KernelEvents::CONTROLLER => 'onKernelController',
             KernelEvents::RESPONSE => 'onKernelResponse',
-        );
+        ];
     }
 
 仅此而已！``TokenSubscriber`` 将在执行每个控制器之前（``onKernelController()``）被通知，

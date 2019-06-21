@@ -25,7 +25,7 @@ Encore的灵感来自 `Webpacker`_ 和 `Mix`_，但仍然保持Webpack的精髓�
 .. tip::
 
     Encore由 `Symfony`_ 发行，能\ *完美*\集成到Symfony应用中。
-    但它可以很容易地用于任何语言的任何应用！
+    但它可以在任何PHP应用中使用，甚至可以与其他服务器端编程语言一起使用！
 
 .. _encore-toc:
 
@@ -65,11 +65,12 @@ Encore 文档
 
 * :doc:`使用Bootstrap的CSS和JS </frontend/encore/bootstrap>`
 * :doc:`创建特定于页面的CSS/JS </frontend/encore/page-specific-assets>`
-* :doc:`jQuery和旧应用 </frontend/encore/legacy-apps>`
+* :doc:`jQuery和旧应用 </frontend/encore/legacy-applications>`
 * :doc:`将信息从Twig传递到脚本 </frontend/encore/server-data>`
 * :doc:`webpack-dev-server和热模块更换(HMR) </frontend/encore/dev-server>`
 * :doc:`添加自定义加载器&插件 </frontend/encore/custom-loaders-plugins>`
 * :doc:`高级Webpack配置 </frontend/encore/advanced-config>`
+* :doc:`在虚拟机中使用Encore </frontend/encore/virtual-machine>`
 
 问 & 答
 ............

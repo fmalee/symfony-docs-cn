@@ -3,9 +3,9 @@ Callback
 
 The purpose of the Callback constraint is to create completely custom
 validation rules and to assign any validation errors to specific fields
-on your object. If you're using validation with forms, this means that you
-can make these custom errors display next to a specific field, instead of
-simply at the top of your form.
+on your object. If you're using validation with forms, this means that
+instead of displaying custom errors at the top of the form, you can
+display them next to the field they apply to.
 
 This process works by specifying one or more *callback* methods, each of
 which will be called during the validation process. Each of those methods
@@ -17,16 +17,14 @@ can do anything, including creating and assigning validation errors.
     as you'll see in the example, a callback method has the ability to directly
     add validator "violations".
 
-+----------------+------------------------------------------------------------------------+
-| Applies to     | :ref:`class <validation-class-target>`                                 |
-+----------------+------------------------------------------------------------------------+
-| Options        | - :ref:`callback <callback-option>`                                    |
-|                | - `payload`_                                                           |
-+----------------+------------------------------------------------------------------------+
-| Class          | :class:`Symfony\\Component\\Validator\\Constraints\\Callback`          |
-+----------------+------------------------------------------------------------------------+
-| Validator      | :class:`Symfony\\Component\\Validator\\Constraints\\CallbackValidator` |
-+----------------+------------------------------------------------------------------------+
+==========  ===================================================================
+Applies to  :ref:`class <validation-class-target>` or :ref:`property/method <validation-property-target>`
+Options     - :ref:`callback <callback-option>`
+            - `groups`_
+            - `payload`_
+Class       :class:`Symfony\\Component\\Validator\\Constraints\\Callback`
+Validator   :class:`Symfony\\Component\\Validator\\Constraints\\CallbackValidator`
+==========  ===================================================================
 
 Configuration
 -------------
@@ -65,7 +63,7 @@ Configuration
         <?xml version="1.0" encoding="UTF-8" ?>
         <constraint-mapping xmlns="http://symfony.com/schema/dic/constraint-mapping"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping http://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
+            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping https://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
 
             <class name="App\Entity\Author">
                 <constraint name="Callback">validate</constraint>
@@ -77,14 +75,19 @@ Configuration
         // src/Entity/Author.php
         namespace App\Entity;
 
-        use Symfony\Component\Validator\Mapping\ClassMetadata;
         use Symfony\Component\Validator\Constraints as Assert;
+        use Symfony\Component\Validator\Mapping\ClassMetadata;
 
         class Author
         {
             public static function loadValidatorMetadata(ClassMetadata $metadata)
             {
                 $metadata->addConstraint(new Assert\Callback('validate'));
+            }
+
+            public function validate(ExecutionContextInterface $context, $payload)
+            {
+                // ...
             }
         }
 
@@ -106,7 +109,7 @@ field those errors should be attributed::
         public function validate(ExecutionContextInterface $context, $payload)
         {
             // somehow you have an array of "fake names"
-            $fakeNames = array(/* ... */);
+            $fakeNames = [/* ... */];
 
             // check if the name is actually a fake name
             if (in_array($this->getFirstName(), $fakeNames)) {
@@ -126,7 +129,7 @@ have access to the object instance, they receive the object as the first argumen
     public static function validate($object, ExecutionContextInterface $context, $payload)
     {
         // somehow you have an array of "fake names"
-        $fakeNames = array(/* ... */);
+        $fakeNames = [/* ... */];
 
         // check if the name is actually a fake name
         if (in_array($object->getFirstName(), $fakeNames)) {
@@ -188,7 +191,7 @@ You can then use the following configuration to invoke this validator:
         <?xml version="1.0" encoding="UTF-8" ?>
         <constraint-mapping xmlns="http://symfony.com/schema/dic/constraint-mapping"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping http://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
+            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping https://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
 
             <class name="App\Entity\Author">
                 <constraint name="Callback">
@@ -204,17 +207,17 @@ You can then use the following configuration to invoke this validator:
         namespace App\Entity;
 
         use Acme\Validator;
-        use Symfony\Component\Validator\Mapping\ClassMetadata;
         use Symfony\Component\Validator\Constraints as Assert;
+        use Symfony\Component\Validator\Mapping\ClassMetadata;
 
         class Author
         {
             public static function loadValidatorMetadata(ClassMetadata $metadata)
             {
-                $metadata->addConstraint(new Assert\Callback(array(
+                $metadata->addConstraint(new Assert\Callback([
                     Validator::class,
                     'validate',
-                )));
+                ]));
             }
         }
 
@@ -232,10 +235,9 @@ constructor of the Callback constraint::
     // src/Entity/Author.php
     namespace App\Entity;
 
-    use Symfony\Component\Validator\Context\ExecutionContextInterface;
-
-    use Symfony\Component\Validator\Mapping\ClassMetadata;
     use Symfony\Component\Validator\Constraints as Assert;
+    use Symfony\Component\Validator\Context\ExecutionContextInterface;
+    use Symfony\Component\Validator\Mapping\ClassMetadata;
 
     class Author
     {
@@ -264,7 +266,7 @@ callback method:
 
 * A **string** containing the name of a concrete or static method;
 
-* An array callable with the format ``array('<Class>', '<method>')``;
+* An array callable with the format ``['<Class>', '<method>']``;
 
 * A closure.
 
@@ -274,5 +276,7 @@ instance as only argument.
 Static or closure callbacks receive the validated object as the first argument
 and the :class:`Symfony\\Component\\Validator\\Context\\ExecutionContextInterface`
 instance as the second argument.
+
+.. include:: /reference/constraints/_groups-option.rst.inc
 
 .. include:: /reference/constraints/_payload-option.rst.inc

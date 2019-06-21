@@ -14,15 +14,13 @@ Debug组件
 
     $ composer require symfony/debug
 
-或者，你可以克隆 `<https://github.com/symfony/debug>`_ 仓库。
-
 .. include:: /components/require_autoload.rst.inc
 
 用法
 -----
 
 Debug组件提供了几个工具来帮助你调试PHP代码。
-可以通过调用 ``Debug::enable()`` 静态方法来完成所有操作::
+通过调用此方法启用所有它们：
 
     use Symfony\Component\Debug\Debug;
 
@@ -35,7 +33,7 @@ Debug组件提供了几个工具来帮助你调试PHP代码。
 
 .. caution::
 
-    你永远不应该在生产环境中启用调试工具，因为它们可能会向用户暴露敏感信息。
+    你不应该在生产环境中启用除错误处理器之外的调试工具，因为它们可能会向用户暴露敏感信息。
 
 启用错误处理器
 --------------------------
@@ -47,6 +45,8 @@ Debug组件提供了几个工具来帮助你调试PHP代码。
     use Symfony\Component\Debug\ErrorHandler;
 
     ErrorHandler::register();
+
+当应用使用FrameworkBundle时，默认情况下会在生产环境中启用此错误处理器，因为它会生成更友好的错误日志。
 
 启用异常处理器
 ------------------------------
@@ -73,8 +73,8 @@ Debug组件提供了几个工具来帮助你调试PHP代码。
 会尝试抛出更多有用的异常。
 实现 ``findFile()`` 方法的所有自动加载器都被替换为一个 ``DebugClassLoader`` 封装器。
 
-要激活它 ``DebugClassLoader``，请调用其
-:method:`Symfony\\Component\\Debug\\DebugClassLoader::enable` 静态方法::
+要使用 ``DebugClassLoader``，可以通过调用其
+:method:`Symfony\\Component\\Debug\\DebugClassLoader::enable` 方法::
 
     use Symfony\Component\Debug\DebugClassLoader;
 

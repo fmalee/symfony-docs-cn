@@ -52,9 +52,9 @@
 
     use App\Entity\Product;
     use Symfony\Component\Form\AbstractType;
+    use Symfony\Component\Form\Extension\Core\Type\FileType;
     use Symfony\Component\Form\FormBuilderInterface;
     use Symfony\Component\OptionsResolver\OptionsResolver;
-    use Symfony\Component\Form\Extension\Core\Type\FileType;
 
     class ProductType extends AbstractType
     {
@@ -62,16 +62,16 @@
         {
             $builder
                 // ...
-                ->add('brochure', FileType::class, array('label' => 'Brochure (PDF file)'))
+                ->add('brochure', FileType::class, ['label' => 'Brochure (PDF file)'])
                 // ...
             ;
         }
 
         public function configureOptions(OptionsResolver $resolver)
         {
-            $resolver->setDefaults(array(
+            $resolver->setDefaults([
                 'data_class' => Product::class,
-            ));
+            ]);
         }
     }
 
@@ -94,12 +94,12 @@
     // src/Controller/ProductController.php
     namespace App\Controller;
 
+    use App\Entity\Product;
+    use App\Form\ProductType;
     use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
     use Symfony\Component\HttpFoundation\File\Exception\FileException;
     use Symfony\Component\HttpFoundation\Request;
     use Symfony\Component\Routing\Annotation\Route;
-    use App\Entity\Product;
-    use App\Form\ProductType;
 
     class ProductController extends AbstractController
     {
@@ -137,9 +137,9 @@
                 return $this->redirect($this->generateUrl('app_product_list'));
             }
 
-            return $this->render('product/new.html.twig', array(
+            return $this->render('product/new.html.twig', [
                 'form' => $form->createView(),
-            ));
+            ]);
         }
 
         /**
@@ -179,10 +179,10 @@
    :method:`Symfony\\Component\\HttpFoundation\\File\\UploadedFile::guessExtension`
    方法让Symfony根据文件MIME类型猜出正确的扩展名的原因;
 
-.. versionadded:: 4.1
+.. deprecated:: 4.1
+
     :method:`Symfony\\Component\\HttpFoundation\\File\\UploadedFile::getClientSize`
     方法在Symfony 4.1中已弃用，将在Symfony 5.0中删除。请改用 ``getSize()``。
-
 
 你可以使用以下代码链接到一个产品的PDF手册：
 
@@ -254,9 +254,6 @@
     :class:`Symfony\\Component\\HttpFoundation\\File\\Exception\\NoTmpDirFileException`，
     以及 :class:`Symfony\\Component\\HttpFoundation\\File\\Exception\\PartialFileException`。
 
-    .. versionadded:: 4.1
-        Symfony 4.1中引入了详细的异常类。
-
 然后，将此类定义为服务：
 
 .. configuration-block::
@@ -278,7 +275,7 @@
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
             <!-- ... -->
 
             <service id="App\FileUploader">
@@ -297,8 +294,8 @@
 现在你已准备好在控制器中使用此服务::
 
     // src/Controller/ProductController.php
-    use Symfony\Component\HttpFoundation\Request;
     use App\Service\FileUploader;
+    use Symfony\Component\HttpFoundation\Request;
 
     // ...
     public function new(Request $request, FileUploader $fileUploader)
@@ -321,17 +318,17 @@
 -------------------------
 
 如果你使用Doctrine来存储Product实体，则可以创建
-:doc:`Doctrine监听器 </doctrine/event_listeners_subscribers>` 以在持久化实体时自动上传文件::
+:doc:`Doctrine监听器 </doctrine/event_listeners_subscribers>` 以在持久化实体时自动移动文件::
 
     // src/EventListener/BrochureUploadListener.php
     namespace App\EventListener;
 
-    use Symfony\Component\HttpFoundation\File\UploadedFile;
-    use Symfony\Component\HttpFoundation\File\File;
-    use Doctrine\ORM\Event\LifecycleEventArgs;
-    use Doctrine\ORM\Event\PreUpdateEventArgs;
     use App\Entity\Product;
     use App\Service\FileUploader;
+    use Doctrine\ORM\Event\LifecycleEventArgs;
+    use Doctrine\ORM\Event\PreUpdateEventArgs;
+    use Symfony\Component\HttpFoundation\File\File;
+    use Symfony\Component\HttpFoundation\File\UploadedFile;
 
     class BrochureUploadListener
     {
@@ -401,11 +398,11 @@
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <services>
                 <!-- ... be sure autowiring is enabled -->
-                <defaults autowire="true" />
+                <defaults autowire="true"/>
                 <!-- ... -->
 
                 <service id="App\EventListener\BrochureUploaderListener">
@@ -421,12 +418,12 @@
         use App\EventListener\BrochureUploaderListener;
 
         $container->autowire(BrochureUploaderListener::class)
-            ->addTag('doctrine.event_listener', array(
+            ->addTag('doctrine.event_listener', [
                 'event' => 'prePersist',
-            ))
-            ->addTag('doctrine.event_listener', array(
+            ])
+            ->addTag('doctrine.event_listener', [
                 'event' => 'preUpdate',
-            ))
+            ])
         ;
 
 现在，在持久化一个新的Product实体时会自动执行此监听器。

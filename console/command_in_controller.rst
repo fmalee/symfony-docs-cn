@@ -36,13 +36,13 @@
             $application = new Application($kernel);
             $application->setAutoExit(false);
 
-            $input = new ArrayInput(array(
-               'command' => 'swiftmailer:spool:send',
-               // (可选)定义命令参数的值
-               'fooArgument' => 'barValue',
-               // (可选) 传递选择给命令
-               '--message-limit' => $messages,
-            ));
+            $input = new ArrayInput([
+                'command' => 'swiftmailer:spool:send',
+                // (可选)定义命令参数的值
+                'fooArgument' => 'barValue',
+                // (可选) 传递选择给命令
+                '--message-limit' => $messages,
+            ]);
 
             // 如果不需要任何输出，可以使用 NullOutput()
             $output = new BufferedOutput();

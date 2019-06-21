@@ -36,21 +36,21 @@ Symfony邮件程序的默认行为是立即发送电子邮件。
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:swiftmailer="http://symfony.com/schema/dic/swiftmailer"
-            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd
-                http://symfony.com/schema/dic/swiftmailer http://symfony.com/schema/dic/swiftmailer/swiftmailer-1.0.xsd">
+            xsi:schemaLocation="http://symfony.com/schema/dic/services https://symfony.com/schema/dic/services/services-1.0.xsd
+                http://symfony.com/schema/dic/swiftmailer https://symfony.com/schema/dic/swiftmailer/swiftmailer-1.0.xsd">
 
             <swiftmailer:config>
-                <swiftmailer:spool type="memory" />
+                <swiftmailer:spool type="memory"/>
             </swiftmailer:config>
         </container>
 
     .. code-block:: php
 
         // config/packages/swiftmailer.php
-        $container->loadFromExtension('swiftmailer', array(
-             // ...
-            'spool' => array('type' => 'memory'),
-        ));
+        $container->loadFromExtension('swiftmailer', [
+            // ...
+            'spool' => ['type' => 'memory'],
+        ]);
 
 .. _spool-using-a-file:
 
@@ -81,8 +81,8 @@ Symfony邮件程序的默认行为是立即发送电子邮件。
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:swiftmailer="http://symfony.com/schema/dic/swiftmailer"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd
-                http://symfony.com/schema/dic/swiftmailer http://symfony.com/schema/dic/swiftmailer/swiftmailer-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd
+                http://symfony.com/schema/dic/swiftmailer https://symfony.com/schema/dic/swiftmailer/swiftmailer-1.0.xsd">
 
             <swiftmailer:config>
                 <swiftmailer:spool
@@ -95,14 +95,14 @@ Symfony邮件程序的默认行为是立即发送电子邮件。
     .. code-block:: php
 
         // config/packages/swiftmailer.php
-        $container->loadFromExtension('swiftmailer', array(
-             // ...
+        $container->loadFromExtension('swiftmailer', [
+            // ...
 
-            'spool' => array(
+            'spool' => [
                 'type' => 'file',
                 'path' => '/path/to/spooldir',
-            ),
-        ));
+            ],
+        ]);
 
 .. tip::
 
@@ -131,7 +131,7 @@ Symfony邮件程序的默认行为是立即发送电子邮件。
 
     $ APP_ENV=prod php bin/console swiftmailer:spool:send --time-limit=10
 
-你很可能不想在现实中手动运行此命令。相反，控制台命令应由cron或计划任务触发，并以固定间隔运行。
+实际上，你不希望手动运行此操作。相反，控制台命令应由cron或计划任务触发，并以固定间隔运行。
 
 .. caution::
 

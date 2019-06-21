@@ -8,8 +8,8 @@
 * **代码**
 
   * :doc:`Bugs </contributing/code/bugs>`
-  * :doc:`补丁 </contributing/code/patches>`
-  * :doc:`审查问题和补丁 </contributing/community/reviews>`
+  * :doc:`拉取请求 </contributing/code/pull_requests>`
+  * :doc:`审查问题和拉取请求 </contributing/community/reviews>`
   * :doc:`维护 </contributing/code/maintenance>`
   * :doc:`核心团队 </contributing/code/core_team>`
   * :doc:`安全 </contributing/code/security>`
@@ -33,3 +33,7 @@
   * :doc:`尊重审查意见 </contributing/community/review-comments>`
   * :doc:`社区审查 </contributing/community/reviews>`
   * :doc:`其他资源 </contributing/community/other>`
+
+* **多样化**
+
+  * :doc:`管理方法 </contributing/diversity/governance>`

@@ -10,6 +10,7 @@
 例如，要为命令添加一个 ``last_name`` 可选参数并使 ``name`` 参数成为必需参数::
 
     // ...
+    use Symfony\Component\Console\Command\Command;
     use Symfony\Component\Console\Input\InputArgument;
 
     class GreetCommand extends Command
@@ -29,6 +30,10 @@
 你现在可以访问命令中的 ``last_name`` 参数::
 
     // ...
+    use Symfony\Component\Console\Command\Command;
+    use Symfony\Component\Console\Input\InputInterface;
+    use Symfony\Component\Console\Output\OutputInterface;
+
     class GreetCommand extends Command
     {
         // ...
@@ -104,7 +109,7 @@
 ---------------------
 
 与参数不同，选项不是有序的（意味着你可以按任何顺序指定它们），并且使用两个破折号（例如 ``--yell``）来指定。
-选项 *总是* 可选的，可以设置为接受一个值（例如 ``--dir=src``）或简单地作为没有值的布尔表示（例如 ``--yell``）。
+选项 *总是* 可选的，可以设置为接受一个值（例如 ``--dir=src``）或作为没有值的布尔表示（例如 ``--yell``）。
 
 例如，在命令中添加一个新选项，可用于指定消息应打印的行数::
 
@@ -149,7 +154,7 @@
 
 .. tip::
 
-     你还可以使用单个短划线调用来声明一个单字母快捷方式，例如 ``-i``::
+    你还可以使用单个短划线调用来声明一个单字母快捷方式，例如 ``-i``::
 
         $this
             // ...
@@ -194,7 +199,7 @@
             null,
             InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
             'Which colors do you like?',
-            array('blue', 'red')
+            ['blue', 'red']
         );
 
 带可选参数的选项

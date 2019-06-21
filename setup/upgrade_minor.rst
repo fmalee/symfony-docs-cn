@@ -19,8 +19,8 @@
 1) 通过Composer更新Symfony库
 ------------------------------------------
 
-你的 ``composer.json`` 文件应该已配置为允许将Symfony软件包升级到次要版本。
-但是，如果一个软件包未升级，请检查Symfony依赖项的版本约束是否如下所示：
+``composer.json`` 文件被配置为允许Symfony包升级到补丁版本。
+但是，如果你希望将软件包升级到次要版本，请确认Symfony依赖项的版本约束是这样的：
 
 .. code-block:: json
 
@@ -37,6 +37,18 @@
             "...": "..."
         },
         "...": "...",
+    }
+
+在 ``composer.json`` 文件的底部，在 ``extra`` 区块中，你可以找到symfony版本的数据设置。
+一定要更新这个。 例如，将其更新为 ``4.3.*`` 以升级到Symfony 4.3：
+
+.. code-block:: json
+
+    "extra": {
+        "symfony": {
+            "allow-contrib": false,
+            "require": "4.3.*"
+        }
     }
 
 接下来，使用Composer下载新版本的库：

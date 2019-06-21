@@ -40,6 +40,9 @@
     +         // 可选的目标路径, 相对于输出目录
     +         //to: 'images/[path][name].[ext]',
     +
+    +         // 如果启用了版本控制，则也添加文件哈希
+    +         //to: 'images/[path][name].[hash:8].[ext]',
+    +
     +         // 只复制匹配此模式的文件
     +         //pattern: /\.(png|jpg|jpeg)$/
     +     })
@@ -52,10 +55,10 @@
 .. code-block:: html+twig
 
     {# assets/images/logo.png 被复制到 public/build/logo.png #}
-    <img src="{{ asset('build/logo.png') }}"
+    <img src="{{ asset('build/logo.png') }}">
 
     {# assets/images/subdir/logo.png 被复制到 public/build/subdir/logo.png #}
-    <img src="{{ asset('build/subdir/logo.png') }}"
+    <img src="{{ asset('build/subdir/logo.png') }}">
 
 请确保已启用 :ref:`json_manifest_path <load-manifest-files>`
 选项，该选项告诉 ``asset()`` 函数从 ``manifest.json`` 文件中读取最终路径。

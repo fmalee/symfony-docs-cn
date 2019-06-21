@@ -4,57 +4,55 @@
 如何Dump工作流
 =====================
 
-为了帮助你调试工作流，你可以使用一个 ``DumperInterface``
-来转储你的工作流或状态机的示意图(representation)。
-Symfony提供2个基于Dot的不同dumper。
+To help you debug your workflows, you can generate a visual representation of
+them as SVG or PNG images. First, install any of these free and open source
+applications needed to generate the images:
 
-使用 ``GraphvizDumper`` 或 ``StateMachineGraphvizDumper`` 来创建DOT文件，或使用
-``PlantUmlDumper`` 处理PlantUML文件。两种类型都可以转换为PNG或SVG图像。
+* `Graphviz`_, provides the ``dot`` command;
+* `PlantUML`_, provides the ``plantuml.jar`` file (which requires Java).
 
-上面定义的工作流图像：
-
-.. code-block:: php
-
-    // dump-graph-dot.php
-    $dumper = new GraphvizDumper();
-    echo $dumper->dump($definition);
-
-.. code-block:: php
-
-    // dump-graph-puml.php
-    $dumper = new PlantUmlDumper();
-    echo $dumper->dump($definition);
+If you are defining the workflow inside a Symfony application, run this command
+to dump it as an image:
 
 .. code-block:: terminal
 
-    $ php dump-graph-dot.php | dot -Tpng -o dot_graph.png
-    $ php dump-graph-puml.php | java -jar plantuml.jar -p  > puml_graph.png
+    # using Graphviz's 'dot' and SVG images
+    $ php bin/console workflow:dump workflow-name | dot -Tsvg -o graph.svg
 
-    # run this command if you prefer SVG images:
-    # 如果你喜欢SVG图像，请运行此命令：
-    # $ php dump-graph-dot.php | dot -Tsvg -o dot_graph.svg
+    # using Graphviz's 'dot' and PNG images
+    $ php bin/console workflow:dump workflow-name | dot -Tpng -o graph.png
 
-DOT结果如下所示：
+    # using PlantUML's 'plantuml.jar'
+    $ php bin/console workflow:dump workflow_name --dump-format=puml | java -jar plantuml.jar -p  > graph.png
+
+    # highlight 'place1' and 'place2' in the dumped workflow
+    $ php bin/console workflow:dump workflow-name place1 place2 | dot -Tsvg -o graph.svg
+
+The DOT image will look like this:
 
 .. image:: /_images/components/workflow/blogpost.png
 
-PUML结果：
+The PlantUML image will look like this:
 
 .. image:: /_images/components/workflow/blogpost_puml.png
 
-在Symfony应用中，你可以使用 ``workflow:dump`` 来利用这些命令转储文件：
+If you are creating workflows outside of a Symfony application, use the
+``GraphvizDumper`` or ``StateMachineGraphvizDumper`` class to create the DOT
+files and ``PlantUmlDumper`` to create the PlantUML files::
+
+    // Add this code to a PHP script; for example: dump-graph.php
+    $dumper = new GraphvizDumper();
+    echo $dumper->dump($definition);
+
+    # if you prefer PlantUML, use this code:
+    # $dumper = new PlantUmlDumper();
+    # echo $dumper->dump($definition);
 
 .. code-block:: terminal
 
-    $ php bin/console workflow:dump name | dot -Tsvg -o graph.svg
-    $ php bin/console workflow:dump name --dump-format=puml | java -jar plantuml.jar -p  > workflow.png
+    # replace 'dump-graph.php' by the name of your PHP script
+    $ php dump-graph.php | dot -Tsvg -o graph.svg
+    $ php dump-graph.php | java -jar plantuml.jar -p  > graph.png
 
-.. note::
-
-    ``dot`` 命令是Graphviz的一部分。你可以在 `Graphviz.org`_ 上下载并阅读更多相关信息。
-
-    ``plantuml.jar`` 命令是PlantUML的一部分。你可以在 `PlantUML.com`_ 上下载并阅读更多相关信息。
-
-
-.. _Graphviz.org: http://www.graphviz.org
-.. _PlantUML.com: http://plantuml.com/
+.. _`Graphviz`: http://www.graphviz.org
+.. _`PlantUML`: http://plantuml.com/

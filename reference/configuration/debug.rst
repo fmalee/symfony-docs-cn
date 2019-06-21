@@ -20,9 +20,9 @@ key in your application configuration.
 
     When using XML, you must use the ``http://symfony.com/schema/dic/debug``
     namespace and the related XSD schema is available at:
-    ``http://symfony.com/schema/dic/debug/debug-1.0.xsd``
+    ``https://symfony.com/schema/dic/debug/debug-1.0.xsd``
 
-配置
+Configuration
 -------------
 
 .. class:: list-config-options
@@ -77,7 +77,7 @@ destination for dumps. Typically, you would set this to ``php://stderr``:
 
         # config/packages/debug.yaml
         debug:
-           dump_destination: php://stderr
+            dump_destination: php://stderr
 
     .. code-block:: xml
 
@@ -87,17 +87,17 @@ destination for dumps. Typically, you would set this to ``php://stderr``:
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:debug="http://symfony.com/schema/dic/debug"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd
-                http://symfony.com/schema/dic/debug http://symfony.com/schema/dic/debug/debug-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd
+                http://symfony.com/schema/dic/debug https://symfony.com/schema/dic/debug/debug-1.0.xsd">
 
-            <debug:config dump-destination="php://stderr" />
+            <debug:config dump-destination="php://stderr"/>
         </container>
 
     .. code-block:: php
 
         // config/packages/debug.php
-        $container->loadFromExtension('debug', array(
-           'dump_destination' => 'php://stderr',
-        ));
+        $container->loadFromExtension('debug', [
+            'dump_destination' => 'php://stderr',
+        ]);
 
 Configure it to ``"tcp://%env(VAR_DUMPER_SERVER)%"`` in order to use the :ref:`ServerDumper feature <var-dumper-dump-server>`.

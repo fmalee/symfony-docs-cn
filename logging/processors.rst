@@ -69,9 +69,9 @@ Processor是一个可调用对象，它接收记录作为其第一个参数。
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:monolog="http://symfony.com/schema/dic/monolog"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd
+                https://symfony.com/schema/dic/services/services-1.0.xsd
                 http://symfony.com/schema/dic/monolog
-                http://symfony.com/schema/dic/monolog/monolog-1.0.xsd">
+                https://symfony.com/schema/dic/monolog/monolog-1.0.xsd">
 
             <services>
                 <service id="monolog.formatter.session_request"
@@ -81,7 +81,7 @@ Processor是一个可调用对象，它接收记录作为其第一个参数。
                 </service>
 
                 <service id="App\Logger\SessionRequestProcessor">
-                    <tag name="monolog.processor" />
+                    <tag name="monolog.processor"/>
                 </service>
             </services>
         </container>
@@ -98,7 +98,7 @@ Processor是一个可调用对象，它接收记录作为其第一个参数。
 
         $container
             ->register(SessionRequestProcessor::class)
-            ->addTag('monolog.processor', array('method' => 'processRecord'));
+            ->addTag('monolog.processor', ['method' => 'processRecord']);
 
 最后，在任何你想要的处理器上设置要使用的格式化器：
 
@@ -123,9 +123,9 @@ Processor是一个可调用对象，它接收记录作为其第一个参数。
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:monolog="http://symfony.com/schema/dic/monolog"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd
+                https://symfony.com/schema/dic/services/services-1.0.xsd
                 http://symfony.com/schema/dic/monolog
-                http://symfony.com/schema/dic/monolog/monolog-1.0.xsd">
+                https://symfony.com/schema/dic/monolog/monolog-1.0.xsd">
 
             <monolog:config>
                 <monolog:handler
@@ -141,20 +141,31 @@ Processor是一个可调用对象，它接收记录作为其第一个参数。
     .. code-block:: php
 
         // config/packages/prod/monolog.php
-        $container->loadFromExtension('monolog', array(
-            'handlers' => array(
-                'main' => array(
+        $container->loadFromExtension('monolog', [
+            'handlers' => [
+                'main' => [
                     'type'      => 'stream',
                     'path'      => '%kernel.logs_dir%/%kernel.environment%.log',
                     'level'     => 'debug',
                     'formatter' => 'monolog.formatter.session_request',
-                ),
-            ),
-        ));
+                ],
+            ],
+        ]);
 
 如果使用了多个处理器，还可以在处理器级别或通道级别注册一个Processor，而不是全局注册它（请参阅以下部分）。
 
-为每个处理器注册Processor
+Symfony的MonologBridge提供了可在你的应用内注册的一些处理器。
+
+:class:`Symfony\\Bridge\\Monolog\\Processor\\DebugProcessor`
+    添加对调试有用的其他信息到记录，如时间戳或错误消息。
+
+:class:`Symfony\\Bridge\\Monolog\\Processor\\TokenProcessor`
+    将当前用户令牌的信息添加到记录中，即用户名、角色以及用户是否经过身份验证。
+
+:class:`Symfony\\Bridge\\Monolog\\Processor\\WebProcessor`
+    使用Symfony的请求对象内部的数据覆盖请求中的数据。
+
+为每个处理器注册处理器
 ----------------------------------
 
 你可以使用 ``monolog.processor`` 标签的 ``handler`` 选项为每个处理器注册一个Processor：
@@ -177,13 +188,13 @@ Processor是一个可调用对象，它接收记录作为其第一个参数。
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:monolog="http://symfony.com/schema/dic/monolog"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd
+                https://symfony.com/schema/dic/services/services-1.0.xsd
                 http://symfony.com/schema/dic/monolog
-                http://symfony.com/schema/dic/monolog/monolog-1.0.xsd">
+                https://symfony.com/schema/dic/monolog/monolog-1.0.xsd">
 
             <services>
                 <service id="App\Logger\SessionRequestProcessor">
-                    <tag name="monolog.processor" handler="main" />
+                    <tag name="monolog.processor" handler="main"/>
                 </service>
             </services>
         </container>
@@ -195,7 +206,7 @@ Processor是一个可调用对象，它接收记录作为其第一个参数。
         // ...
         $container
             ->register(SessionRequestProcessor::class)
-            ->addTag('monolog.processor', array('handler' => 'main'));
+            ->addTag('monolog.processor', ['handler' => 'main']);
 
 为每个通道注册Processor
 ----------------------------------
@@ -220,13 +231,13 @@ Processor是一个可调用对象，它接收记录作为其第一个参数。
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:monolog="http://symfony.com/schema/dic/monolog"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd
+                https://symfony.com/schema/dic/services/services-1.0.xsd
                 http://symfony.com/schema/dic/monolog
-                http://symfony.com/schema/dic/monolog/monolog-1.0.xsd">
+                https://symfony.com/schema/dic/monolog/monolog-1.0.xsd">
 
             <services>
                 <service id="App\Logger\SessionRequestProcessor">
-                    <tag name="monolog.processor" channel="main" />
+                    <tag name="monolog.processor" channel="main"/>
                 </service>
             </services>
         </container>
@@ -238,4 +249,4 @@ Processor是一个可调用对象，它接收记录作为其第一个参数。
         // ...
         $container
             ->register(SessionRequestProcessor::class)
-            ->addTag('monolog.processor', array('channel' => 'main'));
+            ->addTag('monolog.processor', ['channel' => 'main']);

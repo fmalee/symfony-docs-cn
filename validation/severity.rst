@@ -72,7 +72,7 @@
         <?xml version="1.0" encoding="UTF-8" ?>
         <constraint-mapping xmlns="http://symfony.com/schema/dic/constraint-mapping"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping http://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
+            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping https://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
 
             <class name="App\Entity\User">
                 <property name="username">
@@ -104,22 +104,22 @@
         // src/Entity/User.php
         namespace App\Entity;
 
-        use Symfony\Component\Validator\Mapping\ClassMetadata;
         use Symfony\Component\Validator\Constraints as Assert;
+        use Symfony\Component\Validator\Mapping\ClassMetadata;
 
         class User
         {
             public static function loadValidatorMetadata(ClassMetadata $metadata)
             {
-                $metadata->addPropertyConstraint('username', new Assert\NotBlank(array(
-                    'payload' => array('severity' => 'error'),
-                )));
-                $metadata->addPropertyConstraint('password', new Assert\NotBlank(array(
-                    'payload' => array('severity' => 'error'),
-                )));
-                $metadata->addPropertyConstraint('bankAccountNumber', new Assert\Iban(array(
-                    'payload' => array('severity' => 'warning'),
-                )));
+                $metadata->addPropertyConstraint('username', new Assert\NotBlank([
+                    'payload' => ['severity' => 'error'],
+                ]));
+                $metadata->addPropertyConstraint('password', new Assert\NotBlank([
+                    'payload' => ['severity' => 'error'],
+                ]));
+                $metadata->addPropertyConstraint('bankAccountNumber', new Assert\Iban([
+                    'payload' => ['severity' => 'warning'],
+                ]));
             }
         }
 
@@ -138,7 +138,7 @@
 
 例如，你可以利用此选项来自定义 ``form_errors`` 区块，以便将 ``severity`` 值添加为一个额外的HTML类：
 
-.. code-block:: html+jinja
+.. code-block:: html+twig
 
     {%- block form_errors -%}
         {%- if errors|length > 0 -%}

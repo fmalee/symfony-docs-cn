@@ -47,7 +47,7 @@
 
 .. code-block:: terminal
 
-    $ php bin/console doctrine:mapping:import 'App\Entity' annotation --path=src/Entity
+    $ php bin/console doctrine:mapping:import "App\Entity" annotation --path=src/Entity
 
 此命令行工具要求Doctrine自检(introspect)数据库并生成带有注释元数据的新PHP类到 ``src/Entity``。
 这会生成两个文件：``BlogPost.php`` 和 ``BlogComment.php``。
@@ -58,7 +58,24 @@
 
     .. code-block:: terminal
 
-        $ php bin/console doctrine:mapping:import 'App\Entity' xml --path=config/doctrine
+        $ php bin/console doctrine:mapping:import "App\Entity" xml --path=config/doctrine
+
+    在这种情况下，请确保相应地调整你的映射配置：
+
+    .. code-block:: yaml
+
+        # config/packages/doctrine.yaml
+        doctrine:
+            # ...
+            orm:
+                # ...
+                mappings:
+                    App:
+                        is_bundle: false
+                        type: yml # 在XML映射的情况下设置为xml
+                        dir: '%kernel.project_dir%/config/doctrine'
+                        prefix: 'App\Entity'
+                        alias: App
 
 生成Getters＆Setters或PHP类
 -----------------------------------------------

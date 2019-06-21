@@ -36,9 +36,13 @@ Symfony通过 `SwiftMailerBundle`_ 提供基于流行的 `Swift Mailer`_ 库的�
     MAILER_URL=null://localhost
 
     # 使用它来配置传统的SMTP服务器
-    # 如果用户名和密码包含非字母数字(non-alphanumeric)字符，请确保对其进行URL编码
-    # 例如 '+'，'@'，'：'和'*'，它们都是URL的保留字符
     MAILER_URL=smtp://localhost:25?encryption=ssl&auth_mode=login&username=&password=
+
+.. caution::
+
+    如果用户名、密码或主机包含一个在URI中被认为特殊的任何字符（例如
+    ``+``、``@``、``$``、``#``、``/``、``:``、``*``、``!``），则必须对其进行编码。
+    有关保留字符的完整列表，请参阅 `RFC 3986`_ 或使用 :phpfunction:`urlencode` 函数对其进行编码。
 
 有关所有可用配置选项的详细说明，请参阅 :doc:`SwiftMailer配置参考 </reference/configuration/swiftmailer>`。
 
@@ -58,7 +62,7 @@ Swift Mailer库通过创建、配置然后发送 ``Swift_Message`` 对象来工�
                 $this->renderView(
                     // templates/emails/registration.html.twig
                     'emails/registration.html.twig',
-                    array('name' => $name)
+                    ['name' => $name]
                 ),
                 'text/html'
             )
@@ -67,7 +71,7 @@ Swift Mailer库通过创建、配置然后发送 ``Swift_Message`` 对象来工�
             ->addPart(
                 $this->renderView(
                     'emails/registration.txt.twig',
-                    array('name' => $name)
+                    ['name' => $name]
                 ),
                 'text/plain'
             )
@@ -82,7 +86,7 @@ Swift Mailer库通过创建、配置然后发送 ``Swift_Message`` 对象来工�
 为了保持解耦，邮件正文已存储在模板中并使用 ``renderView()`` 方法渲染。
 ``registration.html.twig`` 模板可能像这样：
 
-.. code-block:: html+jinja
+.. code-block:: html+twig
 
     {# templates/emails/registration.html.twig #}
     <h3>You did it! You registered!</h3>
@@ -113,7 +117,7 @@ Swift Mailer库通过创建、配置然后发送 ``Swift_Message`` 对象来工�
     # 用户名是完整的 Gmail 或 Google Apps 邮件地址
     MAILER_URL=gmail://username:password@localhost
 
-``gmail`` 传输只是一个使用 ``smtp`` 传输、``ssl`` 加密，``login`` 认证模式和 ``smtp.gmail.com`` 主机的快捷方式。
+``gmail`` 传输是一个使用 ``smtp`` 传输、``ssl`` 加密，``login`` 认证模式和 ``smtp.gmail.com`` 主机的快捷方式。
 如果你的应用使用其他加密或认证模式，则必须覆盖这些值
 （请参阅 :doc:`邮件程序配置参考 </reference/configuration/swiftmailer>`）。
 
@@ -124,7 +128,6 @@ Swift Mailer库通过创建、配置然后发送 ``Swift_Message`` 对象来工�
 
 如果你的Gmail帐户使用两步验证(2-Step-Verification)，则必须 `生成应用密码`_ 并将其用作邮件程序密码的值。
 你还必须确保 `允许安全性较低的应用访问你的Gmail帐户`_。
-
 
 使用云服务发送邮件
 -----------------------------------
@@ -159,3 +162,4 @@ Swift Mailer库通过创建、配置然后发送 ``Swift_Message`` 对象来工�
 .. _`Amazon SES`: http://aws.amazon.com/ses/
 .. _`生成应用密码`: https://support.google.com/accounts/answer/185833
 .. _`允许安全性较低的应用访问你的Gmail帐户`: https://support.google.com/accounts/answer/6010255
+.. _`RFC 3986`: https://www.ietf.org/rfc/rfc3986.txt

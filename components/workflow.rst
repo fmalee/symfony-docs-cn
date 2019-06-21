@@ -14,8 +14,6 @@ Workflow组件
 
     $ composer require symfony/workflow
 
-或者，你可以克隆 `<https://github.com/symfony/workflow>`_ 仓库。
-
 .. include:: /components/require_autoload.rst.inc
 
 创建工作流
@@ -34,9 +32,9 @@ Workflow组件
 在工作流程中，这些状态称为 **位置**。你可以像这样定义工作流::
 
     use Symfony\Component\Workflow\DefinitionBuilder;
+    use Symfony\Component\Workflow\MarkingStore\SingleStateMarkingStore;
     use Symfony\Component\Workflow\Transition;
     use Symfony\Component\Workflow\Workflow;
-    use Symfony\Component\Workflow\MarkingStore\SingleStateMarkingStore;
 
     $definitionBuilder = new DefinitionBuilder();
     $definition = $definitionBuilder->addPlaces(['draft', 'review', 'rejected', 'published'])
@@ -57,10 +55,10 @@ Workflow组件
 定义多个工作流时，应考虑使用一个 ``Registry``，这是一个可以存储和访问不同工作流的对象。
 一个注册表还将帮助你确定一个工作流是否支持你正尝试使用的对象::
 
-    use Symfony\Component\Workflow\Registry;
-    use Symfony\Component\Workflow\SupportStrategy\InstanceOfSupportStrategy;
     use Acme\Entity\BlogPost;
     use Acme\Entity\Newsletter;
+    use Symfony\Component\Workflow\Registry;
+    use Symfony\Component\Workflow\SupportStrategy\InstanceOfSupportStrategy;
 
     $blogWorkflow = ...
     $newsletterWorkflow = ...
@@ -69,22 +67,21 @@ Workflow组件
     $registry->addWorkflow($blogWorkflow, new InstanceOfSupportStrategy(BlogPost::class));
     $registry->addWorkflow($newsletterWorkflow, new InstanceOfSupportStrategy(Newsletter::class));
 
-.. versionadded:: 4.1
-    ``addWorkflow()`` 方法是在Symfony 4.1中引入的。在以前的Symfony版本中，它被称为 ``add()``。
-
 用法
 -----
 
-在使用工作流配置了一个 ``Registry`` 后，就可以按如下方式来使用它::
+在使用工作流配置了一个 ``Registry`` 后，你可以从中检索工作流并按如下方式来使用它::
 
     // ...
+    // 假设 $post 默认情况下处于 "draft" 状态
     $post = new BlogPost();
     $workflow = $registry->get($post);
 
     $workflow->can($post, 'publish'); // False
     $workflow->can($post, 'to_review'); // True
 
-    $workflow->apply($post, 'to_review');
+    $workflow->apply($post, 'to_review'); // $post 现在处于 "review" 状态
+
     $workflow->can($post, 'publish'); // True
     $workflow->getEnabledTransitions($post); // ['publish', 'reject']
 

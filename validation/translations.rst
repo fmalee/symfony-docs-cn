@@ -4,8 +4,8 @@
 如何翻译验证约束的消息
 ===============================================
 
-如果你使用Form组件来验证约束，则在 ``validators`` :ref:`域 <using-message-domains>`
-的翻译资源中完成错误消息的翻译。
+如果你对Form组件使用验证约束，则可以通过为 ``validators``
+:ref:`域 <using-message-domains>` 创建一个翻译资源来翻译错误消息。
 
 首先，假设你已经创建了一个普通的PHP对象，你需要在应用中的某个位置使用它::
 
@@ -50,7 +50,7 @@
         <constraint-mapping xmlns="http://symfony.com/schema/dic/constraint-mapping"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping
-                http://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
+                https://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
 
             <class name="App\Entity\Author">
                 <property name="name">
@@ -66,8 +66,8 @@
         // src/Entity/Author.php
 
         // ...
-        use Symfony\Component\Validator\Mapping\ClassMetadata;
         use Symfony\Component\Validator\Constraints\NotBlank;
+        use Symfony\Component\Validator\Mapping\ClassMetadata;
 
         class Author
         {
@@ -75,9 +75,9 @@
 
             public static function loadValidatorMetadata(ClassMetadata $metadata)
             {
-                $metadata->addPropertyConstraint('name', new NotBlank(array(
+                $metadata->addPropertyConstraint('name', new NotBlank([
                     'message' => 'author.name.not_blank',
-                )));
+                ]));
             }
         }
 
@@ -108,8 +108,8 @@
     .. code-block:: php
 
         // translations/validators.en.php
-        return array(
+        return [
             'author.name.not_blank' => 'Please enter an author name.',
-        );
+        ];
 
 如果是第一次创建此文件，你可能需要清除缓存（即使在开发环境中）。

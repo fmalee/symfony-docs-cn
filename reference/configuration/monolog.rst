@@ -19,7 +19,7 @@ Symfony应用中的MonologBundle集成了Monolog :doc:`日志 </logging>` 库。
 
     使用XML时，必须使用 ``http://symfony.com/schema/dic/monolog``
     命名空间，并且相关的XSD架构可在以下位置使用：
-    ``http://symfony.com/schema/dic/monolog/monolog-1.0.xsd``
+    ``https://symfony.com/schema/dic/monolog/monolog-1.0.xsd``
 
 
 .. tip::

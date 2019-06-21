@@ -7,6 +7,7 @@
 如果你需要模拟不同客户端之间的交互（例如，聊天室），请创建多个客户端::
 
     // ...
+    use Symfony\Component\HttpFoundation\Response;
 
     $harry = static::createClient();
     $sally = static::createClient();
@@ -21,6 +22,7 @@
 在这种情况下，你可以隔离（insulate）你的客户端::
 
     // ...
+    use Symfony\Component\HttpFoundation\Response;
 
     $harry = static::createClient();
     $sally = static::createClient();

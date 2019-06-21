@@ -17,15 +17,15 @@
 * B) ``.env`` 文件现在 **会** 提交到为你的仓库。而之前通过 ``.gitignore`` 文件忽略了它（更新的配方不会再忽略此文件）。
   由于此文件已可提交，因此它应包含非敏感的默认值。通俗的讲，``.env.dist`` 文件被移动到 ``.env``。
 
-* C) 现在可以创建一个 ``.env.local`` 文件来 *重写* 你的计算机的环境变量。
+* C) 现在可以创建一个 ``.env.local`` 文件来 *重写* 你的计算机中的 ``.env`` 的值。
   新的 ``.gitignore`` 文件已忽略此文件。
 
 * D) 现在测试时，将读取你的 ``.env`` 文件，以使其与所有其他环境保持一致。
   你还可以创建一个 ``.env.test`` 文件来重写测试环境。
 
-* E) 如果在运行 ``bin/console`` 时传递 ``--env=`` 标志，该值将覆盖你的 ``APP_ENV``
-  环境变量（如果有设置的话）。所以，如果你传递了
-  ``--env=prod``，DotEnv组件 *将* 尝试加载你的 ``.env*`` 文件。
+* E) `2019年1月对指令的进一步`_ 更改意味着即使你设置了一个 ``APP_ENV=prod``
+  环境变量，也 *始终* 会加载你的 ``.env`` 文件。目的是让 ``.env``
+  文件定义默认值，如果要使用实际环境值，可以覆盖这些值。
 
 还有一些其他改进，但这些是最重要的。为了充分利用这些特性，你 *将* 需要在现有的应用修改的几个文件。
 
@@ -42,44 +42,45 @@
 #. 更新你的 `public/index.php`_ （`index.php diff`_ ）文件以加载新的 ``config/bootstrap.php`` 文件。
    如果你已自定义此文件，请确保保留那些更改（但使用其余更改）。
 
-#. 更新你的 `bin/console`_ （`bin/console diff`_ ）文件以加载新的 ``config/bootstrap.php`` 文件。
+#. 更新你的 `bin/console`_ 文件以加载新的 ``config/bootstrap.php`` 文件。
 
 #. 更新 ``.gitignore``:
 
-.. code-block:: diff
+   .. code-block:: diff
 
-    # .gitignore
-    # ...
+       # .gitignore
+       # ...
 
-    ###> symfony/framework-bundle ###
-    - /.env
-    + /.env.local
-    + /.env.*.local
+       ###> symfony/framework-bundle ###
+       - /.env
+       + /.env.local
+       + /.env.local.php
+       + /.env.*.local
 
-    # ...
+       # ...
 
 #. 重命名 ``.env`` 为 ``.env.local`` 以及重命名 ``.env.dist`` 为 ``.env``:
 
-.. code-block:: terminal
+   .. code-block:: terminal
 
-    # Unix
-    $ mv .env .env.local
-    $ git mv .env.dist .env
+       # Unix
+       $ mv .env .env.local
+       $ git mv .env.dist .env
 
-    # Windows
-    $ mv .env .env.local
-    $ git mv .env.dist .env
+       # Windows
+       $ mv .env .env.local
+       $ git mv .env.dist .env
 
-    你还可以更新 `.env顶部的注释`_ 以反映新的更改。
+   你还可以更新 `.env顶部的注释`_ 以反映新的更改。
 
 #. 如果你正在使用PHPUnit，你还需要 `创建一个新的.env.test`_ 文件并更新你的
    `phpunit.xml.dist文件`_，以便加载 ``config/bootstrap.php`` 文件。
 
-.. _`config/bootstrap.php`: https://github.com/symfony/recipes/blob/master/symfony/framework-bundle/4.2/src/.bootstrap.php
+.. _`config/bootstrap.php`: https://github.com/symfony/recipes/blob/master/symfony/framework-bundle/4.2/config/bootstrap.php
 .. _`public/index.php`: https://github.com/symfony/recipes/blob/master/symfony/framework-bundle/4.2/public/index.php
-.. _`index.php diff`: https://github.com/symfony/recipes/compare/8a4e5555e30d5dff64275e2788a901f31a214e79...f54d6a468405d0d8d27b0e790dc09a01e337777a#diff-473fca613b5bda15d87731036cb31586
+.. _`index.php diff`: https://github.com/symfony/recipes/compare/8a4e5555e30d5dff64275e2788a901f31a214e79...86e2b6795c455f026e5ab0cba2aff2c7a18511f7#diff-7d73eabd1e5eb7d969ddf9a7ce94f954
 .. _`bin/console`: https://github.com/symfony/recipes/blob/master/symfony/console/3.3/bin/console
-.. _`bin/console diff`: https://github.com/symfony/recipes/compare/8a4e5555e30d5dff64275e2788a901f31a214e79...f54d6a468405d0d8d27b0e790dc09a01e337777a#diff-2af50efd729ff8e61dcbd936cf2b114b
 .. _`.env顶部的注释`: https://github.com/symfony/recipes/blob/master/symfony/flex/1.0/.env
 .. _`创建一个新的.env.test`: https://github.com/symfony/recipes/blob/master/symfony/phpunit-bridge/3.3/.env.test
 .. _`phpunit.xml.dist文件`: https://github.com/symfony/recipes/blob/master/symfony/phpunit-bridge/3.3/phpunit.xml.dist
+.. _`2019年1月对指令的进一步`: https://github.com/symfony/recipes/pull/501

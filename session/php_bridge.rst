@@ -27,7 +27,7 @@
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:framework="http://symfony.com/schema/dic/symfony"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <framework:config>
                 <framework:session storage-id="session.storage.php_bridge"
@@ -39,14 +39,14 @@
     .. code-block:: php
 
         // config/packages/framework.php
-        $container->loadFromExtension('framework', array(
-            'session' => array(
+        $container->loadFromExtension('framework', [
+            'session' => [
                 'storage_id' => 'session.storage.php_bridge',
                 'handler_id' => null,
-            ),
-        ));
+            ],
+        ]);
 
-否则，如果问题仅在于你无法避免该应用使用 ``session_start()``
+否则，如果问题在于你无法避免该应用使用 ``session_start()``
 来启动会话，你仍然可以通过指定保存处理器来使用Symfony的基于会话的保存处理器，如下例所示：
 
 .. configuration-block::
@@ -67,7 +67,7 @@
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:framework="http://symfony.com/schema/dic/symfony"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <framework:config>
                 <framework:session storage-id="session.storage.php_bridge"
@@ -79,12 +79,12 @@
     .. code-block:: php
 
         // config/packages/framework.php
-        $container->loadFromExtension('framework', array(
-            'session' => array(
+        $container->loadFromExtension('framework', [
+            'session' => [
                 'storage_id' => 'session.storage.php_bridge',
                 'handler_id' => 'session.storage.native_file',
-            ),
-        ));
+            ],
+        ]);
 
 .. note::
 

@@ -85,15 +85,15 @@ Symfony的自动装配被设计为可预测的：如果不清楚应该传递哪�
         <?xml version="1.0" encoding="UTF-8" ?>
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+            xsi:schemaLocation="http://symfony.com/schema/dic/services https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <services>
-                <defaults autowire="true" autoconfigure="true" public="false" />
+                <defaults autowire="true" autoconfigure="true" public="false"/>
                 <!-- ... -->
 
-                <service id="App\Service\TwitterClient" autowire="true" />
+                <service id="App\Service\TwitterClient" autowire="true"/>
 
-                <service id="App\Util\Rot13Transformer" autowire="true" />
+                <service id="App\Util\Rot13Transformer" autowire="true"/>
             </services>
         </container>
 
@@ -204,13 +204,13 @@ Symfony的自动装配被设计为可预测的：如果不清楚应该传递哪�
         <?xml version="1.0" encoding="UTF-8" ?>
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+            xsi:schemaLocation="http://symfony.com/schema/dic/services https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <services>
                 <!-- ... -->
 
-                <service id="app.rot13.transformer" class="App\Util\Rot13Transformer" autowire="true" />
-                <service id="App\Util\Rot13Transformer" alias="app.rot13.transformer" />
+                <service id="app.rot13.transformer" class="App\Util\Rot13Transformer" autowire="true"/>
+                <service id="App\Util\Rot13Transformer" alias="app.rot13.transformer"/>
             </services>
         </container>
 
@@ -239,7 +239,7 @@ Symfony的自动装配被设计为可预测的：如果不清楚应该传递哪�
 接口的使用
 -----------------------
 
-你可能还会发现自己的类型约束是抽象的（例如接口）而不是具体类，这样的话它可以轻松地将依赖替换为其他对象。
+你可能还会发现自己的类型约束是抽象的（例如接口）而不是具体类，这样的话它可以将依赖替换为其他对象。
 
 为了遵循此最佳做法，假设你决定创建一个 ``TransformerInterface``::
 
@@ -264,7 +264,7 @@ Symfony的自动装配被设计为可预测的：如果不清楚应该传递哪�
     {
         public function __construct(TransformerInterface $transformer)
         {
-             // ...
+            // ...
         }
 
         // ...
@@ -295,13 +295,13 @@ Symfony的自动装配被设计为可预测的：如果不清楚应该传递哪�
         <?xml version="1.0" encoding="UTF-8" ?>
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+            xsi:schemaLocation="http://symfony.com/schema/dic/services https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <services>
                 <!-- ... -->
-                <service id="App\Util\Rot13Transformer" />
+                <service id="App\Util\Rot13Transformer"/>
 
-                <service id="App\Util\TransformerInterface" alias="App\Util\Rot13Transformer" />
+                <service id="App\Util\TransformerInterface" alias="App\Util\Rot13Transformer"/>
             </services>
         </container>
 
@@ -320,7 +320,8 @@ Symfony的自动装配被设计为可预测的：如果不清楚应该传递哪�
 
 .. tip::
 
-    如果只有一个类实现了该接口，并且该类是同一命名空间的一部分，那么配置别名就不是必需的，Symfony将自动创建一个。
+    使用 `服务定义原型`_ 时，如果只发现一个实现一个接口的服务，
+    并且同时也发现该接口，则配置别名不是必需的，Symfony将自动创建一个。
 
 处理相同类型的多个实现
 ------------------------------------------------------
@@ -340,8 +341,34 @@ Symfony的自动装配被设计为可预测的：如果不清楚应该传递哪�
 如果将此类注册为服务，则现在有 *两个* 实现了 ``App\Util\TransformerInterface`` 类型的服务。
 自动装配子系统将无法决定使用哪一个服务。请记住，自动装配不是魔术，它只是查找id与类型约束匹配的服务。
 因此，你需要通过创建一个对应正确的服务ID的别名来选择一个默认服务（请参阅 :ref:`autowiring-interface-alias`）。
+此外，如果要在某些情况下使用一个实现，并在某些其他情况下使用另一个实现，则可以定义多个命名化的自动装配别名。
 
-如果你想 ``Rot13Transformer`` 成为用于自动装配的服务，请为该服务创建别名：
+例如，默认情况下，你可能希望在 ``TransformerInterface`` 接口被类型约束时默认使用
+``Rot13Transformer`` 实现，但在某些特定情况下使用 ``UppercaseTransformer`` 实现。
+为此，你可以从 ``TransformerInterface`` 接口创建一个普通别名到
+``Rot13Transformer``，然后从包含该接口的特殊字符串创建一个
+*命名化的自动装配别名*，后跟一个与你在执行注入时使用的变量名称相匹配的变量名称：
+
+    namespace App\Service;
+
+    use App\Util\TransformerInterface;
+
+    class MastodonClient
+    {
+        private $transformer;
+
+        public function __construct(TransformerInterface $shoutyTransformer)
+        {
+            $this->transformer = $shoutyTransformer;
+        }
+
+        public function toot($user, $key, $status)
+        {
+            $transformedStatus = $this->transformer->transform($status);
+
+            // ... 连接到Mastodon并发送转换后的状态
+        }
+    }
 
 .. configuration-block::
 
@@ -354,15 +381,20 @@ Symfony的自动装配被设计为可预测的：如果不清楚应该传递哪�
             App\Util\Rot13Transformer: ~
             App\Util\UppercaseTransformer: ~
 
-            # 当检测到 ``App\Util\TransformerInterface`` 类型约束时，
-            # 将注入 ``App\Util\Rot13Transformer`` 服务
+            # 当检测到 ``App\Util\TransformerInterface``
+            # 被类型约束到 ``$shoutyTransformer`` 参数时，
+            # 将注入 ``App\Util\UppercaseTransformer`` 服务。
+            App\Util\TransformerInterface $shoutyTransformer: '@App\Util\UppercaseTransformer'
+
+            # 如果用于注入的参数不匹配，但类型约束仍然匹配，
+            # 则将注入 ``App\Util\Rot13Transformer`` 服务。
             App\Util\TransformerInterface: '@App\Util\Rot13Transformer'
 
             App\Service\TwitterClient:
-                # Rot13Transformer 将会被传递到 $transformer 参数
+                # Rot13Transformer将作为 $transformer 参数传递
                 autowire: true
 
-                # 如果要选择非默认服务，请手动装配参数：
+                # 如果要选择非默认服务，并且不想使用命名化的自动装配别名，请手动装配：
                 #     $transformer: '@App\Util\UppercaseTransformer'
                 # ...
 
@@ -372,17 +404,20 @@ Symfony的自动装配被设计为可预测的：如果不清楚应该传递哪�
         <?xml version="1.0" encoding="UTF-8" ?>
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+            xsi:schemaLocation="http://symfony.com/schema/dic/services https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <services>
                 <!-- ... -->
-                <service id="App\Util\Rot13Transformer" />
-                <service id="App\Util\UppercaseTransformer" />
+                <service id="App\Util\Rot13Transformer"/>
+                <service id="App\Util\UppercaseTransformer"/>
 
-                <service id="App\Util\TransformerInterface" alias="App\Util\Rot13Transformer" />
+                <service id="App\Util\TransformerInterface" alias="App\Util\Rot13Transformer"/>
+                <service
+                    id="App\Util\TransformerInterface $shoutyTransformer"
+                    alias="App\Util\UppercaseTransformer"/>
 
                 <service id="App\Service\TwitterClient" autowire="true">
-                    <!-- <argument key="$transformer" type="service" id="App\Util\UppercaseTransformer" /> -->
+                    <!-- <argument key="$transformer" type="service" id="App\Util\UppercaseTransformer"/> -->
                 </service>
             </services>
         </container>
@@ -390,22 +425,33 @@ Symfony的自动装配被设计为可预测的：如果不清楚应该传递哪�
     .. code-block:: php
 
         // config/services.php
-        use App\Util\Rot13Transformer;
-        use App\Util\UppercaseTransformer;
-        use App\Util\TransformerInterface;
+        use App\Service\MastodonClient;
         use App\Service\TwitterClient;
+        use App\Util\Rot13Transformer;
+        use App\Util\TransformerInterface;
+        use App\Util\UppercaseTransformer;
 
         // ...
         $container->autowire(Rot13Transformer::class);
         $container->autowire(UppercaseTransformer::class);
         $container->setAlias(TransformerInterface::class, Rot13Transformer::class);
+        $container->setAlias(
+            TransformerInterface::class.' $shoutyTransformer',
+            UppercaseTransformer::class
+        );
         $container->autowire(TwitterClient::class)
             //->setArgument('$transformer', new Reference(UppercaseTransformer::class))
         ;
+        $container->autowire(MastodonClient::class);
 
 得益于 ``App\Util\TransformerInterface`` 别名，任何使用类型约束此接口的参数都将被传递
-``App\Util\Rot13Transformer`` 服务。
-但是，你也可以通过在 ``arguments`` 键下指定参数来手动装配 *其他* 服务。
+``App\Util\Rot13Transformer`` 服务。如果参数已命名为
+``$shoutyTransformer``，则将使用 ``App\Util\UppercaseTransformer`` 来替代。
+但是，你也可以通过在 ``arguments`` 键下指定参数来手动装配任何 *其他* 服务。
+
+.. versionadded:: 4.2
+
+    Symfony 4.2中引入了命名化自动装配别名。
 
 修复不能自动装配的参数
 ---------------------------------
@@ -469,3 +515,4 @@ Symfony的自动装配被设计为可预测的：如果不清楚应该传递哪�
 
 .. _Rapid Application Development: https://en.wikipedia.org/wiki/Rapid_application_development
 .. _ROT13: https://en.wikipedia.org/wiki/ROT13
+.. _服务定义原型: https://symfony.com/blog/new-in-symfony-3-3-psr-4-based-service-discovery

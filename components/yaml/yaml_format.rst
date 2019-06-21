@@ -179,7 +179,7 @@ Sequences use a dash followed by a space:
 
 The previous YAML file is equivalent to the following PHP code::
 
-    array('PHP', 'Perl', 'Python');
+    ['PHP', 'Perl', 'Python'];
 
 Mappings use a colon followed by a space (``:`` ) to mark each key/value pair:
 
@@ -191,7 +191,7 @@ Mappings use a colon followed by a space (``:`` ) to mark each key/value pair:
 
 which is equivalent to this PHP code::
 
-    array('PHP' => 5.2, 'MySQL' => 5.1, 'Apache' => '2.2.20');
+    ['PHP' => 5.2, 'MySQL' => 5.1, 'Apache' => '2.2.20'];
 
 .. note::
 
@@ -218,16 +218,16 @@ YAML uses indentation with one or more spaces to describe nested collections:
 
 The above YAML is equivalent to the following PHP code::
 
-    array(
-        'symfony 1.0' => array(
+    [
+        'symfony 1.0' => [
             'PHP'    => 5.0,
             'Propel' => 1.2,
-        ),
-        'symfony 1.2' => array(
+        ],
+        'symfony 1.2' => [
             'PHP'    => 5.2,
             'Propel' => 1.3,
-        ),
-    );
+        ],
+    ];
 
 There is one important thing you need to remember when using indentation in a
 YAML file: *Indentation must be done with one or more spaces, but never with
@@ -286,8 +286,8 @@ Comments can be added in YAML by prefixing them with a hash mark (``#``):
 
 .. note::
 
-    Comments are simply ignored by the YAML parser and do not need to be
-    indented according to the current level of nesting in a collection.
+    Comments are ignored by the YAML parser and do not need to be indented
+    according to the current level of nesting in a collection.
 
 Explicit Typing
 ---------------
@@ -321,7 +321,7 @@ The following YAML features are not supported by the Symfony Yaml component:
 * Complex mapping keys and complex values starting with ``?``;
 * Tagged values as keys;
 * The following tags and types: `!!set`, `!!omap`, `!!pairs`, `!!set`, `!!seq`,
-  `!!bool`, `!!int`, `!!merge`, `!!null`, `!!timestamp`, `!!value`, `!!yaml`;
+  `!!bool`, `!!int`, `!!merge`, `!!null`, `!!timestamp`, `!!value`, `!!yaml`;
 * Tags (``TAG`` directive; example: ``%TAG ! tag:example.com,2000:app/``)
   and tag references (example: ``!<tag:example.com,2000:app/foo>``);
 * Using sequence-like syntax for mapping elements (example: ``{foo, bar}``; use

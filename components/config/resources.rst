@@ -19,7 +19,7 @@ files. This can be done with the :class:`Symfony\\Component\\Config\\FileLocator
 
     use Symfony\Component\Config\FileLocator;
 
-    $configDirectories = array(__DIR__.'/config');
+    $configDirectories = [__DIR__.'/config'];
 
     $fileLocator = new FileLocator($configDirectories);
     $yamlUserFiles = $fileLocator->locate('users.yaml', null, false);
@@ -39,6 +39,8 @@ defined. Each loader should implement
 :class:`Symfony\\Component\\Config\\Loader\\LoaderInterface` or extend the
 abstract :class:`Symfony\\Component\\Config\\Loader\\FileLoader` class,
 which allows for recursively importing other resources::
+
+    namespace Acme\Config\Loader;
 
     use Symfony\Component\Config\Loader\FileLoader;
     use Symfony\Component\Yaml\Yaml;
@@ -81,10 +83,11 @@ When it is asked to load a resource, it delegates this question to the
 resolver has found a suitable loader, this loader will be asked to load
 the resource::
 
-    use Symfony\Component\Config\Loader\LoaderResolver;
+    use Acme\Config\Loader\YamlUserLoader;
     use Symfony\Component\Config\Loader\DelegatingLoader;
+    use Symfony\Component\Config\Loader\LoaderResolver;
 
-    $loaderResolver = new LoaderResolver(array(new YamlUserLoader($fileLocator)));
+    $loaderResolver = new LoaderResolver([new YamlUserLoader($fileLocator)]);
     $delegatingLoader = new DelegatingLoader($loaderResolver);
 
     // YamlUserLoader is used to load this resource because it supports

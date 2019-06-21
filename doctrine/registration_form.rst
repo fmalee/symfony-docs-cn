@@ -3,159 +3,106 @@
    single: Form; Simple Registration Form
    single: Security; Simple Registration Form
 
-如何实现简单的注册表单
+如何实现注册表单
 ===========================================
 
-创建注册表单与创建任何表单的工作方式相同。
-你配置表单以更新某个 ``User`` 模型对象（在此示例中为Doctrine实体），然后保存它。
+创建注册表单的基础知识与任何普通表单相同。毕竟，你正在使用它创建一个对象（用户）。
+但是，由于这与安全有关，因此还有一些其他方面的事项。这篇文章将解释这一切。
 
-首先，确保你已安装所有需要的依赖：
+开始之前
+----------------------
+
+要创建注册表单，请确保准备好以下3件事：
+
+**1) 安装MakerBundle**
+
+确保安装了MakerBundle：
 
 .. code-block:: terminal
 
-    $ composer require symfony/orm-pack symfony/form symfony/security-bundle symfony/validator
+    $ composer require --dev symfony/maker-bundle
 
-如果你还没有 ``User`` 实体和一个登录系统，请首先按照 :doc:`/security` 进行配置。
+如果你需要任何其他依赖项，MakerBundle将在你运行每个命令时告诉你。
 
-你的 ``User`` 实体可能至少具有以下字段：
+**2) 创建用户类**
 
-``username``
-    这将用于登录，除非你希望你的用户
-    :ref:`通过电子邮件登录 <registration-form-via-email>` （在这种情况下，此字段是不必要的）。
+如果你已经拥有一个
+:ref:`User类 <create-user-class>`，那太好了！如果没有，你可以通过运行命令生成一个：
 
-``email``
-    用户信息中比较重要的。你还可以允许用户 :ref:`通过电子邮件登录 <registration-form-via-email>`。
+.. code-block:: terminal
 
-``password``
-    加密的密码。
+    $ php bin/console make:user
 
-``plainPassword``
-    此字段 *不会* 保留:(请注意不在其上方添加 ``@ORM\Column`` ）。
-    它暂时存储注册表单中的文本密码。可以验证此字段，然后使用该字段填充 ``password`` 字段。
+有关详细信息，请参阅 :ref:`create-user-class`。
 
-添加一些验证后，你的类可能如下所示::
+**3) (可选) 创建安保认证器**
 
-    // src/Entity/User.php
-    namespace App\Entity;
+如果要在注册后自动对用户进行认证，请在生成注册表单之前创建安保认证器。有关详细信息，请参阅主安全页面上的
+:ref:`firewalls-authentication` 部分。
 
-    use Doctrine\ORM\Mapping as ORM;
-    use Symfony\Component\Validator\Constraints as Assert;
-    use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-    use Symfony\Component\Security\Core\User\UserInterface;
+添加注册系统
+------------------------------
 
-    /**
-     * @ORM\Entity
-     * @UniqueEntity(fields="email", message="Email already taken")
-     * @UniqueEntity(fields="username", message="Username already taken")
-     */
-    class User implements UserInterface
+最简单的方法是使用 ``make:registration-form`` 命令来构建注册表单：
+
+.. versionadded:: 1.11
+
+    ``make:registration-form`` 是在MakerBundle 1.11.0中引入的。
+
+.. code-block:: terminal
+
+    $ php bin/console make:registration-form
+
+这个命令需要知道几件事 - 比如你的 ``User``
+类和关于该类属性的信息。问题将根据你的设置而有所不同，因为命令会尽可能的进行预测。
+
+命令完成后，恭喜！你拥有了一个可供你自定义的功能性注册表系统。生成的文件将类似于你在下面看到的内容。
+
+RegistrationFormType
+~~~~~~~~~~~~~~~~~~~~
+
+注册表单的表单类将如下所示::
+
+    namespace App\Form;
+
+    use App\Entity\User;
+    use Symfony\Component\Form\AbstractType;
+    use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+    use Symfony\Component\Form\FormBuilderInterface;
+    use Symfony\Component\OptionsResolver\OptionsResolver;
+    use Symfony\Component\Validator\Constraints\Length;
+    use Symfony\Component\Validator\Constraints\NotBlank;
+
+    class RegistrationFormType extends AbstractType
     {
-        /**
-         * @ORM\Id
-         * @ORM\Column(type="integer")
-         * @ORM\GeneratedValue(strategy="AUTO")
-         */
-        private $id;
-
-        /**
-         * @ORM\Column(type="string", length=255, unique=true)
-         * @Assert\NotBlank
-         * @Assert\Email
-         */
-        private $email;
-
-        /**
-         * @ORM\Column(type="string", length=255, unique=true)
-         * @Assert\NotBlank
-         */
-        private $username;
-
-        /**
-         * @Assert\NotBlank
-         * @Assert\Length(max=4096)
-         */
-        private $plainPassword;
-
-        /**
-         * The below length depends on the "algorithm" you use for encoding
-         * the password, but this works well with bcrypt.
-         *
-         * @ORM\Column(type="string", length=64)
-         */
-        private $password;
-
-        /**
-         * @ORM\Column(type="array")
-         */
-        private $roles;
-
-        public function __construct()
+        public function buildForm(FormBuilderInterface $builder, array $options)
         {
-            $this->roles = array('ROLE_USER');
+            $builder
+                ->add('email')
+                ->add('plainPassword', PasswordType::class, [
+                    // 不是直接设置到对象上，而是在控制器中读取和编码
+                    'mapped' => false,
+                    'constraints' => [
+                        new NotBlank([
+                            'message' => 'Please enter a password',
+                        ]),
+                        new Length([
+                            'min' => 6,
+                            'minMessage' => 'Your password should be at least {{ limit }} characters',
+                            'max' => 4096,
+                        ]),
+                    ],
+                ])
+            ;
         }
 
-        // 其他属性和方法
-
-        public function getEmail()
+        public function configureOptions(OptionsResolver $resolver)
         {
-            return $this->email;
-        }
-
-        public function setEmail($email)
-        {
-            $this->email = $email;
-        }
-
-        public function getUsername()
-        {
-            return $this->username;
-        }
-
-        public function setUsername($username)
-        {
-            $this->username = $username;
-        }
-
-        public function getPlainPassword()
-        {
-            return $this->plainPassword;
-        }
-
-        public function setPlainPassword($password)
-        {
-            $this->plainPassword = $password;
-        }
-
-        public function getPassword()
-        {
-            return $this->password;
-        }
-
-        public function setPassword($password)
-        {
-            $this->password = $password;
-        }
-
-        public function getSalt()
-        {
-            // bcrypt和argon2i算法不需要单独的salt。
-            // 如果你选择不同的编码器，你*可能*需要一个真正的salt。
-            return null;
-        }
-
-        public function getRoles()
-        {
-            return $this->roles;
-        }
-
-        public function eraseCredentials()
-        {
+            $resolver->setDefaults([
+                'data_class' => User::class,
+            ]);
         }
     }
-
-:class:`Symfony\\Component\\Security\\Core\\User\\UserInterface`
-需要一些其他的方法，你的 ``security.yaml`` 文件也需要正确配置，以便与 ``User`` 实体一起工作。
-有关更完整的示例，请参阅 :doc:`安全指南 </security>`。
 
 .. _registration-password-max:
 
@@ -168,201 +115,79 @@
     在应用中的，你需要在用户提交明文密码的任何位置都添加此约束（例如，更改密码表单）。
     不需要关心这一点的唯一地方是你的登录表单，因为Symfony的安全组件为你处理此问题。
 
-.. _create-a-form-for-the-model:
+RegistrationController
+~~~~~~~~~~~~~~~~~~~~~~
 
-为实体创建表单
-----------------------------
+控制器会构建表单，并在提交时加密普通密码以及保存用户::
 
-接下来，为 ``User`` 实体创建表单类型::
-
-    // src/Form/UserType.php
-    namespace App\Form;
-
-    use App\Entity\User;
-    use Symfony\Component\Form\AbstractType;
-    use Symfony\Component\Form\FormBuilderInterface;
-    use Symfony\Component\OptionsResolver\OptionsResolver;
-    use Symfony\Component\Form\Extension\Core\Type\EmailType;
-    use Symfony\Component\Form\Extension\Core\Type\TextType;
-    use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
-    use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-
-    class UserType extends AbstractType
-    {
-        public function buildForm(FormBuilderInterface $builder, array $options)
-        {
-            $builder
-                ->add('email', EmailType::class)
-                ->add('username', TextType::class)
-                ->add('plainPassword', RepeatedType::class, array(
-                    'type' => PasswordType::class,
-                    'first_options'  => array('label' => 'Password'),
-                    'second_options' => array('label' => 'Repeat Password'),
-                ))
-            ;
-        }
-
-        public function configureOptions(OptionsResolver $resolver)
-        {
-            $resolver->setDefaults(array(
-                'data_class' => User::class,
-            ));
-        }
-    }
-
-只有三个字段：``email``、``username`` 和 ``plainPassword`` （重复确认输入的密码）。
-
-.. tip::
-
-    要了解有关Form组件的更多信息，请阅读 :doc:`/forms` 指南。
-
-处理表单提交
-----------------------------
-
-接下来，你需要一个控制器来处理表单渲染和提交。
-如果提交了表单，控制器将执行验证并将数据保存到数据库中::
-
-    // src/Controller/RegistrationController.php
     namespace App\Controller;
 
-    use App\Form\UserType;
     use App\Entity\User;
+    use App\Form\RegistrationFormType;
+    use App\Security\StubAuthenticator;
     use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
     use Symfony\Component\HttpFoundation\Request;
+    use Symfony\Component\HttpFoundation\Response;
     use Symfony\Component\Routing\Annotation\Route;
     use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+    use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
 
     class RegistrationController extends AbstractController
     {
         /**
-         * @Route("/register", name="user_registration")
+         * @Route("/register", name="app_register")
          */
-        public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder)
+        public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder): Response
         {
-            // 1) 生成表单
             $user = new User();
-            $form = $this->createForm(UserType::class, $user);
-
-            // 2) 处理提交 (仅在POST时触发)
+            $form = $this->createForm(RegistrationFormType::class, $user);
             $form->handleRequest($request);
+
             if ($form->isSubmitted() && $form->isValid()) {
+                // 加密文本密码
+                $user->setPassword(
+                    $passwordEncoder->encodePassword(
+                        $user,
+                        $form->get('plainPassword')->getData()
+                    )
+                );
 
-                // 3) 加密密码 (你也可以通过Doctrine监听器做此操作)
-                $password = $passwordEncoder->encodePassword($user, $user->getPlainPassword());
-                $user->setPassword($password);
-
-                // 4) 保存用户!
                 $entityManager = $this->getDoctrine()->getManager();
                 $entityManager->persist($user);
                 $entityManager->flush();
 
-                // ... 其他操作 - 比如给他们发送邮件等等
-                // 也可以该用户设置一个闪存消息
+                // 做你需要的任何其他事情，比如发送电子邮件
 
-                return $this->redirectToRoute('replace_with_some_route');
+                return $this->redirectToRoute('app_homepage');
             }
 
-            return $this->render(
-                'registration/register.html.twig',
-                array('form' => $form->createView())
-            );
+            return $this->render('registration/register.html.twig', [
+                'registrationForm' => $form->createView(),
+            ]);
         }
     }
 
-要在步骤3中定义用于编码密码的算法，请在安全配置中配置编码器：
+register.html.twig
+~~~~~~~~~~~~~~~~~~
 
-.. configuration-block::
-
-    .. code-block:: yaml
-
-        # config/packages/security.yaml
-        security:
-            encoders:
-                App\Entity\User: bcrypt
-
-    .. code-block:: xml
-
-        <!-- config/packages/security.xml -->
-        <?xml version="1.0" charset="UTF-8" ?>
-        <srv:container xmlns="http://symfony.com/schema/dic/security"
-            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xmlns:srv="http://symfony.com/schema/dic/services"
-            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
-
-            <config>
-                <encoder class="App\Entity\User">bcrypt</encoder>
-            </config>
-        </srv:container>
-
-    .. code-block:: php
-
-        // config/packages/security.php
-        use App\Entity\User;
-
-        $container->loadFromExtension('security', array(
-            'encoders' => array(
-                User::class => 'bcrypt',
-            ),
-        ));
-
-在这个例子中，使用推荐的 `bcrypt`_ 算法。如果有需要，请查看
-:ref:`用户密码编码 <security-encoding-user-password>` 章节。
-
-接下来，创建模板：
+用于渲染该表单的模板：
 
 .. code-block:: html+twig
 
-    {# templates/registration/register.html.twig #}
+    {% extends 'base.html.twig' %}
 
-    {{ form_start(form) }}
-        {{ form_row(form.username) }}
-        {{ form_row(form.email) }}
-        {{ form_row(form.plainPassword.first) }}
-        {{ form_row(form.plainPassword.second) }}
+    {% block title %}Register{% endblock %}
 
-        <button type="submit">Register!</button>
-    {{ form_end(form) }}
+    {% block body %}
+        <h1>Register</h1>
 
-有关更多详细信息，请参阅 :doc:`/form/form_customization`。
+        {{ form_start(registrationForm) }}
+            {{ form_row(registrationForm.email) }}
+            {{ form_row(registrationForm.plainPassword) }}
 
-更新数据库的模式
----------------------------
-
-如果你在本教程中更新了 ``User`` 实体，则必须使用以下命令更新数据库模式：
-
-.. code-block:: terminal
-
-    $ php bin/console doctrine:migrations:diff
-    $ php bin/console doctrine:migrations:migrate
-
-仅此而已！可以前往 ``/register`` 看看成果了！
-
-.. _registration-form-via-email:
-
-只有电子邮件（无用户名）的注册表单
---------------------------------------------------------
-
-如果你希望用户通过电子邮件而不是用户名登录，则可以将其从你的 ``User`` 实体中完全删除。
-然后，在 ``getUsername()`` 中返回 ``email`` 属性::
-
-    // src/Entity/User.php
-    // ...
-
-    class User implements UserInterface
-    {
-        // ...
-
-        public function getUsername()
-        {
-            return $this->email;
-        }
-
-        // ...
-    }
-
-接下来，更新 ``security.yaml`` 文件的 ``providers`` 部分，
-以便Symfony知道如何在登录时通过 ``email`` 属性加载用户。
-请参阅 :ref:`authenticating-someone-with-a-custom-entity-provider`。
+            <button class="btn">Register</button>
+        {{ form_end(registrationForm) }}
+    {% endblock %}
 
 添加“接受条款”复选框
 --------------------------------
@@ -376,22 +201,22 @@
 
     // src/Form/UserType.php
     // ...
-    use Symfony\Component\Validator\Constraints\IsTrue;
     use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
     use Symfony\Component\Form\Extension\Core\Type\EmailType;
+    use Symfony\Component\Validator\Constraints\IsTrue;
 
     class UserType extends AbstractType
     {
         public function buildForm(FormBuilderInterface $builder, array $options)
         {
             $builder
-                ->add('email', EmailType::class);
+                ->add('email', EmailType::class)
                 // ...
-                ->add('termsAccepted', CheckboxType::class, array(
+                ->add('termsAccepted', CheckboxType::class, [
                     'mapped' => false,
                     'constraints' => new IsTrue(),
-                ))
-            );
+                ])
+            ;
         }
     }
 
@@ -401,7 +226,7 @@
 成功后手动认证
 -------------------------------------
 
-如果你使用的是安保(Guard)认证，则可以在注册成功后 :ref:`自动进行认证 <guard-manual-auth>`。
+如果你使用的是安保(Guard)认证，则可以在注册成功后
+:ref:`自动进行认证 <guard-manual-auth>`。生成器可能已配置你的控制器以利用此功能。
 
 .. _`CVE-2013-5750`: https://symfony.com/blog/cve-2013-5750-security-issue-in-fosuserbundle-login-form
-.. _`bcrypt`: https://en.wikipedia.org/wiki/Bcrypt

@@ -5,22 +5,20 @@ This constraint ensures that a credit card number is valid for a given credit
 card company. It can be used to validate the number before trying to initiate
 a payment through a payment gateway.
 
-+----------------+--------------------------------------------------------------------------+
-| Applies to     | :ref:`property or method <validation-property-target>`                   |
-+----------------+--------------------------------------------------------------------------+
-| Options        | - `schemes`_                                                             |
-|                | - `message`_                                                             |
-|                | - `payload`_                                                             |
-+----------------+--------------------------------------------------------------------------+
-| Class          | :class:`Symfony\\Component\\Validator\\Constraints\\CardScheme`          |
-+----------------+--------------------------------------------------------------------------+
-| Validator      | :class:`Symfony\\Component\\Validator\\Constraints\\CardSchemeValidator` |
-+----------------+--------------------------------------------------------------------------+
+==========  ===================================================================
+Applies to  :ref:`property or method <validation-property-target>`
+Options     - `groups`_
+            - `message`_
+            - `payload`_
+            - `schemes`_
+Class       :class:`Symfony\\Component\\Validator\\Constraints\\CardScheme`
+Validator   :class:`Symfony\\Component\\Validator\\Constraints\\CardSchemeValidator`
+==========  ===================================================================
 
 Basic Usage
 -----------
 
-To use the ``CardScheme`` validator, simply apply it to a property or method
+To use the ``CardScheme`` validator, apply it to a property or method
 on an object that will contain a credit card number.
 
 .. configuration-block::
@@ -59,7 +57,7 @@ on an object that will contain a credit card number.
         <?xml version="1.0" encoding="UTF-8" ?>
         <constraint-mapping xmlns="http://symfony.com/schema/dic/constraint-mapping"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping http://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
+            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping https://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
 
             <class name="App\Entity\Transaction">
                 <property name="cardNumber">
@@ -78,21 +76,19 @@ on an object that will contain a credit card number.
         // src/Entity/Transaction.php
         namespace App\Entity;
 
-        use Symfony\Component\Validator\Mapping\ClassMetadata;
         use Symfony\Component\Validator\Constraints as Assert;
+        use Symfony\Component\Validator\Mapping\ClassMetadata;
 
         class Transaction
         {
-            protected $cardNumber;
-
             public static function loadValidatorMetadata(ClassMetadata $metadata)
             {
-                $metadata->addPropertyConstraint('cardNumber', new Assert\CardScheme(array(
-                    'schemes' => array(
+                $metadata->addPropertyConstraint('cardNumber', new Assert\CardScheme([
+                    'schemes' => [
                         'VISA',
-                    ),
+                    ],
                     'message' => 'Your credit card number is invalid.',
-                )));
+                ]));
             }
         }
 
@@ -100,6 +96,25 @@ on an object that will contain a credit card number.
 
 Available Options
 -----------------
+
+.. include:: /reference/constraints/_groups-option.rst.inc
+
+message
+~~~~~~~
+
+**type**: ``string`` **default**: ``Unsupported card type or invalid card number.``
+
+The message shown when the value does not pass the ``CardScheme`` check.
+
+You can use the following parameters in this message:
+
+===============  ==============================================================
+Parameter        Description
+===============  ==============================================================
+``{{ value }}``  The current (invalid) value
+===============  ==============================================================
+
+.. include:: /reference/constraints/_payload-option.rst.inc
 
 schemes
 ~~~~~~~
@@ -123,22 +138,5 @@ Valid values are:
 
 For more information about the used schemes, see
 `Wikipedia: Issuer identification number (IIN)`_.
-
-message
-~~~~~~~
-
-**type**: ``string`` **default**: ``Unsupported card type or invalid card number.``
-
-The message shown when the value does not pass the ``CardScheme`` check.
-
-You can use the following parameters in this message:
-
-+------------------+------------------------------------------------+
-| Parameter        | Description                                    |
-+==================+================================================+
-| ``{{ value }}``  | The current (invalid) value                    |
-+------------------+------------------------------------------------+
-
-.. include:: /reference/constraints/_payload-option.rst.inc
 
 .. _`Wikipedia: Issuer identification number (IIN)`: https://en.wikipedia.org/wiki/Bank_card_number#Issuer_identification_number_.28IIN.29

@@ -22,11 +22,11 @@
 
         protected function execute(InputInterface $input, OutputInterface $output)
         {
-            $output->writeln(array(
+            $output->writeln([
                 '<info>Lorem Ipsum Dolor Sit Amet</>',
                 '<info>==========================</>',
                 '',
-            ));
+            ]);
 
             // ...
         }
@@ -49,9 +49,9 @@
     namespace App\Command;
 
     use Symfony\Component\Console\Command\Command;
-    use Symfony\Component\Console\Style\SymfonyStyle;
     use Symfony\Component\Console\Input\InputInterface;
     use Symfony\Component\Console\Output\OutputInterface;
+    use Symfony\Component\Console\Style\SymfonyStyle;
 
     class GreetCommand extends Command
     {
@@ -104,31 +104,31 @@
         // ...
 
         // 在显示冗长的消息时可以考虑使用数组
-        $io->text(array(
+        $io->text([
             'Lorem ipsum dolor sit amet',
             'Consectetur adipiscing elit',
             'Aenean sit amet arcu vitae sem faucibus porta',
-        ));
+        ]);
 
 :method:`Symfony\\Component\\Console\\Style\\SymfonyStyle::listing`
     它显示一个作为数组传递的元素的无序列表::
 
-        $io->listing(array(
+        $io->listing([
             'Element #1 Lorem ipsum dolor sit amet',
             'Element #2 Lorem ipsum dolor sit amet',
             'Element #3 Lorem ipsum dolor sit amet',
-        ));
+        ]);
 
 :method:`Symfony\\Component\\Console\\Style\\SymfonyStyle::table`
     它将包含标题和行的给定数组显示为一个紧凑表格::
 
         $io->table(
-            array('Header 1', 'Header 2'),
-            array(
-                array('Cell 1-1', 'Cell 1-2'),
-                array('Cell 2-1', 'Cell 2-2'),
-                array('Cell 3-1', 'Cell 3-2'),
-            )
+            ['Header 1', 'Header 2'],
+            [
+                ['Cell 1-1', 'Cell 1-2'],
+                ['Cell 2-1', 'Cell 2-2'],
+                ['Cell 3-1', 'Cell 3-2'],
+            ]
         );
 
 :method:`Symfony\\Component\\Console\\Style\\SymfonyStyle::newLine`
@@ -153,11 +153,11 @@
         // ...
 
         // 在显示冗长的”备注”时可以考虑使用数组
-        $io->note(array(
+        $io->note([
             'Lorem ipsum dolor sit amet',
             'Consectetur adipiscing elit',
             'Aenean sit amet arcu vitae sem faucibus porta',
-        ));
+        ]);
 
 :method:`Symfony\\Component\\Console\\Style\\SymfonyStyle::caution`
     与 ``note()`` 辅助方法类似，但它的内容会更显眼地高亮显示。
@@ -169,11 +169,11 @@
         // ...
 
         // 在显示冗长的警告信息时可以考虑使用数组
-        $io->caution(array(
+        $io->caution([
             'Lorem ipsum dolor sit amet',
             'Consectetur adipiscing elit',
             'Aenean sit amet arcu vitae sem faucibus porta',
-        ));
+        ]);
 
 进度条方法
 ~~~~~~~~~~~~~~~~~~~~
@@ -209,7 +209,7 @@
 
         $io->ask('What is your name?');
 
-    你可以将默认值作为第二个参数传递，以便用户只需按 <Enter> 键即可选择该值::
+    你可以将默认值作为第二个参数传递，以便用户按 <Enter> 键即可选择该值::
 
         $io->ask('Where are you from?', 'United States');
 
@@ -229,7 +229,8 @@
 
         $io->askHidden('What is your password?');
 
-        // 验证给定回答
+    如果你需要验证给定值，请将一个回调验证器作为第二个参数传递::
+
         $io->askHidden('What is your password?', function ($password) {
             if (empty($password)) {
                 throw new \RuntimeException('Password cannot be empty.');
@@ -243,18 +244,18 @@
 
         $io->confirm('Restart the web server?');
 
-    你可以将默认值作为第二个参数传递，以便用户只需按 <Enter> 键即可选择该值::
+    你可以将默认值作为第二个参数传递，以便用户按 <Enter> 键即可选择该值::
 
         $io->confirm('Restart the web server?', true);
 
 :method:`Symfony\\Component\\Console\\Style\\SymfonyStyle::choice`
     它询问一个问题，其答案受限于给定的有效答案列表::
 
-        $io->choice('Select the queue to analyze', array('queue1', 'queue2', 'queue3'));
+        $io->choice('Select the queue to analyze', ['queue1', 'queue2', 'queue3']);
 
-    你可以将默认值作为第三个参数传递，以便用户只需按 <Enter> 键即可选择该值::
+    你可以将默认值作为第三个参数传递，以便用户按 <Enter> 键即可选择该值::
 
-        $io->choice('Select the queue to analyze', array('queue1', 'queue2', 'queue3'), 'queue1');
+        $io->choice('Select the queue to analyze', ['queue1', 'queue2', 'queue3'], 'queue1');
 
 结果方法
 ~~~~~~~~~~~~~~
@@ -269,10 +270,10 @@
         // ...
 
         // 在显示冗长的成功消息时可以考虑使用数组
-        $io->success(array(
+        $io->success([
             'Lorem ipsum dolor sit amet',
             'Consectetur adipiscing elit',
-        ));
+        ]);
 
 :method:`Symfony\\Component\\Console\\Style\\SymfonyStyle::warning`
     它显示给定的字符串或字符串数​​组，高亮显示为警告消息（带有红色背景和 ``[WARNING]`` 标签）。
@@ -284,10 +285,10 @@
         // ...
 
         // 在显示冗长的警告消息时可以考虑使用数组
-        $io->warning(array(
+        $io->warning([
             'Lorem ipsum dolor sit amet',
             'Consectetur adipiscing elit',
-        ));
+        ]);
 
 :method:`Symfony\\Component\\Console\\Style\\SymfonyStyle::error`
     它显示给定的字符串或字符串数​​组，高亮显示为错误消息（带有红色背景和 ``[ERROR]`` 标签）。
@@ -299,10 +300,10 @@
         // ...
 
         // 在显示冗长的错误消息时可以考虑使用数组
-        $io->error(array(
+        $io->error([
             'Lorem ipsum dolor sit amet',
             'Consectetur adipiscing elit',
-        ));
+        ]);
 
 定义自己的样式
 ------------------------
@@ -322,6 +323,7 @@
 然后，在命令中实例化此自定义类而不是默认的 ``SymfonyStyle`` 类。
 得益于 ``StyleInterface``，你不需要更改命令代码便可以更改其外观::
 
+    // src/Command/GreetCommand.php
     namespace App\Console;
 
     use App\Console\CustomStyle;
@@ -336,10 +338,11 @@
         protected function execute(InputInterface $input, OutputInterface $output)
         {
             // 之前
-            // $io = new SymfonyStyle($input, $output);
+            $io = new SymfonyStyle($input, $output);
 
             // 现在
             $io = new CustomStyle($input, $output);
+
             // ...
         }
     }

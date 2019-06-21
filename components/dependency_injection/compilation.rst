@@ -57,10 +57,10 @@ added but are processed when the container's ``compile()`` method is called.
 
 A very simple extension may just load configuration files into the container::
 
-    use Symfony\Component\DependencyInjection\ContainerBuilder;
-    use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
-    use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
     use Symfony\Component\Config\FileLocator;
+    use Symfony\Component\DependencyInjection\ContainerBuilder;
+    use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
+    use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 
     class AcmeDemoExtension implements ExtensionInterface
     {
@@ -113,8 +113,8 @@ If this file is loaded into the configuration then the values in it are
 only processed when the container is compiled at which point the Extensions
 are loaded::
 
-    use Symfony\Component\DependencyInjection\ContainerBuilder;
     use Symfony\Component\Config\FileLocator;
+    use Symfony\Component\DependencyInjection\ContainerBuilder;
     use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
     $containerBuilder = new ContainerBuilder();
@@ -146,12 +146,12 @@ that was loaded into the container. You are only loading a single config
 file in the above example but it will still be within an array. The array
 will look like this::
 
-    array(
-        array(
+    [
+        [
             'foo' => 'fooValue',
             'bar' => 'barValue',
-        ),
-    )
+        ],
+    ]
 
 Whilst you can manually manage merging the different files, it is much better
 to use :doc:`the Config component </components/config>` to
@@ -201,7 +201,7 @@ The XML version of the config would then look like this:
     <container xmlns="http://symfony.com/schema/dic/services"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns:acme_demo="http://www.example.com/symfony/schema/"
-        xsi:schemaLocation="http://www.example.com/symfony/schema/ http://www.example.com/symfony/schema/hello-1.0.xsd">
+        xsi:schemaLocation="http://www.example.com/symfony/schema/ https://www.example.com/symfony/schema/hello-1.0.xsd">
 
         <acme_demo:config>
             <acme_demo:foo>fooValue</acme_demo:foo>
@@ -325,7 +325,7 @@ compilation::
     {
         public function process(ContainerBuilder $container)
         {
-           // ... do something during the compilation
+            // ... do something during the compilation
         }
 
         // ...
@@ -379,7 +379,7 @@ class implementing the ``CompilerPassInterface``::
     {
         public function process(ContainerBuilder $container)
         {
-           // ... do something during the compilation
+            // ... do something during the compilation
         }
     }
 
@@ -486,7 +486,7 @@ dump it::
         $dumper = new PhpDumper($containerBuilder);
         file_put_contents(
             $file,
-            $dumper->dump(array('class' => 'MyCachedContainer'))
+            $dumper->dump(['class' => 'MyCachedContainer'])
         );
     }
 
@@ -519,7 +519,7 @@ application::
             $dumper = new PhpDumper($containerBuilder);
             file_put_contents(
                 $file,
-                $dumper->dump(array('class' => 'MyCachedContainer'))
+                $dumper->dump(['class' => 'MyCachedContainer'])
             );
         }
     }
@@ -552,7 +552,7 @@ for these resources and use them as metadata for the cache::
 
         $dumper = new PhpDumper($containerBuilder);
         $containerConfigCache->write(
-            $dumper->dump(array('class' => 'MyCachedContainer')),
+            $dumper->dump(['class' => 'MyCachedContainer']),
             $containerBuilder->getResources()
         );
     }

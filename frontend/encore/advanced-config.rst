@@ -1,10 +1,10 @@
 高级Webpack配置
 =======================
 
-Encore使用你的 ``webpack.config.js`` 文件来生成Webpack配置。
-Encore不支持添加所有Webpack的 `配置选项`_，因为你可以轻松添加很多自己的配置。
+总结一下，Encore使用你的 ``webpack.config.js`` 文件来生成Webpack配置。
+Encore不支持添加所有Webpack的 `配置选项`_，因为你可以添加很多自己的配置。
 
-例如，假设你需要设置Webpack的 `watchOptions`_ 设置。为此，请在从Encore获取配置后修改它：
+例如，假设你需要自动解析一个新扩展。为此，请在从Encore获取配置后修改配置：
 
 .. code-block:: javascript
 
@@ -12,15 +12,13 @@ Encore不支持添加所有Webpack的 `配置选项`_，因为你可以轻松添
 
     var Encore = require('@symfony/webpack-encore');
 
-    // ... all Encore config here
+    // ... 所有的Encore配置
 
     // 获取配置，然后修改它!
     var config = Encore.getWebpackConfig();
-    config.watchOptions = { poll: true, ignored: /node_modules/ };
 
-    // 其他示例: 添加一个别名或扩展
-    // config.resolve.alias.local = path.resolve(__dirname, './resources/src');
-    // config.resolve.extensions.push('json');
+    // 添加一个扩展
+    config.resolve.extensions.push('json');
 
     // 导出最终配置
     module.exports = config;
@@ -32,11 +30,25 @@ Encore不支持添加所有Webpack的 `配置选项`_，因为你可以轻松添
     // webpack.config.js
     // ...
 
-    // GOOD - this modifies the config.resolve.extensions array
+    // 最佳 - 这会修改 config.resolve.extensions 数组
     config.resolve.extensions.push('json');
 
-    // BAD - this replaces any extensions added by Encore
+    // 糟糕 - 它取代了Encore添加的任何扩展
     // config.resolve.extensions = ['json'];
+
+配置监视选项和轮询
+----------------------------------------
+
+Encore提供了 ``configureWatchOptions()`` 方法来配置在运行
+``encore dev --watch`` 或 ``encore dev-server`` 时的 `监视选项`_：
+
+.. code-block:: javascript
+
+    Encore.configureWatchOptions(function(watchOptions) {
+        // 启用轮询并每250ms检查一次更改
+        // 在虚拟机中运行Encore时，轮询很有用
+        watchOptions.poll = 250;
+    });
 
 定义多个Webpack配置
 ----------------------------------------
@@ -46,10 +58,10 @@ Webpack Encore包含一个 ``reset()`` 对象，允许重置当前配置的状�
 
 .. code-block:: javascript
 
-    // define the first configuration
+    // 定义第一个配置
     Encore
-        .setOutputPath('public/build/')
-        .setPublicPath('/build')
+        .setOutputPath('public/build/first_build/')
+        .setPublicPath('/build/first_build')
         .addEntry('app', './assets/js/app.js')
         .addStyleEntry('global', './assets/css/global.scss')
         .enableSassLoader()
@@ -57,32 +69,32 @@ Webpack Encore包含一个 ``reset()`` 对象，允许重置当前配置的状�
         .enableSourceMaps(!Encore.isProduction())
     ;
 
-    // build the first configuration
+    // 构建第一个配置
     const firstConfig = Encore.getWebpackConfig();
 
-    // Set a unique name for the config (needed later!)
+    // 为配置设置一个唯一的名称（稍后需要！）
     firstConfig.name = 'firstConfig';
 
-    // reset Encore to build the second config
+    // 重置Encore以构建第二个配置
     Encore.reset();
 
-    // define the second configuration
+    // 定义第二个配置
     Encore
-        .setOutputPath('public/build/')
-        .setPublicPath('/build')
+        .setOutputPath('public/build/second_build/')
+        .setPublicPath('/build/second_build')
         .addEntry('mobile', './assets/js/mobile.js')
         .addStyleEntry('mobile', './assets/css/mobile.less')
         .enableLessLoader()
         .enableSourceMaps(!Encore.isProduction())
     ;
 
-    // build the second configuration
+    // 构建第二个配置
     const secondConfig = Encore.getWebpackConfig();
 
-    // Set a unique name for the config (needed later!)
+    // 为配置设置一个唯一的名称（稍后需要！）
     secondConfig.name = 'secondConfig';
 
-    // export the final configuration as an array of multiple configurations
+    // 将最终配置导出为一个多个配置的数组
     module.exports = [firstConfig, secondConfig];
 
 运行Encore时，两个配置将并行生成。如果你更喜欢单独生成配置，请传递 ``--config-name`` 选项：
@@ -90,6 +102,29 @@ Webpack Encore包含一个 ``reset()`` 对象，允许重置当前配置的状�
 .. code-block:: terminal
 
     $ yarn encore dev --config-name firstConfig
+
+接下来，定义每个构建的输出目录：
+
+.. code-block:: yaml
+
+    # config/packages/webpack_encore.yaml
+    webpack_encore:
+        output_path: '%kernel.project_dir%/public/default_build'
+        builds:
+            firstConfig: '%kernel.project_dir%/public/first_build'
+            secondConfig: '%kernel.project_dir%/public/second_build'
+
+最后，使用 ``encore_entry_*_tags()`` 函数的第三个可选参数来指定要使用的构建：
+
+.. code-block:: twig
+
+    {# 使用位于 ./public/first_build 中的 entrypoints.json 文件 #}
+    {{ encore_entry_script_tags('app', null, 'firstConfig') }}
+    {{ encore_entry_link_tags('global', null, 'firstConfig') }}
+
+    {# 使用位于 ./public/second_build 中的 entrypoints.json文件 #}
+    {{ encore_entry_script_tags('mobile', null, 'secondConfig') }}
+    {{ encore_entry_link_tags('mobile', null, 'secondConfig') }}
 
 不使用命令行界面生成Webpack配置对象
 ----------------------------------------------------------------------------------
@@ -130,7 +165,48 @@ Webpack Encore包含一个 ``reset()`` 对象，允许重置当前配置的状�
         keepPublicPath: true,
     });
 
+对加载器规则进行完全控制
+----------------------------------------
+
+``configureLoaderRule()`` 方法提供了一种配置Webpack加载器规则（``module.rules``，请参阅
+`配置 <https://webpack.js.org/concepts/loaders/#configuration>`_）的简洁方法。
+
+这是一种低级方法。你的所有修改将在加载器规则推送到Webpack之前被应用。
+这意味着你可以覆盖Encore提供的默认配置，这可能会破坏一些东西。使用时要小心。
+
+一种用途可能是配置 ``eslint-loader`` 来优化（lint）Vue文件。以下代码是等效的：
+
+.. code-block:: javascript
+
+    // 手动
+    const webpackConfig = Encore.getWebpackConfig();
+
+    const eslintLoader = webpackConfig.module.rules.find(rule => rule.loader === 'eslint-loader');
+    eslintLoader.test = /\.(jsx?|vue)$/;
+
+    return webpackConfig;
+
+    // 使用 Encore.configureLoaderRule()
+    Encore.configureLoaderRule('eslint', loaderRule => {
+        loaderRule.test = /\.(jsx?|vue)$/
+    });
+
+    return Encore.getWebpackConfig();
+
+以下加载器可以用 ``configureLoaderRule()`` 进行配置：
+  - ``javascript`` (alias ``js``)
+  - ``css``
+  - ``images``
+  - ``fonts``
+  - ``sass`` (alias ``scss``)
+  - ``less``
+  - ``stylus``
+  - ``vue``
+  - ``eslint``
+  - ``typescript`` (alias ``ts``)
+  - ``handlebars``
+
 .. _`配置选项`: https://webpack.js.org/configuration/
-.. _`watchOptions`: https://webpack.js.org/configuration/watch/#watchoptions
 .. _`配置数组`: https://github.com/webpack/docs/wiki/configuration#multiple-configurations
 .. _`Karma`: https://karma-runner.github.io
+.. _`监视选项`: https://webpack.js.org/configuration/watch/#watchoptions

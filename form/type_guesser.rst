@@ -76,12 +76,12 @@ Form组件可以使用类型猜测器猜测表单字段的类型和一些选项�
 
     namespace App\Form\TypeGuesser;
 
-    use Symfony\Component\Form\Guess\Guess;
-    use Symfony\Component\Form\Guess\TypeGuess;
-    use Symfony\Component\Form\Extension\Core\Type\TextType;
+    use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
     use Symfony\Component\Form\Extension\Core\Type\IntegerType;
     use Symfony\Component\Form\Extension\Core\Type\NumberType;
-    use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+    use Symfony\Component\Form\Extension\Core\Type\TextType;
+    use Symfony\Component\Form\Guess\Guess;
+    use Symfony\Component\Form\Guess\TypeGuess;
 
     class PHPDocTypeGuesser implements FormTypeGuesserInterface
     {
@@ -98,25 +98,25 @@ Form组件可以使用类型猜测器猜测表单字段的类型和一些选项�
                 case 'string':
                     // 类型是文本时，有很高的可信度
                     // 应用 @var string
-                    return new TypeGuess(TextType::class, array(), Guess::HIGH_CONFIDENCE);
+                    return new TypeGuess(TextType::class, [], Guess::HIGH_CONFIDENCE);
 
                 case 'int':
                 case 'integer':
                     // 整数也可以是一个实体的id或一个复选框（0或1）
-                    return new TypeGuess(IntegerType::class, array(), Guess::MEDIUM_CONFIDENCE);
+                    return new TypeGuess(IntegerType::class, [], Guess::MEDIUM_CONFIDENCE);
 
                 case 'float':
                 case 'double':
                 case 'real':
-                    return new TypeGuess(NumberType::class, array(), Guess::MEDIUM_CONFIDENCE);
+                    return new TypeGuess(NumberType::class, [], Guess::MEDIUM_CONFIDENCE);
 
                 case 'boolean':
                 case 'bool':
-                    return new TypeGuess(CheckboxType::class, array(), Guess::HIGH_CONFIDENCE);
+                    return new TypeGuess(CheckboxType::class, [], Guess::HIGH_CONFIDENCE);
 
                 default:
                     // 如果此处是正确类型，则赋予非常低的可信度
-                    return new TypeGuess(TextType::class, array(), Guess::LOW_CONFIDENCE);
+                    return new TypeGuess(TextType::class, [], Guess::LOW_CONFIDENCE);
             }
         }
 
@@ -126,7 +126,7 @@ Form组件可以使用类型猜测器猜测表单字段的类型和一些选项�
             $phpdoc = $reflectionProperty->getDocComment();
 
             // 将 $phpdoc 解析为一个数组:
-            // array('var' => 'string', 'since' => '1.0')
+            // ['var' => 'string', 'since' => '1.0']
             $phpdocTags = ...;
 
             return $phpdocTags;
@@ -184,7 +184,7 @@ Symfony已经知道并正在使用你的表单类型猜测器。
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <services>
                 <service id="App\Form\TypeGuesser\PHPDocTypeGuesser">
@@ -209,8 +209,8 @@ Symfony已经知道并正在使用你的表单类型猜测器。
     :method:`Symfony\\Component\\Form\\FormFactoryBuilder::addTypeGuessers`
     来注册新的类型猜测器::
 
-        use Symfony\Component\Form\Forms;
         use Acme\Form\PHPDocTypeGuesser;
+        use Symfony\Component\Form\Forms;
 
         $formFactory = Forms::createFormFactoryBuilder()
             // ...
@@ -218,3 +218,11 @@ Symfony已经知道并正在使用你的表单类型猜测器。
             ->getFormFactory();
 
         // ...
+
+.. tip::
+
+    运行以下命令以验证表单类型猜测器是否已在应用中成功注册：
+
+    .. code-block:: terminal
+
+        $ php bin/console debug:form

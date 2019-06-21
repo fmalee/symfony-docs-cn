@@ -4,7 +4,7 @@
 在Symfony应用中，你可能会发现需要将一些动态数据（例如用户信息）从Twig传递到脚本代码。
 传递动态配置的一个好方法是将信息存储在 ``data`` 属性中，稍后在脚本中读取它们。例如：
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <div class="js-user-rating" data-is-authenticated="{{ app.user ? 'true' : 'false' }}">
         <!-- ... -->
@@ -32,7 +32,7 @@
 在Twig中，使用 ``html_attr`` 转义策略以避免弄乱HTML属性。
 例如，如果你的 ``User`` 对象有一些 ``getProfileData()`` 方法返回一个数组，你可以执行以下操作：
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <div data-user-profile="{{ app.user ? app.user.profileData|json_encode|e('html_attr') }}">
         <!-- ... -->

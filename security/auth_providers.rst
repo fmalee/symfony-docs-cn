@@ -54,13 +54,13 @@ HTTP基本认证使用浏览器中的对话框来询问凭据（用户名和密�
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:srv="http://symfony.com/schema/dic/services"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <config>
                 <!-- ... -->
 
                 <firewall name="main">
-                    <http-basic realm="Secured Area" />
+                    <http-basic realm="Secured Area"/>
                 </firewall>
             </config>
         </srv:container>
@@ -68,17 +68,17 @@ HTTP基本认证使用浏览器中的对话框来询问凭据（用户名和密�
     .. code-block:: php
 
         // config/packages/security.php
-        $container->loadFromExtension('security', array(
+        $container->loadFromExtension('security', [
             // ...
 
-            'firewalls' => array(
-                'main' => array(
-                    'http_basic' => array(
+            'firewalls' => [
+                'main' => [
+                    'http_basic' => [
                         'realm' => 'Secured Area',
-                    ),
-                ),
-            ),
-        ));
+                    ],
+                ],
+            ],
+        ]);
 
 仅此而已！Symfony现在将监听任何HTTP基本认证数据。
 它将使用你配置的 :doc:`用户提供器 </security/user_provider>` 加载用户信息。
@@ -118,14 +118,14 @@ X.509客户端证书认证
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:srv="http://symfony.com/schema/dic/services"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <config>
                 <!-- ... -->
 
                 <firewall name="main">
                     <!-- ... -->
-                    <x509 provider="your_user_provider" />
+                    <x509 provider="your_user_provider"/>
                 </firewall>
             </config>
         </srv:container>
@@ -133,18 +133,18 @@ X.509客户端证书认证
     .. code-block:: php
 
         // config/packages/security.php
-        $container->loadFromExtension('security', array(
+        $container->loadFromExtension('security', [
             // ...
 
-            'firewalls' => array(
-                'main' => array(
+            'firewalls' => [
+                'main' => [
                     // ...
-                    'x509' => array(
+                    'x509' => [
                         'provider' => 'your_user_provider',
-                    ),
-                ),
-            ),
-        ));
+                    ],
+                ],
+            ],
+        ]);
 
 默认情况下，防火墙将 ``SSL_CLIENT_S_DN_Email`` 变量提供给用户提供器，并在
 :class:`Symfony\\Component\\Security\\Core\\Authentication\\Token\\PreAuthenticatedToken`
@@ -200,15 +200,15 @@ X.509客户端证书认证
     .. code-block:: php
 
         // config/packages/security.php
-        $container->loadFromExtension('security', array(
-            'firewalls' => array(
-                'main' => array(
-                    'remote_user' => array(
+        $container->loadFromExtension('security', [
+            'firewalls' => [
+                'main' => [
+                    'remote_user' => [
                         'provider' => 'your_user_provider',
-                    ),
-                ),
-            ),
-        ));
+                    ],
+                ],
+            ],
+        ]);
 
 然后，防火墙将为你的用户提供器提供 ``REMOTE_USER`` 环境变量。
 你可以通过在 ``remote_user`` 防火墙配置中设置 ``user`` 键来更改使用的变量名称。

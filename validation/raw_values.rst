@@ -5,7 +5,7 @@
 =====================================================
 
 通常，你将验证整个对象。但有时，你只想验证一个简单的值 - 比如验证字符串是否是有效的电子邮件地址。
-为此，你可以直接实例化验证器。从控制器内部看起来就像这样::
+从控制器内部看起来就像这样::
 
     // ...
     use Symfony\Component\Validator\Constraints as Assert;
@@ -42,25 +42,61 @@
 
 使用 ``Collection`` 约束可以验证一个数组::
 
-    use Symfony\Component\Validator\Validation;
     use Symfony\Component\Validator\Constraints as Assert;
+    use Symfony\Component\Validator\Validation;
 
     $validator = Validation::createValidator();
 
-    $constraint = new Assert\Collection(array(
-        // 该键对应于输入数组中的键
-        'name' => new Assert\Collection(array(
-          'first_name' => new Assert\Length(array('min' => 101)),
-          'last_name' => new Assert\Length(array('min' => 1)),
-        )),
-        'email' => new Assert\Email(),
-        'simple' => new Assert\Length(array('min' => 102)),
-        'gender' => new Assert\Choice(array(3, 4)),
-        'file' => new Assert\File(),
-        'password' => new Assert\Length(array('min' => 60)),
-    ));
+    $input = [
+        'name' => [
+            'first_name' => 'Fabien',
+            'last_name' => 'Potencier',
+        ],
+        'email' => 'test@email.tld',
+        'simple' => 'hello',
+        'eye_color' => 3,
+        'file' => null,
+        'password' => 'test',
+        'tags' => [
+            [
+                'slug' => 'symfony_doc',
+                'label' => 'symfony doc',
+            ],
+        ],
+    ];
 
-    $violations = $validator->validate($input, $constraint);
+    $groups = new Assert\GroupSequence(['Default', 'custom']);
+
+    $constraint = new Assert\Collection([
+        // 该键对应于输入数组中的键
+        'name' => new Assert\Collection([
+            'first_name' => new Assert\Length(['min' => 101]),
+            'last_name' => new Assert\Length(['min' => 1]),
+        ]),
+        'email' => new Assert\Email(),
+        'simple' => new Assert\Length(['min' => 102]),
+        'eye_color' => new Assert\Choice([3, 4]),
+        'file' => new Assert\File(),
+        'password' => new Assert\Length(['min' => 60]),
+        'tags' => new Assert\Optional([
+            new Assert\Type('array'),
+            new Assert\Count(['min' => 1]),
+            new Assert\All([
+                new Assert\Collection([
+                    'slug' => [
+                        new Assert\NotBlank(),
+                        new Assert\Type(['type' => 'string'])
+                    ],
+                    'label' => [
+                        new Assert\NotBlank(),
+                    ],
+                ]),
+                new CustomUniqueTagValidator(['groups' => 'custom']),
+            ]),
+        ]),
+    ]);
+
+    $violations = $validator->validate($input, $constraint, $groups);
 
 ``validate()`` 方法返回一个
 :class:`Symfony\\Component\\Validator\\ConstraintViolationList`

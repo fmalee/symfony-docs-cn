@@ -33,8 +33,6 @@ Installation
 
     $ composer require symfony/yaml
 
-Alternatively, you can clone the `<https://github.com/symfony/yaml>`_ repository.
-
 .. include:: /components/require_autoload.rst.inc
 
 Why?
@@ -102,7 +100,7 @@ string and converts it to a PHP array::
     use Symfony\Component\Yaml\Yaml;
 
     $value = Yaml::parse("foo: bar");
-    // $value = array('foo' => 'bar')
+    // $value = ['foo' => 'bar']
 
 If an error occurs during parsing, the parser throws a
 :class:`Symfony\\Component\\Yaml\\Exception\\ParseException` exception
@@ -139,10 +137,10 @@ array to its YAML representation::
 
     use Symfony\Component\Yaml\Yaml;
 
-    $array = array(
+    $array = [
         'foo' => 'bar',
-        'bar' => array('foo' => 'bar', 'bar' => 'baz'),
-    );
+        'bar' => ['foo' => 'bar', 'bar' => 'baz'],
+    ];
 
     $yaml = Yaml::dump($array);
 
@@ -261,7 +259,7 @@ You can dump objects as Yaml maps by using the ``DUMP_OBJECT_AS_MAP`` flag::
     $object = new \stdClass();
     $object->foo = 'bar';
 
-    $dumped = Yaml::dump(array('data' => $object), 2, 4, Yaml::DUMP_OBJECT_AS_MAP);
+    $dumped = Yaml::dump(['data' => $object], 2, 4, Yaml::DUMP_OBJECT_AS_MAP);
     // $dumped = "data:\n    foo: bar"
 
 And parse them by using the ``PARSE_OBJECT_FOR_MAP`` flag::
@@ -314,14 +312,14 @@ Dumping Multi-line Literal Blocks
 In YAML multiple lines can be represented as literal blocks, by default the
 dumper will encode multiple lines as an inline string::
 
-    $string = array("string" => "Multiple\nLine\nString");
+    $string = ["string" => "Multiple\nLine\nString"];
     $yaml = Yaml::dump($string);
     echo $yaml; // string: "Multiple\nLine\nString"
 
 You can make it use a literal block with the ``DUMP_MULTI_LINE_LITERAL_BLOCK``
 flag::
 
-    $string = array("string" => "Multiple\nLine\nString");
+    $string = ["string" => "Multiple\nLine\nString"];
     $yaml = Yaml::dump($string, 2, 4, Yaml::DUMP_MULTI_LINE_LITERAL_BLOCK);
     echo $yaml;
     //  string: |
@@ -338,7 +336,7 @@ syntax to parse them as proper PHP constants::
 
     $yaml = '{ foo: PHP_INT_SIZE, bar: !php/const PHP_INT_SIZE }';
     $parameters = Yaml::parse($yaml, Yaml::PARSE_CONSTANT);
-    // $parameters = array('foo' => 'PHP_INT_SIZE', 'bar' => 8);
+    // $parameters = ['foo' => 'PHP_INT_SIZE', 'bar' => 8];
 
 Parsing and Dumping of Binary Data
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -347,7 +345,7 @@ You can dump binary data by using the ``DUMP_BASE64_BINARY_DATA`` flag::
 
     $imageContents = file_get_contents(__DIR__.'/images/logo.png');
 
-    $dumped = Yaml::dump(array('logo' => $imageContents), 2, 4, Yaml::DUMP_BASE64_BINARY_DATA);
+    $dumped = Yaml::dump(['logo' => $imageContents], 2, 4, Yaml::DUMP_BASE64_BINARY_DATA);
     // logo: !!binary iVBORw0KGgoAAAANSUhEUgAAA6oAAADqCAY...
 
 Binary data is automatically parsed if they include the ``!!binary`` YAML tag
@@ -366,16 +364,16 @@ In addition to the built-in support of tags like ``!php/const`` and
 
     $data = "!my_tag { foo: bar }";
     $parsed = Yaml::parse($data, Yaml::PARSE_CUSTOM_TAGS);
-    // $parsed = Symfony\Component\Yaml\Tag\TaggedValue('my_tag', array('foo' => 'bar'));
+    // $parsed = Symfony\Component\Yaml\Tag\TaggedValue('my_tag', ['foo' => 'bar']);
     $tagName = $parsed->getTag();    // $tagName = 'my_tag'
-    $tagValue = $parsed->getValue(); // $tagValue = array('foo' => 'bar')
+    $tagValue = $parsed->getValue(); // $tagValue = ['foo' => 'bar']
 
 If the contents to dump contain :class:`Symfony\\Component\\Yaml\\Tag\\TaggedValue`
 objects, they are automatically transformed into YAML tags::
 
     use Symfony\Component\Yaml\Tag\TaggedValue;
 
-    $data = new TaggedValue('my_tag', array('foo' => 'bar'));
+    $data = new TaggedValue('my_tag', ['foo' => 'bar']);
     $dumped = Yaml::dump($data);
     // $dumped = '!my_tag { foo: bar }'
 
@@ -394,7 +392,6 @@ First, install the Console component:
 Create a console application with ``lint:yaml`` as its only command::
 
     // lint.php
-
     use Symfony\Component\Console\Application;
     use Symfony\Component\Yaml\Command\LintCommand;
 
@@ -410,21 +407,18 @@ Then, execute the script for validating contents:
 
     # validates a single file
     $ php lint.php path/to/file.yaml
-    
+
     # or validates multiple files
-    $ php lint.php path/to/file1.yaml path/to/file2.yaml 
+    $ php lint.php path/to/file1.yaml path/to/file2.yaml
 
     # or all the files in a directory
     $ php lint.php path/to/directory
-    
+
     # or all the files in multiple directories
     $ php lint.php path/to/directory1 path/to/directory2
 
     # or contents passed to STDIN
     $ cat path/to/file.yaml | php lint.php
-
-.. versionadded:: 4.2
-    The feature to lint multiple files and directories was introduced in Symfony 4.2.
 
 The result is written to STDOUT and uses a plain text format by default.
 Add the ``--format`` option to get the output in JSON format:

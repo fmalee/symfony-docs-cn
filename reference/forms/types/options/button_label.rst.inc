@@ -8,10 +8,10 @@ be directly set inside the template:
 
 .. configuration-block::
 
-    .. code-block:: html+twig
+    .. code-block:: twig
 
         {{ form_widget(form.save, { 'label': 'Click me' }) }}
 
     .. code-block:: html+php
 
-        <?= $view['form']->widget($form['save'], array('label' => 'Click me')) ?>
+        <?= $view['form']->widget($form['save'], ['label' => 'Click me']) ?>

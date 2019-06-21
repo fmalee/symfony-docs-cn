@@ -51,6 +51,8 @@ manually, but then you should just use the ``ChoiceType`` directly.
 | Class       | :class:`Symfony\\Component\\Form\\Extension\\Core\\Type\\TimezoneType` |
 +-------------+------------------------------------------------------------------------+
 
+.. include:: /reference/forms/types/options/_debug_form.rst.inc
+
 Field Options
 -------------
 
@@ -70,7 +72,8 @@ regions
 
 **type**: ``int`` **default**: ``\DateTimeZone::ALL``
 
-.. versionadded:: 4.2
+.. deprecated:: 4.2
+
     This option was deprecated in Symfony 4.2.
 
 The available regions in the timezone choice list. For example: ``DateTimeZone::AMERICA | DateTimeZone::EUROPE``
@@ -119,7 +122,7 @@ The actual default value of this option depends on other field options:
 
 * If ``multiple`` is ``false`` and ``expanded`` is ``false``, then ``''``
   (empty string);
-* Otherwise ``array()`` (empty array).
+* Otherwise ``[]`` (empty array).
 
 .. include:: /reference/forms/types/options/empty_data.rst.inc
     :start-after: DEFAULT_PLACEHOLDER

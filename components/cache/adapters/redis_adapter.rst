@@ -7,7 +7,14 @@
 Redis缓存适配器
 ===================
 
+.. seealso::
+
+    本文介绍在任何PHP应用中将Cache用作独立组件时该如何配置Redis适配器。
+    如果你在Symfony应用中使用它，请阅读
+    :ref:`Symfony缓存配置 <cache-configuration-with-frameworkbundle>` 一文。
+
 此适配器使用一个（或多个）Redis服务器实例将值存储在内存中。
+
 与 :ref:`APCu适配器 <apcu-adapter>` 不同，但与 :ref:`Memcached适配器 <memcached-adapter>`
 类似，它可以不限于当前服务器的共享内存;你可以独立于PHP环境来存储内容。
 还可以使用服务器集群来提供冗余和故障转移。
@@ -49,7 +56,7 @@ Redis缓存适配器
         'redis://localhost'
     );
 
-DSN可以指定IP/主机（和可选端口）或一个套接字路径、用户和密码以及数据库索引。
+DSN可以指定IP/主机（和可选端口）或一个套接字路径、密码以及数据库索引。
 
 .. note::
 
@@ -57,23 +64,37 @@ DSN可以指定IP/主机（和可选端口）或一个套接字路径、用户�
 
     .. code-block:: text
 
-        redis://[user:pass@][ip|host|socket[:port]][/db-index]
+        redis://[pass@][ip|host|socket[:port]][/db-index]
 
 以下是展示可用值的组合的有效DSN的常见示例::
 
     use Symfony\Component\Cache\Adapter\RedisAdapter;
 
-    // host "my.server.com" and port "6379"
+    // "my.server.com" 主机和 "6379" 端口
     RedisAdapter::createConnection('redis://my.server.com:6379');
 
-    // host "my.server.com" and port "6379" and database index "20"
+    // "my.server.com" 主机、"6379" 端口以及 "20" 数据库索引
     RedisAdapter::createConnection('redis://my.server.com:6379/20');
 
-    // host "localhost" and SASL use "rmf" and pass "abcdef"
-    RedisAdapter::createConnection('redis://rmf:abcdef@localhost');
+    // "localhost" 主机 "abcdef" 认证以及 5 秒超时
+    RedisAdapter::createConnection('redis://abcdef@localhost?timeout=5');
 
-    // socket "/var/run/redis.sock" and SASL user "user1" and pass "bad-pass"
-    RedisAdapter::createConnection('redis://user1:bad-pass@/var/run/redis.sock');
+    // "/var/run/redis.sock" 套接口和 "bad-pass" 认证
+    RedisAdapter::createConnection('redis://bad-pass@/var/run/redis.sock');
+
+    // 单个DSN可以使用以下语法定义多个服务器：
+    // host[hostname-or-IP:port] (端口是可选的)。套接字必须包含尾随':'
+    RedisAdapter::createConnection(
+        'redis:?host[localhost]&host[localhost:6379]&host[/var/run/redis.sock:]&auth=my-password&redis_cluster=1'
+    );
+
+.. versionadded:: 4.2
+
+    在Symfony 4.2中引入了在单个DSN中定义多个服务器的选项。
+
+.. note::
+
+    有关可以作为DSN参数传递的更多选项，请参阅 :class:`Symfony\\Component\\Cache\\Traits\\RedisTrait`。
 
 配置选项
 ---------------------
@@ -89,7 +110,7 @@ DSN可以指定IP/主机（和可选端口）或一个套接字路径、用户�
         'redis://localhost:6379',
 
         // 配置选项的关联数组
-        array(
+        [
             'compression' => true,
             'lazy' => false,
             'persistent' => 0,
@@ -98,7 +119,7 @@ DSN可以指定IP/主机（和可选端口）或一个套接字路径、用户�
             'timeout' => 30,
             'read_timeout' => 0,
             'retry_interval' => 0,
-         )
+        ]
 
     );
 
@@ -135,6 +156,7 @@ DSN可以指定IP/主机（和可选端口）或一个套接字路径、用户�
     指定在连接尝试超时之前用于连接Redis服务器的时间（以秒为单位）。
 
 .. note::
+
     使用 `Predis`_ 库时，可以使用一些其他特定于Predis的选项。有关详细信息，请参阅 `Predis连接参数`_。
 
 .. _`数据源名称（DSN）`: https://en.wikipedia.org/wiki/Data_source_name

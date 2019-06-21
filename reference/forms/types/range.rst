@@ -5,7 +5,7 @@ RangeType Field
 ===============
 
 The ``RangeType`` field is a slider that is rendered using the HTML5
-``<input type="range" />`` tag.
+``<input type="range"/>`` tag.
 
 +-------------+---------------------------------------------------------------------+
 | Rendered as | ``input`` ``range`` field (slider in HTML5 supported browser)       |
@@ -29,6 +29,8 @@ The ``RangeType`` field is a slider that is rendered using the HTML5
 | Class       | :class:`Symfony\\Component\\Form\\Extension\\Core\\Type\\RangeType` |
 +-------------+---------------------------------------------------------------------+
 
+.. include:: /reference/forms/types/options/_debug_form.rst.inc
+
 Basic Usage
 -----------
 
@@ -37,12 +39,12 @@ Basic Usage
     use Symfony\Component\Form\Extension\Core\Type\RangeType;
     // ...
 
-    $builder->add('name', RangeType::class, array(
-        'attr' => array(
+    $builder->add('name', RangeType::class, [
+        'attr' => [
             'min' => 5,
             'max' => 50
-        )
-    ));
+        ]
+    ]);
 
 Inherited Options
 -----------------

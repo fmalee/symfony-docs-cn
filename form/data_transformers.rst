@@ -29,9 +29,9 @@
     namespace App\Form\Type;
 
     use App\Entity\Task;
+    use Symfony\Component\Form\Extension\Core\Type\TextType;
     use Symfony\Component\Form\FormBuilderInterface;
     use Symfony\Component\OptionsResolver\OptionsResolver;
-    use Symfony\Component\Form\Extension\Core\Type\TextType;
 
     // ...
     class TaskType extends AbstractType
@@ -43,9 +43,9 @@
 
         public function configureOptions(OptionsResolver $resolver)
         {
-            $resolver->setDefaults(array(
+            $resolver->setDefaults([
                 'data_class' => Task::class,
-            ));
+            ]);
         }
 
         // ...
@@ -60,8 +60,8 @@
     namespace App\Form\Type;
 
     use Symfony\Component\Form\CallbackTransformer;
-    use Symfony\Component\Form\FormBuilderInterface;
     use Symfony\Component\Form\Extension\Core\Type\TextType;
+    use Symfony\Component\Form\FormBuilderInterface;
     // ...
 
     class TaskType extends AbstractType
@@ -135,9 +135,9 @@
 
         public function configureOptions(OptionsResolver $resolver)
         {
-            $resolver->setDefaults(array(
+            $resolver->setDefaults([
                 'data_class' => Task::class,
-            ));
+            ]);
         }
 
         // ...
@@ -236,7 +236,7 @@
 ~~~~~~~~~~~~~~~~~~~~~
 
 接下来，你需要在 ``TaskType`` 中使用 ``IssueToNumberTransformer`` 对象并将其添加到 ``issue`` 字段中。
-这不是问题！添加 ``__construct()`` 方法并类型约束该新类::
+这不是问题！添加一个 ``__construct()`` 方法并类型约束该新类::
 
     // src/Form/Type/TaskType.php
     namespace App\Form\Type;
@@ -259,10 +259,10 @@
         {
             $builder
                 ->add('description', TextareaType::class)
-                ->add('issue', TextType::class, array(
+                ->add('issue', TextType::class, [
                     // 数据转换器失败的一个验证消息
                     'invalid_message' => 'That is not a valid issue number',
-                ));
+                ]);
 
             // ...
 
@@ -283,7 +283,7 @@
 
 现在，你可以使用你的 ``TaskType``::
 
-    // 例如在某个控制器中
+    // 例如在一个控制器的某个地方
     $form = $this->createForm(TaskType::class, $task);
 
     // ...
@@ -319,6 +319,7 @@
     use App\Form\DataTransformer\IssueToNumberTransformer;
     use Doctrine\Common\Persistence\ObjectManager;
     use Symfony\Component\Form\AbstractType;
+    use Symfony\Component\Form\Extension\Core\Type\TextType;
     use Symfony\Component\Form\FormBuilderInterface;
     use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -338,9 +339,9 @@
 
         public function configureOptions(OptionsResolver $resolver)
         {
-            $resolver->setDefaults(array(
+            $resolver->setDefaults([
                 'invalid_message' => 'The selected issue does not exist',
-            ));
+            ]);
         }
 
         public function getParent()

@@ -5,21 +5,19 @@ This constraint is used to ensure that a credit card number passes the
 `Luhn algorithm`_. It is useful as a first step to validating a credit
 card: before communicating with a payment gateway.
 
-+----------------+-----------------------------------------------------------------------+
-| Applies to     | :ref:`property or method <validation-property-target>`                |
-+----------------+-----------------------------------------------------------------------+
-| Options        | - `message`_                                                          |
-|                | - `payload`_                                                          |
-+----------------+-----------------------------------------------------------------------+
-| Class          | :class:`Symfony\\Component\\Validator\\Constraints\\Luhn`             |
-+----------------+-----------------------------------------------------------------------+
-| Validator      | :class:`Symfony\\Component\\Validator\\Constraints\\LuhnValidator`    |
-+----------------+-----------------------------------------------------------------------+
+==========  ===================================================================
+Applies to  :ref:`property or method <validation-property-target>`
+Options     - `groups`_
+            - `message`_
+            - `payload`_
+Class       :class:`Symfony\\Component\\Validator\\Constraints\\Luhn`
+Validator   :class:`Symfony\\Component\\Validator\\Constraints\\LuhnValidator`
+==========  ===================================================================
 
 Basic Usage
 -----------
 
-To use the Luhn validator, simply apply it to a property on an object that
+To use the Luhn validator, apply it to a property on an object that
 will contain a credit card number.
 
 .. configuration-block::
@@ -54,7 +52,7 @@ will contain a credit card number.
         <?xml version="1.0" encoding="UTF-8" ?>
         <constraint-mapping xmlns="http://symfony.com/schema/dic/constraint-mapping"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping http://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
+            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping https://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
 
             <class name="App\Entity\Transaction">
                 <property name="cardNumber">
@@ -70,18 +68,16 @@ will contain a credit card number.
         // src/Entity/Transaction.php
         namespace App\Entity;
 
-        use Symfony\Component\Validator\Mapping\ClassMetadata;
         use Symfony\Component\Validator\Constraints as Assert;
+        use Symfony\Component\Validator\Mapping\ClassMetadata;
 
         class Transaction
         {
-            protected $cardNumber;
-
             public static function loadValidatorMetadata(ClassMetadata $metadata)
             {
-                $metadata->addPropertyConstraint('cardNumber', new Assert\Luhn(array(
+                $metadata->addPropertyConstraint('cardNumber', new Assert\Luhn([
                     'message' => 'Please check your credit card number',
-                )));
+                ]));
             }
         }
 
@@ -89,6 +85,8 @@ will contain a credit card number.
 
 Available Options
 -----------------
+
+.. include:: /reference/constraints/_groups-option.rst.inc
 
 message
 ~~~~~~~
@@ -99,11 +97,11 @@ The default message supplied when the value does not pass the Luhn check.
 
 You can use the following parameters in this message:
 
-+-----------------+-----------------------------+
-| Parameter       | Description                 |
-+=================+=============================+
-| ``{{ value }}`` | The current (invalid) value |
-+-----------------+-----------------------------+
+===============  ==============================================================
+Parameter        Description
+===============  ==============================================================
+``{{ value }}``  The current (invalid) value
+===============  ==============================================================
 
 .. include:: /reference/constraints/_payload-option.rst.inc
 

@@ -17,8 +17,6 @@ Installation
 
     $ composer require symfony/polyfill-intl-grapheme
 
-Alternatively, you can clone the `<https://github.com/symfony/polyfill-intl-grapheme>`_ repository.
-
 .. include:: /components/require_autoload.rst.inc
 
 Usage
@@ -50,9 +48,11 @@ Provided Functions
 
 .. seealso::
 
-    The :doc:`polyfill-intl-icu </components/polyfill_intl_icu>` and
-    :doc:`polyfill-intl-normalizer </components/polyfill_intl_normalizer>`
-    components provide polyfills for other classes and functions related to the
-    Intl PHP extension.
+    Symfony provides more polyfills for other classes and functions related to
+    the Intl PHP extension:
+    :doc:`polyfill-intl-icu </components/polyfill_intl_icu>`,
+    :doc:`polyfill-intl-idn </components/polyfill_intl_idn>`,
+    :doc:`polyfill-intl-messageformatter </components/polyfill_intl_messageformatter>`,
+    and :doc:`polyfill-intl-normalizer </components/polyfill_intl_normalizer>`.
 
 .. _`PHP intl extension`: https://secure.php.net/manual/en/book.intl.php

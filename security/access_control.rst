@@ -37,7 +37,7 @@ Symfony 为每个 ``access_control`` 项创建一个
             # ...
             access_control:
                 - { path: ^/admin, roles: ROLE_USER_IP, ip: 127.0.0.1 }
-                - { path: ^/admin, roles: ROLE_USER_IP, ip: 127.0.0.1, port: 8080 }
+                - { path: ^/admin, roles: ROLE_USER_PORT, ip: 127.0.0.1, port: 8080 }
                 - { path: ^/admin, roles: ROLE_USER_HOST, host: symfony\.com$ }
                 - { path: ^/admin, roles: ROLE_USER_METHOD, methods: [POST, PUT] }
                 - { path: ^/admin, roles: ROLE_USER }
@@ -50,51 +50,51 @@ Symfony 为每个 ``access_control`` 项创建一个
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:srv="http://symfony.com/schema/dic/services"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <config>
                 <!-- ... -->
-                <rule path="^/admin" role="ROLE_USER_IP" ip="127.0.0.1" />
-                <rule path="^/admin" role="ROLE_USER_IP" ip="127.0.0.1" port="8080" />
-                <rule path="^/admin" role="ROLE_USER_HOST" host="symfony\.com$" />
-                <rule path="^/admin" role="ROLE_USER_METHOD" methods="POST, PUT" />
-                <rule path="^/admin" role="ROLE_USER" />
+                <rule path="^/admin" role="ROLE_USER_IP" ip="127.0.0.1"/>
+                <rule path="^/admin" role="ROLE_USER_PORT" ip="127.0.0.1" port="8080"/>
+                <rule path="^/admin" role="ROLE_USER_HOST" host="symfony\.com$"/>
+                <rule path="^/admin" role="ROLE_USER_METHOD" methods="POST, PUT"/>
+                <rule path="^/admin" role="ROLE_USER"/>
             </config>
         </srv:container>
 
     .. code-block:: php
 
         // config/packages/security.php
-        $container->loadFromExtension('security', array(
+        $container->loadFromExtension('security', [
             // ...
-            'access_control' => array(
-                array(
+            'access_control' => [
+                [
                     'path' => '^/admin',
                     'role' => 'ROLE_USER_IP',
                     'ip' => '127.0.0.1',
-                ),
-                array(
+                ],
+                [
                     'path' => '^/admin',
-                    'role' => 'ROLE_USER_IP',
+                    'role' => 'ROLE_USER_PORT',
                     'ip' => '127.0.0.1',
                     'port' => '8080',
-                ),
-                array(
+                ],
+                [
                     'path' => '^/admin',
                     'role' => 'ROLE_USER_HOST',
                     'host' => 'symfony\.com$',
-                ),
-                array(
+                ],
+                [
                     'path' => '^/admin',
                     'role' => 'ROLE_USER_METHOD',
                     'methods' => 'POST, PUT',
-                ),
-                array(
+                ],
+                [
                     'path' => '^/admin',
                     'role' => 'ROLE_USER',
-                ),
-            ),
-        ));
+                ],
+            ],
+        ]);
 
 对于每个传入请求，Symfony将根据URI、客户端的IP地址、传入主机名和请求方法来决定使用哪个 ``access_control``。
 请记住，使用第一个匹配的规则时，如果一个 ``access_control`` 没有指定
@@ -187,7 +187,7 @@ Symfony 为每个 ``access_control`` 项创建一个
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:srv="http://symfony.com/schema/dic/services"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <config>
                 <!-- ... -->
@@ -198,28 +198,28 @@ Symfony 为每个 ``access_control`` 项创建一个
                     <ip>::1</ip>
                 </rule>
 
-                <rule path="^/internal" role="ROLE_NO_ACCESS" />
+                <rule path="^/internal" role="ROLE_NO_ACCESS"/>
             </config>
         </srv:container>
 
     .. code-block:: php
 
         // config/packages/security.php
-        $container->loadFromExtension('security', array(
+        $container->loadFromExtension('security', [
             // ...
-            'access_control' => array(
-                array(
+            'access_control' => [
+                [
                     'path' => '^/internal',
                     'role' => 'IS_AUTHENTICATED_ANONYMOUSLY',
                     // the 'ips' option supports IP addresses and subnet masks
-                    'ips' => array('127.0.0.1', '::1'),
-                ),
-                array(
+                    'ips' => ['127.0.0.1', '::1'],
+                ],
+                [
                     'path' => '^/internal',
                     'role' => 'ROLE_NO_ACCESS',
-                ),
-            ),
-        ));
+                ],
+            ],
+        ]);
 
 当路径是 ``/internal/something``，IP地址是来自外部的 ``10.0.0.1`` 时，我们看看它是如何工作的：
 
@@ -259,28 +259,33 @@ Symfony 为每个 ``access_control`` 项创建一个
 
     .. code-block:: xml
 
-        <!-- app/config/security.xml -->
+        <!-- config/packages/security.xml -->
         <?xml version="1.0" encoding="UTF-8"?>
         <srv:container xmlns="http://symfony.com/schema/dic/security"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:srv="http://symfony.com/schema/dic/services"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <config>
+                <!-- ... -->
                 <rule path="^/_internal/secure"
-                    allow-if="'127.0.0.1' == request.getClientIp() or is_granted('ROLE_ADMIN')" />
+                    allow-if="'127.0.0.1' == request.getClientIp() or is_granted('ROLE_ADMIN')"/>
             </config>
         </srv:container>
 
     .. code-block:: php
 
-            'access_control' => array(
-                array(
+        // config/packages/security.php
+        $container->loadFromExtension('security', [
+            // ...
+            'access_control' => [
+                [
                     'path' => '^/_internal/secure',
                     'allow_if' => '"127.0.0.1" == request.getClientIp() or is_granted("ROLE_ADMIN")',
-                ),
-            ),
+                ],
+            ],
+        ]);
 
 在这种情况下，当用户尝试访问任何以 ``/_internal/secure`` 开头的URL时，只有在IP地址是 ``127.0.0.1`` 或用户具有 ``ROLE_ADMIN``  角色的情况下，才会授予他们访问权限。
 
@@ -294,9 +299,6 @@ Symfony 为每个 ``access_control`` 项创建一个
 
     ``allow_if`` 表达式也可以包含用
     :ref:`表达式提供器 <components-expression-language-provider>` 注册的自定义函数。
-
-    .. versionadded:: 4.1
-        在Symfony 4.1中引入了在 ``allow_if`` 表达式中使用自定义函数的功能。
 
 限制端口
 ------------------
@@ -322,26 +324,30 @@ Symfony 为每个 ``access_control`` 项创建一个
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:srv="http://symfony.com/schema/dic/services"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
-            <rule path="^/cart/checkout"
-                role="IS_AUTHENTICATED_ANONYMOUSLY"
-                port="8080"
-            />
+            <config>
+                <!-- ... -->
+                <rule path="^/cart/checkout"
+                    role="IS_AUTHENTICATED_ANONYMOUSLY"
+                    port="8080"
+                />
+            </config>
         </srv:container>
 
     .. code-block:: php
 
         // config/packages/security.php
-        $container->loadFromExtension('security', array(
-            'access_control' => array(
-                array(
+        $container->loadFromExtension('security', [
+            // ...
+            'access_control' => [
+                [
                     'path' => '^/cart/checkout',
                     'role' => 'IS_AUTHENTICATED_ANONYMOUSLY',
                     'port' => '8080',
-                ),
-            ),
-        ));
+                ],
+            ],
+        ]);
 
 强制使用特定通道（http，https）
 -------------------------------
@@ -368,23 +374,27 @@ Symfony 为每个 ``access_control`` 项创建一个
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:srv="http://symfony.com/schema/dic/services"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
-            <rule path="^/cart/checkout"
-                role="IS_AUTHENTICATED_ANONYMOUSLY"
-                requires-channel="https"
-            />
+            <config>
+                <!-- ... -->
+                <rule path="^/cart/checkout"
+                    role="IS_AUTHENTICATED_ANONYMOUSLY"
+                    requires-channel="https"
+                />
+            </config>
         </srv:container>
 
     .. code-block:: php
 
         // config/packages/security.php
-        $container->loadFromExtension('security', array(
-            'access_control' => array(
-                array(
+        $container->loadFromExtension('security', [
+            // ...
+            'access_control' => [
+                [
                     'path' => '^/cart/checkout',
                     'role' => 'IS_AUTHENTICATED_ANONYMOUSLY',
                     'requires_channel' => 'https',
-                ),
-            ),
-        ));
+                ],
+            ],
+        ]);

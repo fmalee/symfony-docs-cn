@@ -7,8 +7,8 @@
 每个应用都是代码和一组配置的组合，这些配置决定了代码应该如何运行。
 配置可以定义正在使用的数据库，是否应该缓存某些内容或者应该如何详细记录日志。
 
-在Symfony中，“环境”的概念是可以使用多种不同配置运行相同的代码库。
-例如，``dev`` 环境应该使用使开发变得简单和友好的配置，而 ``prod`` 环境应该使用一组针对速度优化过的配置。
+在Symfony中，“环境”的概念是可以使用多种不同的配置运行相同的代码库。
+例如，``dev`` 环境应该是使开发变得舒适和友好的配置，而 ``prod`` 环境应该使用一组针对速度和安全性进行了优化的配置。
 
 .. index::
    single: Environments; Configuration files
@@ -149,20 +149,20 @@ the environment variable is passed to the kernel::
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xmlns:doctrine="http://symfony.com/schema/dic/doctrine"
                 xsi:schemaLocation="http://symfony.com/schema/dic/services
-                    http://symfony.com/schema/dic/services/services-1.0.xsd
+                    https://symfony.com/schema/dic/services/services-1.0.xsd
                     http://symfony.com/schema/dic/twig
-                    http://symfony.com/schema/dic/twig/twig-1.0.xsd">
+                    https://symfony.com/schema/dic/twig/twig-1.0.xsd">
 
-                <twig:config debug="%kernel.debug%" />
+                <twig:config debug="%kernel.debug%"/>
 
             </container>
 
         .. code-block:: php
 
-            $container->loadFromExtension('twig', array(
+            $container->loadFromExtension('twig', [
                 'debug' => '%kernel.debug%',
                 // ...
-            ));
+            ]);
 
 Selecting the Environment for Console Commands
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -221,12 +221,12 @@ configuration file:
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:framework="http://symfony.com/schema/dic/symfony"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd
+                https://symfony.com/schema/dic/services/services-1.0.xsd
                 http://symfony.com/schema/dic/symfony
-                http://symfony.com/schema/dic/symfony/symfony-1.0.xsd">
+                https://symfony.com/schema/dic/symfony/symfony-1.0.xsd">
 
             <framework:config>
-                <framework:profiler only-exceptions="false" />
+                <framework:profiler only-exceptions="false"/>
             </framework:config>
 
         </container>
@@ -234,9 +234,9 @@ configuration file:
     .. code-block:: php
 
         // config/packages/benchmark/web_profiler.php
-        $container->loadFromExtension('framework', array(
-            'profiler' => array('only_exceptions' => false),
-        ));
+        $container->loadFromExtension('framework', [
+            'profiler' => ['only_exceptions' => false],
+        ]);
 
 And... you're finished! The application now supports a new environment called
 ``benchmark``.
@@ -279,9 +279,9 @@ environment through your browser:
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xmlns:framework="http://symfony.com/schema/dic/symfony"
                 xsi:schemaLocation="http://symfony.com/schema/dic/services
-                    http://symfony.com/schema/dic/services/services-1.0.xsd
+                    https://symfony.com/schema/dic/services/services-1.0.xsd
                     http://symfony.com/schema/dic/symfony
-                    http://symfony.com/schema/dic/symfony/symfony-1.0.xsd">
+                    https://symfony.com/schema/dic/symfony/symfony-1.0.xsd">
 
                 <imports>
                     <import resource="../prod/"/>

@@ -8,7 +8,7 @@
 
 要功能测试邮件的发送，甚至断言邮件主题、内容或任何其他标头，你可以使用 :doc:`Symfony分析器 </profiler>`。
 
-从发送邮件的简单控制器动作开始::
+从发送邮件的控制器动作开始::
 
     public function sendEmail($name, \Swift_Mailer $mailer)
     {
@@ -20,7 +20,7 @@
 
         $mailer->send($message);
 
-        return $this->render(...);
+        // ...
     }
 
 在功能测试中，使用分析器上的 ``swiftmailer`` 收集器获取有关上一个请求中发送的消息的信息::

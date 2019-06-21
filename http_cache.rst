@@ -11,7 +11,7 @@ HTTP缓存
 ----------------------------------
 
 使用HTTP缓存，你可以缓存页面的完整输出（即响应），并 *完全* 绕过后续请求。
-当然，对于高度动态的网站来说，缓存整个响应并不总是可行的，或者是这样吗？
+对于高度动态的网站来说，缓存整个响应并不总是可行的，或者是这样吗？
 使用 :doc:`Edge Side Includes (ESI) </http_cache/esi>`，你可以仅在站点的 *片段* 上使用HTTP缓存的强大功能。
 
 Symfony缓存系统与众不同，因为它依靠的是 `RFC 7234 - Caching`_ 所定义的简单又强大的HTTP缓冲。
@@ -83,13 +83,9 @@ Symfony带有一个用PHP编写的反向代理（即网关缓存）。
     use App\Kernel;
 
     // ...
-    $env = $_SERVER['APP_ENV'] ?? 'dev';
-    $debug = (bool) ($_SERVER['APP_DEBUG'] ?? ('prod' !== $env));
-    // ...
-    $kernel = new Kernel($env, $debug);
-
+    $kernel = new Kernel($_SERVER['APP_ENV'], (bool) $_SERVER['APP_DEBUG']);
     + // 在 'prod' 环境中使用 CacheKernel 封装默认内核
-    + if ('prod' === $env) {
+    + if ('prod' === $kernel->getEnvironment()) {
     +     $kernel = new CacheKernel($kernel);
     + }
 
@@ -122,10 +118,10 @@ Symfony带有一个用PHP编写的反向代理（即网关缓存）。
     {
         protected function getOptions()
         {
-            return array(
+            return [
                 'default_ttl' => 0,
                 // ...
-            );
+            ];
         }
     }
 
@@ -286,14 +282,14 @@ HTTP缓存仅适用于“安全”HTTP方法（如GET和HEAD）。这意味着�
 :method:`Symfony\\Component\\HttpFoundation\\Response::setCache` 方法来设置::
 
     // sets cache settings in one call
-    $response->setCache(array(
+    $response->setCache([
         'etag'          => $etag,
         'last_modified' => $date,
         'max_age'       => 10,
         's_maxage'      => 10,
         'public'        => true,
         // 'private'    => true,
-    ));
+    ]);
 
 缓存失效
 ------------------
@@ -322,9 +318,6 @@ HTTP缓存和用户会话
     use Symfony\Component\HttpKernel\EventListener\AbstractSessionListener;
 
     $response->headers->set(AbstractSessionListener::NO_AUTO_CACHE_CONTROL_HEADER, 'true');
-
-.. versionadded:: 4.1
-    ``NO_AUTO_CACHE_CONTROL_HEADER`` 标头在Symfony的4.1中引入。
 
 摘要
 -------

@@ -4,7 +4,7 @@
 SearchType Field
 ================
 
-This renders an ``<input type="search" />`` field, which is a text box with
+This renders an ``<input type="search"/>`` field, which is a text box with
 special functionality supported by some browsers.
 
 Read about the input search field at `DiveIntoHTML5.info`_
@@ -29,6 +29,8 @@ Read about the input search field at `DiveIntoHTML5.info`_
 +-------------+----------------------------------------------------------------------+
 | Class       | :class:`Symfony\\Component\\Form\\Extension\\Core\\Type\\SearchType` |
 +-------------+----------------------------------------------------------------------+
+
+.. include:: /reference/forms/types/options/_debug_form.rst.inc
 
 Inherited Options
 -----------------

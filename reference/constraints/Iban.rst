@@ -6,21 +6,19 @@ format of an `International Bank Account Number (IBAN)`_. IBAN is an
 internationally agreed means of identifying bank accounts across national
 borders with a reduced risk of propagating transcription errors.
 
-+----------------+-----------------------------------------------------------------------+
-| Applies to     | :ref:`property or method<validation-property-target>`                 |
-+----------------+-----------------------------------------------------------------------+
-| Options        | - `message`_                                                          |
-|                | - `payload`_                                                          |
-+----------------+-----------------------------------------------------------------------+
-| Class          | :class:`Symfony\\Component\\Validator\\Constraints\\Iban`             |
-+----------------+-----------------------------------------------------------------------+
-| Validator      | :class:`Symfony\\Component\\Validator\\Constraints\\IbanValidator`    |
-+----------------+-----------------------------------------------------------------------+
+==========  ===================================================================
+Applies to  :ref:`property or method <validation-property-target>`
+Options     - `groups`_
+            - `message`_
+            - `payload`_
+Class       :class:`Symfony\\Component\\Validator\\Constraints\\Iban`
+Validator   :class:`Symfony\\Component\\Validator\\Constraints\\IbanValidator`
+==========  ===================================================================
 
 Basic Usage
 -----------
 
-To use the Iban validator, simply apply it to a property on an object that
+To use the Iban validator, apply it to a property on an object that
 will contain an International Bank Account Number.
 
 .. configuration-block::
@@ -57,7 +55,7 @@ will contain an International Bank Account Number.
         <?xml version="1.0" encoding="UTF-8" ?>
         <constraint-mapping xmlns="http://symfony.com/schema/dic/constraint-mapping"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping http://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
+            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping https://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
 
             <class name="App\Entity\Transaction">
                 <property name="bankAccountNumber">
@@ -75,8 +73,8 @@ will contain an International Bank Account Number.
         // src/Entity/Transaction.php
         namespace App\Entity;
 
-        use Symfony\Component\Validator\Mapping\ClassMetadata;
         use Symfony\Component\Validator\Constraints as Assert;
+        use Symfony\Component\Validator\Mapping\ClassMetadata;
 
         class Transaction
         {
@@ -84,9 +82,9 @@ will contain an International Bank Account Number.
 
             public static function loadValidatorMetadata(ClassMetadata $metadata)
             {
-                $metadata->addPropertyConstraint('bankAccountNumber', new Assert\Iban(array(
+                $metadata->addPropertyConstraint('bankAccountNumber', new Assert\Iban([
                     'message' => 'This is not a valid International Bank Account Number (IBAN).',
-                )));
+                ]));
             }
         }
 
@@ -94,6 +92,8 @@ will contain an International Bank Account Number.
 
 Available Options
 -----------------
+
+.. include:: /reference/constraints/_groups-option.rst.inc
 
 message
 ~~~~~~~
@@ -104,11 +104,11 @@ The default message supplied when the value does not pass the Iban check.
 
 You can use the following parameters in this message:
 
-+-----------------+-----------------------------+
-| Parameter       | Description                 |
-+=================+=============================+
-| ``{{ value }}`` | The current (invalid) value |
-+-----------------+-----------------------------+
+===============  ==============================================================
+Parameter        Description
+===============  ==============================================================
+``{{ value }}``  The current (invalid) value
+===============  ==============================================================
 
 .. include:: /reference/constraints/_payload-option.rst.inc
 

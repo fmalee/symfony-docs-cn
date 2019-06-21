@@ -5,24 +5,22 @@ This constraint is used to ensure that the given value is one of a given
 set of *valid* choices. It can also be used to validate that each item in
 an array of items is one of those valid choices.
 
-+----------------+----------------------------------------------------------------------+
-| Applies to     | :ref:`property or method <validation-property-target>`               |
-+----------------+----------------------------------------------------------------------+
-| Options        | - `choices`_                                                         |
-|                | - `callback`_                                                        |
-|                | - `multiple`_                                                        |
-|                | - `min`_                                                             |
-|                | - `max`_                                                             |
-|                | - `message`_                                                         |
-|                | - `multipleMessage`_                                                 |
-|                | - `minMessage`_                                                      |
-|                | - `maxMessage`_                                                      |
-|                | - `payload`_                                                         |
-+----------------+----------------------------------------------------------------------+
-| Class          | :class:`Symfony\\Component\\Validator\\Constraints\\Choice`          |
-+----------------+----------------------------------------------------------------------+
-| Validator      | :class:`Symfony\\Component\\Validator\\Constraints\\ChoiceValidator` |
-+----------------+----------------------------------------------------------------------+
+==========  ===================================================================
+Applies to  :ref:`property or method <validation-property-target>`
+Options     - `callback`_
+            - `choices`_
+            - `groups`_
+            - `max`_
+            - `maxMessage`_
+            - `message`_
+            - `min`_
+            - `minMessage`_
+            - `multiple`_
+            - `multipleMessage`_
+            - `payload`_
+Class       :class:`Symfony\\Component\\Validator\\Constraints\\Choice`
+Validator   :class:`Symfony\\Component\\Validator\\Constraints\\ChoiceValidator`
+==========  ===================================================================
 
 Basic Usage
 -----------
@@ -45,13 +43,17 @@ If your valid choice list is simple, you can pass them in directly via the
 
         class Author
         {
+            const GENRES = ['fiction', 'non-fiction'];
+
             /**
              * @Assert\Choice({"New York", "Berlin", "Tokyo"})
              */
             protected $city;
 
             /**
-             * @Assert\Choice(choices={"fiction", "non-fiction"}, message="Choose a valid genre.")
+             * You can also directly provide an array constant to the "choices" option in the annotation
+             *
+             * @Assert\Choice(choices=Author::GENRES, message="Choose a valid genre.")
              */
             protected $genre;
         }
@@ -74,7 +76,7 @@ If your valid choice list is simple, you can pass them in directly via the
         <?xml version="1.0" encoding="UTF-8" ?>
         <constraint-mapping xmlns="http://symfony.com/schema/dic/constraint-mapping"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping http://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
+            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping https://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
 
             <class name="App\Entity\Author">
                 <property name="city">
@@ -101,24 +103,22 @@ If your valid choice list is simple, you can pass them in directly via the
         // src/EntityAuthor.php
         namespace App\Entity;
 
-        use Symfony\Component\Validator\Mapping\ClassMetadata;
         use Symfony\Component\Validator\Constraints as Assert;
+        use Symfony\Component\Validator\Mapping\ClassMetadata;
 
         class Author
         {
-            protected $genre;
-
             public static function loadValidatorMetadata(ClassMetadata $metadata)
             {
                 $metadata->addPropertyConstraint(
                     'city',
-                     new Assert\Choice(array('New York', 'Berlin', 'Tokyo'))
-                 );
+                    new Assert\Choice(['New York', 'Berlin', 'Tokyo'])
+                );
 
-                $metadata->addPropertyConstraint('genre', new Assert\Choice(array(
-                    'choices' => array('fiction', 'non-fiction'),
+                $metadata->addPropertyConstraint('genre', new Assert\Choice([
+                    'choices' => ['fiction', 'non-fiction'],
                     'message' => 'Choose a valid genre.',
-                )));
+                ]));
             }
         }
 
@@ -127,8 +127,7 @@ Supplying the Choices with a Callback Function
 
 You can also use a callback function to specify your options. This is useful
 if you want to keep your choices in some central location so that, for example,
-you can easily access those choices for validation or for building a select
-form element::
+you can access those choices for validation or for building a select form element::
 
     // src/Entity/Author.php
     namespace App\Entity;
@@ -137,7 +136,7 @@ form element::
     {
         public static function getGenres()
         {
-            return array('fiction', 'non-fiction');
+            return ['fiction', 'non-fiction'];
         }
     }
 
@@ -175,7 +174,7 @@ constraint.
         <?xml version="1.0" encoding="UTF-8" ?>
         <constraint-mapping xmlns="http://symfony.com/schema/dic/constraint-mapping"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping http://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
+            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping https://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
 
             <class name="App\Entity\Author">
                 <property name="genre">
@@ -191,8 +190,8 @@ constraint.
         // src/EntityAuthor.php
         namespace App\Entity;
 
-        use Symfony\Component\Validator\Mapping\ClassMetadata;
         use Symfony\Component\Validator\Constraints as Assert;
+        use Symfony\Component\Validator\Mapping\ClassMetadata;
 
         class Author
         {
@@ -200,13 +199,13 @@ constraint.
 
             public static function loadValidatorMetadata(ClassMetadata $metadata)
             {
-                $metadata->addPropertyConstraint('genre', new Assert\Choice(array(
+                $metadata->addPropertyConstraint('genre', new Assert\Choice([
                     'callback' => 'getGenres',
-                )));
+                ]));
             }
         }
 
-If the callback is stored in a different class and is static, for example ``App\Entity\Genre``,
+If the callback is defined in a different class and is static, for example ``App\Entity\Genre``,
 you can pass the class name and the method as an array.
 
 .. configuration-block::
@@ -240,7 +239,7 @@ you can pass the class name and the method as an array.
         <?xml version="1.0" encoding="UTF-8" ?>
         <constraint-mapping xmlns="http://symfony.com/schema/dic/constraint-mapping"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping http://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
+            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping https://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
 
             <class name="App\Entity\Author">
                 <property name="genre">
@@ -260,32 +259,21 @@ you can pass the class name and the method as an array.
         namespace App\Entity;
 
         use App\Entity\Genre;
-        use Symfony\Component\Validator\Mapping\ClassMetadata;
         use Symfony\Component\Validator\Constraints as Assert;
+        use Symfony\Component\Validator\Mapping\ClassMetadata;
 
         class Author
         {
-            protected $genre;
-
             public static function loadValidatorMetadata(ClassMetadata $metadata)
             {
-                $metadata->addPropertyConstraint('genre', new Assert\Choice(array(
-                    'callback' => array(Genre::class, 'getGenres'),
-                )));
+                $metadata->addPropertyConstraint('genre', new Assert\Choice([
+                    'callback' => [Genre::class, 'getGenres'],
+                ]));
             }
         }
 
 Available Options
 -----------------
-
-choices
-~~~~~~~
-
-**type**: ``array`` [:ref:`default option <validation-default-option>`]
-
-A required option (unless `callback`_ is specified) - this is the array
-of options that should be considered in the valid set. The input value
-will be matched against this array.
 
 callback
 ~~~~~~~~
@@ -296,25 +284,16 @@ This is a callback method that can be used instead of the `choices`_ option
 to return the choices array. See
 `Supplying the Choices with a Callback Function`_ for details on its usage.
 
-multiple
-~~~~~~~~
+choices
+~~~~~~~
 
-**type**: ``boolean`` **default**: ``false``
+**type**: ``array`` [:ref:`default option <validation-default-option>`]
 
-If this option is true, the input value is expected to be an array instead
-of a single, scalar value. The constraint will check that each value of
-the input array can be found in the array of valid choices. If even one
-of the input values cannot be found, the validation will fail.
+A required option (unless `callback`_ is specified) - this is the array
+of options that should be considered in the valid set. The input value
+will be matched against this array.
 
-min
-~~~
-
-**type**: ``integer``
-
-If the ``multiple`` option is true, then you can use the ``min`` option
-to force at least XX number of values to be selected. For example, if
-``min`` is 3, but the input array only contains 2 valid items, the validation
-will fail.
+.. include:: /reference/constraints/_groups-option.rst.inc
 
 max
 ~~~
@@ -325,6 +304,22 @@ If the ``multiple`` option is true, then you can use the ``max`` option
 to force no more than XX number of values to be selected. For example, if
 ``max`` is 3, but the input array contains 4 valid items, the validation
 will fail.
+
+maxMessage
+~~~~~~~~~~
+
+**type**: ``string`` **default**: ``You must select at most {{ limit }} choices.``
+
+This is the validation error message that's displayed when the user chooses
+too many options per the `max`_ option.
+
+You can use the following parameters in this message:
+
+===============  ============================================================
+Parameter        Description
+===============  ============================================================
+``{{ value }}``  The current (invalid) value
+===============  ============================================================
 
 message
 ~~~~~~~
@@ -337,11 +332,47 @@ choices.
 
 You can use the following parameters in this message:
 
-+------------------+------------------------------------------------+
-| Parameter        | Description                                    |
-+==================+================================================+
-| ``{{ value }}``  | The current (invalid) value                    |
-+------------------+------------------------------------------------+
+===============  ==============================================================
+Parameter        Description
+===============  ==============================================================
+``{{ value }}``  The current (invalid) value
+===============  ==============================================================
+
+min
+~~~
+
+**type**: ``integer``
+
+If the ``multiple`` option is true, then you can use the ``min`` option
+to force at least XX number of values to be selected. For example, if
+``min`` is 3, but the input array only contains 2 valid items, the validation
+will fail.
+
+minMessage
+~~~~~~~~~~
+
+**type**: ``string`` **default**: ``You must select at least {{ limit }} choices.``
+
+This is the validation error message that's displayed when the user chooses
+too few choices per the `min`_ option.
+
+You can use the following parameters in this message:
+
+===============  ============================================================
+Parameter        Description
+===============  ============================================================
+``{{ value }}``  The current (invalid) value
+===============  ============================================================
+
+multiple
+~~~~~~~~
+
+**type**: ``boolean`` **default**: ``false``
+
+If this option is true, the input value is expected to be an array instead
+of a single, scalar value. The constraint will check that each value of
+the input array can be found in the array of valid choices. If even one
+of the input values cannot be found, the validation will fail.
 
 multipleMessage
 ~~~~~~~~~~~~~~~
@@ -354,42 +385,10 @@ is not in the array of valid choices.
 
 You can use the following parameters in this message:
 
-+------------------+------------------------------------------------+
-| Parameter        | Description                                    |
-+==================+================================================+
-| ``{{ value }}``  | The current (invalid) value                    |
-+------------------+------------------------------------------------+
-
-minMessage
-~~~~~~~~~~
-
-**type**: ``string`` **default**: ``You must select at least {{ limit }} choices.``
-
-This is the validation error message that's displayed when the user chooses
-too few choices per the `min`_ option.
-
-You can use the following parameters in this message:
-
-+------------------+------------------------------------------------+
-| Parameter        | Description                                    |
-+==================+================================================+
-| ``{{ limit }}``  | The lower limit of choices                     |
-+------------------+------------------------------------------------+
-
-maxMessage
-~~~~~~~~~~
-
-**type**: ``string`` **default**: ``You must select at most {{ limit }} choices.``
-
-This is the validation error message that's displayed when the user chooses
-too many options per the `max`_ option.
-
-You can use the following parameters in this message:
-
-+------------------+------------------------------------------------+
-| Parameter        | Description                                    |
-+==================+================================================+
-| ``{{ limit }}``  | The upper limit of choices                     |
-+------------------+------------------------------------------------+
+===============  ==============================================================
+Parameter        Description
+===============  ==============================================================
+``{{ value }}``  The current (invalid) value
+===============  ==============================================================
 
 .. include:: /reference/constraints/_payload-option.rst.inc

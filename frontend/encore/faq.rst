@@ -85,7 +85,7 @@ Twig快捷方式（或者是以某种其他方式 :ref:`通过entrypoints.json�
 但是，当你使用Webpack和 ``require('jquery')``，不会有全局变量被设置。
 
 此错误的修复取决于你的代码中或你正在使用的某些第三方代码中是否发生错误。
-请参阅 :doc:`/frontend/encore/legacy-apps` 以获取修复方法。
+请参阅 :doc:`/frontend/encore/legacy-applications` 以获取修复方法。
 
 Uncaught ReferenceError: webpackJsonp is not defined
 ----------------------------------------------------
@@ -126,3 +126,33 @@ This dependency was not found: some-module in ./path/to/file.js
 有关详细信息，请参阅 :doc:`/frontend/encore/babel`。
 
 .. _`rsync`: https://rsync.samba.org/
+
+如何将我的Encore配置与IDE集成？
+-------------------------------------------------------
+
+将 `Webpack集成到PhpStorm`_
+和其他IDE中可以提高开发效率（例如通过解析别名）。但是，你可能会遇到此错误：
+
+.. code-block:: text
+
+    Encore.setOutputPath() cannot be called yet because the runtime environment
+    doesn't appear to be configured. Make sure you're using the encore executable
+    or call Encore.configureRuntimeEnvironment() first if you're purposely not
+    calling Encore directly.
+
+这个错误是因为Encore的运行时环境仅在你运行它时被配置（例如，在执行
+``yarn encore dev`` 时）。可以调用 ``Encore.isRuntimeEnvironmentConfigured()`` 和
+``Encore.configureRuntimeEnvironment()`` 方法来修复此问题：
+
+.. code-block:: javascript
+
+    // webpack.config.js
+    const Encore = require('@symfony/webpack-encore')
+
+    if (!Encore.isRuntimeEnvironmentConfigured()) {
+        Encore.configureRuntimeEnvironment(process.env.NODE_ENV || 'dev');
+    }
+
+    // ... Encore配置的其余部分
+
+.. _`Webpack集成到PhpStorm`: https://www.jetbrains.com/help/phpstorm/using-webpack.html

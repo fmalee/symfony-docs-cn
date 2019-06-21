@@ -58,13 +58,13 @@
         // config/packages/security.php
         use App\Security\AccessDeniedHandler;
 
-        $container->loadFromExtension('security', array(
-            'firewalls' => array(
-                'main' => array(
+        $container->loadFromExtension('security', [
+            'firewalls' => [
+                'main' => [
                     // ...
                     'access_denied_handler' => AccessDeniedHandler::class,
-                ),
-            ),
-        ));
+                ],
+            ],
+        ]);
 
 仅此而已！现在，你的服务将处理 ``main`` 防火墙下的代码抛出的任何 ``AccessDeniedException``。

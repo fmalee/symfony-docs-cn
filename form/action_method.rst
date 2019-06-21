@@ -86,10 +86,10 @@
             {
                 // ...
 
-                $form = $this->createForm(TaskType::class, $task, array(
+                $form = $this->createForm(TaskType::class, $task, [
                     'action' => $this->generateUrl('target_route'),
                     'method' => 'GET',
-                ));
+                ]);
 
                 // ...
             }
@@ -106,14 +106,14 @@
 
         $formFactory = $formFactoryBuilder->getFormFactory();
 
-        $form = $formFactory->create(TaskType::class, $task, array(
+        $form = $formFactory->create(TaskType::class, $task, [
             'action' => '...',
             'method' => 'GET',
-        ));
+        ]);
 
 最后，你可以通过它们传递给 ``form()`` 或 ``form_start()`` 辅助方法来重写模板中的动作和方法：
 
-.. code-block:: html+twig
+.. code-block:: twig
 
     {# templates/default/new.html.twig #}
     {{ form_start(form, {'action': path('target_route'), 'method': 'GET'}) }}

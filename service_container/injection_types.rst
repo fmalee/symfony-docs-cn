@@ -48,12 +48,12 @@
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <services>
                 <!-- ... -->
 
-                <service id="app.newsletter_manager" class="App\Mail\NewsletterManager">
+                <service id="App\Mail\NewsletterManager">
                     <argument type="service" id="mailer"/>
                 </service>
             </services>
@@ -66,7 +66,7 @@
         use Symfony\Component\DependencyInjection\Reference;
 
         // ...
-        $container->register('app.newsletter_manager', NewsletterManager::class)
+        $container->register(NewsletterManager::class)
             ->addArgument(new Reference('mailer'));
 
 .. tip::
@@ -108,7 +108,7 @@ Setter注入
     .. code-block:: yaml
 
         # config/services.yaml
-       services:
+        services:
             # ...
 
             app.newsletter_manager:
@@ -123,14 +123,14 @@ Setter注入
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <services>
                 <!-- ... -->
 
                 <service id="app.newsletter_manager" class="App\Mail\NewsletterManager">
                     <call method="setMailer">
-                        <argument type="service" id="mailer" />
+                        <argument type="service" id="mailer"/>
                     </call>
                 </service>
             </services>
@@ -144,7 +144,7 @@ Setter注入
 
         // ...
         $container->register('app.newsletter_manager', NewsletterManager::class)
-            ->addMethodCall('setMailer', array(new Reference('mailer')));
+            ->addMethodCall('setMailer', [new Reference('mailer')]);
 
 setter注入的优点是：
 
@@ -177,7 +177,7 @@ setter注入的缺点是：
     .. code-block:: yaml
 
         # config/services.yaml
-       services:
+        services:
             # ...
 
             app.newsletter_manager:
@@ -192,13 +192,13 @@ setter注入的缺点是：
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <services>
                 <!-- ... -->
 
                 <service id="app.newsletter_manager" class="App\Mail\NewsletterManager">
-                    <property name="mailer" type="service" id="mailer" />
+                    <property name="mailer" type="service" id="mailer"/>
                 </service>
             </services>
         </container>

@@ -15,8 +15,6 @@ Config组件
 
     $ composer require symfony/config
 
-或者，你可以克隆 `<https://github.com/symfony/config>`_ 仓库。
-
 .. include:: /components/require_autoload.rst.inc
 
 扩展阅读

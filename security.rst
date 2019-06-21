@@ -131,14 +131,14 @@ Symfony的安全系统是非常强大的，但在设置它时也可能令人迷�
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:srv="http://symfony.com/schema/dic/services"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <config>
                 <!-- ... -->
 
                 <encoder class="App\Entity\User"
                     algorithm="bcrypt"
-                    cost="12" />
+                    cost="12"/>
 
                 <!-- ... -->
             </config>
@@ -147,17 +147,18 @@ Symfony的安全系统是非常强大的，但在设置它时也可能令人迷�
     .. code-block:: php
 
         // config/packages/security.php
-        $container->loadFromExtension('security', array(
+        $container->loadFromExtension('security', [
             // ...
 
-            'encoders' => array(
-                'App\Entity\User' => array(
+            'encoders' => [
+                'App\Entity\User' => [
                     'algorithm' => 'bcrypt',
                     'cost' => 12,
-                )
-            ),
+                ]
+            ],
+
             // ...
-        ));
+        ]);
 
 既然Symfony知道你想 *如何* 编码密码，
 你可以在将用户保存到数据库之前，使用 ``UserPasswordEncoderInterface`` 服务执行加密操作。
@@ -240,15 +241,15 @@ Symfony的安全系统是非常强大的，但在设置它时也可能令人迷�
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:srv="http://symfony.com/schema/dic/services"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <config>
                 <firewall name="dev"
                     pattern="^/(_(profiler|wdt)|css|images|js)/"
-                    security="false" />
+                    security="false"/>
 
                 <firewall name="main">
-                    <anonymous />
+                    <anonymous/>
                 </firewall>
             </config>
         </srv:container>
@@ -256,17 +257,17 @@ Symfony的安全系统是非常强大的，但在设置它时也可能令人迷�
     .. code-block:: php
 
         // config/packages/security.php
-        $container->loadFromExtension('security', array(
-            'firewalls' => array(
-                'dev' => array(
+        $container->loadFromExtension('security', [
+            'firewalls' => [
+                'dev' => [
                     'pattern'   => '^/(_(profiler|wdt)|css|images|js)/',
                     'security'  => false,
                 ),
-                'main' => array(
+                'main' => [
                     'anonymous' => null,
-                ),
-            ),
-        ));
+                ],
+            ],
+        ]);
 
 “防火墙”是你的身份验证系统：它下面的配置定义了你的用户将 *如何* 进行身份验证（例如登录表单，API令牌等）。
 
@@ -419,7 +420,7 @@ Symfony有几个 :doc:`内置的认证提供器 </security/auth_providers>`。
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:srv="http://symfony.com/schema/dic/services"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <config>
                 <!-- ... -->
@@ -429,27 +430,27 @@ Symfony有几个 :doc:`内置的认证提供器 </security/auth_providers>`。
                 </firewall>
 
                 <!-- require ROLE_ADMIN for /admin* -->
-                <rule path="^/admin" role="ROLE_ADMIN" />
+                <rule path="^/admin" role="ROLE_ADMIN"/>
             </config>
         </srv:container>
 
     .. code-block:: php
 
         // config/packages/security.php
-        $container->loadFromExtension('security', array(
+        $container->loadFromExtension('security', [
             // ...
 
-            'firewalls' => array(
+            'firewalls' => [
                 // ...
-                'main' => array(
+                'main' => [
                     // ...
-                ),
-            ),
-           'access_control' => array(
-               // require ROLE_ADMIN for /admin*
-                array('path' => '^/admin', 'role' => 'ROLE_ADMIN'),
-            ),
-        ));
+                ],
+            ],
+            'access_control' => [
+                // require ROLE_ADMIN for /admin*
+                ['path' => '^/admin', 'role' => 'ROLE_ADMIN'],
+            ],
+        ]);
 
 你可以根据需要定义任意数量的URL模式 - 每个模式都是正则表达式。
 **但是**，每个请求仅匹配一\ **个**：Symfony从列表顶部开始，并在找到第一个匹配时停止：
@@ -477,30 +478,30 @@ Symfony有几个 :doc:`内置的认证提供器 </security/auth_providers>`。
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:srv="http://symfony.com/schema/dic/services"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <config>
                 <!-- ... -->
 
-                <rule path="^/admin/users" role="ROLE_SUPER_ADMIN" />
-                <rule path="^/admin" role="ROLE_ADMIN" />
+                <rule path="^/admin/users" role="ROLE_SUPER_ADMIN"/>
+                <rule path="^/admin" role="ROLE_ADMIN"/>
             </config>
         </srv:container>
 
     .. code-block:: php
 
         // config/packages/security.php
-        $container->loadFromExtension('security', array(
+        $container->loadFromExtension('security', [
             // ...
 
-            'access_control' => array(
-                array('path' => '^/admin/users', 'role' => 'ROLE_SUPER_ADMIN'),
-                array('path' => '^/admin', 'role' => 'ROLE_ADMIN'),
-            ),
-        ));
+            'access_control' => [
+                ['path' => '^/admin/users', 'role' => 'ROLE_SUPER_ADMIN'],
+                ['path' => '^/admin', 'role' => 'ROLE_ADMIN'],
+            ],
+        ]);
 
 使用 ``^`` 添加到路径之前意味着只匹配以该模式\ *开头*\的URL。
-例如，一个简单的 ``/admin`` （没有 ``^``）的路径将匹配 ``/admin/foo``，
+例如，一个 ``/admin`` （没有 ``^``）的路径将匹配 ``/admin/foo``，
 但也会匹配 ``/foo/admin`` 之类的URL。
 
 每个 ``access_control`` 也可以匹配IP地址，主机名和HTTP方法。
@@ -570,7 +571,7 @@ Symfony有几个 :doc:`内置的认证提供器 </security/auth_providers>`。
 模板中的访问控制
 ...........................
 
-如果要在模板中检查当前的访问权限，请使用内置的 ``is_granted()`` 辅助函数：
+如果要检查当前用户是否具有某个角色，可以在任何Twig模板中使用内置的 ``is_granted()`` 辅助函数：
 
 .. code-block:: html+twig
 
@@ -722,14 +723,14 @@ Symfony有几个 :doc:`内置的认证提供器 </security/auth_providers>`。
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:srv="http://symfony.com/schema/dic/services"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <config>
                 <!-- ... -->
 
                 <firewall name="secured_area">
                     <!-- ... -->
-                    <logout path="app_logout" />
+                    <logout path="app_logout"/>
                 </firewall>
             </config>
         </srv:container>
@@ -737,26 +738,20 @@ Symfony有几个 :doc:`内置的认证提供器 </security/auth_providers>`。
     .. code-block:: php
 
         // config/packages/security.php
-        $container->loadFromExtension('security', array(
+        $container->loadFromExtension('security', [
             // ...
 
-            'firewalls' => array(
-                'secured_area' => array(
+            'firewalls' => [
+                'secured_area' => [
                     // ...
-                    'logout' => array('path' => 'app_logout'),
-                ),
-            ),
-        ));
+                    'logout' => ['path' => 'app_logout'],
+                ],
+            ],
+        ]);
 
 接下来，你需要为此改URL创建路由（但不是控制器）：
 
 .. configuration-block::
-
-    .. code-block:: yaml
-
-        # config/routes.yaml
-        app_logout:
-            path: /logout
 
     .. code-block:: php-annotations
 
@@ -769,7 +764,7 @@ Symfony有几个 :doc:`内置的认证提供器 </security/auth_providers>`。
         class SecurityController extends AbstractController
         {
             /**
-             * @Route("/logout", name="app_logout")
+             * @Route("/logout", name="app_logout", methods={"GET"})
              */
             public function logout()
             {
@@ -778,6 +773,13 @@ Symfony有几个 :doc:`内置的认证提供器 </security/auth_providers>`。
             }
         }
 
+    .. code-block:: yaml
+
+        # config/routes.yaml
+        app_logout:
+            path: /logout
+            methods: GET
+
     .. code-block:: xml
 
         <!-- config/routes.xml -->
@@ -785,21 +787,21 @@ Symfony有几个 :doc:`内置的认证提供器 </security/auth_providers>`。
         <routes xmlns="http://symfony.com/schema/routing"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/routing
-                http://symfony.com/schema/routing/routing-1.0.xsd">
+                https://symfony.com/schema/routing/routing-1.0.xsd">
 
-            <route id="app_logout" path="/logout" />
+            <route id="app_logout" path="/logout" methods="GET"/>
         </routes>
 
     ..  code-block:: php
 
         // config/routes.php
-        use Symfony\Component\Routing\RouteCollection;
-        use Symfony\Component\Routing\Route;
+        use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
-        $routes = new RouteCollection();
-        $routes->add('app_logout', new Route('/logout'));
-
-        return $routes;
+        return function (RoutingConfigurator $routes) {
+            $routes->add('logout', '/logout')
+                ->methods(['GET'])
+            ;
+        };
 
 就是这样！通过将用户发送到 ``app_logout`` 路由（即 ``/logout``），
 Symfony将取消对当前用户的认证并重定向它们。
@@ -836,7 +838,7 @@ Symfony将取消对当前用户的认证并重定向它们。
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:srv="http://symfony.com/schema/dic/services"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <config>
                 <!-- ... -->
@@ -849,23 +851,24 @@ Symfony将取消对当前用户的认证并重定向它们。
     .. code-block:: php
 
         // config/packages/security.php
-        $container->loadFromExtension('security', array(
+        $container->loadFromExtension('security', [
             // ...
 
-            'role_hierarchy' => array(
+            'role_hierarchy' => [
                 'ROLE_ADMIN'       => 'ROLE_USER',
-                'ROLE_SUPER_ADMIN' => array(
+                'ROLE_SUPER_ADMIN' => [
                     'ROLE_ADMIN',
                     'ROLE_ALLOWED_TO_SWITCH',
-                ),
-            ),
-        ));
+                ],
+            ],
+        ]);
 
 具有 ``ROLE_ADMIN`` 角色的用户也将具有 ``ROLE_USER`` 角色。
 使用 ``ROLE_SUPER_ADMIN`` 的用户将自动拥有 ``ROLE_ADMIN``、
 ``ROLE_ALLOWED_TO_SWITCH`` 和 ``ROLE_USER`` （继承自 ``ROLE_ADMIN``）。
 
-要使角色层级起作用，请不要尝试直接调用 ``$user->getRoles()``::
+要使角色层级起作用，请不要尝试手动调用 ``$user->getRoles()``。例如，在继承自
+:ref:`基础控制器 <the-base-controller-class-services>` 的控制器中::
 
     // 错误 - $user->getRoles() 将不知道角色的层级
     $hasAccess = in_array('ROLE_ADMIN', $user->getRoles());
@@ -908,7 +911,7 @@ Symfony将取消对当前用户的认证并重定向它们。
     有时认证可能成功了，但重定向后，由于从会话中加载 ``User`` 时出现问题，认证会被立即注销。
     要查看是否是这个问题，请检查日志文件（``var/log/dev.log``）以获取日志消息：
 
-    > Cannot refresh token because user has changed.
+**无法刷新令牌，因为用户已更改**
 
     如果你看到了这个，有两个可能的原因。
     首先，从会话中加载用户可能出现了问题，详情请参阅 :ref:`user_session_refresh`。
@@ -955,4 +958,4 @@ Symfony将取消对当前用户的认证并重定向它们。
 .. _`HWIOAuthBundle`: https://github.com/hwi/HWIOAuthBundle
 .. _`Symfony ACL bundle`: https://github.com/symfony/acl-bundle
 .. _`Symfony Security screencast series`: https://symfonycasts.com/screencast/symfony-security
-.. _`MakerBundle`: https://github.com/symfony/maker-bundle
+.. _`MakerBundle`: https://symfony.com/doc/current/bundles/SymfonyMakerBundle/index.html

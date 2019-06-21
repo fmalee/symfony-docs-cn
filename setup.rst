@@ -11,7 +11,6 @@
 
 要创建一个 Symfony 应用，受限要确保你使用的是 PHP 7.1(或是更高的版本)，并且安装了 `Composer`_ 。
 如果没有，那就在你的系统上 :doc:`全局安装 Composer </setup/composer>`。
-如果你想要使用虚拟机(VM)，可以参考  :doc:`Homestead </setup/homestead>`。
 
 运行一下的命令来创建你的项目:
 
@@ -31,23 +30,23 @@
 
         $ composer create-project symfony/skeleton my-project
 
-        # 可选项: 安装 Web 服务器 (下面会解释)
-        $ cd my-project
-        $ composer require symfony/web-server-bundle --dev
-
 运行 Symfony 应用
 --------------------------------
 
 在生成环境下，你应该使用 Nginx 或 Apache 等Web服务器
 （请参阅 :doc:`配置一个Web服务器来运行Symfony </setup/web_server_configuration>`）。
-但是对于开发来说，使用 :doc:`Symfony的内置服务器 <setup/built_in_web_server>` 会更方便。
+但是对于开发来说，使用 :doc:`Symfony的本地服务器 <setup/symfony_server>` 会更方便。
+
+.. note::
+
+    如果你想要使用虚拟机(VM)，可以参考 :doc:`Homestead </setup/homestead>`。
 
 进入你的新项目并且运行内置服务器：
 
 .. code-block:: terminal
 
     $ cd my-project
-    $ php bin/console server:run
+    $ symfony server:start
 
 打开你的浏览器并访问 ``http://localhost:8000/``。如果一切正常，你应该会看到一个欢迎页面。
 最后，你在完成工作后想要关闭服务器，可以在终端中按 ``Ctrl+C`` 关闭服务器。
@@ -102,6 +101,11 @@
     $ composer install
 
 你可能还需要自定义你的 :ref:`.env <config-dot-env>` 并执行一些其他项目特定任务（例如，创建数据库模式(schema)）。
+在首次使用现有Symfony应用时，运行此命令可能会有用，该命令显示有关应用的信息：
+
+.. code-block:: terminal
+
+    $ php bin/console about
 
 检查安全漏洞
 -------------------------------------

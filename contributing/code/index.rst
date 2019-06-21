@@ -6,7 +6,7 @@
 
     bugs
     reproducer
-    patches
+    pull_requests
     maintenance
     core_team
     security

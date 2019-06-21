@@ -10,6 +10,32 @@
 
 .. configuration-block::
 
+    .. code-block:: php-annotations
+
+        use Symfony\Component\Routing\Annotation\Route;
+
+        /**
+         * @Route(name="blog_")
+         */
+        class BlogController
+        {
+            /**
+             * @Route("/blog/{page}", name="index", defaults={"page": 1, "title": "Hello world!"})
+             */
+            public function index($page)
+            {
+                // ...
+            }
+        }
+
+        # config/routes.yaml
+        blog:
+            path:       /blog/{page}
+            controller: App\Controller\BlogController::index
+            defaults:
+                page: 1
+                title: "Hello world!"
+
     .. code-block:: yaml
 
         # config/routes.yaml
@@ -27,10 +53,9 @@
         <routes xmlns="http://symfony.com/schema/routing"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/routing
-                http://symfony.com/schema/routing/routing-1.0.xsd">
+                https://symfony.com/schema/routing/routing-1.0.xsd">
 
-            <route id="blog" path="/blog/{page}">
-                <default key="_controller">App\Controller\BlogController::index</default>
+            <route id="blog" path="/blog/{page}" controller="App\Controller\BlogController::index">
                 <default key="page">1</default>
                 <default key="title">Hello world!</default>
             </route>
@@ -39,17 +64,18 @@
     .. code-block:: php
 
         // config/routes.php
-        use Symfony\Component\Routing\RouteCollection;
-        use Symfony\Component\Routing\Route;
+        use App\Controller\BlogController;
+        use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
-        $routes = new RouteCollection();
-        $routes->add('blog', new Route('/blog/{page}', array(
-            '_controller' => 'App\Controller\BlogController::index',
-            'page'        => 1,
-            'title'       => 'Hello world!',
-        )));
-
-        return $routes;
+        return function (RoutingConfigurator $routes) {
+            $routes->add('blog', '/blog/{page}')
+                ->controller([BlogController::class, 'index'])
+                ->defaults([
+                    'page'  => 1,
+                    'title' => 'Hello world!',
+                ])
+            ;
+        };
 
 现在，你可以在控制器中将此额外参数作为该控制器方法的参数来进行访问::
 

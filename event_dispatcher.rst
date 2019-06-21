@@ -21,8 +21,8 @@ Symfony在处理HTTP请求时触发多个与 :doc:`内核相关的事件 </refer
     // src/EventListener/ExceptionListener.php
     namespace App\EventListener;
 
-    use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
     use Symfony\Component\HttpFoundation\Response;
+    use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
     use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
     class ExceptionListener
@@ -81,11 +81,11 @@ Symfony在处理HTTP请求时触发多个与 :doc:`内核相关的事件 </refer
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <services>
                 <service id="App\EventListener\ExceptionListener">
-                    <tag name="kernel.event_listener" event="kernel.exception" />
+                    <tag name="kernel.event_listener" event="kernel.exception"/>
                 </service>
             </services>
         </container>
@@ -97,7 +97,7 @@ Symfony在处理HTTP请求时触发多个与 :doc:`内核相关的事件 </refer
 
         $container
             ->autowire(ExceptionListener::class)
-            ->addTag('kernel.event_listener', array('event' => 'kernel.exception'))
+            ->addTag('kernel.event_listener', ['event' => 'kernel.exception'])
         ;
 
 Symfony遵循以下逻辑来决定在事件监听器类中执行哪个方法：
@@ -107,9 +107,6 @@ Symfony遵循以下逻辑来决定在事件监听器类中执行哪个方法：
    （例如， ``kernel.exception`` 事件的 ``onKernelException()`` 方法）;
 #. 如果该方法没有定义，请尝试执行 ``__invoke()`` 魔术方法（这使得事件监听器器可调用）;
 #. 如果连 ``_invoke()`` 方法都没有定义，则抛出异常。
-
-.. versionadded:: 4.1
-    Symfony 4.1中引入了 ``__invoke()`` 方法对创建可调用事件监听器的支持。
 
 .. note::
 
@@ -145,13 +142,13 @@ Symfony遵循以下逻辑来决定在事件监听器类中执行哪个方法：
         public static function getSubscribedEvents()
         {
             // 返回被订阅的事件，以及它们的方法和属性
-            return array(
-               KernelEvents::EXCEPTION => array(
-                   array('processException', 10),
-                   array('logException', 0),
-                   array('notifyException', -10),
-               )
-            );
+            return [
+                KernelEvents::EXCEPTION => [
+                    ['processException', 10],
+                    ['logException', 0],
+                    ['notifyException', -10],
+                ],
+            ];
         }
 
         public function processException(GetResponseForExceptionEvent $event)
@@ -192,8 +189,6 @@ Symfony会负责其余的工作。
     namespace App\EventListener;
 
     use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-    use Symfony\Component\HttpKernel\HttpKernel;
-    use Symfony\Component\HttpKernel\HttpKernelInterface;
 
     class RequestListener
     {

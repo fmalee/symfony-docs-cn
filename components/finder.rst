@@ -5,7 +5,7 @@
 Finder组件
 ====================
 
-    Finder组件通过直观的流畅界面查找文件和目录。
+    Finder组件通过一个直观流式的接口来根据不同的标准（名称，文件大小，修改时间等）查找文件和目录。
 
 安装
 ------------
@@ -13,8 +13,6 @@ Finder组件
 .. code-block:: terminal
 
     $ composer require symfony/finder
-
-或者，你可以克隆 `<https://github.com/symfony/finder>`_ 仓库。
 
 .. include:: /components/require_autoload.rst.inc
 
@@ -26,49 +24,32 @@ Finder组件
     use Symfony\Component\Finder\Finder;
 
     $finder = new Finder();
+    // 找到当前目录中的所有文件
     $finder->files()->in(__DIR__);
 
-    foreach ($finder as $file) {
-        // 转储绝对路径
-        var_dump($file->getRealPath());
-
-        // 转储文件的相对路径，省略文件名
-        var_dump($file->getRelativePath());
-
-        // 转储文件的相对路径，包括文件名
-        var_dump($file->getRelativePathname());
+    // 检查是否有任何搜索结果
+    if ($finder->hasResults()) {
+        // ...
     }
 
-``$file`` 是一个 :class:`Symfony\\Component\\Finder\\SplFileInfo`
-(继承自PHP自己的 :phpclass:`SplFileInfo`)实例，以提供使用相对路径的方法。
+    foreach ($finder as $file) {
+        $absoluteFilePath = $file->getRealPath();
+        $fileNameWithExtension = $file->getRelativePathname();
 
-上面的代码以递归方式打印当前目录中的所有文件的名称。
-Finder类使用流式接口，因此所有方法都返回该Finder实例。
+        // ...
+    }
 
-.. tip::
-
-    Finder实例是一个PHP :phpclass:`IteratorAggregate`。
-    因此，除了使用 ``foreach`` 迭代Finder之外，你还可以使用 :phpfunction:`iterator_to_array`
-    函数将其转换为数组，或者使用 :phpfunction:`iterator_count` 来获取该项的数量。
+``$file`` 变量是一个扩展PHP的 :phpclass:`SplFileInfo` 的一个
+:class:`Symfony\\Component\\Finder\\SplFileInfo` 实例的，以提供处理相对路径的方法。
 
 .. caution::
 
     ``Finder`` 对象不会自动重置其内部状态。这意味着如果你不希望得到混合(mixed)结果，则需要创建一个新实例。
 
-.. caution::
+搜索文件和目录
+-----------------------------------
 
-    在搜索被传递给 :method:`Symfony\\Component\\Finder\\Finder::in`
-    方法的多个位置时，会在内部为每个位置创建一个单独的迭代器。
-    这意味着我们会将多个结果集聚合为一个。由于 :phpfunction:`iterator_to_array`
-    默认情况下使用结果集的键，因此在转换为数组时，某些键可能会被复制并且其值会被覆盖。
-    通过将 ``false`` 传递给 :phpfunction:`iterator_to_array` 的第二个参数可以避免这种情况。
-
-条件
---------
-
-有很多方法可以过滤和排序你的结果。
-你还可以使用 :method:`Symfony\\Component\\Finder\\Finder::hasResults`
-方法检查是否存在与搜索条件匹配的文件或目录。
+该组件提供了许多方法来定义搜索条件。它们都可以链式操作，因为它们实现了一个 `流式接口`_。
 
 位置
 ~~~~~~~~
@@ -80,18 +61,17 @@ Finder类使用流式接口，因此所有方法都返回该Finder实例。
 通过链式调用 :method:`Symfony\\Component\\Finder\\Finder::in` 来搜索多个位置::
 
     // 在*两个*目录里面搜索
-    $finder->in(array(__DIR__, '/elsewhere'));
+    $finder->in([__DIR__, '/elsewhere']);
 
     // 与上述相同
     $finder->in(__DIR__)->in('/elsewhere');
 
-使用通配符来搜索匹配一个模式的目录::
+使用 ``*`` 作为通配符来搜索匹配一个模式的目录（每个模式必须解析为至少一个目录路径）::
 
     $finder->in('src/Symfony/*/*/Resources');
 
-每个模式必须解析为至少一个目录路径。
-
-使用 :method:`Symfony\\Component\\Finder\\Finder::exclude` 方法排除匹配的目录::
+使用 :method:`Symfony\\Component\\Finder\\Finder::exclude`
+方法来排除匹配的目录::
 
     // 作为参数传递的目录必须相对于使用 in() 方法定义的目录
     $finder->in(__DIR__)->exclude('ruby');
@@ -100,7 +80,8 @@ Finder类使用流式接口，因此所有方法都返回该Finder实例。
 
     $finder->ignoreUnreadableDirs()->in(__DIR__);
 
-由于Finder使用PHP迭代器，你可以使用支持的 `协议`_ 来传递任何URL::
+由于Finder使用PHP迭代器，你可以使用支持的 ``PHP wrapper for URL-style protocols`_
+(``ftp://``、``zlib://`` 等等)来传递任何URL::
 
     // 在FTP根目录中查找时始终添加一个尾斜杠
     $finder->in('ftp://example.com/');
@@ -112,8 +93,9 @@ Finder类使用流式接口，因此所有方法都返回该Finder实例。
 
     use Symfony\Component\Finder\Finder;
 
-    $s3 = new \Zend_Service_Amazon_S3($key, $secret);
-    $s3->registerStreamWrapper('s3');
+    // register a 's3://' wrapper with the official AWS SDK
+    $s3Client = new Aws\S3\S3Client([/* config options */]);
+    $s3Client->registerStreamWrapper();
 
     $finder = new Finder();
     $finder->name('photos*')->size('< 100K')->date('since 1 hour ago');
@@ -121,73 +103,34 @@ Finder类使用流式接口，因此所有方法都返回该Finder实例。
         // ... 对文件做一些事情
     }
 
-.. note::
+.. seealso::
 
-    阅读 `Streams`_ 文档以了解如何创建自己的流。
+    阅读 `PHP流`_ 文档以了解如何创建自己的流。
 
 文件和目录
 ~~~~~~~~~~~~~~~~~~~~
 
 默认情况下，Finder返回文件和目录; 但可以使用
 :method:`Symfony\\Component\\Finder\\Finder::files` 和
-:method:`Symfony\\Component\\Finder\\Finder::directories` 方法来控制改行为::
+:method:`Symfony\\Component\\Finder\\Finder::directories` 方法来控制该行为::
 
+    // 只查找文件; 忽略目录
     $finder->files();
 
+    // 只查找目录; 忽略文件
     $finder->directories();
 
-如果要关注链接，请使用 ``followLinks()`` 方法::
+如果要关注 `软连接`_，请使用 ``followLinks()`` 方法::
 
     $finder->files()->followLinks();
 
-默认情况下，迭代器忽略流行的VCS文件。但可以通过 ``ignoreVCS()`` 方法更改::
+版本控制文件
+~~~~~~~~~~~~~~~~~~~~~
+
+`版本控制系统`_（简称“VCS”），例如Git和Mercurial，会创建一些特殊文件来存储其元数据。
+查找文件和目录时，默认情况下会忽略这些文件，但你可以使用 ``ignoreVCS()`` 方法更改此模式::
 
     $finder->ignoreVCS(false);
-
-排序
-~~~~~~~
-
-按名称或类型（首先是目录，然后是文件）对结果进行排序::
-
-    $finder->sortByName();
-
-    $finder->sortByType();
-
-.. tip::
-
-    默认情况下，``sortByName()`` 方法使用 :phpfunction:`strcmp`
-    PHP函数（例如 ``file1.txt``、``file10.txt``、``file2.txt``）。
-    可以通过传递 ``true`` 作为它的参数来使用PHP的 `自然排序`_
-    算法（例如 ``file1.txt``、``file2.txt``、``file10.txt``）。
-
-    .. versionadded:: 4.2
-        Symfony 4.2中引入了使用自然排序顺序的选项。
-
-按上次访问、变更或修改的时间对文件和目录进行排序::
-
-    $finder->sortByAccessedTime();
-
-    $finder->sortByChangedTime();
-
-    $finder->sortByModifiedTime();
-
-你还可以使用 ``sort()`` 方法定义自己的排序算法::
-
-    $finder->sort(function (\SplFileInfo $a, \SplFileInfo $b) {
-        return strcmp($a->getRealPath(), $b->getRealPath());
-    });
-
-你可以使用 ``reverseSorting()`` 方法反转任何排序::
-
-    // 结果将被排序为“Z到A”而不是默认的“A到Z”
-    $finder->sortByName()->reverseSorting();
-
-.. versionadded:: 4.2
-    ``reverseSorting()`` 方法是在Symfony 4.2中引入的。
-
-.. note::
-
-    请注意，这些 ``sort*`` 方法需要获取所有匹配的元素以完成它们的工作。对于大型迭代器，它会很慢。
 
 文件名称
 ~~~~~~~~~
@@ -205,7 +148,7 @@ Finder类使用流式接口，因此所有方法都返回该Finder实例。
     $finder->files()->name('*.php')->name('*.twig');
 
     // 与上述相同
-    $finder->files()->name(array('*.php', '*.twig'));
+    $finder->files()->name(['*.php', '*.twig']);
 
 ``notName()`` 方法排除匹配一个模式的文件::
 
@@ -216,15 +159,13 @@ Finder类使用流式接口，因此所有方法都返回该Finder实例。
     $finder->files()->notName('*.rb')->notName('*.py');
 
     // 与上述相同
-    $finder->files()->notName(array('*.rb', '*.py'));
-
-.. versionadded:: 4.2
-    在Symfony 4.2引入了对将数组传递到 ``name()`` 和 ``notName()`` 的支持。
+    $finder->files()->notName(['*.rb', '*.py']);
 
 文件内容
 ~~~~~~~~~~~~~
 
-使用 :method:`Symfony\\Component\\Finder\\Finder::contains` 方法来按内容限制文件::
+使用 :method:`Symfony\\Component\\Finder\\Finder::contains`
+方法来按内容查找文件::
 
     $finder->files()->contains('lorem ipsum');
 
@@ -239,16 +180,17 @@ Finder类使用流式接口，因此所有方法都返回该Finder实例。
 路径
 ~~~~
 
-使用 :method:`Symfony\\Component\\Finder\\Finder::path` 方法来按路径限制文件和目录::
+使用 :method:`Symfony\\Component\\Finder\\Finder::path
+方法来按路径查找文件和目录::
 
     // 匹配其路径（文件或目录）中的任何位置包含“data”的文件
     $finder->path('data');
     // 例如，如果它们存在的话，则匹配 data/*.xml 和 data.xml
     $finder->path('data')->name('*.xml');
 
-在所有平台上，应该使用斜杠（即 ``/``）作为目录的分隔符。
+在所有平台（包括Windows）上使用正斜杠（即 ``/``）作为目录分隔符。该组件会在内部进行必要的转换。
 
-``path()`` 方法接受字符串、正则表达式或字符串、正则表达式数组::
+``path()`` 方法接受字符串、正则表达式、一个字符串、常量表达式的数组::
 
     $finder->path('foo/bar');
     $finder->path('/^foo\/bar/');
@@ -258,17 +200,16 @@ Finder类使用流式接口，因此所有方法都返回该Finder实例。
     $finder->path('data')->path('foo/bar');
 
     // 与上述相同
-    $finder->path(array('data', 'foo/bar'));
-
-.. versionadded:: 4.2
-    在Symfony 4.2中引入了对传递数组到 ``path()`` 的支持
+    $finder->path(['data', 'foo/bar']);
 
 在内部，通过转义斜杠和添加分隔符来将字符串转换为正则表达式：
 
-.. code-block:: text
-
-    dirname    ===>    /dirname/
-    a/b/c      ===>    /a\/b\/c/
+=====================  =======================
+原始给定字符串           使用正则表达式
+=====================  =======================
+``dirname``            ``/dirname/``
+``a/b/c``              ``/a\/b\/c/``
+=====================  =======================
 
 :method:`Symfony\\Component\\Finder\\Finder::notPath` 方法按路径排除文件::
 
@@ -279,15 +220,17 @@ Finder类使用流式接口，因此所有方法都返回该Finder实例。
     $finder->notPath('first/dir')->notPath('other/dir');
 
     // 与上述相同
-    $finder->notPath(array('first/dir', 'other/dir'));
+    $finder->notPath(['first/dir', 'other/dir']);
 
 .. versionadded:: 4.2
+
     在Symfony 4.2中引入了对传递数组到 ``notPath()`` 的支持
 
 文件大小
 ~~~~~~~~~
 
-使用 :method:`Symfony\\Component\\Finder\\Finder::size` 方法来按大小(size)限制文件::
+使用 :method:`Symfony\\Component\\Finder\\Finder::size`
+方法来按大小查找文件::
 
     $finder->files()->size('< 1.5K');
 
@@ -296,20 +239,18 @@ Finder类使用流式接口，因此所有方法都返回该Finder实例。
     $finder->files()->size('>= 1K')->size('<= 2K');
 
     // 与上述相同
-    $finder->files()->size(array('>= 1K', '<= 2K'));
+    $finder->files()->size(['>= 1K', '<= 2K']);
 
-.. versionadded:: 4.2
-    在Symfony 4.2中引入了对传递数组到 ``size()`` 的支持
+比较运算符可以是下列任何一项：``>``、``>=``、``<``、``<=``、``==``、``!=``。
 
-比较运算符可以是下列任何一项： ``>``, ``>=``, ``<``, ``<=``, ``==``, ``!=``。
-
-目标值可以使用千字节（``k``、``ki``），兆字节（``m``、``mi``）或千兆字节（``g``、``gi``）的大小。
+目标值可以使用千字节（``k``、``ki``）、兆字节（``m``、``mi``）或千兆字节（``g``、``gi``）的大小。
 后缀为 ``i`` 的话，会根据 `IEC标准`_ 来使用适当的 ``2**n`` 版本。
 
 文件日期
 ~~~~~~~~~
 
-使用 :method:`Symfony\\Component\\Finder\\Finder::date` 方法来按最后修改日期限制文件::
+使用 :method:`Symfony\\Component\\Finder\\Finder::date`
+方法按上次修改日期来查找文件::
 
     $finder->date('since yesterday');
 
@@ -318,21 +259,18 @@ Finder类使用流式接口，因此所有方法都返回该Finder实例。
     $finder->date('>= 2018-01-01')->date('<= 2018-12-31');
 
     // 与上述相同
-    $finder->date(array('>= 2018-01-01', '<= 2018-12-31'));
+    $finder->date(['>= 2018-01-01', '<= 2018-12-31']);
 
-.. versionadded:: 4.2
-    在Symfony 4.2中引入了对传递数组到 ``date()`` 的支持
+比较运算符可以是下列任何一项：``>``、``>=``、``<``、``<=``、``==``。
+你还可以使用 ``since`` 或 ``after`` 作为 ``>`` 的别名；使用
+``until`` 或 ``before`` 作为 ``<`` 的别名。
 
-比较运算符可以是下列任何一项：``>``, ``>=``, ``<``, ``<=``, ``==``。
-你还可以使用 ``since`` 或 ``after`` 作为 ``>``
-的别名，使用 ``until`` 或 ``before`` 作为 ``<`` 别名。
-
-目标值可以是 `strtotime`_ 函数支持的任何日期。
+目标值可以是 :phpfunction:`strtotime` 支持的任何日期。
 
 目录深度
 ~~~~~~~~~~~~~~~
 
-默认情况下，Finder以递归方式遍历目录。通过使用
+默认情况下，Finder以递归方式遍历目录。可以通过
 :method:`Symfony\\Component\\Finder\\Finder::depth` 方法来限制遍历的深度::
 
     $finder->depth('== 0');
@@ -343,15 +281,12 @@ Finder类使用流式接口，因此所有方法都返回该Finder实例。
     $finder->depth('> 2')->depth('< 5');
 
     // 与上述相同
-    $finder->depth(array('> 2', '< 5'));
-
-.. versionadded:: 4.2
-    在Symfony 4.2中引入了对传递数组到 ``depth()`` 的支持
+    $finder->depth(['> 2', '< 5']);
 
 自定义过滤
 ~~~~~~~~~~~~~~~~
 
-要使用你自己的策略来限制匹配文件，请使用
+要使用你自己的策略来过滤结果，请使用
 :method:`Symfony\\Component\\Finder\\Finder::filter`::
 
     $filter = function (\SplFileInfo $file)
@@ -367,8 +302,57 @@ Finder类使用流式接口，因此所有方法都返回该Finder实例。
 对于每个匹配的文件，使用该文件作为 :class:`Symfony\\Component\\Finder\\SplFileInfo`
 实例来调用它。如果闭包返回 ``false``，则从结果集中排除该文件。
 
+排序结果
+---------------
+
+按名称或类型（首先是目录，然后是文件）对结果进行排序::
+
+    $finder->sortByName();
+
+    $finder->sortByType();
+
+.. tip::
+
+    默认情况下，``sortByName()`` 方法使用 :phpfunction:`strcmp` PHP函数（例如
+    ``file1.txt``、``file10.txt``、``file2.txt``）。
+    传递 ``true`` 作为它的参数可以使用PHP的 `自然排序`_
+    算法来代替（例如 ``file1.txt``、``file2.txt``、``file10.txt``）。
+
+按上次访问、更改或编辑的时间对文件和目录进行排序::
+
+    $finder->sortByAccessedTime();
+
+    $finder->sortByChangedTime();
+
+    $finder->sortByModifiedTime();
+
+你还可以使用 ``sort()`` 方法来定义自己的排序算法::
+
+    $finder->sort(function (\SplFileInfo $a, \SplFileInfo $b) {
+        return strcmp($a->getRealPath(), $b->getRealPath());
+    });
+
+你可以使用 ``reverseSorting()`` 方法来反转任何排序::
+
+    // 结果将被排序为“Z到A”而不是默认的“A到Z”
+    $finder->sortByName()->reverseSorting();
+
+.. note::
+
+    请注意，这些 ``sort*`` 方法需要获取所有匹配的元素以完成它们的工作。对于大型迭代器，它会很慢。
+
+将结果转换为数组
+--------------------------------
+
+Finder实例是一个 :phpclass:`IteratorAggregate` PHP类。因此，除了使用 ``foreach``
+来迭代Finder结果之外，你还可以使用 :phpfunction:`iterator_to_array`
+函数将其转换为一个数组，或者使用 :phpfunction:`iterator_count` 来获取项目数量。
+
+如果你调用 :method:`Symfony\\Component\\Finder\\Finder::in`
+方法在多个位置进行搜索不止一次，传递 ``false`` 作为 :phpfunction:`iterator_to_array` 的第二个参数，以避免出现问题（每个位置都会创建一个单独的迭代器，如果你不传递 ``false`` 到 :phpfunction:`iterator_to_array`，得到的结果集的其中一些键可能是重复的并且它们的值已被覆盖）。
+
 读取返回文件的内容
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+----------------------------------
 
 返回文件的内容可以通过使用
 :method:`Symfony\\Component\\Finder\\SplFileInfo::getContents` 方法来读取::
@@ -384,9 +368,11 @@ Finder类使用流式接口，因此所有方法都返回该Finder实例。
         // ...
     }
 
-.. _strtotime:          https://php.net/manual/en/datetime.formats.php
-.. _协议:               https://php.net/manual/en/wrappers.php
-.. _Streams:            https://php.net/streams
-.. _IEC标准:            https://physics.nist.gov/cuu/Units/binary.html
-.. _Packagist:          https://packagist.org/packages/symfony/finder
+.. _`流式接口`: https://en.wikipedia.org/wiki/Fluent_interface
+.. _`软连接`: https://en.wikipedia.org/wiki/Symbolic_link
+.. _`版本控制系统`: https://en.wikipedia.org/wiki/Version_control
+.. _`PHP wrapper for URL-style protocols`: https://php.net/manual/en/wrappers.php
+.. _`PHP流`: https://php.net/streams
+.. _`IEC标准`: https://physics.nist.gov/cuu/Units/binary.html
+.. _`Packagist`: https://packagist.org/packages/symfony/finder
 .. _`自然排序`: https://en.wikipedia.org/wiki/Natural_sort_order

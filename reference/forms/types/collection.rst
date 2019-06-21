@@ -1,7 +1,7 @@
 .. index::
    single: Forms; Fields; CollectionType
 
-CollectionType字段
+CollectionType Field
 ====================
 
 This field type is used to render a "collection" of some field or form.
@@ -40,6 +40,8 @@ photos).
 | Class       | :class:`Symfony\\Component\\Form\\Extension\\Core\\Type\\CollectionType`    |
 +-------------+-----------------------------------------------------------------------------+
 
+.. include:: /reference/forms/types/options/_debug_form.rst.inc
+
 .. note::
 
     If you are working with a collection of Doctrine entities, pay special
@@ -59,14 +61,14 @@ address as its own input text box::
     use Symfony\Component\Form\Extension\Core\Type\EmailType;
     // ...
 
-    $builder->add('emails', CollectionType::class, array(
+    $builder->add('emails', CollectionType::class, [
         // each entry in the array will be an "email" field
         'entry_type' => EmailType::class,
         // these options are passed to each "email" type
-        'entry_options' => array(
-            'attr' => array('class' => 'email-box'),
-        ),
-    ));
+        'entry_options' => [
+            'attr' => ['class' => 'email-box'],
+        ],
+    ]);
 
 The simplest way to render this is all at once:
 
@@ -113,8 +115,8 @@ your form):
 
 .. code-block:: html
 
-    <input type="email" id="form_emails_0" name="form[emails][0]" value="foo@foo.com" />
-    <input type="email" id="form_emails_1" name="form[emails][1]" value="bar@bar.com" />
+    <input type="email" id="form_emails_0" name="form[emails][0]" value="foo@foo.com"/>
+    <input type="email" id="form_emails_1" name="form[emails][1]" value="bar@bar.com"/>
 
 To allow your user to add another email, just set `allow_add`_ to ``true``
 and - via JavaScript - render another field with the name ``form[emails][2]``
@@ -147,7 +149,7 @@ you need is this JavaScript code:
     // add-collection-widget.js
     jQuery(document).ready(function () {
         jQuery('.add-another-collection-widget').click(function (e) {
-            var list = jQuery(jQuery(this).attr('data-list'));
+            var list = jQuery(jQuery(this).attr('data-list-selector'));
             // Try to find the counter of the list or use the length of the list
             var counter = list.data('widget-counter') | list.children().length;
 
@@ -178,7 +180,8 @@ And update the template as follows:
         {# store the prototype on the data-prototype attribute #}
         <ul id="email-fields-list"
             data-prototype="{{ form_widget(form.emails.vars.prototype)|e }}"
-            data-widget-tags="{{ '<li></li>'|e }}">
+            data-widget-tags="{{ '<li></li>'|e }}"
+            data-widget-counter="{{ form.children|length }}">
         {% for emailField in form.emails %}
             <li>
                 {{ form_errors(emailField) }}
@@ -189,7 +192,7 @@ And update the template as follows:
 
         <button type="button"
             class="add-another-collection-widget"
-            data-list="#email-fields-list">Add another email</button>
+            data-list-selector="#email-fields-list">Add another email</button>
 
         {# ... #}
     {{ form_end(form) }}
@@ -237,9 +240,9 @@ allow_delete
 
 If set to ``true``, then if an existing item is not contained in the submitted
 data, it will be correctly absent from the final array of items. This means
-that you can implement a "delete" button via JavaScript which simply removes
-a form element from the DOM. When the user submits the form, its absence
-from the submitted data will mean that it's removed from the final array.
+that you can implement a "delete" button via JavaScript which removes a form
+element from the DOM. When the user submits the form, its absence from the
+submitted data will mean that it's removed from the final array.
 
 For more information, see :ref:`form-collections-remove`.
 
@@ -280,12 +283,12 @@ the value is removed from the collection. For example::
     use Symfony\Component\Form\Extension\Core\Type\CollectionType;
     // ...
 
-    $builder->add('users', CollectionType::class, array(
+    $builder->add('users', CollectionType::class, [
         // ...
         'delete_empty' => function (User $user = null) {
             return null === $user || empty($user->getFirstName());
         },
-    ));
+    ]);
 
 Using a callable is particularly useful in case of compound form types, which
 may define complex conditions for considering them empty.
@@ -293,7 +296,7 @@ may define complex conditions for considering them empty.
 entry_options
 ~~~~~~~~~~~~~
 
-**type**: ``array`` **default**: ``array()``
+**type**: ``array`` **default**: ``[]``
 
 This is the array that's passed to the form type specified in the `entry_type`_
 option. For example, if you used the :doc:`ChoiceType </reference/forms/types/choice>`
@@ -301,21 +304,21 @@ as your `entry_type`_ option (e.g. for a collection of drop-down menus),
 then you'd need to at least pass the ``choices`` option to the underlying
 type::
 
-    use Symfony\Component\Form\Extension\Core\Type\CollectionType;
     use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+    use Symfony\Component\Form\Extension\Core\Type\CollectionType;
     // ...
 
-    $builder->add('favorite_cities', CollectionType::class, array(
+    $builder->add('favoriteCities', CollectionType::class, [
         'entry_type'   => ChoiceType::class,
-        'entry_options'  => array(
-            'choices'  => array(
+        'entry_options'  => [
+            'choices'  => [
                 'Nashville' => 'nashville',
                 'Paris'     => 'paris',
                 'Berlin'    => 'berlin',
                 'London'    => 'london',
-            ),
-        ),
-    ));
+            ],
+        ],
+    ]);
 
 entry_type
 ~~~~~~~~~~
@@ -368,20 +371,18 @@ prototype_data
 
 Allows you to define specific data for the prototype. Each new row added will
 initially contain the data set by this option. By default, the data configured
-for all entries with the `entry_options`_ option will be used.
-
-.. code-block:: php
+for all entries with the `entry_options`_ option will be used::
 
     use Symfony\Component\Form\Extension\Core\Type\CollectionType;
     use Symfony\Component\Form\Extension\Core\Type\TextType;
     // ...
 
-    $builder->add('tags', CollectionType::class, array(
+    $builder->add('tags', CollectionType::class, [
         'entry_type' => TextType::class,
         'allow_add' => true,
         'prototype' => true,
         'prototype_data' => 'New Tag Placeholder',
-    ));
+    ]);
 
 prototype_name
 ~~~~~~~~~~~~~~
@@ -405,7 +406,7 @@ Not all options are listed here - only the most applicable to this type:
 .. include:: /reference/forms/types/options/empty_data.rst.inc
     :end-before: DEFAULT_PLACEHOLDER
 
-The default value is ``array()`` (empty array).
+The default value is ``[]`` (empty array).
 
 .. include:: /reference/forms/types/options/empty_data.rst.inc
     :start-after: DEFAULT_PLACEHOLDER

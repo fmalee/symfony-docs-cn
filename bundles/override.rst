@@ -35,7 +35,7 @@
 
     {# templates/bundles/FOSUserBundle/Registration/confirmed.html.twig #}
     {# 从一个被重写的模板扩展时，特殊的 '!' 前缀可以避免错误 #}
-    {% extends "@!FOSUserBundle/Registration/confirmed.html.twig" %}
+    {% extends "@!FOSUser/Registration/confirmed.html.twig" %}
 
     {% block some_block %}
         ...
@@ -120,7 +120,7 @@ Symfony从每个bundle中加载所有的验证配置文件，并将它们组合�
         <constraint-mapping xmlns="http://symfony.com/schema/dic/constraint-mapping"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping
-                http://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
+                https://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
 
             <class name="FOS\UserBundle\Model\User">
                 <property name="plainPassword">

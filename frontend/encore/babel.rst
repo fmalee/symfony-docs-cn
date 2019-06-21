@@ -17,17 +17,18 @@
 
         .configureBabel(function(babelConfig) {
             // 添加额外预设
-            // babelConfig.presets.push('@babel/preset-flow');
+            babelConfig.presets.push('@babel/preset-flow');
 
             // 默认情况下不添加任何插件，但你可以添加一些插件
-            // babelConfig.plugins.push('styled-jsx/babel');
+            babelConfig.plugins.push('styled-jsx/babel');
         }, {
             // 默认情况下，不通过Babel处理node_modules
             // 但你可以将特定模块列入白名单进行处理
-            // include_node_modules: ['foundation-sites']
+            include_node_modules: ['foundation-sites'],
 
-            // 或者完全控制 exclude
-            // exclude: /bower_components/
+            // 或完全控制排除规则
+            // （请注意，你不能同时使用 "include_node_modules" 和 "exclude"）
+            exclude: /bower_components/
         })
     ;
 

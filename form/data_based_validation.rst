@@ -13,12 +13,12 @@
     // ...
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
-            'validation_groups' => array(
+        $resolver->setDefaults([
+            'validation_groups' => [
                 Client::class,
                 'determineValidationGroups',
-            ),
-        ));
+            ],
+        ]);
     }
 
 这将在提交表单之后、执行验证之前，调用类 ``Client`` 上的 ``determineValidationGroups()`` 静态方法。
@@ -31,17 +31,17 @@
     // ...
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'validation_groups' => function (FormInterface $form) {
                 $data = $form->getData();
 
                 if (Client::TYPE_PERSON == $data->getType()) {
-                    return array('person');
+                    return ['person'];
                 }
 
-                return array('company');
+                return ['company'];
             },
-        ));
+        ]);
     }
 
 使用 ``validation_groups`` 选项会重写正在使用的默认验证组。
@@ -54,17 +54,17 @@
     // ...
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'validation_groups' => function (FormInterface $form) {
                 $data = $form->getData();
 
                 if (Client::TYPE_PERSON == $data->getType()) {
-                    return array('Default', 'person');
+                    return ['Default', 'person'];
                 }
 
-                return array('Default', 'company');
+                return ['Default', 'company'];
             },
-        ));
+        ]);
     }
 
 你可以在 :doc:`验证组 </validation/groups>` 的文档中找到有关验证组和默认约束如何工作的更多信息。

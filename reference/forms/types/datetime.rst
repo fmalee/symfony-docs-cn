@@ -56,6 +56,8 @@ the data can be a ``DateTime`` object, a string, a timestamp or an array.
 | Class                | :class:`Symfony\\Component\\Form\\Extension\\Core\\Type\\DateTimeType`      |
 +----------------------+-----------------------------------------------------------------------------+
 
+.. include:: /reference/forms/types/options/_debug_form.rst.inc
+
 Field Options
 -------------
 
@@ -70,27 +72,29 @@ Defines the ``format`` option that will be passed down to the date field.
 See the :ref:`DateType's format option <reference-forms-type-date-format>`
 for more details.
 
+The ``date_format`` option does not have any effect when the form is rendered
+as an HTML5 datetime input.
+
 date_label
 ~~~~~~~~~~
 
 **type**: ``string`` | ``null`` **default**: The label is "guessed" from the field name
-
-.. versionadded:: 4.2
-    The ``date_label`` option was introduced in Symfony 4.2.
 
 Sets the label that will be used when rendering the date widget. Setting it to
 ``false`` will suppress the label::
 
     use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 
-    $builder->add('startDateTime', DateTimeType::class, array(
+    $builder->add('startDateTime', DateTimeType::class, [
         'date_label' => 'Starts On',
-    ));
+    ]);
 
 date_widget
 ~~~~~~~~~~~
 
 .. include:: /reference/forms/types/options/date_widget_description.rst.inc
+
+The ``date_widget`` option is ignored when the ``widget`` option is set to ``single_text``.
 
 .. include:: /reference/forms/types/options/days.rst.inc
 
@@ -105,21 +109,21 @@ it will be used as the **blank value** of all select boxes::
 
     use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 
-    $builder->add('startDateTime', DateTimeType::class, array(
+    $builder->add('startDateTime', DateTimeType::class, [
         'placeholder' => 'Select a value',
-    ));
+    ]);
 
 Alternatively, you can use an array that configures different placeholder
 values for the year, month, day, hour, minute and second fields::
 
     use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 
-    $builder->add('startDateTime', DateTimeType::class, array(
-        'placeholder' => array(
+    $builder->add('startDateTime', DateTimeType::class, [
+        'placeholder' => [
             'year' => 'Year', 'month' => 'Month', 'day' => 'Day',
             'hour' => 'Hour', 'minute' => 'Minute', 'second' => 'Second',
-        )
-    ));
+        ]
+    ]);
 
 format
 ~~~~~~
@@ -148,7 +152,7 @@ on your underlying object. Valid values are:
 * ``string`` (e.g. ``2011-06-05 12:15:00``)
 * ``datetime`` (a ``DateTime`` object)
 * ``datetime_immutable`` (a ``DateTimeImmutable`` object)
-* ``array`` (e.g. ``array(2011, 06, 05, 12, 15, 0)``)
+* ``array`` (e.g. ``[2011, 06, 05, 12, 15, 0]``)
 * ``timestamp`` (e.g. ``1307276100``)
 
 The value that comes back from the form will also be normalized back into
@@ -169,17 +173,14 @@ time_label
 
 **type**: ``string`` | ``null`` **default**: The label is "guessed" from the field name
 
-.. versionadded:: 4.2
-    The ``time_label`` option was introduced in Symfony 4.2.
-
 Sets the label that will be used when rendering the time widget. Setting it to
 ``false`` will suppress the label::
 
     use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 
-    $builder->add('startDateTime', DateTimeType::class, array(
+    $builder->add('startDateTime', DateTimeType::class, [
         'time_label' => 'Starts On',
-    ));
+    ]);
 
 time_widget
 ~~~~~~~~~~~
@@ -187,6 +188,8 @@ time_widget
 **type**: ``string`` **default**: ``choice``
 
 Defines the ``widget`` option for the :doc:`TimeType </reference/forms/types/time>`.
+
+The ``time_widget`` option is ignored when the ``widget`` option is set to ``single_text``.
 
 .. include:: /reference/forms/types/options/view_timezone.rst.inc
 

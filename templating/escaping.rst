@@ -8,7 +8,7 @@
 结果是该动态内容可能会破坏结果页面的HTML或允许恶意用户执行 `跨站点脚本`_ （XSS）攻击。
 思考这个典型的例子：
 
-.. code-block:: html+twig
+.. code-block:: twig
 
     Hello {{ name }}
 

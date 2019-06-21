@@ -10,6 +10,7 @@
   - `1310e0dc917f676f75662d6fe1053b3adaa695b6`（2018-12-04）
     - `components/dom_crawler.rst`
 - `4.2`
+  - `d87b7191d2faef1815e4ca5a3a8b459c66d9f5b3`（2019-06-12）
   - `78123c8c25a67e8aa8e53ff5bb33252c79bdabae`（2018-12-23）
   - `2086b162ba7b8e310a38fb108468cab6dd0d18fa`（2018-12-04）
   - `2ebb3d5057c8024355ce173f6d0e0ea215053c71`（2018-11-17）
@@ -25,11 +26,35 @@
 
 ### 未汉化
 
+- `cache.rst`
+- `mercure.rst`
+- `migration.rst`
+- `workflow.rst`
+- `components/cache.rst`
+- `components/dotenv.rst`
+- `omponents/serializer.rst`
+- `frontend/encore/virtual-machine.rst`
+- `translation/message_format.rst`
+- `setup/symfony_server.rst`
+- `workflow/dumping-workflows.rst`
+
 - [常用Bundle](https://symfony.com/doc/bundles/)
 - `introduction`
 - `compoments`
   - `serializer` (翻译小半)
 - `reference`
+- `contributing`
+  - `code/bc.rst`
+  - `code/bugs.rst`
+  - `code/core_team.rst`
+  - `code/experimental.rst`
+  - `code/maintenance.rst`
+  - `code/pull_requests.rst`
+  - `code/reproducer.rst`
+  - `code/security.rst`
+  - `community/review-comments.rst`
+  - `community/reviews.rst`
+  - `diversity/governance.rst`
 - `bundle/` (5)
 - `http_cache` (7)
 - `service_container/service_subscribers_locators.rst`
@@ -139,6 +164,7 @@
 - `Cache Adapter` 缓存适配器
 - `Cache Hit` 缓存命中
 - `Cache Misse` 缓存未命中
+- `Contract` 契约
 
 ### 导航调整
 
@@ -265,10 +291,12 @@ $ make html
 # build the image...
 $ docker build . -t symfony-docs
 
-# ...and serve it locally on http//:127.0.0.1:8080
+# ...and start the local web server
 # (if it's already in use, change the '8080' port by any other port)
 $ docker run --rm -p 8080:80 symfony-docs
 ```
+
+你现在可以在http://127.0.0.1:8080上阅读该文档（如果你使用虚拟机，则可以使用其IP浏览， 例如http://192.168.99.100:8080，而不是localhost）。
 
 ### 中文搜索
 

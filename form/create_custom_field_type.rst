@@ -14,26 +14,30 @@ Symfony附带有一堆可用于构建表单的核心字段类型。
 
 要创建自定义字段类型，首先必须创建表示该字段的类。
 在这个例子中，保存该字段类型的类被命名为 ``ShippingType``，并将该文件存储在表单字段的默认位置，即
-``App\Form\Type``。同时确保该字段继承 :class:`Symfony\\Component\\Form\\AbstractType`::
+``App\Form\Type``。
+
+所有的字段类型都必须实现 :class:`Symfony\\Component\\Form\\FormTypeInterface`，
+但你应该继承已经实现了该接口并提供了一些实用工具的
+:class:`Symfony\\Component\\Form\\AbstractType`::
 
     // src/Form/Type/ShippingType.php
     namespace App\Form\Type;
 
     use Symfony\Component\Form\AbstractType;
-    use Symfony\Component\OptionsResolver\OptionsResolver;
     use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+    use Symfony\Component\OptionsResolver\OptionsResolver;
 
     class ShippingType extends AbstractType
     {
         public function configureOptions(OptionsResolver $resolver)
         {
-            $resolver->setDefaults(array(
-                'choices' => array(
+            $resolver->setDefaults([
+                'choices' => [
                     'Standard Shipping' => 'standard',
                     'Expedited Shipping' => 'expedited',
                     'Priority Shipping' => 'priority',
-                ),
-            ));
+                ],
+            ]);
         }
 
         public function getParent()
@@ -48,7 +52,15 @@ Symfony附带有一堆可用于构建表单的核心字段类型。
 
 ``getParent()`` 函数的返回值表示你正在扩展 ``ChoiceType`` 字段。
 这意味着，默认情况下，你继承了该字段类型的所有逻辑和渲染。
-要查看其中一些逻辑，请查看 `ChoiceType`_ 类。这里有三个方法特别重要：
+要查看其中一些逻辑，请查看 `ChoiceType`_ 类。
+
+.. note::
+
+    PHP类扩展机制和Symfony表单字段扩展机制不一样。在 ``getParent()``
+    中返回的父类型是Symfony用于构建和管理字段类型的。
+    使PHP类扩展自 ``AbstractType`` 只是实现所需的 ``FormTypeInterface`` 的一种便捷方式。
+
+有三种方法特别重要：
 
 .. _form-type-methods-explanation:
 
@@ -74,11 +86,19 @@ Symfony附带有一堆可用于构建表单的核心字段类型。
 此字段的目标是扩展 ``choice`` 类型以启用物流类型的选择选项。
 这是通过将 ``choices`` 修复为可用的运输选项列表来实现的。
 
+.. tip::
+
+    运行以下命令以验证表单类型是否已在应用中成功注册：
+
+    .. code-block:: terminal
+
+        $ php bin/console debug:form
+
 为字段创建一个模板
 ---------------------------------
 
-每个字段类型都通过一个模板片段来渲染，该片段的名称由你的类型的类名称来决定。
-有关更多信息，请参阅 :ref:`form-customization-form-themes`。
+每个字段类型都由模板片段渲染，模板片段的名称部分取决于你的类型的类名称。有关更多详细信息，请阅读
+:ref:`表单片段命名 <form-fragment-naming>` 规则。
 
 .. note::
 
@@ -105,12 +125,12 @@ Symfony附带有一堆可用于构建表单的核心字段类型。
         {% spaceless %}
             {% if expanded %}
                 <ul {{ block('widget_container_attributes') }}>
-                {% for child in form if not child.rendered %}
-                    <li>
-                        {{ form_widget(child) }}
-                        {{ form_label(child) }}
-                    </li>
-                {% endfor %}
+                    {% for child in form if not child.rendered %}
+                        <li>
+                            {{ form_widget(child) }}
+                            {{ form_label(child) }}
+                        </li>
+                    {% endfor %}
                 </ul>
             {% else %}
                 {# 让 choice 部件渲染选择标签 #}
@@ -128,14 +148,14 @@ Symfony附带有一堆可用于构建表单的核心字段类型。
 
     你可以进一步自定义用于渲染 choice 类型的每个子项的模板。
     在这种情况下要重写的区块被命名为：
-    “区块名称”+ ``_entry`` +“元素名称”（``label``、``errors`` 或
+    “区块名称”+ ``_entry_`` +“元素名称”（``label``、``errors`` 或
     ``widget``）（例如，自定义Shipping部件的子项的标签，你需要定义
     ``{% block shipping_entry_label %} ... {% endblock %}``）。
 
 .. note::
 
     确保使用正确的部件前缀。在这个例子中，名称应该是 ``shipping_widget``
-    （请参阅 :ref:`form-customization-form-themes`）。
+    （请参阅 :ref:`form fragment naming <form-fragment-naming>` 规则）。
     此外，主配置文件应指向自定义表单模板，以便在渲染所有表单时使用它。
 
     使用Twig时，应该是：
@@ -157,9 +177,9 @@ Symfony附带有一堆可用于构建表单的核心字段类型。
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xmlns:twig="http://symfony.com/schema/dic/twig"
                 xsi:schemaLocation="http://symfony.com/schema/dic/services
-                    http://symfony.com/schema/dic/services/services-1.0.xsd
+                    https://symfony.com/schema/dic/services/services-1.0.xsd
                     http://symfony.com/schema/dic/twig
-                    http://symfony.com/schema/dic/twig/twig-1.0.xsd">
+                    https://symfony.com/schema/dic/twig/twig-1.0.xsd">
 
                 <twig:config>
                     <twig:form-theme>form/fields.html.twig</twig:form-theme>
@@ -169,11 +189,11 @@ Symfony附带有一堆可用于构建表单的核心字段类型。
         .. code-block:: php
 
             // config/packages/twig.php
-            $container->loadFromExtension('twig', array(
-                'form_themes' => array(
+            $container->loadFromExtension('twig', [
+                'form_themes' => [
                     'form/fields.html.twig',
-                ),
-            ));
+                ],
+            ]);
 
     对于PHP模板引擎，你的配置应如下所示：
 
@@ -195,8 +215,8 @@ Symfony附带有一堆可用于构建表单的核心字段类型。
             <container xmlns="http://symfony.com/schema/dic/services"
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xmlns:framework="http://symfony.com/schema/dic/symfony"
-                xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd
-                http://symfony.com/schema/dic/symfony http://symfony.com/schema/dic/symfony/symfony-1.0.xsd">
+                xsi:schemaLocation="http://symfony.com/schema/dic/services https://symfony.com/schema/dic/services/services-1.0.xsd
+                http://symfony.com/schema/dic/symfony https://symfony.com/schema/dic/symfony/symfony-1.0.xsd">
 
                 <framework:config>
                     <framework:templating>
@@ -210,35 +230,35 @@ Symfony附带有一堆可用于构建表单的核心字段类型。
         .. code-block:: php
 
             // config/packages/framework.php
-            $container->loadFromExtension('framework', array(
-                'templating' => array(
-                    'form' => array(
-                        'resources' => array(
+            $container->loadFromExtension('framework', [
+                'templating' => [
+                    'form' => [
+                        'resources' => [
                             ':form:fields.html.php',
-                        ),
-                    ),
-                ),
-            ));
+                        ],
+                    ],
+                ],
+            ]);
 
 使用字段类型
 --------------------
 
-你现在可以立即使用你的自定义字段类型，方法是在其中一个表单中创建该类型的一个新实例::
+你现在可以通过在你的其中一个表单中创建该类型的新实例来使用该自定义字段类型::
 
     // src/Form/Type/OrderType.php
     namespace App\Form\Type;
 
+    use App\Form\Type\ShippingType;
     use Symfony\Component\Form\AbstractType;
     use Symfony\Component\Form\FormBuilderInterface;
-    use App\Form\Type\ShippingType;
 
     class OrderType extends AbstractType
     {
         public function buildForm(FormBuilderInterface $builder, array $options)
         {
-            $builder->add('shipping_code', ShippingType::class, array(
+            $builder->add('shippingCode', ShippingType::class, [
                 'placeholder' => 'Choose a delivery option',
-            ));
+            ]);
         }
     }
 

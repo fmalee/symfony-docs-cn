@@ -42,10 +42,10 @@ Symfony provides drivers for the following native save handler as an example:
 Example usage::
 
     use Symfony\Component\HttpFoundation\Session\Session;
-    use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
     use Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeFileSessionHandler;
+    use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
 
-    $sessionStorage = new NativeSessionStorage(array(), new NativeFileSessionHandler());
+    $sessionStorage = new NativeSessionStorage([], new NativeFileSessionHandler());
     $session = new Session($sessionStorage);
 
 .. note::
@@ -81,18 +81,15 @@ serve as examples if you wish to write your own.
 Example usage::
 
     use Symfony\Component\HttpFoundation\Session\Session;
-    use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
     use Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler;
+    use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
 
     $pdo = new \PDO(...);
-    $sessionStorage = new NativeSessionStorage(array(), new PdoSessionHandler($pdo));
+    $sessionStorage = new NativeSessionStorage([], new PdoSessionHandler($pdo));
     $session = new Session($sessionStorage);
 
 Migrating Between Save Handlers
 -------------------------------
-
-.. versionadded:: 4.1
-    The ``MigratingSessionHandler`` class was introduced in Symfony 4.1.
 
 If your application changes the way sessions are stored, use the
 :class:`Symfony\\Component\\HttpFoundation\\Session\\Storage\\Handler\\MigratingSessionHandler`
@@ -202,7 +199,7 @@ calculated by adding the PHP runtime configuration value in
     using the ``migrate()`` or ``invalidate()`` methods of the ``Session`` class.
 
     The initial cookie lifetime can be set by configuring ``NativeSessionStorage``
-    using the ``setOptions(array('cookie_lifetime' => 1234))`` method.
+    using the ``setOptions(['cookie_lifetime' => 1234])`` method.
 
 .. note::
 

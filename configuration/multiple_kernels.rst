@@ -67,9 +67,9 @@ These are some of the common use cases for creating multiple kernels:
 请务必同时更改缓存、日志和配置文件的位置，以免它们与 ``src/Kernel.php`` 下的文件发生冲突::
 
     // src/ApiKernel.php
-    use Symfony\Component\HttpKernel\Kernel;
     use Symfony\Component\Config\Loader\LoaderInterface;
     use Symfony\Component\DependencyInjection\ContainerBuilder;
+    use Symfony\Component\HttpKernel\Kernel;
 
     class ApiKernel extends Kernel
     {

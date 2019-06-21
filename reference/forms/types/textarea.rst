@@ -29,10 +29,12 @@ Renders a ``textarea`` HTML element.
 | Class       | :class:`Symfony\\Component\\Form\\Extension\\Core\\Type\\TextareaType` |
 +-------------+------------------------------------------------------------------------+
 
+.. include:: /reference/forms/types/options/_debug_form.rst.inc
+
 .. tip::
 
     If you prefer to use an **advanced WYSIWYG editor** instead of a plain
-    textarea, consider using the IvoryCKEditorBundle community bundle. Read
+    textarea, consider using the FOSCKEditorBundle community bundle. Read
     `its documentation`_ to learn how to integrate it in your Symfony application.
 
 Inherited Options
@@ -74,4 +76,4 @@ The default value is ``''`` (the empty string).
 
 .. include:: /reference/forms/types/options/trim.rst.inc
 
-.. _`its documentation`: https://symfony.com/doc/current/bundles/IvoryCKEditorBundle/index.html
+.. _`its documentation`: https://symfony.com/doc/current/bundles/FOSCKEditorBundle/index.html

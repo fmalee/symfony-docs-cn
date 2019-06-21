@@ -27,9 +27,9 @@ To give an Extension the power to do this, it needs to implement
     // src/Acme/HelloBundle/DependencyInjection/AcmeHelloExtension.php
     namespace Acme\HelloBundle\DependencyInjection;
 
-    use Symfony\Component\HttpKernel\DependencyInjection\Extension;
-    use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
     use Symfony\Component\DependencyInjection\ContainerBuilder;
+    use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
+    use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
     class AcmeHelloExtension extends Extension implements PrependExtensionInterface
     {
@@ -63,7 +63,7 @@ in case a specific other bundle is not registered::
         // determine if AcmeGoodbyeBundle is registered
         if (!isset($bundles['AcmeGoodbyeBundle'])) {
             // disable AcmeGoodbyeBundle in bundles
-            $config = array('use_acme_goodbye' => false);
+            $config = ['use_acme_goodbye' => false];
             foreach ($container->getExtensions() as $name => $extension) {
                 switch ($name) {
                     case 'acme_something':
@@ -89,7 +89,7 @@ in case a specific other bundle is not registered::
         // check if entity_manager_name is set in the "acme_hello" configuration
         if (isset($config['entity_manager_name'])) {
             // prepend the acme_something settings with the entity_manager_name
-            $config = array('entity_manager_name' => $config['entity_manager_name']);
+            $config = ['entity_manager_name' => $config['entity_manager_name']];
             $container->prependExtensionConfig('acme_something', $config);
         }
     }
@@ -122,28 +122,28 @@ registered and the ``entity_manager_name`` setting for ``acme_hello`` is set to
             xmlns:acme-something="http://example.org/schema/dic/acme_something"
             xmlns:acme-other="http://example.org/schema/dic/acme_other"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <acme-something:config use-acme-goodbye="false">
                 <acme-something:entity-manager-name>non_default</acme-something:entity-manager-name>
             </acme-something:config>
 
-            <acme-other:config use-acme-goodbye="false" />
+            <acme-other:config use-acme-goodbye="false"/>
 
         </container>
 
     .. code-block:: php
 
         // config/packages/acme_something.php
-        $container->loadFromExtension('acme_something', array(
+        $container->loadFromExtension('acme_something', [
             // ...
             'use_acme_goodbye' => false,
             'entity_manager_name' => 'non_default',
-        ));
-        $container->loadFromExtension('acme_other', array(
+        ]);
+        $container->loadFromExtension('acme_other', [
             // ...
             'use_acme_goodbye' => false,
-        ));
+        ]);
 
 More than one Bundle using PrependExtensionInterface
 ----------------------------------------------------

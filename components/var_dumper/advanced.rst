@@ -15,10 +15,10 @@ By adding a handler, you can customize the `Cloners`_, `Dumpers`_ and `Casters`_
 as explained below. A simple implementation of a handler function might look
 like this::
 
-    use Symfony\Component\VarDumper\VarDumper;
     use Symfony\Component\VarDumper\Cloner\VarCloner;
     use Symfony\Component\VarDumper\Dumper\CliDumper;
     use Symfony\Component\VarDumper\Dumper\HtmlDumper;
+    use Symfony\Component\VarDumper\VarDumper;
 
     VarDumper::setHandler(function ($var) {
         $cloner = new VarCloner();
@@ -179,9 +179,16 @@ method. They also typically implement the
 them from re-implementing the logic required to walk through a
 :class:`Symfony\\Component\\VarDumper\\Cloner\\Data` object's internal structure.
 
+The :class:`Symfony\\Component\\VarDumper\\Dumper\\HtmlDumper` uses a dark
+theme by default. Use the :method:`Symfony\\Component\\VarDumper\\Dumper\\HtmlDumper::setTheme`
+method to use a light theme::
+
+    // ...
+    $htmlDumper->setTheme('light');
+
 The :class:`Symfony\\Component\\VarDumper\\Dumper\\HtmlDumper` limits string
 length and nesting depth of the output to make it more readable. These options
-can be overriden by the third optional parameter of the
+can be overridden by the third optional parameter of the
 :method:`dump(Data $data) <Symfony\\Component\\VarDumper\\Dumper\\DataDumperInterface::dump>`
 method::
 
@@ -190,11 +197,11 @@ method::
     $output = fopen('php://memory', 'r+b');
 
     $dumper = new HtmlDumper();
-    $dumper->dump($var, $output, array(
+    $dumper->dump($var, $output, [
         // 1 and 160 are the default values for these options
         'maxDepth' => 1,
         'maxStringLength' => 160
-    ));
+    ]);
 
 The output format of a dumper can be fine tuned by the two flags
 ``DUMP_STRING_LENGTH`` and ``DUMP_LIGHT_ARRAY`` which are passed as a bitmap
@@ -208,14 +215,12 @@ bit field of ``Caster::EXCLUDE_*`` constants and influences the expected
 output produced by the different casters.
 
 If ``DUMP_STRING_LENGTH`` is set, then the length of a string is displayed
-next to its content:
-
-.. code-block:: php
+next to its content::
 
     use Symfony\Component\VarDumper\Dumper\AbstractDumper;
     use Symfony\Component\VarDumper\Dumper\CliDumper;
 
-    $var = array('test');
+    $var = ['test'];
     $dumper = new CliDumper();
     echo $dumper->dump($var, true);
 
@@ -232,14 +237,12 @@ next to its content:
     // ]
 
 If ``DUMP_LIGHT_ARRAY`` is set, then arrays are dumped in a shortened format
-similar to PHP's short array notation:
-
-.. code-block:: php
+similar to PHP's short array notation::
 
     use Symfony\Component\VarDumper\Dumper\AbstractDumper;
     use Symfony\Component\VarDumper\Dumper\CliDumper;
 
-    $var = array('test');
+    $var = ['test'];
     $dumper = new CliDumper();
     echo $dumper->dump($var, true);
 
@@ -256,14 +259,12 @@ similar to PHP's short array notation:
     // ]
 
 If you would like to use both options, then you can combine them by
-using a the logical OR operator ``|``:
-
-.. code-block:: php
+using a the logical OR operator ``|``::
 
     use Symfony\Component\VarDumper\Dumper\AbstractDumper;
     use Symfony\Component\VarDumper\Dumper\CliDumper;
 
-    $var = array('test');
+    $var = ['test'];
     $dumper = new CliDumper(null, null, AbstractDumper::DUMP_STRING_LENGTH | AbstractDumper::DUMP_LIGHT_ARRAY);
     echo $dumper->dump($var, true);
 
@@ -286,7 +287,7 @@ or its ``addCasters()`` method::
 
     use Symfony\Component\VarDumper\Cloner\VarCloner;
 
-    $myCasters = array(...);
+    $myCasters = [...];
     $cloner = new VarCloner($myCasters);
 
     // or
@@ -296,10 +297,10 @@ or its ``addCasters()`` method::
 The provided ``$myCasters`` argument is an array that maps a class,
 an interface or a resource type to a callable::
 
-    $myCasters = array(
+    $myCasters = [
         'FooClass' => $myFooClassCallableCaster,
         ':bar resource' => $myBarResourceCallableCaster,
-    );
+    ];
 
 As you can notice, resource types are prefixed by a ``:`` to prevent
 colliding with a class name.

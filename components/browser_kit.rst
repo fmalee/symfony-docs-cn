@@ -19,8 +19,6 @@ BrowserKit组件
 
     $ composer require symfony/browser-kit
 
-或者，你可以克隆 `<https://github.com/symfony/browser-kit>`_ 仓库。
-
 .. include:: /components/require_autoload.rst.inc
 
 基本用法
@@ -83,9 +81,6 @@ BrowserKit组件
     // 自动添加所需的 HTTP_X_REQUESTED_WITH 标头
     $crawler = $client->xmlHttpRequest('GET', '/');
 
-.. versionadded:: 4.1
-    ``xmlHttpRequest()`` 方法是在Symfony 4.1中引入的。
-
 点击链接
 ~~~~~~~~~~~~~~
 
@@ -97,9 +92,6 @@ BrowserKit组件
     $client->request('GET', '/product/123');
 
     $crawler = $client->clickLink('Go elsewhere...');
-
-.. versionadded:: 4.2
-    ``clickLink()`` 方法是在Symfony 4.2中引入的。
 
 如果你需要一个提供访问链接属性（例如 ``$link->getMethod()``、``$link->getUri()``）的方法的
 :class:`Symfony\\Component\\DomCrawler\\Link` 对象，请使用另一种方法::
@@ -125,25 +117,22 @@ BrowserKit组件
     $client->submitForm('Log in');
 
     // 第二个可选参数允许你重写默认的表单字段值
-    $client->submitForm('Log in', array(
+    $client->submitForm('Log in', [
         'login' => 'my_user',
         'password' => 'my_pass',
         // 要上传文件，该值必须是绝对文件路径
         'file' => __FILE__,
-    ));
+    ]);
 
     // 你也可以重写其他表单选项
     $client->submitForm(
         'Log in',
-        array('login' => 'my_user', 'password' => 'my_pass'),
+        ['login' => 'my_user', 'password' => 'my_pass'],
         // 重写默认表单HTTP方法
         'PUT',
         // 重写一些 $_SERVER 参数（例如HTTP标头）
-        array('HTTP_ACCEPT_LANGUAGE' => 'es')
+        ['HTTP_ACCEPT_LANGUAGE' => 'es']
     );
-
-.. versionadded:: 4.2
-    ``submitForm()`` 方法是在Symfony 4.2中引入的。
 
 如果你需要一个提供访问表单属性（例如 ``$form->getUri()``、``$form->getValues()``
 ``$form->getFields()``）的方法的 :class:`Symfony\\Component\\DomCrawler\\Form`
@@ -241,7 +230,7 @@ Cookies
     $cookieJar->set($cookie);
 
     // 创建一个客户端并设置cookies
-    $client = new Client(array(), null, $cookieJar);
+    $client = new Client([], null, $cookieJar);
     // ...
 
 历史记录

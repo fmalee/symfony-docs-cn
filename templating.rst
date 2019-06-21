@@ -85,7 +85,12 @@ Twig也包含 **过滤器**，它可以在模板输出之前改变输出内容�
     {{ title|upper }}
 
 Twig 内置了大量的 `标签`_、`过滤器`_ 和 `函数`_ ，默认就可以使用。
-你甚至可以利用 :doc:`Twig 扩展 </templating/twig_extension>` 来 *自定义* 你自己的过滤器和函数（乃至更多）。
+你甚至可以利用 :doc:`Twig 扩展 </templating/twig_extension>` 来 *自定义*
+你自己的过滤器和函数（乃至更多）。运行以下命令将它们全部列出：
+
+.. code-block:: terminal
+
+    $ php bin/console debug:twig
 
 Twig代码很像PHP代码，但两者有微妙的区别。
 下例使用了一个标准的 ``for`` 标签和 ``cycle()`` 函数来输出10个div标签，并用 ``odd``、``even`` css类交替显示。
@@ -94,7 +99,7 @@ Twig代码很像PHP代码，但两者有微妙的区别。
 
     {% for i in 1..10 %}
         <div class="{{ cycle(['even', 'odd'], i) }}">
-          <!-- some HTML here -->
+            <!-- some HTML here -->
         </div>
     {% endfor %}
 
@@ -107,7 +112,7 @@ Twig代码很像PHP代码，但两者有微妙的区别。
 
     还有很多Twig可以做但是PHP不可以的事，如空格控制、沙盒、自动转码HTML、手动上下文输出转义，
     以及包容“只会影响模板”的自定义函数和过滤器。
-    Twig包含一些小功能，使得写模板时更加方便快捷。请看下例，它结合了循环和 ``if`` 逻辑语句：
+    Twig包含了大量特性，使得写模板时更加方便快捷。请看下例，它结合了循环和 ``if`` 逻辑语句：
 
     .. code-block:: html+twig
 
@@ -417,7 +422,7 @@ Symfony内置了几个特殊的Twig标签和函数，来帮助模板设计者简
         class WelcomeController extends AbstractController
         {
             /**
-             * @Route("/", name="welcome")
+             * @Route("/", name="welcome", methods={"GET"})
              */
             public function index()
             {
@@ -431,6 +436,7 @@ Symfony内置了几个特殊的Twig标签和函数，来帮助模板设计者简
         welcome:
             path:     /
             controller: App\Controller\WelcomeController::index
+            methods: GET
 
     .. code-block:: xml
 
@@ -439,25 +445,23 @@ Symfony内置了几个特殊的Twig标签和函数，来帮助模板设计者简
         <routes xmlns="http://symfony.com/schema/routing"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/routing
-                http://symfony.com/schema/routing/routing-1.0.xsd">
+                https://symfony.com/schema/routing/routing-1.0.xsd">
 
-            <route id="welcome" path="/">
-                <default key="_controller">App\Controller\WelcomeController::index</default>
-            </route>
+            <route id="welcome" path="/" controller="App\Controller\WelcomeController::index" methods="GET"/>
         </routes>
 
     .. code-block:: php
 
         // config/routes.php
-        use Symfony\Component\Routing\Route;
-        use Symfony\Component\Routing\RouteCollection;
+        use App\Controller\WelcomeController;
+        use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
-        $routes = new RouteCollection();
-        $routes->add('welcome', new Route('/', array(
-            '_controller' => 'App\Controller\WelcomeController::index',
-        )));
-
-        return $routes;
+        return function (RoutingConfigurator $routes) {
+            $routes->add('welcome', '/')
+                ->controller([WelcomeController::class, 'index'])
+                ->methods(['GET'])
+            ;
+        };
 
 要链到该页面，需使用Twig的 ``path()`` 函数来指定这个路由即可：
 
@@ -479,7 +483,7 @@ Symfony内置了几个特殊的Twig标签和函数，来帮助模板设计者简
         class ArticleController extends AbstractController
         {
             /**
-             * @Route("/article/{slug}", name="article_show")
+             * @Route("/article/{slug}", name="article_show", methods={"GET"})
              */
             public function show($slug)
             {
@@ -493,6 +497,7 @@ Symfony内置了几个特殊的Twig标签和函数，来帮助模板设计者简
         article_show:
             path:       /article/{slug}
             controller: App\Controller\ArticleController::show
+            methods: GET
 
     .. code-block:: xml
 
@@ -501,25 +506,26 @@ Symfony内置了几个特殊的Twig标签和函数，来帮助模板设计者简
         <routes xmlns="http://symfony.com/schema/routing"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/routing
-                http://symfony.com/schema/routing/routing-1.0.xsd">
+                https://symfony.com/schema/routing/routing-1.0.xsd">
 
-            <route id="article_show" path="/article/{slug}">
-                <default key="_controller">App\Controller\ArticleController::show</default>
-            </route>
+            <route id="article_show"
+                path="/article/{slug}"
+                controller="App\Controller\ArticleController::show"
+                methods="GET"/>
         </routes>
 
     .. code-block:: php
 
         // config/routes.php
-        use Symfony\Component\Routing\Route;
-        use Symfony\Component\Routing\RouteCollection;
+        use App\Controller\ArticleController;
+        use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
-        $routes = new RouteCollection();
-        $routes->add('article_show', new Route('/article/{slug}', array(
-            '_controller' => 'App\Controller\ArticleController::show',
-        )));
-
-        return $routes;
+        return function (RoutingConfigurator $routes) {
+            $routes->add('article_show', '/articles/{slug}')
+                ->controller([ArticleController::class, 'show'])
+                ->methods(['GET'])
+            ;
+        };
 
 这种情况下，你需要同时指定路由名称(``article_show``)和一个 ``{slug}`` 参数的值。
 使用这个路由重新访问前面提到的 ``recent_list.html.twig`` 模板，即可正确地链接到该文章。
@@ -563,9 +569,9 @@ Symfony内置了几个特殊的Twig标签和函数，来帮助模板设计者简
 
 .. code-block:: html+twig
 
-    <img src="{{ asset('images/logo.png') }}" alt="Symfony!" />
+    <img src="{{ asset('images/logo.png') }}" alt="Symfony!"/>
 
-    <link href="{{ asset('css/blog.css') }}" rel="stylesheet" />
+    <link href="{{ asset('css/blog.css') }}" rel="stylesheet"/>
 
 ``asset()`` 函数的主要目的，是让你的程序更加portable（可移动）。
 如果你的程序在主机根目录下(如 ``http://example.com``)，生成的路径应该是 ``/images/logo.png``。
@@ -583,9 +589,9 @@ Symfony内置了几个特殊的Twig标签和函数，来帮助模板设计者简
 
 如果你需要资源的绝对URL，可以使用 ``absolute_url()`` Twig函数：
 
-.. code-block:: html+jinja
+.. code-block:: html+twig
 
-    <img src="{{ absolute_url(asset('images/logo.png')) }}" alt="Symfony!" />
+    <img src="{{ absolute_url(asset('images/logo.png')) }}" alt="Symfony!"/>
 
 .. index::
    single: Templating; Including stylesheets and JavaScripts
@@ -615,7 +621,7 @@ Symfony内置了几个特殊的Twig标签和函数，来帮助模板设计者简
             {# ... #}
 
             {% block stylesheets %}
-                <link href="{{ asset('css/main.css') }}" rel="stylesheet" />
+                <link href="{{ asset('css/main.css') }}" rel="stylesheet"/>
             {% endblock %}
         </head>
         <body>
@@ -640,7 +646,7 @@ Symfony内置了几个特殊的Twig标签和函数，来帮助模板设计者简
     {% block stylesheets %}
         {{ parent() }}
 
-        <link href="{{ asset('css/contact.css') }}" rel="stylesheet" />
+        <link href="{{ asset('css/contact.css') }}" rel="stylesheet"/>
     {% endblock %}
 
     {# ... #}
@@ -655,7 +661,7 @@ Symfony内置了几个特殊的Twig标签和函数，来帮助模板设计者简
 
 .. code-block:: html+twig
 
-    <link href="{{ asset('bundles/acmedemo/css/contact.css') }}" rel="stylesheet" />
+    <link href="{{ asset('bundles/acmedemo/css/contact.css') }}" rel="stylesheet"/>
 
 最终结果是，该页面同时引用了 ``main.js`` 以及 ``main.css`` 和 ``contact.css`` 两个样式表。
 
@@ -675,11 +681,11 @@ Symfony同样在Twig中给了你一个全局的 ``app`` 变量，可以用于访
 
 .. code-block:: twig
 
-    <!-- 输出转义自动启用 -->
-    {{ description }} <!-- I &lt;3 this product -->
+    {# 输出转义自动启用 #}
+    {{ description }} {# I &lt;3 this product #}
 
-    <!-- 使用 raw 过滤器禁用输出转义 -->
-    {{ description|raw }} <!-- I <3 this product -->
+    {# 使用 raw 过滤器禁用输出转义 #}
+    {{ description|raw }} {# I <3 this product #}
 
 .. caution::
 

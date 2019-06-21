@@ -34,35 +34,35 @@
         <security:config>
             <!-- replace 'main' by the name of your own firewall -->
             <security:firewall name="main">
-              <security:http-basic />
-           </security:firewall>
+                <security:http-basic/>
+            </security:firewall>
         </security:config>
 
     .. code-block:: php
 
         // config/packages/test/security.php
-        $container->loadFromExtension('security', array(
-            'firewalls' => array(
+        $container->loadFromExtension('security', [
+            'firewalls' => [
                 // replace 'main' by the name of your own firewall
-                'main' => array(
-                    'http_basic' => array(),
-                ),
-            ),
-        ));
+                'main' => [
+                    'http_basic' => [],
+                ],
+            ],
+        ]);
 
 现在，该测试可以使用 ``createClient()`` 的第二个参数将用户名和密码作为服务器变量来通过HTTP进行认证::
 
-    $client = static::createClient(array(), array(
+    $client = static::createClient([], [
         'PHP_AUTH_USER' => 'username',
         'PHP_AUTH_PW'   => 'pa$$word',
-    ));
+    ]);
 
 也可以基于每个请求来传递用户名和密码::
 
-    $client->request('DELETE', '/post/12', array(), array(), array(
+    $client->request('DELETE', '/post/12', [], [], [
         'PHP_AUTH_USER' => 'username',
         'PHP_AUTH_PW'   => 'pa$$word',
-    ));
+    ]);
 
 创建认证令牌
 ---------------------------------
@@ -109,7 +109,7 @@
 
             // 你可能需要使用一个不同的令牌类，具体取决于你的应用。
             // 例如，使用安保认证时，你必须实例化 PostAuthenticationGuardToken
-            $token = new UsernamePasswordToken('admin', null, $firewallName, array('ROLE_ADMIN'));
+            $token = new UsernamePasswordToken('admin', null, $firewallName, ['ROLE_ADMIN']);
             $session->set('_security_'.$firewallContext, serialize($token));
             $session->save();
 

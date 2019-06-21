@@ -15,11 +15,9 @@ Security组件
 
     $ composer require symfony/security
 
-或者，你可以克隆 `<https://github.com/symfony/security>`_ 仓库。
-
 .. include:: /components/require_autoload.rst.inc
 
-安全组件分为四个较小的可以单独使用的子组件：
+安全组件分为多个较小的可以单独使用的子组件：
 
 ``symfony/security-core``
     它提供了所有常见的安全功能，从认证到授权，从编码密码到加载用户。
@@ -29,6 +27,9 @@ Security组件
 
 ``symfony/security-csrf``
     它可以防止 `CSRF攻击`_。
+
+``symfony/security-guard``
+    它将多层身份验证结合在一起，允许创建复杂的身份验证系统。
 
 .. seealso::
 

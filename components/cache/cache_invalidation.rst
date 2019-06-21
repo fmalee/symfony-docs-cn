@@ -21,29 +21,28 @@ Symfony的缓存组件提供了两种机制来帮助解决此问题：
 要从基于标签的失效中受益，你需要将适当的标签附加到每个缓存项中。
 每个标签都是一个纯字符串标识符，你可以随时使用它来触发与此标签关联的所有缓存项的删除。
 
-要将标签附加到缓存项，你需要使用由缓存适配器返回的缓存项实现的
-:method:`Symfony\\Component\\Cache\\CacheItem::tag` 方法::
+要将标签附加到缓存项，你需要使用由使用缓存项实现的
+:method:`Symfony\\Contracts\\Cache\\ItemInterface::tag` 方法::
 
-    $item = $cache->getItem('cache_key');
-    // ...
-    // 添加一个或更多标签
-    $item->tag('tag_1');
-    $item->tag(array('tag_2', 'tag_3'));
-    $cache->save($item);
+    $item = $cache->get('cache_key', function (ItemInterface $item) {
+        // [...]
+        // 添加一个或更多标签
+        $item->tag('tag_1');
+        $item->tag(['tag_2', 'tag_3']);
+
+        return $cachedValue;
+    });
 
 如果 ``$cache`` 实现了
-:class:`Symfony\\Component\\Cache\\Adapter\\TagAwareAdapterInterface`，则可以通过调用
-:method:`Symfony\\Component\\Cache\\Adapter\\TagAwareAdapterInterface::invalidateTags`
+:class:`Symfony\\Contracts\\Cache\\TagAwareCacheInterface`，则可以通过调用
+:method:`Symfony\\Contracts\\Cache\\TagAwareCacheInterface::invalidateTags`
 方法来使缓存项无效::
 
     // 使所有与“tag_1”或“tag_3”相关的缓存项无效
-    $cache->invalidateTags(array('tag_1', 'tag_3'));
+    $cache->invalidateTags(['tag_1', 'tag_3']);
 
     // 如果知道缓存键，也可以直接删除该项
     $cache->deleteItem('cache_key');
-
-    // 如果不记得缓存项的键，可以使用 getKey() 方法
-    $cache->deleteItem($item->getKey());
 
 在跟踪缓存键变得困难时，使用标签失效会非常有用。
 
@@ -52,7 +51,7 @@ Symfony的缓存组件提供了两种机制来帮助解决此问题：
 
 要存储标签，你需要使用
 :class:`Symfony\\Component\\Cache\\Adapter\\TagAwareAdapter` 类或实现了
-:class:`Symfony\\Component\\Cache\\Adapter\\TagAwareAdapterInterface`
+:class:`Symfony\\Contracts\\Cache\\TagAwareCacheInterface`
 及其唯一
 :method:`Symfony\\Component\\Cache\\Adapter\\TagAwareAdapterInterface::invalidateTags`
 方法封装的缓存适配器。
@@ -63,9 +62,9 @@ Symfony的缓存组件提供了两种机制来帮助解决此问题：
 第二个可选适配器用于存储标签及其无效版本号（概念上类似于其最新的无效日期）。
 当只使用一个适配器时，缓存的项和标签都存储在同一个地方。通过使用两个适配器，你可以将一些大的缓存项存储在文件系统或数据库中，并将标签保存在一个Redis数据库中，以同步你的所有前端并进行非常快速的失效检查::
 
-    use Symfony\Component\Cache\Adapter\TagAwareAdapter;
     use Symfony\Component\Cache\Adapter\FilesystemAdapter;
     use Symfony\Component\Cache\Adapter\RedisAdapter;
+    use Symfony\Component\Cache\Adapter\TagAwareAdapter;
 
     $cache = new TagAwareAdapter(
         // 用于储存缓存项的适配器

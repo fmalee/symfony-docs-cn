@@ -49,9 +49,9 @@ Symfony框架将日志消息组织到通道中。
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:monolog="http://symfony.com/schema/dic/monolog"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd
+                https://symfony.com/schema/dic/services/services-1.0.xsd
                 http://symfony.com/schema/dic/monolog
-                http://symfony.com/schema/dic/monolog/monolog-1.0.xsd">
+                https://symfony.com/schema/dic/monolog/monolog-1.0.xsd">
 
             <monolog:config>
                 <monolog:handler name="security" type="stream" path="%kernel.logs_dir%/security.log">
@@ -72,23 +72,23 @@ Symfony框架将日志消息组织到通道中。
     .. code-block:: php
 
         // config/packages/prod/monolog.php
-        $container->loadFromExtension('monolog', array(
-            'handlers' => array(
-                'security' => array(
+        $container->loadFromExtension('monolog', [
+            'handlers' => [
+                'security' => [
                     'type'     => 'stream',
                     'path'     => '%kernel.logs_dir%/security.log',
-                    'channels' => array(
+                    'channels' => [
                         'security',
-                    ),
-                ),
-                'main'     => array(
+                    ],
+                ],
+                'main'     => [
                     // ...
-                    'channels' => array(
+                    'channels' => [
                         '!security',
-                    ),
-                ),
-            ),
-        ));
+                    ],
+                ],
+            ],
+        ]);
 
 .. caution::
 
@@ -141,9 +141,9 @@ YAML规范
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:monolog="http://symfony.com/schema/dic/monolog"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd
+                https://symfony.com/schema/dic/services/services-1.0.xsd
                 http://symfony.com/schema/dic/monolog
-                http://symfony.com/schema/dic/monolog/monolog-1.0.xsd">
+                https://symfony.com/schema/dic/monolog/monolog-1.0.xsd">
 
             <monolog:config>
                 <monolog:channel>foo</monolog:channel>
@@ -154,12 +154,12 @@ YAML规范
     .. code-block:: php
 
         // config/packages/prod/monolog.php
-        $container->loadFromExtension('monolog', array(
-            'channels' => array(
+        $container->loadFromExtension('monolog', [
+            'channels' => [
                 'foo',
                 'bar',
-            ),
-        ));
+            ],
+        ]);
 
 Symfony自动为每个通道注册一个服务（在此示例中，``foo`` 通道创建了一个名为 ``monolog.logger.foo`` 的服务）。
 要将此服务注入其他服务，你必须更新服务配置以 :ref:`选择要注入的特定服务 <services-wire-specific-service>`。

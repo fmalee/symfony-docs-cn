@@ -100,9 +100,9 @@ Move the controller to ``Calendar\Controller\LeapYearController``::
     // example.com/src/Calendar/Controller/LeapYearController.php
     namespace Calendar\Controller;
 
+    use Calendar\Model\LeapYear;
     use Symfony\Component\HttpFoundation\Request;
     use Symfony\Component\HttpFoundation\Response;
-    use Calendar\Model\LeapYear;
 
     class LeapYearController
     {
@@ -136,10 +136,10 @@ And move the ``is_leap_year()`` function to its own class too::
 
 Don't forget to update the ``example.com/src/app.php`` file accordingly::
 
-    $routes->add('leap_year', new Routing\Route('/is_leap_year/{year}', array(
+    $routes->add('leap_year', new Routing\Route('/is_leap_year/{year}', [
         'year' => null,
-        '_controller' => 'Calendar\Controller\LeapYearController::indexAction',
-    )));
+        '_controller' => 'Calendar\Controller\LeapYearController::index',
+    ]));
 
 To sum up, here is the new file layout:
 
@@ -171,7 +171,7 @@ a well defined goal:
   our application;
 
 * ``src/Simplex``: The reusable framework code that abstracts the handling of
-  incoming Requests (by the way, it makes your controllers/templates easily
+  incoming Requests (by the way, it makes your controllers/templates better
   testable -- more about that later on);
 
 * ``src/Calendar``: Our application specific code (the controllers and the

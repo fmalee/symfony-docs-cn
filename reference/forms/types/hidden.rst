@@ -9,7 +9,7 @@ The hidden type represents a hidden input field.
 +-------------+----------------------------------------------------------------------+
 | Rendered as | ``input`` ``hidden`` field                                           |
 +-------------+----------------------------------------------------------------------+
-| Overriden   | - `compound`_                                                        |
+| Overridden  | - `compound`_                                                        |
 | options     | - `error_bubbling`_                                                  |
 |             | - `required`_                                                        |
 +-------------+----------------------------------------------------------------------+
@@ -22,6 +22,8 @@ The hidden type represents a hidden input field.
 +-------------+----------------------------------------------------------------------+
 | Class       | :class:`Symfony\\Component\\Form\\Extension\\Core\\Type\\HiddenType` |
 +-------------+----------------------------------------------------------------------+
+
+.. include:: /reference/forms/types/options/_debug_form.rst.inc
 
 Overridden Options
 ------------------

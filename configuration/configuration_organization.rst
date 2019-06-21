@@ -72,7 +72,7 @@ Symfony使用 :doc:`Config组件 </components/config>` 来加载配置文件，�
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 配置文件可以导入任何其他内置配置格式定义的文件
-（``.yaml`` 或 ``.yml``、``.xml``、``.php``、``.ini``）：
+（``.yaml``、``.xml``、``.php``、``.ini``）：
 
 .. configuration-block::
 
@@ -92,13 +92,13 @@ Symfony使用 :doc:`Config组件 </components/config>` 来加载配置文件，�
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd
+                https://symfony.com/schema/dic/services/services-1.0.xsd
                 http://symfony.com/schema/dic/symfony
-                http://symfony.com/schema/dic/symfony/symfony-1.0.xsd">
+                https://symfony.com/schema/dic/symfony/symfony-1.0.xsd">
 
             <imports>
-                <import resource="my_config_file.yaml" />
-                <import resource="legacy.php" />
+                <import resource="my_config_file.yaml"/>
+                <import resource="legacy.php"/>
             </imports>
 
             <!-- ... -->
@@ -116,6 +116,8 @@ Symfony使用 :doc:`Config组件 </components/config>` 来加载配置文件，�
 :class:`Symfony\\Component\\DependencyInjection\\Loader\\FileLoader` 的加载器类。
 当配置值是动态时，你可以使用PHP配置文件来执行你自己的逻辑。
 此外，你可以定义自己的服务以从数据库或Web服务加载配置。
+
+.. include:: /components/dependency_injection/_imports-parameters-note.rst.inc
 
 全局配置文件
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -141,12 +143,12 @@ Symfony使用 :doc:`Config组件 </components/config>` 来加载配置文件，�
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd
+                https://symfony.com/schema/dic/services/services-1.0.xsd
                 http://symfony.com/schema/dic/symfony
-                http://symfony.com/schema/dic/symfony/symfony-1.0.xsd">
+                https://symfony.com/schema/dic/symfony/symfony-1.0.xsd">
 
             <imports>
-                <import resource="/etc/sites/mysite.com/parameters.yaml" ignore-errors="true" />
+                <import resource="/etc/sites/mysite.com/parameters.yaml" ignore-errors="true"/>
             </imports>
 
             <!-- ... -->

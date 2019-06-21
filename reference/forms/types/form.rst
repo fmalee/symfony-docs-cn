@@ -45,6 +45,8 @@ FormType字段
 | Class     | :class:`Symfony\\Component\\Form\\Extension\\Core\\Type\\FormType` |
 +-----------+--------------------------------------------------------------------+
 
+.. include:: /reference/forms/types/options/_debug_form.rst.inc
+
 字段选项
 -------------
 
@@ -85,7 +87,7 @@ allow_extra_fields
 
 * 如果 ``data_class`` 已设置并且 ``required`` 为 ``true``, 那么默认值为 ``new $data_class()``;
 * 如果 ``data_class`` 已设置并且 ``required`` 为 ``false``, 那么默认值为 ``null``;
-* 如果 ``data_class`` 未设置并且 ``compound`` 为 ``true``, 那么默认值为 ``array()``
+* 如果 ``data_class`` 未设置并且 ``compound`` 为 ``true``, 那么默认值为 ``[]``
   (空数组);
 * 如果 ``data_class`` 未设置并且 ``compound`` 为 ``false``, 那么默认值为 ``''``
   (空字符串).

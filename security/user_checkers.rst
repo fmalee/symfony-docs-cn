@@ -14,9 +14,7 @@
 :class:`Symfony\\Component\\Security\\Core\\User\\UserCheckerInterface` 的类。
 该接口定义了两个分别叫 ``checkPreAuth()`` 和 ``checkPostAuth()`` 的方法，
 用于在用户认证之前和之后执行检查。如果不满足一个或多个条件，则会抛出一个继承自
-:class:`Symfony\\Component\\Security\\Core\\Exception\\AccountStatusException` 的异常。
-
-.. code-block:: php
+:class:`Symfony\\Component\\Security\\Core\\Exception\\AccountStatusException` 的异常::
 
     namespace App\Security;
 
@@ -37,12 +35,7 @@
 
             // 用户被删除，显示一个通用的“帐户未找到”消息。
             if ($user->isDeleted()) {
-                throw new AccountDeletedException('...');
-
-                // 或者自定义要显示的消息
-                throw new CustomUserMessageAuthenticationException(
-                    'Your account was deleted. Sorry about that!'
-                );
+                throw new AccountDeletedException();
             }
         }
 
@@ -89,7 +82,7 @@
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:srv="http://symfony.com/schema/dic/services"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <config>
                 <!-- ... -->
@@ -107,12 +100,12 @@
         // ...
         use App\Security\UserChecker;
 
-        $container->loadFromExtension('security', array(
-            'firewalls' => array(
-                'main' => array(
+        $container->loadFromExtension('security', [
+            'firewalls' => [
+                'main' => [
                     'pattern' => '^/',
                     'user_checker' => UserChecker::class,
                     // ...
-                ),
-            ),
-        ));
+                ],
+            ],
+        ]);

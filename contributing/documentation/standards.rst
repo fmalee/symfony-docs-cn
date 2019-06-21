@@ -152,6 +152,22 @@ Symfony文档使用美国英语方言，通常称为 `美国英语`_。使用 `�
   * his or hers, use theirs
   * himself or herself, use themselves
 
+* **避免贬低词语s**: 人们阅读文档是因为他们对某个特定主题知之甚少，或者甚至对它都是未知的。
+  对于记录它的人来说似乎“显而易见”或“简单”的事情却可能与读者完全相反。
+  为了确保每个人在阅读文档时都感到舒适，请尽量避免使用以下字词：
+
+  * basically
+  * clearly
+  * easy/easily
+  * just
+  * logically
+  * merely
+  * obviously
+  * of course
+  * quick/quickly
+  * simply
+  * trivial
+
 .. _`Sphinx文档`: http://sphinx-doc.org/rest.html#source-code
 .. _`Twig代码标准`: https://twig.symfony.com/doc/2.x/coding_standards.html
 .. _`由IANA保留`: http://tools.ietf.org/html/rfc2606#section-3

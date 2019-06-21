@@ -5,7 +5,7 @@
 ======================================================
 
 模板是以 *任何* 格式渲染内容的通用方式。
-虽然在大多数情况下你将使用模板来渲染HTML内容，但模板可以轻松生成JavaScript、CSS、XML或你梦寐以求的任何其他格式。
+虽然在大多数情况下你将使用模板来渲染HTML内容，但一个模板可以生成JavaScript、CSS、XML或任何其他格式。
 
 例如，相同的“资源”通常以多种格式渲染。
 要以XML格式渲染文章索引页面，请在模板名称中包含以下格式：
@@ -33,9 +33,9 @@
 
             $format = $request->getRequestFormat();
 
-            return $this->render('article/show.'.$format.'.twig', array(
+            return $this->render('article/show.'.$format.'.twig', [
                 'article' => $article,
-            ));
+            ]);
         }
     }
 
@@ -45,7 +45,7 @@
 这可以通过在路由定义中使用特殊的 ``_format`` 占位符来实现::
 
     /**
-     * @Route("/{slug}.{_format}", defaults={"_format"="html"})
+     * @Route("/{slug}.{_format}", defaults={"_format"="html"}, requirements={"_format"="html|xml"}))
      */
     public function show(Request $request, $slug)
     {

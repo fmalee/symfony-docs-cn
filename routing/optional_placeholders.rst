@@ -11,12 +11,10 @@
     .. code-block:: php-annotations
 
         // src/Controller/BlogController.php
+        use Symfony\Component\Routing\Annotation\Route;
 
-        // ...
-        class BlogController extends AbstractController
+        class BlogController
         {
-            // ...
-
             /**
              * @Route("/blog")
              */
@@ -24,6 +22,7 @@
             {
                 // ...
             }
+            // ...
         }
 
     .. code-block:: yaml
@@ -40,25 +39,22 @@
         <routes xmlns="http://symfony.com/schema/routing"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/routing
-                http://symfony.com/schema/routing/routing-1.0.xsd">
+                https://symfony.com/schema/routing/routing-1.0.xsd">
 
-            <route id="blog" path="/blog">
-                <default key="_controller">App\Controller\BlogController::index</default>
-            </route>
+            <route id="blog" path="/blog" controller="App\Controller\BlogController::index"/>
         </routes>
 
     .. code-block:: php
 
         // config/routes.php
-        use Symfony\Component\Routing\RouteCollection;
-        use Symfony\Component\Routing\Route;
+        use App\Controller\BlogController;
+        use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
-        $routes = new RouteCollection();
-        $routes->add('blog', new Route('/blog', array(
-            '_controller' => 'App\Controller\BlogController::index',
-        )));
-
-        return $routes;
+        return function (RoutingConfigurator $routes) {
+            $routes->add('blog', '/blog')
+                ->controller([BlogController::class, 'index'])
+            ;
+        };
 
 到目前为止，这个路由尽可能简单 - 它不包含占位符，只匹配确切的 ``/blog`` URL。
 但是，如果你需要这个路由支持分页，比如 ``/blog/2`` 显示博客条目的第二页呢？
@@ -94,25 +90,22 @@
         <routes xmlns="http://symfony.com/schema/routing"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/routing
-                http://symfony.com/schema/routing/routing-1.0.xsd">
+                https://symfony.com/schema/routing/routing-1.0.xsd">
 
-            <route id="blog" path="/blog/{page}">
-                <default key="_controller">App\Controller\BlogController::index</default>
-            </route>
+            <route id="blog" path="/blog/{page}" controller="App\Controller\BlogController::index"/>
         </routes>
 
     .. code-block:: php
 
         // config/routes.php
-        use Symfony\Component\Routing\RouteCollection;
-        use Symfony\Component\Routing\Route;
+        use App\Controller\BlogController;
+        use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
-        $routes = new RouteCollection();
-        $routes->add('blog', new Route('/blog/{page}', array(
-            '_controller' => 'App\Controller\BlogController::index',
-        )));
-
-        return $routes;
+        return function (RoutingConfigurator $routes) {
+            $routes->add('blog', '/blog/{page}')
+                ->controller([BlogController::class, 'index'])
+            ;
+        };
 
 与之前的 ``{slug}`` 占位符一样，匹配 ``{page}`` 的值将在你的控制器中可用。
 它的值可用于确定要为给定页面显示的博客帖子集合。
@@ -153,10 +146,9 @@
         <routes xmlns="http://symfony.com/schema/routing"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/routing
-                http://symfony.com/schema/routing/routing-1.0.xsd">
+                https://symfony.com/schema/routing/routing-1.0.xsd">
 
-            <route id="blog" path="/blog/{page}">
-                <default key="_controller">App\Controller\BlogController::index</default>
+            <route id="blog" path="/blog/{page}" controller="App\Controller\BlogController::index">
                 <default key="page">1</default>
             </route>
         </routes>
@@ -164,16 +156,17 @@
     .. code-block:: php
 
         // config/routes.php
-        use Symfony\Component\Routing\RouteCollection;
-        use Symfony\Component\Routing\Route;
+        use App\Controller\BlogController;
+        use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
-        $routes = new RouteCollection();
-        $routes->add('blog', new Route('/blog/{page}', array(
-            '_controller' => 'App\Controller\BlogController::index',
-            'page'        => 1,
-        )));
-
-        return $routes;
+        return function (RoutingConfigurator $routes) {
+            $routes->add('blog', '/blog/{page}')
+                ->controller([BlogController::class, 'index'])
+                ->defaults([
+                    'page' => 1,
+                ])
+            ;
+        };
 
 通过添加 ``page`` 到 ``defaults`` 键，不再永远都需要 ``{page}`` 占位符。
 ``/blog`` URL将匹配此路由，``page`` 参数的值将被设置为 ``1``。
@@ -190,7 +183,7 @@
 .. caution::
 
     你可以拥有多个可选占位符（例如 ``/blog/{slug}/{page}``），但可选占位符后面的所有内容就都必须是可选的。
-    例如，``/{page}/blog`` 是一个有效路径，但 ``page`` 将变为总是必需的（即简单的 ``/blog`` 将不匹配此路由）。
+    例如，``/{page}/blog`` 是一个有效路径，但 ``page`` 将变为总是必需的（即 ``/blog`` 将不匹配此路由）。
 
 .. tip::
 

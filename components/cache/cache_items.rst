@@ -7,7 +7,8 @@
 ===========
 
 缓存项是存储在缓存中作为键/值对的信息单元。在Cache组件中，它们用
-:class:`Symfony\\Component\\Cache\\CacheItem` 类来表示。
+:class:`Symfony\\Component\\Cache\\CacheItem`
+类来表示。它们用于缓存契约(Contract)和PSR-6接口。
 
 缓存项的键和值
 --------------------------
@@ -22,22 +23,33 @@
 创建缓存项
 --------------------
 
-使用缓存池的 ``getItem($key)`` 方法来创建缓存项。参数是缓存项的键::
+The only way to create cache items is via cache pools. When using the Cache
+Contracts, they are passed as arguments to the recomputation callback::
+创建缓存项的唯一方法是通过缓存池。
+使用缓存契约时，它们作为一个参数传递给重新计算(recomputation)回调::
+
+    // $cache池对象之前就创建了
+    $productsCount = $cache->get('stats.products_count', function (ItemInterface $item) {
+        // [...]
+    });
+
+使用PSR-6时，它们是使用缓存池的 ``getItem($key)`` 方法创建的::
 
     // $cache池对象之前就创建了
     $productsCount = $cache->getItem('stats.products_count');
 
-然后，使用 ``Psr\\Cache\\CacheItemInterface::set`` 方法来设置存储在缓存项中的数据::
+然后，使用 ``Psr\\Cache\\CacheItemInterface::set``
+方法来设置存储在缓存项中的数据（此步骤在使用缓存契约时自动完成）::
 
     // 储存一个简单的整数
     $productsCount->set(4711);
     $cache->save($productsCount);
 
     // 储存一个数组
-    $productsCount->set(array(
+    $productsCount->set([
         'category1' => 4711,
         'category2' => 2387,
-    ));
+    ]);
     $cache->save($productsCount);
 
 可以使用相应的 *getter* 方法来获取任何给定缓存项的键和值::
@@ -57,7 +69,6 @@
 例如，某个应用的最新消息只缓存一分钟。在这些情况下，使用 ``expiresAfter()``
 方法来设置缓存项的秒数::
 
-    $latestNews = $cache->getItem('latest_news');
     $latestNews->expiresAfter(60);  // 60秒 = 1分钟
 
     // 此参数还接收 \DateInterval 实例
@@ -65,19 +76,18 @@
 
 缓存项还定义了另一个相关方法，``expiresAt()`` 用于设置缓存项到期时的确切日期和时间::
 
-    $mostPopularNews = $cache->getItem('popular_news');
     $mostPopularNews->expiresAt(new \DateTime('tomorrow'));
 
 缓存项的命中和未命中
 --------------------------
 
-使用缓存机制对于提高应用性能很重要，但不应该影响应用的正常运行。事实上，PSR-6标准规定缓存错误不应导致应用失败。
+使用缓存机制对于提高应用性能很重要，但不应该影响应用的正常运行。事实上，PSR-6文档明智地指出缓存错误不应导致应用失败。
 
-实际上，这意味着 ``getItem()`` 方法总是返回一个实现了 ``Psr\Cache\CacheItemInterface``
+在PSR-6的实践中，这意味着 ``getItem()`` 方法总是返回一个实现了 ``Psr\Cache\CacheItemInterface``
 接口的对象，即使该缓存项不存在也是如此。因此，你不必处理 ``null``
 返回值，并且可以安全地存储缓存值，例如 ``false`` 和 ``null``。
 
-为了确定返回的对象是否正确，缓存使用命中和未命中的概念：
+为了确定返回的对象是否代表来自存储的值，缓存使用命中和未命中的概念：
 
 * **缓存命中** 当在缓存中找到所请求的缓存项、其值未损坏或无效且未过期时，会发生缓存命中;
 * **缓存未命中** 缓存未命中与命中相反，因此当在缓存中找不到缓存项、其值因任何原因损坏或无效或项目已过期时，都会发生缓存未命中。

@@ -27,7 +27,7 @@
          */
         public function __invoke(FormInterface $form)
         {
-            $groups = array();
+            $groups = [];
 
             // ... 确定要应用哪些验证组并返回一个数组
 
@@ -56,9 +56,9 @@
         // ...
         public function configureOptions(OptionsResolver $resolver)
         {
-            $resolver->setDefaults(array(
+            $resolver->setDefaults([
                 'validation_groups' => $this->groupResolver,
-            ));
+            ]);
         }
     }
 

@@ -22,7 +22,7 @@ configuration.
 
     When using XML, you must use the ``http://symfony.com/schema/dic/doctrine``
     namespace and the related XSD schema is available at:
-    ``http://symfony.com/schema/dic/doctrine/doctrine-1.0.xsd``
+    ``https://symfony.com/schema/dic/doctrine/doctrine-1.0.xsd``
 
 .. index::
     single: Configuration; Doctrine DBAL
@@ -78,9 +78,9 @@ The following block shows all possible configuration keys:
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:doctrine="http://symfony.com/schema/dic/doctrine"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd
+                https://symfony.com/schema/dic/services/services-1.0.xsd
                 http://symfony.com/schema/dic/doctrine
-                http://symfony.com/schema/dic/doctrine/doctrine-1.0.xsd">
+                https://symfony.com/schema/dic/doctrine/doctrine-1.0.xsd">
 
             <doctrine:config>
                 <doctrine:dbal
@@ -116,10 +116,10 @@ The following block shows all possible configuration keys:
     to find your PostgreSQL version and ``mysql -V`` to get your MySQL
     version).
 
-    If you are running a MariaDB database, you must prefix the ``server_version``
+    If you are running a MariaDB database, you must prefix the ``server_version``
     value with ``mariadb-`` (e.g. ``server_version: mariadb-10.2.12``).
 
-    Always wrap the server version number with quotes to parse it as a string
+    Always wrap the server version number with quotes to parse it as a string
     instead of a float number. Otherwise, the floating-point representation
     issues can make your version be considered a different number (e.g. ``5.6``
     will be rounded as ``5.5999999999999996447286321199499070644378662109375``).
@@ -194,7 +194,7 @@ can be placed directly under ``doctrine.orm`` config level.
         orm:
             # ...
             query_cache_driver:
-               # ...
+                # ...
             metadata_cache_driver:
                 # ...
             result_cache_driver:
@@ -321,25 +321,25 @@ directory instead:
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:doctrine="http://symfony.com/schema/dic/doctrine"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <doctrine:config>
                 <doctrine:orm auto-mapping="true">
-                    <mapping name="AppBundle" dir="SomeResources/config/doctrine" type="xml" />
+                    <mapping name="AppBundle" dir="SomeResources/config/doctrine" type="xml"/>
                 </doctrine:orm>
             </doctrine:config>
         </container>
 
     .. code-block:: php
 
-        $container->loadFromExtension('doctrine', array(
-            'orm' => array(
+        $container->loadFromExtension('doctrine', [
+            'orm' => [
                 'auto_mapping' => true,
-                'mappings' => array(
-                    'AppBundle' => array('dir' => 'SomeResources/config/doctrine', 'type' => 'xml'),
-                ),
-            ),
-        ));
+                'mappings' => [
+                    'AppBundle' => ['dir' => 'SomeResources/config/doctrine', 'type' => 'xml'],
+                ],
+            ],
+        ]);
 
 Mapping Entities Outside of a Bundle
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -372,7 +372,7 @@ namespace in the ``src/Entity`` directory and gives them an ``App`` alias
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:doctrine="http://symfony.com/schema/dic/doctrine"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <doctrine:config>
                 <doctrine:orm>
@@ -389,20 +389,20 @@ namespace in the ``src/Entity`` directory and gives them an ``App`` alias
 
     .. code-block:: php
 
-        $container->loadFromExtension('doctrine', array(
-            'orm' => array(
+        $container->loadFromExtension('doctrine', [
+            'orm' => [
                 'auto_mapping' => true,
-                'mappings' => array(
-                    'SomeEntityNamespace' => array(
+                'mappings' => [
+                    'SomeEntityNamespace' => [
                         'type'      => 'annotation',
                         'dir'       => '%kernel.project_dir%/src/Entity',
                         'is_bundle' => false,
                         'prefix'    => 'App\Entity',
                         'alias'     => 'App',
-                    ),
-                ),
-            ),
-        ));
+                    ],
+                ],
+            ],
+        ]);
 
 Detecting a Mapping Configuration Format
 ........................................

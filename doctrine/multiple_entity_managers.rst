@@ -72,9 +72,9 @@
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:doctrine="http://symfony.com/schema/dic/doctrine"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd
+                https://symfony.com/schema/dic/services/services-1.0.xsd
                 http://symfony.com/schema/dic/doctrine
-                http://symfony.com/schema/dic/doctrine/doctrine-1.0.xsd">
+                https://symfony.com/schema/dic/doctrine/doctrine-1.0.xsd">
 
             <doctrine:config>
                 <doctrine:dbal default-connection="default">
@@ -124,67 +124,79 @@
     .. code-block:: php
 
         // config/packages/doctrine.php
-        $container->loadFromExtension('doctrine', array(
-            'dbal' => array(
+        $container->loadFromExtension('doctrine', [
+            'dbal' => [
                 'default_connection' => 'default',
-                'connections' => array(
+                'connections' => [
                     // configure these for your database server
-                    'default' => array(
+                    'default' => [
                         'url'            => '%env(DATABASE_URL)%',
                         'driver'         => 'pdo_mysql',
                         'server_version' => '5.7',
                         'charset'        => 'utf8mb4',
-                    ),
+                    ],
                     // configure these for your database server
-                    'customer' => array(
+                    'customer' => [
                         'url'            => '%env(DATABASE_CUSTOMER_URL)%',
                         'driver'         => 'pdo_mysql',
                         'server_version' => '5.7',
                         'charset'        => 'utf8mb4',
-                    ),
-                ),
-            ),
+                    ],
+                ],
+            ],
 
-            'orm' => array(
+            'orm' => [
                 'default_entity_manager' => 'default',
-                'entity_managers' => array(
-                    'default' => array(
+                'entity_managers' => [
+                    'default' => [
                         'connection' => 'default',
-                        'mappings'   => array(
-                            'Main'  => array(
+                        'mappings'   => [
+                            'Main'  => [
                                 is_bundle => false,
                                 type => 'annotation',
                                 dir => '%kernel.project_dir%/src/Entity/Main',
                                 prefix => 'App\Entity\Main',
                                 alias => 'Main',
-                            )
-                        ),
-                    ),
-                    'customer' => array(
+                            ]
+                        ],
+                    ],
+                    'customer' => [
                         'connection' => 'customer',
-                        'mappings'   => array(
-                            'Customer'  => array(
+                        'mappings'   => [
+                            'Customer'  => [
                                 is_bundle => false,
                                 type => 'annotation',
                                 dir => '%kernel.project_dir%/src/Entity/Customer',
                                 prefix => 'App\Entity\Customer',
                                 alias => 'Customer',
-                            )
-                        ),
-                    ),
-                ),
-            ),
-        ));
+                            ]
+                        ],
+                    ],
+                ],
+            ],
+        ]);
 
 在这个例子中，你定义了两个实体管理器，并将他们命名为 ``default`` 和 ``customer``。
 ``default`` 实体管理器管理的实体在 ``src/Entity/Main`` 目录，
 而 ``customer`` 实体管理器的管理的实体在 ``src/Entity/Customer`` 目录。
 你还定义了两个连接，每个实体管理器一个连接。
 
-.. note::
+.. caution::
 
     使用多个连接和实体管理器时，应明确说明所需的配置。
     如果你 *省略* 了连接或实体管理器的名称，默认值（即 ``default``）被使用。
+
+    如果使用与默认实体管理器 ``default`` 所不同的名称，则还需要在 ``prod``
+    环境配置中重新定义默认实体管理器：
+
+    .. code-block:: yaml
+
+        # config/packages/prod/doctrine.yaml
+        doctrine:
+            orm:
+                default_entity_manager: 'your default entity manager name'
+
+        # ...
 
 使用多个连接创建数据库时：
 

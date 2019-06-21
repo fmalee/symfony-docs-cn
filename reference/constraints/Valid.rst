@@ -5,14 +5,13 @@ This constraint is used to enable validation on objects that are embedded
 as properties on an object being validated. This allows you to validate
 an object and all sub-objects associated with it.
 
-+----------------+---------------------------------------------------------------------+
-| Applies to     | :ref:`property or method <validation-property-target>`              |
-+----------------+---------------------------------------------------------------------+
-| Options        | - `traverse`_                                                       |
-|                | - `payload`_                                                        |
-+----------------+---------------------------------------------------------------------+
-| Class          | :class:`Symfony\\Component\\Validator\\Constraints\\Valid`          |
-+----------------+---------------------------------------------------------------------+
+==========  ===================================================================
+Applies to  :ref:`property or method <validation-property-target>`
+Options     - `groups`_
+            - `payload`_
+            - `traverse`_
+Class       :class:`Symfony\\Component\\Validator\\Constraints\\Valid`
+==========  ===================================================================
 
 .. include:: /reference/forms/types/options/_error_bubbling_hint.rst.inc
 
@@ -115,14 +114,14 @@ stores an ``Address`` instance in the ``$address`` property::
         <?xml version="1.0" encoding="UTF-8" ?>
         <constraint-mapping xmlns="http://symfony.com/schema/dic/constraint-mapping"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping http://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
+            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping https://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
 
             <class name="App\Entity\Address">
                 <property name="street">
-                    <constraint name="NotBlank" />
+                    <constraint name="NotBlank"/>
                 </property>
                 <property name="zipCode">
-                    <constraint name="NotBlank" />
+                    <constraint name="NotBlank"/>
                     <constraint name="Length">
                         <option name="max">5</option>
                     </constraint>
@@ -131,13 +130,13 @@ stores an ``Address`` instance in the ``$address`` property::
 
             <class name="App\Entity\Author">
                 <property name="firstName">
-                    <constraint name="NotBlank" />
+                    <constraint name="NotBlank"/>
                     <constraint name="Length">
                         <option name="min">4</option>
                     </constraint>
                 </property>
                 <property name="lastName">
-                    <constraint name="NotBlank" />
+                    <constraint name="NotBlank"/>
                 </property>
             </class>
         </constraint-mapping>
@@ -147,38 +146,31 @@ stores an ``Address`` instance in the ``$address`` property::
         // src/Entity/Address.php
         namespace App\Entity;
 
-        use Symfony\Component\Validator\Mapping\ClassMetadata;
         use Symfony\Component\Validator\Constraints as Assert;
+        use Symfony\Component\Validator\Mapping\ClassMetadata;
 
         class Address
         {
-            protected $street;
-            protected $zipCode;
-
             public static function loadValidatorMetadata(ClassMetadata $metadata)
             {
                 $metadata->addPropertyConstraint('street', new Assert\NotBlank());
                 $metadata->addPropertyConstraint('zipCode', new Assert\NotBlank());
-                $metadata->addPropertyConstraint('zipCode', new Assert\Length(array("max" => 5)));
+                $metadata->addPropertyConstraint('zipCode', new Assert\Length(["max" => 5]));
             }
         }
 
         // src/Entity/Author.php
         namespace App\Entity;
 
-        use Symfony\Component\Validator\Mapping\ClassMetadata;
         use Symfony\Component\Validator\Constraints as Assert;
+        use Symfony\Component\Validator\Mapping\ClassMetadata;
 
         class Author
         {
-            protected $firstName;
-            protected $lastName;
-            protected $address;
-
             public static function loadValidatorMetadata(ClassMetadata $metadata)
             {
                 $metadata->addPropertyConstraint('firstName', new Assert\NotBlank());
-                $metadata->addPropertyConstraint('firstName', new Assert\Length(array("min" => 4)));
+                $metadata->addPropertyConstraint('firstName', new Assert\Length(["min" => 4]));
                 $metadata->addPropertyConstraint('lastName', new Assert\NotBlank());
             }
         }
@@ -218,11 +210,11 @@ an invalid address. To prevent that, add the ``Valid`` constraint to the
         <?xml version="1.0" encoding="UTF-8" ?>
         <constraint-mapping xmlns="http://symfony.com/schema/dic/constraint-mapping"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping http://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
+            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping https://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
 
             <class name="App\Entity\Author">
                 <property name="address">
-                    <constraint name="Valid" />
+                    <constraint name="Valid"/>
                 </property>
             </class>
         </constraint-mapping>
@@ -232,13 +224,11 @@ an invalid address. To prevent that, add the ``Valid`` constraint to the
         // src/Entity/Author.php
         namespace App\Entity;
 
-        use Symfony\Component\Validator\Mapping\ClassMetadata;
         use Symfony\Component\Validator\Constraints as Assert;
+        use Symfony\Component\Validator\Mapping\ClassMetadata;
 
         class Author
         {
-            protected $address;
-
             public static function loadValidatorMetadata(ClassMetadata $metadata)
             {
                 $metadata->addPropertyConstraint('address', new Assert\Valid());
@@ -256,13 +246,15 @@ the validation of the ``Address`` fields failed.
 Options
 -------
 
+.. include:: /reference/constraints/_groups-option.rst.inc
+
+.. include:: /reference/constraints/_payload-option.rst.inc
+
 traverse
 ~~~~~~~~
 
 **type**: ``boolean`` **default**: ``true``
 
-If this constraint is applied to a property that holds an array of objects,
-then each object in that array will be validated only if this option is
-set to ``true``.
-
-.. include:: /reference/constraints/_payload-option.rst.inc
+If this constraint is applied to a ``Traversable``, then all containing values
+will be validated if this option is set to ``true``. This option is ignored on
+arrays: Arrays are traversed in either case. Keys are not validated.

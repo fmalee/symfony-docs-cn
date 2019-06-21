@@ -1,19 +1,56 @@
-.. index::
-    single: Workflow; Workflows as State Machines
+工作流和状态机
+============================
 
-作为状态机的工作流
-===========================
+工作流
+---------
 
-工作流组件以一个 *工作流网络* 为模型，而该网络是 `Petri net`_ 的子类。
-通过添加进一步的限制，你可以获取一个状态机。最重要的一点是一个状态机不能同时存在于多个位置。
-还有一点值得注意，在定义图中，一个工作流通常不具有循环路径，但对于一个状态机来说却很常见。
+一个工作流，是你应用中一个流程(process)的一个模型。
+它可能是博客文章从草稿、审核到发布的过程。
+另一个例子是，当一位用户提交一系列不同的表单以完成一个任务时。
+类似的进程最好从你的模型中脱离，而且应该在配置信息中进行定义。
 
-状态机示例
---------------------------
+一个工作流的一个 **定义** 包括位置和动作，以从一个位置转移到另一个位置。这些动作被称为 **过渡**。
+工作流还需要知道每个对象在工作流中的位置。
+**marking store(标记存储区)** 通过写入对象的一个属性来记住当前位置。
 
-一个拉取请求以一个初始的“start”状态开始，还有一个在Travis上运行测试的状态。
-完成此操作后，拉取请求处于“review”状态，其中贡献者可以要求更改、拒绝或接受该拉取请求。
-你可以随时“update”该拉取请求，不过这将导致另一个Travis的运行。
+.. note::
+
+    上面的专有名词一般被用于讨论工作流和 `Petri nets`_
+
+示例
+~~~~~~~~
+
+最简单的工作流是下面这种。它包括两个位置和一个过渡。
+
+.. image:: /_images/components/workflow/simple.png
+
+当用来描述一个真实业务时，工作流可以是更复杂的。下面的工作流描述了在一个应聘应用中进行应聘的流程。
+
+.. image:: /_images/components/workflow/job_application.png
+
+在此示例中填写应聘应用时，根据你申请的工作，有4到7个步骤。
+一些工作需要用户回答性格测试、逻辑测试和/或形式要求。有些则工作没有。
+用 ``GuardEvent`` 来确定一个特定申请所许可的后续步骤。
+
+通过像这样定义一个工作流，流程如何被展现就能知其大概。
+流程的逻辑并不与控制器、模型或视图混为一谈。只需更改配置即可更改步骤的顺序。
+
+状态机
+--------------
+
+状态机是工作流的子集，其目的是保持模型的状态。它们之间最重要的区别是：
+
+* 工作流可以同时存在于多个位置，而状态机不能;
+* 工作流通常在定义图中没有循环路径，但它通常用于状态机;
+* 为了应用一个过渡，工作流要求对象位于过渡的所有先前的位置，而状态机仅要求对象至少位于其中一个位置。
+
+示例
+~~~~~~~
+
+一个拉动请求以初始的“start”状态开始，然后是“test”状态，
+例如在持续集成(continuous integration)堆栈上运行测试。
+完成此操作后，拉取请求处于“review”状态，其中贡献者可以要求更改，拒绝或接受拉取请求。
+你可以随时“update”该拉取请求，这将导致另一次持续集成运行。
 
 .. image:: /_images/components/workflow/pull_request.png
 
@@ -34,19 +71,19 @@
                     places:
                         - start
                         - coding
-                        - travis
+                        - test
                         - review
                         - merged
                         - closed
                     transitions:
                         submit:
                             from: start
-                            to: travis
+                            to: test
                         update:
-                            from: [coding, travis, review]
-                            to: travis
+                            from: [coding, test, review]
+                            to: test
                         wait_for_review:
-                            from: travis
+                            from: test
                             to: review
                         request_change:
                             from: review
@@ -64,12 +101,12 @@
     .. code-block:: xml
 
         <!-- config/packages/workflow.xml -->
-        <?xml version="1.0" encoding="utf-8" ?>
+        <?xml version="1.0" encoding="UTF-8" ?>
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:framework="http://symfony.com/schema/dic/symfony"
-            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd
-                http://symfony.com/schema/dic/symfony http://symfony.com/schema/dic/symfony/symfony-1.0.xsd"
+            xsi:schemaLocation="http://symfony.com/schema/dic/services https://symfony.com/schema/dic/services/services-1.0.xsd
+                http://symfony.com/schema/dic/symfony https://symfony.com/schema/dic/symfony/symfony-1.0.xsd"
         >
 
             <framework:config>
@@ -80,7 +117,7 @@
 
                     <framework:place>start</framework:place>
                     <framework:place>coding</framework:place>
-                    <framework:place>travis</framework:place>
+                    <framework:place>test</framework:place>
                     <framework:place>review</framework:place>
                     <framework:place>merged</framework:place>
                     <framework:place>closed</framework:place>
@@ -88,19 +125,19 @@
                     <framework:transition name="submit">
                         <framework:from>start</framework:from>
 
-                        <framework:to>travis</framework:to>
+                        <framework:to>test</framework:to>
                     </framework:transition>
 
                     <framework:transition name="update">
                         <framework:from>coding</framework:from>
-                        <framework:from>travis</framework:from>
+                        <framework:from>test</framework:from>
                         <framework:from>review</framework:from>
 
-                        <framework:to>travis</framework:to>
+                        <framework:to>test</framework:to>
                     </framework:transition>
 
                     <framework:transition name="wait_for_review">
-                        <framework:from>travis</framework:from>
+                        <framework:from>test</framework:from>
 
                         <framework:to>review</framework:to>
                     </framework:transition>
@@ -136,54 +173,54 @@
 
     .. code-block:: php
 
-        // # config/packages/workflow.php
-        $container->loadFromExtension('framework', array(
+        // config/packages/workflow.php
+        $container->loadFromExtension('framework', [
             // ...
-            'workflows' => array(
-                'pull_request' => array(
+            'workflows' => [
+                'pull_request' => [
                   'type' => 'state_machine',
-                  'supports' => array('App\Entity\PullRequest'),
-                  'places' => array(
+                  'supports' => ['App\Entity\PullRequest'],
+                  'places' => [
                     'start',
                     'coding',
-                    'travis',
+                    'test',
                     'review',
                     'merged',
                     'closed',
-                  ),
-                  'transitions' => array(
-                    'submit'=> array(
+                  ],
+                  'transitions' => [
+                    'submit'=> [
                       'from' => 'start',
-                      'to' => 'travis',
-                    ),
-                    'update'=> array(
-                      'from' => array('coding','travis','review'),
-                      'to' => 'travis',
-                    ),
-                    'wait_for_review'=> array(
-                      'from' => 'travis',
+                      'to' => 'test',
+                    ],
+                    'update'=> [
+                      'from' => ['coding', 'test', 'review'],
+                      'to' => 'test',
+                    ],
+                    'wait_for_review'=> [
+                      'from' => 'test',
                       'to' => 'review',
-                    ),
-                    'request_change'=> array(
+                    ],
+                    'request_change'=> [
                       'from' => 'review',
                       'to' => 'coding',
-                    ),
-                    'accept'=> array(
+                    ],
+                    'accept'=> [
                       'from' => 'review',
                       'to' => 'merged',
-                    ),
-                    'reject'=> array(
+                    ],
+                    'reject'=> [
                       'from' => 'review',
                       'to' => 'closed',
-                    ),
-                    'reopen'=> array(
+                    ],
+                    'reopen'=> [
                       'from' => 'start',
                       'to' => 'review',
-                    ),
-                  ),
-                ),
-            ),
-        ));
+                    ],
+                  ],
+                ],
+            ],
+        ]);
 
 在使用 :ref:`默认services.yaml配置 <service-container-services-load-example>`
 的Symfony应用中，你可以通过注入工作流注册表服务来获取此状态机::
@@ -209,4 +246,4 @@
         // ...
     }
 
-.. _Petri net: https://en.wikipedia.org/wiki/Petri_net
+.. _`Petri nets`: https://en.wikipedia.org/wiki/Petri_net

@@ -9,6 +9,9 @@
 例如，Symfony中的 ``kernel`` 服务从 ``Kernel`` 类中注入到容器::
 
     // ...
+    use Symfony\Component\HttpKernel\KernelInterface;
+    use Symfony\Component\HttpKernel\TerminableInterface;
+
     abstract class Kernel implements KernelInterface, TerminableInterface
     {
         // ...
@@ -44,12 +47,12 @@
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <services>
 
                 <!-- synthetic services don't specify a class -->
-                <service id="app.synthetic_service" synthetic="true" />
+                <service id="app.synthetic_service" synthetic="true"/>
 
             </services>
         </container>

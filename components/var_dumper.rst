@@ -14,16 +14,14 @@ Installation
 
 .. code-block:: terminal
 
-    $ composer require symfony/var-dumper --dev
-
-Alternatively, you can clone the `<https://github.com/symfony/var-dumper>`_ repository.
+    $ composer require --dev symfony/var-dumper
 
 .. include:: /components/require_autoload.rst.inc
 
 .. note::
 
     If using it inside a Symfony application, make sure that the DebugBundle has
-    been installed (or run ``composer require symfony/debug-bundle`` to install it).
+    been installed (or run ``composer require --dev symfony/debug-bundle`` to install it).
 
 .. _components-var-dumper-dump:
 
@@ -70,9 +68,6 @@ current PHP SAPI:
     ``VAR_DUMPER_FORMAT`` environment variable and setting its value to either
     ``html`` or ``cli``.
 
-    .. versionadded:: 4.2
-        The ``VAR_DUMPER_FORMAT`` env var was introduced in Symfony 4.2.
-
 .. note::
 
     If you want to catch the dump output as a string, please read the
@@ -97,16 +92,10 @@ current PHP SAPI:
     function. This function dumps the variables using ``dump()`` and
     immediately ends the execution of the script (using :phpfunction:`exit`).
 
-    .. versionadded:: 4.1
-        The ``dd()`` helper method was introduced in Symfony 4.1.
-
 .. _var-dumper-dump-server:
 
 The Dump Server
 ---------------
-
-.. versionadded:: 4.1
-    The dump server was introduced in Symfony 4.1.
 
 The ``dump()`` function outputs its contents in the same browser window or
 console terminal as your own application. Sometimes mixing the real output
@@ -120,11 +109,11 @@ server, which outputs it to its own console or to an HTML file:
 .. code-block:: terminal
 
     # displays the dumped data in the console:
-    $ ./bin/console server:dump
+    $ php bin/console server:dump
       [OK] Server listening on tcp://0.0.0.0:9912
 
     # stores the dumped data in a file using the HTML format:
-    $ ./bin/console server:dump --format=html > dump.html
+    $ php bin/console server:dump --format=html > dump.html
 
 Inside a Symfony application, the output of the dump server is configured with
 the :ref:`dump_destination option <configuration-debug-dump_destination>` of the
@@ -146,37 +135,37 @@ the :ref:`dump_destination option <configuration-debug-dump_destination>` of the
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:debug="http://symfony.com/schema/dic/debug"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd
-                http://symfony.com/schema/dic/debug http://symfony.com/schema/dic/debug/debug-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd
+                http://symfony.com/schema/dic/debug https://symfony.com/schema/dic/debug/debug-1.0.xsd">
 
-            <debug:config dump-destination="tcp://%env(VAR_DUMPER_SERVER)%" />
+            <debug:config dump-destination="tcp://%env(VAR_DUMPER_SERVER)%"/>
         </container>
 
     .. code-block:: php
 
         // config/packages/debug.php
-        $container->loadFromExtension('debug', array(
+        $container->loadFromExtension('debug', [
            'dump_destination' => 'tcp://%env(VAR_DUMPER_SERVER)%',
-        ));
+        ]);
 
 Outside a Symfony application, use the :class:`Symfony\\Component\\VarDumper\\Dumper\\ServerDumper` class::
 
     require __DIR__.'/vendor/autoload.php';
 
-    use Symfony\Component\VarDumper\VarDumper;
     use Symfony\Component\VarDumper\Cloner\VarCloner;
     use Symfony\Component\VarDumper\Dumper\CliDumper;
     use Symfony\Component\VarDumper\Dumper\ContextProvider\CliContextProvider;
     use Symfony\Component\VarDumper\Dumper\ContextProvider\SourceContextProvider;
     use Symfony\Component\VarDumper\Dumper\HtmlDumper;
     use Symfony\Component\VarDumper\Dumper\ServerDumper;
+    use Symfony\Component\VarDumper\VarDumper;
 
     $cloner = new VarCloner();
-    $fallbackDumper = \in_array(\PHP_SAPI, array('cli', 'phpdbg')) ? new CliDumper() : new HtmlDumper();
-    $dumper = new ServerDumper('tcp://127.0.0.1:9912', $fallbackDumper, array(
+    $fallbackDumper = \in_array(\PHP_SAPI, ['cli', 'phpdbg']) ? new CliDumper() : new HtmlDumper();
+    $dumper = new ServerDumper('tcp://127.0.0.1:9912', $fallbackDumper, [
         'cli' => new CliContextProvider(),
         'source' => new SourceContextProvider(),
-    ));
+    ]);
 
     VarDumper::setHandler(function ($var) use ($cloner, $dumper) {
         $dumper->dump($cloner->cloneVar($var));
@@ -230,10 +219,10 @@ option. Read more about this and other options in
 
     If the dumped contents are complex, consider using the local search box to
     look for specific variables or values. First, click anywhere on the dumped
-    contents and then press :kbd:`Ctrl. + F` or :kbd:`Cmd. + F` to make the local
+    contents and then press ``Ctrl. + F`` or ``Cmd. + F`` to make the local
     search box appear. All the common shortcuts to navigate the search results
-    are supported (:kbd:`Ctrl. + G` or :kbd:`Cmd. + G`, :kbd:`F3`, etc.) When
-    finished, press :kbd:`Esc.` to hide the box again.
+    are supported (``Ctrl. + G`` or ``Cmd. + G``, ``F3``, etc.) When
+    finished, press ``Esc.`` to hide the box again.
 
 Using the VarDumper Component in your PHPUnit Test Suite
 --------------------------------------------------------
@@ -255,14 +244,15 @@ This will provide you with two new assertions:
 Example::
 
     use PHPUnit\Framework\TestCase;
+    use Symfony\Component\VarDumper\Test\VarDumperTestTrait;
 
     class ExampleTest extends TestCase
     {
-        use \Symfony\Component\VarDumper\Test\VarDumperTestTrait;
+        use VarDumperTestTrait;
 
         public function testWithDumpEquals()
         {
-            $testedVar = array(123, 'foo');
+            $testedVar = [123, 'foo'];
 
             $expectedDump = <<<EOTXT
     array:2 [
@@ -280,10 +270,6 @@ Example::
         }
     }
 
-.. versionadded:: 4.1
-    The possibility of passing non-string variables as the first argument of
-    ``assertDumpEquals()`` was introduced in Symfony 4.1.
-
 Dump Examples and Output
 ------------------------
 
@@ -291,13 +277,13 @@ For simple variables, reading the output should be straightforward.
 Here are some examples showing first a variable defined in PHP,
 then its dump representation::
 
-    $var = array(
+    $var = [
         'a simple string' => "in an array of 5 elements",
         'a float' => 1.0,
         'an integer' => 1,
         'a boolean' => true,
-        'an empty array' => array(),
-    );
+        'an empty array' => [],
+    ];
     dump($var);
 
 .. image:: /_images/components/var_dumper/01-simple.png
@@ -378,11 +364,11 @@ then its dump representation::
 
 .. code-block:: php
 
-    $var = array();
+    $var = [];
     $var[0] = 1;
     $var[1] =& $var[0];
     $var[1] += 1;
-    $var[2] = array("Hard references (circular or sibling)");
+    $var[2] = ["Hard references (circular or sibling)"];
     $var[3] =& $var[2];
     $var[3][] = "are dumped using `&number` prefixes.";
     dump($var);

@@ -37,7 +37,7 @@ Symfony的服务容器提供了一种控制对象创建的强大方法，它允�
 
             App\Email\NewsletterManager:
                 # 调用该静态方法
-                factory: ['App\Email\NewsletterManagerStaticFactory', createNewsletterManager]
+                factory: ['App\Email\NewsletterManagerStaticFactory', 'createNewsletterManager']
 
     .. code-block:: xml
 
@@ -46,17 +46,17 @@ Symfony的服务容器提供了一种控制对象创建的强大方法，它允�
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <services>
                 <service id="App\Email\NewsletterManager">
                     <!-- call the static method -->
-                    <factory class="App\Email\NewsletterManagerStaticFactory" method="createNewsletterManager" />
+                    <factory class="App\Email\NewsletterManagerStaticFactory" method="createNewsletterManager"/>
 
                     <!-- if the factory class is the same as the service class, you can omit
                          the 'class' attribute and define just the 'method' attribute:
 
-                         <factory method="createNewsletterManager" />
+                         <factory method="createNewsletterManager"/>
                     -->
                 </service>
             </services>
@@ -71,7 +71,7 @@ Symfony的服务容器提供了一种控制对象创建的强大方法，它允�
 
         $container->register(NewsletterManager::class)
             // call the static method
-            ->setFactory(array(NewsletterManagerStaticFactory::class, 'createNewsletterManager'));
+            ->setFactory([NewsletterManagerStaticFactory::class, 'createNewsletterManager']);
 
 .. note::
 
@@ -95,7 +95,7 @@ Symfony的服务容器提供了一种控制对象创建的强大方法，它允�
 
             App\Email\NewsletterManager:
                 # 在特定的工厂服务上调用一个方法
-                factory: 'App\Email\NewsletterManagerFactory:createNewsletterManager'
+                factory: ['@App\Email\NewsletterManagerFactory', 'createNewsletterManager']
 
     .. code-block:: xml
 
@@ -104,10 +104,10 @@ Symfony的服务容器提供了一种控制对象创建的强大方法，它允�
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <services>
-                <service id="App\Email\NewsletterManagerFactory" />
+                <service id="App\Email\NewsletterManagerFactory"/>
 
                 <service id="App\Email\NewsletterManager">
                     <!-- call a method on the specified factory service -->
@@ -123,29 +123,17 @@ Symfony的服务容器提供了一种控制对象创建的强大方法，它允�
         // config/services.php
         use App\Email\NewsletterManager;
         use App\Email\NewsletterManagerFactory;
+        use Symfony\Component\DependencyInjection\Reference;
         // ...
 
         $container->register(NewsletterManagerFactory::class);
 
         $container->register(NewsletterManager::class)
             // call a method on the specified factory service
-            ->setFactory(array(
+            ->setFactory([
                 new Reference(NewsletterManagerFactory::class),
                 'createNewsletterManager',
-            ));
-
-.. note::
-
-    YAML文件中的传统配置语法使用一个数组来定义工厂服务和其方法名称：
-
-    .. code-block:: yaml
-
-        # config/services.yaml
-        App\Email\NewsletterManager:
-            # 新语法
-            factory: 'App\Email\NewsletterManagerFactory:createNewsletterManager'
-            # 传统语法
-            factory: ['@App\Email\NewsletterManagerFactory', createNewsletterManager]
+            ]);
 
 .. _factories-passing-arguments-factory-method:
 
@@ -168,7 +156,7 @@ Symfony的服务容器提供了一种控制对象创建的强大方法，它允�
             # ...
 
             App\Email\NewsletterManager:
-                factory:   'App\Email\NewsletterManagerFactory:createNewsletterManager'
+                factory:   ['@App\Email\NewsletterManagerFactory', createNewsletterManager]
                 arguments: ['@templating']
 
     .. code-block:: xml
@@ -178,7 +166,7 @@ Symfony的服务容器提供了一种控制对象创建的强大方法，它允�
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <services>
                 <!-- ... -->
@@ -200,7 +188,7 @@ Symfony的服务容器提供了一种控制对象创建的强大方法，它允�
         // ...
         $container->register(NewsletterManager::class)
             ->addArgument(new Reference('templating'))
-            ->setFactory(array(
+            ->setFactory([
                 new Reference(NewsletterManagerFactory::class),
                 'createNewsletterManager',
-            ));
+            ]);

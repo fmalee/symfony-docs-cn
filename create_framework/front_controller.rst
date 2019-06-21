@@ -61,8 +61,8 @@ which name is exposed to the end user via the URL
 (``http://127.0.0.1:4321/bye.php``): there is a direct mapping between the PHP
 script name and the client URL. This is because the dispatching of the request
 is done by the web server directly. It might be a good idea to move this
-dispatching to our code for better flexibility. This can be achieved by
-routing all client requests to a single PHP script.
+dispatching to our code for better flexibility. This can be achieved by routing
+all client requests to a single PHP script.
 
 .. tip::
 
@@ -80,10 +80,10 @@ Such a script might look like the following::
     $request = Request::createFromGlobals();
     $response = new Response();
 
-    $map = array(
+    $map = [
         '/hello' => __DIR__.'/hello.php',
         '/bye'   => __DIR__.'/bye.php',
-    );
+    ];
 
     $path = $request->getPathInfo();
     if (isset($map[$path])) {
@@ -153,12 +153,12 @@ web root directory:
 Now, configure your web server root directory to point to ``web/`` and all
 other files won't be accessible from the client anymore.
 
-To test your changes in a browser (``http://localhost:4321/hello?name=Fabien``), run
-the PHP built-in server:
+To test your changes in a browser (``http://localhost:4321/hello?name=Fabien``),
+run the :doc:`Symfony Local Web Server </setup/symfony_server>`:
 
 .. code-block:: terminal
 
-    $ php -S 127.0.0.1:4321 -t web/ web/front.php
+    $ symfony server:start --port=4321 --passthru=front.php
 
 .. note::
 
@@ -203,10 +203,10 @@ We have the first version of our framework::
     $request = Request::createFromGlobals();
     $response = new Response();
 
-    $map = array(
+    $map = [
         '/hello' => __DIR__.'/../src/pages/hello.php',
         '/bye'   => __DIR__.'/../src/pages/bye.php',
-    );
+    ];
 
     $path = $request->getPathInfo();
     if (isset($map[$path])) {

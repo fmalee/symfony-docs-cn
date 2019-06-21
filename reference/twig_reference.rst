@@ -3,7 +3,7 @@
 
 .. _symfony2-twig-extensions:
 
-Symfony的Twig扩展
+Symfony Twig扩展
 =======================
 
 Twig is the default template engine for Symfony. By itself, it already contains
@@ -18,7 +18,7 @@ describe these extra features.
 
 .. tip::
 
-    Technically, most of the extensions live in the `Twig Bridge`_. That code
+    Technically, most of the extensions live in the `Twig Bridge`_. That code
     might give you some ideas when you need to write your own Twig extension
     as described in :doc:`/templating/twig_extension`.
 
@@ -30,7 +30,7 @@ describe these extra features.
 
 .. tip::
 
-    The `Twig Extensions repository`_ contains some additional Twig extensions
+    The `Twig Extensions repository`_ contains some additional Twig extensions
     that do not belong to the Twig core, so you might want to have a look at
     the `Twig Extensions documentation`_.
 
@@ -144,138 +144,7 @@ asset_version
 Returns the current version of the package, more information in
 :ref:`templating-assets`.
 
-form
-~~~~
-
-.. code-block:: twig
-
-    {{ form(view, variables = []) }}
-
-``view``
-    **type**: ``FormView``
-``variables`` *(optional)*
-    **type**: ``array`` **default**: ``[]``
-
-Renders the HTML of a complete form, more information in
-:ref:`the Twig Form reference <reference-forms-twig-form>`.
-
-form_start
-~~~~~~~~~~
-
-.. code-block:: twig
-
-    {{ form_start(view, variables = []) }}
-
-``view``
-    **type**: ``FormView``
-``variables`` *(optional)*
-    **type**: ``array`` **default**: ``[]``
-
-Renders the HTML start tag of a form, more information in
-:ref:`the Twig Form reference <reference-forms-twig-start>`.
-
-form_end
-~~~~~~~~
-
-.. code-block:: twig
-
-    {{ form_end(view, variables = []) }}
-
-``view``
-    **type**: ``FormView``
-``variables`` *(optional)*
-    **type**: ``array`` **default**: ``[]``
-
-Renders the HTML end tag of a form together with all fields that have not
-been rendered yet, more information in
-:ref:`the Twig Form reference <reference-forms-twig-end>`.
-
-form_widget
-~~~~~~~~~~~
-
-.. code-block:: twig
-
-    {{ form_widget(view, variables = []) }}
-
-``view``
-    **type**: ``FormView``
-``variables`` *(optional)*
-    **type**: ``array`` **default**: ``[]``
-
-Renders a complete form or a specific HTML widget of a field, more information
-in :ref:`the Twig Form reference <reference-forms-twig-widget>`.
-
-form_errors
-~~~~~~~~~~~
-
-.. code-block:: twig
-
-    {{ form_errors(view) }}
-
-``view``
-    **type**: ``FormView``
-
-Renders any errors for the given field or the global errors, more information
-in :ref:`the Twig Form reference <reference-forms-twig-errors>`.
-
-form_label
-~~~~~~~~~~
-
-.. code-block:: twig
-
-    {{ form_label(view, label = null, variables = []) }}
-
-``view``
-    **type**: ``FormView``
-``label`` *(optional)*
-    **type**: ``string`` **default**: ``null``
-``variables`` *(optional)*
-    **type**: ``array`` **default**: ``[]``
-
-Renders the label for the given field, more information in
-:ref:`the Twig Form reference <reference-forms-twig-label>`.
-
-form_help
-~~~~~~~~~~
-
-.. code-block:: twig
-
-    {{ form_help(view) }}
-
-``view``
-    **type**: ``FormView``
-
-Renders the help text for the given field.
-
-form_row
-~~~~~~~~
-
-.. code-block:: twig
-
-    {{ form_row(view, variables = []) }}
-
-``view``
-    **type**: ``FormView``
-``variables`` *(optional)*
-    **type**: ``array`` **default**: ``[]``
-
-Renders the row (the field's label, errors and widget) of the given field,
-more information in :ref:`the Twig Form reference <reference-forms-twig-row>`.
-
-form_rest
-~~~~~~~~~
-
-.. code-block:: twig
-
-    {{ form_rest(view, variables = []) }}
-
-``view``
-    **type**: ``FormView``
-``variables`` *(optional)*
-    **type**: ``array`` **default**: ``[]``
-
-Renders all fields that have not yet been rendered, more information in
-:ref:`the Twig Form reference <reference-forms-twig-rest>`.
+.. _reference-twig-function-csrf-token:
 
 csrf_token
 ~~~~~~~~~~
@@ -285,10 +154,10 @@ csrf_token
     {{ csrf_token(intention) }}
 
 ``intention``
-    **type**: ``string``
+    **type**: ``string`` - an arbitrary string used to generate the token value.
 
-Renders a CSRF token. Use this function if you want CSRF protection without
-creating a form.
+Renders a CSRF token. Use this function if you want :doc:`CSRF protection </security/csrf>`
+in a regular HTML form not managed by the Symfony Form component.
 
 is_granted
 ~~~~~~~~~~
@@ -384,7 +253,7 @@ information in :ref:`templating-pages`.
 absolute_url
 ~~~~~~~~~~~~
 
-.. code-block:: jinja
+.. code-block:: twig
 
     {{ absolute_url(path) }}
 
@@ -395,7 +264,7 @@ Returns the absolute URL from the passed relative path. For example, assume
 you're on the following page in your app:
 ``http://example.com/products/hover-board``.
 
-.. code-block:: jinja
+.. code-block:: twig
 
     {{ absolute_url('/human.txt') }}
     {# http://example.com/human.txt #}
@@ -406,7 +275,7 @@ you're on the following page in your app:
 relative_path
 ~~~~~~~~~~~~~
 
-.. code-block:: jinja
+.. code-block:: twig
 
     {{ relative_path(path) }}
 
@@ -417,7 +286,7 @@ Returns the relative path from the passed absolute URL. For example, assume
 you're on the following page in your app:
 ``http://example.com/products/hover-board``.
 
-.. code-block:: jinja
+.. code-block:: twig
 
     {{ relative_path('http://example.com/human.txt') }}
     {# ../human.txt #}
@@ -430,6 +299,22 @@ expression
 
 Creates an :class:`Symfony\\Component\\ExpressionLanguage\\Expression` in
 Twig.
+
+Form Related Functions
+~~~~~~~~~~~~~~~~~~~~~~
+
+The following functions related to Symfony Forms are also available. They are
+explained in the article about :doc:`customizing form rendering </form/form_customization>`:
+
+* :ref:`form() <reference-forms-twig-form>`
+* :ref:`form_start() <reference-forms-twig-start>`
+* :ref:`form_end() <reference-forms-twig-end>`
+* :ref:`form_widget() <reference-forms-twig-widget>`
+* :ref:`form_errors() <reference-forms-twig-errors>`
+* :ref:`form_label() <reference-forms-twig-label>`
+* :ref:`form_help() <reference-forms-twig-help>`
+* :ref:`form_row() <reference-forms-twig-row>`
+* :ref:`form_rest() <reference-forms-twig-rest>`
 
 .. _reference-twig-filters:
 
@@ -473,6 +358,12 @@ Translates the text into the current language. More information in
 
 transchoice
 ~~~~~~~~~~~
+
+.. deprecated:: 4.2
+
+   The ``transchoice`` filter is deprecated since Symfony 4.2 and will be
+   removed in 5.0. Use the :doc:`ICU MessageFormat </translation/message_format>` with
+   the ``trans`` filter instead.
 
 .. code-block:: twig
 
@@ -643,9 +534,6 @@ a preconfigured scheme.
 file_relative
 ~~~~~~~~~~~~~
 
-.. versionadded:: 4.2
-    The ``file_relative`` filter was introduced in Symfony 4.2.
-
 .. code-block:: twig
 
     {{ file|file_relative }}
@@ -668,6 +556,8 @@ will be returned.
 
 Tags
 ----
+
+.. _reference-twig-tag-form-theme:
 
 form_theme
 ~~~~~~~~~~
@@ -704,6 +594,12 @@ Renders the translation of the content. More information in :ref:`translation-ta
 transchoice
 ~~~~~~~~~~~
 
+.. deprecated:: 4.2
+
+   The ``transchoice`` tag is deprecated since Symfony 4.2 and will be
+   removed in 5.0. Use the :doc:`ICU MessageFormat </translation/message_format>` with
+   the ``trans`` tag instead.
+
 .. code-block:: twig
 
     {% transchoice count with vars from domain into locale %}{% endtranschoice %}
@@ -735,7 +631,7 @@ This will set the default domain in the current template.
 stopwatch
 ~~~~~~~~~
 
-.. code-block:: jinja
+.. code-block:: twig
 
     {% stopwatch 'name' %}...{% endstopwatch %}
 
@@ -747,36 +643,11 @@ of the WebProfilerBundle.
 Tests
 -----
 
-selectedchoice
-~~~~~~~~~~~~~~
+The following tests related to Symfony Forms are available. They are explained
+in the article about :doc:`customizing form rendering </form/form_customization>`:
 
-.. code-block:: twig
-
-    {% if choice is selectedchoice(selectedValue) %}
-
-``choice``
-    **type**: ``ChoiceView``
-``selectedValue``
-    **type**: ``string``
-
-Checks if ``selectedValue`` was checked for the provided choice field. Using
-this test is the most effective way.
-
-rootform
-~~~~~~~~
-
-.. code-block:: twig
-
-    {% if form is rootform %}
-        {# ... #}
-    {% endif %}
-
-``form``
-    **type**: ``FormView``
-
-Checks if the given ``form`` does not have a parent form view. This is the only
-safe way of testing it because checking if the form contains a field called
-``parent`` is not reliable.
+* :ref:`selectedchoice() <form-twig-selectedchoice>`
+* :ref:`rootform() <form-twig-rootform>`
 
 Global Variables
 ----------------

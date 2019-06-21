@@ -18,9 +18,9 @@ Symfony将语言环境设置存储在请求中，这意味着此设置不会跨�
     // src/EventSubscriber/LocaleSubscriber.php
     namespace App\EventSubscriber;
 
+    use Symfony\Component\EventDispatcher\EventSubscriberInterface;
     use Symfony\Component\HttpKernel\Event\GetResponseEvent;
     use Symfony\Component\HttpKernel\KernelEvents;
-    use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
     class LocaleSubscriber implements EventSubscriberInterface
     {
@@ -49,10 +49,10 @@ Symfony将语言环境设置存储在请求中，这意味着此设置不会跨�
 
         public static function getSubscribedEvents()
         {
-            return array(
+            return [
                 // 必须在默认的语言环境监听器之前（即一个更高的优先级）注册
-                KernelEvents::REQUEST => array(array('onKernelRequest', 20)),
-            );
+                KernelEvents::REQUEST => [['onKernelRequest', 20]],
+            ];
         }
     }
 
@@ -88,14 +88,14 @@ Symfony将自动了解该事件订阅者并在每个请求上调用 ``onKernelRe
             <container xmlns="http://symfony.com/schema/dic/services"
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xsi:schemaLocation="http://symfony.com/schema/dic/services
-                    http://symfony.com/schema/dic/services/services-1.0.xsd">
+                    https://symfony.com/schema/dic/services/services-1.0.xsd">
 
                 <services>
                     <service id="App\EventSubscriber\LocaleSubscriber">
                         <argument>%kernel.default_locale%</argument>
 
                         <!-- uncomment the next line if you are not using autoconfigure -->
-                        <!-- <tag name="kernel.event_subscriber" /> -->
+                        <!-- <tag name="kernel.event_subscriber"/> -->
                     </service>
                 </services>
             </container>
@@ -166,9 +166,9 @@ Symfony将自动了解该事件订阅者并在每个请求上调用 ``onKernelRe
 
         public static function getSubscribedEvents()
         {
-            return array(
+            return [
                 SecurityEvents::INTERACTIVE_LOGIN => 'onInteractiveLogin',
-            );
+            ];
         }
     }
 

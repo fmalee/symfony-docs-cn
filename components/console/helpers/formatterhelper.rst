@@ -50,7 +50,7 @@ notice that the background is only as long as each individual line. Use the
 :method:`Symfony\\Component\\Console\\Helper\\FormatterHelper::formatBlock`
 to generate a block output::
 
-    $errorMessages = array('Error!', 'Something went wrong');
+    $errorMessages = ['Error!', 'Something went wrong'];
     $formattedBlock = $formatter->formatBlock($errorMessages, 'error');
     $output->writeln($formattedBlock);
 
@@ -108,6 +108,7 @@ If you don't want to use suffix at all, pass an empty string::
 
     $truncatedMessage = $formatter->truncate($message, 7, '!!'); // result: This is!!
     $truncatedMessage = $formatter->truncate($message, 7, '');   // result: This is
-    $truncatedMessage = $formatter->truncate('test', 10));
-    /* result: test
-       because length of the "test..." string is shorter than 10 */
+
+    $truncatedMessage = $formatter->truncate('test', 10);
+    // result: test
+    // because length of the "test..." string is shorter than 10

@@ -63,9 +63,9 @@ authentication, have Varnish remove the corresponding header from requests to
 prevent clients from bypassing the cache. In practice, you will need sessions
 at least for some parts of the site, e.g. when using forms with
 :doc:`CSRF Protection </security/csrf>`. In this situation, make sure to
-:doc:`only start a session when actually needed </session/avoid_session_start>`
+:ref:`only start a session when actually needed <session-avoid-start>`
 and clear the session when it is no longer needed. Alternatively, you can look
-into :doc:`/http_cache/form_csrf_caching`.
+into :ref:`caching pages that contain CSRF protected forms <caching-pages-that-contain-csrf-protected-forms>`.
 
 Cookies created in JavaScript and used only in the frontend, e.g. when using
 Google Analytics, are nonetheless sent to the server. These cookies are not
@@ -134,9 +134,8 @@ using Varnish 3:
     .. code-block:: varnish3
 
         sub vcl_fetch {
-            /* By default, Varnish3 ignores Cache-Control: no-cache and private
-               https://www.varnish-cache.org/docs/3.0/tutorial/increasing_your_hitrate.html#cache-control
-             */
+            // By default, Varnish3 ignores Cache-Control: no-cache and private
+            // https://www.varnish-cache.org/docs/3.0/tutorial/increasing_your_hitrate.html#cache-control
             if (beresp.http.Cache-Control ~ "private" ||
                 beresp.http.Cache-Control ~ "no-cache" ||
                 beresp.http.Cache-Control ~ "no-store"

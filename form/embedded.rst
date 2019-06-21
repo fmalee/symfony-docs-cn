@@ -6,7 +6,7 @@
 
 通常，你需要构建一个包含许多不同对象的字段的表单。
 例如，一个注册表单可以包含属于一个 ``User`` 对象以及许多的 ``Address`` 对象的数据。
-幸运的是，使用Form组件可以很容易、自然的实现该目的。
+幸运的是，这可以通过Form组件来实现。
 
 .. _forms-embedding-single-object:
 
@@ -79,17 +79,17 @@
 
         public function configureOptions(OptionsResolver $resolver)
         {
-            $resolver->setDefaults(array(
+            $resolver->setDefaults([
                 'data_class' => Category::class,
-            ));
+            ]);
         }
     }
 
 最终目标是允许在任务表单本身内部修改一个 ``Task`` 的 ``Category``。
 要完成此操作，请将一个 ``category`` 字段添加到类型为该新类的一个实例的 ``TaskType`` 对象上::
 
-    use Symfony\Component\Form\FormBuilderInterface;
     use App\Form\CategoryType;
+    use Symfony\Component\Form\FormBuilderInterface;
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {

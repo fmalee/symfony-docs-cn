@@ -18,8 +18,6 @@ DomCrawler组件
 
     $ composer require symfony/dom-crawler
 
-或者，你也可以克隆 `<https://github.com/symfony/dom-crawler>`_ 仓库。
-
 .. include:: /components/require_autoload.rst.inc
 
 用法
@@ -32,7 +30,7 @@ DomCrawler组件
 
 :class:`Symfony\\Component\\DomCrawler\\Crawler` 类提供了查询和操作HTML和XML文档的方法。
 
-Crawler的一个实例代表一组 :phpclass:`DOMElement` 对象，它们是可以轻松遍历的基本节点::
+Crawler的一个实例代表一组 :phpclass:`DOMElement` 对象，这些对象是可以按如下方式来遍历的节点::
 
     use Symfony\Component\DomCrawler\Crawler;
 
@@ -177,9 +175,6 @@ Crawler的一个实例代表一组 :phpclass:`DOMElement` 对象，它们是可�
 
     $crawler->filter('body')->children('p.lorem');
 
-.. versionadded:: 4.2
-    ``children($selector)`` 方法中的可选选择器是在Symfony 4.2中引入的。
-
 .. note::
 
     所有遍历方法都返回一个新的 :class:`Symfony\\Component\\DomCrawler\\Crawler` 实例。
@@ -194,6 +189,7 @@ Crawler的一个实例代表一组 :phpclass:`DOMElement` 对象，它们是可�
 
 访问当前选择的第一个节点的值::
 
+    // 如果节点不存在，调用 text() 将会导致异常
     $message = $crawler->filterXPath('//body/p')->text();
 
 访问当前选择的第一个节点的属性值::
@@ -204,7 +200,7 @@ Crawler的一个实例代表一组 :phpclass:`DOMElement` 对象，它们是可�
 
     $attributes = $crawler
         ->filterXpath('//body/p')
-        ->extract(array('_text', 'class'))
+        ->extract(['_text', 'class'])
     ;
 
 .. note::
@@ -222,21 +218,32 @@ Crawler的一个实例代表一组 :phpclass:`DOMElement` 对象，它们是可�
 
 匿名函数接收节点（作为Crawler）和节点位置作为参数。结果是调用该匿名函数返回的数组形式的值。
 
+使用嵌套式Crawler时，请注意在Crawler的上下文中，``filterXPath()`` 已经评估过（evaluate）了：
+
+    $crawler->filterXPath('parent')->each(function (Crawler $parentCrawler, $i) {
+        // 错误操作：找不到直接的子标签
+        $subCrawler = $parentCrawler->filterXPath('sub-tag/sub-child-tag');
+
+        // 这样操作：同样指定父标签
+        $subCrawler = $parentCrawler->filterXPath('parent/sub-tag/sub-child-tag');
+        $subCrawler = $parentCrawler->filterXPath('node()/sub-tag/sub-child-tag');
+    });
+
 添加内容
 ~~~~~~~~~~~~~~~~~~
 
 Crawler支持多种添加内容的方式::
 
-    $crawler = new Crawler('<html><body /></html>');
+    $crawler = new Crawler('<html><body/></html>');
 
-    $crawler->addHtmlContent('<html><body /></html>');
-    $crawler->addXmlContent('<root><node /></root>');
+    $crawler->addHtmlContent('<html><body/></html>');
+    $crawler->addXmlContent('<root><node/></root>');
 
-    $crawler->addContent('<html><body /></html>');
-    $crawler->addContent('<root><node /></root>', 'text/xml');
+    $crawler->addContent('<html><body/></html>');
+    $crawler->addContent('<root><node/></root>', 'text/xml');
 
-    $crawler->add('<html><body /></html>');
-    $crawler->add('<root><node /></root>');
+    $crawler->add('<html><body/></html>');
+    $crawler->add('<root><node/></root>');
 
 .. note::
 
@@ -251,13 +258,13 @@ Crawler支持多种添加内容的方式::
 :phpclass:`DOMNodeList` 和 :phpclass:`DOMNode` 对象交互::
 
     $domDocument = new \DOMDocument();
-    $domDocument->loadXml('<root><node /><node /></root>');
+    $domDocument->loadXml('<root><node/><node/></root>');
     $nodeList = $domDocument->getElementsByTagName('node');
     $node = $domDocument->getElementsByTagName('node')->item(0);
 
     $crawler->addDocument($domDocument);
     $crawler->addNodeList($nodeList);
-    $crawler->addNodes(array($node));
+    $crawler->addNodes([$node]);
     $crawler->addNode($node);
     $crawler->add($domDocument);
 
@@ -280,6 +287,7 @@ Crawler支持多种添加内容的方式::
     或者你可以使用 :method:`Symfony\\Component\\DomCrawler\\Crawler::html`
     方法获取第一个节点的HTML::
 
+        // 如果节点不存在，调用 html() 将会导致异常
         $html = $crawler->html();
 
 表达式求值
@@ -305,35 +313,39 @@ Crawler支持多种添加内容的方式::
     $crawler->addHtmlContent($html);
 
     $crawler->filterXPath('//span[contains(@id, "article-")]')->evaluate('substring-after(@id, "-")');
-    /* array:3 [
-         0 => "100"
-         1 => "101"
-         2 => "102"
-       ]
-     */
+    /* 结果:
+    [
+        0 => '100',
+        1 => '101',
+        2 => '102',
+    ];
+    */
 
     $crawler->evaluate('substring-after(//span[contains(@id, "article-")]/@id, "-")');
-    /* array:1 [
-         0 => "100"
-       ]
-     */
+    /* 结果:
+    [
+        0 => '100',
+    ]
+    */
 
     $crawler->filterXPath('//span[@class="article"]')->evaluate('count(@id)');
-    /* array:3 [
-         0 => 1.0
-         1 => 1.0
-         2 => 1.0
-       ]
-     */
+    /* 结果:
+    [
+        0 => 1.0,
+        1 => 1.0,
+        2 => 1.0,
+    ]
+    */
 
     $crawler->evaluate('count(//span[@class="article"])');
-    /* array:1 [
-         0 => 3.0
-       ]
-     */
+    /* 结果:
+    [
+        0 => 3.0,
+    ]
+    */
 
     $crawler->evaluate('//span[1]');
-    // A Symfony\Component\DomCrawler\Crawler instance
+    // 一个 Symfony\Component\DomCrawler\Crawler 实例
 
 链接
 ~~~~~
@@ -398,9 +410,9 @@ Crawler支持多种添加内容的方式::
     $crawler->filter('.form-vertical')->form();
 
     // 或者用数据“填充”表单字段
-    $form = $crawler->selectButton('my-super-button')->form(array(
+    $form = $crawler->selectButton('my-super-button')->form([
         'name' => 'Ryan',
-    ));
+    ]);
 
 :class:`Symfony\\Component\\DomCrawler\\Form` 对象提供许多非常有用的方法来处理表单::
 
@@ -419,10 +431,10 @@ Crawler支持多种添加内容的方式::
 你可以实质性的设置和获取表单上的值::
 
     // 在表单内部设置值
-    $form->setValues(array(
+    $form->setValues([
         'registration[username]' => 'symfonyfan',
         'registration[terms]'    => 1,
-    ));
+    ]);
 
     // 获取到一个数组形式的值 - 在像上面那样的“扁平”数组中
     $values = $form->getValues();
@@ -433,21 +445,21 @@ Crawler支持多种添加内容的方式::
 处理多维的字段::
 
     <form>
-        <input name="multi[]" />
-        <input name="multi[]" />
-        <input name="multi[dimensional]" />
+        <input name="multi[]"/>
+        <input name="multi[]"/>
+        <input name="multi[dimensional]"/>
     </form>
 
 传递一个数组形式的值::
 
     // 设置单个字段
-    $form->setValues(array('multi' => array('value')));
+    $form->setValues(['multi' => ['value']]);
 
     // 一次设置多个字段
-    $form->setValues(array('multi' => array(
+    $form->setValues(['multi' => [
         1             => 'value',
         'dimensional' => 'an other value',
-    )));
+    ]]);
 
 这很棒，但它会变得更好！``Form`` 对象允许你像浏览器一样与表单进行交互，选择单选框的值，勾选复选框和上传文件::
 
@@ -461,7 +473,7 @@ Crawler支持多种添加内容的方式::
     $form['registration[birthday][year]']->select(1984);
 
     // 在选择框中选择多个选项
-    $form['registration[interests]']->select(array('symfony', 'cookies'));
+    $form['registration[interests]']->select(['symfony', 'cookies']);
 
     // 伪造文件上传
     $form['registration[photo]']->upload('/path/to/lucas.jpg');

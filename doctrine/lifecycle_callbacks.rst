@@ -12,6 +12,9 @@
 
 .. code-block:: php-annotations
 
+    // src/Entity/Product.php
+    use Doctrine\ORM\Mapping as ORM;
+
     /**
      * @ORM\Entity()
      * @ORM\HasLifecycleCallbacks()
@@ -29,6 +32,7 @@
     .. code-block:: php-annotations
 
         // src/Entity/Product.php
+        use Doctrine\ORM\Mapping as ORM;
 
         /**
          * @ORM\PrePersist
@@ -54,12 +58,12 @@
         <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
-                http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+                https://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
             <entity name="App\Entity\Product">
                 <!-- ... -->
                 <lifecycle-callbacks>
-                    <lifecycle-callback type="prePersist" method="setCreatedAtValue" />
+                    <lifecycle-callback type="prePersist" method="setCreatedAtValue"/>
                 </lifecycle-callbacks>
             </entity>
         </doctrine-mapping>

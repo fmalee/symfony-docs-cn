@@ -103,9 +103,9 @@ Symfony自动附带默认目录结构。你可以重写此目录结构以创建�
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:twig="http://symfony.com/schema/dic/twig"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd
+                https://symfony.com/schema/dic/services/services-1.0.xsd
                 http://symfony.com/schema/dic/twig
-                http://symfony.com/schema/dic/twig/twig-1.0.xsd">
+                https://symfony.com/schema/dic/twig/twig-1.0.xsd">
 
             <twig:config>
                 <twig:path>%kernel.project_dir%/resources/views</twig:path>
@@ -116,11 +116,11 @@ Symfony自动附带默认目录结构。你可以重写此目录结构以创建�
     .. code-block:: php
 
         // config/packages/twig.php
-        $container->loadFromExtension('twig', array(
-            'paths' => array(
+        $container->loadFromExtension('twig', [
+            'paths' => [
                 '%kernel.project_dir%/resources/views',
-            ),
-        ));
+            ],
+        ]);
 
 重写翻译目录
 -----------------------------------
@@ -147,9 +147,9 @@ Symfony自动附带默认目录结构。你可以重写此目录结构以创建�
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:twig="http://symfony.com/schema/dic/twig"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd
+                https://symfony.com/schema/dic/services/services-1.0.xsd
                 http://symfony.com/schema/dic/twig
-                http://symfony.com/schema/dic/twig/twig-1.0.xsd">
+                https://symfony.com/schema/dic/twig/twig-1.0.xsd">
 
             <framework:config>
                 <framework:translator>
@@ -162,13 +162,13 @@ Symfony自动附带默认目录结构。你可以重写此目录结构以创建�
     .. code-block:: php
 
         // config/packages/translation.php
-        $container->loadFromExtension('framework', array(
-            'translator' => array(
-                'paths' => array(
+        $container->loadFromExtension('framework', [
+            'translator' => [
+                'paths' => [
                     '%kernel.project_dir%/i18n',
-                ),
-            ),
-        ));
+                ],
+            ],
+        ]);
 
 .. _override-web-dir:
 .. _override-the-web-directory:

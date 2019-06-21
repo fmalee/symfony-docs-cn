@@ -10,8 +10,8 @@
     $form = $this->createFormBuilder($task)
         ->add('task', TextType::class)
         ->add('dueDate', DateType::class)
-        ->add('save', SubmitType::class, array('label' => 'Create Task'))
-        ->add('saveAndAdd', SubmitType::class, array('label' => 'Save and Add'))
+        ->add('save', SubmitType::class, ['label' => 'Create Task'])
+        ->add('saveAndAdd', SubmitType::class, ['label' => 'Save and Add'])
         ->getForm();
 
 在控制器中，使用按钮的 :method:`Symfony\\Component\\Form\\ClickableInterface::isClicked`

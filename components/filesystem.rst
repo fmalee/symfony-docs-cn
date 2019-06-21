@@ -13,8 +13,6 @@ Filesystem组件
 
     $ composer require symfony/filesystem
 
-或者，你可以克隆 `<https://github.com/symfony/filesystem>`_ 仓库。
-
 .. include:: /components/require_autoload.rst.inc
 
 用法
@@ -22,13 +20,13 @@ Filesystem组件
 
 :class:`Symfony\\Component\\Filesystem\\Filesystem` 类是文件系统操作的唯一端点::
 
-    use Symfony\Component\Filesystem\Filesystem;
     use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
+    use Symfony\Component\Filesystem\Filesystem;
 
-    $fileSystem = new Filesystem();
+    $filesystem = new Filesystem();
 
     try {
-        $fileSystem->mkdir(sys_get_temp_dir().'/'.random_int(0, 1000));
+        $filesystem->mkdir(sys_get_temp_dir().'/'.random_int(0, 1000));
     } catch (IOExceptionInterface $exception) {
         echo "An error occurred while creating your directory at ".$exception->getPath();
     }
@@ -50,7 +48,7 @@ mkdir
 :method:`Symfony\\Component\\Filesystem\\Filesystem::mkdir` 以递归方式创建目录。
 在POSIX文件系统上，使用默认的 `0777` 模式值来创建目录。你可以使用第二个参数来设置自己的模式::
 
-    $fileSystem->mkdir('/tmp/photos', 0700);
+    $filesystem->mkdir('/tmp/photos', 0700);
 
 .. note::
 
@@ -73,11 +71,11 @@ exists
 检查是否存在一个或多个文件或目录，如果缺少任何文件或目录则返回 ``false``::
 
     // 如果此绝对目录存在，则返回 true
-    $fileSystem->exists('/tmp/photos');
+    $filesystem->exists('/tmp/photos');
 
     // 如果 rabbit.jpg 存在，但 bottle.png 不存在，则返回 false
     // 非绝对路径是相对于存储正在运行的PHP脚本的目录
-    $fileSystem->exists(array('rabbit.jpg', 'bottle.png'));
+    $filesystem->exists(['rabbit.jpg', 'bottle.png']);
 
 .. note::
 
@@ -91,10 +89,10 @@ copy
 如果目标已存在，则仅在源修改日期晚于目标时才会复制文件。传递布尔类型的第三个参数可以重写此行为::
 
     // 只有 image-ICC 在 image.jpg 之后修改时才有效
-    $fileSystem->copy('image-ICC.jpg', 'image.jpg');
+    $filesystem->copy('image-ICC.jpg', 'image.jpg');
 
     // image.jpg 会被重写
-    $fileSystem->copy('image-ICC.jpg', 'image.jpg', true);
+    $filesystem->copy('image-ICC.jpg', 'image.jpg', true);
 
 touch
 ~~~~~
@@ -104,11 +102,11 @@ touch
 你可以使用第二个参数来设置修改时间。第三个参数是访问时间::
 
     // 将修改时间设置为当前时间戳
-    $fileSystem->touch('file.txt');
+    $filesystem->touch('file.txt');
     // 将修改时间设置为当前时间的后10秒
-    $fileSystem->touch('file.txt', time() + 10);
+    $filesystem->touch('file.txt', time() + 10);
     // 将访问时间设置为当前时间的前10秒
-    $fileSystem->touch('file.txt', time(), time() - 10);
+    $filesystem->touch('file.txt', time(), time() - 10);
 
 .. note::
 
@@ -121,9 +119,9 @@ chown
 第三个参数是一个布尔类型的递归选项::
 
     // 将 lolcat 视频的所有者设置为 www-data
-    $fileSystem->chown('lolcat.mp4', 'www-data');
+    $filesystem->chown('lolcat.mp4', 'www-data');
     // 以递归方式更改 video 目录的所有者
-    $fileSystem->chown('/video', 'www-data', true);
+    $filesystem->chown('/video', 'www-data', true);
 
 .. note::
 
@@ -136,9 +134,9 @@ chgrp
 第三个参数是一个布尔类型的递归选项::
 
     // 将 lolcat 视频的组设置为 nginx
-    $fileSystem->chgrp('lolcat.mp4', 'nginx');
+    $filesystem->chgrp('lolcat.mp4', 'nginx');
     // 以递归方式更改 video 目录的组
-    $fileSystem->chgrp('/video', 'nginx', true);
+    $filesystem->chgrp('/video', 'nginx', true);
 
 .. note::
 
@@ -151,9 +149,9 @@ chmod
 第四个参数是一个布尔类型的递归选项::
 
     // 将视频的模式设置为0600
-    $fileSystem->chmod('video.ogg', 0600);
+    $filesystem->chmod('video.ogg', 0600);
     // 以递归方式更改 src 目录的模式
-    $fileSystem->chmod('src', 0700, 0000, true);
+    $filesystem->chmod('src', 0700, 0000, true);
 
 .. note::
 
@@ -164,7 +162,7 @@ remove
 
 :method:`Symfony\\Component\\Filesystem\\Filesystem::remove` 删除文件、目录和符号链接::
 
-    $fileSystem->remove(array('symlink', '/path/to/directory', 'activity.log'));
+    $filesystem->remove(['symlink', '/path/to/directory', 'activity.log']);
 
 .. note::
 
@@ -176,9 +174,9 @@ rename
 :method:`Symfony\\Component\\Filesystem\\Filesystem::rename` 修改单个文件或目录的名称::
 
     // 重命名一个文件
-    $fileSystem->rename('/tmp/processed_video.ogg', '/path/to/store/video_647.ogg');
+    $filesystem->rename('/tmp/processed_video.ogg', '/path/to/store/video_647.ogg');
     // 重命名一个目录
-    $fileSystem->rename('/tmp/files', '/path/to/store/files');
+    $filesystem->rename('/tmp/files', '/path/to/store/files');
 
 symlink
 ~~~~~~~
@@ -187,9 +185,9 @@ symlink
 如果文件系统不支持符号链接，则可以使用第三个布尔类型的参数::
 
     // 创建一个符号链接
-    $fileSystem->symlink('/path/to/source', '/path/to/destination');
+    $filesystem->symlink('/path/to/source', '/path/to/destination');
     // 如果文件系统不支持符号链接，则复制源目录
-    $fileSystem->symlink('/path/to/source', '/path/to/destination', true);
+    $filesystem->symlink('/path/to/source', '/path/to/destination', true);
 
 readlink
 ~~~~~~~~
@@ -205,10 +203,10 @@ Filesystem组件提供的
 :method:`Symfony\\Component\\Filesystem\\Filesystem::readlink` 方法始终以相同的方式运行::
 
     // 返回链接的下一个直接目标，而不考虑目标是否存在
-    $fileSystem->readlink('/path/to/link');
+    $filesystem->readlink('/path/to/link');
 
     // 返回目标的绝对完全解析的最终版本（如果有嵌套链接，则解析它们）
-    $fileSystem->readlink('/path/to/link', true);
+    $filesystem->readlink('/path/to/link', true);
 
 其行为如下::
 
@@ -229,12 +227,12 @@ makePathRelative
 采用两个绝对路径并返回从第二个路径到第一个路径的相对路径::
 
     // 返回 '../'
-    $fileSystem->makePathRelative(
+    $filesystem->makePathRelative(
         '/var/lib/symfony/src/Symfony/',
         '/var/lib/symfony/src/Symfony/Component'
     );
     // 返回 'videos/'
-    $fileSystem->makePathRelative('/tmp/videos', '/tmp')
+    $filesystem->makePathRelative('/tmp/videos', '/tmp')
 
 mirror
 ~~~~~~
@@ -243,7 +241,7 @@ mirror
 将源目录的所有内容复制到目标目录（使用
 :method:`Symfony\\Component\\Filesystem\\Filesystem::copy` 方法复制单个文件）::
 
-    $fileSystem->mirror('/path/to/source', '/path/to/target');
+    $filesystem->mirror('/path/to/source', '/path/to/target');
 
 isAbsolutePath
 ~~~~~~~~~~~~~~
@@ -252,13 +250,22 @@ isAbsolutePath
 如果给定路径是绝对路径则返回 ``true``，否则返回 ``false``::
 
     // 返回 true
-    $fileSystem->isAbsolutePath('/tmp');
+    $filesystem->isAbsolutePath('/tmp');
     // 返回 true
-    $fileSystem->isAbsolutePath('c:\\Windows');
+    $filesystem->isAbsolutePath('c:\\Windows');
     // 返回 false
-    $fileSystem->isAbsolutePath('tmp');
+    $filesystem->isAbsolutePath('tmp');
     // 返回 false
-    $fileSystem->isAbsolutePath('../dir');
+    $filesystem->isAbsolutePath('../dir');
+
+tempnam
+~~~~~~~
+
+:method:`Symfony\\Component\\Filesystem\\Filesystem::tempnam`
+创建一个具有唯一文件名的临时文件，并返回其路径，或者在失败时抛出异常::
+
+    // returns a path like : /tmp/prefix_wyjgtF
+    $filesystem->tempnam('/tmp', 'prefix_');
 
 dumpFile
 ~~~~~~~~
@@ -267,7 +274,7 @@ dumpFile
 它以原子方式执行该操作：它首先将内容写入到一个临时文件，写入完成后再将其移动到该新文件的位置。
 这意味着用户将始终看到完整的旧文件和新文件（但不会有一个只写入一个部分的文件）::
 
-    $fileSystem->dumpFile('file.txt', 'Hello World');
+    $filesystem->dumpFile('file.txt', 'Hello World');
 
 ``file.txt`` 文件现在包含 ``Hello World``。
 
@@ -276,7 +283,7 @@ appendToFile
 
 :method:`Symfony\\Component\\Filesystem\\Filesystem::appendToFile` 在某个文件的末尾添加新内容::
 
-    $fileSystem->appendToFile('logs.txt', 'Email sent to user@example.com');
+    $filesystem->appendToFile('logs.txt', 'Email sent to user@example.com');
 
 如果对应文件或包含它的目录不存在，则该方法会在附加内容之前创建它们。
 

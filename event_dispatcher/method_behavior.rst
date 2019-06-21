@@ -41,7 +41,7 @@
     // src/Event/BeforeSendMailEvent.php
     namespace App\Event;
 
-    use Symfony\Component\EventDispatcher\Event;
+    use Symfony\Contracts\EventDispatcher\Event;
 
     class BeforeSendMailEvent extends Event
     {
@@ -80,7 +80,7 @@
     // src/Event/AfterSendMailEvent.php
     namespace App\Event;
 
-    use Symfony\Component\EventDispatcher\Event;
+    use Symfony\Contracts\EventDispatcher\Event;
 
     class AfterSendMailEvent extends Event
     {
@@ -110,8 +110,8 @@
     // src/EventSubscriber/MailPostSendSubscriber.php
     namespace App\EventSubscriber;
 
-    use Symfony\Component\EventDispatcher\EventSubscriberInterface;
     use App\Event\AfterSendMailEvent;
+    use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
     class MailPostSendSubscriber implements EventSubscriberInterface
     {
@@ -126,9 +126,9 @@
 
         public static function getSubscribedEvents()
         {
-            return array(
+            return [
                 'mailer.post_send' => 'onMailerPostSend'
-            );
+            ];
         }
     }
 

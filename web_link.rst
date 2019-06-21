@@ -1,3 +1,6 @@
+.. index::
+   single: Web Link
+
 WebLink
 ===========================================================
 
@@ -21,9 +24,8 @@ Symfony提供了用于管理 ``Link`` HTTP标头的原生支持（通过 :doc:`W
 
 想象一下，你的应用包含如下网页：
 
-.. code-block:: twig
+.. code-block:: html
 
-    {# templates/homepage.html.twig #}
     <!DOCTYPE html>
     <html>
     <head>
@@ -33,7 +35,7 @@ Symfony提供了用于管理 ``Link`` HTTP标头的原生支持（通过 :doc:`W
     </head>
     <body>
         <main role="main" class="container">
-            {# ... some content here ... #}
+            <!-- ... -->
         </main>
     </body>
     </html>
@@ -45,28 +47,34 @@ Symfony提供了用于管理 ``Link`` HTTP标头的原生支持（通过 :doc:`W
 
 .. code-block:: terminal
 
-    $ composer req web-link
+    $ composer require symfony/web-link
 
-现在，更新模板以使用WebLink提供的 ``preload()`` Twig函数：
+现在，更新模板以使用WebLink提供的 ``preload()`` Twig函数。
+该 `"as" 属性`_ 是强制性的，因为浏览器需要其应用正确的优先顺序和内容安全策略：
 
-.. code:: twig
+.. code-block:: html+twig
 
     <head>
-       {# ... #}
-        <link rel="stylesheet" href="{{ preload('/app.css') }}">
+        <!-- ... -->
+        <link rel="stylesheet" href="{{ preload('/app.css', { as: 'style' }) }}">
     </head>
 
 如果重新加载页面，感知性能将得到改善，因为当浏览器仅请求HTML页面时，服务器同时响应HTML页面和CSS文件。
 
-.. tip::
+此外，根据 `Priority Hints规范`_，你可以使用 ``importance`` 属性来标记要下载的资源的优先级：
 
-    Google Chrome提供了调试HTTP/2连接的界面。浏览 ``chrome://net-internals/#http2`` 以查看所有详细信息。
+.. code-block:: html+twig
+
+    <head>
+        <!-- ... -->
+        <link rel="stylesheet" href="{{ preload('/app.css', { as: 'style', importance: 'low' }) }}">
+    </head>
 
 它是如何工作的？
 ~~~~~~~~~~~~~~~~~
 
 WebLink组件管理添加到响应的 ``Link`` HTTP标头。
-当使用上一示例中 ``preload()`` 函数时，响应中添加了以下标头：``Link </app.css>; rel="preload"``。
+当使用上一示例中 ``preload()`` 函数时，响应中添加了以下标头：``Link </app.css>; rel="preload"; as="style"``。
 
 根据 `Preload规范`_，当HTTP/2服务器检测到原始（HTTP 1.x）响应包含此HTTP标头时，它将自动触发对同一HTTP/2连接中的相关文件的推送。
 
@@ -75,11 +83,11 @@ WebLink组件管理添加到响应的 ``Link`` HTTP标头。
 
 如果要阻止推送但让浏览器通过发出早期单独的HTTP请求来预加载资源，请使用以下 ``nopush`` 选项：
 
-.. code:: twig
+.. code-block:: html+twig
 
     <head>
-       {# ... #}
-        <link rel="stylesheet" href="{{ preload('/app.css', { nopush: true }) }}">
+        <!-- ... -->
+        <link rel="stylesheet" href="{{ preload('/app.css', { as: 'style', nopush: true }) }}">
     </head>
 
 资源提示
@@ -101,12 +109,12 @@ WebLink组件提供以下Twig函数来发送这些提示：
 该组件还支持发送与性能无关的HTTP Link以及实现 `PSR-13`_ 标准的任何Link。
 例如，任何 `HTML规范中定义的Link`_：
 
-.. code:: twig
+.. code-block:: html+twig
 
     <head>
-       {# ... #}
+        <!-- ... -->
         <link rel="alternate" href="{{ link('/index.jsonld', 'alternate') }}">
-        <link rel="stylesheet" href="{{ preload('/app.css', {nopush: true}) }}">
+        <link rel="stylesheet" href="{{ preload('/app.css', { as: 'style', nopush: true }) }}">
     </head>
 
 上一个代码段将会产生此HTTP标头发送到客户端：``Link: </index.jsonld>; rel="alternate",</app.css>; rel="preload"; nopush``
@@ -118,8 +126,8 @@ WebLink组件提供以下Twig函数来发送这些提示：
 
     use Fig\Link\GenericLinkProvider;
     use Fig\Link\Link;
-    use Symfony\Component\HttpFoundation\Request;
     use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+    use Symfony\Component\HttpFoundation\Request;
 
     class BlogController extends AbstractController
     {
@@ -130,7 +138,7 @@ WebLink组件提供以下Twig函数来发送这些提示：
 
             // 如果你不想使用 addLink() 快捷方式的替代方法
             $linkProvider = $request->attributes->get('_links', new GenericLinkProvider());
-            $request->attributes->set('_links', $linkProvider->withLink(new Link('preload', '/app.css')));
+            $request->attributes->set('_links', $linkProvider->withLink(new Link('preload', '/app.css', ['as' : 'style'])));
 
             return $this->render('...');
         }
@@ -147,6 +155,8 @@ WebLink组件提供以下Twig函数来发送这些提示：
 .. _`Resource Hints`: https://www.w3.org/TR/resource-hints/
 .. _`Docker installer and runtime for Symfony`: https://github.com/dunglas/symfony-docker
 .. _`preload`: https://developer.mozilla.org/en-US/docs/Web/HTML/Preloading_content
+.. _`"as" 属性`: https://w3c.github.io/preload/#as-attribute
+.. _`Priority Hints规范`: https://wicg.github.io/priority-hints/
 .. _`Preload规范`: https://www.w3.org/TR/preload/#server-push-(http/2)
 .. _`Cloudflare`: https://blog.cloudflare.com/announcing-support-for-http-2-server-push-2/
 .. _`Fastly`: https://docs.fastly.com/guides/performance-tuning/http2-server-push

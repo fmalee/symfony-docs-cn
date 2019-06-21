@@ -42,7 +42,7 @@
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:twig="http://symfony.com/schema/dic/twig"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <twig:config debug="%kernel.debug%" strict-variables="%kernel.debug%">
                 <twig:path namespace="foo_bar">%kernel.project_dir%/vendor/acme/foo-bar/templates</twig:path>
@@ -52,11 +52,11 @@
     .. code-block:: php
 
         // config/packages/twig.php
-        $container->loadFromExtension('twig', array(
-            'paths' => array(
+        $container->loadFromExtension('twig', [
+            'paths' => [
                 '%kernel.project_dir%/vendor/acme/foo-bar/templates' => 'foo_bar',
-            ),
-        ));
+            ],
+        ]);
 
 需要在模板中要调用已注册的 ``foo_bar`` 命名空间，则必须为该命名空间添加 ``@`` 字符前缀
 （这是为了让Twig区分命名空间与常规路径）。
@@ -99,7 +99,7 @@
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:twig="http://symfony.com/schema/dic/twig"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <twig:config debug="%kernel.debug%" strict-variables="%kernel.debug%">
                 <twig:path namespace="theme">%kernel.project_dir%/vendor/acme/themes/theme1</twig:path>
@@ -111,13 +111,13 @@
     .. code-block:: php
 
         // config/packages/twig.php
-        $container->loadFromExtension('twig', array(
-            'paths' => array(
+        $container->loadFromExtension('twig', [
+            'paths' => [
                 '%kernel.project_dir%/vendor/acme/themes/theme1' => 'theme',
                 '%kernel.project_dir%/vendor/acme/themes/theme2' => 'theme',
                 '%kernel.project_dir%/vendor/acme/themes/common' => 'theme',
-            ),
-        ));
+            ],
+        ]);
 
 现在，你可以使用同样的 ``@theme`` 命名空间来引用位于之前三个目录中的任何模板：
 

@@ -16,7 +16,7 @@ Symfony提供了一个序列化器，用于序列化/反序列化对象和不同
 
 .. code-block:: terminal
 
-    $ composer require symfony/serializer
+    $ composer require symfony/serializer-pack
 
 使用序列化服务
 ----------------------------
@@ -90,11 +90,11 @@ Symfony提供了一个序列化器，用于序列化/反序列化对象和不同
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <services>
                 <service id="get_set_method_normalizer" class="Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer" public="false">
-                    <tag name="serializer.normalizer" />
+                    <tag name="serializer.normalizer"/>
                 </service>
             </services>
         </container>
@@ -125,15 +125,12 @@ Symfony提供了一个序列化器，用于序列化/反序列化对象和不同
 
     $json = $serializer->serialize(
         $someObject,
-        'json', array('groups' => 'group1')
+        'json', ['groups' => 'group1']
     );
 
 .. tip::
 
     ``groups`` 键的值可以是单个字符串，也可以是字符串数组。
-
-    .. versionadded:: 4.2
-        在Symfony 4.2中引入了将单个字符串传递给 ``groups`` 的选项。
 
 除 ``@Groups`` 注释外，Serializer组件还支持YAML或XML文件。
 存储在以下位置之一的这些文件会自动加载：
@@ -149,7 +146,7 @@ Symfony提供了一个序列化器，用于序列化/反序列化对象和不同
 
 序列化器的元数据会被自动缓存，以提高应用的性能。
 默认情况下，序列化器使用 ``cache.system`` 缓存池，
-该缓存池使用 :ref:`cache.system <reference-cache-systen>` 选项配置。
+该缓存池使用 :ref:`cache.system <reference-cache-system>` 选项配置。
 
 启用名称转换器
 -------------------------
@@ -175,23 +172,34 @@ Symfony提供了一个序列化器，用于序列化/反序列化对象和不同
         <!-- config/packages/framework.xml -->
         <framework:config>
             <!-- ... -->
-            <framework:serializer name-converter="serializer.name_converter.camel_case_to_snake_case" />
+            <framework:serializer name-converter="serializer.name_converter.camel_case_to_snake_case"/>
         </framework:config>
 
     .. code-block:: php
 
         // config/packages/framework.php
-        $container->loadFromExtension('framework', array(
+        $container->loadFromExtension('framework', [
             // ...
-            'serializer' => array(
+            'serializer' => [
                 'name_converter' => 'serializer.name_converter.camel_case_to_snake_case',
-            ),
-        ));
+            ],
+        ]);
 
 扩展阅读
 ---------------------------------
 
-`ApiPlatform`_ 提供支持 `JSON-LD`_ 和 `Hydra Core Vocabulary`_ 超媒体格式的API系统。
+`ApiPlatform`_ 提供支持以下格式的API系统：
+
+* `JSON-LD`_ along with the `Hydra Core Vocabulary`_
+* `OpenAPI`_ v2 (formerly Swagger) and v3
+* `GraphQL`_
+* `JSON:API`_
+* `HAL`_
+* JSON
+* XML
+* YAML
+* CSV
+
 它构建于Symfony Framework及其Serializer组件之上。
 它提供自定义规范化器和自定义编码器，自定义元数据和缓存系统。
 
@@ -205,7 +213,11 @@ Symfony提供了一个序列化器，用于序列化/反序列化对象和不同
     serializer/custom_normalizer
 
 .. _`APCu`: https://github.com/krakjoe/apcu
-.. _`ApiPlatform`: https://github.com/api-platform/core
+.. _`API Platform`: https://api-platform.com
 .. _`JSON-LD`: http://json-ld.org
 .. _`Hydra Core Vocabulary`: http://hydra-cg.com
+.. _`OpenAPI`: https://www.openapis.org
+.. _`GraphQL`: https://graphql.org
+.. _`JSON:API`: https://jsonapi.org
+.. _`HAL`: http://stateless.co/hal_specification.html
 .. _`Data URIs`: https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs

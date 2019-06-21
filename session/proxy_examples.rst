@@ -31,10 +31,10 @@
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:framework="http://symfony.com/schema/dic/symfony"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <framework:config>
-                <framework:session handler-id="App\Session\CustomSessionHandler" />
+                <framework:session handler-id="App\Session\CustomSessionHandler"/>
             </framework:config>
         </container>
 
@@ -42,13 +42,13 @@
 
         // config/packages/framework.php
         use App\Session\CustomSessionHandler;
-        $container->loadFromExtension('framework', array(
+        $container->loadFromExtension('framework', [
             // ...
-            'session' => array(
+            'session' => [
                 // ...
                 'handler_id' => CustomSessionHandler::class,
-            ),
-        ));
+            ],
+        ]);
 
 继续阅读下一节，了解如何在实践中使用会话处理器来解决两个常见用例：加密会话信息和定义只读访客会话。
 

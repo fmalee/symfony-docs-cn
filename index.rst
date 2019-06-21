@@ -32,6 +32,7 @@ Symfony中文文档
     :maxdepth: 1
 
     bundles
+    cache
     configuration
     console
     controller
@@ -43,7 +44,9 @@ Symfony中文文档
     frontend
     http_cache
     logging
+    mercure
     messenger
+    migration
     performance
     profiler
     routing

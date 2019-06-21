@@ -52,10 +52,10 @@ SOAP通过将PHP对象的方法暴露给外部实体（即使用SOAP服务的人
 
     namespace App\Controller;
 
+    use App\Service\HelloService;
     use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
     use Symfony\Component\HttpFoundation\Response;
     use Symfony\Component\Routing\Annotation\Route;
-    use App\Service\HelloService;
 
     class HelloServiceController extends AbstractController
     {
@@ -91,7 +91,7 @@ SOAP通过将PHP对象的方法暴露给外部实体（即使用SOAP服务的人
 
     $soapClient = new \SoapClient('http://example.com/index.php/soap?wsdl');
 
-    $result = $soapClient->call('hello', array('name' => 'Scott'));
+    $result = $soapClient->call('hello', ['name' => 'Scott']);
 
 下面是一个WSDL示例。
 
@@ -110,17 +110,17 @@ SOAP通过将PHP对象的方法暴露给外部实体（即使用SOAP服务的人
 
         <types>
             <xsd:schema targetNamespace="urn:hellowsdl">
-                <xsd:import namespace="http://schemas.xmlsoap.org/soap/encoding/" />
-                <xsd:import namespace="http://schemas.xmlsoap.org/wsdl/" />
+                <xsd:import namespace="http://schemas.xmlsoap.org/soap/encoding/"/>
+                <xsd:import namespace="http://schemas.xmlsoap.org/wsdl/"/>
             </xsd:schema>
         </types>
 
         <message name="helloRequest">
-            <part name="name" type="xsd:string" />
+            <part name="name" type="xsd:string"/>
         </message>
 
         <message name="helloResponse">
-            <part name="return" type="xsd:string" />
+            <part name="return" type="xsd:string"/>
         </message>
 
         <portType name="hellowsdlPortType">
@@ -150,7 +150,7 @@ SOAP通过将PHP对象的方法暴露给外部实体（即使用SOAP服务的人
 
         <service name="hellowsdl">
             <port name="hellowsdlPort" binding="tns:hellowsdlBinding">
-                <soap:address location="http://example.com/index.php/soap" />
+                <soap:address location="http://example.com/index.php/soap"/>
             </port>
         </service>
     </definitions>

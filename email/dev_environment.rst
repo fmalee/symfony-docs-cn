@@ -5,7 +5,7 @@
 ==========================================
 
 在开发一个发送邮件的应用时，你通常不希望在开发期间将邮件实际发送给指定的收件人。
-如果你使用默认的Symfony邮件程序，则可以通过配置设置实现此目的，而无需对应用的代码进行任何更改。
+如果你将SwiftmailerBundle与Symfony一起使用，则可以通过配置设置实现此目的，而无需对应用的代码进行任何更改。
 在开发过程中处理邮件有两个主要选择：（a）完全禁止发送邮件或（b）将所有邮件发送到指定地址（可配置可选的例外情况）。
 
 禁用发送
@@ -30,18 +30,18 @@
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:swiftmailer="http://symfony.com/schema/dic/swiftmailer"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd
-                http://symfony.com/schema/dic/swiftmailer http://symfony.com/schema/dic/swiftmailer/swiftmailer-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd
+                http://symfony.com/schema/dic/swiftmailer https://symfony.com/schema/dic/swiftmailer/swiftmailer-1.0.xsd">
 
-            <swiftmailer:config disable-delivery="true" />
+            <swiftmailer:config disable-delivery="true"/>
         </container>
 
     .. code-block:: php
 
         // config/packages/test/swiftmailer.php
-        $container->loadFromExtension('swiftmailer', array(
+        $container->loadFromExtension('swiftmailer', [
             'disable_delivery' => "true",
-        ));
+        ]);
 
 .. _sending-to-a-specified-address:
 
@@ -67,9 +67,9 @@
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:swiftmailer="http://symfony.com/schema/dic/swiftmailer"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd
+                https://symfony.com/schema/dic/services/services-1.0.xsd
                 http://symfony.com/schema/dic/swiftmailer
-                http://symfony.com/schema/dic/swiftmailer/swiftmailer-1.0.xsd">
+                https://symfony.com/schema/dic/swiftmailer/swiftmailer-1.0.xsd">
 
             <swiftmailer:config>
                 <swiftmailer:delivery-address>dev@example.com</swiftmailer:delivery-address>
@@ -79,9 +79,9 @@
     .. code-block:: php
 
         // config/packages/dev/swiftmailer.php
-        $container->loadFromExtension('swiftmailer', array(
-            'delivery_addresses' => array("dev@example.com"),
-        ));
+        $container->loadFromExtension('swiftmailer', [
+            'delivery_addresses' => ['dev@example.com'],
+        ]);
 
 现在，假设你在一个控制器向 ``recipient@example.com`` 发送邮件::
 
@@ -93,7 +93,7 @@
             ->setBody(
                 $this->renderView(
                     'HelloBundle:Hello:email.txt.twig',
-                    array('name' => $name)
+                    ['name' => $name]
                 )
             )
         ;
@@ -128,10 +128,10 @@ Swift Mailer会在邮件中添加一个额外的 ``X-Swift-To`` 标头，其中�
         swiftmailer:
             delivery_addresses: ['dev@example.com']
             delivery_whitelist:
-               # all email addresses matching these regexes will be delivered
-               # like normal, as well as being sent to dev@example.com
-               - '/@specialdomain\.com$/'
-               - '/^admin@mydomain\.com$/'
+                # all email addresses matching these regexes will be delivered
+                # like normal, as well as being sent to dev@example.com
+                - '/@specialdomain\.com$/'
+                - '/^admin@mydomain\.com$/'
 
     .. code-block:: xml
 
@@ -141,9 +141,9 @@ Swift Mailer会在邮件中添加一个额外的 ``X-Swift-To`` 标头，其中�
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:swiftmailer="http://symfony.com/schema/dic/swiftmailer"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd
+                https://symfony.com/schema/dic/services/services-1.0.xsd
                 http://symfony.com/schema/dic/swiftmailer
-                http://symfony.com/schema/dic/swiftmailer/swiftmailer-1.0.xsd">
+                https://symfony.com/schema/dic/swiftmailer/swiftmailer-1.0.xsd">
 
             <swiftmailer:config>
                 <!-- all email addresses matching these regexes will be delivered
@@ -157,15 +157,15 @@ Swift Mailer会在邮件中添加一个额外的 ``X-Swift-To`` 标头，其中�
     .. code-block:: php
 
         // config/packages/dev/swiftmailer.php
-        $container->loadFromExtension('swiftmailer', array(
-            'delivery_addresses' => array("dev@example.com"),
-            'delivery_whitelist' => array(
+        $container->loadFromExtension('swiftmailer', [
+            'delivery_addresses' => ["dev@example.com"],
+            'delivery_whitelist' => [
                 // all email addresses matching these regexes will be delivered
                 // like normal, as well as being sent to dev@example.com
                 '/@specialdomain\.com$/',
                 '/^admin@mydomain\.com$/',
-            ),
-        ));
+            ],
+        ]);
 
 在上面的示例中，所有邮件都将被重定向到 ``dev@example.com``，但是发送到 ``admin@mydomain.com``
 地址或属于 ``specialdomain.com`` 域的任何邮件地址的邮件将照常传送。
@@ -201,9 +201,9 @@ Swift Mailer会在邮件中添加一个额外的 ``X-Swift-To`` 标头，其中�
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:webprofiler="http://symfony.com/schema/dic/webprofiler"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd
+                https://symfony.com/schema/dic/services/services-1.0.xsd
                 http://symfony.com/schema/dic/webprofiler
-                http://symfony.com/schema/dic/webprofiler/webprofiler-1.0.xsd">
+                https://symfony.com/schema/dic/webprofiler/webprofiler-1.0.xsd">
 
             <webprofiler:config
                 intercept-redirects="true"
@@ -213,9 +213,9 @@ Swift Mailer会在邮件中添加一个额外的 ``X-Swift-To`` 标头，其中�
     .. code-block:: php
 
         // config/packages/dev/web_profiler.php
-        $container->loadFromExtension('web_profiler', array(
+        $container->loadFromExtension('web_profiler', [
             'intercept_redirects' => 'true',
-        ));
+        ]);
 
 .. tip::
 

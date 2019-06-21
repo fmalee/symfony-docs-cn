@@ -15,8 +15,6 @@ Installation
 
     $ composer require symfony/translation
 
-Alternatively, you can clone the `<https://github.com/symfony/translation>`_ repository.
-
 .. include:: /components/require_autoload.rst.inc
 
 .. seealso::
@@ -120,9 +118,9 @@ argument is the loader name (this was the first argument of the ``addLoader()``
 method), the second is the resource and the third argument is the locale::
 
     // ...
-    $translator->addResource('array', array(
+    $translator->addResource('array', [
         'Hello World!' => 'Bonjour',
-    ), 'fr_FR');
+    ], 'fr_FR');
 
 Loading Messages with the File Loaders
 ......................................
@@ -177,14 +175,11 @@ example, assume you're trying to translate into the ``es_AR`` locale:
 #. If the translation still isn't found, the translator uses the one or more
    fallback locales set explicitly on the translator.
 
-.. versionadded:: 4.2
-    The use of parent locales was introduced in Symfony 4.2.
-
 For (3), the fallback locales can be set by calling
 :method:`Symfony\\Component\\Translation\\Translator::setFallbackLocales`::
 
     // ...
-    $translator->setFallbackLocales(array('en'));
+    $translator->setFallbackLocales(['en']);
 
 .. _using-message-domains:
 
@@ -215,7 +210,7 @@ loaded like this::
 When translating strings that are not in the default domain (``messages``),
 you must specify the domain as the third argument of ``trans()``::
 
-    $translator->trans('Symfony is great', array(), 'admin');
+    $translator->trans('Symfony is great', [], 'admin');
 
 Symfony will now look for the message in the ``admin`` domain of the
 specified locale.

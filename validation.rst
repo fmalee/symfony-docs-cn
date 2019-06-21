@@ -74,11 +74,11 @@ Symfony提供了一个 `Validator`_ 组件，使该任务变得简单透明。
         <constraint-mapping xmlns="http://symfony.com/schema/dic/constraint-mapping"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping
-                http://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
+                https://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
 
             <class name="App\Entity\Author">
                 <property name="name">
-                    <constraint name="NotBlank" />
+                    <constraint name="NotBlank"/>
                 </property>
             </class>
         </constraint-mapping>
@@ -88,8 +88,8 @@ Symfony提供了一个 `Validator`_ 组件，使该任务变得简单透明。
         // src/Entity/Author.php
 
         // ...
-        use Symfony\Component\Validator\Mapping\ClassMetadata;
         use Symfony\Component\Validator\Constraints\NotBlank;
+        use Symfony\Component\Validator\Mapping\ClassMetadata;
 
         class Author
         {
@@ -118,9 +118,9 @@ Symfony提供了一个 `Validator`_ 组件，使该任务变得简单透明。
 从控制器内部获取这个简单示例::
 
     // ...
+    use App\Entity\Author;
     use Symfony\Component\HttpFoundation\Response;
     use Symfony\Component\Validator\Validator\ValidatorInterface;
-    use App\Entity\Author;
 
     // ...
     public function author(ValidatorInterface $validator)
@@ -148,7 +148,7 @@ Symfony提供了一个 `Validator`_ 组件，使该任务变得简单透明。
 
 .. code-block:: text
 
-    App\Entity\Author.name:
+    Object(App\Entity\Author).name:
         This value should not be blank
 
 如果在 ``name`` 属性中插入值，则会显示愉快的成功消息。
@@ -162,9 +162,9 @@ Symfony提供了一个 `Validator`_ 组件，使该任务变得简单透明。
 你还可以将错误集合传递到模板中::
 
     if (count($errors) > 0) {
-        return $this->render('author/validation.html.twig', array(
+        return $this->render('author/validation.html.twig', [
             'errors' => $errors,
-        ));
+        ]);
     }
 
 在模板内部，你可以根据需要输出错误列表：
@@ -208,22 +208,22 @@ Symfony提供了一个 `Validator`_ 组件，使该任务变得简单透明。
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:framework="http://symfony.com/schema/dic/symfony"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd
-                http://symfony.com/schema/dic/symfony http://symfony.com/schema/dic/symfony/symfony-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd
+                http://symfony.com/schema/dic/symfony https://symfony.com/schema/dic/symfony/symfony-1.0.xsd">
 
             <framework:config>
-                <framework:validation enabled="true" />
+                <framework:validation enabled="true"/>
             </framework:config>
         </container>
 
     .. code-block:: php
 
         // config/packages/framework.php
-        $container->loadFromExtension('framework', array(
-            'validation' => array(
+        $container->loadFromExtension('framework', [
+            'validation' => [
                 'enabled' => true,
-            ),
-        ));
+            ],
+        ]);
 
 此外，如果你计划使用注释来配置验证，请使用以下内容替换以前的配置：
 
@@ -243,22 +243,22 @@ Symfony提供了一个 `Validator`_ 组件，使该任务变得简单透明。
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:framework="http://symfony.com/schema/dic/symfony"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd
-                http://symfony.com/schema/dic/symfony http://symfony.com/schema/dic/symfony/symfony-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd
+                http://symfony.com/schema/dic/symfony https://symfony.com/schema/dic/symfony/symfony-1.0.xsd">
 
             <framework:config>
-                <framework:validation enable-annotations="true" />
+                <framework:validation enable-annotations="true"/>
             </framework:config>
         </container>
 
     .. code-block:: php
 
         // config/packages/framework.php
-        $container->loadFromExtension('framework', array(
-            'validation' => array(
+        $container->loadFromExtension('framework', [
+            'validation' => [
                 'enable_annotations' => true,
-            ),
-        ));
+            ],
+        ]);
 
 .. index::
    single: Validation; Constraints
@@ -333,7 +333,7 @@ Symfony封装了很多最常用的约束：
         <constraint-mapping xmlns="http://symfony.com/schema/dic/constraint-mapping"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping
-                http://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
+                https://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
 
             <class name="App\Entity\Author">
                 <property name="genre">
@@ -355,8 +355,8 @@ Symfony封装了很多最常用的约束：
         // src/Entity/Author.php
 
         // ...
-        use Symfony\Component\Validator\Mapping\ClassMetadata;
         use Symfony\Component\Validator\Constraints as Assert;
+        use Symfony\Component\Validator\Mapping\ClassMetadata;
 
         class Author
         {
@@ -368,10 +368,10 @@ Symfony封装了很多最常用的约束：
             {
                 // ...
 
-                $metadata->addPropertyConstraint('genre', new Assert\Choice(array(
-                    'choices' => array('fiction', 'non-fiction'),
+                $metadata->addPropertyConstraint('genre', new Assert\Choice([
+                    'choices' => ['fiction', 'non-fiction'],
                     'message' => 'Choose a valid genre.',
-                )));
+                ]));
             }
         }
 
@@ -415,7 +415,7 @@ Symfony封装了很多最常用的约束：
         <constraint-mapping xmlns="http://symfony.com/schema/dic/constraint-mapping"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping
-                http://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
+                https://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
 
             <class name="App\Entity\Author">
                 <property name="genre">
@@ -434,8 +434,8 @@ Symfony封装了很多最常用的约束：
         // src/Entity/Author.php
 
         // ...
-        use Symfony\Component\Validator\Mapping\ClassMetadata;
         use Symfony\Component\Validator\Constraints as Assert;
+        use Symfony\Component\Validator\Mapping\ClassMetadata;
 
         class Author
         {
@@ -447,7 +447,7 @@ Symfony封装了很多最常用的约束：
 
                 $metadata->addPropertyConstraint(
                     'genre',
-                    new Assert\Choice(array('fiction', 'non-fiction'))
+                    new Assert\Choice(['fiction', 'non-fiction'])
                 );
             }
         }
@@ -465,10 +465,10 @@ Symfony封装了很多最常用的约束：
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('myField', TextType::class, array(
+            ->add('myField', TextType::class, [
                 'required' => true,
-                'constraints' => array(new Length(array('min' => 3)))
-            ))
+                'constraints' => [new Length(['min' => 3])]
+            ])
         ;
     }
 
@@ -529,11 +529,11 @@ Symfony封装了很多最常用的约束：
         <constraint-mapping xmlns="http://symfony.com/schema/dic/constraint-mapping"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping
-                http://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
+                https://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
 
             <class name="App\Entity\Author">
                 <property name="firstName">
-                    <constraint name="NotBlank" />
+                    <constraint name="NotBlank"/>
                     <constraint name="Length">
                         <option name="min">3</option>
                     </constraint>
@@ -546,8 +546,8 @@ Symfony封装了很多最常用的约束：
         // src/Entity/Author.php
 
         // ...
-        use Symfony\Component\Validator\Mapping\ClassMetadata;
         use Symfony\Component\Validator\Constraints as Assert;
+        use Symfony\Component\Validator\Mapping\ClassMetadata;
 
         class Author
         {
@@ -558,7 +558,7 @@ Symfony封装了很多最常用的约束：
                 $metadata->addPropertyConstraint('firstName', new Assert\NotBlank());
                 $metadata->addPropertyConstraint(
                     'firstName',
-                    new Assert\Length(array("min" => 3))
+                    new Assert\Length(["min" => 3])
                 );
             }
         }
@@ -610,7 +610,7 @@ Getter
         <constraint-mapping xmlns="http://symfony.com/schema/dic/constraint-mapping"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping
-                http://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
+                https://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
 
             <class name="App\Entity\Author">
                 <getter property="passwordSafe">
@@ -626,16 +626,16 @@ Getter
         // src/Entity/Author.php
 
         // ...
-        use Symfony\Component\Validator\Mapping\ClassMetadata;
         use Symfony\Component\Validator\Constraints as Assert;
+        use Symfony\Component\Validator\Mapping\ClassMetadata;
 
         class Author
         {
             public static function loadValidatorMetadata(ClassMetadata $metadata)
             {
-                $metadata->addGetterConstraint('passwordSafe', new Assert\IsTrue(array(
+                $metadata->addGetterConstraint('passwordSafe', new Assert\IsTrue([
                     'message' => 'The password cannot match your first name',
-                )));
+                ]));
             }
         }
 

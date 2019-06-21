@@ -22,7 +22,7 @@ method signature.
 
 Also, not every BC break has the same impact on application code. While some BC
 breaks require you to make significant changes to your classes or your
-architecture, others are fixed as easily as changing the name of a method.
+architecture, others are fixed by changing the name of a method.
 
 That's why we created this page for you. The section "Using Symfony Code" will
 tell you how you can ensure that your application won't break completely when
@@ -41,14 +41,14 @@ follow to ensure smooth upgrades for our users.
     Also note that backward compatibility breaks are tolerated if they are
     required to fix a security issue.
 
-使用Symfony代码
+Using Symfony Code
 ------------------
 
 If you are using Symfony in your projects, the following guidelines will help
 you to ensure smooth upgrades to all future minor releases of your Symfony
 version.
 
-使用我们的接口
+Using our Interfaces
 ~~~~~~~~~~~~~~~~~~~~
 
 All interfaces shipped with Symfony can be used in type hints. You can also call
@@ -85,7 +85,7 @@ backward compatibility promise:
 | Add a return type to an implemented method    | Yes                         |
 +-----------------------------------------------+-----------------------------+
 
-使用我们的类
+Using our Classes
 ~~~~~~~~~~~~~~~~~
 
 All classes provided by Symfony may be instantiated and accessed through their
@@ -143,8 +143,8 @@ covered by our backward compatibility promise:
 | Access a private property (via Reflection)    | No                          |
 +-----------------------------------------------+-----------------------------+
 
-使用我们的Traits
-~~~~~~~~~~~~~~~~~~~~~~~~
+Using our Traits
+~~~~~~~~~~~~~~~~
 
 All traits provided by Symfony may be used in your classes.
 
@@ -178,13 +178,13 @@ covered by our backward compatibility promise:
 | Use a public, protected or private method     | Yes                         |
 +-----------------------------------------------+-----------------------------+
 
-修改Symfony代码
+Working on Symfony Code
 -----------------------
 
 Do you want to help us improve Symfony? That's great! However, please stick
 to the rules listed below in order to ensure smooth upgrades for our users.
 
-修改接口
+Changing Interfaces
 ~~~~~~~~~~~~~~~~~~~
 
 This table tells you which changes you are allowed to do when working on
@@ -222,7 +222,7 @@ Remove constant                                 No
 Change value of a constant                      Yes [1]_ [5]_
 ==============================================  ==============
 
-修改类
+Changing Classes
 ~~~~~~~~~~~~~~~~
 
 This table tells you which changes you are allowed to do when working on
@@ -325,7 +325,7 @@ Remove constant                                     No
 Change value of a constant                          Yes [1]_ [5]_
 ==================================================  ==============
 
-修改Traits
+Changing Traits
 ~~~~~~~~~~~~~~~
 
 This table tells you which changes you are allowed to do when working on

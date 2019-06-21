@@ -31,10 +31,10 @@ Symfony配备了极简主义的 `PSR-3`_ 日志器：:class:`Symfony\\Component\
         $logger->info('I just got the logger');
         $logger->error('An error occurred');
 
-        $logger->critical('I left the oven on!', array(
+        $logger->critical('I left the oven on!', [
             // 在日志中包含额外的“上下文”信息
             'cause' => 'in_hurry',
-        ));
+        ]);
 
         // ...
     }
@@ -109,9 +109,9 @@ Symfony在默认的 ``monolog.yaml`` 配置文件中预配置了一些基础处�
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:monolog="http://symfony.com/schema/dic/monolog"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd
+                https://symfony.com/schema/dic/services/services-1.0.xsd
                 http://symfony.com/schema/dic/monolog
-                http://symfony.com/schema/dic/monolog/monolog-1.0.xsd">
+                https://symfony.com/schema/dic/monolog/monolog-1.0.xsd">
 
             <monolog:config>
                 <monolog:handler
@@ -131,19 +131,19 @@ Symfony在默认的 ``monolog.yaml`` 配置文件中预配置了一些基础处�
     .. code-block:: php
 
         // config/packages/prod/monolog.php
-        $container->loadFromExtension('monolog', array(
-            'handlers' => array(
-                'file_log' => array(
+        $container->loadFromExtension('monolog', [
+            'handlers' => [
+                'file_log' => [
                     'type'  => 'stream',
                     'path'  => '%kernel.logs_dir%/%kernel.environment%.log',
                     'level' => 'debug',
-                ),
-                'syslog_handler' => array(
+                ],
+                'syslog_handler' => [
                     'type'  => 'syslog',
                     'level' => 'error',
-                ),
-            ),
-        ));
+                ],
+            ],
+        ]);
 
 这里定义了一\ *堆*\处理器，每个处理器按照它定义的顺序调用。
 
@@ -186,9 +186,9 @@ Symfony在默认的 ``monolog.yaml`` 配置文件中预配置了一些基础处�
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:monolog="http://symfony.com/schema/dic/monolog"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd
+                https://symfony.com/schema/dic/services/services-1.0.xsd
                 http://symfony.com/schema/dic/monolog
-                http://symfony.com/schema/dic/monolog/monolog-1.0.xsd">
+                https://symfony.com/schema/dic/monolog/monolog-1.0.xsd">
 
             <monolog:config>
                 <monolog:handler
@@ -214,24 +214,24 @@ Symfony在默认的 ``monolog.yaml`` 配置文件中预配置了一些基础处�
     .. code-block:: php
 
         // config/packages/prod/monolog.php
-        $container->loadFromExtension('monolog', array(
-            'handlers' => array(
-                'filter_for_errors' => array(
+        $container->loadFromExtension('monolog', [
+            'handlers' => [
+                'filter_for_errors' => [
                     'type'         => 'fingers_crossed',
                     'action_level' => 'error',
                     'handler'      => 'file_log',
-                ),
-                'file_log' => array(
+                ],
+                'file_log' => [
                     'type'  => 'stream',
                     'path'  => '%kernel.logs_dir%/%kernel.environment%.log',
                     'level' => 'debug',
-                ),
-                'syslog_handler' => array(
+                ],
+                'syslog_handler' => [
                     'type'  => 'syslog',
                     'level' => 'error',
-                ),
-            ),
-        ));
+                ],
+            ],
+        ]);
 
 现在，一旦一个日志具有 ``error`` 或更高级别，
 那么该请求的所有日志信息都将通过 ``file_log`` 处理器保存到文件中。
@@ -284,9 +284,9 @@ Monolog附带了\ *许多*\ 内置处理器，可用于邮寄日志、将它们�
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:monolog="http://symfony.com/schema/dic/monolog"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd
+                https://symfony.com/schema/dic/services/services-1.0.xsd
                 http://symfony.com/schema/dic/monolog
-                http://symfony.com/schema/dic/monolog/monolog-1.0.xsd">
+                https://symfony.com/schema/dic/monolog/monolog-1.0.xsd">
 
             <monolog:config>
                 <!-- "max_files": max number of log files to keep
@@ -303,24 +303,33 @@ Monolog附带了\ *许多*\ 内置处理器，可用于邮寄日志、将它们�
     .. code-block:: php
 
         // config/packages/prod/monolog.php
-        $container->loadFromExtension('monolog', array(
-            'handlers' => array(
-                'main' => array(
+        $container->loadFromExtension('monolog', [
+            'handlers' => [
+                'main' => [
                     'type'  => 'rotating_file',
                     'path'  => '%kernel.logs_dir%/%kernel.environment%.log',
                     'level' => 'debug',
                     // max number of log files to keep
                     // defaults to zero, which means infinite files
                     'max_files' => 10,
-                ),
-            ),
-        ));
+                ],
+            ],
+        ]);
 
 在服务中使用日志
 -------------------------------
 
+如果你的应用使用 :ref:`服务自动配置 <services-autoconfigure>`，则实现了
+``Psr\Log\LoggerAwareInterface`` 的任何服务将接收对它的 ``setLogger()``
+方法的调用，并将默认日志器服务作为一个服务传递过去。
+
+.. versionadded:: 4.2
+
+    实现了 ``LoggerAwareInterface`` 后会自动调用 ``setLogger()`` 是在Symfony 4.2中引入的。
+
 如果你希望使用自己的服务中的有特定通道（默认情况下是 ``app``）的预配置日志器，
-请如 :ref:`依赖注入参考 <dic_tags-monolog>` 中所阐述的那样使用 ``monolog.logger`` 标记并附带 ``channel`` 属性。
+请如 :ref:`依赖注入参考 <dic_tags-monolog>` 中所阐述的那样使用
+``monolog.logger`` 标签并附带 ``channel`` 属性。
 
 向每个日志添加额外数据（例如，唯一的请求令牌）
 -----------------------------------------------------------

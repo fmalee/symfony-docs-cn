@@ -17,9 +17,7 @@
 解决方案：setTrustedProxies()
 -----------------------------
 
-要解决此问题，你需要告诉Symfony要信任的反向代理的IP地址以及反向代理用于发送信息的标头：
-
-.. code-block:: php
+要解决此问题，你需要告诉Symfony要信任的反向代理的IP地址以及反向代理用于发送信息的标头::
 
     // public/index.php
 
@@ -53,16 +51,14 @@
 #. 将你的Web服务器配置为 *不* 响应来自负载均衡器以外的 *任何* 客户端的流量。
    对于AWS，可以使用 `security groups`_ 完成此操作。
 
-#. 一旦你确保流量只来自你可信的反向代理，请将Symfony配置为 *始终* 信任传入的请求：
-
-   .. code-block:: php
+#. 一旦你确保流量只来自你可信的反向代理，请将Symfony配置为 *始终* 信任传入的请求::
 
        // public/index.php
 
        // ...
        Request::setTrustedProxies(
            // 信任 *所有* 请求
-           array('127.0.0.1', $request->server->get('REMOTE_ADDR')),
+           ['127.0.0.1', $request->server->get('REMOTE_ADDR')],
 
            // 如果你正在使用ELB，否则使用上面的常量
            Request::HEADER_X_FORWARDED_AWS_ELB

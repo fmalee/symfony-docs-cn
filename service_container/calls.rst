@@ -49,13 +49,13 @@
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <services>
                 <service id="App\Service\MessageGenerator">
                     <!-- ... -->
                     <call method="setLogger">
-                        <argument type="service" id="logger" />
+                        <argument type="service" id="logger"/>
                     </call>
                 </service>
             </services>
@@ -68,4 +68,4 @@
         use Symfony\Component\DependencyInjection\Reference;
 
         $container->register(MessageGenerator::class)
-            ->addMethodCall('setLogger', array(new Reference('logger')));
+            ->addMethodCall('setLogger', [new Reference('logger')]);

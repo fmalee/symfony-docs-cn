@@ -5,17 +5,15 @@ Validates that a value is of a specific data type. For example, if a variable
 should be an array, you can use this constraint with the ``array`` type
 option to validate this.
 
-+----------------+---------------------------------------------------------------------+
-| Applies to     | :ref:`property or method <validation-property-target>`              |
-+----------------+---------------------------------------------------------------------+
-| Options        | - :ref:`type <reference-constraint-type-type>`                      |
-|                | - `message`_                                                        |
-|                | - `payload`_                                                        |
-+----------------+---------------------------------------------------------------------+
-| Class          | :class:`Symfony\\Component\\Validator\\Constraints\\Type`           |
-+----------------+---------------------------------------------------------------------+
-| Validator      | :class:`Symfony\\Component\\Validator\\Constraints\\TypeValidator`  |
-+----------------+---------------------------------------------------------------------+
+==========  ===================================================================
+Applies to  :ref:`property or method <validation-property-target>`
+Options     - `groups`_
+            - `message`_
+            - `payload`_
+            - :ref:`type <reference-constraint-type-type>`
+Class       :class:`Symfony\\Component\\Validator\\Constraints\\Type`
+Validator   :class:`Symfony\\Component\\Validator\\Constraints\\TypeValidator`
+==========  ===================================================================
 
 Basic Usage
 -----------
@@ -67,7 +65,7 @@ This will check if ``firstName`` is of type ``string`` and that ``age`` is an
         <?xml version="1.0" encoding="UTF-8" ?>
         <constraint-mapping xmlns="http://symfony.com/schema/dic/constraint-mapping"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping http://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
+            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping https://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
 
             <class name="App\Entity\Author">
                 <property name="firstName">
@@ -89,8 +87,8 @@ This will check if ``firstName`` is of type ``string`` and that ``age`` is an
         // src/Entity/Author.php
         namespace App\Entity;
 
-        use Symfony\Component\Validator\Mapping\ClassMetadata;
         use Symfony\Component\Validator\Constraints as Assert;
+        use Symfony\Component\Validator\Mapping\ClassMetadata;
 
         class Author
         {
@@ -98,15 +96,35 @@ This will check if ``firstName`` is of type ``string`` and that ``age`` is an
             {
                 $metadata->addPropertyConstraint('firstName', new Assert\Type('string'));
 
-                $metadata->addPropertyConstraint('age', new Assert\Type(array(
-                    'type'    => 'integer',
+                $metadata->addPropertyConstraint('age', new Assert\Type([
+                    'type' => 'integer',
                     'message' => 'The value {{ value }} is not a valid {{ type }}.',
-                )));
+                ]));
             }
         }
 
 Options
 -------
+
+.. include:: /reference/constraints/_groups-option.rst.inc
+
+message
+~~~~~~~
+
+**type**: ``string`` **default**: ``This value should be of type {{ type }}.``
+
+The message if the underlying data is not of the given type.
+
+You can use the following parameters in this message:
+
+===============  ==============================================================
+Parameter        Description
+===============  ==============================================================
+``{{ type }}``   The expected type
+``{{ value }}``  The current (invalid) value
+===============  ==============================================================
+
+.. include:: /reference/constraints/_payload-option.rst.inc
 
 .. _reference-constraint-type-type:
 
@@ -152,25 +170,6 @@ Also, you can use ``ctype_()`` functions from corresponding
 
 Make sure that the proper :phpfunction:`locale <setlocale>` is set before
 using one of these.
-
-message
-~~~~~~~
-
-**type**: ``string`` **default**: ``This value should be of type {{ type }}.``
-
-The message if the underlying data is not of the given type.
-
-You can use the following parameters in this message:
-
-+-----------------+-----------------------------+
-| Parameter       | Description                 |
-+=================+=============================+
-| ``{{ value }}`` | The current (invalid) value |
-+-----------------+-----------------------------+
-| ``{{ type }}``  | The expected type           |
-+-----------------+-----------------------------+
-
-.. include:: /reference/constraints/_payload-option.rst.inc
 
 .. _built-in PHP extension: https://php.net/book.ctype.php
 .. _a list of ctype functions: https://php.net/ref.ctype.php

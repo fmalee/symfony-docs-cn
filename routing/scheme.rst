@@ -5,7 +5,7 @@
 ===============================================
 
 有时，你希望保护某些路由，并确保始终通过HTTPS协议访问它们。
-Routing组件允许你通过 ``schemes`` 强制执行URI scheme：
+Routing组件允许你使用 ``schemes`` 配置来强制执行URI scheme：
 
 .. configuration-block::
 
@@ -43,25 +43,23 @@ Routing组件允许你通过 ``schemes`` 强制执行URI scheme：
 
         <routes xmlns="http://symfony.com/schema/routing"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://symfony.com/schema/routing http://symfony.com/schema/routing/routing-1.0.xsd">
+            xsi:schemaLocation="http://symfony.com/schema/routing https://symfony.com/schema/routing/routing-1.0.xsd">
 
-            <route id="secure" path="/secure" schemes="https">
-                <default key="_controller">App\Controller\MainController::secure</default>
-            </route>
+            <route id="secure" path="/secure" schemes="https" controller="App\Controller\MainController::secure"/>
         </routes>
 
     .. code-block:: php
 
         // config/routes.php
-        use Symfony\Component\Routing\RouteCollection;
-        use Symfony\Component\Routing\Route;
+        use App\Controller\MainController;
+        use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
-        $routes = new RouteCollection();
-        $routes->add('secure', new Route('/secure', array(
-            '_controller' => 'App\Controller\MainController::secure',
-        ), array(), array(), '', array('https')));
-
-        return $routes;
+        return function (RoutingConfigurator $routes) {
+            $routes->add('secure', '/secure')
+                ->controller([MainController::class, 'secure'])
+                ->schemes(['https'])
+            ;
+        };
 
 以上配置强制 ``secure`` 路由始终使用HTTPS。
 

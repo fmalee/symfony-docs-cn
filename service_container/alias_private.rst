@@ -43,10 +43,10 @@
         <?xml version="1.0" encoding="UTF-8" ?>
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+            xsi:schemaLocation="http://symfony.com/schema/dic/services https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <services>
-                <service id="App\Service\Foo" public="false" />
+                <service id="App\Service\Foo" public="false"/>
             </services>
         </container>
 
@@ -103,12 +103,12 @@
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <services>
-                <service id="App\Mail\PhpMailer" public="false" />
+                <service id="App\Mail\PhpMailer" public="false"/>
 
-                <service id="app.mailer" alias="App\Mail\PhpMailer" />
+                <service id="app.mailer" alias="App\Mail\PhpMailer"/>
             </services>
         </container>
 
@@ -144,9 +144,6 @@
 
     只有XML和YAML配置格式支持匿名服务。
 
-.. versionadded:: 3.3
-    在Symfony 3.3中引入了在YAML中配置匿名服务的功能。
-
 在某些情况下，你可能希望阻止将一个服务用作其他服务的依赖。这可以通过创建一个匿名服务来实现。
 这些服务与常规服务类似，但它们不会定义一个ID，而是在它们被使用的地方才创建它们。
 
@@ -156,7 +153,7 @@
 
     .. code-block:: yaml
 
-        # app/config/services.yaml
+        # config/services.yaml
         services:
             App\Foo:
                 arguments:
@@ -165,17 +162,17 @@
 
     .. code-block:: xml
 
-        <!-- app/config/services.xml -->
+        <!-- config/services.xml -->
         <?xml version="1.0" encoding="UTF-8" ?>
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <services>
                 <service id="foo" class="App\Foo">
                     <argument type="service">
-                        <service class="App\AnonymousBar" />
+                        <service class="App\AnonymousBar"/>
                     </argument>
                 </service>
             </services>
@@ -187,19 +184,19 @@
 
     .. code-block:: yaml
 
-        # app/config/services.yaml
+        # config/services.yaml
         services:
             App\Foo:
                 factory: [ !service { class: App\FooFactory }, 'constructFoo' ]
 
     .. code-block:: xml
 
-        <!-- app/config/services.xml -->
+        <!-- config/services.xml -->
         <?xml version="1.0" encoding="UTF-8" ?>
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <services>
                 <service id="foo" class="App\Foo">
@@ -221,7 +218,7 @@
 
         # config/services.yaml
         App\Service\OldService:
-            deprecated: The "%service_id%" service is deprecated since 2.8 and will be removed in 3.0.
+            deprecated: The "%service_id%" service is deprecated since vendor-name/package-name 2.8 and will be removed in 3.0.
 
     .. code-block:: xml
 
@@ -229,11 +226,11 @@
         <?xml version="1.0" encoding="UTF-8" ?>
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-Instance"
-            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+            xsi:schemaLocation="http://symfony.com/schema/dic/services https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <services>
                 <service id="App\Service\OldService">
-                    <deprecated>The "%service_id%" service is deprecated since 2.8 and will be removed in 3.0.</deprecated>
+                    <deprecated>The "%service_id%" service is deprecated since vendor-name/package-name 2.8 and will be removed in 3.0.</deprecated>
                 </service>
             </services>
         </container>
@@ -247,7 +244,7 @@
             ->register(OldService::class)
             ->setDeprecated(
                 true,
-                'The "%service_id%" service is deprecated since 2.8 and will be removed in 3.0.'
+                'The "%service_id%" service is deprecated since vendor-name/package-name 2.8 and will be removed in 3.0.'
             )
         ;
 

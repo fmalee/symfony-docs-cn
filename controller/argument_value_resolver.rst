@@ -10,10 +10,12 @@
 这是通过 :class:`Symfony\\Component\\HttpKernel\\Controller\\ArgumentResolver` 完成的。
 通过创建和注册自定义的参数值解析器，你可以扩展此功能。
 
-HttpKernel附带的功能
------------------------------------------
+.. _functionality-shipped-with-the-httpkernel:
 
-Symfony在HttpKernel组件中附带五个值解析器：
+内置的值解析器
+------------------------
+
+Symfony在 :doc:`HttpKernel 组件 </components/http_kernel>` 中附带了以下值解析器：
 
 :class:`Symfony\\Component\\HttpKernel\\Controller\\ArgumentResolver\\RequestAttributeValueResolver`
     尝试查找一个与参数名称匹配的请求属性。
@@ -35,6 +37,26 @@ Symfony在HttpKernel组件中附带五个值解析器：
 :class:`Symfony\\Component\\HttpKernel\\Controller\\ArgumentResolver\\VariadicValueResolver`
     验证请求数据是否为数组，并将所有数据添加到参数列表中。
     调用该动作时，最后一个（可变参数）参数将包含此数组的所有值。
+
+此外，一些组件和官方软件包提供了其他值解析器：
+
+:class:`Symfony\\Component\\Security\\Http\\Controller\\UserValueResolver`
+    如果使用 ``UserInterface``类型提示，则注入表示当前登录用户的对象。
+    如果匿名用户可以访问控制器，则默认值可以设置为 ``null``。它需要安装
+    :doc:`Security组件 </components/security>`。
+
+:class:`Symfony\\Bundle\\SecurityBundle\\SecurityUserValueResolver`
+    如果使用 ``UserInterface`` 类型提示，则注入表示当前登录用户的对象。
+    如果匿名用户可以访问控制器，则默认值可以设置为 ``null``。它需要安装 `SecurityBundle`_。
+
+.. deprecated:: 4.1
+
+    在Symfony 4.1中不推荐使用 ``SecurityUserValueResolver``，而是使用
+    :class:`Symfony\\Component\\Security\\Http\\Controller\\UserValueResolver`。
+
+``Psr7ServerRequestResolver``
+    如果使用 ``RequestInterface``、``MessageInterface`` 或 ``ServerRequestInterface``
+    类型提示，则注入一个当前请求的 `PSR-7`_ 兼容版本。它需要安装 `SensioFrameworkExtraBundle`_。
 
 添加自定义值解析器
 ------------------------------
@@ -76,22 +98,22 @@ Symfony在HttpKernel组件中附带五个值解析器：
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:sensio-framework-extra="http://symfony.com/schema/dic/symfony_extra"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <sensio-framework-extra:config>
-                <request converters="true" auto-convert="false" />
+                <request converters="true" auto-convert="false"/>
             </sensio-framework-extra:config>
         </container>
 
     .. code-block:: php
 
         // config/packages/sensio_framework_extra.php
-        $container->loadFromExtension('sensio_framework_extra', array(
-            'request' => array(
+        $container->loadFromExtension('sensio_framework_extra', [
+            'request' => [
                 'converters' => true,
                 'auto_convert' => false,
-            ),
-        ));
+            ],
+        ]);
 
 添加新的值解析器需要创建一个实现
 :class:`Symfony\\Component\\HttpKernel\\Controller\\ArgumentValueResolverInterface`
@@ -173,15 +195,15 @@ Symfony在HttpKernel组件中附带五个值解析器：
         <?xml version="1.0" encoding="UTF-8" ?>
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-Instance"
-            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+            xsi:schemaLocation="http://symfony.com/schema/dic/services https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <services>
                 <!-- ... be sure autowiring is enabled -->
-                <defaults autowire="true" />
+                <defaults autowire="true"/>
                 <!-- ... -->
 
                 <service id="App\ArgumentResolver\UserValueResolver">
-                    <tag name="controller.argument_value_resolver" priority="50" />
+                    <tag name="controller.argument_value_resolver" priority="50"/>
                 </service>
             </services>
 
@@ -193,7 +215,7 @@ Symfony在HttpKernel组件中附带五个值解析器：
         use App\ArgumentResolver\UserValueResolver;
 
         $container->autowire(UserValueResolver::class)
-            ->addTag('controller.argument_value_resolver', array('priority' => 50));
+            ->addTag('controller.argument_value_resolver', ['priority' => 50]);
 
 虽然添加优先级是可选的，但建议添加一个以确保注入预期值。
 负责从 ``Request`` 提取属性的 ``RequestAttributeValueResolver`` 优先级为100，
@@ -212,3 +234,6 @@ Symfony在HttpKernel组件中附带五个值解析器：
 
 .. _`@ParamConverter`: https://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/annotations/converters.html
 .. _`yield`: http://php.net/manual/en/language.generators.syntax.php
+.. _`SecurityBundle`: https://github.com/symfony/security-bundle
+.. _`PSR-7`: https://www.php-fig.org/psr/psr-7/
+.. _`SensioFrameworkExtraBundle`: https://github.com/sensiolabs/SensioFrameworkExtraBundle

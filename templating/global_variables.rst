@@ -25,9 +25,9 @@
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:twig="http://symfony.com/schema/dic/twig"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd
+                https://symfony.com/schema/dic/services/services-1.0.xsd
                 http://symfony.com/schema/dic/twig
-                http://symfony.com/schema/dic/twig/twig-1.0.xsd">
+                https://symfony.com/schema/dic/twig/twig-1.0.xsd">
 
             <twig:config>
                 <!-- ... -->
@@ -38,12 +38,12 @@
     .. code-block:: php
 
         // config/packages/twig.php
-        $container->loadFromExtension('twig', array(
-             // ...
-             'globals' => array(
-                 'ga_tracking' => 'UA-xxxxx-x',
-             ),
-        ));
+        $container->loadFromExtension('twig', [
+            // ...
+            'globals' => [
+                'ga_tracking' => 'UA-xxxxx-x',
+            ],
+        ]);
 
 现在，``ga_tracking`` 变量在所有Twig模板中都可用：
 
@@ -81,9 +81,9 @@
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:twig="http://symfony.com/schema/dic/twig"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd
+                https://symfony.com/schema/dic/services/services-1.0.xsd
                 http://symfony.com/schema/dic/twig
-                http://symfony.com/schema/dic/twig/twig-1.0.xsd">
+                https://symfony.com/schema/dic/twig/twig-1.0.xsd">
 
             <twig:config>
                 <twig:global key="ga_tracking">%ga_tracking%</twig:global>
@@ -93,11 +93,11 @@
     .. code-block:: php
 
         // config/packages/twig.php
-        $container->loadFromExtension('twig', array(
-             'globals' => array(
-                 'ga_tracking' => '%ga_tracking%',
-             ),
-        ));
+        $container->loadFromExtension('twig', [
+            'globals' => [
+                'ga_tracking' => '%ga_tracking%',
+            ],
+        ]);
 
 这就是和之前完全相同的变量。
 
@@ -133,9 +133,9 @@
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:twig="http://symfony.com/schema/dic/twig"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd
+                https://symfony.com/schema/dic/services/services-1.0.xsd
                 http://symfony.com/schema/dic/twig
-                http://symfony.com/schema/dic/twig/twig-1.0.xsd">
+                https://symfony.com/schema/dic/twig/twig-1.0.xsd">
 
             <twig:config>
                 <!-- ... -->
@@ -146,9 +146,9 @@
     .. code-block:: php
 
         // config/packages/twig.php
-        $container->loadFromExtension('twig', array(
-             // ...
-             'globals' => array(
-                 'user_management' => '@App\Service\UserManagement',
-             ),
-        ));
+        $container->loadFromExtension('twig', [
+            // ...
+            'globals' => [
+                'user_management' => '@App\Service\UserManagement',
+            ],
+        ]);

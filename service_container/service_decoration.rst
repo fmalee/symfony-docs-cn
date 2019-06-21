@@ -24,14 +24,14 @@
         <?xml version="1.0" encoding="UTF-8" ?>
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance"
-            xsd:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+            xsd:schemaLocation="http://symfony.com/schema/dic/services https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <services>
-                <service id="App\Mailer" />
+                <service id="App\Mailer"/>
 
                 <!-- this replaces the old App\Mailer definition with the new
                      one, the old definition is lost -->
-                <service id="App\Mailer" class="App\NewMailer" />
+                <service id="App\Mailer" class="App\NewMailer"/>
             </services>
         </container>
 
@@ -70,10 +70,10 @@
         <?xml version="1.0" encoding="UTF-8" ?>
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance"
-            xsd:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+            xsd:schemaLocation="http://symfony.com/schema/dic/services https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <services>
-                <service id="App\Mailer" />
+                <service id="App\Mailer"/>
 
                 <service id="App\DecoratingMailer"
                     decorates="App\Mailer"
@@ -99,9 +99,6 @@
 如果你使用 :ref:`默认的services.yaml配置 <service-container-services-load-example>`，
 那么当装饰服务的构造函数使用一个被装饰的服务类的类型约束作为参数时，将自动注入被装饰的服务。
 
-.. versionadded:: 4.1
-    装饰服务的自动装配在Symfony 4.1中引入。
-
 如果你没有使用自动装配，或该装饰的服务拥有多个带有被装饰服务类的类型约束的构造函数参数，
 那么就必须显式的注入被装饰的服务（被装饰的服务的ID自动更改为 ``decorating_service_id + '.inner'``）：
 
@@ -124,15 +121,15 @@
         <?xml version="1.0" encoding="UTF-8" ?>
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance"
-            xsd:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+            xsd:schemaLocation="http://symfony.com/schema/dic/services https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <services>
-                <service id="App\Mailer" />
+                <service id="App\Mailer"/>
 
                 <service id="App\DecoratingMailer"
                     decorates="App\Mailer"
                 >
-                    <argument type="service" id="App\DecoratingMailer.inner" />
+                    <argument type="service" id="App\DecoratingMailer.inner"/>
                 </service>
 
             </services>
@@ -179,7 +176,7 @@
             <?xml version="1.0" encoding="UTF-8" ?>
             <container xmlns="http://symfony.com/schema/dic/services"
                 xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance"
-                xsd:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+                xsd:schemaLocation="http://symfony.com/schema/dic/services https://symfony.com/schema/dic/services/services-1.0.xsd">
 
                 <services>
                     <!-- ... -->
@@ -190,7 +187,7 @@
                         decoration-inner-name="App\DecoratingMailer.wooz"
                         public="false"
                     >
-                        <argument type="service" id="App\DecoratingMailer.wooz" />
+                        <argument type="service" id="App\DecoratingMailer.wooz"/>
                     </service>
 
                 </services>
@@ -240,17 +237,17 @@
 
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+            xsi:schemaLocation="http://symfony.com/schema/dic/services https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <services>
-                <service id="Foo" />
+                <service id="Foo"/>
 
                 <service id="Bar" decorates="Foo" decoration-priority="5" public="false">
-                    <argument type="service" id="Bar.inner" />
+                    <argument type="service" id="Bar.inner"/>
                 </service>
 
                 <service id="Baz" decorates="Foo" decoration-priority="1" public="false">
-                    <argument type="service" id="Baz.inner" />
+                    <argument type="service" id="Baz.inner"/>
                 </service>
             </services>
         </container>
@@ -260,17 +257,17 @@
         // config/services.php
         use Symfony\Component\DependencyInjection\Reference;
 
-        $container->register(Foo:class)
+        $container->register(Foo::class)
 
-        $container->register(Bar:class)
-            ->addArgument(new Reference(Bar:class.'inner'))
+        $container->register(Bar::class)
+            ->addArgument(new Reference(Bar::class.'.inner'))
             ->setPublic(false)
-            ->setDecoratedService(Foo:class, null, 5);
+            ->setDecoratedService(Foo::class, null, 5);
 
-        $container->register(Baz:class)
-            ->addArgument(new Reference(Baz:class.'inner'))
+        $container->register(Baz::class)
+            ->addArgument(new Reference(Baz::class.'.inner'))
             ->setPublic(false)
-            ->setDecoratedService(Foo:class, null, 1);
+            ->setDecoratedService(Foo::class, null, 1);
 
 生成的代码如下::
 

@@ -28,7 +28,7 @@ Encore创建了一个 :ref:`entrypoints.json <encore-entrypointsjson-simple-desc
 如果你正在使用WebpackEncoreBundle中的 ``encore_entry_link_tags()`` 和 ``encore_entry_script_tags()``
 Twig函数，则无需执行任何其他操作！这些函数会自动读取文件并根据需要渲染多个 ``script`` 或 ``link`` 标签：
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {#
         现在可能渲染多个 script 标签:

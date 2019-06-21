@@ -19,7 +19,7 @@ WebProfilerBundle是一个 **开发工具**，提供有关每个请求执行的�
 
     使用XML时，必须使用 ``http://symfony.com/schema/dic/webprofiler``
     命名空间，并且相关的XSD架构可在以下位置使用：
-    ``http://symfony.com/schema/dic/webprofiler/webprofiler-1.0.xsd``
+    ``https://symfony.com/schema/dic/webprofiler/webprofiler-1.0.xsd``
 
 .. caution::
 

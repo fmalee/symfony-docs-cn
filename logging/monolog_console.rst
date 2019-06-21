@@ -86,7 +86,7 @@ Monolog的控制台处理器默认已启用：
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:monolog="http://symfony.com/schema/dic/monolog"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <monolog:config>
                 <!-- ... -->
@@ -104,15 +104,15 @@ Monolog的控制台处理器默认已启用：
     .. code-block:: php
 
         // config/packages/dev/monolog.php
-        $container->loadFromExtension('monolog', array(
-            'handlers' => array(
-                'console' => array(
+        $container->loadFromExtension('monolog', [
+            'handlers' => [
+                'console' => [
                    'type' => 'console',
                    'process_psr_3_messages' => false,
-                   'channels' => array('!event', '!doctrine', '!console'),
-                ),
-            ),
-        ));
+                   'channels' => ['!event', '!doctrine', '!console'],
+                ],
+            ],
+        ]);
 
 现在，日志消息将根据日志级别和冗余度显示在控制台上。
 默认情况下（正常冗余度级别），将显示警告及更高级别。但在

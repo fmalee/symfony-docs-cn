@@ -3,18 +3,16 @@ DivisibleBy
 
 Validates that a value is divisible by another value, defined in the options.
 
-+----------------+---------------------------------------------------------------------------+
-| Applies to     | :ref:`property or method<validation-property-target>`                     |
-+----------------+---------------------------------------------------------------------------+
-| Options        | - `value`_                                                                |
-|                | - `message`_                                                              |
-|                | - `payload`_                                                              |
-|                | - `propertyPath`_                                                         |
-+----------------+---------------------------------------------------------------------------+
-| Class          | :class:`Symfony\\Component\\Validator\\Constraints\\DivisibleBy`          |
-+----------------+---------------------------------------------------------------------------+
-| Validator      | :class:`Symfony\\Component\\Validator\\Constraints\\DivisibleByValidator` |
-+----------------+---------------------------------------------------------------------------+
+==========  ===================================================================
+Applies to  :ref:`property or method <validation-property-target>`
+Options     - `groups`_
+            - `message`_
+            - `payload`_
+            - `propertyPath`_
+            - `value`_
+Class       :class:`Symfony\\Component\\Validator\\Constraints\\DivisibleBy`
+Validator   :class:`Symfony\\Component\\Validator\\Constraints\\DivisibleByValidator`
+==========  ===================================================================
 
 Basic Usage
 -----------
@@ -66,7 +64,7 @@ The following constraints ensure that:
         <?xml version="1.0" encoding="UTF-8" ?>
         <constraint-mapping xmlns="http://symfony.com/schema/dic/constraint-mapping"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping http://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
+            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping https://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
 
             <class name="App\Entity\Item">
                 <property name="weight">
@@ -87,8 +85,8 @@ The following constraints ensure that:
         // src/Entity/Item.php
         namespace App\Entity;
 
-        use Symfony\Component\Validator\Mapping\ClassMetadata;
         use Symfony\Component\Validator\Constraints as Assert;
+        use Symfony\Component\Validator\Mapping\ClassMetadata;
 
         class Item
         {
@@ -96,16 +94,16 @@ The following constraints ensure that:
             {
                 $metadata->addPropertyConstraint('weight', new Assert\DivisibleBy(0.25));
 
-                $metadata->addPropertyConstraint('quantity', new Assert\DivisibleBy(array(
+                $metadata->addPropertyConstraint('quantity', new Assert\DivisibleBy([
                     'value' => 5,
-                )));
+                ]));
             }
         }
 
 Options
 -------
 
-.. include:: /reference/constraints/_comparison-value-option.rst.inc
+.. include:: /reference/constraints/_groups-option.rst.inc
 
 message
 ~~~~~~~
@@ -117,13 +115,6 @@ comparison value.
 
 .. include:: /reference/constraints/_payload-option.rst.inc
 
-propertyPath
-~~~~~~~~~~~~
+.. include:: /reference/constraints/_comparison-propertypath-option.rst.inc
 
-**type**: ``string``
-
-It defines the object property whose value is used to make the comparison.
-
-For example, if you want to compare the ``$value`` property of some object
-with regard to the ``$increments`` property of the same object, use
-``propertyPath="increments"`` in the comparison constraint of ``$value``.
+.. include:: /reference/constraints/_comparison-value-option.rst.inc

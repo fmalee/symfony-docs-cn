@@ -61,7 +61,7 @@
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="
                 http://symfony.com/schema/dic/constraint-mapping
-                http://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd
+                https://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd
             ">
 
             <class name="App\Entity\User">
@@ -100,42 +100,43 @@
         // src/Entity/User.php
         namespace App\Entity;
 
-        use Symfony\Component\Validator\Mapping\ClassMetadata;
         use Symfony\Component\Validator\Constraints as Assert;
+        use Symfony\Component\Validator\Mapping\ClassMetadata;
 
         class User
         {
             public static function loadValidatorMetadata(ClassMetadata $metadata)
             {
-                $metadata->addPropertyConstraint('email', new Assert\Email(array(
-                    'groups' => array('registration'),
-                )));
+                $metadata->addPropertyConstraint('email', new Assert\Email([
+                    'groups' => ['registration'],
+                ]));
 
-                $metadata->addPropertyConstraint('password', new Assert\NotBlank(array(
-                    'groups' => array('registration'),
-                )));
-                $metadata->addPropertyConstraint('password', new Assert\Length(array(
+                $metadata->addPropertyConstraint('password', new Assert\NotBlank([
+                    'groups' => ['registration'],
+                ]));
+                $metadata->addPropertyConstraint('password', new Assert\Length([
                     'min'    => 7,
-                    'groups' => array('registration'),
-                )));
+                    'groups' => ['registration'],
+                ]));
 
-                $metadata->addPropertyConstraint('city', new Assert\Length(array(
+                $metadata->addPropertyConstraint('city', new Assert\Length([
                     "min" => 3,
-                )));
+                ]));
             }
         }
 
 使用此配置，将会有三个验证组：
 
 ``Default``
-    包含当前类和所有引用类的不属于任何其他组的约束。
+    包含当前类和所有引用类的不属于任何其他组的约束。在此示例中，它仅包含 ``city`` 字段。
 
 ``User``
     相当于 ``Default`` 组中的 ``User`` 对象的所有约束。它始终是类的名称。
     这与 ``Default`` 之间的区别在 :doc:`/validation/sequence_provider` 中进行了解释。
 
 ``registration``
-    仅包含 ``email`` 和 ``password`` 字段的约束。
+    这是一个自定义验证组，因此它只包含与其明确关联的约束。在这个例子中，只有
+    ``email`` 和 ``password`` 字段。
 
 一个类的 ``Default`` 组中的约束包括没有显式的配置为组的约束，以及配置为等于类名称或是 ``Default`` 字符串的组。
 
@@ -160,7 +161,7 @@
 
 要告知验证器使用一个特定组，请传递一个或多个组的名称到 ``validate()`` 方法的第三个参数::
 
-    $errors = $validator->validate($author, null, array('registration'));
+    $errors = $validator->validate($author, null, ['registration']);
 
 如果未指定任何组，则将应用属于 ``Default`` 组的所有约束。
 

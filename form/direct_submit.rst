@@ -4,7 +4,7 @@
 如何使用submit()函数处理表单提交
 ===========================================================
 
-使用 ``handleRequest()`` 方法，你可以处理表单提交::
+使用 ``handleRequest()`` 方法来处理表单提交::
 
     use Symfony\Component\HttpFoundation\Request;
     // ...
@@ -23,9 +23,9 @@
             return $this->redirectToRoute('task_success');
         }
 
-        return $this->render('product/new.html.twig', array(
+        return $this->render('product/new.html.twig', [
             'form' => $form->createView(),
-        ));
+        ]);
     }
 
 .. tip::
@@ -60,9 +60,9 @@
             }
         }
 
-        return $this->render('product/new.html.twig', array(
+        return $this->render('product/new.html.twig', [
             'form' => $form->createView(),
-        ));
+        ]);
     }
 
 .. tip::

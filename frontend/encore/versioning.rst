@@ -54,7 +54,7 @@
 
 仅此而已！像平常一样确保每个路径封装在Twig的 ``asset()`` 函数中：
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <img src="{{ asset('build/images/logo.png') }}">
 

@@ -22,8 +22,8 @@
     namespace App\Controller;
 
     use Psr\Log\LoggerInterface;
-    use Symfony\Component\Routing\Annotation\Route;
     use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+    use Symfony\Component\Routing\Annotation\Route;
 
     class DefaultController extends AbstractController
     {
@@ -59,16 +59,21 @@ Symfony读取了 ``LoggerInterface`` 类型约束并自动计算出它应该传�
 
     $ php bin/console debug:autowiring
 
-=============================================================== =====================================
-类/接口 类型                                                       服务ID的别名
-=============================================================== =====================================
-``Psr\Cache\CacheItemPoolInterface``                            alias for "cache.app.recorder"
-``Psr\Log\LoggerInterface``                                     alias for "monolog.logger"
-``Symfony\Component\EventDispatcher\EventDispatcherInterface``  alias for "debug.event_dispatcher"
-``Symfony\Component\HttpFoundation\RequestStack``               alias for "request_stack"
-``Symfony\Component\HttpFoundation\Session\SessionInterface``   alias for "session"
-``Symfony\Component\Routing\RouterInterface``                   alias for "router.default"
-=============================================================== =====================================
+      # this is just a *small* sample of the output...
+
+      Describes a logger instance.
+      Psr\Log\LoggerInterface (monolog.logger)
+
+      Request stack that controls the lifecycle of requests.
+      Symfony\Component\HttpFoundation\RequestStack (request_stack)
+
+      Interface for the session.
+      Symfony\Component\HttpFoundation\Session\SessionInterface (session)
+
+      RouterInterface is the interface that all Router classes must implement.
+      Symfony\Component\Routing\RouterInterface (router.default)
+
+      [...]
 
 这只是完整列表的简短摘要！ 当你添加更多包时，这个工具列表将会增长。
 
@@ -99,8 +104,8 @@ Symfony读取了 ``LoggerInterface`` 类型约束并自动计算出它应该传�
 
     use App\GreetingGenerator;
     use Psr\Log\LoggerInterface;
-    use Symfony\Component\Routing\Annotation\Route;
     use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+    use Symfony\Component\Routing\Annotation\Route;
 
     class DefaultController extends AbstractController
     {
@@ -188,7 +193,7 @@ Twig 扩展 & 自动配置
 
 只需创建 *一个* 文件，你就可以立即使用:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {# templates/default/index.html.twig #}
     {# Will print something like "Hey Symfony!" #}
@@ -266,9 +271,8 @@ Twig 扩展 & 自动配置
 Symfony 遵循行业最佳实践，将基于服务器的配置存储为 *environment* 变量。
 这意味着 Symfony 可以与平台即服务（PaaS）部署系统以及Docker完美配合。
 
-但是在开发过程中设置环境变量可能会很痛苦。
-这就是为什么在 ``APP_ENV`` 环境变量在当前环境中没有配置的情况下，你的应用会自动加载一个 ``.env`` 文件。
-然后，此文件中的键会成为环境变量，并由你的应用读取：
+但是在开发过程中设置环境变量可能会很痛苦。这就是你的应用自动加载一个 ``.env`` 文件的原因。
+然后，此文件中的键会成为环境变量，并被你的应用读取：
 
 .. code-block:: bash
 

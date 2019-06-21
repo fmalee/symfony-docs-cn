@@ -45,8 +45,8 @@
     namespace App\Form\Type;
 
     use Symfony\Component\Form\AbstractType;
-    use Symfony\Component\Form\FormBuilderInterface;
     use Symfony\Component\Form\Extension\Core\Type\TextType;
+    use Symfony\Component\Form\FormBuilderInterface;
 
     class CompanyType extends AbstractType
     {
@@ -63,9 +63,9 @@
     // src/Form/Type/CustomerType.php
     namespace App\Form\Type;
 
-    use Symfony\Component\Form\FormBuilderInterface;
     use Symfony\Component\Form\AbstractType;
     use Symfony\Component\Form\Extension\Core\Type\TextType;
+    use Symfony\Component\Form\FormBuilderInterface;
 
     class CustomerType extends AbstractType
     {
@@ -84,10 +84,10 @@
     namespace App\Form\Type;
 
     use Symfony\Component\Form\AbstractType;
-    use Symfony\Component\Form\FormBuilderInterface;
-    use Symfony\Component\OptionsResolver\OptionsResolver;
     use Symfony\Component\Form\Extension\Core\Type\TextareaType;
     use Symfony\Component\Form\Extension\Core\Type\TextType;
+    use Symfony\Component\Form\FormBuilderInterface;
+    use Symfony\Component\OptionsResolver\OptionsResolver;
 
     class LocationType extends AbstractType
     {
@@ -102,9 +102,9 @@
 
         public function configureOptions(OptionsResolver $resolver)
         {
-            $resolver->setDefaults(array(
+            $resolver->setDefaults([
                 'inherit_data' => true,
-            ));
+            ]);
         }
     }
 
@@ -127,9 +127,9 @@
     {
         // ...
 
-        $builder->add('foo', LocationType::class, array(
+        $builder->add('foo', LocationType::class, [
             'data_class' => Company::class,
-        ));
+        ]);
     }
 
 .. code-block:: php
@@ -142,9 +142,9 @@
     {
         // ...
 
-        $builder->add('bar', LocationType::class, array(
+        $builder->add('bar', LocationType::class, [
             'data_class' => Customer::class,
-        ));
+        ]);
     }
 
 仅此而已！你已将重复的字段定义提取到单独的位置表单中，现在可以在任何需要的位置复用它。

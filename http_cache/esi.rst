@@ -4,7 +4,7 @@
 
 .. _edge-side-includes:
 
-使用Edge Side Include
+如何创建自定义路由加载器
 ===============================
 
 Gateway caches are a great way to make your website perform better. But they
@@ -27,7 +27,7 @@ as this is the only useful one outside of Akamai context:
             <!-- ... some content -->
 
             <!-- Embed the content of another page here -->
-            <esi:include src="http://..." />
+            <esi:include src="http://..."/>
 
             <!-- ... more content -->
         </body>
@@ -75,23 +75,23 @@ First, to use ESI, be sure to enable it in your application configuration:
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:framework="http://symfony.com/schema/dic/symfony"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd
+                https://symfony.com/schema/dic/services/services-1.0.xsd
                 http://symfony.com/schema/dic/symfony
-                http://symfony.com/schema/dic/symfony/symfony-1.0.xsd">
+                https://symfony.com/schema/dic/symfony/symfony-1.0.xsd">
 
             <framework:config>
                 <!-- ... -->
-                <framework:esi enabled="true" />
+                <framework:esi enabled="true"/>
             </framework:config>
         </container>
 
     .. code-block:: php
 
         // config/packages/framework.php
-        $container->loadFromExtension('framework', array(
+        $container->loadFromExtension('framework', [
             // ...
-            'esi' => array('enabled' => true),
-        ));
+            'esi' => ['enabled' => true],
+        ]);
 
 Now, suppose you have a page that is relatively static, except for a news
 ticker at the bottom of the content. With ESI, you can cache the news ticker
@@ -205,23 +205,23 @@ that must be enabled in your configuration:
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:framework="http://symfony.com/schema/dic/symfony"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd
+                https://symfony.com/schema/dic/services/services-1.0.xsd
                 http://symfony.com/schema/dic/symfony
-                http://symfony.com/schema/dic/symfony/symfony-1.0.xsd">
+                https://symfony.com/schema/dic/symfony/symfony-1.0.xsd">
 
             <!-- ... -->
             <framework:config>
-                <framework:fragment path="/_fragment" />
+                <framework:fragment path="/_fragment"/>
             </framework:config>
         </container>
 
     .. code-block:: php
 
         // config/packages/framework.php
-        $container->loadFromExtension('framework', array(
+        $container->loadFromExtension('framework', [
             // ...
-            'fragments' => array('path' => '/_fragment'),
-        ));
+            'fragments' => ['path' => '/_fragment'],
+        ]);
 
 One great advantage of the ESI renderer is that you can make your application
 as dynamic as needed and at the same time, hit the application as little as
@@ -250,6 +250,6 @@ The ``render_esi`` helper supports two other useful options:
 ``ignore_errors``
     If set to true, an ``onerror`` attribute will be added to the ESI with a value
     of ``continue`` indicating that, in the event of a failure, the gateway cache
-    will simply remove the ESI tag silently.
+    will remove the ESI tag silently.
 
 .. _`ESI`: http://www.w3.org/TR/esi-lang

@@ -8,7 +8,7 @@ PostCSS是CSS后期处理工具，可以以很多很酷的方式转换(transform
 
 .. code-block:: terminal
 
-    $ yarn add --dev postcss-loader autoprefixer
+    $ yarn add postcss-loader autoprefixer --dev
 
 接下来，在项目的根目录下创建一个 ``postcss.config.js`` 文件：
 
@@ -48,7 +48,8 @@ PostCSS是CSS后期处理工具，可以以很多很酷的方式转换(transform
         // ...
     +     .enablePostCssLoader((options) => {
     +         options.config = {
-    +             path: 'config/postcss.config.js'
+    +             // the directory where the postcss.config.js file is stored
+    +             path: 'path/to/config'
     +         };
     +     })
     ;

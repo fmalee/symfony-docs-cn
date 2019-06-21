@@ -14,8 +14,6 @@ CssSelector组件
 
     $ composer require symfony/css-selector
 
-或者，你可以克隆 `<https://github.com/symfony/css-selector>`_ 仓库。
-
 .. include:: /components/require_autoload.rst.inc
 
 用法

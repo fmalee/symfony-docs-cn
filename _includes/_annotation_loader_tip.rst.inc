@@ -6,7 +6,7 @@
 
     注释类不会自动加载，因此你必须使用类似于此类的一个类加载器来加载它们::
 
-        use Composer\Autoload\ClassLoader;
+        use Composer\Autoload\ClassLoader;
         use Doctrine\Common\Annotations\AnnotationRegistry;
 
         /** @var ClassLoader $loader */

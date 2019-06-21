@@ -4,7 +4,7 @@
 带安保的自定义身份认证系统（API令牌示例）
 ===========================================================
 
-无论你是需要构建传统的登录表单、API令牌认证系统还是需要与某些专有的单点登录系统集成，Guard组件都可以让它变得轻松而有趣！
+无论你是需要构建传统的登录表单、API令牌认证系统还是需要与某些专有的单点登录系统集成，Guard组件将是不错的选择！
 
 安保认证器可用于：
 
@@ -12,7 +12,7 @@
 * 创建API令牌认证系统（在此页面上完成！）
 * `社交认证`_ （或使用 `HWIOAuthBundle`_ 获得强大但非安保的解决方案）
 
-或者你梦想的任何事情。
+或者其他事情。
 在这个例子中，我们将构建一个API令牌认证系统，以便我们可以详细了解Guard的更多信息。
 
 步骤 1) 准备用户类
@@ -63,14 +63,14 @@
 
     use App\Entity\User;
     use Doctrine\ORM\EntityManagerInterface;
-    use Symfony\Component\HttpFoundation\Request;
     use Symfony\Component\HttpFoundation\JsonResponse;
+    use Symfony\Component\HttpFoundation\Request;
     use Symfony\Component\HttpFoundation\Response;
-    use Symfony\Component\Security\Core\User\UserInterface;
-    use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
     use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
     use Symfony\Component\Security\Core\Exception\AuthenticationException;
+    use Symfony\Component\Security\Core\User\UserInterface;
     use Symfony\Component\Security\Core\User\UserProviderInterface;
+    use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
 
     class TokenAuthenticator extends AbstractGuardAuthenticator
     {
@@ -96,9 +96,9 @@
          */
         public function getCredentials(Request $request)
         {
-            return array(
+            return [
                 'token' => $request->headers->get('X-AUTH-TOKEN'),
-            );
+            ];
         }
 
         public function getUser($credentials, UserProviderInterface $userProvider)
@@ -131,12 +131,12 @@
 
         public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
         {
-            $data = array(
+            $data = [
                 'message' => strtr($exception->getMessageKey(), $exception->getMessageData())
 
                 // 或翻译此消息
                 // $this->translator->trans($exception->getMessageKey(), $exception->getMessageData())
-            );
+            ];
 
             return new JsonResponse($data, Response::HTTP_FORBIDDEN);
         }
@@ -146,10 +146,10 @@
          */
         public function start(Request $request, AuthenticationException $authException = null)
         {
-            $data = array(
+            $data = [
                 // 你可以翻译此消息
                 'message' => 'Authentication Required'
-            );
+            ];
 
             return new JsonResponse($data, Response::HTTP_UNAUTHORIZED);
         }
@@ -202,7 +202,7 @@
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:srv="http://symfony.com/schema/dic/services"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
             <config>
                 <!-- ... -->
 
@@ -210,7 +210,7 @@
                     pattern="^/"
                     anonymous="true"
                 >
-                    <logout />
+                    <logout/>
 
                     <guard>
                         <authenticator>App\Security\TokenAuthenticator</authenticator>
@@ -225,29 +225,29 @@
 
         // config/packages/security.php
 
-        // ..
+        // ...
         use App\Security\TokenAuthenticator;
 
-        $container->loadFromExtension('security', array(
-            'firewalls' => array(
-                'main'       => array(
+        $container->loadFromExtension('security', [
+            'firewalls' => [
+                'main'       => [
                     'pattern'        => '^/',
                     'anonymous'      => true,
                     'logout'         => true,
-                    'guard'          => array(
-                        'authenticators'  => array(
+                    'guard'          => [
+                        'authenticators'  => [
                             TokenAuthenticator::class
-                        ),
-                    ),
+                        ],
+                    ],
                     // ...
-                ),
-            ),
-        ));
+                ],
+            ],
+        ]);
 
 你做到了！你现在拥有一个完全可用的API令牌认证系统。
 如果你的主页需要 ``ROLE_USER``，那么你可以在不同的条件下测试它：
 
-.. code-block:: bash
+.. code-block:: terminal
 
     # 没有令牌的测试
     curl http://localhost:8000/
@@ -368,7 +368,7 @@ Guard认证器的方法
 
 在这个例子中，由于“ILuvAPIs”是一个荒谬的API令牌，如果有人试图这样做，你可以返回一个包含复活节彩蛋的自定义消息：
 
-.. code-block:: bash
+.. code-block:: terminal
 
     curl -H "X-AUTH-TOKEN: ILuvAPIs" http://localhost:8000/
     # {"message":"ILuvAPIs is not a real API key: it's just a silly phrase"}

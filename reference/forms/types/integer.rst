@@ -42,6 +42,8 @@ integers. By default, all non-integer values (e.g. 6.78) will round down
 | Class       | :class:`Symfony\\Component\\Form\\Extension\\Core\\Type\\IntegerType` |
 +-------------+-----------------------------------------------------------------------+
 
+.. include:: /reference/forms/types/options/_debug_form.rst.inc
+
 Field Options
 -------------
 
@@ -86,9 +88,14 @@ scale
 
 **type**: ``integer`` **default**: ``0``
 
+.. deprecated:: 4.2
+
+    The ``scale`` option is deprecated since Symfony 4.2 and will be removed
+    in 5.0.
+
 This specifies how many decimals will be allowed until the field rounds the
 submitted value (via ``rounding_mode``). This option inherits from
-:doc:`number </reference/forms/types/number>` type and is overriden to ``0`` for
+:doc:`number </reference/forms/types/number>` type and is overridden to ``0`` for
 ``IntegerType``.
 
 Inherited Options

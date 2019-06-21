@@ -27,7 +27,7 @@ Symfony框架并未整合任何需要使用数据库的组件，但是却紧密�
 .. code-block:: terminal
 
     $ composer require symfony/orm-pack
-    $ composer require symfony/maker-bundle --dev
+    $ composer require --dev symfony/maker-bundle
 
 配置数据库
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -47,9 +47,9 @@ Symfony框架并未整合任何需要使用数据库的组件，但是却紧密�
 
 .. caution::
 
-    如果URI中的用户名、密码、主机或数据库名称包含特殊的任何字符（例如 ``!``, ``@``, ``$``, ``#``, ``/``），
-    则必须对它们进行编码。有关保留字符的完整列表请参阅 `RFC 3986`_ ，
-    或使用 :phpfunction:`urlencode` 函数对其进行编码。
+    如果URI中的用户名、密码、主机或数据库名称包含特殊的任何字符（例如
+    ``+``、``@``、``$``、``#``、``/``、``:``、``*``、``!``），则必须对它们进行编码。
+    有关保留字符的完整列表请参阅 `RFC 3986`_ ，或使用 :phpfunction:`urlencode` 函数对其进行编码。
     在这种情况下，你需要删除 ``config/packages/doctrine.yaml`` 中的 ``resolve:`` 前缀以避免错误：
     ``url: '%env(resolve:DATABASE_URL)%'``
 
@@ -110,6 +110,7 @@ Symfony框架并未整合任何需要使用数据库的组件，但是却紧密�
     (press enter again to finish)
 
 .. versionadded:: 1.3
+
     ``make:entity`` 命令的交互行为是在MakerBundle 1.3中引入的。
 
 Woh！你现在有了一个新的 ``src/Entity/Product.php`` 文件::
@@ -153,6 +154,13 @@ Woh！你现在有了一个新的 ``src/Entity/Product.php`` 文件::
 
     困惑为什么价格是整数？别担心：这只是一个例子。
     但是，将价格存储为整数（例如100 = 1美元）可以避免舍入(rounding)问题。
+
+.. note::
+
+    如果你使用的是SQLite数据库，则会看到以下错误：
+    *PDOException: SQLSTATE[HY000]: General error: 1 Cannot add a NOT NULL
+    column with default value NULL*.
+    向 ``description`` 属性添加一个 ``nullable=true`` 选项可以解决该问题。
 
 .. caution::
 
@@ -309,15 +317,15 @@ Doctrine 支持各种字段类型，每种类型都有自己的选项。
 
     $ php bin/console make:controller ProductController
 
-在控制器内部，你可以创建一个新的 ``Product`` 对象，接着给它添加数据，然后进行保存！
-
-.. code-block:: php
+在控制器内部，你可以创建一个新的 ``Product`` 对象，接着给它添加数据，然后进行保存::
 
     // src/Controller/ProductController.php
     namespace App\Controller;
 
     // ...
     use App\Entity\Product;
+    use Doctrine\ORM\EntityManagerInterface;
+    use Symfony\Component\HttpFoundation\Response;
 
     class ProductController extends AbstractController
     {
@@ -363,15 +371,15 @@ Doctrine 支持各种字段类型，每种类型都有自己的选项。
 
 .. _doctrine-entity-manager:
 
-* **16行** ``$this->getDoctrine()->getManager()`` 方法获取Doctrine的 *实体管理器* 对象，这是Doctrine中最重要的对象。
+* **18行** ``$this->getDoctrine()->getManager()`` 方法获取Doctrine的 *实体管理器* 对象，这是Doctrine中最重要的对象。
   它负责将对象保存到数据库并从中提取对象。
 
-* **18-21行** 在本节中，你将像任何其他普通PHP对象一样实例化和使用 ``$product`` 对象。
+* **20-23行** 在本节中，你将像任何其他普通PHP对象一样实例化和使用 ``$product`` 对象。
 
-* **24行** 调用 ``persist($product)`` 告诉Doctrine去 "管理" ``$product`` 对象。
+* **26行** 调用 ``persist($product)`` 告诉Doctrine去 "管理" ``$product`` 对象。
   它 *没有* 引发对数据库的请求。
 
-* **27行** 当 ``flush()`` 方法被调用时，Doctrine会遍历它管理的所有对象以确定是否需要被持久化到数据库。
+* **29行** 当 ``flush()`` 方法被调用时，Doctrine会遍历它管理的所有对象以确定是否需要被持久化到数据库。
   本例中，``$product`` 对象的数据在数据库中并不存在，
   因此实体管理器要执行 ``INSERT`` 查询，在 ``product`` 表中创建一个新行。
 
@@ -473,9 +481,7 @@ Doctrine足够聪明，可以知道它应该是 *插入* 还是 *更新* 你的�
 现在，简化你的控制器::
 
     // src/Controller/ProductController.php
-
     use App\Entity\Product;
-    // ...
 
     /**
      * @Route("/product/{id}", name="product_show")
@@ -689,7 +695,7 @@ Doctrine提供了一个库，允许你以编程方式将测试数据加载到项
 
 .. code-block:: terminal
 
-    $ composer require doctrine/doctrine-fixtures-bundle --dev
+    $ composer require --dev doctrine/doctrine-fixtures-bundle
 
 然后，使用 ``make:fixtures`` 命令生成一个空 fixture 类：
 

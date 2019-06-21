@@ -64,9 +64,6 @@ value and then call the ``setMaxSteps()`` method to update it as needed::
     // a complex task has just been created: increase the progressbar to 200 units
     $progressBar->setMaxSteps(200);
 
-.. versionadded:: 4.1
-    The ``setMaxSteps()`` method was introduced in Symfony 4.1.
-
 Another solution is to omit the steps argument when creating the
 :class:`Symfony\\Component\\Console\\Helper\\ProgressBar` instance::
 
@@ -335,7 +332,7 @@ The ``setMessage()`` method accepts a second optional argument to set the value
 of the custom placeholders::
 
     // ...
-    // $files = array('client-001/invoices.xml', '...');
+    // $files = ['client-001/invoices.xml', '...'];
     foreach ($files as $filename) {
         $progressBar->setMessage('Importing invoices...');
         $progressBar->setMessage($filename, 'filename');
@@ -347,10 +344,6 @@ of the custom placeholders::
 
 Displaying Multiple Progress Bars
 ---------------------------------
-
-.. versionadded:: 4.1
-    The feature to display multiple progress bars using output sections was
-    introduced in Symfony 4.1.
 
 When using :ref:`Console output sections <console-output-sections>` it's
 possible to display multiple progress bars at the same time and change their

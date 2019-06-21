@@ -38,10 +38,10 @@ Form组件由3个核心对象组成：一个表单类型（实现了
     {
         public function testSubmitValidData()
         {
-            $formData = array(
+            $formData = [
                 'test' => 'test',
                 'test2' => 'test2',
-            );
+            ];
 
             $objectToCompare = new TestObject();
             // $objectToCompare 将从表单提交中检索数据; 并将它作为第二个参数传递
@@ -140,10 +140,10 @@ Form组件由3个核心对象组成：一个表单类型（实现了
             // 使用模拟的依赖来创建一个类型实例
             $type = new TestedType($this->objectManager);
 
-            return array(
+            return [
                 // 使用 PreloadedExtension 注册该类型实例
-                new PreloadedExtension(array($type), array()),
-            );
+                new PreloadedExtension([$type], []),
+            ];
         }
 
         public function testSubmitValidData()
@@ -170,32 +170,23 @@ Form组件由3个核心对象组成：一个表单类型（实现了
     namespace App\Tests\Form\Type;
 
     // ...
-    use App\Form\Type\TestedType;
     use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
-    use Symfony\Component\Form\Form;
-    use Symfony\Component\Validator\ConstraintViolationList;
-    use Symfony\Component\Validator\Mapping\ClassMetadata;
-    use Symfony\Component\Validator\Validator\ValidatorInterface;
+    use Symfony\Component\Validator\Validation;
 
     class TestedTypeTest extends TypeTestCase
     {
-        private $validator;
-
         protected function getExtensions()
         {
-            $this->validator = $this->createMock(ValidatorInterface::class);
-            // 在 PHPUnit 5.3 或更低版本中使用 getMock()
-            // $this->validator = $this->getMock(ValidatorInterface::class);
-            $this->validator
-                ->method('validate')
-                ->will($this->returnValue(new ConstraintViolationList()));
-            $this->validator
-                ->method('getMetadataFor')
-                ->will($this->returnValue(new ClassMetadata(Form::class)));
+            $validator = Validation::createValidator();
 
-            return array(
-                new ValidatorExtension($this->validator),
-            );
+            // or if you also need to read constraints from annotations
+            $validator = Validation::createValidatorBuilder()
+                ->enableAnnotationMapping()
+                ->getValidator();
+
+            return [
+                new ValidatorExtension($validator),
+            ];
         }
 
         // ... 你的测试

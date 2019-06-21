@@ -34,14 +34,14 @@
             $this->normalizer = $normalizer;
         }
 
-        public function normalize($topic, $format = null, array $context = array())
+        public function normalize($topic, $format = null, array $context = [])
         {
             $data = $this->normalizer->normalize($topic, $format, $context);
 
             // 在这里添加、编辑、删除数据:
-            $data['href']['self'] = $this->router->generate('topic_show', array(
+            $data['href']['self'] = $this->router->generate('topic_show', [
                 'id' => $topic->getId(),
-            ), UrlGeneratorInterface::ABSOLUTE_URL);
+            ], UrlGeneratorInterface::ABSOLUTE_URL);
 
             return $data;
         }

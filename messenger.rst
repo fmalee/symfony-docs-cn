@@ -101,11 +101,11 @@ Serializer实例来进行序列化和反序列化之外::
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <services>
                 <service id="App\MessageHandler\SmsNotificationHandler">
-                   <tag name="messenger.message_handler" />
+                   <tag name="messenger.message_handler"/>
                 </service>
             </services>
         </container>
@@ -154,13 +154,13 @@ Serializer实例来进行序列化和反序列化之外::
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:framework="http://symfony.com/schema/dic/symfony"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd
+                https://symfony.com/schema/dic/services/services-1.0.xsd
                 http://symfony.com/schema/dic/symfony
-                http://symfony.com/schema/dic/symfony/symfony-1.0.xsd">
+                https://symfony.com/schema/dic/symfony/symfony-1.0.xsd">
 
             <framework:config>
                 <framework:messenger>
-                    <framework:transport name="amqp" dsn="%env(MESSENGER_TRANSPORT_DSN)%" />
+                    <framework:transport name="amqp" dsn="%env(MESSENGER_TRANSPORT_DSN)%"/>
                 </framework:messenger>
             </framework:config>
         </container>
@@ -168,13 +168,13 @@ Serializer实例来进行序列化和反序列化之外::
     .. code-block:: php
 
         // config/packages/messenger.php
-        $container->loadFromExtension('framework', array(
-            'messenger' => array(
-                'transports' => array(
+        $container->loadFromExtension('framework', [
+            'messenger' => [
+                'transports' => [
                     'amqp' => '%env(MESSENGER_TRANSPORT_DSN)%',
-                ),
-            ),
-        ));
+                ],
+            ],
+        ]);
 
 .. code-block:: bash
 
@@ -190,11 +190,12 @@ Serializer实例来进行序列化和反序列化之外::
 
 .. note::
 
-    为了使用Symfony的内置AMQP传输系统，你将需要Serializer组件。确保安装时使用：
+    为了使用Symfony的内置AMQP传输系统，你将需要AMQP PHP扩展以及Serializer组件。
+    要确保这些已经正确安装，请使用：
 
     .. code-block:: terminal
 
-        $ composer require symfony/serializer-pack
+        $ composer require symfony/amqp-pack
 
 路由
 -------
@@ -220,14 +221,14 @@ Serializer实例来进行序列化和反序列化之外::
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:framework="http://symfony.com/schema/dic/symfony"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd
+                https://symfony.com/schema/dic/services/services-1.0.xsd
                 http://symfony.com/schema/dic/symfony
-                http://symfony.com/schema/dic/symfony/symfony-1.0.xsd">
+                https://symfony.com/schema/dic/symfony/symfony-1.0.xsd">
 
             <framework:config>
                 <framework:messenger>
                     <framework:routing message-class="My\Message\Message">
-                        <framework:sender service="amqp" />
+                        <framework:sender service="amqp"/>
                     </framework:routing>
                 </framework:messenger>
             </framework:config>
@@ -236,13 +237,13 @@ Serializer实例来进行序列化和反序列化之外::
     .. code-block:: php
 
         // config/packages/messenger.php
-        $container->loadFromExtension('framework', array(
-            'messenger' => array(
-                'routing' => array(
+        $container->loadFromExtension('framework', [
+            'messenger' => [
+                'routing' => [
                     'My\Message\Message' => 'amqp',
-                ),
-            ),
-        ));
+                ],
+            ],
+        ]);
 
 此类配置仅将 ``My\Message\Message`` 消息路由为异步，其余消息仍将直接处理。
 
@@ -267,17 +268,17 @@ Serializer实例来进行序列化和反序列化之外::
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:framework="http://symfony.com/schema/dic/symfony"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd
+                https://symfony.com/schema/dic/services/services-1.0.xsd
                 http://symfony.com/schema/dic/symfony
-                http://symfony.com/schema/dic/symfony/symfony-1.0.xsd">
+                https://symfony.com/schema/dic/symfony/symfony-1.0.xsd">
 
             <framework:config>
                 <framework:messenger>
                     <framework:routing message-class="My\Message\Message">
-                        <framework:sender service="another_transport" />
+                        <framework:sender service="another_transport"/>
                     </framework:routing>
                     <framework:routing message-class="*">
-                        <framework:sender service="amqp" />
+                        <framework:sender service="amqp"/>
                     </framework:routing>
                 </framework:messenger>
             </framework:config>
@@ -286,14 +287,14 @@ Serializer实例来进行序列化和反序列化之外::
     .. code-block:: php
 
         // config/packages/messenger.php
-        $container->loadFromExtension('framework', array(
-            'messenger' => array(
-                'routing' => array(
+        $container->loadFromExtension('framework', [
+            'messenger' => [
+                'routing' => [
                     'My\Message\Message' => 'another_transport',
                     '*' => 'amqp',
-                ),
-            ),
-        ));
+                ],
+            ],
+        ]);
 
 通过指定列表，还可以将一个类的消息路由到多个发件人：
 
@@ -315,15 +316,15 @@ Serializer实例来进行序列化和反序列化之外::
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:framework="http://symfony.com/schema/dic/symfony"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd
+                https://symfony.com/schema/dic/services/services-1.0.xsd
                 http://symfony.com/schema/dic/symfony
-                http://symfony.com/schema/dic/symfony/symfony-1.0.xsd">
+                https://symfony.com/schema/dic/symfony/symfony-1.0.xsd">
 
             <framework:config>
                 <framework:messenger>
                     <framework:routing message-class="My\Message\ToBeSentToTwoSenders">
-                        <framework:sender service="amqp" />
-                        <framework:sender service="audit" />
+                        <framework:sender service="amqp"/>
+                        <framework:sender service="audit"/>
                     </framework:routing>
                 </framework:messenger>
             </framework:config>
@@ -332,13 +333,13 @@ Serializer实例来进行序列化和反序列化之外::
     .. code-block:: php
 
         // config/packages/messenger.php
-        $container->loadFromExtension('framework', array(
-            'messenger' => array(
-                'routing' => array(
-                    'My\Message\ToBeSentToTwoSenders' => array('amqp', 'audit'),
-                ),
-            ),
-        ));
+        $container->loadFromExtension('framework', [
+            'messenger' => [
+                'routing' => [
+                    'My\Message\ToBeSentToTwoSenders' => ['amqp', 'audit'],
+                ],
+            ],
+        ]);
 
 通过指定 ``send_and_handle`` 选项，你还可以将一个类的消息路由到一个发件人，同时仍将它们传递到各自的处理器：
 
@@ -362,14 +363,14 @@ Serializer实例来进行序列化和反序列化之外::
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:framework="http://symfony.com/schema/dic/symfony"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd
+                https://symfony.com/schema/dic/services/services-1.0.xsd
                 http://symfony.com/schema/dic/symfony
-                http://symfony.com/schema/dic/symfony/symfony-1.0.xsd">
+                https://symfony.com/schema/dic/symfony/symfony-1.0.xsd">
 
             <framework:config>
                 <framework:messenger>
                     <framework:routing message-class="My\Message\ThatIsGoingToBeSentAndHandledLocally" send-and-handle="true">
-                        <framework:sender service="amqp" />
+                        <framework:sender service="amqp"/>
                     </framework:routing>
                 </framework:messenger>
             </framework:config>
@@ -378,16 +379,16 @@ Serializer实例来进行序列化和反序列化之外::
     .. code-block:: php
 
         // config/packages/messenger.php
-        $container->loadFromExtension('framework', array(
-            'messenger' => array(
-                'routing' => array(
-                    'My\Message\ThatIsGoingToBeSentAndHandledLocally' => array(
-                        'senders' => array('amqp'),
+        $container->loadFromExtension('framework', [
+            'messenger' => [
+                'routing' => [
+                    'My\Message\ThatIsGoingToBeSentAndHandledLocally' => [
+                        'senders' => ['amqp'],
                         'send_and_handle' => true,
-                    ),
-                ),
-            ),
-        ));
+                    ],
+                ],
+            ],
+        ]);
 
 消费消息
 ------------------
@@ -396,109 +397,10 @@ Serializer实例来进行序列化和反序列化之外::
 
 .. code-block:: terminal
 
-    $ bin/console messenger:consume-messages amqp
+    $ php bin/console messenger:consume-messages amqp
 
 第一个参数是收件人的服务名称。它可能是由你的 ``transports`` 配置创建的，也可能是你自己的收件人。
 如果配置了多个总线，它还需要一个 ``--bus`` 选项，这是应该调度已接收的消息的总线的名称。
-
-多个总线
---------------
-
-如果你对CQRS等架构感兴趣，可能需要在应用中安装多个总线。
-
-你可以创建多个总线（在此示例中的命令总线和事件总线），如下所示：
-
-.. configuration-block::
-
-    .. code-block:: yaml
-
-        # config/packages/messenger.yaml
-        framework:
-            messenger:
-                # 注入 MessageBusInterface 时要注入的总线：
-                default_bus: messenger.bus.commands
-
-                # 创建总线
-                buses:
-                    messenger.bus.commands: ~
-                    messenger.bus.events: ~
-
-    .. code-block:: xml
-
-        <!-- config/packages/messenger.xml -->
-        <?xml version="1.0" encoding="UTF-8" ?>
-        <container xmlns="http://symfony.com/schema/dic/services"
-            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xmlns:framework="http://symfony.com/schema/dic/symfony"
-            xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd
-                http://symfony.com/schema/dic/symfony
-                http://symfony.com/schema/dic/symfony/symfony-1.0.xsd">
-
-            <framework:config>
-                <framework:messenger default-bus="messenger.bus.commands">
-                    <framework:bus name="messenger.bus.commands" />
-                    <framework:bus name="messenger.bus.events" />
-                </framework:messenger>
-            </framework:config>
-        </container>
-
-    .. code-block:: php
-
-        // config/packages/messenger.php
-        $container->loadFromExtension('framework', array(
-            'messenger' => array(
-                'default_bus' => 'messenger.bus.commands',
-                'buses' => array(
-                    'messenger.bus.commands' => null,
-                    'messenger.bus.events' => null,
-                ),
-            ),
-        ));
-
-这将生成 ``messenger.bus.commands`` 和 ``messenger.bus.events`` 服务，你可以在你的服务注入它们。
-
-.. note::
-
-    要仅为特定总线注册一个处理器，请将一个 ``bus`` 属性添加到处理器的服务标签（``messenger.message_handler``）中，并使用该总线名称作为它的值。
-
-类型约束和自动装配
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-自动装配是一项很棒的功能，可以减少创建服务容器所需的配置量。
-使用多个总线时，默认情况下自动装配不起作用，因为它不知道要在你自己的服务中注入哪个总线。
-
-为了解决这一点，你可以使用依赖注入的绑定功能，该功能根据参数的名称来阐明哪个总线将被注入：
-
-.. configuration-block::
-
-    .. code-block:: yaml
-
-        # config/services.yaml
-        services:
-            _defaults:
-                # ...
-
-                bind:
-                    $commandBus: '@messenger.bus.commands'
-                    $eventBus: '@messenger.bus.events'
-
-    .. code-block:: xml
-
-        <!-- config/services.xml -->
-        <?xml version="1.0" encoding="UTF-8" ?>
-        <container xmlns="http://symfony.com/schema/dic/services"
-            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
-
-            <services>
-                <defaults>
-                   <bind key="$commandBus" type="service" id="messenger.bus.commands" />
-                   <bind key="$commandBus" type="service" id="messenger.bus.events" />
-                </defaults>
-            </services>
-        </container>
 
 中间件
 ----------
@@ -542,13 +444,13 @@ Serializer实例来进行序列化和反序列化之外::
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:framework="http://symfony.com/schema/dic/symfony"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd
+                https://symfony.com/schema/dic/services/services-1.0.xsd
                 http://symfony.com/schema/dic/symfony
-                http://symfony.com/schema/dic/symfony/symfony-1.0.xsd">
+                https://symfony.com/schema/dic/symfony/symfony-1.0.xsd">
 
             <framework:config>
                 <framework:messenger>
-                    <framework:bus name="messenger.bus.default" default-middleware="false" />
+                    <framework:bus name="messenger.bus.default" default-middleware="false"/>
                 </framework:messenger>
             </framework:config>
         </container>
@@ -556,15 +458,15 @@ Serializer实例来进行序列化和反序列化之外::
     .. code-block:: php
 
         // config/packages/messenger.php
-        $container->loadFromExtension('framework', array(
-            'messenger' => array(
-                'buses' => array(
-                    'messenger.bus.default' => array(
+        $container->loadFromExtension('framework', [
+            'messenger' => [
+                'buses' => [
+                    'messenger.bus.default' => [
                         'default_middleware' => false,
-                    ),
-                ),
-            ),
-        ));
+                    ],
+                ],
+            ],
+        ]);
 
 添加自定义中间件
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -592,15 +494,15 @@ Serializer实例来进行序列化和反序列化之外::
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:framework="http://symfony.com/schema/dic/symfony"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd
+                https://symfony.com/schema/dic/services/services-1.0.xsd
                 http://symfony.com/schema/dic/symfony
-                http://symfony.com/schema/dic/symfony/symfony-1.0.xsd">
+                https://symfony.com/schema/dic/symfony/symfony-1.0.xsd">
 
             <framework:config>
                 <framework:messenger>
                     <framework:bus name="messenger.bus.default">
-                        <framework:middleware id="App\Middleware\MyMiddleware" />
-                        <framework:middleware id="App\Middleware\AnotherMiddleware" />
+                        <framework:middleware id="App\Middleware\MyMiddleware"/>
+                        <framework:middleware id="App\Middleware\AnotherMiddleware"/>
                     </framework:bus>
                 </framework:messenger>
             </framework:config>
@@ -609,18 +511,18 @@ Serializer实例来进行序列化和反序列化之外::
     .. code-block:: php
 
         // config/packages/messenger.php
-        $container->loadFromExtension('framework', array(
-            'messenger' => array(
-                'buses' => array(
-                    'messenger.bus.default' => array(
-                        'middleware' => array(
+        $container->loadFromExtension('framework', [
+            'messenger' => [
+                'buses' => [
+                    'messenger.bus.default' => [
+                        'middleware' => [
                             'App\Middleware\MyMiddleware',
                             'App\Middleware\AnotherMiddleware',
-                        ),
-                    ),
-                ),
-            ),
-        ));
+                        ],
+                    ],
+                ],
+            ],
+        ]);
 
 请注意，如果服务是抽象的，则将为每个总线创建不同的服务实例。
 
@@ -654,15 +556,15 @@ Serializer实例来进行序列化和反序列化之外::
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:framework="http://symfony.com/schema/dic/symfony"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd
+                https://symfony.com/schema/dic/services/services-1.0.xsd
                 http://symfony.com/schema/dic/symfony
-                http://symfony.com/schema/dic/symfony/symfony-1.0.xsd">
+                https://symfony.com/schema/dic/symfony/symfony-1.0.xsd">
 
             <framework:config>
                 <framework:messenger>
                     <framework:bus name="command_bus">
                         <!-- Using the default configured entity manager name -->
-                        <framework:middleware id="doctrine_transaction" />
+                        <framework:middleware id="doctrine_transaction"/>
                         <!-- Using another entity manager -->
                         <framework:middleware id="doctrine_transaction">
                             <framework:argument>custom</framework:argument>
@@ -675,20 +577,20 @@ Serializer实例来进行序列化和反序列化之外::
     .. code-block:: php
 
         // config/packages/messenger.php
-        $container->loadFromExtension('framework', array(
-            'messenger' => array(
-                'buses' => array(
-                    'command_bus' => array(
-                        'middleware' => array(
+        $container->loadFromExtension('framework', [
+            'messenger' => [
+                'buses' => [
+                    'command_bus' => [
+                        'middleware' => [
                             // Using the default configured entity manager name
                             'doctrine_transaction',
                             // Using another entity manager
-                            array('id' => 'doctrine_transaction', 'arguments' => array('custom')),
-                        ),
-                    ),
-                ),
-            ),
-        ));
+                            ['id' => 'doctrine_transaction', 'arguments' => ['custom']],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
 
 定义这样的可配置中间件是基于Symfony的 :doc:`依赖注入 </service_container>` 功能：
 
@@ -712,7 +614,7 @@ Serializer实例来进行序列化和反序列化之外::
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <services>
                 <service id="messenger.middleware.doctrine_transaction"
@@ -721,7 +623,7 @@ Serializer实例来进行序列化和反序列化之外::
                     abstract="true">
                     <!-- Main dependencies are defined by the parent definitions. -->
                     <!-- Arguments provided in the middleware config will be appended on the child definition. -->
-                    <argument type="service" id="doctrine" />
+                    <argument type="service" id="doctrine"/>
                 </service>
             </services>
         </container>
@@ -737,7 +639,7 @@ Serializer实例来进行序列化和反序列化之外::
             ->setAbstract(true)
             // Main dependencies are defined by the parent definitions.
             // Arguments provided in the middleware config will be appended on the child definition.
-            ->setArguments(array(new Reference('doctrine')));
+            ->setArguments([new Reference('doctrine')]);
 
 .. note::
 
@@ -754,10 +656,10 @@ Serializer实例来进行序列化和反序列化之外::
 
 你需要给FrameworkBundle提供从DSN创建你自己的传输的机会。你需要一个传输工厂::
 
-    use Symfony\Component\Messenger\Transport\TransportFactoryInterface;
-    use Symfony\Component\Messenger\Transport\TransportInterface;
     use Symfony\Component\Messenger\Transport\Receiver\ReceiverInterface;
     use Symfony\Component\Messenger\Transport\Sender\SenderInterface;
+    use Symfony\Component\Messenger\Transport\TransportFactoryInterface;
+    use Symfony\Component\Messenger\Transport\TransportInterface;
 
     class YourTransportFactory implements TransportFactoryInterface
     {
@@ -812,11 +714,11 @@ Serializer实例来进行序列化和反序列化之外::
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <services>
                 <service id="Your\Transport\YourTransportFactory">
-                   <tag name="messenger.transport_factory" />
+                   <tag name="messenger.transport_factory"/>
                 </service>
             </services>
         </container>
@@ -827,7 +729,7 @@ Serializer实例来进行序列化和反序列化之外::
         use Your\Transport\YourTransportFactory;
 
         $container->register(YourTransportFactory::class)
-            ->setTags(array('messenger.transport_factory'));
+            ->setTags(['messenger.transport_factory']);
 
 使用自定义传输
 ~~~~~~~~~~~~~~~~~~
@@ -852,13 +754,13 @@ Serializer实例来进行序列化和反序列化之外::
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:framework="http://symfony.com/schema/dic/symfony"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd
+                https://symfony.com/schema/dic/services/services-1.0.xsd
                 http://symfony.com/schema/dic/symfony
-                http://symfony.com/schema/dic/symfony/symfony-1.0.xsd">
+                https://symfony.com/schema/dic/symfony/symfony-1.0.xsd">
 
             <framework:config>
                 <framework:messenger>
-                    <framework:transport name="yours" dsn="my-transport://..." />
+                    <framework:transport name="yours" dsn="my-transport://..."/>
                 </framework:messenger>
             </framework:config>
         </container>
@@ -866,17 +768,26 @@ Serializer实例来进行序列化和反序列化之外::
     .. code-block:: php
 
         // config/packages/messenger.php
-        $container->loadFromExtension('framework', array(
-            'messenger' => array(
-                'transports' => array(
+        $container->loadFromExtension('framework', [
+            'messenger' => [
+                'transports' => [
                     'yours' => 'my-transport://...',
-                ),
-            ),
-        ));
+                ],
+            ],
+        ]);
 
 除了能够将消息路由到该 ``yours`` 发件人之外，还可以访问以下服务：
 
 #. ``messenger.sender.yours``: 发件人;
 #. ``messenger.receiver.yours``: 收件人.
+
+扩展阅读
+------------
+
+.. toctree::
+    :maxdepth: 1
+    :glob:
+
+    /messenger/*
 
 .. _`enqueue's transport`: https://github.com/php-enqueue/messenger-adapter

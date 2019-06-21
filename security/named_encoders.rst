@@ -26,7 +26,7 @@
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:srv="http://symfony.com/schema/dic/services"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd"
+                https://symfony.com/schema/dic/services/services-1.0.xsd"
         >
             <config>
                 <!-- ... -->
@@ -42,15 +42,15 @@
         // config/packages/security.php
         use App\Entity\User;
 
-        $container->loadFromExtension('security', array(
+        $container->loadFromExtension('security', [
             // ...
-            'encoders' => array(
-                User::class => array(
+            'encoders' => [
+                User::class => [
                     'algorithm' => 'bcrypt',
                     'cost' => 12,
-                ),
-            ),
-        ));
+                ],
+            ],
+        ]);
 
 另一种选择是使用一个“命名”编码器，然后选择要动态使用的编码器。
 
@@ -79,29 +79,29 @@
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:srv="http://symfony.com/schema/dic/services"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd"
+                https://symfony.com/schema/dic/services/services-1.0.xsd"
         >
 
             <config>
                 <!-- ... -->
                 <encoder class="harsh"
                     algorithm="bcrypt"
-                    cost="15" />
+                    cost="15"/>
             </config>
         </srv:container>
 
     .. code-block:: php
 
         // config/packages/security.php
-        $container->loadFromExtension('security', array(
+        $container->loadFromExtension('security', [
             // ...
-            'encoders' => array(
-                'harsh' => array(
+            'encoders' => [
+                'harsh' => [
                     'algorithm' => 'bcrypt',
                     'cost'      => '15',
-                ),
-            ),
-        ));
+                ],
+            ],
+        ]);
 
 .. note::
 
@@ -116,8 +116,8 @@
     // src/Acme/UserBundle/Entity/User.php
     namespace Acme\UserBundle\Entity;
 
-    use Symfony\Component\Security\Core\User\UserInterface;
     use Symfony\Component\Security\Core\Encoder\EncoderAwareInterface;
+    use Symfony\Component\Security\Core\User\UserInterface;
 
     class User implements UserInterface, EncoderAwareInterface
     {
@@ -154,13 +154,13 @@
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:srv="http://symfony.com/schema/dic/services"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd"
+                https://symfony.com/schema/dic/services/services-1.0.xsd"
         >
 
             <config>
                 <!-- ... -->
                 <encoder class="app_encoder"
-                    id="App\Security\Encoder\MyCustomPasswordEncoder" />
+                    id="App\Security\Encoder\MyCustomPasswordEncoder"/>
             </config>
         </srv:container>
 
@@ -170,14 +170,14 @@
         // ...
         use App\Security\Encoder\MyCustomPasswordEncoder;
 
-        $container->loadFromExtension('security', array(
+        $container->loadFromExtension('security', [
             // ...
-            'encoders' => array(
-                'app_encoder' => array(
+            'encoders' => [
+                'app_encoder' => [
                     'id' => MyCustomPasswordEncoder::class,
-                ),
-            ),
-        ));
+                ],
+            ],
+        ]);
 
 这将创建一个名为 ``app_encoder`` 的编码器，该编码器使用了一个ID为
 ``App\Security\Encoder\MyCustomPasswordEncoder`` 的服务。

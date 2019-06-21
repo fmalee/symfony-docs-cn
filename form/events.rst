@@ -234,15 +234,15 @@ View data        使用一个视图转换器转换的Normalized data
 
     // ...
 
-    use Symfony\Component\Form\FormEvent;
-    use Symfony\Component\Form\FormEvents;
-    use Symfony\Component\Form\Extension\Core\Type\TextType;
     use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
     use Symfony\Component\Form\Extension\Core\Type\EmailType;
+    use Symfony\Component\Form\Extension\Core\Type\TextType;
+    use Symfony\Component\Form\FormEvent;
+    use Symfony\Component\Form\FormEvents;
 
     $form = $formFactory->createBuilder()
         ->add('username', TextType::class)
-        ->add('show_email', CheckboxType::class)
+        ->add('showEmail', CheckboxType::class)
         ->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
             $user = $event->getData();
             $form = $event->getForm();
@@ -253,7 +253,7 @@ View data        使用一个视图转换器转换的Normalized data
 
             // 检查用户是否选择显示他们的电子邮件地址。
             // 如果之前就提交了数据，则需要删除请求变量中包含的额外的值。
-            if (true === $user['show_email']) {
+            if (true === $user['showEmail']) {
                 $form->add('email', EmailType::class);
             } else {
                 unset($user['email']);
@@ -269,8 +269,8 @@ View data        使用一个视图转换器转换的Normalized data
     // src/Form/SubscriptionType.php
     namespace App\Form;
 
-    use Symfony\Component\Form\Extension\Core\Type\TextType;
     use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+    use Symfony\Component\Form\Extension\Core\Type\TextType;
     use Symfony\Component\Form\FormEvent;
     use Symfony\Component\Form\FormEvents;
 
@@ -281,10 +281,10 @@ View data        使用一个视图转换器转换的Normalized data
         {
             $builder
                 ->add('username', TextType::class)
-                ->add('show_email', CheckboxType::class)
+                ->add('showEmail', CheckboxType::class)
                 ->addEventListener(
                     FormEvents::PRE_SET_DATA,
-                    array($this, 'onPreSetData')
+                    [$this, 'onPreSetData']
                 )
             ;
         }
@@ -304,24 +304,24 @@ View data        使用一个视图转换器转换的Normalized data
 * 监听多个事件;
 * 在单个类中重组多个监听器。
 
-.. code-block:: php
+请思考以下表单事件订阅器的示例::
 
     // src/Form/EventListener/AddEmailFieldListener.php
     namespace App\Form\EventListener;
 
     use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+    use Symfony\Component\Form\Extension\Core\Type\EmailType;
     use Symfony\Component\Form\FormEvent;
     use Symfony\Component\Form\FormEvents;
-    use Symfony\Component\Form\Extension\Core\Type\EmailType;
 
     class AddEmailFieldListener implements EventSubscriberInterface
     {
         public static function getSubscribedEvents()
         {
-            return array(
+            return [
                 FormEvents::PRE_SET_DATA => 'onPreSetData',
                 FormEvents::PRE_SUBMIT   => 'onPreSubmit',
-            );
+            ];
         }
 
         public function onPreSetData(FormEvent $event)
@@ -346,7 +346,7 @@ View data        使用一个视图转换器转换的Normalized data
 
             // 检查用户是否选择显示他们的电子邮件地址。
             // 如果之前就提交了数据，则需要删除请求变量中包含的额外的值。
-            if (true === $user['show_email']) {
+            if (true === $user['showEmail']) {
                 $form->add('email', EmailType::class);
             } else {
                 unset($user['email']);
@@ -358,14 +358,14 @@ View data        使用一个视图转换器转换的Normalized data
 要注册事件订阅器，请使用 ``addEventSubscriber()`` 方法::
 
     use App\Form\EventListener\AddEmailFieldListener;
-    use Symfony\Component\Form\Extension\Core\Type\TextType;
     use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+    use Symfony\Component\Form\Extension\Core\Type\TextType;
 
     // ...
 
     $form = $formFactory->createBuilder()
         ->add('username', TextType::class)
-        ->add('show_email', CheckboxType::class)
+        ->add('showEmail', CheckboxType::class)
         ->addEventSubscriber(new AddEmailFieldListener())
         ->getForm();
 

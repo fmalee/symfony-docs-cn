@@ -35,7 +35,7 @@
     在开始之前，确保你已经阅读了 :doc:`/setup` 章节，同时已经可以在浏览器中访问Symfony程序。
 
 假设你要新建一个 ``/lucky/number`` 页面，用于生成一个随机的幸运数字并且输出它。
-那么，要先创建一个“控制器类”并添加一个"控制器"方法::
+那么，要先创建一个“控制器”类并添加一个"控制器"方法::
 
     <?php
     // src/Controller/LuckyController.php
@@ -219,10 +219,9 @@ Symfony的 *杀手级* 功能之一是Web调试工具栏：
 模板文件存在于 ``templates/`` 目录中，该目录是在安装 Twig 时自动创建的。
 创建一个新的 ``templates/lucky`` 目录，并在该目录下新建 ``number.html.twig`` 文件：
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {# templates/lucky/number.html.twig #}
-
     <h1>你的幸运数字是 {{ number }}</h1>
 
 
@@ -241,7 +240,7 @@ Symfony的 *杀手级* 功能之一是Web调试工具栏：
 好消息！你早已经在项目中最重要的目录中开工了：
 
 ``config/``
-    包含......当然是配置啦！你可以在这里配置路由、:doc:`服务 </service_container>` 和依赖包。
+    包含……配置！你可以在这里配置路由、:doc:`服务 </service_container>` 和依赖包。
 
 ``src/``
     你的所有PHP代码都存在于此处。

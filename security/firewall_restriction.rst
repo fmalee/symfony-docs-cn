@@ -37,7 +37,7 @@
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:srv="http://symfony.com/schema/dic/services"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <config>
                 <!-- ... -->
@@ -52,14 +52,14 @@
         // config/packages/security.php
 
         // ...
-        $container->loadFromExtension('security', array(
-            'firewalls' => array(
-                'secured_area' => array(
+        $container->loadFromExtension('security', [
+            'firewalls' => [
+                'secured_area' => [
                     'pattern' => '^/admin',
                     // ...
-                ),
-            ),
-        ));
+                ],
+            ],
+        ]);
 
 ``pattern`` 是一个正则表达式。
 在此示例中，仅当一个URL以 ``/admin`` 开头时（由于 ``^`` 正则表达式字符），才会激活该防火墙。
@@ -92,7 +92,7 @@
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:srv="http://symfony.com/schema/dic/services"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <config>
                 <!-- ... -->
@@ -107,14 +107,14 @@
         // config/packages/security.php
 
         // ...
-        $container->loadFromExtension('security', array(
-            'firewalls' => array(
-                'secured_area' => array(
+        $container->loadFromExtension('security', [
+            'firewalls' => [
+                'secured_area' => [
                     'host' => '^admin\.example\.com$',
                     // ...
-                ),
-            ),
-        ));
+                ],
+            ],
+        ]);
 
 ``host`` 是一个正则表达式（类似于 ``pattern``）。
 在此示例中，仅当该主机与主机名 ``admin.example.com``
@@ -147,7 +147,7 @@ HTTP方法限制
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:srv="http://symfony.com/schema/dic/services"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <config>
                 <!-- ... -->
@@ -162,14 +162,14 @@ HTTP方法限制
         // config/packages/security.php
 
         // ...
-        $container->loadFromExtension('security', array(
-            'firewalls' => array(
-                'secured_area' => array(
-                    'methods' => array('GET', 'POST'),
+        $container->loadFromExtension('security', [
+            'firewalls' => [
+                'secured_area' => [
+                    'methods' => ['GET', 'POST'],
                     // ...
-                ),
-            ),
-        ));
+                ],
+            ],
+        ]);
 
 在此示例中，仅当请求的HTTP方法为 ``GET`` 或 ``POST`` 时，才会激活该防火墙。
 如果该方法不在允许方法的数组中，则不会激活防火墙，并且后续防火墙将再次有机会匹配此请求。

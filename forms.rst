@@ -10,7 +10,7 @@
     更喜欢视频教程? 可以观看 `Symfony Forms screencast series`_ 系列录像.
 
 对一个Web开发者来说，处理HTML表单是一个最为普通又极具挑战的任务。
-Symfony整合了一个Form组件，让处理表单变得容易起来。
+Symfony整合了一个Form组件，帮助你处理表单。
 在本章，你将从零开始创建一个复杂的表单，学习表单类库中的重要功能。
 
 安装
@@ -80,17 +80,17 @@ Symfony整合了一个Form组件，让处理表单变得容易起来。
 在Symfony中，这是通过构建一个表单对象并将其渲染到模版来完成的。
 现在，在控制器里即可完成所有这些::
 
-    // src/Controller/DefaultController.php
+    // src/Controller/TaskController.php
     namespace App\Controller;
 
     use App\Entity\Task;
     use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-    use Symfony\Component\HttpFoundation\Request;
-    use Symfony\Component\Form\Extension\Core\Type\TextType;
     use Symfony\Component\Form\Extension\Core\Type\DateType;
     use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+    use Symfony\Component\Form\Extension\Core\Type\TextType;
+    use Symfony\Component\HttpFoundation\Request;
 
-    class DefaultController extends AbstractController
+    class TaskController extends AbstractController
     {
         public function new(Request $request)
         {
@@ -102,12 +102,12 @@ Symfony整合了一个Form组件，让处理表单变得容易起来。
             $form = $this->createFormBuilder($task)
                 ->add('task', TextType::class)
                 ->add('dueDate', DateType::class)
-                ->add('save', SubmitType::class, array('label' => 'Create Task'))
+                ->add('save', SubmitType::class, ['label' => 'Create Task'])
                 ->getForm();
 
-            return $this->render('default/new.html.twig', array(
+            return $this->render('task/new.html.twig', [
                 'form' => $form->createView(),
-            ));
+            ]);
         }
     }
 
@@ -120,7 +120,8 @@ Symfony整合了一个Form组件，让处理表单变得容易起来。
 创建表单需要相对较少的代码，因为Symfony表单对象是使用“表单构建器”构建的。
 表单构建器的目的是允许你编写简单的表单“指令(recipes)”，并让它完成实际构建表单的所有繁重工作。
 
-在此示例中，你已向表单添加了两个字段 -- ``task`` 和 ``dueDate`` -- 对应于 ``Task`` 类中的 ``task`` 和 ``dueDate`` 属性。
+在此示例中，你已向表单添加了两个字段 -- ``task`` 和 ``dueDate``
+-- 对应于 ``Task`` 类中的 ``task`` 和 ``dueDate`` 属性。
 你还为每个字段分配了一个“类型”（例如 ``TextType`` 和 ``DateType``），用其完全限定的类名表示。
 除此之外，它还决定为该字段渲染哪个HTML表单标签。
 
@@ -136,39 +137,31 @@ Symfony开箱附带许多内置类型，它们将在稍后讨论（参见 :ref:`
 ~~~~~~~~~~~~~~~~~~
 
 表单创建之后，下一步就是渲染它。
-这是通过传递一个特殊的表单“视图”对象（注意上例控制器中的 ``$form->createView()`` 方法）到你的模板，
-并通过一系列的表单辅助函数来实现的：
+这是通过传递一个特殊的表单“视图”对象（注意上例控制器中的
+``$form->createView()`` 方法）到你的模板，并通过一系列的
+:ref:`表单辅助函数 <reference-form-twig-functions>` 来实现的：
 
-.. code-block:: html+twig
+.. code-block:: twig
 
-    {# templates/default/new.html.twig #}
-    {{ form_start(form) }}
-    {{ form_widget(form) }}
-    {{ form_end(form) }}
+    {# templates/task/new.html.twig #}
+    {{ form(form) }}
 
 .. image:: /_images/form/simple-form.png
     :align: center
 
-.. note::
+仅此而已！:ref:`form() 函数 <reference-forms-twig-form>`
+会渲染所有的字段，*还有* ``<form>`` 的开始和结束标签。默认情况下，表单方法是
+``POST``，目标URL与显示表单的URL相同。
 
-    本例假设你以"POST"请求提交表单，并且和表单展示页使用相同的URL。
-    后面你将学习如何改变表单的请求方法和目标URL。
+尽管如此，它并不是很灵活。通常，你需要更多地控制整个表单或其某些字段的外观。
+Symfony提供了几种方法：
 
-就是这样！只需要三行就可以渲染出完整的表单：
-
-``form_start(form)``
-    渲染表单的开始标签，包括在使用文件上传时的正确enctype属性。
-
-``form_widget(form)``
-    渲染出全部字段，包含字段元素本身，字段标签以及字段验证的任何错误信息。
-
-``form_end(form)``
-    当你手动生成每个字段时，它可以渲染表单结束标签以及表单中所有尚未渲染的字段。这在渲染隐藏字段以及利用自动的 :doc:`CSRF 保护 </security/csrf>` 机制时非常有用。
-
-
-.. seealso::
-
-    就是这么简单，但不太灵活（暂时）。通常情况下，你希望单独渲染出表单中的每一个字段，以便控制表单的样式。你将在 :doc:`/form/rendering` 文档中掌握这种方法。
+* 如果你的应用使用CSS框架（如Bootstrap或Foundation），请使用任意的
+  :ref:`内置表单主题 <symfony-builtin-forms>`，以使所有表单与应用其余部分的样式相匹配;
+* 如果你只想自定义应用的几个字段或几种表单，请阅读
+  :doc:`如何自定义表单渲染 </form/form_customization>` 一文;
+* 如果要以相同的方式自定义所有表单，请创建
+  :doc:`Symfony表单主题 </form/form_themes>`（基于任何内置主题或从头开始）。
 
 在继续下去之前，请注意，为什么渲染出来的 ``task`` 输入框中有一个来自 ``$task`` 对象的 ``task`` 属性值（即“Write a blog post”）。
 这是表单的第一个任务：从一个对象中获取数据并把它转换成一种适当的格式，以便在HTML表单中被渲染。
@@ -203,7 +196,7 @@ Symfony开箱附带许多内置类型，它们将在稍后讨论（参见 :ref:`
         $form = $this->createFormBuilder($task)
             ->add('task', TextType::class)
             ->add('dueDate', DateType::class)
-            ->add('save', SubmitType::class, array('label' => 'Create Task'))
+            ->add('save', SubmitType::class, ['label' => 'Create Task'])
             ->getForm();
 
         $form->handleRequest($request);
@@ -222,9 +215,9 @@ Symfony开箱附带许多内置类型，它们将在稍后讨论（参见 :ref:`
             return $this->redirectToRoute('task_success');
         }
 
-        return $this->render('default/new.html.twig', array(
+        return $this->render('task/new.html.twig', [
             'form' => $form->createView(),
-        ));
+        ]);
     }
 
 .. caution::
@@ -305,7 +298,7 @@ Symfony开箱附带许多内置类型，它们将在稍后讨论（参见 :ref:`
 
     .. code-block:: yaml
 
-        # config/validation.yaml
+        # config/validator/validation.yaml
         App\Entity\Task:
             properties:
                 task:
@@ -321,14 +314,14 @@ Symfony开箱附带许多内置类型，它们将在稍后讨论（参见 :ref:`
         <constraint-mapping xmlns="http://symfony.com/schema/dic/constraint-mapping"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping
-                http://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
+                https://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
 
             <class name="App\Entity\Task">
                 <property name="task">
-                    <constraint name="NotBlank" />
+                    <constraint name="NotBlank"/>
                 </property>
                 <property name="dueDate">
-                    <constraint name="NotBlank" />
+                    <constraint name="NotBlank"/>
                     <constraint name="Type">\DateTime</constraint>
                 </property>
             </class>
@@ -337,9 +330,9 @@ Symfony开箱附带许多内置类型，它们将在稍后讨论（参见 :ref:`
     .. code-block:: php
 
         // src/Entity/Task.php
-        use Symfony\Component\Validator\Mapping\ClassMetadata;
         use Symfony\Component\Validator\Constraints\NotBlank;
         use Symfony\Component\Validator\Constraints\Type;
+        use Symfony\Component\Validator\Mapping\ClassMetadata;
 
         class Task
         {
@@ -373,9 +366,9 @@ Symfony开箱附带许多内置类型，它们将在稍后讨论（参见 :ref:`
     客户端验证，也可通过把 ``novalidate`` 属性添加到 ``form`` 标签，或是把 ``formnovalidate`` 添加到提交标签来关闭之。
     这在你想要测试服务器端的验证规则却被浏览器端阻止，例如，在提交空白字段时，就非常有用。
 
-    .. code-block:: html+twig
+    .. code-block:: twig
 
-        {# templates/default/new.html.twig #}
+        {# templates/task/new.html.twig #}
         {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
         {{ form_widget(form) }}
         {{ form_end(form) }}
@@ -405,7 +398,7 @@ Symfony标配了大量的字段类型，涵盖了你所能遇到的全部常规�
 而 :doc:`DateType </reference/forms/types/date>` 字段可以被配置渲染成一个单一的文本框
 （用户可以输入字符串作为日期）::
 
-    ->add('dueDate', DateType::class, array('widget' => 'single_text'))
+    ->add('dueDate', DateType::class, ['widget' => 'single_text'])
 
 .. image:: /_images/form/simple-form-2.png
     :align: center
@@ -420,10 +413,10 @@ Symfony标配了大量的字段类型，涵盖了你所能遇到的全部常规�
     如果你不想需要这种行为，要么 :ref:`关闭 HTML5 验证 <forms-html5-validation-disable>`，
     要么把字段的 ``required`` 选项设置为 ``false``::
 
-        ->add('dueDate', DateType::class, array(
+        ->add('dueDate', DateType::class, [
             'widget' => 'single_text',
             'required' => false
-        ))
+        ])
 
     要注意设置 ``required`` 为 ``true`` 并 *不* 意味着服务器端验证会被使用。
     换句话说，如果用户提交一个空值（blank）到该字段（比如在老旧浏览器中，或是使用web service时），
@@ -435,13 +428,24 @@ Symfony标配了大量的字段类型，涵盖了你所能遇到的全部常规�
 
     表单字段可以使用 ``label`` 选项来设置表单字段的标签，它适用于任何字段::
 
-        ->add('dueDate', DateType::class, array(
+        ->add('dueDate', DateType::class, [
             'widget' => 'single_text',
             'label'  => 'Due Date',
-        ))
+        ])
 
     字段的标签也可以在模版渲染表单时进行设置，详情见下文。
     如果你不需要把标签关联到你的输入框，你可以设置该选项值为 ``false``。
+
+    .. tip::
+
+        默认情况下，必需字段的 ``<label>`` 标签使用 ``required``
+        CSS类渲染，因此你可以应用这些CSS样式来为必填字段显示一个星号：
+
+        .. code-block:: css
+
+            label.required:before {
+                content: "*";
+            }
 
 .. index::
    single: Forms; Field type guessing
@@ -462,7 +466,7 @@ Symfony标配了大量的字段类型，涵盖了你所能遇到的全部常规�
 
         $form = $this->createFormBuilder($task)
             ->add('task')
-            ->add('dueDate', null, array('widget' => 'single_text'))
+            ->add('dueDate', null, ['widget' => 'single_text'])
             ->add('save', SubmitType::class)
             ->getForm();
     }
@@ -499,12 +503,12 @@ Symfony标配了大量的字段类型，涵盖了你所能遇到的全部常规�
 
 .. caution::
 
-  这些字段选项 *仅* 在你使用Symfony进行类型猜测时
-  （即，传入 ``null`` 作为 ``add()`` 方法的第二个参数或忽略该参数）才会进行猜测。
+    这些字段选项 *仅* 在你使用Symfony进行类型猜测时
+    （即，传入 ``null`` 作为 ``add()`` 方法的第二个参数或忽略该参数）才会进行猜测。
 
 如果你希望改变某个被猜出来的值，可以在字段类型的选项数组中传入此项进行重写::
 
-    ->add('task', null, array('attr' => array('maxlength' => 4)))
+    ->add('task', null, ['attr' => ['maxlength' => 4]])
 
 .. index::
    single: Forms; Creating form classes
@@ -523,8 +527,8 @@ Symfony标配了大量的字段类型，涵盖了你所能遇到的全部常规�
     namespace App\Form;
 
     use Symfony\Component\Form\AbstractType;
-    use Symfony\Component\Form\FormBuilderInterface;
     use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+    use Symfony\Component\Form\FormBuilderInterface;
 
     class TaskType extends AbstractType
     {
@@ -532,7 +536,7 @@ Symfony标配了大量的字段类型，涵盖了你所能遇到的全部常规�
         {
             $builder
                 ->add('task')
-                ->add('dueDate', null, array('widget' => 'single_text'))
+                ->add('dueDate', null, ['widget' => 'single_text'])
                 ->add('save', SubmitType::class)
             ;
         }
@@ -540,7 +544,7 @@ Symfony标配了大量的字段类型，涵盖了你所能遇到的全部常规�
 
 这个新类包含了创建任务表单所需要的方方面面。它可用于在控制器中创建表单::
 
-    // src/Controller/DefaultController.php
+    // src/Controller/TaskController.php
     use App\Form\TaskType;
 
     public function new()
@@ -570,9 +574,9 @@ Symfony标配了大量的字段类型，涵盖了你所能遇到的全部常规�
         // ...
         public function configureOptions(OptionsResolver $resolver)
         {
-            $resolver->setDefaults(array(
+            $resolver->setDefaults([
                 'data_class' => Task::class,
-            ));
+            ]);
         }
 
 .. tip::
@@ -589,7 +593,7 @@ Symfony标配了大量的字段类型，涵盖了你所能遇到的全部常规�
             $builder
                 ->add('task')
                 ->add('dueDate')
-                ->add('agreeTerms', CheckboxType::class, array('mapped' => false))
+                ->add('agreeTerms', CheckboxType::class, ['mapped' => false])
                 ->add('save', SubmitType::class)
             ;
         }
@@ -607,8 +611,24 @@ Symfony标配了大量的字段类型，涵盖了你所能遇到的全部常规�
 
 .. note::
 
-    表单名称是从类型类名称自动生成的。
-    如果要修改它，请使用 :method:`Symfony\\Component\\Form\\FormFactoryInterface::createNamed` 方法。
+    表单名称是从类型类名称自动生成的。如果要修改它，请使用
+    :method:`Symfony\\Component\\Form\\FormFactoryInterface::createNamed` 方法::
+
+        // src/Controller/DefaultController.php
+        use App\Form\TaskType;
+        use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+
+        class DefaultController extends AbstractController
+        {
+            public function newAction()
+            {
+                $task = ...;
+                $form = $this->get('form.factory')->createNamed('name', TaskType::class, $task);
+
+                // ...
+            }
+        }
+
     你甚至可以通过将名称设置为空字符串来完全取消命名。
 
 总结
@@ -621,6 +641,7 @@ Symfony标配了大量的字段类型，涵盖了你所能遇到的全部常规�
 
 扩展阅读
 ------------------------
+
 .. toctree::
     :maxdepth: 1
     :glob:
@@ -628,7 +649,7 @@ Symfony标配了大量的字段类型，涵盖了你所能遇到的全部常规�
     /form/*
     /controller/upload_file
     /reference/forms/types
-    /http_cache/form_csrf_caching
+    /security/csrf
 
 .. _`Symfony Form component`: https://github.com/symfony/form
 .. _`DateTime`: https://php.net/manual/en/class.datetime.php

@@ -4,16 +4,14 @@ Date
 Validates that a value is a valid date, meaning a string (or an object that can
 be cast into a string) that follows a valid ``YYYY-MM-DD`` format.
 
-+----------------+--------------------------------------------------------------------+
-| Applies to     | :ref:`property or method <validation-property-target>`             |
-+----------------+--------------------------------------------------------------------+
-| Options        | - `message`_                                                       |
-|                | - `payload`_                                                       |
-+----------------+--------------------------------------------------------------------+
-| Class          | :class:`Symfony\\Component\\Validator\\Constraints\\Date`          |
-+----------------+--------------------------------------------------------------------+
-| Validator      | :class:`Symfony\\Component\\Validator\\Constraints\\DateValidator` |
-+----------------+--------------------------------------------------------------------+
+==========  ===================================================================
+Applies to  :ref:`property or method <validation-property-target>`
+Options     - `groups`_
+            - `message`_
+            - `payload`_
+Class       :class:`Symfony\\Component\\Validator\\Constraints\\Date`
+Validator   :class:`Symfony\\Component\\Validator\\Constraints\\DateValidator`
+==========  ===================================================================
 
 Basic Usage
 -----------
@@ -33,7 +31,7 @@ Basic Usage
              * @Assert\Date
              * @var string A "Y-m-d" formatted value
              */
-             protected $birthday;
+            protected $birthday;
         }
 
     .. code-block:: yaml
@@ -50,11 +48,11 @@ Basic Usage
         <?xml version="1.0" encoding="UTF-8" ?>
         <constraint-mapping xmlns="http://symfony.com/schema/dic/constraint-mapping"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping http://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
+            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping https://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
 
             <class name="App\Entity\Author">
                 <property name="birthday">
-                    <constraint name="Date" />
+                    <constraint name="Date"/>
                 </property>
             </class>
         </constraint-mapping>
@@ -64,8 +62,8 @@ Basic Usage
         // src/Entity/Author.php
         namespace App\Entity;
 
-        use Symfony\Component\Validator\Mapping\ClassMetadata;
         use Symfony\Component\Validator\Constraints as Assert;
+        use Symfony\Component\Validator\Mapping\ClassMetadata;
 
         class Author
         {
@@ -85,6 +83,8 @@ Basic Usage
 Options
 -------
 
+.. include:: /reference/constraints/_groups-option.rst.inc
+
 message
 ~~~~~~~
 
@@ -94,10 +94,10 @@ This message is shown if the underlying data is not a valid date.
 
 You can use the following parameters in this message:
 
-+------------------+------------------------------------------------+
-| Parameter        | Description                                    |
-+==================+================================================+
-| ``{{ value }}``  | The current (invalid) value                    |
-+------------------+------------------------------------------------+
+===============  ==============================================================
+Parameter        Description
+===============  ==============================================================
+``{{ value }}``  The current (invalid) value
+===============  ==============================================================
 
 .. include:: /reference/constraints/_payload-option.rst.inc

@@ -3,8 +3,7 @@ The EventDispatcher Component
 
 Our framework is still missing a major characteristic of any good framework:
 *extensibility*. Being extensible means that the developer should be able to
-easily hook into the framework life cycle to modify the way the request is
-handled.
+hook into the framework life cycle to modify the way the request is handled.
 
 What kind of hooks are we talking about? Authentication or caching for
 instance. To be flexible, hooks must be plug-and-play; the ones you "register"
@@ -89,9 +88,9 @@ now dispatched::
     // example.com/src/Simplex/ResponseEvent.php
     namespace Simplex;
 
+    use Symfony\Component\EventDispatcher\Event;
     use Symfony\Component\HttpFoundation\Request;
     use Symfony\Component\HttpFoundation\Response;
-    use Symfony\Component\EventDispatcher\Event;
 
     class ResponseEvent extends Event
     {
@@ -240,8 +239,8 @@ And do the same with the other listener::
 Our front controller should now look like the following::
 
     $dispatcher = new EventDispatcher();
-    $dispatcher->addListener('response', array(new Simplex\ContentLengthListener(), 'onResponse'), -255);
-    $dispatcher->addListener('response', array(new Simplex\GoogleListener(), 'onResponse'));
+    $dispatcher->addListener('response', [new Simplex\ContentLengthListener(), 'onResponse'], -255);
+    $dispatcher->addListener('response', [new Simplex\GoogleListener(), 'onResponse']);
 
 Even if the code is now nicely wrapped in classes, there is still a slight
 issue: the knowledge of the priorities is "hardcoded" in the front controller,
@@ -270,7 +269,7 @@ look at the new version of the ``GoogleListener``::
 
         public static function getSubscribedEvents()
         {
-            return array('response' => 'onResponse');
+            return ['response' => 'onResponse'];
         }
     }
 
@@ -287,7 +286,7 @@ And here is the new version of ``ContentLengthListener``::
 
         public static function getSubscribedEvents()
         {
-            return array('response' => array('onResponse', -255));
+            return ['response' => ['onResponse', -255]];
         }
     }
 
@@ -302,4 +301,4 @@ is not about creating a generic framework, but one that is tailored to your
 needs. Stop whenever you see fit, and further evolve the code from there.
 
 .. _`WSGI`: https://www.python.org/dev/peps/pep-0333/#middleware-components-that-play-both-sides
-.. _`Rack`: http://rack.rubyforge.org/
+.. _`Rack`: https://github.com/rack/rack

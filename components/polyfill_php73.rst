@@ -16,8 +16,6 @@ Installation
 
     $ composer require symfony/polyfill-php73
 
-Alternatively, you can clone the `<https://github.com/symfony/polyfill-php73>`_ repository.
-
 .. include:: /components/require_autoload.rst.inc
 
 Usage
@@ -30,3 +28,6 @@ Provided Functions
 ~~~~~~~~~~~~~~~~~~
 
 * :phpfunction:`is_countable`
+* :phpfunction:`hrtime`
+* :phpfunction:`array_key_first`
+* :phpfunction:`array_key_last`

@@ -5,7 +5,8 @@
 =================================
 
 在添加和自定义路由时，能够可视化并获取有关路由的详细信息会很有帮助。
-查看应用中每条路由的好方法是通过 ``debug:router`` 控制台命令，该命令列出应用中 *所有* 已配置的路由：
+查看应用中每条路由的好方法是通过 ``debug:router``
+控制台命令，该命令默认为列出应用中 *所有* 已配置的路由：
 
 .. code-block:: terminal
 
@@ -35,9 +36,6 @@
       [0] blog
       [1] blog_show
 
-.. versionadded:: 4.1
-    Symfony 4.1中引入了查找部分路由名称的功能。
-
 同样，如果要测试一个URL是否与给定路由匹配，请使用 ``router:match`` 命令。
 这对于调试路由问题并找出与给定URL关联的路由非常有用：
 
@@ -46,3 +44,20 @@
     $ php bin/console router:match /blog/my-latest-post
 
     Route "blog_show" matches
+
+    +--------------+---------------------------------------------------------+
+    | Property     | Value                                                   |
+    +--------------+---------------------------------------------------------+
+    | Route Name   | blog_show                                               |
+    | Path         | /blog/{slug}                                            |
+    | Path Regex   | #^/blog/(?P<slug>[^/]++)$#sDu                           |
+    | Host         | ANY                                                     |
+    | Host Regex   |                                                         |
+    | Scheme       | ANY                                                     |
+    | Method       | ANY                                                     |
+    | Requirements | NO CUSTOM                                               |
+    | Class        | Symfony\Component\Routing\Route                         |
+    | Defaults     | _controller: App\Controller\BlogController:show         |
+    | Options      | compiler_class: Symfony\Component\Routing\RouteCompiler |
+    |              | utf8: true                                              |
+    +--------------+---------------------------------------------------------+

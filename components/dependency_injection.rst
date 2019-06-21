@@ -19,8 +19,6 @@ Installation
 
     $ composer require symfony/dependency-injection
 
-Alternatively, you can clone the `<https://github.com/symfony/dependency-injection>`_ repository.
-
 .. include:: /components/require_autoload.rst.inc
 
 Basic Usage
@@ -159,7 +157,7 @@ If you do want to though then the container can call the setter method::
 
     $containerBuilder
         ->register('newsletter_manager', 'NewsletterManager')
-        ->addMethodCall('setMailer', array(new Reference('mailer')));
+        ->addMethodCall('setMailer', [new Reference('mailer')]);
 
 You could then get your ``newsletter_manager`` service from the container
 like this::
@@ -200,8 +198,8 @@ files. To do this you also need to install
 
 Loading an XML config file::
 
-    use Symfony\Component\DependencyInjection\ContainerBuilder;
     use Symfony\Component\Config\FileLocator;
+    use Symfony\Component\DependencyInjection\ContainerBuilder;
     use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 
     $containerBuilder = new ContainerBuilder();
@@ -210,8 +208,8 @@ Loading an XML config file::
 
 Loading a YAML config file::
 
-    use Symfony\Component\DependencyInjection\ContainerBuilder;
     use Symfony\Component\Config\FileLocator;
+    use Symfony\Component\DependencyInjection\ContainerBuilder;
     use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
     $containerBuilder = new ContainerBuilder();
@@ -235,8 +233,8 @@ Loading a YAML config file::
 If you *do* want to use PHP to create the services then you can move this
 into a separate config file and load it in a similar way::
 
-    use Symfony\Component\DependencyInjection\ContainerBuilder;
     use Symfony\Component\Config\FileLocator;
+    use Symfony\Component\DependencyInjection\ContainerBuilder;
     use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 
     $containerBuilder = new ContainerBuilder();
@@ -268,7 +266,7 @@ config files:
         <?xml version="1.0" encoding="UTF-8" ?>
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+            xsi:schemaLocation="http://symfony.com/schema/dic/services https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <parameters>
                 <!-- ... -->
@@ -282,7 +280,7 @@ config files:
 
                 <service id="newsletter_manager" class="NewsletterManager">
                     <call method="setMailer">
-                        <argument type="service" id="mailer" />
+                        <argument type="service" id="mailer"/>
                     </call>
                 </service>
             </services>
@@ -300,7 +298,7 @@ config files:
 
         $container
             ->register('newsletter_manager', 'NewsletterManager')
-            ->addMethodCall('setMailer', array(new Reference('mailer')));
+            ->addMethodCall('setMailer', [new Reference('mailer')]);
 
 Learn More
 ----------

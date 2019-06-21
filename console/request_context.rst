@@ -58,13 +58,10 @@
         $container->setParameter('asset.request_context.base_path', $container->getParameter('router.request_context.base_url'));
         $container->setParameter('asset.request_context.secure', true);
 
-.. versionadded:: 3.4
-    ``asset.request_context.*`` 参数在Symfony的3.4中引入。
-
 按命令配置请求上下文
 -------------------------------------------
 
-要仅在一个命令中更改它，你可以从路由服务中获取请求上下文并覆盖其设置::
+要仅在一个命令中更改它，你需要从 ``router`` 服务中获取请求上下文并覆盖其设置::
 
     // src/Command/DemoCommand.php
     use Symfony\Component\Routing\RouterInterface;
@@ -88,7 +85,7 @@
             $context->setScheme('https');
             $context->setBaseUrl('my/path');
 
-            $url = $this->router->generate('route-name', array('param-name' => 'param-value'));
+            $url = $this->router->generate('route-name', ['param-name' => 'param-value']);
             // ...
         }
     }

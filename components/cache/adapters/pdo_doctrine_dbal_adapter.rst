@@ -25,11 +25,8 @@ PDO & Doctrine DBAL缓存适配器
         $defaultLifetime = 0,
 
         // 用于配置数据库表和连接的选项数组
-        $options = array()
+        $options = []
     );
-
-.. versionadded:: 4.2
-    在Symfony 4.2中引入了自动创建表的功能。
 
 存储值的表在第一次调用
 :method:`Symfony\\Component\\Cache\\Adapter\\PdoAdapter::save`

@@ -4,8 +4,6 @@
 配置信息通常被细分到程序的不同部分（比如基本信息和安全凭证）和不同的环境（开发环境、生产环境）。
 这就是为何Symfony推荐你将程序配置分为三部分的原因。
 
-.. _config-parameters.yml:
-
 基础架构相关配置
 ------------------------------------
 
@@ -13,7 +11,7 @@
 
 .. best-practice::
 
-    将基础结构相关的配置选项定义为 :doc:`环境变量 </configuration/external_parameters>`。
+    将基础结构相关的配置选项定义为 :doc:`环境变量 </configuration/environment_variables>`。
     在开发过程中，使用项目根目录下的 ``.env`` 和 ``.env.local`` 文件来设置它们。
 
 默认情况下，在应用中安装新的依赖项时，Symfony会将这些类型的选项添加到 ``.env`` 文件中：
@@ -34,15 +32,13 @@
 这些选项未在 ``config/services.yaml`` 文件中定义，因为它们与应用的行为无关。
 换句话说，只要数据库配置正确，你的应用就不关心数据库的位置或访问它的凭据。
 
-要使用机器特定值(machine-specific)或敏感值来重写这些变量，请创建一个 ``env.local`` 文件。
+要使用机器特定值(machine-specific)或敏感值来重写这些变量，请创建一个 ``.env.local`` 文件。
 此文件不应该添加到版本控制中。
 
 .. caution::
 
     请注意，打印(dumping) ``$ _SERVER`` 和 ``$ _ENV`` 变量的内容或输出 ``phpinfo()`` 内容将显示环境变量的值，
     从而暴露敏感信息，如数据库凭据。
-
-.. _best-practices-canonical-parameters:
 
 规范参数
 ~~~~~~~~~~~~~~~~~~~~
@@ -113,7 +109,7 @@ Symfony在项目根目录中包含一个名为 ``.env`` 的配置文件，它存
         Displaying the {{ constant('NUMBER_OF_ITEMS', post) }} most recent results.
     </p>
 
-而且，Doctrine 实体和仓库现在可以轻松访问这些值，而它们无法访问容器参数::
+并且，Doctrine实体和仓库也可以访问这些值，而它们无法访问容器参数::
 
     namespace App\Repository;
 
@@ -128,7 +124,7 @@ Symfony在项目根目录中包含一个名为 ``.env`` 的配置文件，它存
         }
     }
 
-使用常量作为配置值的唯一显着缺点是，你无法在测试中轻松地重新定义它们。
+使用常量作为配置值的唯一显着缺点是在测试中重新定义它们的值会很复杂。
 
 参数命名
 ----------------

@@ -7,16 +7,14 @@ string "``0``".
 
 Also see :doc:`IsTrue <IsTrue>`.
 
-+----------------+-----------------------------------------------------------------------+
-| Applies to     | :ref:`property or method <validation-property-target>`                |
-+----------------+-----------------------------------------------------------------------+
-| Options        | - `message`_                                                          |
-|                | - `payload`_                                                          |
-+----------------+-----------------------------------------------------------------------+
-| Class          | :class:`Symfony\\Component\\Validator\\Constraints\\IsFalse`          |
-+----------------+-----------------------------------------------------------------------+
-| Validator      | :class:`Symfony\\Component\\Validator\\Constraints\\IsFalseValidator` |
-+----------------+-----------------------------------------------------------------------+
+==========  ===================================================================
+Applies to  :ref:`property or method <validation-property-target>`
+Options     - `groups`_
+            - `message`_
+            - `payload`_
+Class       :class:`Symfony\\Component\\Validator\\Constraints\\IsFalse`
+Validator   :class:`Symfony\\Component\\Validator\\Constraints\\IsFalseValidator`
+==========  ===================================================================
 
 Basic Usage
 -----------
@@ -28,7 +26,7 @@ you want to guarantee that some ``state`` property is *not* in a dynamic
 
     protected $state;
 
-    protected $invalidStates = array();
+    protected $invalidStates = [];
 
     public function isStateInvalid()
     {
@@ -54,10 +52,10 @@ method returns **false**:
              *     message = "You've entered an invalid state."
              * )
              */
-             public function isStateInvalid()
-             {
+            public function isStateInvalid()
+            {
                 // ...
-             }
+            }
         }
 
     .. code-block:: yaml
@@ -75,7 +73,7 @@ method returns **false**:
         <?xml version="1.0" encoding="UTF-8" ?>
         <constraint-mapping xmlns="http://symfony.com/schema/dic/constraint-mapping"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping http://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
+            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping https://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
 
             <class name="App\Entity\Author">
                 <getter property="stateInvalid">
@@ -91,19 +89,28 @@ method returns **false**:
         // src/Entity/Author.php
         namespace App\Entity;
 
-        use Symfony\Component\Validator\Mapping\ClassMetadata;
         use Symfony\Component\Validator\Constraints as Assert;
+        use Symfony\Component\Validator\Mapping\ClassMetadata;
 
         class Author
         {
             public static function loadValidatorMetadata(ClassMetadata $metadata)
             {
-                $metadata->addGetterConstraint('stateInvalid', new Assert\IsFalse());
+                $metadata->addGetterConstraint('stateInvalid', new Assert\IsFalse([
+                    'message' => 'You've entered an invalid state.',
+                ]));
             }
+        }
+
+        public function isStateInvalid()
+        {
+            // ...
         }
 
 Options
 -------
+
+.. include:: /reference/constraints/_groups-option.rst.inc
 
 message
 ~~~~~~~
@@ -114,10 +121,10 @@ This message is shown if the underlying data is not false.
 
 You can use the following parameters in this message:
 
-+-----------------+-----------------------------+
-| Parameter       | Description                 |
-+=================+=============================+
-| ``{{ value }}`` | The current (invalid) value |
-+-----------------+-----------------------------+
+===============  ==============================================================
+Parameter        Description
+===============  ==============================================================
+``{{ value }}``  The current (invalid) value
+===============  ==============================================================
 
 .. include:: /reference/constraints/_payload-option.rst.inc

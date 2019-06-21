@@ -18,7 +18,7 @@
 
   * :doc:`表单字段类型参考 </reference/forms/types>`
   * :doc:`验证约束参考 </reference/constraints>`
-  * :doc:`Twig模板函数和变量参考 </reference/forms/twig_reference>`
+  * :ref:`Twig模板函数和变量参考 <reference-form-twig-functions-variables>`
 
 * :doc:`Twig扩展(表单、过滤器、标签等等)参考 </reference/twig_reference>`
 

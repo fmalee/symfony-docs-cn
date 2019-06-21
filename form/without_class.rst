@@ -16,7 +16,7 @@
 
     public function contact(Request $request)
     {
-        $defaultData = array('message' => 'Type your message here');
+        $defaultData = ['message' => 'Type your message here'];
         $form = $this->createFormBuilder($defaultData)
             ->add('name', TextType::class)
             ->add('email', EmailType::class)
@@ -67,33 +67,31 @@
 答案是自己设置约束，并将它们附加到各个字段。
 在 :doc:`这篇验证文档 </validation/raw_values>` 中对整体方法进行了更多介绍，但这里有一个简短的例子::
 
-    use Symfony\Component\Validator\Constraints\Length;
-    use Symfony\Component\Validator\Constraints\NotBlank;
     use Symfony\Component\Form\Extension\Core\Type\TextType;
     use Symfony\Component\Form\FormBuilderInterface;
+    use Symfony\Component\Validator\Constraints\Length;
+    use Symfony\Component\Validator\Constraints\NotBlank;
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-           ->add('firstName', TextType::class, array(
-               'constraints' => new Length(array('min' => 3)),
-           ))
-           ->add('lastName', TextType::class, array(
-               'constraints' => array(
-                   new NotBlank(),
-                   new Length(array('min' => 3)),
-               ),
-           ))
+            ->add('firstName', TextType::class, [
+                'constraints' => new Length(['min' => 3]),
+            ])
+            ->add('lastName', TextType::class, [
+                'constraints' => [
+                    new NotBlank(),
+                    new Length(['min' => 3]),
+                ],
+            ])
         ;
     }
 
 .. tip::
 
-    如果你正使用验证组，则需要在创建表单时引用 ``Default`` 组，或者在要添加的约束上设置正确的验证组。
+    如果你正使用验证组，则需要在创建表单时引用 ``Default`` 组，或者在要添加的约束上设置正确的验证组::
 
-    .. code-block:: php
-
-        new NotBlank(array('groups' => array('create', 'update')));
+        new NotBlank(['groups' => ['create', 'update']]);
 
 .. tip::
 

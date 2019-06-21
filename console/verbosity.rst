@@ -38,6 +38,10 @@
 可以在命令中仅为特定的冗余度级别打印消息。例如::
 
     // ...
+    use Symfony\Component\Console\Command\Command;
+    use Symfony\Component\Console\Input\InputInterface;
+    use Symfony\Component\Console\Output\OutputInterface;
+
     class CreateUserCommand extends Command
     {
         // ...
@@ -46,10 +50,10 @@
         {
             $user = new User(...);
 
-            $output->writeln(array(
+            $output->writeln([
                 'Username: '.$input->getArgument('username'),
                 'Password: '.$input->getArgument('password'),
-            ));
+            ]);
 
             // 可用方法: ->isQuiet(), ->isVerbose(), ->isVeryVerbose(), ->isDebug()
             if ($output->isVerbose()) {

@@ -12,6 +12,27 @@
 
 .. configuration-block::
 
+    .. code-block:: php-annotations
+
+        // src/Controller/MainController.php
+        namespace App\Controller;
+
+        use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+        use Symfony\Component\Routing\Annotation\Route;
+
+        class MainController extends AbstractController
+        {
+            /**
+             * @Route("/{_locale}/contact", name="contact", requirements={
+             *     "_locale"="%app.locales%"
+             * })
+             */
+            public function contact()
+            {
+                // ...
+            }
+        }
+
     .. code-block:: yaml
 
         # config/routes.yaml
@@ -28,10 +49,9 @@
         <routes xmlns="http://symfony.com/schema/routing"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/routing
-                http://symfony.com/schema/routing/routing-1.0.xsd">
+                https://symfony.com/schema/routing/routing-1.0.xsd">
 
-            <route id="contact" path="/{_locale}/contact">
-                <default key="_controller">App\Controller\MainController::contact</default>
+            <route id="contact" path="/{_locale}/contact" controller="App\Controller\MainController::contact">
                 <requirement key="_locale">%app.locales%</requirement>
             </route>
         </routes>
@@ -39,17 +59,17 @@
     .. code-block:: php
 
         // config/routes.php
-        use Symfony\Component\Routing\RouteCollection;
-        use Symfony\Component\Routing\Route;
+        use App\Controller\MainController;
+        use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
-        $routes = new RouteCollection();
-        $routes->add('contact', new Route('/{_locale}/contact', array(
-            '_controller' => 'App\Controller\MainController::contact',
-        ), array(
-            '_locale' => '%app.locales%',
-        )));
-
-        return $routes;
+        return function (RoutingConfigurator $routes) {
+            $routes->add('contact', '/{_locale}/contact')
+                ->controller([MainController::class, 'contact'])
+                ->requirements([
+                    '_locale' => '%app.locales%',
+                ])
+            ;
+        };
 
 你现在可以在容器中的某个位置控制和设置 ``app.locales`` 参数：
 
@@ -68,7 +88,7 @@
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <parameters>
                 <parameter key="app.locales">en|es</parameter>
@@ -84,6 +104,25 @@
 
 .. configuration-block::
 
+    .. code-block:: php-annotations
+
+        // src/Controller/MainController.php
+        namespace App\Controller;
+
+        use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+        use Symfony\Component\Routing\Annotation\Route;
+
+        class MainController extends AbstractController
+        {
+            /**
+             * @Route("/%app.route_prefix%/contact", name="contact")
+             */
+            public function contact()
+            {
+                // ...
+            }
+        }
+
     .. code-block:: yaml
 
         # config/routes.yaml
@@ -98,25 +137,53 @@
         <routes xmlns="http://symfony.com/schema/routing"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/routing
-                http://symfony.com/schema/routing/routing-1.0.xsd">
+                https://symfony.com/schema/routing/routing-1.0.xsd">
 
-            <route id="some_route" path="/%app.route_prefix%/contact">
-                <default key="_controller">App\Controller\MainController::contact</default>
-            </route>
+            <route id="some_route"
+                path="/%app.route_prefix%/contact"
+                controller="App\Controller\MainController::contact"/>
         </routes>
 
     .. code-block:: php
 
         // config/routes.php
-        use Symfony\Component\Routing\RouteCollection;
-        use Symfony\Component\Routing\Route;
+        use App\Controller\MainController;
+        use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
-        $routes = new RouteCollection();
-        $routes->add('some_route', new Route('/%app.route_prefix%/contact', array(
-            '_controller' => 'App\Controller\MainController::contact',
-        )));
+        return function (RoutingConfigurator $routes) {
+            $routes->add('contact', '/%app.route_prefix%/contact')
+                ->controller([MainController::class, 'contact'])
+            ;
+        };
 
-        return $routes;
+现在确保将 ``app.route_prefix`` 参数设置在容器中的某个位置：
+
+.. configuration-block::
+
+    .. code-block:: yaml
+
+        # config/services.yaml
+        parameters:
+            app.route_prefix: 'foo'
+
+    .. code-block:: xml
+
+        <!-- config/services.xml -->
+        <?xml version="1.0" charset="UTF-8" ?>
+        <container xmlns="http://symfony.com/schema/dic/services"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://symfony.com/schema/dic/services
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
+
+            <parameters>
+                <parameter key="app.route_prefix">foo</parameter>
+            </parameters>
+        </container>
+
+    .. code-block:: php
+
+        // config/services.php
+        $container->setParameter('app.route_prefix', 'foo');
 
 .. note::
 

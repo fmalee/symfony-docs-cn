@@ -4,19 +4,19 @@
 如何将请求转发给另一个控制器
 =============================================
 
-虽然不常见，但你可以使用
-:method:`Symfony\\Bundle\\FrameworkBundle\\Controller\\AbstractController::forward`
-方法在内部转发到另一个控制器。
+虽然不常见，但你也可以使用
+:class:`Symfony\\Bundle\\FrameworkBundle\\Controller\\AbstractController`
+类提供的 ``forward()`` 方法在内部转发到另一个控制器。
 这不是重定向用户的浏览器，而是创建一个“内部”子请求并调用定义的控制器。
 ``forward()`` 方法返回 *那个* 控制器返回的
 :class:`Symfony\\Component\\HttpFoundation\\Response` 对象::
 
     public function index($name)
     {
-        $response = $this->forward('App\Controller\OtherController::fancy', array(
+        $response = $this->forward('App\Controller\OtherController::fancy', [
             'name'  => $name,
             'color' => 'green',
-        ));
+        ]);
 
         // ... 进一步修改响应或直接返回
 

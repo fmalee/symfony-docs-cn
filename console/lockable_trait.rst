@@ -8,7 +8,10 @@
 此外，Console组件提供了一个名为 ``LockableTrait`` 的PHP trait，它添加了两个方便的方法来锁定和释放命令::
 
     // ...
+    use Symfony\Component\Console\Command\Command;
     use Symfony\Component\Console\Command\LockableTrait;
+    use Symfony\Component\Console\Input\InputInterface;
+    use Symfony\Component\Console\Output\OutputInterface;
 
     class UpdateContentsCommand extends Command
     {

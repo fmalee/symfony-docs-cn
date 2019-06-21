@@ -14,9 +14,6 @@
     # 也可以添加此选项来显示“隐藏服务” (那些ID以点号开头的服务)
     $ php bin/console debug:container --show-hidden
 
-.. versionadded:: 4.1
-    Symfony 4.1中引入了隐藏服务和 ``--show-hidden`` 选项。
-
 要查看可用于自动装配的所有可用类型的列表，请运行：
 
 .. code-block:: terminal

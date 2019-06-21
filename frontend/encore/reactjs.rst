@@ -5,7 +5,7 @@
 
 .. code-block:: terminal
 
-    $ yarn add --dev @babel/preset-react
+    $ yarn add @babel/preset-react --dev
     $ yarn add react react-dom prop-types
 
 在你的 ``webpack.config.js`` 中启用react：

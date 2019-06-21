@@ -30,12 +30,12 @@
     .. code-block:: xml
 
         <!-- config/packages/security.xml -->
-        <?xml version="1.0" encoding="utf-8" ?>
+        <?xml version="1.0" encoding="UTF-8" ?>
         <srv:container xmlns="http://symfony.com/schema/dic/security"
             xmlns:srv="http://symfony.com/schema/dic/services"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <config>
                 <!-- ... -->
@@ -47,7 +47,7 @@
                     <remember-me
                         secret="%kernel.secret%"
                         lifetime="604800"
-                        path="/" />
+                        path="/"/>
                     <!-- by default, the feature is enabled by checking a checkbox
                          in the login form (see below), add always-remember-me="true"
                          to always enable it. -->
@@ -58,13 +58,13 @@
     .. code-block:: php
 
         // config/packages/security.php
-        $container->loadFromExtension('security', array(
+        $container->loadFromExtension('security', [
             // ...
 
-            'firewalls' => array(
-                'main' => array(
+            'firewalls' => [
+                'main' => [
                     // ...
-                    'remember_me' => array(
+                    'remember_me' => [
                         'secret'   => '%kernel.secret%',
                         'lifetime' => 604800, // 1 week in seconds
                         'path'     => '/',
@@ -72,10 +72,10 @@
                         // checkbox in the login form (see below), uncomment
                         // the following line to always enable it.
                         //'always_remember_me' => true,
-                    ),
-                ),
-            ),
-        ));
+                    ],
+                ],
+            ],
+        ]);
 
 ``remember_me`` 防火墙定义了以下配置选项：
 
@@ -115,12 +115,8 @@
     如果值为 ``true``，``remember_me_parameter`` 的值会被忽略，并且始终启用“记住我”功能，无论最终用户的意愿如何。
 
 ``token_provider`` (默认值: ``null``)
-    定义要使用的令牌提供器的服务标识。
-    默认情况下，令牌存储在cookie中。
-    例如，你可能希望将令牌存储在数据库中，以使cookie中没有（已哈希）密码版本。
-    DoctrineBridge附带一个
-    ``Symfony\Bridge\Doctrine\Security\RememberMe\DoctrineTokenProvider``
-    供你使用。
+    定义要使用的令牌提供器的服务标识。如果要在数据库中存储令牌，请参阅
+    :ref:`remember-me-token-in-database`。
 
 强制用户选择记住我的功能
 ------------------------------------------------------
@@ -138,7 +134,7 @@
     <form method="post">
         {# ... your form fields #}
 
-        <input type="checkbox" id="remember_me" name="_remember_me" checked />
+        <input type="checkbox" id="remember_me" name="_remember_me" checked/>
         <label for="remember_me">Keep me logged in</label>
 
         {# ... #}
@@ -174,3 +170,113 @@
 
         // ...
     }
+
+.. _remember-me-token-in-database:
+
+在数据库中存储“记住我”令牌
+------------------------------------------
+
+令牌内容（包含用户密码的散列版本）默认存储在cookie中。
+如果你希望将它们存储在数据库中，请使用Doctrine Bridge提供的
+:class:`Symfony\\Bridge\\Doctrine\\Security\\RememberMe\\DoctrineTokenProvider` 类。
+
+首先，你需要将 ``DoctrineTokenProvider`` 注册为服务：
+
+.. configuration-block::
+
+    .. code-block:: yaml
+
+        # config/services.yaml
+        services:
+            # ...
+
+            Symfony\Bridge\Doctrine\Security\RememberMe\DoctrineTokenProvider: ~
+
+    .. code-block:: xml
+
+        <!-- config/services.xml -->
+        <?xml version="1.0" encoding="UTF-8" ?>
+        <container xmlns="http://symfony.com/schema/dic/services"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://symfony.com/schema/dic/services https://symfony.com/schema/dic/services/services-1.0.xsd">
+
+            <services>
+                <service id="Symfony\Bridge\Doctrine\Security\RememberMe\DoctrineTokenProvider"/>
+            </services>
+        </container>
+
+    .. code-block:: php
+
+        // config/services.php
+        use Symfony\Bridge\Doctrine\Security\RememberMe\DoctrineTokenProvider;
+
+        $container->register(DoctrineTokenProvider::class);
+
+然后，你需要在数据库中创建具有以下结构的表，以便 ``DoctrineTokenProvider`` 可以存储令牌：
+
+.. code-block:: sql
+
+    CREATE TABLE `rememberme_token` (
+        `series`   char(88)     UNIQUE PRIMARY KEY NOT NULL,
+        `value`    char(88)     NOT NULL,
+        `lastUsed` datetime     NOT NULL,
+        `class`    varchar(100) NOT NULL,
+        `username` varchar(200) NOT NULL
+    );
+
+最后，将 ``remember_me`` 配置的 ``token_provider`` 选项设置为刚刚创建的服务：
+
+.. configuration-block::
+
+    .. code-block:: yaml
+
+        # config/packages/security.yaml
+        security:
+            # ...
+
+            firewalls:
+                main:
+                    # ...
+                    remember_me:
+                        # ...
+                        token_provider: 'Symfony\Bridge\Doctrine\Security\RememberMe\DoctrineTokenProvider'
+
+    .. code-block:: xml
+
+        <!-- config/packages/security.xml -->
+        <?xml version="1.0" encoding="UTF-8" ?>
+        <srv:container xmlns="http://symfony.com/schema/dic/security"
+            xmlns:srv="http://symfony.com/schema/dic/services"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://symfony.com/schema/dic/services
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
+
+            <config>
+                <!-- ... -->
+
+                <firewall name="main">
+                    <!-- ... -->
+
+                    <remember-me
+                        token_provider="Symfony\Bridge\Doctrine\Security\RememberMe\DoctrineTokenProvider"
+                        />
+                </firewall>
+            </config>
+        </srv:container>
+
+    .. code-block:: php
+
+        // config/packages/security.php
+        $container->loadFromExtension('security', [
+            // ...
+
+            'firewalls' => [
+                'main' => [
+                    // ...
+                    'remember_me' => [
+                        // ...
+                        'token_provider' => 'Symfony\Bridge\Doctrine\Security\RememberMe\DoctrineTokenProvider',
+                    ],
+                ],
+            ],
+        ]);

@@ -27,7 +27,7 @@
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <parameters>
                 <parameter key="mailer.transport">sendmail</parameter>
@@ -64,7 +64,7 @@
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <parameters>
                 <parameter key="mailer.transport">sendmail</parameter>
@@ -198,7 +198,7 @@
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <parameters>
                 <parameter key="my_mailer.gateways" type="collection">
@@ -224,16 +224,16 @@
     .. code-block:: php
 
         // config/services.php
-        $container->setParameter('my_mailer.gateways', array('mail1', 'mail2', 'mail3'));
-        $container->setParameter('my_multilang.language_fallback', array(
-            'en' => array('en', 'fr'),
-            'fr' => array('fr', 'en'),
-        ));
+        $container->setParameter('my_mailer.gateways', ['mail1', 'mail2', 'mail3']);
+        $container->setParameter('my_multilang.language_fallback', [
+            'en' => ['en', 'fr'],
+            'fr' => ['fr', 'en'],
+        ]);
 
 环境变量和动态值
 ----------------------------------------
 
-请参阅 :doc:`/configuration/external_parameters`。
+请参阅 :doc:`/configuration/environment_variables`。
 
 .. _component-di-parameters-constants:
 
@@ -258,7 +258,7 @@
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <parameters>
                 <parameter key="global.constant.value" type="constant">GLOBAL_CONSTANT</parameter>
@@ -274,9 +274,6 @@
 
 二进制值作为参数
 ---------------------------
-
-.. versionadded:: 4.1
-    在Symfony 4.1中引入了在容器参数中使用二进制值的支持
 
 如果容器参数的值是二进制值，则需要在YAML和XML配置中将其设置为base64编码值，
 在PHP配置中则使用转义序列(escape sequences)：
@@ -296,7 +293,7 @@
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <parameters>
                 <parameter key="some_parameter" type="binary">VGhpcyBpcyBhIEJlbGwgY2hhciAH</parameter>

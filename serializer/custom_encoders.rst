@@ -24,7 +24,7 @@
 
     class YamlEncoder implements EncoderInterface, DecoderInterface
     {
-        public function encode($data, $format, array $context = array())
+        public function encode($data, $format, array $context = [])
         {
             return Yaml::dump($data);
         }
@@ -34,7 +34,7 @@
             return 'yaml' === $format;
         }
 
-        public function decode($data, $format, array $context = array())
+        public function decode($data, $format, array $context = [])
         {
             return Yaml::parse($data);
         }
@@ -44,6 +44,13 @@
             return 'yaml' === $format;
         }
     }
+
+.. tip::
+
+    如果你需要在你的 ``supportsDecoding`` 或 ``supportsEncoding`` 方法中访问
+    ``$context``，请确保其相应的实现了
+    ``Symfony\Component\Serializer\Encoder\ContextAwareDecoderInterface``
+    或 ``Symfony\Component\Serializer\Encoder\ContextAwareEncoderInterface``。
 
 在应用中注册
 --------------------------

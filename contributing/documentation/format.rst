@@ -154,29 +154,41 @@ PHP是应用于所有代码块的默认语法高亮器。你可以使用 ``code-
 
     :phpfunction:`iterator_to_array`
 
-新功能或行为更改
+新功能，行为更改或弃用
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-如果你要书写一个全新的功能或在Symfony中进行的更改，你应该在更改的描述之前加上 ``.. versionadded:: 2.X`` 指令和简短描述：
+如果你要记录在Symfony中进行的全新功能、更改或弃用，则应在更改说明之前使用相应的指令和简短说明：
+
+对于一个新功能或一个行为更改，请使用 ``.. versionadded:: 4.x`` 指令：
 
 .. code-block:: rst
 
-    .. versionadded:: 2.7
-        The ``askHiddenResponse()`` method was introduced in Symfony 2.7.
+    .. versionadded:: 4.2
 
-    You can also ask a question and hide the response. This is particularly [...]
+        Named autowiring aliases have been introduced in Symfony 4.2.
 
-如果你正在书写一个行为更改，则简要描述行为是如何更改的可能会有所帮助：
+如果要记录一个行为更改，则 *简要* 的描述行为的更改可能会有所帮助：
 
 .. code-block:: rst
 
-    .. versionadded:: 2.7
-        The ``include()`` function is a new Twig feature that's available in
-        Symfony 2.7. Prior, the ``{% include %}`` tag was used.
+    .. versionadded:: 4.2
 
-每当发布一个新的Symfony次要版本（例如2.4，2.5等）时，就会从 ``master`` 分支创建一个新的文档分支。
-此时，将会删除已达到维护截止期的Symfony版本的所有 ``versionadded`` 标签。
-例如，如果Symfony 2.5今天发布，并且2.2最近已达到其维护终止期，则2.2 ``versionadded`` 标签将从新的 ``2.5`` 分支中删除。
+       Support for ICU MessageFormat was introduced in Symfony 4.2. Prior to this,
+       pluralization was managed by the ``transChoice`` method.
+
+对于一个弃用，请使用 ``.. deprecated:: 4.X`` 指令：
+
+.. code-block:: rst
+
+    .. deprecated:: 4.2
+
+        Not passing the root node name to ``TreeBuilder`` was deprecated in Symfony 4.2.
+
+每当发布新的Symfony主要版本（例如5.0、6.0等）时，都会从 ``master``
+分支创建一个新的文档分支。此时，将删除具有较低的主要版本的所有
+``versionadded`` 和 ``deprecated`` 标签。
+例如，如果Symfony 5.0今天发布，4.0到4.4的
+``versionadded`` 和 ``deprecated`` 标签将从新的5.0分支中删除。
 
 .. _reStructuredText: http://docutils.sourceforge.net/rst.html
 .. _Sphinx: http://sphinx-doc.org/

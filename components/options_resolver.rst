@@ -16,8 +16,6 @@ Installation
 
     $ composer require symfony/options-resolver
 
-Alternatively, you can clone the `<https://github.com/symfony/options-resolver>`_ repository.
-
 .. include:: /components/require_autoload.rst.inc
 
 Usage
@@ -30,13 +28,13 @@ Imagine you have a ``Mailer`` class which has four options: ``host``,
     {
         protected $options;
 
-        public function __construct(array $options = array())
+        public function __construct(array $options = [])
         {
             $this->options = $options;
         }
     }
 
-When accessing the ``$options``, you need to add a lot of boilerplate code to
+When accessing the ``$options``, you need to add some boilerplate code to
 check which options are set::
 
     class Mailer
@@ -46,53 +44,39 @@ check which options are set::
         {
             $mail = ...;
 
-            $mail->setHost(isset($this->options['host'])
-                ? $this->options['host']
-                : 'smtp.example.org');
-
-            $mail->setUsername(isset($this->options['username'])
-                ? $this->options['username']
-                : 'user');
-
-            $mail->setPassword(isset($this->options['password'])
-                ? $this->options['password']
-                : 'pa$$word');
-
-            $mail->setPort(isset($this->options['port'])
-                ? $this->options['port']
-                : 25);
+            $mail->setHost($this->options['host'] ?? 'smtp.example.org');
+            $mail->setUsername($this->options['username'] ?? 'user');
+            $mail->setPassword($this->options['password'] ?? 'pa$$word');
+            $mail->setPort($this->options['port'] ?? 25);
 
             // ...
         }
     }
 
-This boilerplate is hard to read and repetitive. Also, the default values of the
-options are buried in the business logic of your code. Use the
-:phpfunction:`array_replace` to fix that::
+Also, the default values of the options are buried in the business logic of your
+code. Use the :phpfunction:`array_replace` to fix that::
 
     class Mailer
     {
         // ...
 
-        public function __construct(array $options = array())
+        public function __construct(array $options = [])
         {
-            $this->options = array_replace(array(
+            $this->options = array_replace([
                 'host'     => 'smtp.example.org',
                 'username' => 'user',
                 'password' => 'pa$$word',
                 'port'     => 25,
-            ), $options);
+            ], $options);
         }
     }
 
-Now all four options are guaranteed to be set. But what happens if the user of
-the ``Mailer`` class makes a mistake?
+Now all four options are guaranteed to be set, but you could still make an error
+like the following when using the ``Mailer`` class::
 
-.. code-block:: php
-
-    $mailer = new Mailer(array(
-        'usernme' => 'johndoe',  // usernme misspelled (instead of username)
-    ));
+    $mailer = new Mailer([
+        'usernme' => 'johndoe',  // 'username' is wrongly spelled as 'usernme'
+    ]);
 
 No error will be shown. In the best case, the bug will appear during testing,
 but the developer will spend time looking for the problem. In the worst case,
@@ -107,15 +91,15 @@ class helps you to fix this problem::
     {
         // ...
 
-        public function __construct(array $options = array())
+        public function __construct(array $options = [])
         {
             $resolver = new OptionsResolver();
-            $resolver->setDefaults(array(
+            $resolver->setDefaults([
                 'host'     => 'smtp.example.org',
                 'username' => 'user',
                 'password' => 'pa$$word',
                 'port'     => 25,
-            ));
+            ]);
 
             $this->options = $resolver->resolve($options);
         }
@@ -125,9 +109,9 @@ Like before, all options will be guaranteed to be set. Additionally, an
 :class:`Symfony\\Component\\OptionsResolver\\Exception\\UndefinedOptionsException`
 is thrown if an unknown option is passed::
 
-    $mailer = new Mailer(array(
+    $mailer = new Mailer([
         'usernme' => 'johndoe',
-    ));
+    ]);
 
     // UndefinedOptionsException: The option "usernme" does not exist.
     // Known options are: "host", "password", "port", "username"
@@ -158,7 +142,7 @@ It's a good practice to split the option configuration into a separate method::
     {
         // ...
 
-        public function __construct(array $options = array())
+        public function __construct(array $options = [])
         {
             $resolver = new OptionsResolver();
             $this->configureOptions($resolver);
@@ -168,13 +152,13 @@ It's a good practice to split the option configuration into a separate method::
 
         public function configureOptions(OptionsResolver $resolver)
         {
-            $resolver->setDefaults(array(
+            $resolver->setDefaults([
                 'host'       => 'smtp.example.org',
                 'username'   => 'user',
                 'password'   => 'pa$$word',
                 'port'       => 25,
                 'encryption' => null,
-            ));
+            ]);
         }
     }
 
@@ -189,10 +173,10 @@ than processing options. Second, sub-classes may now override the
         {
             parent::configureOptions($resolver);
 
-            $resolver->setDefaults(array(
+            $resolver->setDefaults([
                 'host' => 'smtp.google.com',
                 'encryption' => 'ssl',
-            ));
+            ]);
         }
     }
 
@@ -235,7 +219,7 @@ one required option::
         public function configureOptions(OptionsResolver $resolver)
         {
             // ...
-            $resolver->setRequired(array('host', 'username', 'password'));
+            $resolver->setRequired(['host', 'username', 'password']);
         }
     }
 
@@ -323,7 +307,7 @@ correctly. To validate the types of the options, call
             $resolver->setAllowedTypes('host', 'string');
 
             // specify multiple allowed types
-            $resolver->setAllowedTypes('port', array('null', 'int'));
+            $resolver->setAllowedTypes('port', ['null', 'int']);
 
             // check all items in an array recursively for a type
             $resolver->setAllowedTypes('dates', 'DateTime[]');
@@ -340,9 +324,9 @@ If you pass an invalid option now, an
 :class:`Symfony\\Component\\OptionsResolver\\Exception\\InvalidOptionsException`
 is thrown::
 
-    $mailer = new Mailer(array(
+    $mailer = new Mailer([
         'host' => 25,
-    ));
+    ]);
 
     // InvalidOptionsException: The option "host" with value "25" is
     // expected to be of type "string"
@@ -368,7 +352,7 @@ to verify that the passed option contains one of these values::
         {
             // ...
             $resolver->setDefault('transport', 'sendmail');
-            $resolver->setAllowedValues('transport', array('sendmail', 'mail', 'smtp'));
+            $resolver->setAllowedValues('transport', ['sendmail', 'mail', 'smtp']);
         }
     }
 
@@ -376,9 +360,9 @@ If you pass an invalid transport, an
 :class:`Symfony\\Component\\OptionsResolver\\Exception\\InvalidOptionsException`
 is thrown::
 
-    $mailer = new Mailer(array(
+    $mailer = new Mailer([
         'transport' => 'send-mail',
-    ));
+    ]);
 
     // InvalidOptionsException: The option "transport" has the value
     // "send-mail", but is expected to be one of "sendmail", "mail", "smtp"
@@ -501,10 +485,10 @@ the closure::
         public function configureOptions(OptionsResolver $resolver)
         {
             // ...
-            $resolver->setDefaults(array(
+            $resolver->setDefaults([
                 'encryption' => null,
                 'host' => 'example.org',
-            ));
+            ]);
         }
     }
 
@@ -534,8 +518,8 @@ Options without Default Values
 In some cases, it is useful to define an option without setting a default value.
 This is useful if you need to know whether or not the user *actually* set
 an option or not. For example, if you set the default value for an option,
-it's not possible to know whether the user passed this value or if it simply
-comes from the default::
+it's not possible to know whether the user passed this value or if it comes
+from the default::
 
     // ...
     class Mailer
@@ -589,9 +573,9 @@ be included in the resolved options if it was actually passed to
     $mailer->sendMail($from, $to);
     // => Not Set!
 
-    $mailer = new Mailer(array(
+    $mailer = new Mailer([
         'port' => 25,
-    ));
+    ]);
     $mailer->sendMail($from, $to);
     // => Set!
 
@@ -605,7 +589,7 @@ options in one go::
         public function configureOptions(OptionsResolver $resolver)
         {
             // ...
-            $resolver->setDefined(array('port', 'encryption'));
+            $resolver->setDefined(['port', 'encryption']);
         }
     }
 
@@ -637,9 +621,6 @@ let you find out which options are defined::
 Nested Options
 ~~~~~~~~~~~~~~
 
-.. versionadded:: 4.2
-    The support of nested options was introduced in Symfony 4.2.
-
 Suppose you have an option named ``spool`` which has two sub-options ``type``
 and ``path``. Instead of defining it as a simple array of values, you can pass a
 closure as the default value of the ``spool`` option with a
@@ -654,11 +635,11 @@ default value::
         public function configureOptions(OptionsResolver $resolver)
         {
             $resolver->setDefault('spool', function (OptionsResolver $spoolResolver) {
-                $spoolResolver->setDefaults(array(
+                $spoolResolver->setDefaults([
                     'type' => 'file',
                     'path' => '/path/to/spool',
-                ));
-                $spoolResolver->setAllowedValues('type', array('file', 'memory'));
+                ]);
+                $spoolResolver->setAllowedValues('type', ['file', 'memory']);
                 $spoolResolver->setAllowedTypes('path', 'string');
             });
         }
@@ -671,11 +652,11 @@ default value::
         }
     }
 
-    $mailer = new Mailer(array(
-        'spool' => array(
+    $mailer = new Mailer([
+        'spool' => [
             'type' => 'memory',
-        ),
-    ));
+        ],
+    ]);
 
 Nested options also support required options, validation (type, value) and
 normalization of their values. If the default value of a nested option depends
@@ -690,10 +671,10 @@ to the closure to access to them::
         {
             $resolver->setDefault('sandbox', false);
             $resolver->setDefault('spool', function (OptionsResolver $spoolResolver, Options $parent) {
-                $spoolResolver->setDefaults(array(
+                $spoolResolver->setDefaults([
                     'type' => $parent['sandbox'] ? 'memory' : 'file',
                     // ...
-                ));
+                ]);
             });
         }
     }
@@ -713,10 +694,10 @@ In same way, parent options can access to the nested options as normal arrays::
         public function configureOptions(OptionsResolver $resolver)
         {
             $resolver->setDefault('spool', function (OptionsResolver $spoolResolver) {
-                $spoolResolver->setDefaults(array(
+                $spoolResolver->setDefaults([
                     'type' => 'file',
                     // ...
-                ));
+                ]);
             });
             $resolver->setDefault('profiling', function (Options $options) {
                 return 'file' === $options['spool']['type'];
@@ -732,15 +713,12 @@ In same way, parent options can access to the nested options as normal arrays::
 Deprecating the Option
 ~~~~~~~~~~~~~~~~~~~~~~
 
-.. versionadded:: 4.2
-    The ``setDeprecated()`` method was introduced in Symfony 4.2.
-
 Once an option is outdated or you decided not to maintain it anymore, you can
 deprecate it using the :method:`Symfony\\Component\\OptionsResolver\\OptionsResolver::setDeprecated`
 method::
 
     $resolver
-        ->setDefined(array('hostname', 'host'))
+        ->setDefined(['hostname', 'host'])
         // this outputs the following generic deprecation message:
         // The option "hostname" is deprecated.
         ->setDeprecated('hostname')
@@ -755,6 +733,13 @@ method::
     somewhere, either its value is provided by the user or the option is evaluated
     within closures of lazy options and normalizers.
 
+.. note::
+
+    When using an option deprecated by you in your own library, you can pass
+    ``false`` as the second argument of the
+    :method:`Symfony\\Component\\OptionsResolver\\Options::offsetGet()` method
+    to not trigger the deprecation warning.
+
 Instead of passing the message, you may also pass a closure which returns
 a string (the deprecation message) or an empty string to ignore the deprecation.
 This closure is useful to only deprecate some of the allowed types or values of
@@ -763,7 +748,7 @@ the option::
     $resolver
         ->setDefault('encryption', null)
         ->setDefault('port', null)
-        ->setAllowedTypes('port', array('null', 'int'))
+        ->setAllowedTypes('port', ['null', 'int'])
         ->setDeprecated('port', function (Options $options, $value) {
             if (null === $value) {
                 return 'Passing "null" to option "port" is deprecated, pass an integer instead.';
@@ -798,11 +783,11 @@ can change your code to do the configuration only once per class::
     // ...
     class Mailer
     {
-        private static $resolversByClass = array();
+        private static $resolversByClass = [];
 
         protected $options;
 
-        public function __construct(array $options = array())
+        public function __construct(array $options = [])
         {
             // What type of Mailer is this, a Mailer, a GoogleMailer, ... ?
             $class = get_class($this);
@@ -831,11 +816,11 @@ method ``clearOptionsConfig()`` and call it periodically::
     // ...
     class Mailer
     {
-        private static $resolversByClass = array();
+        private static $resolversByClass = [];
 
         public static function clearOptionsConfig()
         {
-            self::$resolversByClass = array();
+            self::$resolversByClass = [];
         }
 
         // ...

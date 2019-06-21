@@ -4,9 +4,10 @@
 配置Web服务器
 ========================
 
-开发Symfony应用的首选方法是使用 :doc:`PHP的内部Web服务器 </setup/built_in_web_server>`。
-但是，在使用较旧的PHP版本或在生产环境中运行应用时，你需要使用一个功能齐全的Web服务器。
-本文介绍了在Apache或Nginx中使用Symfony的几种方法。
+开发Symfony应用的首选方法是使用 :doc:`Symfony的本地Web服务器 </setup/symfony_server>`。
+
+但是，在生产环境中运行应用时，你需要使用功能齐全的Web服务器。
+本文介绍了将Symfony与Apache或Nginx一起使用的几种方法。
 
 使用Apache时，你可以将PHP配置为一个
 :ref:`Apache模块 <web-server-apache-mod-php>`，或使用
@@ -274,7 +275,7 @@ Nginx
         }
 
         location ~ ^/index\.php(/|$) {
-            fastcgi_pass unix:/var/run/php/php7.1-fpm.sock;
+            fastcgi_pass unix:/var/run/php/php7.2-fpm.sock;
             fastcgi_split_path_info ^(.+\.php)(/.*)$;
             include fastcgi_params;
 

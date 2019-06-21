@@ -4,9 +4,6 @@
 服务订阅器 & 定位器
 ==============================
 
-.. versionadded:: 3.3
-    服务订阅器和定位器在Symfony 3.3中引入。
-
 有时，一个服务需要访问其他几个服务，而又不确定是否实际使用了所有这些服务。
 在这些情况下，你可能希望服务的实例化是惰性的。
 但是，使用显式的依赖注入时这是不可能的，因为并非所有服务都是 ``lazy``
@@ -75,7 +72,7 @@ to handle their respective command when it is asked for::
     use App\CommandHandler\BarHandler;
     use App\CommandHandler\FooHandler;
     use Psr\Container\ContainerInterface;
-    use Symfony\Component\DependencyInjection\ServiceSubscriberInterface;
+    use Symfony\Contracts\Service\ServiceSubscriberInterface;
 
     class CommandBus implements ServiceSubscriberInterface
     {
@@ -196,7 +193,7 @@ to handle their respective command when it is asked for::
 
     .. code-block:: yaml
 
-        // config/services.yaml
+        # config/services.yaml
         services:
             App\CommandBus:
                 tags:
@@ -208,12 +205,12 @@ to handle their respective command when it is asked for::
         <?xml version="1.0" encoding="UTF-8" ?>
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+            xsi:schemaLocation="http://symfony.com/schema/dic/services https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <services>
 
                 <service id="App\CommandBus">
-                    <tag name="container.service_subscriber" key="logger" id="monolog.logger.event" />
+                    <tag name="container.service_subscriber" key="logger" id="monolog.logger.event"/>
                 </service>
 
             </services>
@@ -228,7 +225,7 @@ to handle their respective command when it is asked for::
 
         $container
             ->register(CommandBus::class)
-            ->addTag('container.service_subscriber', array('key' => 'logger', 'id' => 'monolog.logger.event'))
+            ->addTag('container.service_subscriber', ['key' => 'logger', 'id' => 'monolog.logger.event'])
         ;
 
 .. tip::
@@ -262,19 +259,19 @@ to handle their respective command when it is asked for::
         <?xml version="1.0" encoding="UTF-8" ?>
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+            xsi:schemaLocation="http://symfony.com/schema/dic/services https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <services>
 
                 <service id="app.command_handler_locator" class="Symfony\Component\DependencyInjection\ServiceLocator">
                     <argument type="collection">
-                        <argument key="App\FooCommand" type="service" id="app.command_handler.foo" />
-                        <argument key="App\BarCommand" type="service" id="app.command_handler.bar" />
+                        <argument key="App\FooCommand" type="service" id="app.command_handler.foo"/>
+                        <argument key="App\BarCommand" type="service" id="app.command_handler.bar"/>
                     </argument>
                     <!--
                         if you are not using the default service autoconfiguration,
                         add the following tag to the service definition:
-                        <tag name="container.service_locator" />
+                        <tag name="container.service_locator"/>
                     -->
                 </service>
 
@@ -284,25 +281,21 @@ to handle their respective command when it is asked for::
     .. code-block:: php
 
         // config/services.php
-        use Symfony\Component\DependencyInjection\ServiceLocator;
         use Symfony\Component\DependencyInjection\Reference;
+        use Symfony\Component\DependencyInjection\ServiceLocator;
 
         // ...
 
         $container
             ->register('app.command_handler_locator', ServiceLocator::class)
-            ->setArguments(array(array(
+            ->setArguments([[
                 'App\FooCommand' => new Reference('app.command_handler.foo'),
                 'App\BarCommand' => new Reference('app.command_handler.bar'),
-            )))
+            ]])
             // if you are not using the default service autoconfiguration,
             // add the following tag to the service definition:
             // ->addTag('container.service_locator')
         ;
-
-.. versionadded:: 4.1
-    服务定位器自动配置是在Symfony 4.1中引入的。
-    在之前的Symfony版本中，你始终需明确添加 ``container.service_locator`` 标签。
 
 .. note::
 
@@ -325,12 +318,12 @@ to handle their respective command when it is asked for::
         <?xml version="1.0" encoding="UTF-8" ?>
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+            xsi:schemaLocation="http://symfony.com/schema/dic/services https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <services>
 
                 <service id="App\CommandBus">
-                    <argument type="service" id="app.command_handler_locator" />
+                    <argument type="service" id="app.command_handler_locator"/>
                 </service>
 
             </services>
@@ -344,7 +337,7 @@ to handle their respective command when it is asked for::
 
         $container
             ->register(CommandBus::class)
-            ->setArguments(array(new Reference('app.command_handler_locator')))
+            ->setArguments([new Reference('app.command_handler_locator')])
         ;
 
 在 :doc:`编译器传递 </service_container/compiler_passes>` 中，建议使用
@@ -357,12 +350,12 @@ to handle their respective command when it is asked for::
 
     public function process(ContainerBuilder $container)
     {
-        //...
+        // ...
 
-        $locateableServices = array(
-            //...
+        $locateableServices = [
+            // ...
             'logger' => new Reference('logger'),
-        );
+        ];
 
         $myService->addArgument(ServiceLocatorTagPass::register($container, $locateableServices));
     }
@@ -372,31 +365,19 @@ to handle their respective command when it is asked for::
 服务订阅器复用(Trait)
 ------------------------
 
-.. versionadded:: 4.2
-    :class:`Symfony\\Component\\DependencyInjection\\ServiceSubscriberTrait`
-    在Symfony的4.2中引入的。
-
-:class:`Symfony\\Component\\DependencyInjection\\ServiceSubscriberTrait` 为
-:class:`Symfony\\Component\\DependencyInjection\\ServiceSubscriberInterface`
+:class:`Symfony\\Contracts\\Service\\ServiceSubscriberTrait` 为
+:class:`Symfony\\Contracts\\Service\\ServiceSubscriberInterface`
 提供了一个实现，用于拥有零参数和一个返回类型的类的所有方法。
 它为那些返回类型的服务提供了一个 ``ServiceLocator``。服务ID是 ``__METHOD__``。
-这允许你基于已类型约束的辅助方法来轻松地向你的服务添加依赖::
-The :class:`Symfony\\Component\\DependencyInjection\\ServiceSubscriberTrait`
-provides an implementation for
-:class:`Symfony\\Component\\DependencyInjection\\ServiceSubscriberInterface`
-that looks through all methods in your class that have no arguments and a return
-type.
-It provides a ``ServiceLocator`` for the services of those return types.
-The service id is ``__METHOD__``.
-This allows you to easily add dependencies to your services based on type-hinted helper methods::
+这允许你基于已类型约束的辅助方法来向你的服务添加依赖::
 
     // src/Service/MyService.php
     namespace App\Service;
 
     use Psr\Log\LoggerInterface;
-    use Symfony\Component\DependencyInjection\ServiceSubscriberInterface;
-    use Symfony\Component\DependencyInjection\ServiceSubscriberTrait;
     use Symfony\Component\Routing\RouterInterface;
+    use Symfony\Contracts\Service\ServiceSubscriberInterface;
+    use Symfony\Contracts\Service\ServiceSubscriberTrait;
 
     class MyService implements ServiceSubscriberInterface
     {
@@ -450,8 +431,8 @@ This allows you to easily add dependencies to your services based on type-hinted
     // src/Service/MyService.php
     namespace App\Service;
 
-    use Symfony\Component\DependencyInjection\ServiceSubscriberInterface;
-    use Symfony\Component\DependencyInjection\ServiceSubscriberTrait;
+    use Symfony\Contracts\Service\ServiceSubscriberInterface;
+    use Symfony\Contracts\Service\ServiceSubscriberTrait;
 
     class MyService implements ServiceSubscriberInterface
     {
@@ -466,8 +447,5 @@ This allows you to easily add dependencies to your services based on type-hinted
 
 .. caution::
 
-    When creating these helper traits, the service id cannot be ``__METHOD__``
-    as this will include the trait name, not the class name. Instead, use
-    ``__CLASS__.'::'.__FUNCTION__`` as the service id.
-    在创建这些辅助复用时，服务ID不能是 ``__METHOD__``，而是包含复用名称，而不包括类名。
-    而是，将 ``__CLASS__.'::'.__FUNCTION__`` 用作服务ID。
+    在创建这些辅助复用时，服务ID不能是 ``__METHOD__``，而是包含复用名称，但不包括类名。
+    相反的，将 ``__CLASS__.'::'.__FUNCTION__`` 用作服务ID。

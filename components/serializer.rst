@@ -9,7 +9,9 @@ Serializer组件
 
 为此，Serializer组件遵循以下模式。
 
-.. image:: /_images/components/serializer/serializer_workflow.png
+.. raw:: html
+
+    <object data="../_images/components/serializer/serializer_workflow.svg" type="image/svg+xml"></object>
 
 如上图所示，一个数组被当做对象和序列化内容之间的中介。
 在这中间，编码器只处理特定 **格式** 到 **数组** 的转换，反之亦然。
@@ -25,8 +27,6 @@ Serializer组件
 
     $ composer require symfony/serializer
 
-或者，你可以克隆 `<https://github.com/symfony/serializer>`_ 仓库。
-
 .. include:: /components/require_autoload.rst.inc
 
 如果要使用 ``ObjectNormalizer``， 还必须安装 :doc:`PropertyAccess组件 </components/property_access>`。
@@ -36,19 +36,22 @@ Serializer组件
 
 .. seealso::
 
-    本文介绍如何在任何PHP应用中将Serializer功能用作独立组件。
-    阅读 :doc:`/serializer` 文档，以了解如何在创建Symfony测试时使用它。
+    This article explains the philosophy of the Serializer and gets you familiar
+    with the concepts of normalizers and encoders. The code examples assume
+    that you use the Serializer as an independent component. If you are using
+    the Serializer in a Symfony application, read :doc:`/serializer` after you
+    finish this article.
 
 要使用Serializer组件，请设置
 :class:`Symfony\\Component\\Serializer\\Serializer` 来指定启用哪些编码器和normalizer::
 
-    use Symfony\Component\Serializer\Serializer;
-    use Symfony\Component\Serializer\Encoder\XmlEncoder;
     use Symfony\Component\Serializer\Encoder\JsonEncoder;
+    use Symfony\Component\Serializer\Encoder\XmlEncoder;
     use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+    use Symfony\Component\Serializer\Serializer;
 
-    $encoders = array(new XmlEncoder(), new JsonEncoder());
-    $normalizers = array(new ObjectNormalizer());
+    $encoders = [new XmlEncoder(), new JsonEncoder()];
+    $normalizers = [new ObjectNormalizer()];
 
     $serializer = new Serializer($normalizers, $encoders);
 
@@ -152,11 +155,8 @@ Serializer组件
 方法需要三个参数：
 
 #. 要解码的信息
-#. The name of the class this information will be decoded to此信息将被解码为的类的名称
+#. 此信息将被解码成的类的名称
 #. 用于将该信息转换为数组的编码器
-
-.. versionadded:: 3.3
-    Symfony 3.3中引入了对上下文中的 ``allow_extra_attributes`` 键的支持。
 
 默认情况下，序列化器组件将忽略未映射到denormalized对象的其他属性。
 如果你希望在发生这种情况时抛出异常，请将 ``allow_extra_attributes`` 选项设置为
@@ -174,10 +174,10 @@ Serializer组件
     // 因为 "city" 不是 Person 了的一个属性
     $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
     $normalizer = new ObjectNormalizer($classMetadataFactory);
-    $serializer = new Serializer(array($normalizer));
-    $person = $serializer->deserialize($data, 'Acme\Person', 'xml', array(
+    $serializer = new Serializer([$normalizer]);
+    $person = $serializer->deserialize($data, 'App\Model\Person', 'xml', [
         'allow_extra_attributes' => false,
-    ));
+    ]);
 
 在现有对象中反序列化
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -197,7 +197,7 @@ Serializer组件
     </person>
     EOF;
 
-    $serializer->deserialize($data, Person::class, 'xml', array('object_to_populate' => $person));
+    $serializer->deserialize($data, Person::class, 'xml', ['object_to_populate' => $person]);
     // $person = App\Model\Person(name: 'foo', age: '69', sportsperson: true)
 
 在使用一个ORM时，这是一个常见的需求。
@@ -208,8 +208,6 @@ Serializer组件
 -----------------
 
 有时，你希望从你的实体中序列化不同的属性集。组是实现这一需求的便捷方式。
-Sometimes, you want to serialize different sets of attributes from your
-entities. Groups are a handy way to achieve this need.
 
 假设你有以下普通的PHP对象::
 
@@ -236,26 +234,33 @@ entities. Groups are a handy way to achieve this need.
 :class:`Symfony\\Component\\Serializer\\Mapping\\Factory\\ClassMetadataFactory`
 必须知道将要使用的格式。
 The definition of serialization can be specified using annotations, XML
-or YAML.
-The :class:`Symfony\\Component\\Serializer\\Mapping\\Factory\\ClassMetadataFactory` that will be used by the normalizer must be aware of the format to use.
+or YAML. The :class:`Symfony\\Component\\Serializer\\Mapping\\Factory\\ClassMetadataFactory`
+that will be used by the normalizer must be aware of the format to use.
 
-以如下所示的方式来初始化
-:class:`Symfony\\Component\\Serializer\\Mapping\\Factory\\ClassMetadataFactory`::
+The following code shows how to initialize the :class:`Symfony\\Component\\Serializer\\Mapping\\Factory\\ClassMetadataFactory`
+for each format:
 
-    use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
-    // 对于注释
+* Annotations in PHP files::
+
     use Doctrine\Common\Annotations\AnnotationReader;
+    use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
     use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
-    // 对于XML
-    // use Symfony\Component\Serializer\Mapping\Loader\XmlFileLoader;
-    // 对于YAML
-    // use Symfony\Component\Serializer\Mapping\Loader\YamlFileLoader;
 
     $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
-    // 对于XML
-    // $classMetadataFactory = new ClassMetadataFactory(new XmlFileLoader('/path/to/your/definition.xml'));
-    // 对于YAML
-    // $classMetadataFactory = new ClassMetadataFactory(new YamlFileLoader('/path/to/your/definition.yaml'));
+
+* YAML files::
+
+    use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
+    use Symfony\Component\Serializer\Mapping\Loader\YamlFileLoader;
+
+    $classMetadataFactory = new ClassMetadataFactory(new YamlFileLoader('/path/to/your/definition.yaml'));
+
+* XML files::
+
+    use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
+    use Symfony\Component\Serializer\Mapping\Loader\XmlFileLoader;
+
+    $classMetadataFactory = new ClassMetadataFactory(new XmlFileLoader('/path/to/your/definition.xml'));
 
 .. _component-serializer-attributes-groups-annotations:
 
@@ -302,7 +307,7 @@ The :class:`Symfony\\Component\\Serializer\\Mapping\\Factory\\ClassMetadataFacto
         <serializer xmlns="http://symfony.com/schema/dic/serializer-mapping"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/dic/serializer-mapping
-                http://symfony.com/schema/dic/serializer-mapping/serializer-mapping-1.0.xsd"
+                https://symfony.com/schema/dic/serializer-mapping/serializer-mapping-1.0.xsd"
         >
             <class name="Acme\MyObj">
                 <attribute name="foo">
@@ -318,24 +323,24 @@ The :class:`Symfony\\Component\\Serializer\\Mapping\\Factory\\ClassMetadataFacto
 
 你现在能仅序列化所需组中的属性::
 
-    use Symfony\Component\Serializer\Serializer;
     use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+    use Symfony\Component\Serializer\Serializer;
 
     $obj = new MyObj();
     $obj->foo = 'foo';
     $obj->setBar('bar');
 
     $normalizer = new ObjectNormalizer($classMetadataFactory);
-    $serializer = new Serializer(array($normalizer));
+    $serializer = new Serializer([$normalizer]);
 
-    $data = $serializer->normalize($obj, null, array('groups' => 'group1'));
-    // $data = array('foo' => 'foo');
+    $data = $serializer->normalize($obj, null, ['groups' => 'group1']);
+    // $data = ['foo' => 'foo'];
 
     $obj2 = $serializer->denormalize(
-        array('foo' => 'foo', 'bar' => 'bar'),
+        ['foo' => 'foo', 'bar' => 'bar'],
         'MyObj',
         null,
-        array('groups' => array('group1', 'group3'))
+        ['groups' => ['group1', 'group3']]
     );
     // $obj2 = MyObj(foo: 'foo', bar: 'bar')
 
@@ -348,8 +353,8 @@ The :class:`Symfony\\Component\\Serializer\\Mapping\\Factory\\ClassMetadataFacto
 
 也可以仅序列化一组(set)特定属性::
 
-    use Symfony\Component\Serializer\Serializer;
     use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+    use Symfony\Component\Serializer\Serializer;
 
     class User
     {
@@ -373,10 +378,10 @@ The :class:`Symfony\\Component\\Serializer\\Mapping\\Factory\\ClassMetadataFacto
     $user->givenName = 'Kévin';
     $user->company = $company;
 
-    $serializer = new Serializer(array(new ObjectNormalizer()));
+    $serializer = new Serializer([new ObjectNormalizer()]);
 
-    $data = $serializer->normalize($user, null, array('attributes' => array('familyName', 'company' => ['name'])));
-    // $data = array('familyName' => 'Dunglas', 'company' => array('name' => 'Les-Tilleuls.coop'));
+    $data = $serializer->normalize($user, null, ['attributes' => ['familyName', 'company' => ['name']]]);
+    // $data = ['familyName' => 'Dunglas', 'company' => ['name' => 'Les-Tilleuls.coop']];
 
 只有未被忽略（见下文）的属性可用。如果同时还设置了某些序列化组，则只能使用这些组允许的属性。
 Only attributes that are not ignored (see below) are available.
@@ -389,31 +394,30 @@ As for groups, attributes can be selected during both the serialization and dese
 忽略属性
 -------------------
 
-.. note::
+As an option, there's a way to ignore attributes from the origin object.
+To remove those attributes provide an array via the ``ignored_attributes``
+key in the ``context`` parameter of the desired serializer method::
 
-    使用属性组而不是
-    :method:`Symfony\\Component\\Serializer\\Normalizer\\AbstractNormalizer::setIgnoredAttributes`
-    方法，被认为是最佳的实践。
-
-作为一个选项，有一种方法可以忽略原始对象的属性。
-要移除这些属性，请在normalizer定义中使用
-:method:`Symfony\\Component\\Serializer\\Normalizer\\AbstractNormalizer::setIgnoredAttributes`
-方法::
-As an option, there's a way to ignore attributes from the origin object. To remove
-those attributes use the
-:method:`Symfony\\Component\\Serializer\\Normalizer\\AbstractNormalizer::setIgnoredAttributes`
-method on the normalizer definition::
-
-    use Symfony\Component\Serializer\Serializer;
+    use Acme\Person;
     use Symfony\Component\Serializer\Encoder\JsonEncoder;
     use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+    use Symfony\Component\Serializer\Serializer;
+
+    $person = new Person();
+    $person->setName('foo');
+    $person->setAge(99);
 
     $normalizer = new ObjectNormalizer();
-    $normalizer->setIgnoredAttributes(array('age'));
     $encoder = new JsonEncoder();
 
-    $serializer = new Serializer(array($normalizer), array($encoder));
-    $serializer->serialize($person, 'json'); // 输出: {"name":"foo","sportsperson":false}
+    $serializer = new Serializer([$normalizer], [$encoder]);
+    $serializer->serialize($person, 'json', ['ignored_attributes' => ['age']]); // Output: {"name":"foo"}
+
+.. deprecated:: 4.2
+
+    The :method:`Symfony\\Component\\Serializer\\Normalizer\\AbstractNormalizer::setIgnoredAttributes`
+    method that was used as an alternative to the ``ignored_attributes`` option
+    was deprecated in Symfony 4.2.
 
 .. _component-serializer-converting-property-names-when-serializing-and-deserializing:
 
@@ -475,7 +479,7 @@ and :class:`Symfony\\Component\\Serializer\\Normalizer\\PropertyNormalizer`::
     $nameConverter = new OrgPrefixNameConverter();
     $normalizer = new ObjectNormalizer(null, $nameConverter);
 
-    $serializer = new Serializer(array($normalizer), array(new JsonEncoder()));
+    $serializer = new Serializer([$normalizer], [new JsonEncoder()]);
 
     $company = new Company();
     $company->name = 'Acme Inc.';
@@ -494,9 +498,6 @@ and :class:`Symfony\\Component\\Serializer\\Normalizer\\PropertyNormalizer`::
     你还可以通过实现
     :class:`Symfony\\Component\\Serializer\\NameConverter\\AdvancedNameConverterInterface`
     来访问当前的类名、格式和上下文。
-
-    .. versionadded:: 4.2
-        ``AdvancedNameConverterInterface`` 接口在Symfony4.2推出。
 
 .. _using-camelized-method-names-for-underscored-attributes:
 
@@ -539,7 +540,7 @@ processes::
     $normalizer->normalize($kevin);
     // ['first_name' => 'Kévin'];
 
-    $anne = $normalizer->denormalize(array('first_name' => 'Anne'), 'Person');
+    $anne = $normalizer->denormalize(['first_name' => 'Anne'], 'Person');
     // Person object with firstName: 'Anne'
 
 使用元数据配置名称转换
@@ -564,8 +565,8 @@ this is already set up and you only need to provide the configuration. Otherwise
     $metadataAwareNameConverter = new MetadataAwareNameConverter($classMetadataFactory);
 
     $serializer = new Serializer(
-        array(new ObjectNormalizer($classMetadataFactory, $metadataAwareNameConverter)),
-        array('json' => new JsonEncoder())
+        [new ObjectNormalizer($classMetadataFactory, $metadataAwareNameConverter)],
+        ['json' => new JsonEncoder()]
     );
 
 现在配置你的名称转换映射。考虑一个定义了具有 ``firstName`` 属性的 ``Person`` 实体的应用：
@@ -608,10 +609,10 @@ defines a ``Person`` entity with a ``firstName`` property:
         <serializer xmlns="http://symfony.com/schema/dic/serializer-mapping"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/dic/serializer-mapping
-                http://symfony.com/schema/dic/serializer-mapping/serializer-mapping-1.0.xsd"
+                https://symfony.com/schema/dic/serializer-mapping/serializer-mapping-1.0.xsd"
         >
             <class name="App\Entity\Person">
-                <attribute name="firstName" serialized-name="customer_name" />
+                <attribute name="firstName" serialized-name="customer_name"/>
             </class>
         </serializer>
 
@@ -631,9 +632,14 @@ automatically detect and use it to serialize related attributes.
 
 ``ObjectNormalizer`` 还需要照顾以 ``has``、``add`` 和 ``remove`` 开头的方法。
 
-Using Callbacks to Serialize Properties with Object Instances
 使用回调来通过对象实例来序列化属性
 -------------------------------------------------------------
+
+.. deprecated:: 4.2
+
+    The :method:`Symfony\\Component\\Serializer\\Normalizer\\AbstractNormalizer::setCallbacks`
+    method is deprecated since Symfony 4.2. Use the ``callbacks``
+    key of the context instead.
 
 序列化时，你可以设置一个回调来格式化特定的对象属性::
 
@@ -643,16 +649,21 @@ Using Callbacks to Serialize Properties with Object Instances
     use Symfony\Component\Serializer\Serializer;
 
     $encoder = new JsonEncoder();
-    $normalizer = new GetSetMethodNormalizer();
 
     // all callback parameters are optional (you can omit the ones you don't use)
-    $callback = function ($innerObject, $outerObject, string $attributeName, string $format = null, array $context = array()) {
+    $dateCallback = function ($innerObject, $outerObject, string $attributeName, string $format = null, array $context = []) {
         return $innerObject instanceof \DateTime ? $innerObject->format(\DateTime::ISO8601) : '';
     };
 
-    $normalizer->setCallbacks(array('createdAt' => $callback));
+    $defaultContext = [
+        AbstractNormalizer::CALLBACKS => [
+            'createdAt' => $callback,
+        ],
+    ];
+    
+    $normalizer = new GetSetMethodNormalizer(null, null, null, null, null, $defaultContext);
 
-    $serializer = new Serializer(array($normalizer), array($encoder));
+    $serializer = new Serializer([$normalizer], [$encoder]);
 
     $person = new Person();
     $person->setName('cordoval');
@@ -662,10 +673,10 @@ Using Callbacks to Serialize Properties with Object Instances
     $serializer->serialize($person, 'json');
     // Output: {"name":"cordoval", "age": 34, "createdAt": "2014-03-22T09:43:12-0500"}
 
-.. versionadded:: 4.2
-    The ``$outerObject``, ``$attributeName``, ``$format`` and ``$context``
-    parameters of the callback were introduced in Symfony 4.2.
-    在$outerObject，$attributeName，$format和$context 回调的参数中的Symfony 4.2推出。
+.. deprecated:: 4.2
+
+    The :method:`Symfony\\Component\\Serializer\\Normalizer\\AbstractNormalizer::setCallbacks` is deprecated since
+    Symfony 4.2, use the "callbacks" key of the context instead.
 
 .. _component-serializer-normalizers:
 
@@ -685,11 +696,11 @@ Normalizers
     它支持在denormalization过程中调用构造函数。
 
     Objects are normalized to a map of property names and values (names are
-    generated removing the ``get``, ``set``, ``has`` or ``remove`` prefix from
+    generated removing the ``get``, ``set``, ``has``, ``is`` or ``remove`` prefix from
     the method name and lowercasing the first letter; e.g. ``getFirstName()`` ->
     ``firstName``).
     对象是normalized的为一个属性名称和值的映射（生成的名称移除方法名称中的
-    ``get``、``set``、``has``、``remove`` 前缀并小写第一个字母;例如
+    ``get``、``set``、``has``、``is``、``remove`` 前缀并小写第一个字母;例如
     ``getFirstName()`` -> ``firstName``）。
 
     The ``ObjectNormalizer`` is the most powerful normalizer. It is configured by
@@ -764,9 +775,6 @@ Normalizers
     :class:`Symfony\\Component\\Validator\\ConstraintViolationListInterface`
     的对象转换为一个错误列表。
 
-    .. versionadded:: 4.1
-        ``ConstraintViolationListNormalizer`` 在Symfony4.1中引入。
-
 .. _component-serializer-encoders:
 
 编码器
@@ -785,12 +793,12 @@ for encoding (array to format) and
 你可以通过将其传递到序列化器实例的第二个构造函数参数来添加新编码器::
 You can add new encoders to a Serializer instance by using its second constructor argument::
 
-    use Symfony\Component\Serializer\Serializer;
-    use Symfony\Component\Serializer\Encoder\XmlEncoder;
     use Symfony\Component\Serializer\Encoder\JsonEncoder;
+    use Symfony\Component\Serializer\Encoder\XmlEncoder;
+    use Symfony\Component\Serializer\Serializer;
 
-    $encoders = array(new XmlEncoder(), new JsonEncoder());
-    $serializer = new Serializer(array(), $encoders);
+    $encoders = [new XmlEncoder(), new JsonEncoder()];
+    $serializer = new Serializer([], $encoders);
 
 内置编码器
 ~~~~~~~~~~~~~~~~~
@@ -826,10 +834,8 @@ Serializer组件提供了几个内置编码器:
 You can pass the context key ``as_collection`` in order to have the results
 always as a collection.
 
-.. versionadded:: 4.1
-    ``as_collection`` 选项在Symfony4.1中引入。
+.. deprecated:: 4.2
 
-.. versionadded:: 4.2
     Relying on the default value ``false`` is deprecated since Symfony 4.2.
     从Symfony 4.2开始，弃用对默认值 ``false`` 的依赖。
 
@@ -841,7 +847,7 @@ always as a collection.
 例如，如下所示将对象normalized::
 For example, take an object normalized as following::
 
-    array('foo' => array(1, 2), 'bar' => true);
+    ['foo' => [1, 2], 'bar' => true];
 
 ``XmlEncoder`` 会将该对象编码为这个样子::
 
@@ -857,20 +863,20 @@ Be aware that this encoder will consider keys beginning with ``@`` as attributes
 the key  ``#comment`` for encoding XML comments::
 
     $encoder = new XmlEncoder();
-    $encoder->encode(array('foo' => array('@bar' => 'value'), 'qux' => array('#comment' => 'A comment));
+    $encoder->encode([
+        'foo' => ['@bar' => 'value'],
+        'qux' => ['#comment' => 'A comment'],
+    ], 'xml');
     // will return:
     // <?xml version="1.0"?>
     // <response>
-    //     <foo bar="value" />
+    //     <foo bar="value"/>
     //     <qux><!-- A comment --!><qux>
     // </response>
 
 你可以传递上下文键 ``as_collection``，以便始终将结果作为一个集合。
 You can pass the context key ``as_collection`` in order to have the results
 always as a collection.
-
-.. versionadded:: 4.1
-    ``as_collection`` 选项在Symfony4.1中引入。
 
 .. tip::
 
@@ -886,14 +892,10 @@ always as a collection.
     默认情况下，带 ``#comment`` 键的数据被编码为XML注释。
     但可以使用 ``XmlEncoder`` 的类构造函数的可选 ``$encoderIgnoredNodeTypes`` 参数进行更改。
 
-    .. versionadded:: 4.1
-        从Symfony 4.1开始，将默认忽略XML注释。
-
 ``YamlEncoder``
 ~~~~~~~~~~~~~~~~~~~
 
 该编码器需要 :doc:`Yaml组件 </components/yaml>` 并将负责Yaml的转换。
-
 
 跳过 ``null`` 值
 ------------------------
@@ -909,9 +911,6 @@ always as a collection.
     $normalizer = new ObjectNormalizer();
     $result = $normalizer->normalize($dummy, 'json', ['skip_null_values' => true]);
     // ['bar' => 'notNull']
-
-.. versionadded:: 4.2
-    ``skip_null_values`` 选项在Symfony4.2中引入。
 
 .. _component-serializer-handling-circular-references:
 
@@ -983,17 +982,15 @@ always as a collection.
 
     $organization = new Organization();
     $organization->setName('Les-Tilleuls.coop');
-    $organization->setMembers(array($member));
+    $organization->setMembers([$member]);
 
     $member->setOrganization($organization);
 
     echo $serializer->serialize($organization, 'json'); // Throws a CircularReferenceException
 
-此normalizer的 ``setCircularReferenceLimit()`` 方法设置在将其视为循环引用之前将序列化同一对象的次数。
-它的默认值为 ``1``。
-The ``setCircularReferenceLimit()`` method of this normalizer sets the number
-of times it will serialize the same object before considering it a circular
-reference. Its default value is ``1``.
+The key ``circular_reference_limit`` in the default context sets the number of
+times it will serialize the same object before considering it a circular
+reference. The default value is ``1``.
 
 循环引用也可以由自定义的可调用对象处理，而不是抛出异常。
 在序列化具有唯一标识符的实体时，这尤其有用：
@@ -1002,20 +999,22 @@ by custom callables. This is especially useful when serializing entities
 having unique identifiers::
 
     $encoder = new JsonEncoder();
-    $normalizer = new ObjectNormalizer();
+    $defaultContext = [
+        AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function ($object, $format, $context) {
+            return $object->getName();
+        },
+    ];
+    $normalizer = new ObjectNormalizer(null, null, null, null, null, null, $defaultContext);
 
-    // all callback parameters are optional (you can omit the ones you don't use)
-    $normalizer->setCircularReferenceHandler(function ($object, string $format = null, array $context = array()) {
-        return $object->getName();
-    });
-
-    $serializer = new Serializer(array($normalizer), array($encoder));
+    $serializer = new Serializer([$normalizer], [$encoder]);
     var_dump($serializer->serialize($org, 'json'));
     // {"name":"Les-Tilleuls.coop","members":[{"name":"K\u00e9vin", organization: "Les-Tilleuls.coop"}]}
 
-.. versionadded:: 4.2
-    ``setCircularReferenceHandler()`` 的
-    ``$format`` 和 ``$context`` 参数是在Symfony4.2引入的。
+.. deprecated:: 4.2
+
+    The :method:`Symfony\\Component\\Serializer\\Normalizer\\AbstractNormalizer::setCircularReferenceHandler`
+    method is deprecated since Symfony 4.2. Use the ``circular_reference_handler``
+    key of the context instead.
 
 处理序列化深度
 ----------------------------
@@ -1056,9 +1055,9 @@ Here, we set it to 2 for the ``$child`` property:
 
     .. code-block:: php-annotations
 
-        use Symfony\Component\Serializer\Annotation\MaxDepth;
-
         namespace Acme;
+
+        use Symfony\Component\Serializer\Annotation\MaxDepth;
 
         class MyObj
         {
@@ -1083,10 +1082,10 @@ Here, we set it to 2 for the ``$child`` property:
         <serializer xmlns="http://symfony.com/schema/dic/serializer-mapping"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/dic/serializer-mapping
-                http://symfony.com/schema/dic/serializer-mapping/serializer-mapping-1.0.xsd"
+                https://symfony.com/schema/dic/serializer-mapping/serializer-mapping-1.0.xsd"
         >
             <class name="Acme\MyObj">
-                <attribute name="child" max-depth="2" />
+                <attribute name="child" max-depth="2"/>
             </class>
         </serializer>
 
@@ -1106,17 +1105,17 @@ The check is only done if the ``enable_max_depth`` key of the serializer context
 is set to ``true``. In the following example, the third level is not serialized
 because it is deeper than the configured maximum depth of 2::
 
-    $result = $serializer->normalize($level1, null, array('enable_max_depth' => true));
+    $result = $serializer->normalize($level1, null, ['enable_max_depth' => true]);
     /*
-    $result = array(
+    $result = [
         'foo' => 'level1',
-        'child' => array(
-                'foo' => 'level2',
-                'child' => array(
-                        'child' => null,
-                    ),
-            ),
-    );
+        'child' => [
+            'foo' => 'level2',
+            'child' => [
+                'child' => null,
+            ],
+        ],
+    ];
     */
 
 当达到最大深度时，可以执行自定义可调用对象而不是抛出异常。
@@ -1126,11 +1125,11 @@ maximum depth is reached. This is especially useful when serializing entities
 having unique identifiers::
 
     use Doctrine\Common\Annotations\AnnotationReader;
-    use Symfony\Component\Serializer\Serializer;
     use Symfony\Component\Serializer\Annotation\MaxDepth;
     use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
     use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
     use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+    use Symfony\Component\Serializer\Serializer;
 
     class Foo
     {
@@ -1154,31 +1153,35 @@ having unique identifiers::
     $level2->child = $level3;
 
     $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
-    $normalizer = new ObjectNormalizer($classMetadataFactory);
+
     // all callback parameters are optional (you can omit the ones you don't use)
-    $normalizer->setMaxDepthHandler(function ($innerObject, $outerObject, string $attributeName, string $format = null, array $context = array()) {
+    $maxDepthHandler = function ($innerObject, $outerObject, string $attributeName, string $format = null, array $context = []) {
         return '/foos/'.$innerObject->id;
-    });
+    };
 
-    $serializer = new Serializer(array($normalizer));
+    $defaultContext = [
+        AbstractObjectNormalizer::MAX_DEPTH_HANDLER => $maxDepthHandler,
+    ];
+    $normalizer = new ObjectNormalizer($classMetadataFactory, null, null, null, null, null, $defaultContext);
 
-    $result = $serializer->normalize($level1, null, array(ObjectNormalizer::ENABLE_MAX_DEPTH => true));
+    $serializer = new Serializer([$normalizer]);
+
+    $result = $serializer->normalize($level1, null, [ObjectNormalizer::ENABLE_MAX_DEPTH => true]);
     /*
-    $result = array(
+    $result = [
         'id' => 1,
-        'child' => array(
+        'child' => [
             'id' => 2,
             'child' => '/foos/3',
-        ),
-    );
+        ],
+    ];
     */
 
-.. versionadded:: 4.1
-    ``setMaxDepthHandler()`` 方法是在Symfony4.1中引入的。
+.. deprecated:: 4.2
 
-.. versionadded:: 4.2
-    ``setMaxDepthHandler()`` 的 ``$outerObject``、``$attributeName``、``$format``
-    以及 ``$context`` 参数是在Symfony4.2中引入的。
+    The :method:`Symfony\\Component\\Serializer\\Normalizer\\AbstractNormalizer::setMaxDepthHandler`
+    method is deprecated since Symfony 4.2. Use the ``max_depth_handler``
+    key of the context instead.
 
 处理数组
 ---------------
@@ -1199,7 +1202,7 @@ Serializing arrays works just like serializing a single object::
     $person2->setAge(33);
     $person2->setSportsman(true);
 
-    $persons = array($person1, $person2);
+    $persons = [$person1, $person2];
     $data = $serializer->serialize($persons, 'json');
 
     // $data 包含 [{"name":"foo","age":99,"sportsman":false},{"name":"bar","age":33,"sportsman":true}]
@@ -1213,9 +1216,7 @@ If you want to deserialize such a structure, you need to add the
 :class:`Symfony\\Component\\Serializer\\Normalizer\\ArrayDenormalizer`
 to the set of normalizers. By appending ``[]`` to the type parameter of the
 :method:`Symfony\\Component\\Serializer\\Serializer::deserialize` method,
-you indicate that you're expecting an array instead of a single object.
-
-.. code-block:: php
+you indicate that you're expecting an array instead of a single object::
 
     use Symfony\Component\Serializer\Encoder\JsonEncoder;
     use Symfony\Component\Serializer\Normalizer\ArrayDenormalizer;
@@ -1223,8 +1224,8 @@ you indicate that you're expecting an array instead of a single object.
     use Symfony\Component\Serializer\Serializer;
 
     $serializer = new Serializer(
-        array(new GetSetMethodNormalizer(), new ArrayDenormalizer()),
-        array(new JsonEncoder())
+        [new GetSetMethodNormalizer(), new ArrayDenormalizer()],
+        [new JsonEncoder()]
     );
 
     $data = ...; // 上一示例中的序列化数据
@@ -1237,7 +1238,7 @@ you indicate that you're expecting an array instead of a single object.
 This encoder transforms arrays into XML and vice versa. For example, take an
 object normalized as following::
 
-    array('foo' => array(1, 2), 'bar' => true);
+    ['foo' => [1, 2], 'bar' => true];
 
 ``XmlEncoder`` 会将该对象编码为这个样子::
 The ``XmlEncoder`` encodes this object as follows:
@@ -1253,17 +1254,17 @@ The ``XmlEncoder`` encodes this object as follows:
 
 以 ``@`` 开头的数组键会被当做XML属性::
 
-    array('foo' => array('@bar' => 'value'));
+    ['foo' => ['@bar' => 'value']];
 
     // is encoded as follows:
     // <?xml version="1.0"?>
     // <response>
-    //     <foo bar="value" />
+    //     <foo bar="value"/>
     // </response>
 
 使用特殊 ``#`` 键来定义一个节点的数据::
 
-    array('foo' => array('@bar' => 'value', '#' => 'baz'));
+    ['foo' => ['@bar' => 'value', '#' => 'baz']];
 
     // is encoded as follows:
     // <?xml version="1.0"?>
@@ -1308,9 +1309,6 @@ which defines the configuration options for the XmlEncoder an associative array:
 处理构造函数参数
 ------------------------------
 
-.. versionadded:: 4.1
-    ``default_constructor_arguments`` 选项在Symfony4.1中引入。
-
 如果类构造函数定义了参数，就像 `Value Objects`_ 一样，如果缺少某些参数，序列化器将无法创建对象。
 在这些情况下，请使用 ``default_constructor_arguments`` 上下文选项：
 If the class constructor defines arguments, as usually happens with
@@ -1318,8 +1316,8 @@ If the class constructor defines arguments, as usually happens with
 arguments are missing. In those cases, use the ``default_constructor_arguments``
 context option::
 
-    use Symfony\Component\Serializer\Serializer;
     use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+    use Symfony\Component\Serializer\Serializer;
 
     class MyObj
     {
@@ -1334,15 +1332,15 @@ context option::
     }
 
     $normalizer = new ObjectNormalizer($classMetadataFactory);
-    $serializer = new Serializer(array($normalizer));
+    $serializer = new Serializer([$normalizer]);
 
     $data = $serializer->denormalize(
-        array('foo' => 'Hello'),
+        ['foo' => 'Hello'],
         'MyObj',
-        array('default_constructor_arguments' => array(
-            'MyObj' => array('foo' => '', 'bar' => ''),
-        )
-    ));
+        ['default_constructor_arguments' => [
+            'MyObj' => ['foo' => '', 'bar' => ''],
+        ]]
+    );
     // $data = new MyObj('Hello', '');
 
 Recursive Denormalization and Type Safety
@@ -1366,12 +1364,12 @@ When using the component standalone, an implementation of :class:`Symfony\\Compo
 (usually an instance of :class:`Symfony\\Component\\PropertyInfo\\PropertyInfoExtractor`) must be passed as the 4th
 parameter of the ``ObjectNormalizer``::
 
+    namespace Acme;
+
     use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
-    use Symfony\Component\Serializer\Serializer;
     use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
     use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-
-    namespace Acme;
+    use Symfony\Component\Serializer\Serializer;
 
     class ObjectOuter
     {
@@ -1406,11 +1404,11 @@ parameter of the ``ObjectNormalizer``::
     }
 
     $normalizer = new ObjectNormalizer(null, null, null, new ReflectionExtractor());
-    $serializer = new Serializer(array(new DateTimeNormalizer(), $normalizer));
+    $serializer = new Serializer([new DateTimeNormalizer(), $normalizer]);
 
     $obj = $serializer->denormalize(
-        array('inner' => array('foo' => 'foo', 'bar' => 'bar'), 'date' => '1988/01/21'),
-         'Acme\ObjectOuter'
+        ['inner' => ['foo' => 'foo', 'bar' => 'bar'], 'date' => '1988/01/21'],
+        'Acme\ObjectOuter'
     );
 
     dump($obj->getInner()->foo); // 'foo'
@@ -1465,8 +1463,8 @@ this is already set up and you only need to provide the configuration. Otherwise
 
     // ...
     use Symfony\Component\Serializer\Encoder\JsonEncoder;
-    use Symfony\Component\Serializer\Mapping\ClassDiscriminatorMapping;
     use Symfony\Component\Serializer\Mapping\ClassDiscriminatorFromClassMetadata;
+    use Symfony\Component\Serializer\Mapping\ClassDiscriminatorMapping;
     use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
     use Symfony\Component\Serializer\Serializer;
 
@@ -1475,8 +1473,8 @@ this is already set up and you only need to provide the configuration. Otherwise
     $discriminator = new ClassDiscriminatorFromClassMetadata($classMetadataFactory);
 
     $serializer = new Serializer(
-        array(new ObjectNormalizer($classMetadataFactory, null, null, null, $discriminator)),
-        array('json' => new JsonEncoder())
+        [new ObjectNormalizer($classMetadataFactory, null, null, null, $discriminator)],
+        ['json' => new JsonEncoder()]
     );
 
 现在配置你的鉴别器类映射。考虑一个定义扩展的类GitHubCodeRepository 和BitBucketCodeRepository类的应用：
@@ -1518,12 +1516,12 @@ and ``BitBucketCodeRepository`` classes:
         <serializer xmlns="http://symfony.com/schema/dic/serializer-mapping"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/dic/serializer-mapping
-                http://symfony.com/schema/dic/serializer-mapping/serializer-mapping-1.0.xsd"
+                https://symfony.com/schema/dic/serializer-mapping/serializer-mapping-1.0.xsd"
         >
             <class name="App\CodeRepository">
                 <discriminator-map type-property="type">
-                    <mapping type="github" class="App\GitHubCodeRepository" />
-                    <mapping type="bitbucket" class="App\BitBucketCodeRepository" />
+                    <mapping type="github" class="App\GitHubCodeRepository"/>
+                    <mapping type="bitbucket" class="App\BitBucketCodeRepository"/>
                 </discriminator-map>
             </class>
         </serializer>
@@ -1571,7 +1569,7 @@ and return ``true`` when
 :method:`Symfony\\Component\\Serializer\\Normalizer\\CacheableSupportsMethodInterface::hasCacheableSupportsMethod`
 is called.
 
- .. note::
+.. note::
 
     All built-in :ref:`normalizers and denormalizers <component-serializer-normalizers>`
     as well the ones included in `API Platform`_ natively implement this interface.
@@ -1590,8 +1588,8 @@ is called.
 .. seealso::
 
     Normalizers for the Symfony Serializer Component supporting popular web API formats
-    (JSON-LD, GraphQL, HAL and JSONAPI) are available as part of the `API Platform`_ project.
-    支持流行的Web API格式（JSON-LD、GraphQL、HAL和JSONAPI）的Symfony Serializer组件的规范化器可作为API Platform项目的一部分提供。
+    (JSON-LD, GraphQL, OpenAPI, HAL, JSONAPI) are available as part of the `API Platform`_ project.
+    支持流行的Web API格式（JSON-LD、GraphQL、OpenAPI、HAL以及JSONAPI）的Symfony Serializer组件的规范化器可作为API Platform项目的一部分提供。
 
 .. seealso::
 

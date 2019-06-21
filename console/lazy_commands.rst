@@ -15,9 +15,9 @@
     use Symfony\Component\Console\Application;
     use Symfony\Component\Console\CommandLoader\FactoryCommandLoader;
 
-    $commandLoader = new FactoryCommandLoader(array(
+    $commandLoader = new FactoryCommandLoader([
         'app:heavy' => function () { return new HeavyCommand(); },
-    ));
+    ]);
 
     $application = new Application();
     $application->setCommandLoader($commandLoader);
@@ -41,10 +41,10 @@
 
     use Symfony\Component\Console\CommandLoader\FactoryCommandLoader;
 
-    $commandLoader = new FactoryCommandLoader(array(
+    $commandLoader = new FactoryCommandLoader([
         'app:foo' => function () { return new FooCommand(); },
-        'app:bar' => array(BarCommand::class, 'create'),
-    ));
+        'app:bar' => [BarCommand::class, 'create'],
+    ]);
 
 工厂可以是任何可调用的PHP，并且每次调用时都会执行
 :method:`Symfony\\Component\\Console\\CommandLoader\\FactoryCommandLoader::get`。
@@ -64,9 +64,9 @@
     $containerBuilder->register(FooCommand::class, FooCommand::class);
     $containerBuilder->compile();
 
-    $commandLoader = new ContainerCommandLoader($containerBuilder, array(
+    $commandLoader = new ContainerCommandLoader($containerBuilder, [
         'app:foo' => FooCommand::class,
-    ));
+    ]);
 
 像这样，执行 ``app:foo`` 命令将通过调用 ``$containerBuilder->get(FooCommand::class)``
 来加载 ``FooCommand`` 服务。

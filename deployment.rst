@@ -53,13 +53,15 @@
 使用平台服务
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-使用平台服务（PaaS）可以快速轻松地部署Symfony应用。
+使用平台服务（PaaS）可以快速地部署Symfony应用。
 有很多PaaS  - 下面有一些与Symfony配合得更好：
 
+* `Symfony Cloud`_
 * `Heroku`_
 * `Platform.sh`_
 * `Azure`_
 * `fortrabbit`_
+* `Clever Cloud`_
 
 使用构建脚本和其他工具
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -125,7 +127,6 @@ B) 配置你的环境变量
 
     .. code-block:: terminal
 
-        $ composer remove symfony/dotenv
         $ composer require symfony/dotenv
 
 C) 安装/更新依赖
@@ -146,7 +147,7 @@ C) 安装/更新依赖
 .. caution::
 
     如果在这一步你得到 "class not found" 错误，你可能需要在执行前述命令之前先运行 ``export APP_ENV=prod``
-    (或 ``export SYMFONY_ENV=prod`` 如果你没有使用 :doc:`Symfony Flex </setup/flex>` 的话)
+    (或 ``export SYMFONY_ENV=prod`` 如果你没有使用 :doc:`Symfony Flex </setup/flex>` 的话)，
     以便在 ``prod`` 环境下运行 ``post-install-cmd`` 脚本。
 
 D) 清除Symfony缓存
@@ -164,7 +165,7 @@ E) 其他任务！
 根据你的设置，你可能还需要做很多其他事情：
 
 * 运行任何数据库迁移
-* 清除APC缓存
+* 清除APCu缓存
 * 添加/编辑 CRON 任务
 * 使用Webpack Encore :ref:`建立和压缩你的资源 <how-do-i-deploy-my-encore-assets>`
 * 发布资源到一个 CDN
@@ -188,25 +189,13 @@ E) 其他任务！
 不使用 ``composer.json`` 文件部署
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Symfony应用提供了 ``kernel.project_dir`` 参数和相关的
+:ref:`项目根目录 <configuration-kernel-project-directory>`（其值通过
+``kernel.project_dir`` 参数和 :method:`Symfony\\Component\\HttpKernel\\Kernel::getProjectDir`
+方法来使用）由Symfony自动计算，并作为存储 ``composer.json`` 文件的目录。
+
+在不使用 ``composer.json`` 文件的部署中，你需要按照
+:ref:`本节中的说明 <configuration-kernel-project-directory>` 来重写
 :method:`Symfony\\Component\\HttpKernel\\Kernel::getProjectDir` 方法。
-你可以使用此方法对文件路径执行相对于项目根目录的操作。
-查找项目根目录的逻辑基于主 ``composer.json`` 文件的位置。
-
-如果部署的方式不使用Composer，你可能已经了删除 ``composer.json`` 文件，那么该应用将无法在生产服务器上运行。
-解决方案是覆盖应用内核中的 ``getProjectDir()``  方法并返回项目的根目录::
-
-    // src/Kernel.php
-    // ...
-    class Kernel extends BaseKernel
-    {
-        // ...
-
-        public function getProjectDir()
-        {
-            return __DIR__.'/..';
-        }
-    }
 
 扩展阅读
 ----------
@@ -233,3 +222,5 @@ Symfony应用提供了 ``kernel.project_dir`` 参数和相关的
 .. _`Azure`: https://azure.microsoft.com/en-us/develop/php/
 .. _`fortrabbit`: https://help.fortrabbit.com/install-symfony
 .. _`EasyDeployBundle`: https://github.com/EasyCorp/easy-deploy-bundle
+.. _`Clever Cloud`: https://www.clever-cloud.com/doc/php/tutorial-symfony/
+.. _`Symfony Cloud`: https://symfony.com/doc/master/cloud/intro.html

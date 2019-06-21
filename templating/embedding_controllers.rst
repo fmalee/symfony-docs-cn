@@ -34,7 +34,7 @@ Symfony提出的替代解决方案是创建一个控制器，该控制器仅显�
 
             return $this->render(
                 'article/recent_list.html.twig',
-                array('articles' => $articles)
+                ['articles' => $articles]
             );
         }
     }

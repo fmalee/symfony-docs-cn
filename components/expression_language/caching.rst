@@ -31,8 +31,8 @@ uses an :class:`Symfony\\Component\\Cache\\Adapter\\ArrayAdapter`). You can
 customize this by creating a custom cache pool or using one of the available
 ones and injecting this using the constructor::
 
-    use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
     use Symfony\Component\Cache\Adapter\RedisAdapter;
+    use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
     $cache = new RedisAdapter(...);
     $expressionLanguage = new ExpressionLanguage($cache);
@@ -51,7 +51,7 @@ Both ``evaluate()`` and ``compile()`` can handle ``ParsedExpression`` and
     // ...
 
     // the parse() method returns a ParsedExpression
-    $expression = $expressionLanguage->parse('1 + 4', array());
+    $expression = $expressionLanguage->parse('1 + 4', []);
 
     var_dump($expressionLanguage->evaluate($expression)); // prints 5
 
@@ -62,7 +62,7 @@ Both ``evaluate()`` and ``compile()`` can handle ``ParsedExpression`` and
 
     $expression = new SerializedParsedExpression(
         '1 + 4',
-        serialize($expressionLanguage->parse('1 + 4', array())->getNodes())
+        serialize($expressionLanguage->parse('1 + 4', [])->getNodes())
     );
 
     var_dump($expressionLanguage->evaluate($expression)); // prints 5

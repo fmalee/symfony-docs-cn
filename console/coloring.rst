@@ -34,7 +34,7 @@
     use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 
     // ...
-    $outputStyle = new OutputFormatterStyle('red', 'yellow', array('bold', 'blink'));
+    $outputStyle = new OutputFormatterStyle('red', 'yellow', ['bold', 'blink']);
     $output->getFormatter()->setStyle('fire', $outputStyle);
 
     $output->writeln('<fire>foo</>');

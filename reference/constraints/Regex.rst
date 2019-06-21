@@ -3,19 +3,17 @@ Regex
 
 Validates that a value matches a regular expression.
 
-+----------------+-----------------------------------------------------------------------+
-| Applies to     | :ref:`property or method <validation-property-target>`                |
-+----------------+-----------------------------------------------------------------------+
-| Options        | - `pattern`_                                                          |
-|                | - `htmlPattern`_                                                      |
-|                | - `match`_                                                            |
-|                | - `message`_                                                          |
-|                | - `payload`_                                                          |
-+----------------+-----------------------------------------------------------------------+
-| Class          | :class:`Symfony\\Component\\Validator\\Constraints\\Regex`            |
-+----------------+-----------------------------------------------------------------------+
-| Validator      | :class:`Symfony\\Component\\Validator\\Constraints\\RegexValidator`   |
-+----------------+-----------------------------------------------------------------------+
+==========  ===================================================================
+Applies to  :ref:`property or method <validation-property-target>`
+Options     - `groups`_
+            - `htmlPattern`_
+            - `match`_
+            - `message`_
+            - `pattern`_
+            - `payload`_
+Class       :class:`Symfony\\Component\\Validator\\Constraints\\Regex`
+Validator   :class:`Symfony\\Component\\Validator\\Constraints\\RegexValidator`
+==========  ===================================================================
 
 Basic Usage
 -----------
@@ -56,7 +54,7 @@ more word characters at the beginning of your string:
         <?xml version="1.0" encoding="UTF-8" ?>
         <constraint-mapping xmlns="http://symfony.com/schema/dic/constraint-mapping"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping http://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
+            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping https://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
 
             <class name="App\Entity\Author">
                 <property name="description">
@@ -72,16 +70,16 @@ more word characters at the beginning of your string:
         // src/Entity/Author.php
         namespace App\Entity;
 
-        use Symfony\Component\Validator\Mapping\ClassMetadata;
         use Symfony\Component\Validator\Constraints as Assert;
+        use Symfony\Component\Validator\Mapping\ClassMetadata;
 
         class Author
         {
             public static function loadValidatorMetadata(ClassMetadata $metadata)
             {
-                $metadata->addPropertyConstraint('description', new Assert\Regex(array(
+                $metadata->addPropertyConstraint('description', new Assert\Regex([
                     'pattern' => '/^\w+/',
-                )));
+                ]));
             }
         }
 
@@ -128,7 +126,7 @@ it a custom message:
         <?xml version="1.0" encoding="UTF-8" ?>
         <constraint-mapping xmlns="http://symfony.com/schema/dic/constraint-mapping"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping http://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
+            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping https://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
 
             <class name="App\Entity\Author">
                 <property name="firstName">
@@ -146,18 +144,18 @@ it a custom message:
         // src/Entity/Author.php
         namespace App\Entity;
 
-        use Symfony\Component\Validator\Mapping\ClassMetadata;
         use Symfony\Component\Validator\Constraints as Assert;
+        use Symfony\Component\Validator\Mapping\ClassMetadata;
 
         class Author
         {
             public static function loadValidatorMetadata(ClassMetadata $metadata)
             {
-                $metadata->addPropertyConstraint('firstName', new Assert\Regex(array(
+                $metadata->addPropertyConstraint('firstName', new Assert\Regex([
                     'pattern' => '/\d/',
-                    'match'   => false,
+                    'match' => false,
                     'message' => 'Your name cannot contain a number',
-                )));
+                ]));
             }
         }
 
@@ -166,16 +164,7 @@ it a custom message:
 Options
 -------
 
-pattern
-~~~~~~~
-
-**type**: ``string`` [:ref:`default option <validation-default-option>`]
-
-This required option is the regular expression pattern that the input will
-be matched against. By default, this validator will fail if the input string
-does *not* match this regular expression (via the :phpfunction:`preg_match`
-PHP function). However, if `match`_ is set to false, then validation will
-fail if the input string *does* match this pattern.
+.. include:: /reference/constraints/_groups-option.rst.inc
 
 htmlPattern
 ~~~~~~~~~~~
@@ -229,7 +218,7 @@ need to specify the HTML5 compatible pattern in the ``htmlPattern`` option:
         <?xml version="1.0" encoding="UTF-8" ?>
         <constraint-mapping xmlns="http://symfony.com/schema/dic/constraint-mapping"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping http://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
+            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping https://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
 
             <class name="App\Entity\Author">
                 <property name="name">
@@ -246,17 +235,17 @@ need to specify the HTML5 compatible pattern in the ``htmlPattern`` option:
         // src/Entity/Author.php
         namespace App\Entity;
 
-        use Symfony\Component\Validator\Mapping\ClassMetadata;
         use Symfony\Component\Validator\Constraints as Assert;
+        use Symfony\Component\Validator\Mapping\ClassMetadata;
 
         class Author
         {
             public static function loadValidatorMetadata(ClassMetadata $metadata)
             {
-                $metadata->addPropertyConstraint('name', new Assert\Regex(array(
-                    'pattern'     => '/^[a-z]+$/i',
+                $metadata->addPropertyConstraint('name', new Assert\Regex([
+                    'pattern' => '/^[a-z]+$/i',
                     'htmlPattern' => '^[a-zA-Z]+$',
-                )));
+                ]));
             }
         }
 
@@ -281,10 +270,21 @@ This is the message that will be shown if this validator fails.
 
 You can use the following parameters in this message:
 
-+-----------------+-----------------------------+
-| Parameter       | Description                 |
-+=================+=============================+
-| ``{{ value }}`` | The current (invalid) value |
-+-----------------+-----------------------------+
+===============  ==============================================================
+Parameter        Description
+===============  ==============================================================
+``{{ value }}``  The current (invalid) value
+===============  ==============================================================
+
+pattern
+~~~~~~~
+
+**type**: ``string`` [:ref:`default option <validation-default-option>`]
+
+This required option is the regular expression pattern that the input will
+be matched against. By default, this validator will fail if the input string
+does *not* match this regular expression (via the :phpfunction:`preg_match`
+PHP function). However, if `match`_ is set to false, then validation will
+fail if the input string *does* match this pattern.
 
 .. include:: /reference/constraints/_payload-option.rst.inc

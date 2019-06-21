@@ -6,7 +6,8 @@
 
 简单的应用可以在单个配置文件中定义所有路由 - 通常是
 ``config/routes.yaml`` （请参阅 :ref:`routing-creating-routes`）。
-但是，在大多数应用中，通常从不同的资源中导入路由定义：控制器文件中的PHP注释，存储在某个目录中的YAML或XML文件等。
+但是，在大多数应用中，通常从不同的资源中导入路由定义：
+控制器文件中的PHP注释，存储在某个目录中的YAML、XML或PHP文件等。
 
 这可以通过从主路由文件中导入路由资源来完成：
 
@@ -17,7 +18,7 @@
         # config/routes.yaml
         app_file:
             # 从存储在某个bundle中的给定路由文件加载路由
-            resource: '@AcmeOtherBundle/Resources/config/routing.yml'
+            resource: '@AcmeBundle/Resources/config/routing.yaml'
 
         app_annotations:
             # 从给定目录的控制器中的PHP注释加载路由
@@ -25,13 +26,13 @@
             type:     annotation
 
         app_directory:
-            # 从给定目录中的YAML或XML文件加载路由
+            # 从给定目录中的YAML、XML或PHP文件加载路由
             resource: '../legacy/routing/'
             type:     directory
 
         app_bundle:
-            # 从某些bundle目录中的YAML或XML文件加载路由
-            resource: '@AppBundle/Resources/config/routing/public/'
+            # 从某些bundle目录中的YAML、XML或PHP文件加载路由
+            resource: '@AcmeOtherBundle/Resources/config/routing/'
             type:     directory
 
     .. code-block:: xml
@@ -41,46 +42,43 @@
         <routes xmlns="http://symfony.com/schema/routing"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/routing
-                http://symfony.com/schema/routing/routing-1.0.xsd">
+                https://symfony.com/schema/routing/routing-1.0.xsd">
 
             <!-- loads routes from the given routing file stored in some bundle -->
-            <import resource="@AcmeOtherBundle/Resources/config/routing.yml" />
+            <import resource="@AcmeBundle/Resources/config/routing.yaml"/>
 
             <!-- loads routes from the PHP annotations of the controllers found in that directory -->
-            <import resource="../src/Controller/" type="annotation" />
+            <import resource="../src/Controller/" type="annotation"/>
 
             <!-- loads routes from the YAML or XML files found in that directory -->
-            <import resource="../legacy/routing/" type="directory" />
+            <import resource="../legacy/routing/" type="directory"/>
 
             <!-- loads routes from the YAML or XML files found in some bundle directory -->
-            <import resource="@AppBundle/Resources/config/routing/public/" type="directory" />
+            <import resource="@AcmeOtherBundle/Resources/config/routing/" type="directory"/>
         </routes>
 
     .. code-block:: php
 
         // config/routes.php
-        use Symfony\Component\Routing\RouteCollection;
+        use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
-        $routes = new RouteCollection();
-        $routes->addCollection(
+        return function (RoutingConfigurator $routes) {
             // loads routes from the given routing file stored in some bundle
-            $loader->import("@AcmeOtherBundle/Resources/config/routing.yml")
+            $routes->import('@AcmeBundle/Resources/config/routing.yaml');
 
             // loads routes from the PHP annotations of the controllers found in that directory
-            $loader->import("../src/Controller/", "annotation")
+            $routes->import('../src/Controller/', 'annotation');
 
             // loads routes from the YAML or XML files found in that directory
-            $loader->import("../legacy/routing/", "directory")
+            $routes->import('../legacy/routing/', 'directory');
 
             // loads routes from the YAML or XML files found in some bundle directory
-            $loader->import("@AppBundle/Resources/config/routing/public/", "directory")
-        );
-
-        return $routes;
+            $routes->import('@AcmeOtherBundle/Resources/config/routing/', 'directory');
+        };
 
 .. note::
 
-    从YAML导入资源时，键（例如 ``app_file``）是没有意义的。只要它是唯一的，以确保它不会被其他行重写。
+    导入资源时，键（例如 ``app_file``）是集合的名称。请确保它对每个文件都是唯一的，这样就没有其他行可以覆盖它。
 
 .. _prefixing-imported-routes:
 
@@ -88,7 +86,7 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 你还可以选择为导入的路由提供“前缀”。
-例如，假设你要为应用的所有路由添加 ``/site`` 前缀（例如
+例如，应用的所有路由都添加 ``/site`` 前缀（例如
 ``/site/blog/{slug}``，而不是 ``/blog/{slug}``）：
 
 .. configuration-block::
@@ -120,26 +118,21 @@
         <routes xmlns="http://symfony.com/schema/routing"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/routing
-                http://symfony.com/schema/routing/routing-1.0.xsd">
+                https://symfony.com/schema/routing/routing-1.0.xsd">
 
-            <import
-                resource="../src/Controller/"
-                type="annotation"
-                prefix="/site" />
+            <import resource="../src/Controller/" type="annotation" prefix="/site"/>
         </routes>
 
     .. code-block:: php
 
         // config/routes.php
-        use Symfony\Component\Routing\RouteCollection;
+        use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
-        $app = $loader->import('../src/Controller/', 'annotation');
-        $app->addPrefix('/site');
-
-        $routes = new RouteCollection();
-        $routes->addCollection($app);
-
-        return $routes;
+        return function (RoutingConfigurator $routes) {
+            $routes->import('../src/Controller/', 'annotation')
+                ->prefix('/site')
+            ;
+        };
 
 现在，从新路由资源加载的每个路由的路径都会添加 ``/site`` 字符串前缀。
 
@@ -167,27 +160,25 @@
             <routes xmlns="http://symfony.com/schema/routing"
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xsi:schemaLocation="http://symfony.com/schema/routing
-                    http://symfony.com/schema/routing/routing-1.0.xsd">
+                    https://symfony.com/schema/routing/routing-1.0.xsd">
 
-                <import
-                    resource="../src/Controller/"
+                <import resource="../src/Controller/"
                     type="annotation"
                     prefix="/site"
-                    trailing-slash-on-root="false" />
+                    trailing-slash-on-root="false"/>
             </routes>
 
         .. code-block:: php
 
             // config/routes.php
-            use Symfony\Component\Routing\RouteCollection;
+            use App\Controller\ArticleController;
+            use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
-            $app = $loader->import('../src/Controller/', 'annotation');
-            // the second argument is the $trailingSlashOnRoot option
-            $app->addPrefix('/site', false);
-            // ...
-
-    .. versionadded:: 4.1
-        ``trailing_slash_on_root`` 选项在Symfony 4.1中引入。
+            return function (RoutingConfigurator $routes) {
+                $routes->import('../src/Controller/', 'annotation')
+                    ->prefix('/site', false)
+                ;
+            };
 
 为导入路由的名称添加前缀
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -203,7 +194,7 @@
         /**
          * @Route(name="blog_")
          */
-        class BlogController extends AbstractController
+        class BlogController
         {
             /**
              * @Route("/blog", name="index")
@@ -237,32 +228,25 @@
         <routes xmlns="http://symfony.com/schema/routing"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/routing
-                http://symfony.com/schema/routing/routing-1.0.xsd">
+                https://symfony.com/schema/routing/routing-1.0.xsd">
 
-            <import
-                resource="../src/Controller/"
+            <import resource="../src/Controller/"
                 type="annotation"
-                name-prefix="blog_" />
+                name-prefix="blog_"/>
         </routes>
 
     .. code-block:: php
 
         // config/routes.php
-        use Symfony\Component\Routing\RouteCollection;
+        use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
-        $app = $loader->import('../src/Controller/', 'annotation');
-        $app->addNamePrefix('blog_');
-
-        $collection = new RouteCollection();
-        $collection->addCollection($app);
-
-        return $collection;
+        return function (RoutingConfigurator $routes) {
+            $routes->import('../src/Controller/', 'annotation')
+                ->namePrefix('blog_')
+            ;
+        };
 
 在此示例中，路由的名称将会是 ``blog_index`` 和 ``blog_post``。
-
-.. versionadded:: 4.1
-    在Symfony 4.1中引入了在YAML，XML和PHP文件中为路由名称添加前缀的选项。
-    以前只有 ``@Route()`` 注释才支持此功能。
 
 为导入的路由添加主机要求
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

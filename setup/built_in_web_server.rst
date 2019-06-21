@@ -4,10 +4,13 @@
 如何使用PHP内置Web服务器
 ====================================
 
-从PHP 5.4开始，CLI SAPI就附带了 `内置的Web服务器`_`。
-它可在开发、测试或应用演示期间用于在本地运行PHP应用。
-这样，你就不必费心配置一个功能齐全的
-类似 :doc:`Apache 或 Nginx </setup/web_server_configuration>` 的Web服务器。
+PHP CLI SAPI附带一个 `内置的Web服务器`_`。
+它可以本地化的运行PHP应用，用于开发、测试或应用演示。这样，你就不必费心配置
+:doc:`Apache 或 Nginx </setup/web_server_configuration>`等功能齐全的Web服务器。
+
+.. tip::
+
+    开发Symfony应用的首选方法是使用 :doc:`Symfony本地Web服务器 </setup/symfony_server>`。
 
 .. caution::
 
@@ -25,7 +28,7 @@ Symfony提供了一个构建在此PHP服务器之上的Web服务器，以简化�
 .. code-block:: terminal
 
     $ cd your-project/
-    $ composer require symfony/web-server-bundle --dev
+    $ composer require --dev symfony/web-server-bundle
 
 启动Web服务器
 -----------------------
@@ -97,7 +100,7 @@ Symfony提供了一个构建在此PHP服务器之上的Web服务器，以简化�
 停止服务器
 -------------------
 
-完成工作后，可以使用 ``server:stop`` 命令停止该Web服务器：
+完成工作后，可以使用以下命令来停止Web服务器：
 
 .. code-block:: terminal
 

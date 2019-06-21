@@ -35,12 +35,14 @@
      created: templates/security/login.html.twig
 
 .. versionadded:: 1.8
+
     MakerBundle 1.8中的 ``make:auth`` 添加了对登录表单认证证的支持。
 
-这会生成三件事：（1）一个登录路由和控制器，（2）一个渲染登录表单的模板和（3）
-一个处理登录提交的 :doc:`安保认证器 </security/guard_authentication>` 类。
+这会生成这些：（1）一个登录路由和控制器，（2）一个渲染登录表单的模板，（3）
+一个处理登录提交的 :doc:`安保认证器 </security/guard_authentication>`
+类以及（4) 更新主安全配置文件。
 
-``/login`` 路由与控制器::
+**步骤1.** ``/login`` 路由与控制器::
 
     // src/Controller/SecurityController.php
     namespace App\Controller;
@@ -69,9 +71,53 @@
         }
     }
 
-此模板与安全几乎没有关系：它只是生成一个提交到 ``/login`` 的传统的HTML表单：
+编辑 ``security.yaml`` 文件以允许任何人访问 ``/login`` 路由：
 
-.. code-block:: twig
+.. configuration-block::
+
+    .. code-block:: yaml
+
+        # config/packages/security.yaml
+        security:
+            # ...
+
+            access_control:
+                - { path: ^/login$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+                # ...
+
+    .. code-block:: xml
+
+        <!-- config/packages/security.xml -->
+        <?xml version="1.0" charset="UTF-8" ?>
+        <srv:container xmlns="http://symfony.com/schema/dic/security"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns:srv="http://symfony.com/schema/dic/services"
+            xsi:schemaLocation="http://symfony.com/schema/dic/services
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
+
+            <config>
+                <rule path="^/login$" role="IS_AUTHENTICATED_ANONYMOUSLY"/>
+                <!-- ... -->
+            </config>
+        </srv:container>
+
+    .. code-block:: php
+
+        // config/packages/security.php
+        $container->loadFromExtension('security', [
+            // ...
+            'access_control' => [
+                [
+                    'path' => '^/login',
+                    'roles' => 'IS_AUTHENTICATED_ANONYMOUSLY',
+                ],
+                // ...
+            ],
+        ]);
+
+**步骤2.** 此模板与安全几乎没有关系：它只是生成一个提交到 ``/login`` 的传统的HTML表单：
+
+.. code-block:: html+twig
 
     {% extends 'base.html.twig' %}
 
@@ -110,18 +156,20 @@
     </form>
     {% endblock %}
 
-安保认证器将处理表单的提交::
+**步骤3.** 安保认证器将处理表单的提交::
 
     // src/Security/LoginFormAuthenticator.php
     namespace App\Security;
 
     use App\Entity\User;
     use Doctrine\ORM\EntityManagerInterface;
+
     use Symfony\Component\HttpFoundation\RedirectResponse;
     use Symfony\Component\HttpFoundation\Request;
     use Symfony\Component\Routing\RouterInterface;
     use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
     use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+    use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
     use Symfony\Component\Security\Core\Exception\InvalidCsrfTokenException;
     use Symfony\Component\Security\Core\Security;
     use Symfony\Component\Security\Core\User\UserInterface;
@@ -206,6 +254,63 @@
             return $this->router->generate('app_login');
         }
     }
+
+**步骤4.** 更新主安全配置文件以安保认证器：
+
+.. configuration-block::
+
+    .. code-block:: yaml
+
+        # config/packages/security.yaml
+        security:
+            # ...
+
+            firewalls:
+                main:
+                    # ...
+                    guard:
+                        authenticators:
+                            - App\Security\LoginFormAuthenticator
+
+    .. code-block:: xml
+
+        <!-- config/packages/security.xml -->
+        <?xml version="1.0" charset="UTF-8" ?>
+        <srv:container xmlns="http://symfony.com/schema/dic/security"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns:srv="http://symfony.com/schema/dic/services"
+            xsi:schemaLocation="http://symfony.com/schema/dic/services
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
+
+            <config>
+                <!-- ... -->
+                <firewall name="main">
+                    <!-- ... -->
+                    <guard>
+                        <authenticator class="App\Security\LoginFormAuthenticator"/>
+                    </guard>
+                </firewall>
+            </config>
+        </srv:container>
+
+    .. code-block:: php
+
+        // config/packages/security.php
+        use App\Security\LoginFormAuthenticator;
+
+        $container->loadFromExtension('security', [
+            // ...
+            'firewalls' => [
+                'main' => [
+                    // ...,
+                    'guard' => [
+                        'authenticators' => [
+                            LoginFormAuthenticator::class,
+                        ]
+                    ],
+                ],
+            ],
+        ]);
 
 完成登录表单
 ------------------------

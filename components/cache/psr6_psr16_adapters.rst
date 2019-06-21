@@ -6,9 +6,9 @@
 适用于在PSR-6和PSR-16缓存之间交互的适配器
 ============================================================
 
-有时，你可能有一个实现了 :ref:`PSR-16 <cache-component-psr16-caching>`
-标准的缓存对象，但需要将其传递给一个需要 :ref:`PSR-6 <cache-component-psr6-caching>`
-缓存适配器的对象。或者，你可能会遇到相反的情况。缓存组件包含用于PSR-6和PSR-16缓存之间的双向交互的两个类。
+有时，你可能有一个实现了 `PSR-16`_ 标准的缓存对象，但需要将其传递给一个需要
+:ref:`PSR-6 <cache-component-psr6-caching>` 缓存适配器的对象。
+或者，你可能会遇到相反的情况。缓存组件包含用于PSR-6和PSR-16缓存之间的双向交互的两个类。
 
 将PSR-16缓存对象作为一个PSR-6缓存
 --------------------------------------------
@@ -33,8 +33,8 @@
 类。没问题！缓存组件为此用例提供了
 :class:`Symfony\\Component\\Cache\\Adapter\\SimpleCacheAdapter` 类::
 
-    use Symfony\Component\Cache\Simple\FilesystemCache;
     use Symfony\Component\Cache\Adapter\SimpleCacheAdapter;
+    use Symfony\Component\Cache\Simple\FilesystemCache;
 
     // 要使用的PSR-16缓存对象
     $psr16Cache = new FilesystemCache();
@@ -79,3 +79,5 @@
 
     // 现在你在哪使用都行
     $githubApiClient = new GitHubApiClient($psr16Cache);
+
+.. _`PSR-16`: http://www.php-fig.org/psr/psr-16/

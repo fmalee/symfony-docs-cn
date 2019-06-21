@@ -5,18 +5,16 @@ Validates that a value is greater than or equal to another value, defined in
 the options. To force that a value is greater than another value, see
 :doc:`/reference/constraints/GreaterThan`.
 
-+----------------+----------------------------------------------------------------------------------+
-| Applies to     | :ref:`property or method<validation-property-target>`                            |
-+----------------+----------------------------------------------------------------------------------+
-| Options        | - `value`_                                                                       |
-|                | - `message`_                                                                     |
-|                | - `payload`_                                                                     |
-|                | - `propertyPath`_                                                                |
-+----------------+----------------------------------------------------------------------------------+
-| Class          | :class:`Symfony\\Component\\Validator\\Constraints\\GreaterThanOrEqual`          |
-+----------------+----------------------------------------------------------------------------------+
-| Validator      | :class:`Symfony\\Component\\Validator\\Constraints\\GreaterThanOrEqualValidator` |
-+----------------+----------------------------------------------------------------------------------+
+==========  ===================================================================
+Applies to  :ref:`property or method <validation-property-target>`
+Options     - `groups`_
+            - `message`_
+            - `payload`_
+            - `propertyPath`_
+            - `value`_
+Class       :class:`Symfony\\Component\\Validator\\Constraints\\GreaterThanOrEqual`
+Validator   :class:`Symfony\\Component\\Validator\\Constraints\\GreaterThanOrEqualValidator`
+==========  ===================================================================
 
 Basic Usage
 -----------
@@ -67,12 +65,12 @@ The following constraints ensure that:
         <?xml version="1.0" encoding="UTF-8" ?>
         <constraint-mapping xmlns="http://symfony.com/schema/dic/constraint-mapping"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping http://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
+            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping https://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
 
             <class name="App\Entity\Person">
                 <property name="siblings">
                     <constraint name="GreaterThanOrEqual">
-                        <value>5</value>
+                        5
                     </constraint>
                 </property>
                 <property name="age">
@@ -88,8 +86,8 @@ The following constraints ensure that:
         // src/Entity/Person.php
         namespace App\Entity;
 
-        use Symfony\Component\Validator\Mapping\ClassMetadata;
         use Symfony\Component\Validator\Constraints as Assert;
+        use Symfony\Component\Validator\Mapping\ClassMetadata;
 
         class Person
         {
@@ -97,9 +95,9 @@ The following constraints ensure that:
             {
                 $metadata->addPropertyConstraint('siblings', new Assert\GreaterThanOrEqual(5));
 
-                $metadata->addPropertyConstraint('age', new Assert\GreaterThanOrEqual(array(
+                $metadata->addPropertyConstraint('age', new Assert\GreaterThanOrEqual([
                     'value' => 18,
-                )));
+                ]));
             }
         }
 
@@ -141,7 +139,7 @@ that a date must at least be the current day:
         <?xml version="1.0" encoding="UTF-8" ?>
         <constraint-mapping xmlns="http://symfony.com/schema/dic/constraint-mapping"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping http://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
+            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping https://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
 
             <class name="App\Entity\Order">
                 <property name="deliveryDate">
@@ -155,8 +153,8 @@ that a date must at least be the current day:
         // src/Entity/Order.php
         namespace App\Entity;
 
-        use Symfony\Component\Validator\Mapping\ClassMetadata;
         use Symfony\Component\Validator\Constraints as Assert;
+        use Symfony\Component\Validator\Mapping\ClassMetadata;
 
         class Order
         {
@@ -200,7 +198,7 @@ dates. If you want to fix the timezone, append it to the date string:
         <?xml version="1.0" encoding="UTF-8" ?>
         <constraint-mapping xmlns="http://symfony.com/schema/dic/constraint-mapping"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping http://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
+            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping https://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
 
             <class name="App\Entity\Order">
                 <property name="deliveryDate">
@@ -214,8 +212,8 @@ dates. If you want to fix the timezone, append it to the date string:
         // src/Entity/Order.php
         namespace App\Entity;
 
-        use Symfony\Component\Validator\Mapping\ClassMetadata;
         use Symfony\Component\Validator\Constraints as Assert;
+        use Symfony\Component\Validator\Mapping\ClassMetadata;
 
         class Order
         {
@@ -260,7 +258,7 @@ current time:
         <?xml version="1.0" encoding="UTF-8" ?>
         <constraint-mapping xmlns="http://symfony.com/schema/dic/constraint-mapping"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping http://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
+            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping https://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
 
             <class name="App\Entity\Order">
                 <property name="deliveryDate">
@@ -274,8 +272,8 @@ current time:
         // src/Entity/Order.php
         namespace App\Entity;
 
-        use Symfony\Component\Validator\Mapping\ClassMetadata;
         use Symfony\Component\Validator\Constraints as Assert;
+        use Symfony\Component\Validator\Mapping\ClassMetadata;
 
         class Order
         {
@@ -288,7 +286,7 @@ current time:
 Options
 -------
 
-.. include:: /reference/constraints/_comparison-value-option.rst.inc
+.. include:: /reference/constraints/_groups-option.rst.inc
 
 message
 ~~~~~~~
@@ -300,18 +298,18 @@ to the comparison value.
 
 You can use the following parameters in this message:
 
-+-------------------------------+-----------------------------+
-| Parameter                     | Description                 |
-+===============================+=============================+
-| ``{{ value }}``               | The current (invalid) value |
-+-------------------------------+-----------------------------+
-| ``{{ compared_value }}``      | The lower limit             |
-+-------------------------------+-----------------------------+
-| ``{{ compared_value_type }}`` | The expected value type     |
-+-------------------------------+-----------------------------+
+=============================  ================================================
+Parameter                      Description
+=============================  ================================================
+``{{ compared_value }}``       The lower limit
+``{{ compared_value_type }}``  The expected value type
+``{{ value }}``                The current (invalid) value
+=============================  ================================================
 
 .. include:: /reference/constraints/_payload-option.rst.inc
 
 .. include:: /reference/constraints/_comparison-propertypath-option.rst.inc
+
+.. include:: /reference/constraints/_comparison-value-option.rst.inc
 
 .. _`accepted by the DateTime constructor`: https://php.net/manual/en/datetime.formats.php

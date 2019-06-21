@@ -10,7 +10,8 @@ The PHPUnit Bridge
 
 It comes with the following features:
 
-* Forces the tests to use a consistent locale (``C``);
+* Forces the tests to use a consistent locale (``C``) (if you create
+  locale-sensitive tests, use PHPUnit's ``setLocale()`` method);
 
 * Auto-register ``class_exists`` to load Doctrine annotations (when used);
 
@@ -30,8 +31,6 @@ Installation
 
     $ composer require --dev "symfony/phpunit-bridge:*"
 
-Alternatively, you can clone the `<https://github.com/symfony/phpunit-bridge>`_ repository.
-
 .. include:: /components/require_autoload.rst.inc
 
 .. note::
@@ -49,13 +48,13 @@ to register a new `test listener`_ called ``SymfonyTestsListener``:
 
     <!-- http://phpunit.de/manual/6.0/en/appendixes.configuration.html -->
     <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-             xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/6.0/phpunit.xsd"
+        xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/6.0/phpunit.xsd"
     >
 
         <!-- ... -->
 
         <listeners>
-            <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener" />
+            <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener"/>
         </listeners>
     </phpunit>
 
@@ -122,7 +121,7 @@ The summary includes:
         <!-- phpunit.xml.dist -->
         <!-- ... -->
         <listeners>
-            <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener" />
+            <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener"/>
         </listeners>
 
 Trigger Deprecation Notices
@@ -173,14 +172,14 @@ message, enclosed with ``/``. For example, with:
 
     <!-- http://phpunit.de/manual/6.0/en/appendixes.configuration.html -->
     <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-             xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/6.0/phpunit.xsd"
+        xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/6.0/phpunit.xsd"
     >
 
         <!-- ... -->
 
         <php>
-            <server name="KERNEL_CLASS" value="App\Kernel" />
-            <env name="SYMFONY_DEPRECATIONS_HELPER" value="/foobar/" />
+            <server name="KERNEL_CLASS" value="App\Kernel"/>
+            <env name="SYMFONY_DEPRECATIONS_HELPER" value="/foobar/"/>
         </php>
     </phpunit>
 
@@ -248,9 +247,6 @@ class autoloading time. This can be disabled with the ``debug-class-loader`` opt
         </listener>
     </listeners>
 
-.. versionadded:: 4.2
-    The ``DebugClassLoader`` integration was introduced in Symfony 4.2.
-
 Write Assertions about Deprecations
 -----------------------------------
 
@@ -280,7 +276,9 @@ By default, the PHPUnit Bridge displays only deprecation messages.
 To show the full stack trace related to a deprecation, set the value of ``SYMFONY_DEPRECATIONS_HELPER``
 to a regular expression matching the deprecation message.
 
-For example, if the following deprecation notice is thrown::
+For example, if the following deprecation notice is thrown:
+
+.. code-block:: bash
 
     1x: Doctrine\Common\ClassLoader is deprecated.
       1x in EntityTypeTest::setUp from Symfony\Bridge\Doctrine\Tests\Form\Type
@@ -345,7 +343,7 @@ following listener in your PHPUnit configuration:
     <!-- phpunit.xml.dist -->
     <!-- ... -->
     <listeners>
-        <listener class="\Symfony\Bridge\PhpUnit\SymfonyTestsListener" />
+        <listener class="\Symfony\Bridge\PhpUnit\SymfonyTestsListener"/>
     </listeners>
 
 .. note::
@@ -405,6 +403,7 @@ different class, do it explicitly using ``ClockMock::register(MyClass::class)``:
 
     use App\MyClass;
     use PHPUnit\Framework\TestCase;
+    use Symfony\Bridge\PhpUnit\ClockMock; 
 
     /**
      * @group time-sensitive
@@ -461,7 +460,7 @@ constraint to test the validity of the email domain::
         public function testEmail()
         {
             $validator = ...
-            $constraint = new Email(array('checkMX' => true));
+            $constraint = new Email(['checkMX' => true]);
 
             $result = $validator->validate('foo@example.com', $constraint);
 
@@ -482,10 +481,10 @@ the data you expect to get for the given hosts::
     {
         public function testEmails()
         {
-            DnsMock::withMockedHosts(array('example.com' => array(array('type' => 'MX'))));
+            DnsMock::withMockedHosts(['example.com' => [['type' => 'MX']]]);
 
             $validator = ...
-            $constraint = new Email(array('checkMX' => true));
+            $constraint = new Email(['checkMX' => true]);
 
             $result = $validator->validate('foo@example.com', $constraint);
 
@@ -497,18 +496,18 @@ are the mocked hosts and the values are arrays of DNS records in the same format
 returned by :phpfunction:`dns_get_record`, so you can simulate diverse network
 conditions::
 
-    DnsMock::withMockedHosts(array(
-        'example.com' => array(
-            array(
+    DnsMock::withMockedHosts([
+        'example.com' => [
+            [
                 'type' => 'A',
                 'ip' => '1.2.3.4',
-            ),
-            array(
+            ],
+            [
                 'type' => 'AAAA',
                 'ipv6' => '::12',
-            ),
-        ),
-    ));
+            ],
+        ],
+    ]);
 
 Troubleshooting
 ---------------
@@ -528,7 +527,7 @@ namespaces in the ``phpunit.xml`` file, as done for example in the
 
     <!-- http://phpunit.de/manual/4.1/en/appendixes.configuration.html -->
     <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-             xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/4.1/phpunit.xsd"
+        xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/4.1/phpunit.xsd"
     >
 
         <!-- ... -->
@@ -590,7 +589,7 @@ It's also possible to set this env var in the ``phpunit.xml.dist`` file.
 
 If you have installed the bridge through Composer, you can run it by calling e.g.:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ vendor/bin/simple-phpunit
 
@@ -608,11 +607,11 @@ If you have installed the bridge through Composer, you can run it by calling e.g
 
     It's also possible to set this env var in the ``phpunit.xml.dist`` file.
 
-Code coverage listener
+Code Coverage Listener
 ----------------------
 
 By default, the code coverage is computed with the following rule: if a line of
-code is executed, then it is marked as covered. And the test which executes a
+code is executed, then it is marked as covered. The test which executes a
 line of code is therefore marked as "covering the line of code". This can be
 misleading.
 
@@ -667,19 +666,19 @@ the ``Test`` part of the classname: ``My\Namespace\Tests\FooTest`` ->
 Installation
 ~~~~~~~~~~~~
 
-Add the following configuration to the ``phpunit.xml.dist`` file
+Add the following configuration to the ``phpunit.xml.dist`` file:
 
 .. code-block:: xml
 
     <!-- http://phpunit.de/manual/6.0/en/appendixes.configuration.html -->
     <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-             xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/6.0/phpunit.xsd"
+        xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/6.0/phpunit.xsd"
     >
 
         <!-- ... -->
 
         <listeners>
-            <listener class="Symfony\Bridge\PhpUnit\CoverageListener" />
+            <listener class="Symfony\Bridge\PhpUnit\CoverageListener"/>
         </listeners>
     </phpunit>
 

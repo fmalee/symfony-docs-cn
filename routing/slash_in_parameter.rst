@@ -1,6 +1,8 @@
 .. index::
    single: Routing; Allow / in route parameter
 
+.. _routing/slash_in_parameter:
+
 如何允许在路由参数中使用“/”字符
 =================================================
 
@@ -51,10 +53,9 @@
         <routes xmlns="http://symfony.com/schema/routing"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/routing
-                http://symfony.com/schema/routing/routing-1.0.xsd">
+                https://symfony.com/schema/routing/routing-1.0.xsd">
 
-            <route id="share" path="/share/{token}">
-                <default key="_controller">App\Controller\DefaultController::share</default>
+            <route id="share" path="/share/{token}" controller="App\Controller\DefaultController::share">
                 <requirement key="token">.+</requirement>
             </route>
         </routes>
@@ -62,17 +63,17 @@
     .. code-block:: php
 
         // config/routes.php
-        use Symfony\Component\Routing\RouteCollection;
-        use Symfony\Component\Routing\Route;
+        use App\Controller\DefaultController;
+        use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
-        $routes = new RouteCollection();
-        $routes->add('share', new Route('/share/{token}', array(
-            '_controller' => 'App\Controller\DefaultController::share',
-        ), array(
-            'token' => '.+',
-        )));
-
-        return $routes;
+        return function (RoutingConfigurator $routes) {
+            $routes->add('share', '/share/{token}')
+                ->controller([DefaultController::class, 'share'])
+                ->requirements([
+                    'token' => '.+',
+                ])
+            ;
+        };
 
 仅此而已！现在 ``{token}`` 参数可以包含 ``/`` 字符了。
 

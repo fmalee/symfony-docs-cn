@@ -91,7 +91,7 @@ the code that prepares the HTML "presentation"::
 
     $result = $connection->query('SELECT id, title FROM post');
 
-    $posts = array();
+    $posts = [];
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
         $posts[] = $row;
     }
@@ -133,7 +133,7 @@ of *your* code that processes user input and prepares the response.
 
 In this case, the controller prepares data from the database and then includes
 a template to present that data. With the controller isolated, you could
-easily change *just* the template file if you needed to render the blog
+change *just* the template file if you needed to render the blog
 entries in some other format (e.g. ``list.json.php`` for JSON format).
 
 Isolating the Application (Domain) Logic
@@ -163,7 +163,7 @@ of the application are isolated in a new file called ``model.php``::
 
         $result = $connection->query('SELECT id, title FROM post');
 
-        $posts = array();
+        $posts = [];
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             $posts[] = $row;
         }
@@ -181,7 +181,7 @@ of the application are isolated in a new file called ``model.php``::
     in this example, only a portion (or none) of the model is actually concerned
     with accessing a database.
 
-The controller (``index.php``) is now is just a few lines of code::
+The controller (``index.php``) is now just a few lines of code::
 
     // index.php
     require_once 'model.php';
@@ -243,9 +243,8 @@ the ``templates/layout.php``:
 You now have a setup that will allow you to reuse the layout.
 Unfortunately, to accomplish this, you're forced to use a few ugly
 PHP functions (``ob_start()``, ``ob_get_clean()``) in the template. Symfony
-uses a :doc:`Templating </components/templating>` component
-that allows this to be accomplished cleanly and easily. You'll see it in
-action shortly.
+solves this using a :doc:`Templating </components/templating>` component.
+You'll see it in action shortly.
 
 Adding a Blog "show" Page
 -------------------------
@@ -262,7 +261,7 @@ an individual blog result based on a given id::
     {
         $connection = open_database_connection();
 
-        $query = 'SELECT created_at, title, body FROM post WHERE  id=:id';
+        $query = 'SELECT created_at, title, body FROM post WHERE id=:id';
         $statement = $connection->prepare($query);
         $statement->bindValue(':id', $id, PDO::PARAM_INT);
         $statement->execute();
@@ -307,7 +306,7 @@ Creating the second page now requires very little work and no code is duplicated
 this page introduces even more lingering problems that a framework can solve
 for you. For example, a missing or invalid ``id`` query parameter will cause
 the page to crash. It would be better if this caused a 404 page to be rendered,
-but this can't really be done easily yet.
+but this can't really be done yet.
 
 Another major problem is that each individual controller file must include
 the ``model.php`` file. What if each controller file suddenly needed to include
@@ -486,7 +485,7 @@ incidentally, acts quite a bit like the Symfony templating engine::
     function list_action()
     {
         $posts = get_all_posts();
-        $html = render_template('templates/list.php', array('posts' => $posts));
+        $html = render_template('templates/list.php', ['posts' => $posts]);
 
         return new Response($html);
     }
@@ -494,7 +493,7 @@ incidentally, acts quite a bit like the Symfony templating engine::
     function show_action($id)
     {
         $post = get_post_by_id($id);
-        $html = render_template('templates/show.php', array('post' => $post));
+        $html = render_template('templates/show.php', ['post' => $post]);
 
         return new Response($html);
     }
@@ -533,7 +532,7 @@ a simple application. Along the way, you've made a simple routing
 system and a method using ``ob_start()`` and ``ob_get_clean()`` to render
 templates. If, for some reason, you needed to continue building this "framework"
 from scratch, you could at least use Symfony's standalone
-:doc:`Routing </components/routing>` and component and :doc:`Twig </templating>`,
+:doc:`Routing </components/routing>` component and :doc:`Twig </templating>`,
 which already solve these problems.
 
 Instead of re-solving common problems, you can let Symfony take care of
@@ -664,9 +663,9 @@ object are sent back to the client.
 
 It's a beautiful thing.
 
-.. figure:: /_images/http/request-flow.png
-   :align: center
-   :alt: Symfony request flow
+.. raw:: html
+
+    <object data="../_images/http/request-flow.svg" type="image/svg+xml"></object>
 
 Where Symfony Delivers
 ----------------------

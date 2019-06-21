@@ -14,14 +14,13 @@ Stopwatch组件
 
     $ composer require symfony/stopwatch
 
-或者，你可以克隆 `<https://github.com/symfony/stopwatch>`_ 仓库。
-
 .. include:: /components/require_autoload.rst.inc
 
 用法
 -----
 
-Stopwatch组件提供了一种简单而一致的方法来统计代码的某些部分的执行时间，这样你可以直接使用 :class:`Symfony\\Component\\Stopwatch\\Stopwatch` 类而不必经常自己解析 ``microtime``::
+Stopwatch组件提供了一种一致的方法来统计代码的某些部分的执行时间，这样你可以直接使用
+:class:`Symfony\\Component\\Stopwatch\\Stopwatch` 类而不必经常自己解析 ``microtime``::
 
     use Symfony\Component\Stopwatch\Stopwatch;
 
@@ -56,8 +55,8 @@ Stopwatch组件提供了一种简单而一致的方法来统计代码的某些�
 
 .. tip::
 
-    如果要在Symfony分析器中显示事件，请自动装配 ``Symfony\Component\Stopwatch\Stopwatch``
-    到你的服务。而每个类别都将显示在单独的行中。
+    阅读 :ref:`这篇文档 <profiler-timing-execution>`
+    以了解有关将Stopwatch组件集成到Symfony分析器中的更多信息。
 
 周期
 -------

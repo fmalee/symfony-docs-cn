@@ -180,7 +180,7 @@ ManyToOne / OneToMany
         <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
-                http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+                https://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
             <entity name="App\Entity\Product">
                 <!-- ... -->
@@ -188,7 +188,7 @@ ManyToOne / OneToMany
                     field="category"
                     target-entity="App\Entity\Category"
                     inversed-by="products">
-                    <join-column nullable="false" />
+                    <join-column nullable="false"/>
                 </many-to-one>
             </entity>
         </doctrine-mapping>
@@ -254,14 +254,14 @@ ManyToOne / OneToMany
         <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
-                http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+                https://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
             <entity name="App\Entity\Category">
                 <!-- ... -->
                 <one-to-many
                     field="products"
                     target-entity="App\Entity\Product"
-                    mapped-by="category" />
+                    mapped-by="category"/>
 
                 <!--
                     don't forget to init the collection in
@@ -382,7 +382,7 @@ Doctrine默默地进行第二次查询以找到与 ``Product`` 相关的 ``Categ
 .. image:: /_images/doctrine/mapping_relations_proxy.png
     :align: center
 
-重要的是你可以轻松访问产品的相关类别，但在你需要类别之前，实际上并未检索对应的类别数据（即“延迟加载”）。
+重要的是你可以访问产品的相关类别，但在你需要类别之前，实际上并未检索对应的类别数据（即“延迟加载”）。
 
 因为我们映射了可选的 ``OneToMany`` 侧，你还可以从另一个方向进行查询::
 
@@ -424,6 +424,8 @@ Doctrine默默地进行第二次查询以找到与 ``Product`` 相关的 ``Categ
 
     在下一节中，当你一次性检索产品和类别数据时（通过 *join*），
     因为不需要延迟加载任何内容，Doctrine将返回 *真实* 的 ``Category`` 对象，。
+
+.. _doctrine-associations-join-query:
 
 连接相关记录
 -----------------------

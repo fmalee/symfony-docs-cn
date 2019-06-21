@@ -5,7 +5,7 @@
 ==========
 
 控制器是你创建的一个PHP函数，它从 ``Request`` 对象读取信息并创建和返回一个 ``Response`` 对象。
-响应可能是HTML页面、JSON、XML、文件下载、重定向、404错误或你可以想到的任何其他内容。
+响应可能是HTML页面、JSON、XML、文件下载、重定向、404错误或任何其他内容。
 控制器负责实施你的应用渲染页面内容所需的任意逻辑。
 
 .. tip::
@@ -106,7 +106,7 @@
 
 :method:`Symfony\\Bundle\\FrameworkBundle\\Controller\\AbstractController::generateUrl` 方法只是一个生成给定路由的URL的辅助方法::
 
-    $url = $this->generateUrl('app_lucky_number', array('max' => 10));
+    $url = $this->generateUrl('app_lucky_number', ['max' => 10]);
 
 重定向
 ~~~~~~~~~~~
@@ -125,10 +125,10 @@
         // return new RedirectResponse($this->generateUrl('homepage'));
 
         // 永久性 - 301 重定向
-        return $this->redirectToRoute('homepage', array(), 301);
+        return $this->redirectToRoute('homepage', [], 301);
 
         // 重定向到带参数的路由
-        return $this->redirectToRoute('app_lucky_number', array('max' => 10));
+        return $this->redirectToRoute('app_lucky_number', ['max' => 10]);
 
         // 重定向到路由并维持原有的查询字符串参数
         return $this->redirectToRoute('blog_show', $request->query->all());
@@ -154,7 +154,7 @@
 ``render()`` 方法会渲染模板 **并** 将该内容放入到一个 ``Response`` 对象中::
 
     // 渲染 templates/lucky/number.html.twig
-    return $this->render('lucky/number.html.twig', array('number' => $number));
+    return $this->render('lucky/number.html.twig', ['number' => $number]);
 
 可以在 :doc:`创建和使用模板 </templating>` 章节中了解更多关于模板和Twig的内容。
 
@@ -173,7 +173,7 @@ Symfony开箱即拥有许多有用的对象，称为 :doc:`服务 </service_cont
 如果你在控制器中的需要一个服务，只需用该服务的类（或接口）作为一个带类型约束(type-hint)的参数。
 Symfony会自动给你传递所需的服务::
 
-    use Psr\Log\LoggerInterface
+    use Psr\Log\LoggerInterface;
     // ...
 
     /**
@@ -219,7 +219,7 @@ Symfony会自动给你传递所需的服务::
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <services>
                 <!-- ... -->
@@ -243,16 +243,13 @@ Symfony会自动给你传递所需的服务::
 
         $container->register(LuckyController::class)
             ->setPublic(true)
-            ->setBindings(array(
+            ->setBindings([
                 '$logger' => new Reference('monolog.logger.doctrine'),
                 '$projectDir' => '%kernel.project_dir%'
-            ))
+            ])
         ;
 
 与所有服务一样，你也可以在控制器中使用常规的 :ref:`构造函数注入 <services-constructor-injection>`。
-
-.. versionadded:: 4.1
-    Symfony 4.1中引入了将标量值(scalar values)绑定到控制器参数的功能。以前只能绑定服务。
 
 有关服务的更多信息，请参阅 :doc:`/service_container` 章节。
 
@@ -274,6 +271,7 @@ Symfony会自动给你传递所需的服务::
     $ php bin/console make:crud Product
 
 .. versionadded:: 1.2
+
     ``make:crud`` 命令是在MakerBundle 1.2中引入的。
 
 .. index::
@@ -361,19 +359,17 @@ Symfony支持会话服务，你可以使用该服务在各请求之间存储有�
         $foobar = $session->get('foobar');
 
         // 如果该属性不存在，则使用默认值
-        $filters = $session->get('filters', array());
+        $filters = $session->get('filters', []);
     }
 
 这些储存的属性将会在用户会话的有效期内保留。
-
-.. tip::
-
-    每个 ``SessionInterface`` 的实现都受支持。如果你有自己的实现，请在参数中使用类型约束。
 
 有关的详细信息，请参阅 :doc:`/session`。
 
 .. index::
    single: Session; Flash messages
+
+.. _flash-messages:
 
 Flash消息
 ~~~~~~~~~~~~~~
@@ -414,14 +410,23 @@ Flash消息
 
     {# templates/base.html.twig #}
 
-    {# 你可以只读取和显示一种闪存消息类型... #}
+    {# 你可以只读取并显示一种闪存消息类型... #}
     {% for message in app.flashes('notice') %}
         <div class="flash-notice">
             {{ message }}
         </div>
     {% endfor %}
 
-    {# ...或者你可以阅读并显示每个可用的闪存消息 #}
+    {# 读取并显示多种类型的闪存消息 #}
+    {% for label, messages in app.flashes(['success', 'warning']) %}
+        {% for message in messages %}
+            <div class="flash-{{ label }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+
+    {# 读取并显示所有闪存消息 #}
     {% for label, messages in app.flashes %}
         {% for message in messages %}
             <div class="flash-{{ label }}">
@@ -454,7 +459,7 @@ Symfony会将 ``Request`` 对象传递给任何使用 ``Request`` 类进行类�
     {
         $request->isXmlHttpRequest(); // 这是一个Ajax请求吗？
 
-        $request->getPreferredLanguage(array('en', 'fr'));
+        $request->getPreferredLanguage(['en', 'fr']);
 
         // 分别检索 GET 和 POST 变量
         $request->query->get('page');
@@ -506,10 +511,10 @@ Symfony会将 ``Request`` 对象传递给任何使用 ``Request`` 类进行类�
     public function index()
     {
         // 返回 '{"username":"jane.doe"}' 并设置合适的 Content-Type 标头
-        return $this->json(array('username' => 'jane.doe'));
+        return $this->json(['username' => 'jane.doe']);
 
         // 该快捷方式同时定义了三个可选参数
-        // return $this->json($data, $status = 200, $headers = array(), $context = array());
+        // return $this->json($data, $status = 200, $headers = [], $context = []);
     }
 
 如果你的应用启用了 :doc:`serializer 服务 </serializer>`，它会被用于将该数据序列化为JSON。

@@ -3,23 +3,22 @@ Bic
 
 This constraint is used to ensure that a value has the proper format of a
 `Business Identifier Code (BIC)`_. BIC is an internationally agreed means to
-uniquely identify both financial and non-financial institutions.
+uniquely identify both financial and non-financial institutions. You may also
+check that the BIC is associated with a given IBAN.
 
-+----------------+-----------------------------------------------------------------------+
-| Applies to     | :ref:`property or method <validation-property-target>`                |
-+----------------+-----------------------------------------------------------------------+
-| Options        | - `message`_                                                          |
-|                | - `payload`_                                                          |
-+----------------+-----------------------------------------------------------------------+
-| Class          | :class:`Symfony\\Component\\Validator\\Constraints\\Bic`              |
-+----------------+-----------------------------------------------------------------------+
-| Validator      | :class:`Symfony\\Component\\Validator\\Constraints\\BicValidator`     |
-+----------------+-----------------------------------------------------------------------+
+==========  ===================================================================
+Applies to  :ref:`property or method <validation-property-target>`
+Options     - `groups`_
+            - `message`_
+            - `payload`_
+Class       :class:`Symfony\\Component\\Validator\\Constraints\\Bic`
+Validator   :class:`Symfony\\Component\\Validator\\Constraints\\BicValidator`
+==========  ===================================================================
 
 Basic Usage
 -----------
 
-To use the Bic validator, simply apply it to a property on an object that
+To use the Bic validator, apply it to a property on an object that
 will contain a Business Identifier Code (BIC).
 
 .. configuration-block::
@@ -53,11 +52,11 @@ will contain a Business Identifier Code (BIC).
         <?xml version="1.0" encoding="UTF-8" ?>
         <constraint-mapping xmlns="http://symfony.com/schema/dic/constraint-mapping"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping http://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
+            xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping https://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
 
             <class name="App\Entity\Transaction">
                 <property name="businessIdentifierCode">
-                    <constraint name="Bic" />
+                    <constraint name="Bic"/>
                 </property>
             </class>
         </constraint-mapping>
@@ -67,13 +66,11 @@ will contain a Business Identifier Code (BIC).
         // src/Entity/Transaction.php
         namespace App\Entity;
 
-        use Symfony\Component\Validator\Mapping\ClassMetadata;
         use Symfony\Component\Validator\Constraints as Assert;
+        use Symfony\Component\Validator\Mapping\ClassMetadata;
 
         class Transaction
         {
-            protected $businessIdentifierCode;
-
             public static function loadValidatorMetadata(ClassMetadata $metadata)
             {
                 $metadata->addPropertyConstraint('businessIdentifierCode', new Assert\Bic());
@@ -85,6 +82,8 @@ will contain a Business Identifier Code (BIC).
 Available Options
 -----------------
 
+.. include:: /reference/constraints/_groups-option.rst.inc
+
 message
 ~~~~~~~
 
@@ -94,11 +93,11 @@ The default message supplied when the value does not pass the BIC check.
 
 You can use the following parameters in this message:
 
-+------------------+------------------------------------------------+
-| Parameter        | Description                                    |
-+==================+================================================+
-| ``{{ value }}``  | The current (invalid) BIC value                |
-+------------------+------------------------------------------------+
+===============  ==============================================================
+Parameter        Description
+===============  ==============================================================
+``{{ value }}``  The current (invalid) BIC value
+===============  ==============================================================
 
 .. include:: /reference/constraints/_payload-option.rst.inc
 

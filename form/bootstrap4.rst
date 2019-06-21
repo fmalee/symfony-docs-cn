@@ -38,9 +38,9 @@ Symfony提供了几种将Bootstrap集成到应用中的方法。
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:twig="http://symfony.com/schema/dic/twig"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd
+                https://symfony.com/schema/dic/services/services-1.0.xsd
                 http://symfony.com/schema/dic/twig
-                http://symfony.com/schema/dic/twig/twig-1.0.xsd">
+                https://symfony.com/schema/dic/twig/twig-1.0.xsd">
 
             <twig:config>
                 <twig:form-theme>bootstrap_4_layout.html.twig</twig:form-theme>
@@ -51,17 +51,17 @@ Symfony提供了几种将Bootstrap集成到应用中的方法。
     .. code-block:: php
 
         // config/packages/twig.php
-        $container->loadFromExtension('twig', array(
-            'form_themes' => array(
+        $container->loadFromExtension('twig', [
+            'form_themes' => [
                 'bootstrap_4_layout.html.twig',
-            ),
+            ],
 
             // ...
-        ));
+        ]);
 
 如果你希望将基础表单上的Bootstrap样式应用于表单，请在使用这些表单的模板中引入 ``form_theme`` 标记：
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {# ... #}
     {# 此标签仅适用于此模板中定义的表单 #}
@@ -87,7 +87,7 @@ Bootstrap 4有一个称为“`自定义表单`_”的功能。
 该功能通过添加一个分别叫 ``radio-custom`` 和 ``checkbox-custom``
 的类来在Symfony表单 ``RadioType`` 和 ``CheckboxType`` 中启用。
 
-.. code-block:: html+twig
+.. code-block:: twig
 
     {{ form_row(form.myRadio, {label_attr: {class: 'radio-custom'} }) }}
     {{ form_row(form.myCheckbox, {label_attr: {class: 'checkbox-custom'} }) }}

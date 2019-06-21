@@ -23,13 +23,12 @@
     .. code-block:: php-annotations
 
         // src/Controller/HelloController.php
-
         use Symfony\Component\Routing\Annotation\Route;
 
         class HelloController
         {
             /**
-             * @Route("/hello", name="hello")
+             * @Route("/hello", name="hello", methods={"GET"})
              */
             public function index()
             {
@@ -42,7 +41,8 @@
         # config/routes.yaml
         hello:
             path:     /hello
-            defaults: { _controller: App\Controller\HelloController::index }
+            controller: App\Controller\HelloController::index
+            methods: GET
 
     .. code-block:: xml
 
@@ -51,29 +51,80 @@
         <routes xmlns="http://symfony.com/schema/routing"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/routing
-                http://symfony.com/schema/routing/routing-1.0.xsd">
+                https://symfony.com/schema/routing/routing-1.0.xsd">
 
-            <route id="hello" path="/hello">
-                <default key="_controller">App\Controller\HelloController::index</default>
-            </route>
+            <route id="hello" path="/hello" controller="App\Controller\HelloController::index" methods="GET"/>
 
         </routes>
 
     .. code-block:: php
 
         // config/routes.php
-        $collection->add('hello', new Route('/hello', array(
-            '_controller' => 'App\Controller\HelloController::index',
-        )));
+        use App\Controller\HelloController;
+        use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
+
+        return function (RoutingConfigurator $routes) {
+            $routes->add('hello', '/hello')
+                ->controller([HelloController::class, 'index'])
+                ->methods(['GET'])
+            ;
+        };
 
 .. _controller-service-invoke:
 
 Invokable控制器
 ---------------------
 
-如果你的控制器实现了一个受Action-Domain-Response（ADR）模式的欢迎的 ``__invoke()`` 方法，
-那么你可以在没有方法的情况下引用服务ID
-（例如 ``App\Controller\HelloController``）。
+控制器还可以使用 ``__invoke()`` 方法来定义单个动作，这是遵循
+`ADR模式`_（Action-Domain-Responder）时的常见做法：
+
+.. configuration-block::
+
+    .. code-block:: php-annotations
+
+        // src/Controller/Hello.php
+        use Symfony\Component\HttpFoundation\Response;
+        use Symfony\Component\Routing\Annotation\Route;
+
+        /**
+         * @Route("/hello/{name}", name="hello")
+         */
+        class Hello
+        {
+            public function __invoke($name = 'World')
+            {
+                return new Response(sprintf('Hello %s!', $name));
+            }
+        }
+
+    .. code-block:: yaml
+
+        # config/routes.yaml
+        hello:
+            path:     /hello/{name}
+            defaults: { _controller: app.hello_controller }
+
+    .. code-block:: xml
+
+        <!-- config/routes.xml -->
+        <?xml version="1.0" encoding="UTF-8" ?>
+        <routes xmlns="http://symfony.com/schema/routing"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://symfony.com/schema/routing
+                https://symfony.com/schema/routing/routing-1.0.xsd">
+
+            <route id="hello" path="/hello/{name}">
+                <default key="_controller">app.hello_controller</default>
+            </route>
+
+        </routes>
+
+    .. code-block:: php
+
+        // app/config/routing.php
+        $collection->add('hello', new Route('/hello', [
+            '_controller' => 'app.hello_controller',
+        ]));
 
 基础控制器方法的替代方案
 ---------------------------------------
@@ -107,7 +158,7 @@ Invokable控制器
         {
             $content = $this->twig->render(
                 'hello/index.html.twig',
-                array('name' => $name)
+                ['name' => $name]
             );
 
             return new Response($content);
@@ -128,3 +179,4 @@ Invokable控制器
 .. _`base Controller class`: https://github.com/symfony/symfony/blob/master/src/Symfony/Bundle/FrameworkBundle/Controller/ControllerTrait.php
 .. _`ControllerTrait`: https://github.com/symfony/symfony/blob/master/src/Symfony/Bundle/FrameworkBundle/Controller/ControllerTrait.php
 .. _`AbstractController`: https://github.com/symfony/symfony/blob/master/src/Symfony/Bundle/FrameworkBundle/Controller/AbstractController.php
+.. _`ADR模式`: https://en.wikipedia.org/wiki/Action%E2%80%93domain%E2%80%93responder

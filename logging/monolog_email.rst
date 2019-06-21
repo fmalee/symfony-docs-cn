@@ -46,8 +46,8 @@
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:monolog="http://symfony.com/schema/dic/monolog"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd
-                http://symfony.com/schema/dic/monolog http://symfony.com/schema/dic/monolog/monolog-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd
+                http://symfony.com/schema/dic/monolog https://symfony.com/schema/dic/monolog/monolog-1.0.xsd">
 
             <monolog:config>
                 <!--
@@ -92,36 +92,36 @@
     .. code-block:: php
 
         // config/packages/prod/monolog.php
-        $container->loadFromExtension('monolog', array(
-            'handlers' => array(
-                'main' => array(
+        $container->loadFromExtension('monolog', [
+            'handlers' => [
+                'main' => [
                     'type'         => 'fingers_crossed',
                     // 500 errors are logged at the critical level
                     'action_level' => 'critical',
                     // to also log 400 level errors (but not 404's):
                     // 'action_level' => 'error',
-                    // 'excluded_404s' => array(
+                    // 'excluded_404s' => [
                     //     '^/',
-                    // ),
+                    // ],
                     'handler'      => 'deduplicated',
-                ),
-                'deduplicated' => array(
+                ],
+                'deduplicated' => [
                     'type'    => 'deduplication',
                     'handler' => 'swift',
-                ),
-                'swift' => array(
+                ],
+                'swift' => [
                     'type'         => 'swift_mailer',
                     'from_email'   => 'error@example.com',
                     'to_email'     => 'error@example.com',
                     // or a list of recipients
-                    // 'to_email'   => array('dev1@example.com', 'dev2@example.com', ...),
+                    // 'to_email'   => ['dev1@example.com', 'dev2@example.com', ...],
                     'subject'      => 'An Error Occurred! %%message%%',
                     'level'        => 'debug',
                     'formatter'    => 'monolog.formatter.html',
                     'content_type' => 'text/html',
-                ),
-            ),
-        ));
+                ],
+            ],
+        ]);
 
 ``main`` 处理器是一个 ``fingers_crossed``
 处理器，这意味着它只在指定的动作级别才会触发，在这个例子是 ``critical``。
@@ -161,20 +161,22 @@
         <monolog:handler name="deduplicated"
             type="deduplication"
             time="10"
-            handler="swift" />
+            handler="swift"/>
 
     .. code-block:: php
 
         // config/packages/prod/monolog.php
-        $container->loadFromExtension('monolog', array(
-            'handlers' => array(
+        $container->loadFromExtension('monolog', [
+            'handlers' => [
                 // ...
-                'deduplicated' => array(
+                'deduplicated' => [
                     'type'    => 'deduplication',
                     // the time in seconds during which duplicate entries are discarded (default: 60)
                     'time' => 10,
                     'handler' => 'swift',
-                 )
+                ],
+            ],
+        ]);
 
 然后将消息传递给 ``swift`` 处理器。这是实际处理邮寄错误消息的处理器。
 对此功能的设置很简单：来往地址、格式化器、内容类型和主题。
@@ -203,12 +205,12 @@
                     type:    deduplication
                     handler: swift
                 swift:
-                    type:       swift_mailer
-                    from_email: 'error@example.com'
-                    to_email:   'error@example.com'
-                    subject:    'An Error Occurred! %%message%%'
-                    level:      debug
-                    formatter:  monolog.formatter.html
+                    type:         swift_mailer
+                    from_email:   'error@example.com'
+                    to_email:     'error@example.com'
+                    subject:      'An Error Occurred! %%message%%'
+                    level:        debug
+                    formatter:    monolog.formatter.html
                     content_type: text/html
 
     .. code-block:: xml
@@ -218,8 +220,8 @@
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:monolog="http://symfony.com/schema/dic/monolog"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd
-                http://symfony.com/schema/dic/monolog http://symfony.com/schema/dic/monolog/monolog-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd
+                http://symfony.com/schema/dic/monolog https://symfony.com/schema/dic/monolog/monolog-1.0.xsd">
 
             <monolog:config>
                 <monolog:handler
@@ -269,39 +271,39 @@
     .. code-block:: php
 
         // config/packages/prod/monolog.php
-        $container->loadFromExtension('monolog', array(
-            'handlers' => array(
-                'main' => array(
+        $container->loadFromExtension('monolog', [
+            'handlers' => [
+                'main' => [
                     'type'         => 'fingers_crossed',
                     'action_level' => 'critical',
                     'handler'      => 'grouped',
-                ),
-                'grouped' => array(
+                ],
+                'grouped' => [
                     'type'    => 'group',
-                    'members' => array('streamed', 'deduplicated'),
-                ),
-                'streamed'  => array(
+                    'members' => ['streamed', 'deduplicated'],
+                ],
+                'streamed'  => [
                     'type'  => 'stream',
                     'path'  => '%kernel.logs_dir%/%kernel.environment%.log',
                     'level' => 'debug',
-                ),
-                'deduplicated' => array(
+                ],
+                'deduplicated' => [
                     'type'     => 'deduplication',
                     'handler'  => 'swift',
-                ),
-                'swift' => array(
+                ],
+                'swift' => [
                     'type'         => 'swift_mailer',
                     'from_email'   => 'error@example.com',
                     'to_email'     => 'error@example.com',
                     // or a list of recipients
-                    // 'to_email'   => array('dev1@example.com', 'dev2@example.com', ...),
+                    // 'to_email'   => ['dev1@example.com', 'dev2@example.com', ...],
                     'subject'      => 'An Error Occurred! %%message%%',
                     'level'        => 'debug',
                     'formatter'    => 'monolog.formatter.html',
                     'content_type' => 'text/html',
-                ),
-            ),
-        ));
+                ],
+            ],
+        ]);
 
 这里使用 ``group`` 处理器将消息发送给两个组成员，即 ``deduplicated`` 和 ``stream`` 处理器。
 现在，消息将写入日志文件并同时通过电子邮件发送。

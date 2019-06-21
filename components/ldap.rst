@@ -14,8 +14,6 @@ Installation
 
     $ composer require symfony/ldap
 
-Alternatively, you can clone the `<https://github.com/symfony/ldap>`_ repository.
-
 .. include:: /components/require_autoload.rst.inc
 
 Usage
@@ -42,7 +40,7 @@ following options:
     The encryption protocol: ``ssl``, ``tls`` or ``none`` (default)
 
 ``connection_string``
-    You may use this option instead of ``host`` and ``port`` to connect to the
+    You may use this option instead of ``host`` and ``port`` to connect to the
     LDAP server
 
 ``optReferrals``
@@ -56,16 +54,16 @@ For example, to connect to a start-TLS secured LDAP server::
 
     use Symfony\Component\Ldap\Ldap;
 
-    $ldap = Ldap::create('ext_ldap', array(
+    $ldap = Ldap::create('ext_ldap', [
         'host' => 'my-server',
         'encryption' => 'ssl',
-    ));
+    ]);
 
 Or you could directly specify a connection string::
 
     use Symfony\Component\Ldap\Ldap;
 
-    $ldap = Ldap::create('ext_ldap', array('connection_string' => 'ldaps://my-server:636'));
+    $ldap = Ldap::create('ext_ldap', ['connection_string' => 'ldaps://my-server:636']);
 
 The :method:`Symfony\\Component\\Ldap\\Ldap::bind` method
 authenticates a previously configured connection using both the
@@ -103,20 +101,30 @@ array, you may use the
 
     // Do something with the results array
 
+By default, LDAP queries use the ``Symfony\Component\Ldap\Adapter::SCOPE_SUB``
+scope, which corresponds to the ``LDAP_SCOPE_SUBTREE`` scope of the
+:phpfunction:`ldap_search` function. You can also use ``SCOPE_BASE`` (related
+to the ``LDAP_SCOPE_BASE`` scope of :phpfunction:`ldap_read`) and ``SCOPE_ONE``
+(related to the ``LDAP_SCOPE_ONELEVEL`` scope of :phpfunction:`ldap_list`)::
+
+    use Symfony\Component\Ldap\Adapter;
+
+    $query = $ldap->query('dc=symfony,dc=com', '...', ['scope' => Adapter::SCOPE_ONE]);
+
 Creating or Updating Entries
 ----------------------------
 
 The Ldap component provides means to create new LDAP entries, update or even
 delete existing ones::
 
-    use Symfony\Component\Ldap\Ldap;
     use Symfony\Component\Ldap\Entry;
+    use Symfony\Component\Ldap\Ldap;
     // ...
 
-    $entry = new Entry('cn=Fabien Potencier,dc=symfony,dc=com', array(
-        'sn' => array('fabpot'),
-        'objectClass' => array('inetOrgPerson'),
-    ));
+    $entry = new Entry('cn=Fabien Potencier,dc=symfony,dc=com', [
+        'sn' => ['fabpot'],
+        'objectClass' => ['inetOrgPerson'],
+    ]);
 
     $entryManager = $ldap->getEntryManager();
 
@@ -127,12 +135,12 @@ delete existing ones::
     $query = $ldap->query('dc=symfony,dc=com', '(&(objectclass=person)(ou=Maintainers))');
     $result = $query->execute();
     $entry = $result[0];
-    $entry->setAttribute('email', array('fabpot@symfony.com'));
+    $entry->setAttribute('email', ['fabpot@symfony.com']);
     $entryManager->update($entry);
 
     // Adding or removing values to a multi-valued attribute is more efficient than using update()
-    $entryManager->addAttributeValues($entry, 'telephoneNumber', array('+1.111.222.3333', '+1.222.333.4444'));
-    $entryManager->removeAttributeValues($entry, 'telephoneNumber', array('+1.111.222.3333', '+1.222.333.4444'));
+    $entryManager->addAttributeValues($entry, 'telephoneNumber', ['+1.111.222.3333', '+1.222.333.4444']);
+    $entryManager->removeAttributeValues($entry, 'telephoneNumber', ['+1.111.222.3333', '+1.222.333.4444']);
 
     // Removing an existing entry
     $entryManager->remove(new Entry('cn=Test User,dc=symfony,dc=com'));
@@ -144,33 +152,26 @@ ______________
 Use the entry manager's :method:`Symfony\\Component\\Ldap\\Adapter\\ExtLdap\\EntryManager::applyOperations`
 method to update multiple attributes at once::
 
-    use Symfony\Component\Ldap\Ldap;
     use Symfony\Component\Ldap\Entry;
+    use Symfony\Component\Ldap\Ldap;
     // ...
 
-    $entry = new Entry('cn=Fabien Potencier,dc=symfony,dc=com', array(
-        'sn' => array('fabpot'),
-        'objectClass' => array('inetOrgPerson'),
-    ));
+    $entry = new Entry('cn=Fabien Potencier,dc=symfony,dc=com', [
+        'sn' => ['fabpot'],
+        'objectClass' => ['inetOrgPerson'],
+    ]);
 
     $entryManager = $ldap->getEntryManager();
 
     // Adding multiple email addresses at once
-    $entryManager->applyOperations($entry->getDn(), array(
+    $entryManager->applyOperations($entry->getDn(), [
         new UpdateOperation(LDAP_MODIFY_BATCH_ADD, 'mail', 'new1@example.com'),
         new UpdateOperation(LDAP_MODIFY_BATCH_ADD, 'mail', 'new2@example.com'),
-    ));
+    ]);
 
 Possible operation types are ``LDAP_MODIFY_BATCH_ADD``, ``LDAP_MODIFY_BATCH_REMOVE``,
 ``LDAP_MODIFY_BATCH_REMOVE_ALL``, ``LDAP_MODIFY_BATCH_REPLACE``. Parameter
 ``$values`` must be ``NULL`` when using ``LDAP_MODIFY_BATCH_REMOVE_ALL``
 operation type.
-
-.. versionadded:: 4.2
-    The ``applyOperations()`` method was introduced in Symfony 4.2.
-
-.. versionadded:: 4.1
-    The ``addAttributeValues()`` and ``removeAttributeValues()`` methods
-    were introduced in Symfony 4.1.
 
 .. _Packagist: https://packagist.org/packages/symfony/ldap

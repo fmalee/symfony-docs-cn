@@ -124,7 +124,7 @@
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd"
+                https://symfony.com/schema/dic/services/services-1.0.xsd"
         >
             <services>
                 <service id="App\Asset\VersionStrategy\GulpBusterVersionStrategy" public="false">
@@ -137,15 +137,15 @@
     .. code-block:: php
 
         // config/services.php
-        use Symfony\Component\DependencyInjection\Definition;
         use App\Asset\VersionStrategy\GulpBusterVersionStrategy;
+        use Symfony\Component\DependencyInjection\Definition;
 
         $container->autowire(GulpBusterVersionStrategy::class)
             ->setArguments(
-                array(
+                [
                     '%kernel.project_dir%/busters.json',
                     '%%s?version=%%s',
-                )
+                ]
         )->setPublic(false);
 
 最后，通过 :ref:`version_strategy <reference-assets-version-strategy>` 选项，
@@ -169,11 +169,11 @@
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:framework="http://symfony.com/schema/dic/symfony"
-            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd
-                http://symfony.com/schema/dic/symfony http://symfony.com/schema/dic/symfony/symfony-1.0.xsd">
+            xsi:schemaLocation="http://symfony.com/schema/dic/services https://symfony.com/schema/dic/services/services-1.0.xsd
+                http://symfony.com/schema/dic/symfony https://symfony.com/schema/dic/symfony/symfony-1.0.xsd">
 
             <framework:config>
-                <framework:assets version-strategy="App\Asset\VersionStrategy\GulpBusterVersionStrategy" />
+                <framework:assets version-strategy="App\Asset\VersionStrategy\GulpBusterVersionStrategy"/>
             </framework:config>
         </container>
 
@@ -182,11 +182,11 @@
         // config/packages/framework.php
         use App\Asset\VersionStrategy\GulpBusterVersionStrategy;
 
-        $container->loadFromExtension('framework', array(
+        $container->loadFromExtension('framework', [
             // ...
-            'assets' => array(
+            'assets' => [
                 'version_strategy' => GulpBusterVersionStrategy::class,
-            ),
-        ));
+            ],
+        ]);
 
 .. _`gulp-buster`: https://www.npmjs.com/package/gulp-buster

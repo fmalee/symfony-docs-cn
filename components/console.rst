@@ -16,8 +16,6 @@ Console组件允许你创建命令行命令。你的控制台命令可用于任�
 
     $ composer require symfony/console
 
-或者，你可以克隆 `<https://github.com/symfony/console>`_ 仓库。
-
 .. include:: /components/require_autoload.rst.inc
 
 创建控制台应用

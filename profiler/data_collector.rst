@@ -21,23 +21,23 @@ Symfony捆绑了其中的一些，但你也可以创建自己的收集器。
     // src/DataCollector/RequestCollector.php
     namespace App\DataCollector;
 
-    use Symfony\Component\HttpKernel\DataCollector\DataCollector;
     use Symfony\Component\HttpFoundation\Request;
     use Symfony\Component\HttpFoundation\Response;
+    use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 
     class RequestCollector extends DataCollector
     {
         public function collect(Request $request, Response $response, \Exception $exception = null)
         {
-            $this->data = array(
+            $this->data = [
                 'method' => $request->getMethod(),
                 'acceptable_content_types' => $request->getAcceptableContentTypes(),
-            );
+            ];
         }
 
         public function reset()
         {
-            $this->data = array();
+            $this->data = [];
         }
 
         public function getName()
@@ -236,7 +236,7 @@ Symfony捆绑了其中的一些，但你也可以创建自己的收集器。
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <services>
                 <service id="App\DataCollector\RequestCollector" public="false">
@@ -257,11 +257,11 @@ Symfony捆绑了其中的一些，但你也可以创建自己的收集器。
         $container
             ->autowire(RequestCollector::class)
             ->setPublic(false)
-            ->addTag('data_collector', array(
+            ->addTag('data_collector', [
                 'template' => 'data_collector/template.html.twig',
                 'id'       => 'app.request_collector',
                 // 'priority' => 300,
-            ))
+            ])
         ;
 
 工具栏中每个面板的位置由收集器的优先级确定。优先级应定义为正整数或负整数，默认为 ``0``。

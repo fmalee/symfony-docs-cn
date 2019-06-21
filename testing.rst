@@ -48,7 +48,7 @@ PHPUnit由Symfony应用的根目录中的 ``phpunit.xml.dist`` 文件配置。
 如果要测试应用的整体行为，请参阅有关功 :ref:`功能测试 <functional-tests>` 的章节。
 
 编写Symfony单元测试与编写标准PHPUnit单元测试没有什么不同。
-例如，假设你在app bundle的 ``Util/`` 目录中有一个名为 ``Calculator`` 的非常简单的类::
+例如，假设你在app bundle的 `src/Util/`` 目录中有一个名为 ``Calculator`` 的非常简单的类::
 
     // src/Util/Calculator.php
     namespace App\Util;
@@ -94,13 +94,13 @@ PHPUnit由Symfony应用的根目录中的 ``phpunit.xml.dist`` 文件配置。
 .. code-block:: terminal
 
     # 运行应用的所有测试
-    $ ./bin/phpunit
+    $ php bin/phpunit
 
     # 运行 Util/ 目录的所有测试
-    $ ./bin/phpunit tests/Util
+    $ php bin/phpunit tests/Util
 
     # 运行 Calculator 类的测试
-    $ ./bin/phpunit tests/Util/CalculatorTest.php
+    $ php bin/phpunit tests/Util/CalculatorTest.php
 
 .. index::
    single: Tests; Functional tests
@@ -311,12 +311,12 @@ Crawler也可用于与页面交互。首先使用Crawler配合XPath表达式或C
 
     public function provideUrls()
     {
-        return array(
-            array('/'),
-            array('/blog'),
-            array('/contact'),
+        return [
+            ['/'],
+            ['/blog'],
+            ['/contact'],
             // ...
-        );
+        ];
     }
 
 .. index::
@@ -345,9 +345,9 @@ Crawler也可用于与页面交互。首先使用Crawler配合XPath表达式或C
         request(
             $method,
             $uri,
-            array $parameters = array(),
-            array $files = array(),
-            array $server = array(),
+            array $parameters = [],
+            array $files = [],
+            array $server = [],
             $content = null,
             $changeHistory = true
         )
@@ -356,43 +356,39 @@ Crawler也可用于与页面交互。首先使用Crawler配合XPath表达式或C
     例如，要设置 ``Content-Type`` 和 ``Referer`` HTTP标头，
     你将传递以下内容（请注意非标准标头的 ``HTTP_`` 前缀）::
 
-
         $client->request(
             'GET',
             '/post/hello-world',
-            array(),
-            array(),
-            array(
+            [],
+            [],
+            [
                 'CONTENT_TYPE' => 'application/json',
                 'HTTP_REFERER' => '/foo/bar',
-            )
+            ]
         );
 
 使用Crawler在响应中查找DOM元素。然后可以使用这些元素单击链接并提交表单::
 
     $crawler = $client->clickLink('Go elsewhere...');
 
-    $crawler = $client->submitForm('validate', array('name' => 'Fabien'));
+    $crawler = $client->submitForm('validate', ['name' => 'Fabien']);
 
 ``clickLink()`` 和 ``submitForm()`` 方法都返回一个 ``Crawler`` 对象。
 这些方法是浏览应用的最佳方式，因为它可以为你处理很多事情，
 例如从表单中检测HTTP方法并为你提供良好的API用于上传文件。
 
-.. versionadded:: 4.2
-    ``clickLink()`` 和 ``submitForm()`` 方法是在Symfony 4.2中引入的。
-
 ``request()`` 方法还可用于直接模拟表单提交或执行更复杂的请求。一些有用的例子::
 
     // 直接提交表单（但使用Crawler更容易！）
-    $client->request('POST', '/submit', array('name' => 'Fabien'));
+    $client->request('POST', '/submit', ['name' => 'Fabien']);
 
     // 在请求正文中提交原始JSON字符串
     $client->request(
         'POST',
         '/submit',
-        array(),
-        array(),
-        array('CONTENT_TYPE' => 'application/json'),
+        [],
+        [],
+        ['CONTENT_TYPE' => 'application/json'],
         '{"name":"Fabien"}'
     );
 
@@ -408,17 +404,17 @@ Crawler也可用于与页面交互。首先使用Crawler配合XPath表达式或C
     $client->request(
         'POST',
         '/submit',
-        array('name' => 'Fabien'),
-        array('photo' => $photo)
+        ['name' => 'Fabien'],
+        ['photo' => $photo]
     );
 
     // 执行DELETE请求并传递HTTP标头
     $client->request(
         'DELETE',
         '/post/12',
-        array(),
-        array(),
-        array('PHP_AUTH_USER' => 'username', 'PHP_AUTH_PW' => 'pa$$word')
+        [],
+        [],
+        ['PHP_AUTH_USER' => 'username', 'PHP_AUTH_PW' => 'pa$$word']
     );
 
 最后但同样重要的是，你可以强制每个请求在其自己的PHP进程中执行，以避免在同一脚本中使用多个客户端时出现任何副作用::
@@ -432,10 +428,7 @@ AJAX请求
 该方法与 ``request()`` 方法具有相同的参数，但它是生成AJAX请求的快捷方式::
 
     // 自动添加所需的HTTP_X_REQUESTED_WITH标头
-    $client->xmlHttpRequest('POST', '/submit', array('name' => 'Fabien'));
-
-.. versionadded:: 4.1
-    ``xmlHttpRequest()`` 方法是在Symfony 4.1中引入的。
+    $client->xmlHttpRequest('POST', '/submit', ['name' => 'Fabien']);
 
 浏览
 ~~~~~~~~
@@ -479,9 +472,6 @@ AJAX请求
 
 访问容器
 ~~~~~~~~~~~~~~~~~~~~~~~
-
-.. versionadded:: 4.1
-    ``self::$container`` 属性是在Symfony 4.1中引入的。
 
 强烈建议功能测试仅测试响应。但在某些极少数情况下，你可能希望访问某些服务来编写断言。
 鉴于默认情况下服务是私有的，测试类定义了一个属性，该属性存储着由Symfony创建的特殊容器，该容器允许获取公共和所有未删除的私有服务::
@@ -537,9 +527,6 @@ AJAX请求
 
 报告异常
 ~~~~~~~~~~~~~~~~~~~~
-
-.. versionadded:: 3.4
-    ``catchExceptions()`` 方法是在Symfony 3.4中引入的。
 
 在功能测试中调试异常可能很困难，因为默认情况下它们会被捕获，你需要检查日志以查看抛出的异常。
 禁用在测试客户端中捕获异常，以允许PHPUnit报告异常::
@@ -598,7 +585,7 @@ Crawler
     $crawler
         ->filter('h1')
         ->reduce(function ($node, $i) {
-            if (!$node->getAttribute('class')) {
+            if (!$node->attr('class')) {
                 return false;
             }
         })
@@ -623,7 +610,7 @@ Crawler可以从节点中提取信息::
     // 提取所有节点的属性数组
     // （_text返回节点值）
     // 为crawler中的每个元素返回一个数组，每个元素都带有值和href
-    $info = $crawler->extract(array('_text', 'href'));
+    $info = $crawler->extract(['_text', 'href']);
 
     // 为每个节点执行一个lambda并返回一个结果数组
     $data = $crawler->each(function ($node, $i) {
@@ -657,9 +644,9 @@ Crawler可以从节点中提取信息::
     $client = static::createClient();
     $client->request('GET', '/post/hello-world');
 
-    $crawler = $client->submitForm('Add comment', array(
-       'comment_form[content]' => '...',
-    ));
+    $crawler = $client->submitForm('Add comment', [
+        'comment_form[content]' => '...',
+    ]);
 
 ``submitForm()`` 的第一个参数是表单中任何 ``<button>`` 或 ``<input type="submit">`` 的
 ``id``、``value``、``name`` 等属性的值。
@@ -681,23 +668,23 @@ Crawler可以从节点中提取信息::
     $form = $buttonCrawlerNode->form();
 
     // 你还可以传递一组用来覆盖默认值的字段值
-    $form = $buttonCrawlerNode->form(array(
+    $form = $buttonCrawlerNode->form([
         'my_form[name]'    => 'Fabien',
         'my_form[subject]' => 'Symfony rocks!',
-    ));
+    ]);
 
     // 你可以传递第二个参数来覆盖表单的HTTP方法
-    $form = $buttonCrawlerNode->form(array(), 'DELETE');
+    $form = $buttonCrawlerNode->form([], 'DELETE');
 
     // 提交表单对象
     $client->submit($form);
 
 字段值也可以作为 ``submit()`` 方法的第二个参数传递::
 
-    $client->submit($form, array(
+    $client->submit($form, [
         'my_form[name]'    => 'Fabien',
         'my_form[subject]' => 'Symfony rocks!',
-    ));
+    ]);
 
 对于更复杂的情况，使用 ``Form`` 实例作为数组来单独设置每个字段的值::
 
@@ -716,6 +703,10 @@ Crawler可以从节点中提取信息::
     // 上传文件
     $form['photo']->upload('/path/to/lucas.jpg');
 
+    // 在一个多文件上传的情况下
+    $form['my_form[field][O]']->upload('/path/to/lucas.jpg');
+    $form['my_form[field][1]']->upload('/path/to/lisa.jpg');
+
 .. tip::
 
     如果你特意要选择“无效”的选择框和单选框，请参阅 :ref:`components-dom-crawler-invalid`。
@@ -731,11 +722,8 @@ Crawler可以从节点中提取信息::
 
     ``submit()`` 和 ``submitForm()`` 方法可以通过定义可选参数，在提交表单时添加自定义服务器参数和HTTP标头::
 
-        $client->submit($form, array(), array('HTTP_ACCEPT_LANGUAGE' => 'es'));
-        $client->submitForm($button, array(), 'POST', array('HTTP_ACCEPT_LANGUAGE' => 'es'));
-
-    .. versionadded:: 4.1
-        Symfony 4.1中引入了添加自定义HTTP标头的功能。
+        $client->submit($form, [], ['HTTP_ACCEPT_LANGUAGE' => 'es']);
+        $client->submitForm($button, [], 'POST', ['HTTP_ACCEPT_LANGUAGE' => 'es']);
 
 添加/删​​除表单到一个集合
 .........................................
@@ -810,12 +798,12 @@ Crawler可以从节点中提取信息::
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:swiftmailer="http://symfony.com/schema/dic/swiftmailer"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd
+                https://symfony.com/schema/dic/services/services-1.0.xsd
                 http://symfony.com/schema/dic/swiftmailer
-                http://symfony.com/schema/dic/swiftmailer/swiftmailer-1.0.xsd">
+                https://symfony.com/schema/dic/swiftmailer/swiftmailer-1.0.xsd">
 
             <!-- ... -->
-            <swiftmailer:config disable-delivery="true" />
+            <swiftmailer:config disable-delivery="true"/>
         </container>
 
     .. code-block:: php
@@ -823,17 +811,17 @@ Crawler可以从节点中提取信息::
         // config/packages/test/swiftmailer.php
 
         // ...
-        $container->loadFromExtension('swiftmailer', array(
+        $container->loadFromExtension('swiftmailer', [
             'disable_delivery' => true,
-        ));
+        ]);
 
 你当然完全可以使用不同的环境，或者通过将每个配置作为选项传递给 ``createClient()``
 方法来覆盖默认的调试模式（``true``）::
 
-    $client = static::createClient(array(
+    $client = static::createClient([
         'environment' => 'my_test_env',
         'debug'       => false,
-    ));
+    ]);
 
 自定义数据库URL/环境变量
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -861,17 +849,17 @@ Crawler可以从节点中提取信息::
 
 如果你的应用的行为根据某些HTTP标头，请将它们作为 ``createClient()`` 的第二个参数传递::
 
-    $client = static::createClient(array(), array(
+    $client = static::createClient([], [
         'HTTP_HOST'       => 'en.example.com',
         'HTTP_USER_AGENT' => 'MySuperBrowser/1.0',
-    ));
+    ]);
 
 你还可以基于每个请求覆盖HTTP标头::
 
-    $client->request('GET', '/', array(), array(), array(
+    $client->request('GET', '/', [], [], [
         'HTTP_HOST'       => 'en.example.com',
         'HTTP_USER_AGENT' => 'MySuperBrowser/1.0',
-    ));
+    ]);
 
 .. tip::
 
@@ -952,11 +940,9 @@ PHPUnit配置
     :glob:
 
     testing/*
-
-* :ref:`测试控制台命令 <console-testing-commands>`
-* :doc:`Symfony最佳实践的测试章节 </best_practices/tests>`
-* :doc:`/components/dom_crawler`
-* :doc:`/components/css_selector`
+    /best_practices/tests
+    /components/dom_crawler
+    /components/css_selector
 
 .. _`PHPUnit`: https://phpunit.de/
 .. _`文档`: https://phpunit.readthedocs.io/

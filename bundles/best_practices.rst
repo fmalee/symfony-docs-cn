@@ -4,10 +4,10 @@
 可重用Bundle的最佳实践
 ===================================
 
-This article is all about how to structure your **reusable bundles** so that
-they're easy to configure and extend. Reusable bundles are those meant to be
-shared privately across many company projects or publicly so any Symfony project
-can install them.
+This article is all about how to structure your **reusable bundles** to be
+configurable and extendable. Reusable bundles are those meant to be shared
+privately across many company projects or publicly so any Symfony project can
+install them.
 
 .. index::
    pair: Bundle; Naming conventions
@@ -250,7 +250,7 @@ With this, :doc:`Symfony Flex </setup/flex>` will be able to automatically
 enable your bundle when it's installed.
 
 If your bundle requires any setup (e.g. configuration, new files, changes to
-`.gitignore`, etc), then you should create a `Symfony Flex recipe`_.
+``.gitignore``, etc), then you should create a `Symfony Flex recipe`_.
 
 Documentation
 -------------
@@ -306,27 +306,15 @@ following standardized instructions in your ``README.md`` file.
         ### Step 2: Enable the Bundle
 
         Then, enable the bundle by adding it to the list of registered bundles
-        in the `app/AppKernel.php` file of your project:
+        in the `config/bundles.php` file of your project:
 
         ```php
-        <?php
-        // app/AppKernel.php
+        // config/bundles.php
 
-        // ...
-        class AppKernel extends Kernel
-        {
-            public function registerBundles()
-            {
-                $bundles = array(
-                    // ...
-                    new <vendor>\<bundle-name>\<bundle-long-name>(),
-                );
-
-                // ...
-            }
-
+        return [
             // ...
-        }
+            <vendor>\<bundle-name>\<bundle-long-name>::class => ['all' => true],
+        ];
         ```
 
     .. code-block:: rst
@@ -363,29 +351,13 @@ following standardized instructions in your ``README.md`` file.
         ~~~~~~~~~~~~~~~~~~~~~~~~~
 
         Then, enable the bundle by adding it to the list of registered bundles
-        in the ``app/AppKernel.php`` file of your project:
+        in the ``config/bundles.php`` file of your project::
 
-        .. code-block:: php
-
-            <?php
-            // app/AppKernel.php
-
-            // ...
-            class AppKernel extends Kernel
-            {
-                public function registerBundles()
-                {
-                    $bundles = array(
-                        // ...
-
-                        new <vendor>\<bundle-name>\<bundle-long-name>(),
-                    );
-
-                    // ...
-                }
-
+            // config/bundles.php
+            return [
                 // ...
-            }
+                <vendor>\<bundle-name>\<bundle-long-name>::class => ['all' => true],
+            ];
 
         .. _`installation chapter`: https://getcomposer.org/doc/00-intro.md
 
@@ -450,7 +422,7 @@ The end user can provide values in any configuration file:
         <container xmlns="http://symfony.com/schema/dic/services"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd">
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
 
             <parameters>
                 <parameter key="acme_blog.author.email">fabien@example.com</parameter>
@@ -521,7 +493,12 @@ The ``composer.json`` file should include at least the following metadata:
 
 ``autoload``
     This information is used by Symfony to load the classes of the bundle. It's
-    recommended to use the `PSR-4`_ autoload standard.
+    recommended to use the `PSR-4`_ autoload standard: use the namespace as key,
+    and the location of the bundle's main class (relative to ``composer.json``)
+    as value. For example, if the main class is located in the bundle root
+    directory: ``"autoload": { "psr-4": { "SomeVendor\\BlogBundle\\": "" } }``.
+    If the main class is located in the ``src/`` directory of the bundle:
+    ``"autoload": { "psr-4": { "SomeVendor\\BlogBundle\\": "src/" } }``.
 
 In order to make it easier for developers to find your bundle, register it on
 `Packagist`_, the official repository for Composer packages.

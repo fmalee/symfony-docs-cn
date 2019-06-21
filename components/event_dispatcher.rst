@@ -43,8 +43,6 @@ Symfony的EventDispatcher组件实现了 `中介者`_ 和 `观察者`_
 
     $ composer require symfony/event-dispatcher
 
-或者，你可以克隆 `<https://github.com/symfony/event-dispatcher>`_ 仓库。
-
 .. include:: /components/require_autoload.rst.inc
 
 用法
@@ -59,7 +57,7 @@ Symfony的EventDispatcher组件实现了 `中介者`_ 和 `观察者`_
 ~~~~~~
 
 当一个事件被调度时，它由一个唯一名称（例如 ``kernel.response``）标识，任意数量的监听器可能正在监听该名称。
-还会创建一个 :class:`Symfony\\Component\\EventDispatcher\\Event`
+还会创建一个 :class:`Symfony\\Contracts\\EventDispatcher\\Event`
 实例并将其传递给所有监听器。正如你稍后将看到的，``Event`` 对象本身通常包含有关正在调度的事件的数据。
 
 .. index::
@@ -115,7 +113,7 @@ Symfony的EventDispatcher组件实现了 `中介者`_ 和 `观察者`_
 一个对调度器的 ``addListener()`` 方法的调用，会将任何有效的PHP可调用对象关联到一个事件::
 
     $listener = new AcmeListener();
-    $dispatcher->addListener('acme.foo.action', array($listener, 'onFooAction'));
+    $dispatcher->addListener('acme.foo.action', [$listener, 'onFooAction']);
 
 ``addListener()`` 方法最多需要三个参数：
 
@@ -132,7 +130,7 @@ Symfony的EventDispatcher组件实现了 `中介者`_ 和 `观察者`_
 
     到目前为止，你已经了解了如何将PHP对象注册为监听器。你还可以将PHP `闭包`_ 注册为事件监听器::
 
-        use Symfony\Component\EventDispatcher\Event;
+        use Symfony\Contracts\EventDispatcher\Event;
 
         $dispatcher->addListener('acme.foo.action', function (Event $event) {
             // 将在调度 acme.foo.action 事件时执行
@@ -142,7 +140,7 @@ Symfony的EventDispatcher组件实现了 `中介者`_ 和 `观察者`_
 在上面的示例中，当 ``acme.foo.action`` 事件被调度时，调度器将调用
 ``AcmeListener::onFooAction()`` 方法并将 ``Event`` 对象作为单个参数传递::
 
-    use Symfony\Component\EventDispatcher\Event;
+    use Symfony\Contracts\EventDispatcher\Event;
 
     class AcmeListener
     {
@@ -166,8 +164,8 @@ Symfony的EventDispatcher组件实现了 `中介者`_ 和 `观察者`_
         use Symfony\Component\DependencyInjection\ContainerBuilder;
         use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
         use Symfony\Component\DependencyInjection\Reference;
-        use Symfony\Component\EventDispatcher\EventDispatcher;
         use Symfony\Component\EventDispatcher\DependencyInjection\RegisterListenersPass;
+        use Symfony\Component\EventDispatcher\EventDispatcher;
 
         $containerBuilder = new ContainerBuilder(new ParameterBag());
         // 注册处理 'kernel.event_listener' 和
@@ -178,10 +176,10 @@ Symfony的EventDispatcher组件实现了 `中介者`_ 和 `观察者`_
 
         // 注册一个事件监听器
         $containerBuilder->register('listener_service_id', \AcmeListener::class)
-            ->addTag('kernel.event_listener', array(
+            ->addTag('kernel.event_listener', [
                 'event' => 'acme.foo.action',
                 'method' => 'onFooAction',
-            ));
+            ]);
 
         // 注册一个事件订阅器
         $containerBuilder->register('subscriber_service_id', \AcmeSubscriber::class)
@@ -212,15 +210,15 @@ Symfony的EventDispatcher组件实现了 `中介者`_ 和 `观察者`_
 
     namespace Acme\Store\Event;
 
-    use Symfony\Component\EventDispatcher\Event;
     use Acme\Store\Order;
+    use Symfony\Contracts\EventDispatcher\Event;
 
     /**
      * 每次在系统中创建一个订单时，都会调度 order.placed 事件。
      */
     class OrderPlacedEvent extends Event
     {
-        const NAME = 'order.placed';
+        public const NAME = 'order.placed';
 
         protected $order;
 
@@ -240,7 +238,7 @@ Symfony的EventDispatcher组件实现了 `中介者`_ 和 `观察者`_
 .. note::
 
     如果你不需要将任何额外数据传递给事件监听器，则可以使用默认的
-    :class:`Symfony\\Component\\EventDispatcher\\Event` 类。
+    :class:`Symfony\\Contracts\\EventDispatcher\\Event` 类。
     在这种情况下，你可以在一个通用的 ``StoreEvents`` 类中记录事件及其名称，类似于
     :class:`Symfony\\Component\\HttpKernel\\KernelEvents` 类。
 
@@ -251,8 +249,8 @@ Symfony的EventDispatcher组件实现了 `中介者`_ 和 `观察者`_
 方法会通知给定事件的所有监听器。
 它需要两个参数：要调度的事件的名称以及要传递给该事件的每个监听器的 ``Event`` 实例::
 
-    use Acme\Store\Order;
     use Acme\Store\Event\OrderPlacedEvent;
+    use Acme\Store\Order;
 
     // 以某种方式创建或检索订单
     $order = new Order();
@@ -285,22 +283,22 @@ Symfony的EventDispatcher组件实现了 `中介者`_ 和 `观察者`_
 
     namespace Acme\Store\Event;
 
+    use Acme\Store\Event\OrderPlacedEvent;
     use Symfony\Component\EventDispatcher\EventSubscriberInterface;
     use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
     use Symfony\Component\HttpKernel\KernelEvents;
-    use Acme\Store\Event\OrderPlacedEvent;
 
     class StoreSubscriber implements EventSubscriberInterface
     {
         public static function getSubscribedEvents()
         {
-            return array(
-                KernelEvents::RESPONSE => array(
-                    array('onKernelResponsePre', 10),
-                    array('onKernelResponsePost', -10),
-                ),
+            return [
+                KernelEvents::RESPONSE => [
+                    ['onKernelResponsePre', 10],
+                    ['onKernelResponsePost', -10],
+                ],
                 OrderPlacedEvent::NAME => 'onStoreOrder',
-            );
+            ];
         }
 
         public function onKernelResponsePre(FilterResponseEvent $event)
@@ -361,7 +359,7 @@ Symfony的EventDispatcher组件实现了 `中介者`_ 和 `观察者`_
 现在，任何尚未调用的监听 ``order.placed`` 的监听器都 *不会* 被调用。
 
 可以通过使用返回布尔值的
-:method:`Symfony\\Component\\EventDispatcher\\Event::isPropagationStopped`
+:method:`Symfony\\Contracts\\EventDispatcher\\Event::isPropagationStopped`
 方法来检测一个事件是否已停止::
 
     // ...
@@ -391,7 +389,7 @@ EventDispatcher感知事件和监听器
 ~~~~~~~~~~~~~~~~~~~~
 
 如果你不需要一个自定义事件对象，则可以依赖一个原生的
-:class:`Symfony\\Component\\EventDispatcher\\Event` 对象。
+:class:`Symfony\\Contracts\\EventDispatcher\\Event` 对象。
 你甚至不需要将该对象传递给调度器，因为它将默认创建一个，除非你特别传递一个::
 
     $dispatcher->dispatch('order.placed');
@@ -420,8 +418,8 @@ EventDispatcher感知事件和监听器
 
 ``EventDispatcher`` 实例以及被调度事件的名称，都会作为参数传递给监听器::
 
-    use Symfony\Component\EventDispatcher\Event;
-    use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+    use Symfony\Contracts\EventDispatcher\Event;
+    use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
     class Foo
     {

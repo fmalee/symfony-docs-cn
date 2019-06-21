@@ -15,8 +15,6 @@ Installation
 
     $ composer require symfony/lock
 
-Alternatively, you can clone the `<https://github.com/symfony/lock>`_ repository.
-
 .. include:: /components/require_autoload.rst.inc
 
 Usage
@@ -106,7 +104,7 @@ with the ``release()`` method.
 
 The trickiest part when working with expiring locks is choosing the right TTL.
 If it's too short, other processes could acquire the lock before finishing the
-job; it it's too long and the process crashes before calling the ``release()``
+job; if it's too long and the process crashes before calling the ``release()``
 method, the resource will stay locked until the timeout::
 
     // ...
@@ -157,9 +155,54 @@ to reset the TTL to its original value::
         // refresh the lock for 600 seconds (next refresh() call will be 30 seconds again)
         $lock->refresh(600);
 
-    .. versionadded:: 4.1
-        The feature to pass a custom TTL as an argument of the ``refresh()``
-        method was introduced in Symfony 4.1.
+This component also provides two useful methods related to expiring locks:
+``getExpiringDate()`` (which returns ``null`` or a ``\DateTimeImmutable``
+object) and ``isExpired()`` (which returns a boolean).
+
+The Owner of The Lock
+---------------------
+
+Locks that are acquired for the first time are owned[1]_ by the ``Lock`` instance that acquired
+it. If you need to check whether the current ``Lock`` instance is (still) the owner of
+a lock, you can use the ``isAcquired()`` method::
+
+    if ($lock->isAcquired()) {
+        // We (still) own the lock
+    }
+
+Because of the fact that some lock stores have expiring locks (as seen and explained
+above), it is possible for an instance to lose the lock it acquired automatically::
+
+    // If we cannot acquire ourselves, it means some other process is already working on it
+    if (!$lock->acquire()) {
+        return;
+    }
+
+    $this->beginTransaction();
+
+    // Perform a very long process that might exceed TTL of the lock
+
+    if ($lock->isAcquired()) {
+        // Still all good, no other instance has acquired the lock in the meantime, we're safe
+        $this->commit();
+    } else {
+        // Bummer! Our lock has apparently exceeded TTL and another process has started in
+        // the meantime so it's not safe for us to commit.
+        $this->rollback();
+        throw new \Exception('Process failed');
+    }
+
+.. caution::
+
+    A common pitfall might be to use the ``isAcquired()`` method to check if
+    a lock has already been acquired by any process. As you can see in this example
+    you have to use ``acquire()`` for this. The ``isAcquired()`` method is used to check
+    if the lock has been acquired by the **current process** only!
+
+.. [1] Technically, the true owners of the lock are the ones that share the same instance of ``Key``,
+    not ``Lock``. But from a user perspective, ``Key`` is internal and you will likely only be working
+    with the ``Lock`` instance so it's easier to think of the ``Lock`` instance as being the one that
+    is the owner of the lock.
 
 Available Stores
 ----------------
@@ -223,9 +266,6 @@ support blocking, and expects a TTL to avoid stalled locks::
 
 PdoStore
 ~~~~~~~~
-
-.. versionadded:: 4.2
-    The PdoStore was introduced Symfony 4.2.
 
 The PdoStore saves locks in an SQL database. It requires a `PDO`_ connection, a
 `Doctrine DBAL Connection`_, or a `Data Source Name (DSN)`_. This store does not
@@ -300,12 +340,12 @@ is being acquired, it forwards the call to all the managed stores, and it
 collects their responses. If a simple majority of stores have acquired the lock,
 then the lock is considered as acquired; otherwise as not acquired::
 
-    use Symfony\Component\Lock\Strategy\ConsensusStrategy;
     use Symfony\Component\Lock\Store\CombinedStore;
     use Symfony\Component\Lock\Store\RedisStore;
+    use Symfony\Component\Lock\Strategy\ConsensusStrategy;
 
     $stores = [];
-    foreach (array('server1', 'server2', 'server3') as $server) {
+    foreach (['server1', 'server2', 'server3'] as $server) {
         $redis = new \Redis();
         $redis->connect($server);
 
@@ -329,9 +369,6 @@ the stores.
 
 ZookeeperStore
 ~~~~~~~~~~~~~~
-
-.. versionadded:: 4.2
-    The ZookeeperStore was introduced in Symfony 4.2.
 
 The ZookeeperStore saves locks on a `ZooKeeper`_ server. It requires a ZooKeeper
 connection implementing the ``\Zookeeper`` class. This store does not
@@ -459,8 +496,8 @@ Some file systems (such as some types of NFS) do not support locking.
     always be locked on the same machine or to use a well configured shared file
     system.
 
-Files on file system can be removed during a maintenance operation. For instance
-to cleanup the ``/tmp`` directory or after a reboot of the machine when directory
+Files on the file system can be removed during a maintenance operation. For instance,
+to clean up the ``/tmp`` directory or after a reboot of the machine when a directory
 uses tmpfs. It's not an issue if the lock is released when the process ended, but
 it is in case of ``Lock`` reused between requests.
 
@@ -489,7 +526,7 @@ needs space to add new items.
 
 .. caution::
 
-    Number of items stored in the Memcached must be under control. If it's not
+    The number of items stored in Memcached must be under control. If it's not
     possible, LRU should be disabled and Lock should be stored in a dedicated
     Memcached service away from Cache.
 

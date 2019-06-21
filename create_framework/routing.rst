@@ -12,10 +12,10 @@ framework just a little to make templates even more readable::
 
     $request = Request::createFromGlobals();
 
-    $map = array(
+    $map = [
         '/hello' => 'hello',
         '/bye'   => 'bye',
-    );
+    ];
 
     $path = $request->getPathInfo();
     if (isset($map[$path])) {
@@ -61,12 +61,12 @@ one for the simple ``/bye`` one::
 
     use Symfony\Component\Routing\Route;
 
-    $routes->add('hello', new Route('/hello/{name}', array('name' => 'World')));
+    $routes->add('hello', new Route('/hello/{name}', ['name' => 'World']));
     $routes->add('bye', new Route('/bye'));
 
 Each entry in the collection is defined by a name (``hello``) and a ``Route``
 instance, which is defined by a route pattern (``/hello/{name}``) and an array
-of default values for route attributes (``array('name' => 'World')``).
+of default values for route attributes (``['name' => 'World']``).
 
 .. note::
 
@@ -80,8 +80,8 @@ of default values for route attributes (``array('name' => 'World')``).
 Based on the information stored in the ``RouteCollection`` instance, a
 ``UrlMatcher`` instance can match URL paths::
 
-    use Symfony\Component\Routing\RequestContext;
     use Symfony\Component\Routing\Matcher\UrlMatcher;
+    use Symfony\Component\Routing\RequestContext;
 
     $context = new RequestContext();
     $context->fromRequest($request);
@@ -93,27 +93,27 @@ The ``match()`` method takes a request path and returns an array of attributes
 (notice that the matched route is automatically stored under the special
 ``_route`` attribute)::
 
-    print_r($matcher->match('/bye'));
-    /* Gives:
-    array (
-      '_route' => 'bye',
-    );
+    $matcher->match('/bye');
+    /* Result:
+    [
+        '_route' => 'bye',
+    ];
     */
 
-    print_r($matcher->match('/hello/Fabien'));
-    /* Gives:
-    array (
-      'name' => 'Fabien',
-      '_route' => 'hello',
-    );
+    $matcher->match('/hello/Fabien');
+    /* Result:
+    [
+        'name' => 'Fabien',
+        '_route' => 'hello',
+    ];
     */
 
-    print_r($matcher->match('/hello'));
-    /* Gives:
-    array (
-      'name' => 'World',
-      '_route' => 'hello',
-    );
+    $matcher->match('/hello');
+    /* Result:
+    [
+        'name' => 'World',
+        '_route' => 'hello',
+    ];
     */
 
 .. note::
@@ -165,23 +165,23 @@ There are a few new things in the code:
 
 * Request attributes are extracted to keep our templates simple::
 
-      <!-- example.com/src/pages/hello.php -->
-      Hello <?= htmlspecialchars($name, ENT_QUOTES, 'UTF-8') ?>
+    // example.com/src/pages/hello.php
+    Hello <?= htmlspecialchars($name, ENT_QUOTES, 'UTF-8') ?>
 
 * Route configuration has been moved to its own file::
 
-      // example.com/src/app.php
-      use Symfony\Component\Routing;
+    // example.com/src/app.php
+    use Symfony\Component\Routing;
 
-      $routes = new Routing\RouteCollection();
-      $routes->add('hello', new Routing\Route('/hello/{name}', array('name' => 'World')));
-      $routes->add('bye', new Routing\Route('/bye'));
+    $routes = new Routing\RouteCollection();
+    $routes->add('hello', new Routing\Route('/hello/{name}', ['name' => 'World']));
+    $routes->add('bye', new Routing\Route('/bye'));
 
-      return $routes;
+    return $routes;
 
-  We now have a clear separation between the configuration (everything
-  specific to our application in ``app.php``) and the framework (the generic
-  code that powers our application in ``front.php``).
+We now have a clear separation between the configuration (everything
+specific to our application in ``app.php``) and the framework (the generic
+code that powers our application in ``front.php``).
 
 With less than 30 lines of code, we have a new framework, more powerful and
 more flexible than the previous one. Enjoy!
@@ -189,14 +189,13 @@ more flexible than the previous one. Enjoy!
 Using the Routing component has one big additional benefit: the ability to
 generate URLs based on Route definitions. When using both URL matching and URL
 generation in your code, changing the URL patterns should have no other
-impact. Want to know how to use the generator? Calling the ``generate`` method
-is all it takes::
+impact. You can use the generator this way::
 
     use Symfony\Component\Routing;
 
     $generator = new Routing\Generator\UrlGenerator($routes, $context);
 
-    echo $generator->generate('hello', array('name' => 'Fabien'));
+    echo $generator->generate('hello', ['name' => 'Fabien']);
     // outputs /hello/Fabien
 
 The code should be self-explanatory; and thanks to the context, you can even
@@ -206,7 +205,7 @@ generate absolute URLs::
 
     echo $generator->generate(
         'hello',
-        array('name' => 'Fabien'),
+        ['name' => 'Fabien'],
         UrlGeneratorInterface::ABSOLUTE_URL
     );
     // outputs something like http://example.com/somewhere/hello/Fabien
@@ -217,6 +216,11 @@ generate absolute URLs::
     highly optimized URL matcher class that can replace the default
     ``UrlMatcher``::
 
-        $dumper = new Routing\Matcher\Dumper\PhpMatcherDumper($routes);
+        use Symfony\Component\Routing\Matcher\CompiledUrlMatcher;
+        use Symfony\Component\Routing\Matcher\Dumper\CompiledUrlMatcherDumper;
 
-        echo $dumper->dump();
+        // $compiledRoutes is a plain PHP array that describes all routes in a performant data format
+        // you can (and should) cache it, typically by exporting it to a PHP file
+        $compiledRoutes = (new CompiledUrlMatcherDumper($routes))->getCompiledRoutes();
+
+        $matcher = new CompiledUrlMatcher($compiledRoutes, $context);

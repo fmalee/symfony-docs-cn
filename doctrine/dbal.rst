@@ -12,7 +12,7 @@
 
 `Doctrine`_ 数据库抽象层（DBAL）是位于的顶部一个抽象层 `PDO`_，
 并提供了一个直观而灵活的API与最流行的关系数据库进行通信。
-换句话说，DBAL库可以轻松执行查询并执行其他数据库操作。
+DBAL库允许你独立于ORM模型来编写查询，例如用于构建报告或直接数据操作。
 
 .. tip::
 
@@ -77,14 +77,14 @@
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:doctrine="http://symfony.com/schema/dic/doctrine"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd
+                https://symfony.com/schema/dic/services/services-1.0.xsd
                 http://symfony.com/schema/dic/doctrine
-                http://symfony.com/schema/dic/doctrine/doctrine-1.0.xsd">
+                https://symfony.com/schema/dic/doctrine/doctrine-1.0.xsd">
 
             <doctrine:config>
                 <doctrine:dbal>
-                    <doctrine:type name="custom_first" class="App\Type\CustomFirst" />
-                    <doctrine:type name="custom_second" class="App\Type\CustomSecond" />
+                    <doctrine:type name="custom_first" class="App\Type\CustomFirst"/>
+                    <doctrine:type name="custom_second" class="App\Type\CustomSecond"/>
                 </doctrine:dbal>
             </doctrine:config>
         </container>
@@ -95,14 +95,14 @@
         use App\Type\CustomFirst;
         use App\Type\CustomSecond;
 
-        $container->loadFromExtension('doctrine', array(
-            'dbal' => array(
-                'types' => array(
+        $container->loadFromExtension('doctrine', [
+            'dbal' => [
+                'types' => [
                     'custom_first'  => CustomFirst::class,
                     'custom_second' => CustomSecond::class,
-                ),
-            ),
-        ));
+                ],
+            ],
+        ]);
 
 在SchemaTool中注册自定义映射类型
 --------------------------------------------------
@@ -120,8 +120,8 @@ SchemaTool用于检查数据库以对比模式(schema)。
         # config/packages/doctrine.yaml
         doctrine:
             dbal:
-               mapping_types:
-                  enum: string
+                mapping_types:
+                    enum: string
 
     .. code-block:: xml
 
@@ -130,13 +130,13 @@ SchemaTool用于检查数据库以对比模式(schema)。
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns:doctrine="http://symfony.com/schema/dic/doctrine"
             xsi:schemaLocation="http://symfony.com/schema/dic/services
-                http://symfony.com/schema/dic/services/services-1.0.xsd
+                https://symfony.com/schema/dic/services/services-1.0.xsd
                 http://symfony.com/schema/dic/doctrine
-                http://symfony.com/schema/dic/doctrine/doctrine-1.0.xsd">
+                https://symfony.com/schema/dic/doctrine/doctrine-1.0.xsd">
 
             <doctrine:config>
                 <doctrine:dbal>
-                     <doctrine:mapping-type name="enum">string</doctrine:mapping-type>
+                    <doctrine:mapping-type name="enum">string</doctrine:mapping-type>
                 </doctrine:dbal>
             </doctrine:config>
         </container>
@@ -144,13 +144,13 @@ SchemaTool用于检查数据库以对比模式(schema)。
     .. code-block:: php
 
         // config/packages/doctrine.php
-        $container->loadFromExtension('doctrine', array(
-            'dbal' => array(
-               'mapping_types' => array(
-                  'enum'  => 'string',
-               ),
-            ),
-        ));
+        $container->loadFromExtension('doctrine', [
+            'dbal' => [
+                'mapping_types' => [
+                    'enum'  => 'string',
+                ],
+            ],
+        ]);
 
 .. _`PDO`:           https://php.net/pdo
 .. _`Doctrine`:      http://www.doctrine-project.org

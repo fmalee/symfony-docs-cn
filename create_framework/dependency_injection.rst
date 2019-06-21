@@ -66,15 +66,15 @@ framework more configurable, but at the same time, it introduces a lot of
 issues:
 
 * We are not able to register custom listeners anymore as the dispatcher is
-  not available outside the Framework class (an easy workaround could be the
+  not available outside the Framework class (a workaround could be the
   adding of a ``Framework::getEventDispatcher()`` method);
 
 * We have lost the flexibility we had before; you cannot change the
   implementation of the ``UrlMatcher`` or of the ``ControllerResolver``
   anymore;
 
-* Related to the previous point, we cannot test our framework easily anymore
-  as it's impossible to mock internal objects;
+* Related to the previous point, we cannot test our framework without much
+  effort anymore as it's impossible to mock internal objects;
 
 * We cannot change the charset passed to ``ResponseListener`` anymore (a
   workaround could be to pass it as a constructor argument).
@@ -97,44 +97,44 @@ container:
 Create a new file to host the dependency injection container configuration::
 
     // example.com/src/container.php
+    use Simplex\Framework;
     use Symfony\Component\DependencyInjection;
     use Symfony\Component\DependencyInjection\Reference;
+    use Symfony\Component\EventDispatcher;
     use Symfony\Component\HttpFoundation;
     use Symfony\Component\HttpKernel;
     use Symfony\Component\Routing;
-    use Symfony\Component\EventDispatcher;
-    use Simplex\Framework;
 
     $containerBuilder = new DependencyInjection\ContainerBuilder();
     $containerBuilder->register('context', Routing\RequestContext::class);
     $containerBuilder->register('matcher', Routing\Matcher\UrlMatcher::class)
-        ->setArguments(array($routes, new Reference('context')))
+        ->setArguments([$routes, new Reference('context')])
     ;
     $containerBuilder->register('request_stack', HttpFoundation\RequestStack::class);
     $containerBuilder->register('controller_resolver', HttpKernel\Controller\ControllerResolver::class);
     $containerBuilder->register('argument_resolver', HttpKernel\Controller\ArgumentResolver::class);
 
     $containerBuilder->register('listener.router', HttpKernel\EventListener\RouterListener::class)
-        ->setArguments(array(new Reference('matcher'), new Reference('request_stack')))
+        ->setArguments([new Reference('matcher'), new Reference('request_stack')])
     ;
     $containerBuilder->register('listener.response', HttpKernel\EventListener\ResponseListener::class)
-        ->setArguments(array('UTF-8'))
+        ->setArguments(['UTF-8'])
     ;
     $containerBuilder->register('listener.exception', HttpKernel\EventListener\ExceptionListener::class)
-        ->setArguments(array('Calendar\Controller\ErrorController::exception'))
+        ->setArguments(['Calendar\Controller\ErrorController::exception'])
     ;
     $containerBuilder->register('dispatcher', EventDispatcher\EventDispatcher::class)
-        ->addMethodCall('addSubscriber', array(new Reference('listener.router')))
-        ->addMethodCall('addSubscriber', array(new Reference('listener.response')))
-        ->addMethodCall('addSubscriber', array(new Reference('listener.exception')))
+        ->addMethodCall('addSubscriber', [new Reference('listener.router')])
+        ->addMethodCall('addSubscriber', [new Reference('listener.response')])
+        ->addMethodCall('addSubscriber', [new Reference('listener.exception')])
     ;
     $containerBuilder->register('framework', Framework::class)
-        ->setArguments(array(
+        ->setArguments([
             new Reference('dispatcher'),
             new Reference('controller_resolver'),
             new Reference('request_stack'),
             new Reference('argument_resolver'),
-        ))
+        ])
     ;
 
     return $containerBuilder;
@@ -198,7 +198,7 @@ Now, here is how you can register a custom listener in the front controller::
 
     $container->register('listener.string_response', StringResponseListener::class);
     $container->getDefinition('dispatcher')
-        ->addMethodCall('addSubscriber', array(new Reference('listener.string_response')))
+        ->addMethodCall('addSubscriber', [new Reference('listener.string_response')])
     ;
 
 Beside describing your objects, the dependency injection container can also be
@@ -214,7 +214,7 @@ charset configurable::
 
     // ...
     $container->register('listener.response', HttpKernel\EventListener\ResponseListener::class)
-        ->setArguments(array('%charset%'))
+        ->setArguments(['%charset%'])
     ;
 
 After this change, you must set the charset before using the response listener
@@ -227,14 +227,14 @@ Instead of relying on the convention that the routes are defined by the
 
     // ...
     $container->register('matcher', Routing\Matcher\UrlMatcher::class)
-        ->setArguments(array('%routes%', new Reference('context')))
+        ->setArguments(['%routes%', new Reference('context')])
     ;
 
 And the related change in the front controller::
 
     $container->setParameter('routes', include __DIR__.'/../src/app.php');
 
-We have obviously barely scratched the surface of what you can do with the
+We have barely scratched the surface of what you can do with the
 container: from class names as parameters, to overriding existing object
 definitions, from shared service support to dumping a container to a plain PHP class,
 and much more. The Symfony dependency injection container is really powerful
