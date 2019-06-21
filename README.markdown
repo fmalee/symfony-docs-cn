@@ -10,6 +10,7 @@
   - `1310e0dc917f676f75662d6fe1053b3adaa695b6`（2018-12-04）
     - `components/dom_crawler.rst`
 - `4.2`
+  - `4fe8ad04430f2e47dd69a031faa22a0fe01b5e76`（2019-06-21）
   - `cfa34fc00e897c691ca59d2ff493d83dd5ee3253`（2019-06-21）
   - `d87b7191d2faef1815e4ca5a3a8b459c66d9f5b3`（2019-06-12）
   - `78123c8c25a67e8aa8e53ff5bb33252c79bdabae`（2018-12-23）
@@ -28,6 +29,7 @@
 ### 未汉化
 
 - `cache.rst`
+- `configuration.rst`
 - `mercure.rst`
 - `migration.rst`
 - `workflow.rst`

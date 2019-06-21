@@ -203,12 +203,14 @@
         command_handlers:
             namespace: App\MessageHandler\
             resource: '%kernel.project_dir%/src/MessageHandler/*CommandHandler.php'
+            autoconfigure: false
             tags:
                 - { name: messenger.message_handler, bus: messenger.bus.commands }
 
         query_handlers:
             namespace: App\MessageHandler\
             resource: '%kernel.project_dir%/src/MessageHandler/*QueryHandler.php'
+            autoconfigure: false
             tags:
                 - { name: messenger.message_handler, bus: messenger.bus.queries }
 
@@ -223,11 +225,11 @@
 
             <services>
                 <!-- command handlers -->
-                <prototype namespace="App\MessageHandler\" resource="%kernel.project_dir%/src/MessageHandler/*CommandHandler.php">
+                <prototype namespace="App\MessageHandler\" resource="%kernel.project_dir%/src/MessageHandler/*CommandHandler.php" autoconfigure="false">
                     <tag name="messenger.message_handler" bus="messenger.bus.commands"/>
                 </service>
                 <!-- query handlers -->
-                <prototype namespace="App\MessageHandler\" resource="%kernel.project_dir%/src/MessageHandler/*QueryHandler.php">
+                <prototype namespace="App\MessageHandler\" resource="%kernel.project_dir%/src/MessageHandler/*QueryHandler.php" autoconfigure="false">
                     <tag name="messenger.message_handler" bus="messenger.bus.queries"/>
                 </service>
             </services>
@@ -240,11 +242,13 @@
         // Command handlers
         $container->services()
             ->load('App\MessageHandler\\', '%kernel.project_dir%/src/MessageHandler/*CommandHandler.php')
+            ->autoconfigure(false)
             ->tag('messenger.message_handler', ['bus' => 'messenger.bus.commands']);
 
         // Query handlers
         $container->services()
             ->load('App\MessageHandler\\', '%kernel.project_dir%/src/MessageHandler/*QueryHandler.php')
+            ->autoconfigure(false)
             ->tag('messenger.message_handler', ['bus' => 'messenger.bus.queries']);
 
 调试总线
