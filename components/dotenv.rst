@@ -57,58 +57,40 @@ Dotenv组件
     // ...
     $dotenv->overload(__DIR__.'/.env');
 
-As you're working with the Dotenv component you'll notice that you might want
-to have different files depending on the environment you're working in. Typically
-this happens for local development or Continuous Integration where you might
-want to have different files for your ``test`` and ``dev`` environments.
-当你使用Dotenv组件时，你会注意到你可能希望根据你正在使用的环境拥有不同的文件。
-通常，这种情况发生在本地开发或持续集成中，你可能希望为你的文件提供不同的文件test和dev环境。
+当你使用Dotenv组件时，你会注意到你可能希望根据你正在使用的环境来拥有不同的文件。
+通常，这种情况发生在本地开发或持续集成中，你可能希望在 ``test`` 和 ``dev``
+环境中使用不同的文件。
 
-You can use ``Dotenv::loadEnv()`` to ease this process::
-你可以使用它Dotenv::loadEnv()来简化此过程：
+你可以使用 ``Dotenv::loadEnv()`` 来简化此过程::
 
     use Symfony\Component\Dotenv\Dotenv;
 
     $dotenv = new Dotenv();
     $dotenv->loadEnv(__DIR__.'/.env');
 
-The Dotenv component will then look for the correct ``.env`` file to load
-in the following order whereas the files loaded later override the variables
-defined in previously loaded files:
-然后，Dotenv组件将按.env以下顺序查找要加载的正确文件，而稍后加载的文件将覆盖先前加载的文件中定义的变量：
+然后，Dotenv组件将按以下顺序查找要加载的正确的 ``.env``
+文件，而之后加载的文件将覆盖之前加载的文件中定义的变量：
 
-#. If ``.env`` exists, it is loaded first. In case there's no ``.env`` file but a
-   ``.env.dist``, this one will be loaded instead.
-   如果.env存在，则首先加载。如果没有.env文件而是a .env.dist，则会加载此文件 。
-#. If one of the previously mentioned files contains the ``APP_ENV`` variable, the
-   variable is populated and used to load environment-specific files hereafter. If
-   ``APP_ENV`` is not defined in either of the previously mentioned files, ``dev`` is
-   assumed for ``APP_ENV`` and populated by default.
-   如果前面提到的文件之一包含APP_ENV变量，则填充该变量并用于以后加载特定于环境的文件。如果 APP_ENV未在前面提到的任何一个文件中定义，dev则APP_ENV默认为假定并填充。
-#. If there's a ``.env.local`` representing general local environment variables it's loaded now.
-   如果有一个.env.local代表一般的本地环境变量，它现在已加载。
-#. If there's a ``.env.$env.local`` file, this one is loaded. Otherwise, it falls
-   back to ``.env.$env``.
-   如果有.env.$env.local文件，则加载此文件。否则，它会回落.env.$env。
+#. 如果存在 ``.env`` 则首先加载。如果没有 ``.env``文件而有一个
+   ``.env.dist``，则会加载此文件。
+#. 如果前面提到的其中一个文件包含 ``APP_ENV``
+   变量，那么将填充该变量，并在以后用于加载特定于环境的文件。
+   如果在前面提到的任何一个文件中都没有定义 ``APP_ENV``，那么 ``APP_ENV``
+   将假定为 ``dev``，并在默认情况下填充。
+#. 如果有一个代表常规本地环境变量的 ``.env.local`` ，那么它现在就加载了。
+#. 如果有一个 ``.env.$env.local`` 文件，这个文件就会被加载。否则，它会回退到 ``.env.$env``。
 
-This might look complicated at first glance but it gives you the opportunity to
-commit multiple environment-specific files that can then be adjusted to your
-local environment. Given you commit ``.env``, ``.env.test`` and ``.env.dev`` to
-represent different configuration settings for your environments, each of them
-can be adjusted by using ``.env.local``, ``.env.test.local`` and
-``.env.dev.local`` respectively.
-乍一看这可能看起来很复杂，但它让你有机会提交多个特定于环境的文件，然后可以将这些文件调整到你的本地环境。给你承诺.env，.env.test并.env.dev为你的环境中代表不同的配置设置，他们每个人都可以通过调整.env.local，.env.test.local并  .env.dev.local分别。
+乍一看，这可能看起来很复杂，但它让你有机会提交多个特定于环境的文件，然后这些文件可以调整到你的本地环境中。
+如果你提交了 ``.env``、``.env.test`` 和 ``.env.dev`` 来表示环境的不同配置设置，则可以分别使用
+``.env.local``、``.env.test.local`` 和 ``.env.dev.local`` 来调整它们。
 
 .. note::
 
-    ``.env.local`` is always ignored in ``test`` environment because tests should produce the
-    same results for everyone.
-    .env.local在test环境中总是被忽略，因为测试应该为每个人产生相同的结果。
+    ``.env.local`` 在 ``test`` 环境中总是被忽略，因为测试应该为每个人产生相同的结果。
 
-You can adjust the variable defining the environment, default environment and test
-environments by passing them as additional arguments to ``Dotenv::loadEnv()``
-(see :method:`Symfony\\Component\\Dotenv\\Dotenv::loadEnv` for details).
-你可以通过将它们作为附加参数传递来调整定义环境，默认环境和测试环境的变量Dotenv::loadEnv() （loadEnv()有关详细信息，请参阅参考资料）。
+你可以通过将变量作为附加参数传递给
+``Dotenv::loadEnv()``，来调整定义环境、默认环境和测试环境的变量（有关详细信息，请参阅
+:method:`Symfony\\Component\\Dotenv\\Dotenv::loadEnv` ）。
 
 .. versionadded:: 4.2
     ``Dotenv::loadEnv()`` 方法是在Symfony 4.2中引入的。
@@ -131,16 +113,16 @@ environments by passing them as additional arguments to ``Dotenv::loadEnv()``
 
 .. code-block:: terminal
 
-    # Database credentials
+    # 数据库凭据
     DB_USER=root
-    DB_PASS=pass # This is the secret password
+    DB_PASS=pass # 这是密码
 
 通过在变量前添加 ``$`` 前缀，可以在值中使用环境变量：
 
 .. code-block:: terminal
 
     DB_USER=root
-    DB_PASS=${DB_USER}pass # Include the user as a password prefix
+    DB_PASS=${DB_USER}pass # 引入用户作为一个密码前缀
 
 通过 ``$()`` 嵌入命令（Windows不支持）：
 
