@@ -28,18 +28,11 @@
 
 ### 未汉化
 
-- `cache.rst`
 - `configuration.rst`
 - `mercure.rst`
-- `migration.rst`
 - `workflow.rst`
-- `components/cache.rst`
 - `components/dotenv.rst`
 - `omponents/serializer.rst`
-- `frontend/encore/virtual-machine.rst`
-- `translation/message_format.rst`
-- `setup/symfony_server.rst`
-- `workflow/dumping-workflows.rst`
 
 - [常用Bundle](https://symfony.com/doc/bundles/)
 - `introduction`
@@ -168,6 +161,9 @@
 - `Cache Hit` 缓存命中
 - `Cache Misse` 缓存未命中
 - `Contract` 契约
+- `Dump` 转储、备份
+- `Recomputation Callbacks` 
+- `tampede` 踩踏
 
 ### 导航调整
 

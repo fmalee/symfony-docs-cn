@@ -1,34 +1,28 @@
 Symfony本地Web服务器
 ========================
 
-You can run Symfony applications with any web server (Apache, nginx, the
-internal PHP web server, etc.). However, Symfony provides its own web server to
-make you more productive while developing your applications.
+你可以使用任何Web服务器（Apache，nginx，PHP内置Web服务器等）运行Symfony应用。
+但是，Symfony提供了自己的Web服务器，可以在开发应用时提高工作效率。
 
-Although this server is not intended for production use, it supports HTTP/2,
-TLS/SSL, automatic generation of security certificates, local domains, and many
-other features that sooner or later you'll need when developing web projects.
-Moreover, the server is not tied to Symfony and you can also use it with any
-PHP application and even with HTML/SPA (single page applications).
+虽然此服务器不适合生产使用，但它支持
+HTTP/2、TLS/SSL、自动生成安全证书、本地域名以及开发Web项目时迟早需要的许多其他功能。
+此外，该服务器不依赖于Symfony，你也可以将它与任何PHP应用一起使用，甚至可以与HTML/SPA（单页面应用）一起使用。
 
 安装
 ------------
 
-The Symfony server is distributed as a free installable binary, without any
-dependency, and has support for Linux, macOS and Windows. Go to `symfony.com/download`_
-and follow the instructions for your operating system.
+Symfony服务器作为免费的可安装二进制文件分发，没有任何依赖，并且支持Linux、macOS和Windows。
+转到 `symfony.com/download`_ 并按照对应的操作系统说明来进行操作。
 
 .. note::
 
-    If you want to report a bug or suggest a new feature, please create an issue
-    on `symfony/cli`_.
+    如果你想报告错误或建议新功能，请在 `symfony/cli`_ 上创建一个问题。
 
-Getting Started
+入门
 ---------------
 
-The Symfony server is started once per project, so you may end up with several
-instances (each of them listening to a different port). This is the common
-workflow to serve a Symfony project:
+Symfony服务器会为每个项目都启动一次，因此最终可能会有多个实例（每个实例都在监听不同的端口）。
+这是为一个Symfony项目提供服务的通用工作流程：
 
 .. code-block:: terminal
 
@@ -38,180 +32,160 @@ workflow to serve a Symfony project:
       [OK] Web server listening on http://127.0.0.1:....
       ...
 
-    # Now, browse the given URL, or run this command:
+    # 现在，浏览给定的URL，或运行以下命令：
     $ symfony open:local
 
-Running the server this way makes it display the log messages in the console, so
-you won't be able to run other commands at the same time. If you prefer, you can
-run the Symfony server in the background:
+以这种方式运行服务器会使其在控制台中显示日志消息，因此你将无法同时运行其他命令。
+如果你愿意，可以在后台运行Symfony服务器：
 
 .. code-block:: terminal
 
     $ cd my-project/
 
-    # start the server in the background
+    # 在后台启动服务器
     $ symfony server:start -d
 
-    # continue working and running other commands...
+    # 继续工作并运行其他命令...
 
-    # show the latest log messages
+    # 显示最新的日志消息
     $ symfony server:log
 
 启用TLS
 ------------
 
-Browsing the secure version of your applications locally is important to detect
-problems with mixed content early, and to run libraries that only run in HTTPS.
-Traditionally this has been painful and complicated to set up, but the Symfony
-server automates everything. First, run this command:
+在本地浏览应用的安全版本，对于尽早检测混合内容的问题，以及运行仅在HTTPS中运行的库非常重要。
+传统上，这是痛苦和复杂的设置，但symfony服务器自动化完成一切。首先，运行以下命令：
 
 .. code-block:: terminal
 
     $ symfony server:ca:install
 
-This command creates a local certificate authority, registers it in your system
-trust store, registers it in Firefox (this is required only for that browser)
-and creates a default certificate for ``localhost`` and ``127.0.0.1``. In other
-words, it does everything for you.
+此命令创建一个本地证书颁发机构，在系统信任存储区中注册，在Firefox中注册（这仅对该浏览器是必需的），并为
+``localhost`` 和 ``127.0.0.1`` 创建默认证书。换句话说，它为你做好了一切。
 
-Before browsing your local application with HTTPS instead of HTTP, restart its
-server stopping and starting it again.
+在使用HTTPS而不是HTTP浏览本地应用之前，请停止并重新启动其服务器。
 
-Different PHP Settings Per Project
+每个项目的不同PHP设置
 ----------------------------------
 
-Selecting a Different PHP Version
+选择不同的PHP版本
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you have multiple PHP versions installed on your computer, you can tell
-Symfony which one to use creating a file called ``.php-version`` at the project
-root directory:
+如果你的计算机上安装了多个PHP版本，你可以在项目根目录下创建名为
+``.php-version`` 的文件来告诉symfony要使用哪个版本：
 
 .. code-block:: terminal
 
     $ cd my-project/
 
-    # use a specific PHP version
+    # 使用特定的PHP版本
     $ echo "7.2" > .php-version
 
-    # use any PHP 7.x version available
+    # 使用任何可用的php 7.x版本
     $ echo "7" > .php-version
 
 .. tip::
 
-    The Symfony server traverses the directory structure up to the root
-    directory, so you can create a ``.php-version`` file in some parent
-    directory to set the same PHP version for a group of projects under that
-    directory.
+    Symfony服务器会遍历目录结构直到根目录，因此你可以在某个父目录中创建一个 ``.php-version``
+    文件，以便为该目录下的一组项目设置相同的PHP版本。
 
-Run the command below if you don't remember all the PHP versions installed on your
-computer:
+如果你不记得计算机上安装的所有PHP版本，请运行以下命令：
 
 .. code-block:: terminal
 
     $ symfony local:php:list
 
-      # You'll see all supported SAPIs (CGI, FastCGI, etc.) for each version.
-      # FastCGI (php-fpm) is used when possible; then CGI (which acts as a FastCGI
-      # server as well), and finally, the server falls back to plain CGI.
+      # 你将看到每个版本支持的所有SAPI（CGI、FastCGI等）。
+      # 尽可能的使用FastCGI（php-fpm）；然后是CGI（它也充当一个FastCGI服务器），
+      # 最后，服务器回退到普通的CGI。
 
-Overriding PHP Config Options Per Project
+按项目重写PHP配置选项
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You can change the value of any PHP runtime config option per project by creating a
-file called ``php.ini`` at the project root directory. Add only the options you want
-to override:
+你可以通过在项目根目录中创建名为 ``php.ini``
+的文件来更改每个项目的PHP运行时的任何配置选项的值。仅添加要重写的选项：
 
 .. code-block:: terminal
 
     $ cd my-project/
 
-    # this project only overrides the default PHP timezone
+    # 此项目仅重写默认的PHP时区
     $ cat php.ini
     [Date]
     date.timezone = Asia/Tokyo
 
-Running Commands with Different PHP Versions
+使用不同的PHP版本来运行命令
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-When running different PHP versions it's useful to use the main ``symfony``
-command as a wrapper for the ``php`` command. This allows you to always select
-the most appropriate PHP version according to the project which is running the
-commands. It also loads the env vars automatically, which is important when
-running non-Symfony commands:
+运行不同的PHP版本时，使用 ``symfony`` 主命令作为 ``php``
+命令的封装器很有用。这允许你始终根据运行命令的项目来选择最合适的PHP版本。
+它还会自动加载环境变量，这在运行非Symfony命令时很重要：
 
 .. code-block:: terminal
 
-    # runs the command with the default PHP version
+    # 使用默认的PHP版本运行该命令
     $ php -r "..."
 
-    # runs the command with the PHP version selected by the project
-    # (or the default PHP version if the project didn't select one)
+    # 使用项目指定的PHP版本来运行命令
+    # (如果项目没有指定一个PHP版本，则为默认的版本)
     $ symfony php -r "..."
 
-If you are using this wrapper frequently, consider aliasing the ``php`` command
-to it:
+如果你经常使用此封装器，请考虑将该命令改名为 ``php``：
 
 .. code-block:: terminal
 
     $ cd ~/.symfony/bin
     $ cp symfony php
-    # now you can run "php ..." and the "symfony" command will be executed instead
+    # 现在你可以运行 “php ...” ，而不是执行 “symfony” 命令
 
-    # other PHP commands can be wrapped too using this trick
+    # 使用这个技巧也可以封装其他PHP命令
     $ cp symfony php-config
     $ cp symfony pear
     $ cp symfony pecl
 
-Local Domain Names
+本地域名
 ------------------
 
-By default, projects are accessible at some random port of the ``127.0.0.1``
-local IP. However, sometimes it is preferable to associate a domain name to them:
+默认情况下，可以在本地IP ``127.0.0.1`` 的某个随机端口中访问项目。但是，有时最好将域名与它们关联起来：
 
-* It's more convenient when you work continuously on the same project because
-  port numbers can change but domains don't;
-* The behavior of some applications depend on their domains/subdomains;
-* To have stable endpoints, such as the local redirection URL for Oauth2.
+* 这样当你在同一个项目上连续工作时会更方便，因为端口号可以改变，但域不会改变;
+* 某些应用的行为取决于其域名/子域;
+* 拥有稳定的端点，例如Oauth2的本地重定向URL。
 
-Setting up the Local Proxy
+设置本地代理
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Local domains are possible thanks to a local proxy provided by the Symfony
-server. First, start the proxy:
+由于Symfony服务器提供的本地代理，本地域名成才为可能。首先，启动代理：
 
 .. code-block:: terminal
 
     $ symfony proxy:start
 
-If this is the first time you run the proxy, you must follow these additional steps:
+如果这是你第一次运行代理，则必须执行以下额外步骤：
 
-* Open the **network configuration** of your operating system;
-* Find the **proxy settings** and select the **"Automatic Proxy Configuration"**;
-* Set the following URL as its value: ``http://127.0.0.1:7080/proxy.pac``
+* 打开操作系统的 **网络配置**；
+* 找到 **代理设置** 并选择 **“自动代理配置”**；
+* 将其值设置为 ``http://127.0.0.1:7080/proxy.pac``。
 
-Defining the Local Domain
+定义本地域名
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-By default, Symfony proposes ``.wip`` (for *Work in Progress*) for the local
-domains. You can define a local domain for your project as follows:
+默认情况下，Symfony使用
+``.wip``（即 *Work in Progress*）作为本地域名。你也可以为项目自定义本地域名，如下所示：
 
 .. code-block:: terminal
 
     $ cd my-project/
     $ symfony proxy:domain:attach my-domain
 
-If you have installed the local proxy as explained in the previous section, you
-can now browse ``https://my-domain.wip`` to access your local project with the
-new custom domain.
+如果你已按照上一节中的说明安装了本地代理，则现在可以浏览 ``https://my-domain.wip``
+以使用新的自定义域名来访问本地项目。
 
 .. tip::
 
-    Browse the http://127.0.0.1:7080 URL to get the full list of local project
-    directories, their custom domains, and port numbers.
+    浏览 http://127.0.0.1:7080 网址以获取本地项目的目录、自定义域名和端口号的完整列表。
 
-When running console commands, add the ``HTTPS_PROXY`` env var to make custom
-domains work:
+运行控制台命令时，添加 ``HTTPS_PROXY`` 环境变量以使器在自定义域名下工作：
 
 .. code-block:: terminal
 
@@ -219,41 +193,39 @@ domains work:
 
 .. tip::
 
-    If you prefer to use a different TLD, edit the ``~/.symfony/proxy.json``
-    file (where ``~`` means the path to your user directory) and change the
-    value of the ``tld`` option from ``wip`` to any other TLD.
+    如果你更喜欢使用其他TLD，请编辑 ``~/.symfony/proxy.json``
+    文件（``~`` 代表用户目录的路径），并将 ``tld`` 选项中的 ``wip``
+    值更改为任何其他TLD。
 
-Long-Running Commands
+长时间运行的命令
 ---------------------
 
-Long-running commands, such as the ones that compile front-end web assets, block
-the terminal and you can't run other commands at the same time. The Symfony
-server provides a ``run`` command to wrap them as follows:
+长时间运行的命令（例如编译前端Web资产的命令）会阻塞终端，并且你无法同时运行其他命令。
+Symfony服务器提供了一个 ``run`` 命令来封装它们，如下所示：
 
 .. code-block:: terminal
 
-    # compile Webpack assets using Symfony Encore ... but do that in the
-    # background to not block the terminal
+    # 使用symfony Encore编译Webpack资产...
+    # 但是在后台这样做不会阻塞终端
     $ symfony run -d yarn encore dev --watch
 
-    # continue working and running other commands...
+    # 继续工作并运行其他命令...
 
-    # from time to time, check the command logs if you want
+    # 如果需要，随时检查命令日志
     $ symfony server:log
 
-    # and you can also check if the command is still running
+    # 你还可以检查命令是否仍在运行
     $ symfony server:status
     Web server listening on ...
     Command "yarn ..." running with PID ...
 
-    # stop the web server (and all the associated commands) when you are finished
+    # 完成后停止Web服务器（以及所有关联的命令）
     $ symfony server:stop
 
-Docker Integration
+Docker集成
 ------------------
 
-The local Symfony server provides full `Docker`_ integration for projects that
-use it. First, make sure to expose the container ports:
+本地Symfony服务器为使用它的项目提供完整的 `Docker`_ 集成。首先，确保暴露了容器端口：
 
 .. code-block:: yaml
 
@@ -269,9 +241,7 @@ use it. First, make sure to expose the container ports:
 
         # ...
 
-Then, check your service names and update them if needed (Symfony creates
-environment variables following the name of the services so they can be
-autoconfigured):
+然后，检查你的服务名称并在需要时更新它们（Symfony根据服务名称创建环境变量，以便它们可以自动配置）：
 
 .. code-block:: yaml
 
@@ -288,11 +258,10 @@ autoconfigured):
         # RABBITMQ_DSN
         rabbitmq: ...
 
-If your ``docker-compose.yaml`` file doesn't use the environment variable names
-expected by Symfony (e.g. you use ``MYSQL_URL`` instead of ``DATABASE_URL``)
-then you need to rename all occurrences of those environment variables in your
-Symfony application. A simpler alternative is to use the ``.env.local`` file to
-reassign the environment variables:
+如果你的 ``docker-compose.yaml`` 文件不使用Symfony期望的环境变量名称（例如，你使用
+``MYSQL_URL`` 而不是 ``DATABASE_URL``
+时），则需要在Symfony应用中重命名所有这些环境变量。更简单的替代方法是使用``.env.local``
+文件重新分配环境变量：
 
 .. code-block:: bash
 
@@ -300,73 +269,65 @@ reassign the environment variables:
     DATABASE_URL=${MYSQL_URL}
     # ...
 
-Now you can start the containers and all their services will be exposed. Browse
-any page of your application and check the "Symfony Server" section in the web
-debug toolbar. You'll see that "Docker Compose" is "Up".
+现在你可以启动容器并将其所有服务公开。
+浏览应用的任何页面，然后检查Web调试工具栏中的“Symfony Server”部分，你会看到“Doc​​ker Compose”是“Up”状态。
 
-SymfonyCloud Integration
+SymfonyCloud集成
 ------------------------
 
-The local Symfony server provides full, but optional, integration with
-`SymfonyCloud`_, a service optimized to run your Symfony applications on the
-cloud. It provides features such as creating environments, backups/snapshots,
-and even access to a copy of the production data from your local machine to help
-debug any issues.
+Symfony本地服务器提供与 `SymfonyCloud`_
+完整但可选的集成，SymfonyCloud是一种优化的服务，用于在云上运行Symfony应用。
+它提供的功能包括创建环境、备份/快照、甚至可以从本地计算机访问生产数据的副本，以帮助调试任何问题。
 
-`Read SymfonyCloud technical docs`_.
+`阅读SymfonyCloud的技术文档`_.
 
-Bonus Features
+额外功能
 --------------
 
-In addition to being a local web server, the Symfony server provides other
-useful features:
+除了作为本地Web服务器之外，Symfony服务器还提供其他有用的功能：
 
-Looking for Security Vulnerabilities
+寻找安全漏洞
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Instead of installing the :doc:`Symfony Security Checker </security/security_checker>`
-as a dependency of your projects, you can run the following command:
+你可以运行以下命令，而不是将 :doc:`Symfony安全检查器 </security/security_checker>`
+安装为项目的依赖：
 
 .. code-block:: terminal
 
     $ symfony security:check
 
-This command uses the same vulnerability database as the Symfony Security
-Checker but it does not make HTTP calls to the official API endpoint. Everything
-(except cloning the public database) is done locally, which is the best for CI
-(*continuous integration*) scenarios.
+此命令使用与Symfony安全检查器相同的漏洞数据库，但它不会对官方的API端点进行HTTP调用。
+所有内容（克隆公共数据库除外）都是在本地完成的，这对CI（持续集成）方案来说是最好的。
 
-Creating Symfony Projects
+创建Symfony项目
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In addition to the `different ways of installing Symfony`_, you can use these
-commands from the Symfony server:
+除了 `安装Symfony的不同方式`_，你还可以在Symfony服务器中使用以下命令：
 
 .. code-block:: terminal
 
-    # creates a new project based on symfony/skeleton
+    # 基于symfony/skeleton创建新项目
     $ symfony new my_project_name
 
-    # creates a new project based on symfony/website-skeleton
+    # 基于symfony/website-skeleton创建新项目
     $ symfony new --full my_project_name
 
-    # creates a new project based on the Symfony Demo application
+    # 基于Symfony演示应用创建新项目
     $ symfony new --demo my_project_name
 
-You can create a project depending on a **development** version as well (note
-that Composer will also set the stability to ``dev`` for all root dependencies):
+你也可以基于 **开发版本** 来创建项目（请注意，Composer还会将所有根依赖的稳定性设置为 ``dev``）：
 
 .. code-block:: terminal
 
-    # creates a new project based on Symfony's master branch
+    # 基于Symfony的主分支创建新项目
     $ symfony new --version=dev-master my_project_name
 
-    # creates a new project based on Symfony's 4.3 dev branch
+    # 基于Symfony的 4.3 dev 分支创建新项目
     $ symfony new --version=4.3.x-dev my_project_name
 
 .. _`symfony.com/download`: https://symfony.com/download
 .. _`symfony/cli`: https://github.com/symfony/cli
-.. _`different ways of installing Symfony`: https://symfony.com/download
+.. _`安装Symfony的不同方式`: https://symfony.com/download
 .. _`Docker`: https://en.wikipedia.org/wiki/Docker_(software)
 .. _`SymfonyCloud`: https://symfony.com/cloud/
-.. _`Read SymfonyCloud technical docs`: https://symfony.com/doc/master/cloud/intro.html
+.. _`阅读SymfonyCloud的技术文档`: https://symfony.com/doc/master/cloud/intro.html

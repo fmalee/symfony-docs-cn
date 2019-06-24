@@ -1,15 +1,13 @@
 在虚拟机中使用Encore
 =================================
 
-Encore is compatible with virtual machines such as `VirtualBox`_ and `VMWare`_
-but you may need to make some changes to your configuration to make it work.
+Encore兼容虚拟机（如 `VirtualBox`_ 和 `VMWare`_），但你可能需要对配置进行一些更改才能使其正常工作。
 
-File Watching Issues
+文件监视问题
 --------------------
 
-When using a virtual machine, your project root directory is shared with the
-virtual machine using `NFS`_. This introduces issues with files watching, so
-you must enable the `polling`_ option to make it work:
+使用虚拟机时，会使用 `NFS`_ 与虚拟机共享项目根目录。这会导致文件监视问题，因此你必须启用
+`轮询`_ 选项才能使其正常工作：
 
 .. code-block:: javascript
 
@@ -17,25 +15,23 @@ you must enable the `polling`_ option to make it work:
 
     // ...
 
-    // will be applied for `encore dev --watch` and `encore dev-server` commands
+    // 将应用于 `encore dev --watch` 和 `encore dev-server` 命令
     Encore.configureWatchOptions(watchOptions => {
-        watchOptions.poll = 250; // check for changes every 250 milliseconds
+        watchOptions.poll = 250; // 每250毫秒检查一次更改
     });
 
-Development Server Issues
+开发服务器问题
 -------------------------
 
-Configure the Public Path
+配置公共路径
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. note::
 
-    You can skip this section if your application is running on
-    ``http://localhost`` instead a custom local domain-name like
-    ``http://app.vm``.
+    如果你的应用正运行在 ``http://localhost``，而不是像 ``http://app.vm``
+    这样的自定义本地域名，则可以跳过此部分。
 
-When running the development server, you will probably see the following errors
-in the web console:
+运行开发服务器时，你可能会在Web控制台中看到以下错误：
 
 .. code-block:: text
 
@@ -43,9 +39,8 @@ in the web console:
     GET http://localhost:8080/build/runtime.js net::ERR_CONNECTION_REFUSED
     ...
 
-If your Symfony application is running on a custom domain (e.g.
-``http://app.vm``), you must configure the public path explicitly in your
-``package.json``:
+如果你的Symfony应用在自定义域名（例如 ``http://app.vm``）上运行，则必须在你的
+``package.json`` 中明确配置公共路径：
 
 .. code-block:: diff
 
@@ -58,23 +53,20 @@ If your Symfony application is running on a custom domain (e.g.
         }
     }
 
-After restarting Encore and reloading your web page, you will probably see
-different issues in the web console:
+重新启动Encore并重新加载网页后，你可能会在Web控制台中看到不同的问题：
 
 .. code-block:: text
 
     GET http://app.vm:8080/build/vendors~app.css net::ERR_CONNECTION_REFUSED
     GET http://app.vm:8080/build/runtime.js net::ERR_CONNECTION_REFUSED
 
-You still need to make other configuration changes, as explained in the
-following sections.
+你仍需要进行其他配置更改，具体如以下各节中所述。
 
-Allow External Access
+允许外部访问
 ~~~~~~~~~~~~~~~~~~~~~
 
-Add the ``--host 0.0.0.0`` argument to the ``dev-server`` configuration in your
-``package.json`` file to make the development server accept all incoming
-connections:
+将 ``--host 0.0.0.0`` 参数添加到 ``package.json`` 文件中的 ``dev-server``
+配置中，以使开发服务器接受所有传入连接：
 
 .. code-block:: diff
 
@@ -89,14 +81,13 @@ connections:
 
 .. caution::
 
-    Make sure to run the development server inside your virtual machine only;
-    otherwise other computers can have access to it.
+    要确保仅在你的虚拟机内运行开发服务器；否则其他计算机也可以访问它。
 
-Fix "Invalid Host header" Issue
+修复"Invalid Host header"问题
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Webpack will respond ``Invalid Host header`` when trying to access files from
-the dev-server. To fix this, add the argument ``--disable-host-check``:
+尝试从开发服务器访问文件时，Webpack将响应 ``Invalid Host header``。要解决此问题，请添加
+``--disable-host-check`` 参数：
 
 .. code-block:: diff
 
@@ -111,11 +102,10 @@ the dev-server. To fix this, add the argument ``--disable-host-check``:
 
 .. caution::
 
-    Beware that `it's not recommended to disable host checking`_ in general, but
-    here it's required to solve the issue when using Encore in a virtual machine.
+    请注意，一般 `不建议禁用主机检查`_，但是在虚拟机中使用Encore时需要解决那些问题。
 
 .. _`VirtualBox`: https://www.virtualbox.org/
 .. _`VMWare`: https://www.vmware.com
 .. _`NFS`: https://en.wikipedia.org/wiki/Network_File_System
 .. _`polling`: https://webpack.js.org/configuration/watch/#watchoptionspoll
-.. _`it's not recommended to disable host checking`: https://webpack.js.org/configuration/dev-server/#devserverdisablehostcheck
+.. _`不建议禁用主机检查`: https://webpack.js.org/configuration/dev-server/#devserverdisablehostcheck

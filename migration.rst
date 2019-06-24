@@ -1,199 +1,131 @@
 .. index::
    single: Migration
 
-迁移现有应用到Symfony
+迁移旧应用到Symfony
 ============================================
 
-When you have an existing application that was not built with Symfony,
-you might want to move over parts of that application without rewriting
-the existing logic completely. For those cases there is a pattern called
-`Strangler Application`_. The basic idea of this pattern is to create a
-new application that gradually takes over functionality from an existing
-application. This migration approach can be implemented with Symfony in
-various ways and has some benefits over a rewrite such as being able
-to introduce new features in the existing application and reducing risk
-by avoiding a "big bang"-release for the new application.
+如果你现有的应用不是使用Symfony构建的，那么你可能希望移动该应用的某些部分，而无需完全重写现有逻辑。
+对于这些情况，有一种称为 `绞杀者应用`_ 的模式 。
+此模式的基本思想是创建一个新应用，然后逐步接管旧应用的功能。
+这种迁移方案可以通过Symfony以各种方式实现，并且与重写相比具有一些优势，
+例如能够在旧应用中引入新功能，并通过避免新应用的“大爆炸”释放来降低风险。
 
 .. admonition:: Screencast
     :class: screencast
 
-    The topic of migrating from an existing application towards Symfony is
-    sometimes discussed during conferences. For example the talk
-    `Modernizing with Symfony`_ reiterates some of the points from this page.
+    在会议期间有时会讨论从旧应用迁移到Symfony的主题。
+    例如，`Modernizing with Symfony`_ 的谈话重申了本页的一些要点。
 
-Prerequisites
+先决条件
 -------------
 
-Before you start introducing Symfony to the existing application, you have to
-ensure certain requirements are met by your existing application and
-environment.  Making the decisions and preparing the environment before
-starting the migration process is crucial for its success.
+在开始将Symfony引入旧应用之前，必须确保旧应用和环境满足某些要求。
+在开始迁移过程之前做出决策并准备好环境对于其成功至关重要。
 
 .. note::
 
-    The following steps do not require you to have the new Symfony
-    application in place and in fact it might be safer to introduce these
-    changes beforehand in your existing application.
+    以下步骤不要求你准备好新的Symfony应用，事实上，在旧应用中预先引入这些更改可能更安全。
 
-Choosing the Target Symfony Version
+选择目标Symfony版本
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Most importantly, this means that you will have to decide which version you
-are aiming to migrate to, either a current stable release or the long
-term support version (LTS). The main difference is, how frequently you
-will need to upgrade in order to use a supported version. In the context
-of a migration, other factors, such as the supported PHP-version or
-support for libraries/bundles you use, may have a strong impact as well.
-Using the most recent, stable release will likely give you more features,
-but it will also require you to update more frequently to ensure you will
-get support for bug fixes and security patches and you will have to work
-faster on fixing deprecations to be able to upgrade.
+最重要的是，这意味着你必须决定要迁移到哪个版本，无论是当前稳定版本还是长期支持版本（LTS）。
+主要的区别是，为了使用支持的版本，你需要多久升级一次。
+在迁移环境中，其他因素（如支持的PHP版本或对所使用的库/包的支持）也可能产生强烈影响。
+使用最新的稳定版本可能会为你提供更多功能，
+但它还需要你更频繁地更新以确保你将获得BUG修复和安全补丁的支持，并且你必须更快地修复弃用以便能够升级。
 
 .. tip::
 
-    When upgrading to Symfony you might be tempted to also use
-    :doc:`Flex </setup/flex>`. Please keep in mind that it primarily
-    focuses on bootstrapping a new Symfony application according to best
-    practices regarding the directory structure. When you work in the
-    constraints of an existing application you might not be able to
-    follow these constraints, making Flex less useful.
+    升级到Symfony时，你可能也想使用 :doc:`Flex </setup/flex>`。
+    请记住，它主要侧重于根据有关目录结构的最佳实践来引导一个新的Symfony应用。
+    当你处理旧应用的约束时，你可能无法遵循这些约束，从而使Flex变得不那么有用。
 
-First of all your environment needs to be able to support the minimum
-requirements for both applications. In other words, when the Symfony
-release you aim to use requires PHP 7.1 and your existing application
-does not yet support this PHP version, you will probably have to upgrade
-your legacy project. You can find out the
-:doc:`requirements </reference/requirements>` for running Symfony and
-compare them with your current application's environment to make sure you
-are able to run both applications on the same system. Having a test
-system, that is as close to the production environment as possible,
-where you can just install a new Symfony project next to the existing one
-and check if it is working will give you an even more reliable result.
+首先，你的环境需要能够同时支持两个应用的最低要求。
+换句话说，当你希望使用的Symfony版本需要PHP 7.1，而你现有的应用尚不支持此PHP版本时，你可能必须升级你的旧项目。
+你可以找到运行Symfony的 :doc:`需求 </reference/requirements>`，并将它们与当前应用的环境进行比较，以确保你能够在同一系统上运行这两个应用。
+拥有一个尽可能靠近生产环境的测试系统，你可以在现有的Symfony项目旁边安装一个新的Symfony项目，并检查它能否正常工作，这样将为你提供更可靠的结果。
 
 .. tip::
 
-    If your current project is running on an older PHP version such as
-    PHP 5.x upgrading to a recent version will give you a performance
-    boost without having to change your code.
+    如果你当前的项目是在较旧的PHP版本（如PHP 5.x）上运行，则升级到最新版本可以在不改变代码的情况下提高性能。
 
-Setting up Composer
+设置Composer
 ~~~~~~~~~~~~~~~~~~~
 
-Another point you will have to look out for is conflicts between
-dependencies in both applications. This is especially important if your
-existing application already uses Symfony components or libraries commonly
-used in Symfony applications such as Doctrine ORM, Swiftmailer or Twig.
-A good way for ensuring compatibility is to use the same ``composer.json``
-for both project's dependencies.
+你需要注意的另一点是两个应用中的依赖之间的冲突。
+如果你现有的应用已经使用Symfony中常用的Symfony组件或库（如Doctrine ORM，Swiftmailer或Twig），那么这一点尤为重要。
+确保兼容性的一种好方法是对项目的依赖使用相同的 ``composer.json``。
 
-Once you have introduced composer for managing your project's dependencies
-you can use its autoloader to ensure you do not run into any conflicts due
-to custom autoloading from your existing framework. This usually entails
-adding an `autoload`_-section to your ``composer.json`` and configuring it
-based on your application and replacing your custom logic with something
-like this::
+一旦你引入了用于管理项目依赖的composer，你就可以使用其自动加载器来确保你不会因为现有框架的自定义自动加载而遇到任何冲突。
+这通常需要为你的 ``composer.json`` 添加一个 `自动加载`_
+节点，并根据你的应用对其进行配置，然后使用以下内容替换你的自定义逻辑::
 
     require __DIR__.'/vendor/autoload.php';
 
-Removing Global State from the Legacy Application
+从旧应用中移除全局状态
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In older PHP applications it was quite common to rely on global state and
-even mutate it during runtime. This might have side effects on the newly
-introduced Symfony application. In other words code relying on globals
-in the existing application should be refactored to allow for both systems
-to work simultaneously. Since relying on global state is considered an
-anti-pattern nowadays you might want to start working on this even before
-doing any integration.
+在较旧的PHP应用中，依赖全局状态甚至在运行时期间改变它是很常见的。
+这可能会对新引入的Symfony应用产生副作用。
+换句话说，应该重构旧应用中依赖于全局变量的代码，以允许两个系统同时工作。
+由于现在依赖于全局状态被认为是一种反模式，因此你甚至可能希望在进行任何集成之前就开始研究它。
 
-Setting up the Environment
+设置环境
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-There might be additional steps you need to take depending on the libraries
-you use, the original framework your project is based on and most importantly
-the age of the project as PHP itself underwent many improvements throughout
-the years that your code might not have caught on to, yet. As long as both
-your existing code and a new Symfony project can run in parallel on the
-same system you are on a good way. All these steps do not require you to
-introduce Symfony just yet and will already open up some opportunities for
-modernizing your existing code.
+根据所使用的库、项目所基于的原始框架以及最重要的是项目的年龄，你可能需要采取其他步骤。
+因为在过去的几年中，PHP本身经历了许多你的代码可能还没有赶上的改进。
+只要你现有的代码和新的Symfony项目都可以在同一个系统上并行运行，那么你就处于良好的状态。
+所有这些步骤都不需要你刚刚引入的Symfony，并且已经为实现现有代码的现代化提供了一些机会。
 
-Establishing a Safety Net for Regressions
+建立一个回归的安全网
 -----------------------------------------
 
-Before you can safely make changes to the existing code, you must ensure that
-nothing will break. One reason for choosing to migrate is making sure that the
-application is in a state where it can run at all times. The best way for
-ensuring a working state is to establish automated tests.
+在你可以安全地更改现有代码之前，必须确保不会中断任何内容。
+选择迁移的一个原因是确保应用处于可以始终运行的状态。
+确保工作状态的最佳方法是建立自动化测试。
 
-It is quite common for an existing application to either not have a test suite
-at all or have low code coverage. Introducing unit tests for this code is
-likely not cost effective as the old code might be replaced with functionality
-from Symfony components or might be adapted to the new application.
-Additionally legacy code tends to be hard to write tests for making the process
-slow and cumbersome.
+旧应用要么根本没有测试套件，要么代码覆盖率很低，这是很常见的。
+为该代码引入单元测试可能不划算，因为旧代码可能被Symfony组件的功能所取代，或者可能会适应新的应用。
+此外，遗留代码往往很难编写测试，从而使该过程变得缓慢和麻烦。
 
-Instead of providing low level tests, that ensure each class works as expected, it
-might makes sense to write high level tests ensuring that at least anything user
-facing works on at least a superficial level. These kinds of tests are commonly
-called End-to-End tests, because they cover the whole application from what the
-user sees in the browser down to the very code that is being run and connected
-services like a database. To automate this you have to make sure that you can
-get a test instance of your system running as easily as possible and making
-sure that external systems do not change your production environment, e.g.
-provide a separate test database with (anonymized) data from a production
-system or being able to setup a new schema with a basic dataset for your test
-environment. Since these tests do not rely as much on isolating testable code
-and instead look at the interconnected system, writing them is usually easier
-and more productive when doing a migration. You can then limit your effort on
-writing lower level tests on parts of the code that you have to change or
-replace in the new application making sure it is testable right from the start.
+与其提供确保每个类按预期工作的低级测试，不如编写高级测试来确保面向用户的任何东西至少在表面上工作，这是有意义的。
+这些类型的测试通常被称为端到端测试，因为它们涵盖了整个应用，从用户在浏览器中看到的内容到正在运行的代码以及连接的服务（如数据库）。
+要实现自动化，你必须确保你的系统的测试实例尽可能容易地运行，并确保外部系统不会更改你的生产环境，
+例如，提供一个包含来自生产系统的（匿名）数据的独立测试数据库，或者能够为你的测试环境设置一个包含基本数据集的新架构。
+由于这些测试不太依赖于隔离可测试代码，而是着眼于相互连接的系统，因此在进行迁移时编写它们通常更容易、更高效。
+然后，你可以限制在新应用中必须更改或替换的代码部分上编写较低级别的测试，以确保从一开始就可以对其进行测试。
 
-There are tools aimed at End-to-End testing you can use such as
-`Symfony Panther`_ or you can write :doc:`functional tests </testing>`
-in the new Symfony application as soon as the initial setup is completed.
-For example you can add so called Smoke Tests, which only ensure a certain
-path is accessible by checking the HTTP status code returned or looking for
-a text snippet from the page.
+有一些针对你可以使用的端到端测试的工具，例如
+`Symfony Panther`_，或者你可以在初始设置完成后立即在新的Symfony应用中编写 :doc:`功能测试 </testing>`。
+例如，你可以添加所谓的烟雾测试，它只通过检查返回的HTTP状态代码或从页面查找文本片段来确保某个路径是可访问的。
 
-Introducing Symfony to the Existing Application
+将Symfony引入旧应用
 -----------------------------------------------
 
-The following instructions only provide an outline of common tasks for
-setting up a Symfony application that falls back to a legacy application
-whenever a route is not accessible. Your mileage may vary and likely you
-will need to adjust some of this or even provide additional configuration
-or retrofitting to make it work with your application. This guide is not
-supposed to be comprehensive and instead aims to be a starting point.
+以下说明仅概述了设置Symfony应用的常见任务，该应用在路由不可访问时回退到旧版应用。
+你的里程可能会有所不同，你可能需要调整其中的一部分，甚至提供额外的配置或改装，以使其适用于你的应用。
+本指南不应该是全面的，而是旨在成为一个起点。
 
 .. tip::
 
-    If you get stuck or need additional help you can reach out to the
-    :doc:`Symfony community </contributing/community/index>` whenever you need
-    concrete feedback on an issue you are facing.
+    如果你遇到困难或需要其他帮助，只要你需要针对你所面临的问题获得具体反馈，你就可以联系
+    :doc:`Symfony社区 </contributing/community/index>`。
 
-Booting Symfony in a Front Controller
+在一个前端控制器中启动Symfony
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-When looking at how a typical PHP application is bootstrapped there are
-two major approaches. Nowadays most frameworks provide a so called
-front controller which acts as an entrypoint. No matter which URL-path
-in your application you are going to, every request is being sent to
-this front controller, which then determines which parts of your
-application to load, e.g. which controller and action to call. This is
-also the approach that Symfony takes with ``public/index.php`` being
-the front controller. Especially in older applications it was common
-that different paths were handled by different PHP files.
+纵观典型的PHP应用如何引导时，有两种主要方法。
+如今，大多数框架都提供了一个所谓的前端控制器，让它充当入口点。
+无论你要执行应用中的哪个URL路径，每个请求都将被发送到此前端控制器，然后前端控制器将确定要加载应用的哪些部分，例如要调用的控制器和动作。
+这也是Symfony所采用的方法，即使用 ``public/index.php`` 作为前端控制器。
+但是是在较旧的应用中，不同的路径由不同的PHP文件处理是很常见的。
 
-In any case you have to create a ``public/index.php`` that will start
-your Symfony application by either copying the file from the
-``FrameworkBundle``-recipe or by using Flex and requiring the
-FrameworkBundle. You will also likely have to update you web server
-(e.g. Apache or nginx) to always use this front controller. You can
-look at :doc:`Web Server Configuration </setup/web_server_configuration>`
-for examples on how this might look. For example when using Apache you can
-use Rewrite Rules to ensure PHP files are ignored and instead only index.php
-is called:
+在任何情况下，你都必须创建一个 ``public/index.php`` 来启动symfony应用，方法是从
+``FrameworkBundle`` 指令复制该文件，或者使用Flex并请求（requiring）FrameworkBundle。
+你可能还必须更新Web服务器（例如Apache或nginx）以始终使用此前端控制器。
+你可以查看 :doc:`Web服务器的配置  </setup/web_server_configuration>`以获取其大概配置的示例。例如，使用Apache时，你可以使用重写规则来确保忽略PHP文件，而只调用index.php：
 
 .. code-block:: apache
 
@@ -213,27 +145,19 @@ is called:
 
     RewriteRule ^ %{ENV:BASE}/index.php [L]
 
-This change will make sure that from now on your Symfony application is
-the first one handling all requests. The next step is to make sure that
-your existing application is started and taking over whenever Symfony
-can not yet handle a path previously managed by the existing application.
+此更改将确保从现在开始Symfony应用是第一个处理所有请求的应用。
+下一步是确保旧应用启动，并在Symfony无法处理以前由旧应用管理的路径时接管该路径。
+从这一点来看，许多策略都是可行的，每个项目都需要其独特的迁移方法。
+本指南显示了常用方法的两个示例，你可以将它们用作自己方法的基础：
 
-From this point, many tactics are possible and every project requires its
-unique approach for migration. This guide shows two examples of commonly used
-approaches, which you can use as a base for your own approach:
+* `带有Legacy Bridge的前端控制器`_，它使旧应用不受影响，并允许将其分阶段迁移到Symfony应用。
+* `传统路由加载器`_，旧应用分阶段集成到Symfony中，具有完全集成的最终结果。
 
-* `Front Controller with Legacy Bridge`_, which leaves the legacy application
-  untouched and allows to migrate it in phases to the Symfony application.
-* `Legacy Route Loader`_, where the legacy application is integrated in phases
-  into Symfony, with a fully integrated final result.
-
-Front Controller with Legacy Bridge
+带有Legacy Bridge的前端控制器
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Once you have a running Symfony application that takes over all requests,
-falling back to your legacy application is done by extending the original front
-controller script with some logic for going to your legacy system. The file
-could look something like this::
+一旦你有一个正在运行的Symfony应用来接管所有请求，就可以使用进入旧系统的一些逻辑来扩展原始前端控制器脚本，以完成对旧应用的回放。
+该文件可能如下所示::
 
     // public/index.php
     use App\Kernel;
@@ -244,10 +168,8 @@ could look something like this::
     require dirname(__DIR__).'/config/bootstrap.php';
 
     /*
-     * The kernel will always be available globally, allowing you to
-     * access it from your existing application and through it the
-     * service container. This allows for introducing new features in
-     * the existing application.
+     * 内核将始终全局可用，以允许你从旧应用访问他，同时能通过它访问服务容器。
+     * 这将允许在旧应用中引入新功能。
      */
     global $kernel;
 
@@ -273,8 +195,7 @@ could look something like this::
     $response = $kernel->handle($request);
 
     /*
-     * LegacyBridge will take care of figuring out whether to boot up the
-     * existing application or to send the Symfony response back to the client.
+     * LegacyBridge将负责确定是启动旧应用还是将Symfony的响应发送回客户端。
      */
     $scriptFile = LegacyBridge::prepareLegacyScript($request, $response, __DIR__);
     if ($scriptFile !== null) {
@@ -284,26 +205,21 @@ could look something like this::
     }
     $kernel->terminate($request, $response);
 
-There are 2 major deviations from the original file:
+它与原始文件有2个主要偏差：
 
 Line 15
-  First of all, ``$kernel`` is made globally available. This allows you to use
-  Symfony features inside your existing application and gives access to
-  services configured in our Symfony application. This helps you prepare your
-  own code to work better within the Symfony application before you transition
-  it over. For instance, by replacing outdated or redundant libraries with
-  Symfony components.
+  首先，``$kernel`` 是全局可用的。这允许你在旧应用中使用Symfony的功能，并允许访问Symfony应用中配置的服务。
+  这有助于你准备自己的代码，以便在转换之前在Symfony应用中更好地工作。
+  例如，通过使用Symfony组件替换过时或冗余的库。
 
 Line 38 - 47
-  Instead of sending the Symfony response directly, a ``LegacyBridge`` is
-  called to decide whether the legacy application should be booted and used to
-  create the response instead.
+  不是直接发送Symfony响应，而是调用一个 ``LegacyBridge``
+  来决定是否应该启动旧应用并使用它来创建响应。
 
-This legacy bridge is responsible for figuring out which file should be loaded
-in order to process the old application logic. This can either be a front
-controller similar to Symfony's ``public/index.php`` or a specific script file
-based on the current route. The basic outline of this LegacyBridge could look
-somewhat like this::
+这个传统桥接器负责确定应该加载哪个文件以处理旧应用的逻辑。
+这可以是类似于Symfony的 ``public/index.php``
+的前端控制器，也可以是基于当前路由的特定脚本文件。
+这个LegacyBridge的基本轮廓可能看起来像这样::
 
     // src/LegacyBridge.php
     namespace App;
@@ -315,62 +231,46 @@ somewhat like this::
     {
         public static function prepareLegacyScript(Request $request, Response $response, string $publicDirectory): string
         {
-            // If Symfony successfully handled the route, you do not have to do anything.
+            // 如果Symfony成功地处理了路由，你就不必做任何事情。
             if (false === $response->isNotFound()) {
                 return;
             }
 
-            // Figure out how to map to the needed script file
-            // from the existing application and possibly (re-)set
-            // some env vars.
+            // 了解如何从旧应用映射到所需的脚本文件，并可能（重新）设置一些环境变量。
             $legacyScriptFilename = ...;
 
             return $legacyScriptFilename;
         }
     }
 
-This is the most generic approach you can take, that is likely to work
-no matter what your previous system was. You might have to account for
-certain "quirks", but since your original application is only started
-after Symfony finished handling the request you reduced the chances
-for side effects and any interference.
+这是你可以采用的最通用的方法，无论你以前的系统是什么，它都可能有效。
+你可能需要考虑某些“怪癖”，但由于你的原始应用仅在Symfony处理完请求后启动，因此减少了产生副作用和任何干扰的机会。
 
-Since the old script is called in the global variable scope it will reduce side
-effects on the old code which can sometimes require variables from the global
-scope. At the same time, because your Symfony application will always be
-booted first, you can access the container via the ``$kernel`` variable and
-then fetch any service (using :method:`Symfony\\Component\\HttpKernel\\KernelInterface::getContainer`).
-This can be helpful if you want to introduce new features to your legacy
-application, without switching over the whole action to the new application.
-For example, you could now use the Symfony Translator in your old application
-or instead of using your old database logic, you could use Doctrine to refactor
-old queries. This will also allow you to incrementally improve the legacy code
-making it easier to transition it over to the new Symfony application.
+由于旧脚本是在全局变量作用域内调用的，它将减少对旧代码的副作用，而旧代码有时可能需要全局作用域内的变量。
+同时，因为你的Symfony应用将始终首先启动，你可以通过 ``$kernel``
+变量来访问容器，然后获取任何服务（使用
+:method:`Symfony\\Component\\HttpKernel\\KernelInterface::getContainer`）。
+如果要为旧应用引入新功能，而不将整个操作切换到新应用，这将非常有用。
+如果你想在不将整个动作切换到新应用的情况下将新功能引入到旧应用中，这将非常有用。
+例如，你现在可以在旧应用中使用Symfony Translator，或者使用Doctrine来重构旧查询，而不是使用旧的数据库逻辑。
+这也将允许你逐步改进旧代码，从而更容易将其转换到新的Symfony应用。
 
-The major downside is, that both systems are not well integrated
-into each other leading to some redundancies and possibly duplicated code.
-For example, since the Symfony application is already done handling the
-request you can not take advantage of kernel events or utilize Symfony's
-routing for determining which legacy script to call.
+主要的缺点是，两个系统没有很好地相互集成，导致一些冗余和可能重复的代码。
+例如，由于Symfony应用已经处理完请求，因此你无法利用内核事件或利用Symfony的路由来确定要调用的旧脚本。
 
-Legacy Route Loader
+传统路由加载器
 ~~~~~~~~~~~~~~~~~~~
 
-The major difference to the LegacyBridge-approach from before is, that the
-logic is moved inside the Symfony application. It removes some of the
-redundancies and allows us to also interact with parts of the legacy
-application from inside Symfony, instead of just the other way around.
+与之前的LegacyBridge方案的主要区别在于，逻辑在Symfony应用中移动。
+它消除了一些冗余，并允许我们从Symfony内部与旧应用的各个部分进行交互，而不是相反的方式。
 
 .. tip::
 
-    The following route loader is just a generic example that you might
-    have to tweak for your legacy application. You can familiarize
-    yourself with the concepts by reading up on it in :doc:`Routing </routing>`.
+    下面的路由加载器只是你可能必须针对旧应用进行调整的常规示例。
+    你可以通过在 :doc:`路由 </routing>` 一文中阅读它来熟悉这些概念。
 
-The legacy route loader is :doc:`a custom route loader </routing/custom_route_loader>`.
-The legacy route loader has a similar functionality as the previous
-LegacyBridge, but it is a service that is registered inside Symfony's Routing
-component::
+传统路由加载器是 :doc:`一个自定义路由加载器 </routing/custom_route_loader>`。
+传统路由加载器具有与之前的LegacyBridge类似的功能，但它是在Symfony的路由组件中注册的服务::
 
     // src/Legacy/LegacyRouteLoader.php
     namespace App\Legacy;
@@ -391,7 +291,7 @@ component::
 
             /** @var SplFileInfo $legacyScriptFile */
             foreach ($finder->in($this->webDir) as $legacyScriptFile) {
-                // This assumes all legacy files use ".php" as extension
+                // 这假定所有旧文件都使用“.php”作为扩展名
                 $filename = basename($legacyScriptFile->getRelativePathname(), '.php');
                 $routeName = sprintf('app.legacy.%s', str_replace('/', '__', $filename));
 
@@ -406,23 +306,19 @@ component::
         }
     }
 
-You will also have to register the loader in your application's
-``routing.yaml`` as described in the documentation for
-:doc:`Custom Route Loaders </routing/custom_route_loader>`.
-Depending on your configuration, you might also have to tag the service with
-``routing.loader``. Afterwards you should be able to see all the legacy routes
-in your route configuration, e.g. when you call the ``debug:router``-command:
+你还必须按照 :doc:`自定义路由加载器 </routing/custom_route_loader>`中的说明在应用的
+``routing.yaml`` 中注册加载器。根据你的配置，你可能还必须使用标签服务。
+之后，你应该能够查看路由配置中的所有旧路由，例如，当你调用 ``debug:router`` 命令时：
 
 .. code-block:: terminal
 
     $ php bin/console debug:router
 
-In order to use these routes you will need to create a controller that handles
-these routes. You might have noticed the ``_controller`` attribute in the
-previous code example, which tells Symfony which Controller to call whenever it
-tries to access one of our legacy routes. The controller itself can then use the
-other route attributes (i.e. ``requestPath`` and ``legacyScript``) to determine
-which script to call and wrap the output in a response class::
+要使用这些路由，你需要创建一个处理这些路由的控制器。
+你可能已经注意到上一个代码示例中的 ``_controller``
+属性，该属性告诉Symfony每当它尝试访问我们的旧路由时调用哪个控制器。
+然后，控制器本身可以使用其他路由属性（即 ``requestPath`` 和
+``legacyScript``）来确定要调用的脚本并将输出封装在一个响应类中::
 
     // src/Controller/LegacyController.php
     namespace App\Controller;
@@ -447,21 +343,15 @@ which script to call and wrap the output in a response class::
         }
     }
 
-This controller will set some server variables that might be needed by
-the legacy application. This will simulate the legacy script being called
-directly, in case it relies on these variables (e.g. when determining
-relative paths or file names). Finally the action requires the old script,
-which essentially calls the original script as before, but it runs inside
-our current application scope, instead of the global scope.
+该控制器将设置一些旧应用可能需要的服务器变量。
+这将模拟直接调用的旧脚本，以防它依赖于这些变量（例如，在确定相对路径或文件名时）。
+最后，该动作需要旧脚本，它基本上像以前一样调用原始脚本，但它在我们当前应用的作用域内运行，而不是在全局作用域内运行。
 
-There are some risks to this approach, as it is no longer run in the global
-scope. However, since the legacy code now runs inside a controller action, you gain
-access to many functionalities from the new Symfony application, including the
-chance to use Symfony's event lifecycle. For instance, this allows you to
-transition the authentication and authorization of the legacy application over
-to the Symfony application using the Security component and its firewalls.
+这种方法存在一些风险，因为它不再在全局作用域内运行。
+但是，由于旧代码现在在一个控制器动作中运行，因此你可以从新的Symfony应用访问许多功能，包括使用Symfony的事件生命周期的机会。
+例如，这允许你使用安全组件及其防火墙将旧应用的认证和授权转移到Symfony应用。
 
-.. _`Strangler Application`: https://www.martinfowler.com/bliki/StranglerApplication.html
-.. _`autoload`: https://getcomposer.org/doc/04-schema.md#autoload
+.. _`绞杀者应用`: https://www.martinfowler.com/bliki/StranglerApplication.html
+.. _`自动加载`: https://getcomposer.org/doc/04-schema.md#autoload
 .. _`Modernizing with Symfony`: https://youtu.be/YzyiZNY9htQ
 .. _`Symfony Panther`: https://github.com/symfony/panther

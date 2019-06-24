@@ -8,17 +8,16 @@
 Cache组件
 ===================
 
-    The Cache component provides features covering simple to advanced caching needs.
-    It natively implements `PSR-6`_ and the `Cache Contracts`_ for greatest
-    interoperability. It is designed for performance and resiliency, ships with
-    ready to use adapters for the most common caching backends. It enables tag-based
-    invalidation and cache stampede protection via locking and early expiration.
+    Cache组件提供了涵盖简单到高级的缓存需求的功能。
+    它原生地实现了 `PSR-6`_ 和 `缓存契约`_，以实现最大的互操作性。
+    它专为提高性能和弹性而设计，随附适用于最常见的缓存后端的适配器。
+    它通过锁定和提前到期来启用基于标签的失效和缓存踩踏（stampede）保护。
 
 .. tip::
 
-    The component also contains adapters to convert between PSR-6, PSR-16 and
-    Doctrine caches. See :doc:`/components/cache/psr6_psr16_adapters` and
-    :doc:`/components/cache/adapters/doctrine_adapter`.
+    该组件还包含在PSR-6、PSR-16和Doctrine缓存之间进行转换的适配器。请参阅
+    :doc:`/components/cache/psr6_psr16_adapters` 和
+    :doc:`/components/cache/adapters/doctrine_adapter`。
 
 安装
 ------------
@@ -34,47 +33,42 @@ Cache组件
 
 本组件包括 *两种* 不同的缓存方法：
 
-:ref:`PSR-6 Caching <cache-component-psr6-caching>`:
-    A generic cache system, which involves cache "pools" and cache "items".
+:ref:`PSR-6缓存 <cache-component-psr6-caching>`:
+    一个通用缓存系统，涉及缓存“池”和缓存“项”。
 
-:ref:`Cache Contracts <cache-component-contracts>`:
-    A simpler yet more powerful way to cache values based on recomputation callbacks.
+:ref:`缓存契约 <cache-component-contracts>`:
+    一种更简单但更强大的方法，可以根据重算回调来缓存值。
 
 .. tip::
 
-    Using the Cache Contracts approach is recommended: it requires less
-    code boilerplate and provides cache stampede protection by default.
+    建议使用缓存契约方案：默认情况下，它需要较少的样板代码并提供缓存踩踏保护。
 
 .. _cache-component-contracts:
 
 缓存契约
 ---------------
 
-All adapters support the Cache Contracts. They contain only two methods:
-``get()`` and ``delete()``. There's no ``set()`` method because the ``get()``
-method both gets and sets the cache values.
+所有适配器都支持缓存契约。它们只包含两种方法：``get()`` 和 ``delete()``。没有
+``set()`` 方法是因为 ``get()`` 方法就可以获取并设置缓存值。
 
-The first thing you need is to instantiate a cache adapter. The
-:class:`Symfony\\Component\\Cache\\Adapter\\FilesystemAdapter` is used in this
-example::
+你要做的第一件事就是实例化一个缓存适配器。在此示例中使用的是
+:class:`Symfony\\Component\\Cache\\Adapter\\FilesystemAdapter`::
 
     use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 
     $cache = new FilesystemAdapter();
 
-Now you can retrieve and delete cached data using this object. The first
-argument of the ``get()`` method is a key, an arbitrary string that you
-associate to the cached value so you can retrieve it later. The second argument
-is a PHP callable which is executed when the key is not found in the cache to
-generate and return the value::
+现在你可以使用此对象来检索和删除缓存的数据。``get()``
+方法的第一个参数是一个键，一个与缓存值关联的任意字符串，以便你以后可以检索它。
+第二个参数是一个PHP可调用，当在缓存中找不到对应的键时，会执行该调用以生成并返回值::
 
     use Symfony\Contracts\Cache\ItemInterface;
 
-    // The callable will only be executed on a cache miss.
+    // 该可调用将只在缓存未命中时执行
     $value = $cache->get('my_cache_key', function (ItemInterface $item) {
         $item->expiresAfter(3600);
 
-        // ... do some HTTP request or heavy computations
+        // ... 做一些HTTP请求或繁重的计算
         $computedValue = 'foobar';
 
         return $computedValue;
@@ -82,38 +76,30 @@ generate and return the value::
 
     echo $value; // 'foobar'
 
-    // ... and to remove the cache key
+    // ... 并删除缓存键
     $cache->delete('my_cache_key');
 
 .. note::
 
-    Use cache tags to delete more than one key at the time. Read more at
-    :doc:`/components/cache/cache_invalidation`.
+    使用缓存标签可以删除多个键。阅读
+    :doc:`/components/cache/cache_invalidation` 以了解更多内容。
 
-The Cache Contracts also comes with built in `Stampede prevention`_. This will
-remove CPU spikes at the moments when the cache is cold. If an example application
-spends 5 seconds to compute data that is cached for 1 hour and this data is accessed
-10 times every second, this means that you mostly have cache hits and everything
-is fine. But after 1 hour, we get 10 new requests to a cold cache. So the data
-is computed again. The next second the same thing happens. So the data is computed
-about 50 times before the cache is warm again. This is where you need stampede
-prevention
+缓存契约还附带内置的 `踩踏预防`_。它用于在缓存冷却时消除CPU峰值。
+如果一个示例应用花费5秒钟来计算要缓存1小时的数据，并且每秒访问此数据10次，这意味着你大多数都有缓存命中，一切都很好。
+但是1小时后，冷缓存中还收到10个新请求。所以再次计算数据。下一秒同样的事情发生了。
+因此，在缓存再次生效之前，数据重复计算大约50次。这是你需要预防踩踏的地方。
 
-The first solution is to use locking: only allow one PHP process (on a per-host basis)
-to compute a specific key at a time. Locking is built-in by default, so
-you don't need to do anything beyond leveraging the Cache Contracts.
+第一种解决方案是使用锁定：只允许一个PHP进程（基于每个主机）一次计算一个特定的键。
+默认情况下，锁定是内置的，因此除了利用缓存契约之外，你无需执行任何操作。
 
-The second solution is also built-in when using the Cache Contracts: instead of
-waiting for the full delay before expiring a value, recompute it ahead of its
-expiration date. The `Probabilistic early expiration`_ algorithm randomly fakes a
-cache miss for one user while others are still served the cached value. You can
-control its behavior with the third optional parameter of
-:method:`Symfony\\Contracts\\Cache\\CacheInterface::get`,
-which is a float value called "beta".
+第二种解决方案在使用缓存契约时也是内置的：在一个值到期日期之前重新计算它，而不是其完全到期之后。
+概率提前到期 算法随机假货高速缓存未命中的一个用户，而另一些仍担任缓存值。
+`概率性提前到期`_ 算法随机地为一个用户伪造一个缓存未命中，而其他用户仍然得到缓存值。
+你可以使用 :method:`Symfony\\Contracts\\Cache\\CacheInterface::get`
+的第三个可选参数来控制其行为，它是一个名为“beta”的浮点值。
 
-By default the beta is ``1.0`` and higher values mean earlier recompute. Set it
-to ``0`` to disable early recompute and set it to ``INF`` to force an immediate
-recompute::
+默认情况下，beta值为 ``1.0``，更高的值意味着更早的重新计算。
+将其设置 ``0`` 以禁用提前重新计算，而将其设置 ``INF`` 则为强制立即重新计算::
 
     use Symfony\Contracts\Cache\ItemInterface;
 
@@ -196,8 +182,8 @@ recompute::
     cache/*
 
 .. _`PSR-6`: http://www.php-fig.org/psr/psr-6/
-.. _`Cache Contracts`: https://github.com/symfony/contracts/blob/master/Cache/CacheInterface.php
+.. _`缓存契约`: https://github.com/symfony/contracts/blob/master/Cache/CacheInterface.php
 .. _`PSR-16`: http://www.php-fig.org/psr/psr-16/
-.. _Doctrine Cache: https://www.doctrine-project.org/projects/cache.html
-.. _Stampede prevention: https://en.wikipedia.org/wiki/Cache_stampede
-.. _Probabilistic early expiration: https://en.wikipedia.org/wiki/Cache_stampede#Probabilistic_early_expiration
+.. _Doctrine缓存: https://www.doctrine-project.org/projects/cache.html
+.. _踩踏预防: https://en.wikipedia.org/wiki/Cache_stampede
+.. _概率性提前到期: https://en.wikipedia.org/wiki/Cache_stampede#Probabilistic_early_expiration

@@ -4,19 +4,18 @@
 缓存
 =====
 
-Using cache is a great way of making your application run quicker. The Symfony cache
-component is shipped with many adapters to different storages. Every adapter is
-developed for high performance.
+使用缓存是一种使应用运行更快的好方法。Symfony缓存组件开箱附带许多适配器以适配不同的存储系统。
+每个适配器都是为高性能而开发的。
 
-Basic uses of the cache looks like this::
+缓存的基本用法如下所示::
 
     use Symfony\Contracts\Cache\ItemInterface;
 
-    // The callable will only be executed on a cache miss.
+    // 该可调用将只在缓存未命中时执行。
     $value = $pool->get('my_cache_key', function (ItemInterface $item) {
         $item->expiresAfter(3600);
 
-        // ... do some HTTP request or heavy computations
+        // ... 做一些HTTP请求或繁重的计算
         $computedValue = 'foobar';
 
         return $computedValue;
@@ -24,38 +23,35 @@ Basic uses of the cache looks like this::
 
     echo $value; // 'foobar'
 
-    // ... and to remove the cache key
+    // ... 还有删除缓存键
     $pool->delete('my_cache_key');
 
-Symfony supports the Cache Contracts, PSR-6/16 and Doctrine Cache interfaces.
-You can read more about these at the :doc:`component documentation </components/cache>`.
+Symfony支持缓存契约、PSR-6/16和Doctrine缓存接口。你可以在
+:doc:`组件文档 </components/cache>` 中阅读有关这些的更多信息。
 
 .. versionadded:: 4.2
 
-    The cache contracts were introduced in Symfony 4.2.
+    缓存契约是在Symfony 4.2中引入的。
 
 .. _cache-configuration-with-frameworkbundle:
 
-Configuring Cache with FrameworkBundle
+使用FrameworkBundle配置缓存
 --------------------------------------
 
-When configuring the cache component there are a few concepts you should know
-of:
+配置缓存组件时，你应该了解一些概念：
 
-**Pool**
-    This is a service that you will interact with. Each pool will always have
-    its own namespace and cache items. There is never a conflict between pools.
-**Adapter**
-    An adapter is a *template* that you use to create Pools.
-**Provider**
-    A provider is a service that some adapters are using to connect to the storage.
-    Redis and Memcached are example of such adapters. If a DSN is used as the
-    provider then a service is automatically created.
+**池**
+    这是你将与之交互的一个服务。每个池将始终具有自己的命名空间和缓存项。池之间永远不会发生冲突。
+**适配器**
+    适配器是用于创建池的一个 *模板*。
+**提供器**
+    提供器是某些适配器用于连接到存储系统的一个服务。Redis和Memcached就是这种适配器的例子。
+    如果将一个DSN作为提供器，则会自动创建相关服务。
 
-There are two pools that are always enabled by default. They are ``cache.app`` and
-``cache.system``. The system cache is used for things like annotations, serializer,
-and validation. The ``cache.app`` can be used in your code. You can configure which
-adapter (template) they use by using the ``app`` and ``system`` key like:
+默认情况下，会始终启用两个池。他们是 ``cache.app`` 和
+``cache.system``。系统缓存用于注释、序列化和验证等操作。``cache.app``
+可以在你的代码中使用。你可以使用 ``app`` 和 ``system``
+键来配置他们各自使用的适配器（模板），如：
 
 .. configuration-block::
 
@@ -94,7 +90,7 @@ adapter (template) they use by using the ``app`` and ``system`` key like:
             ],
         ]);
 
-The Cache component comes with a series of adapters pre-configured:
+缓存组件附带一系列预配置的适配器：
 
 * :doc:`cache.adapter.apcu </components/cache/adapters/apcu_adapter>`
 * :doc:`cache.adapter.array </components/cache/adapters/array_cache_adapter>`
@@ -105,8 +101,7 @@ The Cache component comes with a series of adapters pre-configured:
 * :doc:`cache.adapter.psr6 </components/cache/adapters/proxy_adapter>`
 * :doc:`cache.adapter.redis </components/cache/adapters/redis_adapter>`
 
-Some of these adapters could be configured via shortcuts. Using these shortcuts
-will create pool with service id of ``cache.[type]``
+其中一些适配器可以通过快捷方式来配置。使用这些快捷方式将会创建服务ID为 ``cache.[type]`` 的池。
 
 .. configuration-block::
 
@@ -115,17 +110,17 @@ will create pool with service id of ``cache.[type]``
         # config/packages/cache.yaml
         framework:
             cache:
-                directory: '%kernel.cache_dir%/pools' # Only used with cache.adapter.filesystem
+                directory: '%kernel.cache_dir%/pools' # 仅用于cache.adapter.filesystem
 
-                # service: cache.doctrine
+                # 服务: cache.doctrine
                 default_doctrine_provider: 'app.doctrine_cache'
-                # service: cache.psr6
+                # 服务: cache.psr6
                 default_psr6_provider: 'app.my_psr6_service'
-                # service: cache.redis
+                # 服务: cache.redis
                 default_redis_provider: 'redis://localhost'
-                # service: cache.memcached
+                # 服务: cache.memcached
                 default_memcached_provider: 'memcached://localhost'
-                # service: cache.pdo
+                # 服务: cache.pdo
                 default_pdo_provider: 'doctrine.dbal.default_connection'
 
     .. code-block:: xml
@@ -177,10 +172,10 @@ will create pool with service id of ``cache.[type]``
             ],
         ]);
 
-Creating Custom (Namespaced) Pools
+创建自定义（命名空间）池
 ----------------------------------
 
-You can also create more customized pools:
+你还可以创建更多的自定义池：
 
 .. configuration-block::
 
@@ -192,28 +187,28 @@ You can also create more customized pools:
                 default_memcached_provider: 'memcached://localhost'
 
                 pools:
-                    # creates a "custom_thing.cache" service
-                    # autowireable via "CacheInterface $customThingCache"
-                    # uses the "app" cache configuration
+                    # 创建一个 "custom_thing.cache" 服务
+                    # 通过 "CacheInterface $customThingCache" 进行自动装配
+                    # 使用 "app" 缓存的配置
                     custom_thing.cache:
                         adapter: cache.app
 
-                    # creates a "my_cache_pool" service
-                    # autowireable via "CacheInterface $myCachePool"
+                    # 创建一个 "my_cache_pool" 服务
+                    # 通过 "CacheInterface $myCachePool" 进行自动装配
                     my_cache_pool:
                         adapter: cache.adapter.array
 
-                    # uses the default_memcached_provider from above
+                    # 使用上面的 default_memcached_provider
                     acme.cache:
                         adapter: cache.adapter.memcached
 
-                    # control adapter's configuration
+                    # 控制适配器的配置
                     foobar.cache:
                         adapter: cache.adapter.memcached
                         provider: 'memcached://user:password@example.com'
 
-                    # uses the "foobar.cache" pool as its backend but controls
-                    # the lifetime and (like all pools) has a separate cache namespace
+                    # 使用 “foobar.cache” 池作为其后端，但控制生存期，
+                    # 并且（与所有池一样）具有单独的缓存命名空间
                     short_cache:
                         adapter: foobar.cache
                         default_lifetime: 60
@@ -267,41 +262,37 @@ You can also create more customized pools:
             ],
         ]);
 
-Each pool manages a set of independent cache keys: keys of different pools
-*never* collide, even if they share the same backend. This is achieved by prefixing
-keys with a namespace that's generated by hashing the name of the pool, the name
-of the compiled container class and a :ref:`configurable seed<reference-cache-prefix-seed>`
-that defaults to the project directory.
+每个池都管理一组独立的缓存键：不同池的键 *永不会* 发生冲突，即使它们共享相同的后端。
+这是通过为键添加一个命名空间来实现的，该命名空间是通过散列池的名称、已编译容器类的名称和默认为项目目录的
+:ref:`可配置种子<reference-cache-prefix-seed>` 生成的。
 
-Each custom pool becomes a service where the service id is the name of the pool
-(e.g. ``custom_thing.cache``). An autowiring alias is also created for each pool
-using the camel case version of its name - e.g. ``custom_thing.cache`` can be
-injected automatically by naming the argument ``$customThingCache`` and type-hinting it
-with either :class:`Symfony\\Contracts\\Cache\\CacheInterface` or
-``Psr\\Cache\\CacheItemPoolInterface``::
+每个自定义池都成为一个服务ID为池名称的服务（例如 ``custom_thing.cache``）。
+也使用其名称的驼峰拼写版本来为每个池创建一个自动装配别名 - 例如，``custom_thing.cache``
+可以通过名为 ``$customThingCache`` 的参数来完成自动注入，并选择
+:class:`Symfony\\Contracts\\Cache\\CacheInterface` 或
+``Psr\\Cache\\CacheItemPoolInterface`` 其一作为类型约束::
 
     use Symfony\Contracts\Cache\CacheInterface;
 
-    // from a controller method
+    // 从一个控制器的方法
     public function listProducts(CacheInterface $customThingCache)
     {
         // ...
     }
 
-    // in a service
+    // 在一个服务中
     public function __construct(CacheInterface $customThingCache)
     {
         // ...
     }
 
-Custom Provider Options
+自定义提供器的选项
 -----------------------
 
-Some providers have specific options that can be configured. The
-:doc:`RedisAdapter </components/cache/adapters/redis_adapter>` allows you to
-create providers with option ``timeout``, ``retry_interval``. etc. To use these
-options with non-default values you need to create your own ``\Redis`` provider
-and use that when configuring the pool.
+某些提供器具有特定的选项可供配置。
+:doc:`RedisAdapter </components/cache/adapters/redis_adapter>` 允许你使用
+``timeout``、``retry_interval`` 等选项来创建供应器。
+要将这些选项与非默认值一起使用，你需要创建自己的 ``\Redis`` 提供器并在配置池时使用它。
 
 .. configuration-block::
 
@@ -371,14 +362,12 @@ and use that when configuring the pool.
                 'timeout' => 10
             ]);
 
-Creating a Cache Chain
+创建缓存链
 ----------------------
 
-Different cache adapters have different strengths and weaknesses. Some might be really
-quick but small and some may be able to contain a lot of data but are quite slow.
-To get the best of both worlds you may use a chain of adapters. The idea is to
-first look at the quick adapter and then move on to slower adapters. In the worst
-case the value needs to be recalculated.
+不同的缓存适配器具有不同的优点和缺点。有些可能非常快但迷你，有些可能包含大量数据但速度很慢。
+为了两全其美，你可以使用一个适配器链。这个想法就是首先查找快速适配器，然后继续使用速度较慢的适配器。
+在最坏的情况下，该值需要重新计算。
 
 .. configuration-block::
 
@@ -399,7 +388,7 @@ case the value needs to be recalculated.
                 class: Symfony\Component\Cache\Adapter\ChainAdapter
                 arguments:
                     - ['cache.adapter.array', 'cache.my_redis', 'cache.adapter.file']
-                    - 31536000 # One year
+                    - 31536000 # 一年
 
     .. code-block:: xml
 
@@ -457,17 +446,16 @@ case the value needs to be recalculated.
 
 .. note::
 
-    In this configuration there is a ``cache.my_redis`` pool that is used as an
-    adapter in the ``app.my_cache_chain_adapter``
+    在此配置中有一个 ``cache.my_redis`` 池，被用作
+    ``app.my_cache_chain_adapter`` 中的一个适配器。
 
 
-Using Cache Tags
+使用缓存标签
 ----------------
 
-In applications with many cache keys it could be useful to organize the data stored
-to be able to invalidate the cache more efficient. One way to achieve that is to
-use cache tags. One or more tags could be added to the cache item. All items with
-the same key could be invalidate with one function call::
+在具有许多缓存键的应用中，组织存储的数据以便能够更有效地使缓存失效可能是有帮助的。
+实现这一目标的一种方法是使用缓存标签。可以将一个或多个标签添加到缓存项。
+具有相同键的所有项可以通过一个函数调用来使其失效::
 
     use Symfony\Contracts\Cache\ItemInterface;
 
@@ -483,11 +471,11 @@ the same key could be invalidate with one function call::
         return 'debug';
     });
 
-    // Remove all cache keys tagged with "bar"
+    // 删除所有标签为“bar”的缓存键
     $pool->invalidateTags(['bar']);
 
-The cache adapter needs to implement :class:`Symfony\\Contracts\\Cache\\TagAwareCacheInterface``
-to enable this feature. This could be added by using the following configuration.
+缓存适配器需要实现 :class:`Symfony\\Contracts\\Cache\\TagAwareCacheInterface``
+才能启用此功能。可以使用以下配置来添加此功能。
 
 .. configuration-block::
 
@@ -532,9 +520,8 @@ to enable this feature. This could be added by using the following configuration
             ],
         ]);
 
-Tags are stored in the same pool by default. This is good in most scenarios. But
-sometimes it might be better to store the tags in a different pool. That could be
-achieved by specifying the adapter.
+默认情况下，标签存储在同一个池中。这在大多数情况下都很好。
+但有时将标签存储在不同的池中可能会更好。这可以通过指定适配器来实现。
 
 .. configuration-block::
 
@@ -587,38 +574,36 @@ achieved by specifying the adapter.
 
 .. note::
 
-    The interface :class:`Symfony\\Contracts\\Cache\\TagAwareCacheInterface`` is
-    autowired to the ``cache.app`` service.
+    :class:`Symfony\\Contracts\\Cache\\TagAwareCacheInterface``
+    接口已自动装配到 ``cache.app`` 服务。
 
-Clearing the Cache
+清除缓存
 ------------------
 
-To clear the cache you can use the ``bin/console cache:pool:clear [pool]`` command.
-That will remove all the entries from your storage and you will have to recalculate
-all values. You can also group your pools into "cache clearers". There are 3 cache
-clearers by default:
+要清除缓存，你可以使用 ``bin/console cache:pool:clear [pool]`` 命令。
+这将删除你的存储中的所有条目，你将不得不重新计算所有的值。
+你还可以将你的池分组到“缓存清除器”。默认情况下有3个缓存清除器：
 
 * ``cache.global_clearer``
 * ``cache.system_clearer``
 * ``cache.app_clearer``
 
-The global clearer clears all the cache in every pool. The system cache clearer
-is used in the ``bin/console cache:clear`` command. The app clearer is the default
-clearer.
+全局清除器清除每个池中的所有缓存。系统缓存清除器在 ``bin/console cache:clear``
+命令中使用。应用清除器则是默认的清除器。
 
-Clear one pool:
+清除一个池：
 
 .. code-block:: terminal
 
     $ php bin/console cache:pool:clear my_cache_pool
 
-Clear all custom pools:
+清除所有自定义池：
 
 .. code-block:: terminal
 
     $ php bin/console cache:pool:clear cache.app_clearer
 
-Clear all caches everywhere:
+清除所有缓存：
 
 .. code-block:: terminal
 
