@@ -1,15 +1,14 @@
 工作流
 ========
 
-Using the Workflow component inside a Symfony application requires to know first
-some basic theory and concepts about workflows and state machines.
-:doc:`Read this article </workflow/introduction>` for a quick overview.
+使用Symfony应用中的Workflow组件需要首先了解有关工作流和状态机的一些基本理论和概念。
+阅读 :doc:`本文 </workflow/introduction>` 以获得快速概述。
 
 安装
 ------------
 
-In applications using :doc:`Symfony Flex </setup/flex>`, run this command to
-install the workflow feature before using it:
+在使用 :doc:`Symfony Flex </setup/flex>`
+的应用中，运行此命令以在使用之前安装工作流功能：
 
 .. code-block:: terminal
 
@@ -18,8 +17,7 @@ install the workflow feature before using it:
 配置
 -------------
 
-To see all configuration options, if you are using the component inside a
-Symfony project run this command:
+要查看所有的配置选项，并且你正在使用Symfony项目中的组件，请运行以下命令：
 
 .. code-block:: terminal
 
@@ -28,19 +26,16 @@ Symfony project run this command:
 创建工作流
 -------------------
 
-A workflow is a process or a lifecycle that your objects go through. Each
-step or stage in the process is called a *place*. You do also define *transitions*
-to that describes the action to get from one place to another.
+一个工作流是你的对象经历的流程或生命周期。该流程中的每个步骤或阶段称为一个
+*位置*。你还可以定义 *过渡*，以描述从一个位置到另一个位置的动作。
 
 .. image:: /_images/components/workflow/states_transitions.png
 
-A set of places and transitions creates a **definition**. A workflow needs
-a ``Definition`` and a way to write the states to the objects (i.e. an
-instance of a :class:`Symfony\\Component\\Workflow\\MarkingStore\\MarkingStoreInterface`.)
+一组位置和过渡创建了一个 **定义**。工作流需要一个 ``Definition`` 方法将状态写入对象（即一个
+:class:`Symfony\\Component\\Workflow\\MarkingStore\\MarkingStoreInterface` 实例）。
 
-Consider the following example for a blog post. A post can have these places:
-``draft``, ``reviewed``, ``rejected``, ``published``. You can define the workflow
-like this:
+请考虑以下博客文章示例。一个帖子可以有这些位置：``draft``、``reviewed``、``rejected``、``published``。
+你可以像这样定义工作流：
 
 .. configuration-block::
 
@@ -50,11 +45,11 @@ like this:
         framework:
             workflows:
                 blog_publishing:
-                    type: 'workflow' # or 'state_machine'
+                    type: 'workflow' # 或 'state_machine'
                     audit_trail:
                         enabled: true
                     marking_store:
-                        type: 'multiple_state' # or 'single_state'
+                        type: 'multiple_state' # 或 'single_state'
                         arguments:
                             - 'currentPlace'
                     supports:
@@ -164,14 +159,14 @@ like this:
 
 .. tip::
 
-    If you are creating your first workflows, consider using the ``workflow:dump``
-    command to :doc:`debug the workflow contents </workflow/dumping-workflows>`.
+    如果你要创建第一个工作流，请考虑使用 ``workflow:dump`` 命令来
+    :doc:`调试工作流内容 </workflow/dumping-workflows>`。
 
-As configured, the following property is used by the marking store::
+按照配置，标记存储区使用以下属性::
 
     class BlogPost
     {
-        // This property is used by the marking store
+        // 此属性由标记存储区使用
         public $currentPlace;
         public $title;
         public $content;
@@ -179,23 +174,20 @@ As configured, the following property is used by the marking store::
 
 .. note::
 
-    The marking store type could be "multiple_state" or "single_state". A single
-    state marking store does not support a model being on multiple places at the
-    same time.
+    标记存储区类型可以是 "multiple_state" 或
+    "single_state"。单个状态的标记存储区不支持同时在多个位置上的模型。
 
 .. tip::
 
-    The ``type`` (default value ``single_state``) and ``arguments`` (default
-    value ``marking``) attributes of the ``marking_store`` option are optional.
-    If omitted, their default values will be used.
+    ``marking_store`` 选项的 ``type``（默认值为 ``single_state``）和
+    ``arguments``（默认值为 ``marking``）属性是可选的。如果省略，将使用它们的默认值。
 
 .. tip::
 
-    Setting the ``audit_trail.enabled`` option to ``true`` makes the application
-    generate detailed log messages for the workflow activity.
+    将 ``audit_trail.enabled`` 选项设置为 ``true``
+    会使应用为工作流的活动生成详细的日志消息。
 
-With this workflow named ``blog_publishing``, you can get help to decide
-what actions are allowed on a blog post::
+通过名为 ``blog_publishing`` 的工作流，你可以获得帮助来决定允许在一个博客文章上执行哪些操作::
 
     use App\Entity\BlogPost;
     use Symfony\Component\Workflow\Exception\LogicException;
@@ -206,88 +198,80 @@ what actions are allowed on a blog post::
     $workflow->can($post, 'publish'); // False
     $workflow->can($post, 'to_review'); // True
 
-    // Update the currentState on the post
+    // 更新帖子上的当前状态
     try {
         $workflow->apply($post, 'to_review');
     } catch (LogicException $exception) {
         // ...
     }
 
-    // See all the available transitions for the post in the current state
+    // 查看处于当前状态的帖子的所有可用过渡
     $transitions = $workflow->getEnabledTransitions($post);
 
 使用事件
 ------------
 
-To make your workflows more flexible, you can construct the ``Workflow``
-object with an ``EventDispatcher``. You can now create event listeners to
-block transitions (i.e. depending on the data in the blog post) and do
-additional actions when a workflow operation happened (e.g. sending
-announcements).
+为了使你的工作流更灵活，你可以使用 ``EventDispatcher` 来构造 ``Workflow`` 对象。
+你现在可以创建事件监听器来阻止过渡（即取决于博客文章中的数据），并在工作流操作发生时执行其他动作（例如发送通知）。
 
-Each step has three events that are fired in order:
+每个步骤都有三个按顺序触发的事件：
 
-* An event for every workflow;
-* An event for the workflow concerned;
-* An event for the workflow concerned with the specific transition or place name.
+* 每个工作流的事件；
+* 相关工作流的事件；
+* 与特定过程或位置有关的工作流事件。
 
-When a state transition is initiated, the events are dispatched in the following
-order:
+启动一个状态过渡时，将按以下顺序调度事件：
 
 ``workflow.guard``
-    Validate whether the transition is blocked or not (see
-    :ref:`guard events <workflow-usage-guard-events>` and
-    :ref:`blocking transitions <workflow-blocking-transitions>`).
+    验证过渡是否被阻止（请参阅 :ref:`安保事件 <workflow-usage-guard-events>`
+    和 :ref:`阻止过渡 <workflow-blocking-transitions>`）。
 
-    The three events being dispatched are:
+    调度的三个事件是：
 
     * ``workflow.guard``
     * ``workflow.[workflow name].guard``
     * ``workflow.[workflow name].guard.[transition name]``
 
 ``workflow.leave``
-    The subject is about to leave a place.
+    主题即将离开一个位置。
 
-    The three events being dispatched are:
+    调度的三个事件是：
 
     * ``workflow.leave``
     * ``workflow.[workflow name].leave``
     * ``workflow.[workflow name].leave.[place name]``
 
 ``workflow.transition``
-    The subject is going through this transition.
+    主题正在经历该过渡。
 
-    The three events being dispatched are:
+    调度的三个事件是：
 
     * ``workflow.transition``
     * ``workflow.[workflow name].transition``
     * ``workflow.[workflow name].transition.[transition name]``
 
 ``workflow.enter``
-    The subject is about to enter a new place. This event is triggered just
-    before the subject places are updated, which means that the marking of the
-    subject is not yet updated with the new places.
+    主题即将进入一个新的位置。此事件在主题位置更新之前触发，这意味着该主题的标记尚未使用新位置进行更新。
 
-    The three events being dispatched are:
+    调度的三个事件是：
 
     * ``workflow.enter``
     * ``workflow.[workflow name].enter``
     * ``workflow.[workflow name].enter.[place name]``
 
 ``workflow.entered``
-    The subject has entered in the places and the marking is updated (making it a good
-    place to flush data in Doctrine).
+    主题已进入位置并且标记已更新（使其成为在Doctrine中刷新数据的好位置）。
 
-    The three events being dispatched are:
+    调度的三个事件是：
 
     * ``workflow.entered``
     * ``workflow.[workflow name].entered``
     * ``workflow.[workflow name].entered.[place name]``
 
 ``workflow.completed``
-    The object has completed this transition.
+    该对象已完成此过渡。
 
-    The three events being dispatched are:
+    调度的三个事件是：
 
     * ``workflow.completed``
     * ``workflow.[workflow name].completed``
@@ -295,9 +279,9 @@ order:
 
 
 ``workflow.announce``
-    Triggered for each transition that now is accessible for the subject.
+    触发现在可供主题访问的每个过渡。
 
-    The three events being dispatched are:
+    调度的三个事件是：
 
     * ``workflow.announce``
     * ``workflow.[workflow name].announce``
@@ -305,11 +289,9 @@ order:
 
 .. note::
 
-    The leaving and entering events are triggered even for transitions that stay
-    in same place.
+    即使对于停留在同一位置的过渡，也会触发离开和进入事件。
 
-Here is an example of how to enable logging for every time a "blog_publishing"
-workflow leaves a place::
+以下是每次 "blog_publishing" 工作流离开某个位置时如何启用日志记录的示例::
 
     use Psr\Log\LoggerInterface;
     use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -348,18 +330,15 @@ workflow leaves a place::
 安保事件
 ~~~~~~~~~~~~
 
-There are a special kind of events called "Guard events". Their event listeners
-are invoked every time a call to ``Workflow::can``, ``Workflow::apply`` or
-``Workflow::getEnabledTransitions`` is executed. With the guard events you may
-add custom logic to decide which transitions should be blocked or not. Here is a
-list of the guard event names.
+有一种特殊的事件称为“安保事件”。每次调用 ``Workflow::can``、``Workflow::apply``
+或 ``Workflow::getEnabledTransitions`` 时，它们的事件监听器都会被执行。
+使用安保事件，你可以添加自定义逻辑来决定应阻止哪些过渡。这是一个安保事件名称列表。
 
 * ``workflow.guard``
 * ``workflow.[workflow name].guard``
 * ``workflow.[workflow name].guard.[transition name]``
 
-This example stops any blog post being transitioned to "reviewed" if it is
-missing a title::
+如果任何博客帖子缺少一个标题，此示例将阻止将其过渡为 “reviewed”::
 
     use Symfony\Component\EventDispatcher\EventSubscriberInterface;
     use Symfony\Component\Workflow\Event\GuardEvent;
@@ -373,7 +352,7 @@ missing a title::
             $title = $post->title;
 
             if (empty($title)) {
-                // Block the transition "to_review" if the post has no title
+                // 如果帖子没有标题，则阻止 "to_review" 过渡
                 $event->setBlocked(true);
             }
         }
@@ -389,53 +368,51 @@ missing a title::
 事件的方法
 ~~~~~~~~~~~~~
 
-Each workflow event is an instance of :class:`Symfony\\Component\\Workflow\\Event\\Event`.
-This means that each event has access to the following information:
+每个工作流事件都是一个 :class:`Symfony\\Component\\Workflow\\Event\\Event`
+实例。这意味着每个事件都可以访问以下信息：
 
 :method:`Symfony\\Component\\Workflow\\Event\\Event::getMarking`
-    Returns the :class:`Symfony\\Component\\Workflow\\Marking` of the workflow.
+    返回工作流的 :class:`Symfony\\Component\\Workflow\\Marking`。
 
 :method:`Symfony\\Component\\Workflow\\Event\\Event::getSubject`
-    Returns the object that dispatches the event.
+    返回调度事件的对象。
 
 :method:`Symfony\\Component\\Workflow\\Event\\Event::getTransition`
-    Returns the :class:`Symfony\\Component\\Workflow\\Transition` that dispatches the event.
+    返回调度事件的 :class:`Symfony\\Component\\Workflow\\Transition`。
 
 :method:`Symfony\\Component\\Workflow\\Event\\Event::getWorkflowName`
-    Returns a string with the name of the workflow that triggered the event.
+    返回一个包含触发事件的工作流的名称的字符串。
 
 :method:`Symfony\\Component\\Workflow\\Event\\Event::getMetadata`
-    Returns a metadata.
+    返回元一个数据。
 
-For Guard Events, there is an extended class :class:`Symfony\\Component\\Workflow\\Event\\GuardEvent`.
-This class has two more methods:
+对于安保事件，有一个 :class:`Symfony\\Component\\Workflow\\Event\\GuardEvent`
+扩展类。这个类还有两个以上的方法：
 
 :method:`Symfony\\Component\\Workflow\\Event\\GuardEvent::isBlocked`
-    Returns if transition is blocked.
+    如果过渡被阻止则返回。
 
 :method:`Symfony\\Component\\Workflow\\Event\\GuardEvent::setBlocked`
-    Sets the blocked value.
+    设置阻止值。
 
 :method:`Symfony\\Component\\Workflow\\Event\\GuardEvent::getTransitionBlockerList`
-    Returns the event :class:`Symfony\\Component\\Workflow\\TransitionBlockerList`.
-    See :ref:`blocking transitions <workflow-blocking-transitions>`.
+    返回 :class:`Symfony\\Component\\Workflow\\TransitionBlockerList` 事件。请参阅
+    :ref:`阻止过渡 <workflow-blocking-transitions>`。
 
 :method:`Symfony\\Component\\Workflow\\Event\\GuardEvent::addTransitionBlocker`
-    Add a :class:`Symfony\\Component\\Workflow\\TransitionBlocker` instance.
+    添加一个 :class:`Symfony\\Component\\Workflow\\TransitionBlocker` 实例。
 
 .. _workflow-blocking-transitions:
 
-Blocking Transitions
+阻止过渡
 --------------------
 
-The execution of the workflow can be controlled by executing custom logic to
-decide if the current transition is blocked or allowed before applying it. This
-feature is provided by "guards", which can be used in two ways.
+可以通过执行自定义逻辑来控制工作流的执行，以在应用它之前确定当前过渡是被阻止还是被允许。
+此功能由“安保”提供，可以通过两种方式使用。
 
-First, you can listen to :ref:`the guard events <workflow-usage-guard-events>`.
-Alternatively, you can define a ``guard`` configuration option for the
-transition. The value of this option is any valid expression created with the
-:doc:`ExpressionLanguage component </components/expression_language>`:
+首先，你可以监听 :ref:`安保事件 <workflow-usage-guard-events>`。
+或者，你可以为过渡定义一个 ``guard`` 配置选项。此选项的值是使用
+:doc:`ExpressionLanguage组件 </components/expression_language>` 创建的任何有效表达式：
 
 .. code-block:: yaml
 
@@ -443,33 +420,30 @@ transition. The value of this option is any valid expression created with the
     framework:
         workflows:
             blog_publishing:
-                # previous configuration
+                # 之前的配置
                 transitions:
                     to_review:
-                        # the transition is allowed only if the current user has the ROLE_REVIEWER role.
+                        # 仅当当前用户具有 ROLE_REVIEWER 角色时才允许过渡。
                         guard: "is_granted('ROLE_REVIEWER')"
                         from: draft
                         to:   reviewed
                     publish:
-                        # or "is_anonymous", "is_remember_me", "is_fully_authenticated", "is_granted", "is_valid"
+                        # 或 "is_anonymous"、"is_remember_me"、"is_fully_authenticated"、"is_granted"、"is_valid"
                         guard: "is_authenticated"
                         from: reviewed
                         to:   published
                     reject:
-                        # or any valid expression language with "subject" referring to the supported object
+                        # 或任何有效的表达语言，其中“subject”指的是受支持的对象
                         guard: "has_role('ROLE_ADMIN') and subject.isRejectable()"
                         from: reviewed
                         to:   rejected
 
-You can also use transition blockers to block and return a user-friendly error
-message when you stop a transition from happening.
-In the example we get this message from the
-:class:`Symfony\\Component\\Workflow\\Event\\Event`'s metadata, giving you a
-central place to manage the text.
+当你停止发生一个过渡时，你还可以使用过渡阻止器来阻止并返回友好的错误消息。
+在示例中，我们从 :class:`Symfony\\Component\\Workflow\\Event\\Event`
+的元数据中获取此消息，为你提供管理文本的中心位置。
 
-This example has been simplified; in production you may prefer to use the
-:doc:`Translation </components/translation>` component to manage messages in one
-place::
+这个例子已经简化了；在生产中，你可能更喜欢使用
+:doc:`Translation </components/translation>` 组件在一个位置管理消息::
 
     namespace App\Listener\Workflow\Task;
 
@@ -488,8 +462,7 @@ place::
                 return;
             }
 
-            // Block the transition "publish" if it is more than 8 PM
-            // with the message for end user
+            // 如果超过晚上8点，则阻止 "publish" 过渡，并为最终用户发送消息
             $explanation = $event->getMetadata('explanation', $eventTransition);
             $event->addTransitionBlocker(new TransitionBlocker($explanation , 0));
         }
@@ -504,27 +477,26 @@ place::
 
 .. versionadded:: 4.1
 
-    The transition blockers were introduced in Symfony 4.1.
+    在Symfony 4.1中引入了过渡阻止器。
 
 在Twig中使用
 ---------------
 
-Symfony defines several Twig functions to manage workflows and reduce the need
-of domain logic in your templates:
+Symfony定义了几个Twig函数来管理工作流并减少模板中域逻辑的需求：
 
 ``workflow_can()``
-    Returns ``true`` if the given object can make the given transition.
+    如果给定对象可以进行给定过渡，则返回 ``true``。
 
 ``workflow_transitions()``
-    Returns an array with all the transitions enabled for the given object.
+    返回一个包含为给定对象启用的所有过渡的数组。
 
 ``workflow_marked_places()``
-    Returns an array with the place names of the given marking.
+    返回一个包含给定标记的位置的数组。
 
 ``workflow_has_marked_place()``
-    Returns ``true`` if the marking of the given object has the given state.
+    如果给定对象的标记具有给定的状态，则返回 ``true``。
 
-The following example shows these functions in action:
+以下示例展示了这些函数：
 
 .. code-block:: html+twig
 
@@ -539,34 +511,31 @@ The following example shows these functions in action:
         <a href="...">Reject</a>
     {% endif %}
 
-    {# Or loop through the enabled transitions #}
+    {# 或者循环已启用的过渡 #}
     {% for transition in workflow_transitions(post) %}
         <a href="...">{{ transition.name }}</a>
     {% else %}
         No actions available.
     {% endfor %}
 
-    {# Check if the object is in some specific place #}
+    {# 检查对象是否在某个特定位置 #}
     {% if workflow_has_marked_place(post, 'reviewed') %}
         <p>This post is ready for review.</p>
     {% endif %}
 
-    {# Check if some place has been marked on the object #}
+    {# 检查对象上是否标记了某个位置 #}
     {% if 'reviewed' in workflow_marked_places(post) %}
         <span class="label">Reviewed</span>
     {% endif %}
 
-Storing Metadata
+存储元数据
 ----------------
 
 .. versionadded:: 4.1
 
-    The feature to store metadata in workflows was introduced in Symfony 4.1.
+    Symfony 4.1中引入了在工作流中存储元数据的特性。
 
-In case you need it, you can store arbitrary metadata in workflows, their
-places, and their transitions using the ``metadata`` option. This metadata can
-be as simple as the title of the workflow or as complex as your own application
-requires:
+如果你需要它，你可以使用 ``metadata`` 选项在工作流、它们的位置和它们的过渡中存储任意元数据。 此元数据可以像工作流的标题一样简单，也可以像你自己的应用所需的那样复杂：
 
 .. configuration-block::
 
@@ -678,7 +647,7 @@ requires:
             ],
         ]);
 
-Then you can access this metadata in your controller as follows::
+然后，你可以在控制器中访问此元数据，如下所示::
 
     use App\Entity\BlogPost;
     use Symfony\Component\Workflow\Registry;
@@ -692,7 +661,7 @@ Then you can access this metadata in your controller as follows::
             ->getWorkflowMetadata()['title'] ?? 'Default title'
         ;
 
-        // or
+        // 或者
         $aTransition = $workflow->getDefinition()->getTransitions()[0];
         $transitionTitle = $workflow
             ->getMetadataStore()
@@ -700,22 +669,23 @@ Then you can access this metadata in your controller as follows::
         ;
     }
 
-There is a shortcut that works with every metadata level::
+有一个适用于每个元数据级别的快捷方式::
 
     $title = $workflow->getMetadataStore()->getMetadata('title');
     $priority = $workflow->getMetadataStore()->getMetadata('priority');
 
-In a :ref:`flash message <flash-messages>` in your controller::
+在控制器的 :ref:`闪存消息 <flash-messages>` 中::
 
-    // $transition = ...; (an instance of Transition)
+    // $transition = ...; (Transition的一个实例)
 
-    // $workflow is a Workflow instance retrieved from the Registry (see above)
+    // $workflow是一个从 Registry 中检索的 Workflow 实例（参见上文）
     $title = $workflow->getMetadataStore()->getMetadata('title', $transition);
     $this->addFlash('info', "You have successfully applied the transition with title: '$title'");
 
-Metadata can also be accessed in a Listener, from the :class:`Symfony\\Component\\Workflow\\Event\\Event` object.
+也可以在监听器器中从
+:class:`Symfony\\Component\\Workflow\\Event\\Event` 对象访问元数据。
 
-In Twig templates, metadata is available via the ``workflow_metadata()`` function:
+在Twig模板中，元数据可通过 ``workflow_metadata()`` 函数获得：
 
 .. code-block:: html+twig
 

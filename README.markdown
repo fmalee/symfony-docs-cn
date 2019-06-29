@@ -28,17 +28,10 @@
 
 ### 未汉化
 
-- `configuration.rst`
-- `mercure.rst`
-- `workflow.rst`
-- `components/dotenv.rst`
-- `omponents/serializer.rst`
-
 - [常用Bundle](https://symfony.com/doc/bundles/)
 - `introduction`
-- `compoments`
-  - `serializer` (翻译小半)
-- `reference`
+- `compoments` (大部分)
+- `reference` (大部分)
 - `contributing`
   - `code/bc.rst`
   - `code/bugs.rst`
@@ -120,6 +113,7 @@
 - `Workflow`：工作流
 - `Serializer`：序列化器
 - `Normalizer`：规范化器
+- `Discriminator`：鉴别器
 - `Locale`：语言环境，表示语言和国家/地区
 - `Translator`：翻译器
 - `Filter`：过滤器

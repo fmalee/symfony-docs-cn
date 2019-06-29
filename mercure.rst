@@ -4,70 +4,53 @@
 使用Mercure协议将数据推送到客户端
 ==================================================
 
-Being able to broadcast data in real-time from servers to clients is a
-requirement for many modern web and mobile applications.
+能够从服务器到客户端实时广播数据是许多现代Web和移动应用的要求。
 
-Creating an UI reacting in live to changes made by other users
-(e.g. a user changes the data currently browsed by several other users,
-all UIs are instantly updated),
-notifying the user when :doc:`an asynchronous job </messenger>` has been
-completed or creating chat applications are among the typical use cases
-requiring "push" capabilities.
+创建实时响应其他用户所做更改的UI（例如，用户更改当前被其他几个用户浏览的数据，所有UI立即更新），在
+:doc:`异步作业 </messenger>` 完成时通知用户，或者创建聊天应用等都是需要“推送”功能的典型用例之一。
 
-Symfony provides a straightforward component, built on top of
-`the Mercure protocol`_, specifically designed for this class of use cases.
+Symfony提供了一个构建在 `Mercure协议`_ 之上的简单组件， 专为此类用例而设计。
 
-Mercure is an open protocol designed from the ground to publish updates from
-server to clients. It is a modern and efficient alternative to timer-based
-polling and to WebSocket.
+Mercure是一个开放式协议，旨在从服务器发布更新到客户端。
+它是基于计时器的轮询和WebSocket的现代高效替代方案。
 
-Because it is built on top `Server-Sent Events (SSE)`_, Mercure is supported
-out of the box in most modern browsers (Edge and IE require `a polyfill`_) and
-has `high-level implementations`_ in many programming languages.
+由于它是基于 `服务器推送事件（SSE）`_ 构建的，因此大多数现代浏览器都支持Mercure（Edge和IE需要
+`polyfill`_），并且在许多编程语言中都有 `高级实现`_。
 
-Mercure comes with an authorization mechanism,
-automatic re-connection in case of network issues
-with retrieving of lost updates, "connection-less" push for smartphones and
-auto-discoverability (a supported client can automatically discover and
-subscribe to updates of a given resource thanks to a specific HTTP header).
+Mercure提供授权机制，在网络出错的情况下自动重新连接并检索丢失的更新，智能手机的“无连接”推送和自动发现（受支持的客户端可以通过特定的HTTP标头自动发现和订阅给定资源的更新）。
 
-All these features are supported in the Symfony integration.
+在Symfony的集成中支持所有这些功能。
 
-Unlike WebSocket, which is only compatible with HTTP 1.x,
-Mercure leverages the multiplexing capabilities provided by HTTP/2
-and HTTP/3 (but also supports older versions of HTTP).
+与仅与HTTP 1.x兼容的WebSocket不同，Mercure利用 HTTP/2 和
+HTTP/3 提供的多路复用功能（但也支持旧版本的HTTP）。
 
-`In this recording`_ you can see how a Symfony web API leverages Mercure
-and API Platform to update in live a React app and a mobile app (React Native)
-generated using the API Platform client generator.
+`在此视频中`_，你可以看到Symfony Web API如何利用Mercure和 `API平台`_
+来实时更新一个React应用，以及使用API​​平台客户端生成器来生成的一个移动应用（React Native）。
 
-Installation
+安装
 ------------
 
-Installing the Symfony Component
+安装Symfony组件
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In applications using :doc:`Symfony Flex </setup/flex>`, run this command to
-install the Mercure support before using it:
+在使用 :doc:`Symfony Flex </setup/flex>`
+的应用中，运行此命令以在使用之前安装Mercure支持：
 
 .. code-block:: terminal
 
     $ composer require mercure
 
-Running a Mercure Hub
+运行MercureHub
 ~~~~~~~~~~~~~~~~~~~~~
 
-To manage persistent connections, Mercure relies on a Hub: a dedicated server
-that handles persistent SSE connections with the clients.
-The Symfony app publishes the updates to the hub, that will broadcast them to
-clients.
+为了管理持久连接，Mercure依赖于一个Hub：一个专用服务器，用于处理与客户端的持久SSE连接。
+Symfony应用将更新发布到该Hub，并将其广播给客户端。
 
 .. image:: /_images/mercure/schema.png
 
-An official and open source (AGPL) implementation of a Hub can be downloaded
-as a static binary from `Mercure.rocks`_.
+可以从 `Mercure.rocks`_ 下载作为Hub的官方和开源（AGPL）实现的静态二进制文件。
 
-Run the following command to start it:
+运行以下命令来启动它：
 
 .. code-block:: terminal
 
@@ -75,36 +58,29 @@ Run the following command to start it:
 
 .. note::
 
-    Alternatively to the binary, a Docker image, a Helm chart for Kubernetes
-    and a managed, High Availability Hub are also provided by Mercure.rocks.
+    除了二进制文件之外，Mercure.rocks还提供了Docker映像、Kubernetes的Helm图和托管的高可用性Hub。
 
 .. tip::
 
-    The `API Platform distribution`_ comes with a Docker Compose configuration
-    as well as a Helm chart for Kubernetes that are 100% compatible with Symfony,
-    and contain a Mercure hub.
-    You can copy them in your project, even if you don't use API Platform.
+    该 `API平台发行版`_ 带有Docker Compose配置以及Kubernetes的Helm图表，这些图表与Symfony
+    100%兼容，并包含一个Mercure集线器。即使你不使用API平台，也可以在项目中复制它们。
 
-Configuration
+配置
 -------------
 
-The preferred way to configure the MercureBundle is using
-:doc:`environment variables </configuration>`.
+配置MercureBundle的首选方法是使用 :doc:`环境变量 </configuration>`。
 
-Set the URL of your hub as the value of the ``MERCURE_PUBLISH_URL`` env var.
-The ``.env`` file of your project has been updated by the Flex recipe to
-provide example values.
-Set it to the URL of the Mercure Hub (``http://localhost:3000/hub`` by default).
+将Hub的URL设置为 ``MERCURE_PUBLISH_URL`` 环境变量的值。你的项目的 ``.env``
+文件已经由Flex指令更新，以提供示例值。将其设置为Mercure Hub的URL（默认为
+``http://localhost:3000/hub``）。
 
-In addition, the Symfony application must bear a `JSON Web Token`_ (JWT)
-to the Mercure Hub to be authorized to publish updates.
+此外，Symfony应用必须携带一个
+`JSON Web Token`_（JWT）到Mercure Hub才有权发布更新。
 
-This JWT should be stored in the ``MERCURE_JWT_SECRET`` environment variable.
+此JWT应存储在 ``MERCURE_JWT_SECRET`` 环境变量中。
 
-The JWT must be signed with the same secret key than the one used by
-the Hub to verify the JWT (``aVerySecretKey`` in our example).
-Its payload must contain at least the following structure to be allowed to
-publish:
+JWT必须使用与Hub用于验证JWT的密钥相同的密钥来进行签名（在我们的示例中为
+``aVerySecretKey``）。其有效负载必须至少包含以下允许发布的结构：
 
 .. code-block:: json
 
@@ -114,36 +90,32 @@ publish:
         }
     }
 
-Because the array is empty, the Symfony app will only be authorized to publish
-public updates (see the authorization_ section for further information).
+由于数组为空，因此Symfony应用仅被授权发布公共更新（有关详细信息，请参阅 授权_ 部分）。
 
 .. tip::
 
-    The jwt.io website is a convenient way to create and sign JWTs.
-    Checkout this `example JWT`_, that grants publishing rights for all *targets*
-    (notice the star in the array).
-    Don't forget to set your secret key properly in the bottom of the right panel of the form!
+    jwt.io网站是一个创建和签名JWT的便捷方式。查看此 `JWT示例`_，它为所有 *目标*
+    授予发布权限（注意数组中的星号）。不要忘记在表单右侧面板的底部正确设置密钥！
 
 .. caution::
 
-    Don't put the secret key in ``MERCURE_JWT_SECRET``, it will not work!
-    This environment variable must contain a JWT, signed with the secret key.
+    不要把密钥放入 ``MERCURE_JWT_SECRET``，它将无法正常工作！
+    此环境变量必须包含一个使用密钥签名的JWT。
 
     Also, be sure to keep both the secret key and the JWTs... secrets!
+    另外，一定要保密密钥和JWT ......秘密！
 
-Basic Usage
+基本用法
 -----------
 
-Publishing
+发布
 ~~~~~~~~~~
 
-The Mercure Component provides an ``Update`` value object representing
-the update to publish. It also provides a ``Publisher`` service to dispatch
-updates to the Hub.
+Mercure组件提供一个表示要发布的更新的 ``Update``
+值对象。它还提供了一个向Hub分发更新的 ``Publisher`` 服务。
 
-The ``Publisher`` service can be injected using the
-:doc:`autowiring </service_container/autowiring>` in any other
-service, including controllers::
+``Publisher`` 服务可以使用 :doc:`自动装配 </service_container/autowiring>`
+在任何其它服务中注入，包括控制器::
 
     // src/Controller/PublishController.php
     namespace App\Controller;
@@ -161,51 +133,45 @@ service, including controllers::
                 json_encode(['status' => 'OutOfStock'])
             );
 
-            // The Publisher service is an invokable object
+            // Publisher服务是一个可调用的对象
             $publisher($update);
 
             return new Response('published!');
         }
     }
 
-The first parameter to pass to the ``Update`` constructor is
-the **topic** being updated. This topic should be an IRI_
-(Internationalized Resource Identifier, RFC 3987): a unique identifier
-of the resource being dispatched.
+传递给 ``Update`` 构造函数的第一个参数是要更新的 *主题*。该主题应该是
+IRI_（国际化资源标识符，RFC 3987）：被调度的资源的唯一标识符。
 
-Usually, this parameter contains the original URL of the resource
-transmitted to the client, but it can be any valid IRI_, it doesn't
-have to be an URL that exists (similarly to XML namespaces).
+通常，此参数包含传输到客户端的资源的原始URL，但它可以是任何有效的
+IRI_，而不必是存在的URL（类似于XML命名空间）。
 
-The second parameter of the constructor is the content of the update.
-It can be anything, stored in any format.
-However, serializing the resource in a hypermedia format such as JSON-LD,
-Atom, HTML or XML is recommended.
+构造函数的第二个参数是更新的内容。它可以是任何东西，以任何格式存储。
+但是，建议以超媒体格式（如JSON-LD、Atom、HTML或XML）序列化资源。
 
-Subscribing
+订阅
 ~~~~~~~~~~~
 
-Subscribing to updates in JavaScript is straightforward:
+订阅JavaScript中的更新非常简单：
 
 .. code-block:: javascript
 
     const es = new EventSource('http://localhost:3000/hub?topic=' + encodeURIComponent('http://example.com/books/1'));
     es.onmessage = e => {
-        // Will be called every time an update is published by the server
+        // 将在每次服务器发布更新时调用
         console.log(JSON.parse(e.data));
     }
 
-Mercure also allows to subscribe to several topics,
-and to use URI Templates as patterns:
+Mercure还允许订阅多个主题，并使用URI模板作为模式：
 
 .. code-block:: javascript
 
-    // URL is a built-in JavaScript class to manipulate URLs
+    // URL是一个内置的JavaScript类，用于操作URL
     const u = new URL('http://localhost:3000/hub');
     u.searchParams.append('topic', 'http://example.com/books/1');
-    // Subscribe to updates of several Book resources
+    // 订阅多个图书资源的更新
     u.searchParams.append('topic', 'http://example.com/books/2');
-    // All Review resources will match this pattern
+    // 所有 Review 资源都将与此模式匹配
     u.searchParams.append('topic', 'http://example.com/reviews/{id}');
 
     const es = new EventSource(u);
@@ -215,35 +181,30 @@ and to use URI Templates as patterns:
 
 .. tip::
 
-    Google Chrome DevTools natively integrate a `practical UI`_ displaying in live
-    the received events:
+    谷歌Chrome的开发者工具本地集成了显示收到的事件的 `实用界面`_：
 
     .. image:: /_images/mercure/chrome.png
 
-    To use it:
+    要使用它：
 
-    * open the DevTools
-    * select the "Network" tab
-    * click on the request to the Mercure hub
-    * click on the "EventStream" sub-tab.
+    * 打开开发者工具
+    * 选择“网络”选项卡
+    * 点击Mercure hub的请求
+    * 单击“EventStream”子选项卡。
 
 .. tip::
 
-    Test if a URI Template match an URL using `the online debugger`_
+    可以使用 `在线调试器`_ 来测试URI模板是否与URL匹配
 
-Async dispatching
+异步调度
 -----------------
 
-Instead of calling the ``Publisher`` service directly, you can also let Symfony
-dispatching the updates asynchronously thanks to the provided integration with
-the Messenger component.
+除了直接调用 ``Publisher`` 服务，你还可以让Symfony通过Messenger组件提供的集成来异步调度更新。
 
-First, be sure :doc:`to install the Messenger component </messenger>`
-and to configure properly a transport (if you don't, the handler will
-be called synchronously).
+首先，确保 :doc:`安装了Messenger组件 </messenger>`
+并正确配置传输（如果不这样，将同步调用该处理器）。
 
-Then, dispatch the Mercure ``Update`` to the Messenger's Message Bus,
-it will be handled automatically::
+然后，将Mercure的 ``Update`` 调度到Messenger的消息总线，它将自动处理：
 
     // src/Controller/PublishController.php
     namespace App\Controller;
@@ -261,24 +222,23 @@ it will be handled automatically::
                 json_encode(['status' => 'OutOfStock'])
             );
 
-            // Sync, or async (RabbitMQ, Kafka...)
+            // 同步或异步 (RabbitMQ, Kafka...)
             $bus->dispatch($update);
 
             return new Response('published!');
         }
     }
 
-Discovery
+发现
 ---------
 
-The Mercure protocol comes with a discovery mechanism.
-To leverage it, the Symfony application must expose the URL of the Mercure Hub
-in a ``Link`` HTTP header.
+Mercure协议附带一个发现机制。要利用它，Symfony应用必须在 ``Link``
+HTTP标头中暴露Mercure Hub的URL。
 
 .. image:: /_images/mercure/discovery.png
 
-You can create ``Link`` headers with the :doc:`WebLink Component </web_link>`,
-by using the ``AbstractController::addLink`` helper method::
+你可以使用 ``AbstractController::addLink`` 辅助方法来通过
+:doc:`WebLink组件 </web_link>` 创建 ``Link`` 标头::
 
     // src/Controller/DiscoverController.php
     namespace App\Controller;
@@ -292,7 +252,7 @@ by using the ``AbstractController::addLink`` helper method::
     {
         public function __invoke(Request $request): JsonResponse
         {
-            // This parameter is automatically created by the MercureBundle
+            // 此参数由MercureBundle自动创建
             $hubUrl = $this->getParameter('mercure.default_hub');
 
             // Link: <http://localhost:3000/hub>; rel="mercure"
@@ -305,32 +265,30 @@ by using the ``AbstractController::addLink`` helper method::
         }
     }
 
-Then, this header can be parsed client-side to find the URL of the Hub,
-and to subscribe to it:
+然后，可以在客户端解析此标头以查找Hub的URL，并订阅它：
 
 .. code-block:: javascript
 
-    // Fetch the original resource served by the Symfony web API
+    // 获取Symfony web API提供的原始资源
     fetch('/books/1') // Has Link: <http://localhost:3000/hub>; rel="mercure"
         .then(response => {
-            // Extract the hub URL from the Link header
+            // 从Link标头提取Hub的URL
             const hubUrl = response.headers.get('Link').match(/<([^>]+)>;\s+rel=(?:mercure|"[^"]*mercure[^"]*")/)[1];
 
-            // Append the topic(s) to subscribe as query parameter
+            // 将要订阅的主题附加为查询参数
             const h = new URL(hubUrl);
             h.searchParams.append('topic', 'http://example.com/books/{id}');
 
-            // Subscribe to updates
+            // 订阅更新
             const es = new EventSource(h);
             es.onmessage = e => console.log(e.data);
         });
 
-Authorization
+授权
 -------------
 
-Mercure also allows to dispatch updates only to authorized clients.
-To do so, set the list of **targets** allowed to receive the update
-as the third parameter of the ``Update`` constructor::
+Mercure还允许仅向授权客户发送更新。为此，请将允许接收更新的 **目标** 列表设置为
+``Update`` 构造函数的第三个参数::
 
     // src/Controller/Publish.php
     namespace App\Controller;
@@ -346,39 +304,33 @@ as the third parameter of the ``Update`` constructor::
             $update = new Update(
                 'http://example.com/books/1',
                 json_encode(['status' => 'OutOfStock']),
-                ['http://example.com/user/kevin', 'http://example.com/groups/admin'] // Here are the targets
+                ['http://example.com/user/kevin', 'http://example.com/groups/admin'] // 这是目标
             );
 
-            // Publisher's JWT must contain all of these targets or * in mercure.publish or you'll get a 401
-            // Subscriber's JWT must contain at least one of these targets or * in mercure.subscribe to receive the update
+            // 发布器的JWT必须包含所有这些目标或在mercure.publish的 * 中，否则你将收到一个401
+            // 订阅器的JWT必须至少包含其中一个目标或在Mercure的 * 中，以接收更新。
             $publisher($update);
 
             return new Response('published to the selected targets!');
         }
     }
 
-To subscribe to private updates, subscribers must provide
-a JWT containing at least one target marking the update to the Hub.
+要订阅私有更新，订阅器必须提供一个JWT，其中包含至少一个标记Hub更新的目标。
 
-To provide this JWT, the subscriber can use a cookie,
-or a ``Authorization`` HTTP header.
-Cookies are automatically sent by the browsers when opening an ``EventSource`` connection.
-They are the most secure and preferred way when the client is a web browser.
-If the client is not a web browser, then using an authorization header is the way to go.
+要提供此JWT，订阅器可以使用cookie或 ``Authorization`` HTTP标头。打开一个 ``EventSource``
+连接时，浏览器会自动发送Cookie。当客户端是Web浏览器时，它们是最安全和首选的方式。
+如果客户端不是Web浏览器，那么使用 ``Authorization`` 标头是可行的方法。
 
-In the following example controller,
-the generated cookie contains a JWT, itself containing the appropriate targets.
-This cookie will be automatically sent by the web browser when connecting to the Hub.
-Then, the Hub will verify the validity of the provided JWT, and extract the targets
-from it.
+在以下示例控制器中，生成的cookie包含一个JWT，它本身包含适当的目标。
+连接到Hub时，Web浏览器将自动发送此cookie。然后，Hub将验证所提供的JWT的有效性，并从中提取目标。
 
-To generate the JWT, we'll use the ``lcobucci/jwt`` library. Install it:
+要生成JWT，我们将使用 ``lcobucci/jwt`` 库。先安装它：
 
 .. code-block:: terminal
 
     $ composer require lcobucci/jwt
 
-And here is the controller::
+这是控制器::
 
     // src/Controller/DiscoverController.php
     namespace App\Controller;
@@ -397,11 +349,11 @@ And here is the controller::
             $hubUrl = $this->getParameter('mercure.default_hub');
             $this->addLink($request, new Link('mercure', $hubUrl));
 
-            $username = $this->getUser()->getUsername(); // Retrieve the username of the current user
+            $username = $this->getUser()->getUsername(); // 检索当前用户的用户名
             $token = (new Builder())
-                // set other appropriate JWT claims, such as an expiration date
-                ->set('mercure', ['subscribe' => "http://example.com/user/$username"]) // could also include the security roles, or anything else
-                ->sign(new Sha256(), $this->getParameter('mercure_secret_key')) // don't forget to set this parameter! Test value: aVerySecretKey
+                // 设置其他适当的JWT声明，例如到期日期
+                ->set('mercure', ['subscribe' => "http://example.com/user/$username"]) // 还可以包括安全角色或其他任何角色
+                ->sign(new Sha256(), $this->getParameter('mercure_secret_key')) // 别忘了设置这个参数！测试值：AveryCretKey
                 ->getToken();
 
             $response = $this->json(['@id' => '/demo/books/1', 'availability' => 'https://schema.org/InStock']);
@@ -416,15 +368,12 @@ And here is the controller::
 
 .. caution::
 
-    To use the cookie authentication method, the Symfony app and the Hub
-    must be served from the same domain (can be different sub-domains).
+    要使用cookie认证方法，Symfony应用和Hub必须来自同一域（可以是不同的子域）。
 
-Generating Programmatically The JWT Used to Publish
+以编程方式生成用于发布的JWT
 ---------------------------------------------------
 
-Instead of directly storing a JWT in the configuration,
-you can create a service that will return the token used by
-the ``Publisher`` object::
+你可以创建一个服务来返回 ``Publisher`` 对象使用的令牌，而不是直接将JWT存储在配置中::
 
     // src/Mercure/MyJwtProvider.php
     namespace App\Mercure;
@@ -437,7 +386,7 @@ the ``Publisher`` object::
         }
     }
 
-Then, reference this service in the bundle configuration:
+然后，在bundle配置中引用此服务：
 
 .. configuration-block::
 
@@ -476,27 +425,22 @@ Then, reference this service in the bundle configuration:
             ],
         ]);
 
-This method is especially convenient when using tokens having an expiration
-date, that can be refreshed programmatically.
+当使用具有到期日期的令牌时，此方法特别方便，可以通过编程方式刷新。
 
-Web APIs
+Web API
 --------
 
-When creating a web API, it's convenient to be able to instantly push
-new versions of the resources to all connected devices, and to update
-their views.
+创建Web API时，能够立即将新版本的资源推送到所有已连接的设备并更新其视图。
 
-API Platform can use the Mercure Component to dispatch updates automatically,
-every time an API resource is created, modified or deleted.
+每次创建、修改或删除API资源时，API平台都可以使用Mercure组件自动发送更新。
 
-Start by installing the library using its official recipe:
+首先使用官方指令来安装该库：
 
 .. code-block:: terminal
 
     $ composer require api
 
-Then, creating the following entity is enough to get a fully-featured
-hypermedia API, and automatic update broadcasting through the Mercure hub::
+然后，创建以下实体就足以获得一个功能齐全的超媒体API，并通过Mercure hub自动更新广播::
 
     // src/Entity/Book.php
     namespace App\Entity;
@@ -522,24 +466,22 @@ hypermedia API, and automatic update broadcasting through the Mercure hub::
         public $status;
     }
 
-As showcased `in this recording`_, the API Platform Client Generator also
-allows to scaffold complete React and React Native applications from this API.
-These applications will render the content of Mercure updates in real-time.
+正如 `在此视频中`_ 所展示的那样，API平台的客户端生成器还允许从该API构建完整的React和React Native应用。
+这些应用将实时呈现Mercure更新的内容。
 
-Checkout `the dedicated API Platform documentation`_ to learn more about
-its Mercure support.
+查看 `专用的API平台文档`_，了解有关Mercure支持的更多信息。
 
-.. _`the Mercure protocol`: https://github.com/dunglas/mercure#protocol-specification
-.. _`Server-Sent Events (SSE)`: https://developer.mozilla.org/docs/Server-sent_events
-.. _`a polyfill`: https://github.com/Yaffle/EventSource
-.. _`high-level implementations`: https://github.com/dunglas/mercure#tools
-.. _`In this recording`: https://www.youtube.com/watch?v=UI1l0JOjLeI
-.. _`API Platform`: https://api-platform.com
+.. _`Mercure协议`: https://github.com/dunglas/mercure#protocol-specification
+.. _`服务器推送事件（SSE）`: https://developer.mozilla.org/docs/Server-sent_events
+.. _`polyfill`: https://github.com/Yaffle/EventSource
+.. _`高级实现`: https://github.com/dunglas/mercure#tools
+.. _`在此视频中`: https://www.youtube.com/watch?v=UI1l0JOjLeI
+.. _`API平台`: https://api-platform.com
 .. _`Mercure.rocks`: https://mercure.rocks
-.. _`API Platform distribution`: https://api-platform.com/docs/distribution/
+.. _`API平台发行版`: https://api-platform.com/docs/distribution/
 .. _`JSON Web Token`: https://tools.ietf.org/html/rfc7519
-.. _`example JWT`: https://jwt.io/#debugger-io?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtZXJjdXJlIjp7InB1Ymxpc2giOlsiKiJdfX0.iHLdpAEjX4BqCsHJEegxRmO-Y6sMxXwNATrQyRNt3GY
+.. _`JWT示例`: https://jwt.io/#debugger-io?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtZXJjdXJlIjp7InB1Ymxpc2giOlsiKiJdfX0.iHLdpAEjX4BqCsHJEegxRmO-Y6sMxXwNATrQyRNt3GY
 .. _`IRI`: https://tools.ietf.org/html/rfc3987
-.. _`practical UI`: https://twitter.com/chromedevtools/status/562324683194785792
-.. _`the dedicated API Platform documentation`: https://api-platform.com/docs/core/mercure/
-.. _`the online debugger`: https://uri-template-tester.mercure.rocks
+.. _`实用界面`: https://twitter.com/chromedevtools/status/562324683194785792
+.. _`专用的API平台文档`: https://api-platform.com/docs/core/mercure/
+.. _`在线调试器`: https://uri-template-tester.mercure.rocks
