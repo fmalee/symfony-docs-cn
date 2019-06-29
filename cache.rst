@@ -378,17 +378,23 @@ Symfony支持缓存契约、PSR-6/16和Doctrine缓存接口。你可以在
             cache:
                 pools:
                     my_cache_pool:
-                        adapter: app.my_cache_chain_adapter
+                        adapter: cache.adapter.psr6
+                        provider: app.my_cache_chain_adapter
                     cache.my_redis:
                         adapter: cache.adapter.redis
                         provider: 'redis://user:password@example.com'
+                    cache.apcu:
+                        adapter: cache.adapter.apcu
+                    cache.array:
+                        adapter: cache.adapter.array
+
 
         services:
             app.my_cache_chain_adapter:
                 class: Symfony\Component\Cache\Adapter\ChainAdapter
                 arguments:
-                    - ['cache.adapter.array', 'cache.my_redis', 'cache.adapter.file']
-                    - 31536000 # 一年
+                    - ['@cache.array', '@cache.apcu', '@cache.my_redis']
+                    - 31536000 # One year
 
     .. code-block:: xml
 
@@ -402,17 +408,19 @@ Symfony支持缓存契约、PSR-6/16和Doctrine缓存接口。你可以在
 
             <framework:config>
                 <framework:cache>
-                    <framework:pool name="my_cache_pool" adapter="app.my_cache_chain_adapter"/>
+                    <framework:pool name="my_cache_pool" adapter="cache.adapter.psr6" provider="app.my_cache_chain_adapter"/>
                     <framework:pool name="cache.my_redis" adapter="cache.adapter.redis" provider="redis://user:password@example.com"/>
+                    <framework:pool name="cache.apcu" adapter="cache.adapter.apcu"/>
+                    <framework:pool name="cache.array" adapter="cache.adapter.array"/>
                 </framework:cache>
             </framework:config>
 
             <services>
                 <service id="app.my_cache_chain_adapter" class="Symfony\Component\Cache\Adapter\ChainAdapter">
                     <argument type="collection">
-                        <argument type="service" value="cache.adapter.array"/>
+                        <argument type="service" value="cache.array"/>
+                        <argument type="service" value="cache.apcu"/>
                         <argument type="service" value="cache.my_redis"/>
-                        <argument type="service" value="cache.adapter.file"/>
                     </argument>
                     <argument>31536000</argument>
                 </service>
@@ -426,11 +434,18 @@ Symfony支持缓存契约、PSR-6/16和Doctrine缓存接口。你可以在
             'cache' => [
                 'pools' => [
                     'my_cache_pool' => [
-                        'adapter' => 'app.my_cache_chain_adapter',
+                        'adapter' => 'cache.adapter.psr6',
+                        'provider' => 'app.my_cache_chain_adapter',
                     ],
                     'cache.my_redis' => [
                         'adapter' => 'cache.adapter.redis',
                         'provider' => 'redis://user:password@example.com',
+                    ],
+                    'cache.apcu' => [
+                        'adapter' => 'cache.adapter.apcu',
+                    ],
+                    'cache.array' => [
+                        'adapter' => 'cache.adapter.array',
                     ],
                 ],
             ],
@@ -438,17 +453,17 @@ Symfony支持缓存契约、PSR-6/16和Doctrine缓存接口。你可以在
 
         $container->getDefinition('app.my_cache_chain_adapter', \Symfony\Component\Cache\Adapter\ChainAdapter::class)
             ->addArgument([
-                new Reference('cache.adapter.array'),
+                new Reference('cache.array'),
+                new Reference('cache.apcu'),
                 new Reference('cache.my_redis'),
-                new Reference('cache.adapter.file'),
             ])
             ->addArgument(31536000);
 
 .. note::
 
-    在此配置中有一个 ``cache.my_redis`` 池，被用作
-    ``app.my_cache_chain_adapter`` 中的一个适配器。
-
+    在此配置中，``my_cache_pool`` 池使用 ``cache.adapter.psr6`` 适配器和
+    ``app.my_cache_chain_adapter``服务作为提供器。这是因为 ``ChainAdapter``
+    不支持 ``cache.pool`` 标签。因此，它用 ``ProxyAdapter``装饰。
 
 使用缓存标签
 ----------------

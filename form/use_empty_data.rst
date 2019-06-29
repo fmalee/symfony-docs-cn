@@ -67,8 +67,11 @@
 
 .. tip::
 
-    为了能将参数传递给 ``BlogType`` 构造函数，你需要将其
-    :doc:`注册为服务并应用form.type标签 </form/form_dependencies>`。
+    为了能将参数传递给 ``BlogType`` 构造函数，你需要
+    :ref:`将表单类注册为服务 <service-container-creating-service>`，并使用
+    ``form.type`` 标签对其进行
+    :doc:`标记 </service_container/tags>`。如果你正在使用
+    :ref:`默认的services.yaml配置 <service-container-services-load-example>`，那么它已经为你完成工作了。
 
 .. _forms-empty-data-closure:
 

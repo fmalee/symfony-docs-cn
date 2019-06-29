@@ -53,7 +53,8 @@
 注册表单类型扩展为服务
 -------------------------------------------------
 
-表单类型扩展必须注册为服务并使用 ``form.type_extension`` 标签进行
+表单类型扩展必须 :ref:`注册为服务 <service-container-creating-service>`
+并使用 ``form.type_extension`` 标签进行
 :doc:`标记 </service_container/tags>`。如果你使用
 :ref:`默认的services.yaml配置 <service-container-services-load-example>`，得益于
 :ref:`自动配置 <services-autoconfigure>`，你已经完工了。

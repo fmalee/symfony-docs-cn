@@ -130,11 +130,6 @@ Symfony默认提供的内核位于 ``src/Kernel.php`` 文件。
     # 忽略 .env 文件并为此命令启用调试模式
     $ APP_DEBUG=1 php bin/console command_name
 
-.. deprecated:: 4.2
-
-    在以前的Symfony版本中，你可以使用 ``--no-debug``
-    命令选项来配置调试模式，但该选项在Symfony 4.2中已弃用。
-
 在内部，调试模式的值将成为 :doc:`服务容器 </service_container>` 内部使用的 ``kernel.debug``
 参数。如果你查看应用的配置文件，你将看到所使用的参数，例如，打开Twig的调试模式：
 

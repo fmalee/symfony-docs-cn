@@ -15,7 +15,7 @@ Symfony项目使用第三方服务，该服务自动为任何提交的 :doc:`补
 ------------------------
 
 要运行Symfony测试套件，请安装测试期间使用的外部依赖项，例如Doctrine，Twig和Monolog。
-为此， 请 :doc:`安装Composer </setup/composer>` 并执行以下操作：
+为此， 请 `安装Composer`_ 并执行以下操作：
 
 .. code-block:: terminal
 
@@ -46,6 +46,7 @@ Symfony项目使用第三方服务，该服务自动为任何提交的 :doc:`补
 
     在Windows上，安装 `Cmder`_、`ConEmu`_、`ANSICON`_ 或 `Mintty`_ 等免费应用以查看彩色测试结果。
 
+.. _`安装Composer`: https://getcomposer.org/download/
 .. _Cmder: http://cmder.net/
 .. _ConEmu: https://conemu.github.io/
 .. _ANSICON: https://github.com/adoxa/ansicon/releases

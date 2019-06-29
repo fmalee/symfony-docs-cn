@@ -69,13 +69,13 @@
 :class:`Symfony\\Component\\Cache\\Simple\\Psr6Cache` 类::
 
     use Symfony\Component\Cache\Adapter\FilesystemAdapter;
-    use Symfony\Component\Cache\Simple\Psr6Cache;
+    use Symfony\Component\Cache\Simple\Psr16Cache;
 
     // 要使用的PSR-6缓存对象
     $psr6Cache = new FilesystemAdapter();
 
     // 在内部使用你的缓存的一个PSR-16缓存！
-    $psr16Cache = new Psr6Cache($psr6Cache);
+    $psr16Cache = new Psr16Cache($psr6Cache);
 
     // 现在你在哪使用都行
     $githubApiClient = new GitHubApiClient($psr16Cache);

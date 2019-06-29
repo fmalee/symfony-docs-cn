@@ -273,13 +273,12 @@
         // ...
     }
 
-仅此而已！只要你使用 :ref:`自动装配 <services-autowire>` 和
-:ref:`自动配置 <services-autoconfigure>`，Symfony就会知道将一个
-``IssueToNumberTransformer`` 实例传递到 ``TaskType``。
-
-.. tip::
-
-    有关将表单类型定义为服务的更多信息，请参阅 :doc:`将表单类型注册为服务 </form/form_dependencies>`。
+仅此而已！如果你正在使用
+:ref:`默认的services.yaml配置 <service-container-services-load-example>`，Symfony将通过
+:ref:`自动装配 <services-autowire>` 和 :ref:`自动配置 <services-autoconfigure>`
+自动知道将一个``IssueToNumberTransformer`` 实例传递到 ``TaskType``。否则，
+:ref:`将表单类注册为服务 <service-container-creating-service>`，并使用 ``form.type``
+标签对其进行 :doc:`标记 </service_container/tags>`。
 
 现在，你可以使用你的 ``TaskType``::
 

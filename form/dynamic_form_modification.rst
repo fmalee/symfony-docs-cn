@@ -296,12 +296,15 @@
     这是因为在 ``buildForm()`` 方法中这样做会导致 **整个** 表单类型被修改，而不仅仅是当前的表单实例。
     这通常不是问题，但从技术上讲，在单个请求上是可以使用单个表单类型来创建多个表单或字段的。
 
-使用该表单
+使用表单
 ~~~~~~~~~~~~~~
 
-如果你正在使用 :ref:`自动装配 <services-autowire>` 和
-:ref:`自动配置 <services-autoconfigure>`，那么你的表单已经可以使用了！
-否则，请参阅 :doc:`/form/form_dependencies` 以了解如何将表单类型注册为服务。
+如果你正在使用
+:ref:`默认的services.yaml配置 <service-container-services-load-example>`，得益于
+:ref:`自动装配 <services-autowire>` 和
+:ref:`自动配置 <services-autoconfigure>`，你的表单已经准备好。否则，
+:ref:`将表单类注册为服务 <service-container-creating-service>`，并使用 ``form.type``
+标签对其进行 :doc:`标记 </service_container/tags>`。
 
 在控制器中，像往常一样创建表单::
 

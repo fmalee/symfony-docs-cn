@@ -656,6 +656,6 @@
     `symfony-collection`_ jQuery插件通过提供添加、编辑和删除集合中的元素所需的JavaScript功能来帮助 ``collection`` 表单元素。
     它还提供更高级的功能，例如移动、复制集合中的元素以及自定义一个按钮。
 
-.. _`拥有方和从属方`: http://docs.doctrine-project.org/en/latest/reference/unitofwork-associations.html
+.. _`拥有方和从属方`: https://www.doctrine-project.org/projects/doctrine-orm/en/current/reference/unitofwork-associations.html
 .. _`JSFiddle`: http://jsfiddle.net/847Kf/4/
 .. _`symfony-collection`: https://github.com/ninsuo/symfony-collection

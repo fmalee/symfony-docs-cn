@@ -289,11 +289,6 @@ Symfony应用附带一个位于项目根目录的名为 ``.env``
     # 忽略 .env 文件并在生产环境中运行此命令
     $ APP_ENV=prod php bin/console command_name
 
-.. deprecated:: 4.2
-
-    在之前的Symfony版本中，你可以使用 ``--env``
-    命令选项来配置环境，该选项在Symfony 4.2中已弃用。
-
 创建新环境
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 

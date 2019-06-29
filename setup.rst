@@ -10,7 +10,7 @@
     更喜欢视频教程? 可以观看 `Stellar Development with Symfony`_ 系列录像.
 
 要创建一个 Symfony 应用，受限要确保你使用的是 PHP 7.1(或是更高的版本)，并且安装了 `Composer`_ 。
-如果没有，那就在你的系统上 :doc:`全局安装 Composer </setup/composer>`。
+如果没有，那就在你的系统上 `安装Composer`_。
 
 运行一下的命令来创建你的项目:
 
@@ -35,16 +35,16 @@
 
 在生成环境下，你应该使用 Nginx 或 Apache 等Web服务器
 （请参阅 :doc:`配置一个Web服务器来运行Symfony </setup/web_server_configuration>`）。
-但是对于开发来说，使用 :doc:`Symfony的本地服务器 <setup/symfony_server>` 会更方便。
+但是对于开发来说，使用 :doc:`Symfony的本地服务器 </setup/symfony_server>` 会更方便。
 
 此本地服务器提供对HTTP/2、TLS/SSL、自动生成安全证书和许多其他功能的支持。
 它适用于任何PHP应用，而不仅适用于Symfony项目，因此它是一个非常有用的开发工具。
 
-安装后，进入新项目并启动本地Web服务器：
+`下载Symfony本地Web服务器`_ 并安装，进入新项目的目录并启动本地Web服务器：
 
 .. code-block:: terminal
 
-    $ cd my-project
+    $ cd my-project/
     $ symfony server:start
 
 打开你的浏览器并访问 ``http://localhost:8000/``。如果一切正常，你应该会看到一个欢迎页面。
@@ -134,11 +134,12 @@ Symfony 演示程序
     setup/homestead
     setup/built_in_web_server
     setup/web_server_configuration
-    setup/composer
     setup/*
 
 .. _`Stellar Development with Symfony`: http://symfonycasts.com/screencast/symfony
 .. _`Composer`: https://getcomposer.org/
+.. _`安装Composer`: https://getcomposer.org/download/
+.. _`下载Symfony本地Web服务器`: https://symfony.com/download
 .. _`安全检查器`: https://github.com/sensiolabs/security-checker#integration
 .. _`Symfony演示程序`: https://github.com/symfony/demo
 .. _`symfony/symfony-demo`: https://github.com/symfony/demo

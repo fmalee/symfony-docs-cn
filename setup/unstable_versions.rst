@@ -7,7 +7,7 @@
 -----------------------------------------------------------
 
 假设Symfony 4.0版本尚未发布，你想创建一个新项目来测试其功能。
-首先，:doc:`安装Composer </setup/composer>` 包管理器。
+首先，`安装 Composer 包管理器`_。
 然后，打开命令控制台，输入项目的目录并执行以下命令：
 
 .. code-block:: terminal
@@ -63,3 +63,5 @@
         # ... 测试完Symfony的新版本之后
         $ git checkout master
         $ git branch -D testing_new_symfony
+
+.. _`安装 Composer 包管理器`: https://getcomposer.org/download/

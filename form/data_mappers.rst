@@ -87,37 +87,37 @@
         // ...
 
         /**
-         * @param Color|null $data
+         * @param Color|null $viewData
          */
-        public function mapDataToForms($data, $forms)
+        public function mapDataToForms($viewData, $forms)
         {
             // 还没有数据，所以没有任何数据可以预先填充
-            if (null === $data) {
+            if (null === $viewData) {
                 return;
             }
 
             // 无效的数据类型
-            if (!$data instanceof Color) {
-                throw new UnexpectedTypeException($data, Color::class);
+            if (!$viewData instanceof Color) {
+                throw new UnexpectedTypeException($viewData, Color::class);
             }
 
             /** @var FormInterface[] $forms */
             $forms = iterator_to_array($forms);
 
             // 初始化表单字段值
-            $forms['red']->setData($data->getRed());
-            $forms['green']->setData($data->getGreen());
-            $forms['blue']->setData($data->getBlue());
+            $forms['red']->setData($viewData->getRed());
+            $forms['green']->setData($viewData->getGreen());
+            $forms['blue']->setData($viewData->getBlue());
         }
 
-        public function mapFormsToData($forms, &$data)
+        public function mapFormsToData($forms, &$viewData)
         {
             /** @var FormInterface[] $forms */
             $forms = iterator_to_array($forms);
 
             // 因为数据是通过引用传递的，所以重写它也会在表单对象中同时更改。
             // 请注意不一致的类型，请参阅下面的注意事项。
-            $data = new Color(
+            $viewData = new Color(
                 $forms['red']->getData(),
                 $forms['green']->getData(),
                 $forms['blue']->getData()
