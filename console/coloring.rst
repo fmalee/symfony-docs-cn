@@ -66,8 +66,23 @@
     或使用 :method:`Symfony\\Component\\Console\\Formatter\\OutputFormatter::escape`
     方法转义给定字符串中包含的所有标签。
 
+显示可点击链接
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. versionadded:: 4.3
+
+    Symfony 4.3中引入了显示可点击链接的特性。
+
+命令可以使用特殊的 ``<href>`` 标签来显示类似于网页的 ``<a>`` 元素的链接::
+
+    $output->writeln('<href=https://symfony.com>Symfony Homepage</>');
+
+如果你的终端属于 `支持链接的终端仿真器列表`_，你可以单击 *"Symfony Homepage"*
+文本在默认浏览器中打开其URL。否则，你将看到 *"Symfony Homepage"* 作为常规文本，URL将丢失。
+
 .. _Cmder: http://cmder.net/
 .. _ConEmu: https://conemu.github.io/
 .. _ANSICON: https://github.com/adoxa/ansicon/releases
 .. _Mintty: https://mintty.github.io/
 .. _Hyper: https://hyper.is/
+.. _`支持链接的终端仿真器列表`: https://gist.github.com/egmontkob/eb114294efbcd5adb1944c9f3cb5feda

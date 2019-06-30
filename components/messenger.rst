@@ -66,6 +66,11 @@ Messenger组件
 #. :class:`Symfony\\Component\\Messenger\\Middleware\\SendMessageMiddleware` (启用异步处理)
 #. :class:`Symfony\\Component\\Messenger\\Middleware\\HandleMessageMiddleware` (调用注册的处理器)
 
+.. deprecated:: 4.3
+
+    自Symfony 4.3起，``LoggingMiddleware`` 已被弃用，并将在5.0中删除。
+    可以将日志器传递到 ``SendMessageMiddleware`` 来代替。
+
 例如::
 
     use App\Message\MyMessage;
@@ -182,7 +187,8 @@ Messenger组件
 ~~~~~~~~~~~~~~~
 
 想象一下，你已经有一个 ``ImportantAction`` 消息通过消息总线并由处理器处理。
-现在，你还希望将此消息作为电子邮件发送。
+现在，你还希望将此消息作为电子邮件发送（使用 :doc:`Mime </components/mime>`
+和 :doc:`Mailer </components/mailer>` 组件)。
 
 通过使用 :class:`Symfony\\Component\\Messenger\\Transport\\Sender\\SenderInterface`，
 你可以创建自己的消息发件人::
@@ -190,15 +196,17 @@ Messenger组件
     namespace App\MessageSender;
 
     use App\Message\ImportantAction;
+    use Symfony\Component\Mailer\MailerInterface;
     use Symfony\Component\Messenger\Envelope;
     use Symfony\Component\Messenger\Transport\Sender\SenderInterface;
+    use Symfony\Component\Mime\Email;
 
     class ImportantActionToEmailSender implements SenderInterface
     {
         private $mailer;
         private $toEmail;
 
-        public function __construct(\Swift_Mailer $mailer, string $toEmail)
+        public function __construct(MailerInterface $mailer, string $toEmail)
         {
             $this->mailer = $mailer;
             $this->toEmail = $toEmail;
@@ -213,12 +221,10 @@ Messenger组件
             }
 
             $this->mailer->send(
-                (new \Swift_Message('Important action made'))
-                    ->setTo($this->toEmail)
-                    ->setBody(
-                        '<h1>Important action</h1><p>Made by '.$message->getUsername().'</p>',
-                        'text/html'
-                    )
+                (new Email())
+                    ->to($this->toEmail)
+                    ->subject('Important action made')
+                    ->html('<h1>Important action</h1><p>Made by '.$message->getUsername().'</p>')
             );
 
             return $envelope;

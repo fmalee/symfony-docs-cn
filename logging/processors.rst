@@ -165,6 +165,16 @@ Symfony的MonologBridge提供了可在你的应用内注册的一些处理器。
 :class:`Symfony\\Bridge\\Monolog\\Processor\\WebProcessor`
     使用Symfony的请求对象内部的数据覆盖请求中的数据。
 
+:class:`Symfony\\Bridge\\Monolog\\Processor\\RouteProcessor`
+    添加有关当前路由的信息（控制器、动作、路由参数）。
+
+:class:`Symfony\\Bridge\\Monolog\\Processor\\ConsoleCommandProcessor`
+    添加有关当前控制台命令的信息。
+
+.. versionadded:: 4.3
+
+    Symfony 4.3中引入了 ``RouteProcessor`` 和 ``ConsoleCommandProcessor``。
+
 为每个处理器注册处理器
 ----------------------------------
 

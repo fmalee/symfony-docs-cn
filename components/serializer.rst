@@ -200,6 +200,19 @@ Serializer组件
 
 在使用一个ORM时，这是一个常见的需求。
 
+``OBJECT_TO_POPULATE`` 仅用于顶级对象。如果该对象是树结构的根节点，则将使用新实例重新创建规范化数据中存在的所有子元素。
+
+当 ``AbstractObjectNormalizer::DEEP_OBJECT_TO_POPULATE``
+选项设置为true时，根节点 ``OBJECT_TO_POPULATE``
+的现有子级将从规范化数据中更新，而不是由反规范化器重新创建。请注意，
+``DEEP_OBJECT_TO_POPULATE`` 只适用于单个子对象，而不适用于对象数组。
+在规范化化数据中仍然会替换这些数据。
+
+.. versionadded:: 4.3
+
+    Symfony 4.3中引入了
+    ``AbstractObjectNormalizer::DEEP_OBJECT_TO_POPULATE`` 选项。
+
 .. _component-serializer-attributes-groups:
 
 属性组

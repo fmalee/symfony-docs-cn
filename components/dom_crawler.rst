@@ -62,6 +62,15 @@ Crawler的一个实例代表一组 :phpclass:`DOMElement` 对象，这些对象�
     而且，尽管DomCrawler并不意味着转储(dump)的内容，但你可以通过
     :ref:`转储它 <component-dom-crawler-dumping>` 以看到你的HTML的“修复”版本。
 
+.. note::
+
+    如果你需要更好地支持HTML5内容，或者希望消除PHP的DOM扩展的不一致性，请安装
+    `html5-php库`_。当内容具有HTML5文档类型时，DomCrawler组件将自动使用它。
+
+    .. versionadded:: 4.3
+
+        Symfony 4.3中引入了对 html5-php 库的自动支持。
+
 节点过滤
 ~~~~~~~~~~~~~~
 
@@ -192,6 +201,13 @@ Crawler的一个实例代表一组 :phpclass:`DOMElement` 对象，这些对象�
     // 如果节点不存在，调用 text() 将会导致异常
     $message = $crawler->filterXPath('//body/p')->text();
 
+    // 给 text() 传递一个参数，可以避免在节点不存在出现异常，并会将其返回
+    $message = $crawler->filterXPath('//body/p')->text('Default text content');
+
+.. versionadded:: 4.3
+
+    Symfony 4.3中引入了 ``text()`` 的默认参数。
+
 访问当前选择的第一个节点的属性值::
 
     $class = $crawler->filterXPath('//body/p')->attr('class');
@@ -200,12 +216,16 @@ Crawler的一个实例代表一组 :phpclass:`DOMElement` 对象，这些对象�
 
     $attributes = $crawler
         ->filterXpath('//body/p')
-        ->extract(['_text', 'class'])
+        ->extract(['_name', '_text', 'class'])
     ;
 
 .. note::
 
-    ``_text`` 特殊属性代表一个节点值。
+    特殊属性 ``_text`` 表示节点值，而 ``_name`` 表示元素名称（HTML标签名称）。
+
+    .. versionadded:: 4.3
+
+        Symfony 4.3中引入了特殊属性 ``_name``。
 
 在列表的每个节点上调用一个匿名函数::
 
@@ -289,6 +309,13 @@ Crawler支持多种添加内容的方式::
 
         // 如果节点不存在，调用 html() 将会导致异常
         $html = $crawler->html();
+
+        // 给 html() 传递一个参数，可以避免在节点不存在出现异常，并会将其返回
+        $html = $crawler->html('Default <strong>HTML</strong> content');
+
+    .. versionadded:: 4.3
+
+        Symfony 4.3中引入了 ``html()`` 的默认参数。
 
 表达式求值
 ~~~~~~~~~~~~~~~~~~~~~
@@ -527,11 +554,12 @@ Goutte理解Symfony Crawler对象，可以使用它来直接提交表单::
     $form->disableValidation();
     $form['country']->select('Invalid value');
 
-.. _`Goutte`: https://github.com/FriendsOfPHP/Goutte
-.. _Packagist: https://packagist.org/packages/symfony/dom-crawler
-
 扩展阅读
 ----------
 
 * :doc:`/testing`
 * :doc:`/components/css_selector`
+
+.. _`Goutte`: https://github.com/FriendsOfPHP/Goutte
+.. _Packagist: https://packagist.org/packages/symfony/dom-crawler
+.. _`html5-php库`: https://github.com/Masterminds/html5-php

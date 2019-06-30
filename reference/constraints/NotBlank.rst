@@ -2,13 +2,16 @@ NotBlank
 ========
 
 Validates that a value is not blank - meaning not equal to a blank string,
-a blank array, ``false`` or ``null``. To check that a value is not equal to
-``null``, see the :doc:`/reference/constraints/NotNull` constraint.
+a blank array, ``false`` or ``null`` (null behavior is configurable). To check
+that a value is not equal to ``null``, see the
+:doc:`/reference/constraints/NotNull` constraint.
 
 ==========  ===================================================================
 Applies to  :ref:`property or method <validation-property-target>`
-Options     - `groups`_
+Options     - `allowNull`_
+            - `groups`_
             - `message`_
+            - `normalizer`_
             - `payload`_
 Class       :class:`Symfony\\Component\\Validator\\Constraints\\NotBlank`
 Validator   :class:`Symfony\\Component\\Validator\\Constraints\\NotBlankValidator`
@@ -79,6 +82,18 @@ class were not blank, you could do the following:
 Options
 -------
 
+allowNull
+~~~~~~~~~
+
+**type**: ``bool`` **default**: ``false``
+
+If set to ``true``, ``null`` values are considered valid and won't trigger a
+constraint violation.
+
+.. versionadded:: 4.3
+
+    The ``allowNull`` option was introduced in Symfony 4.3.
+
 .. include:: /reference/constraints/_groups-option.rst.inc
 
 message
@@ -95,5 +110,7 @@ Parameter        Description
 ===============  ==============================================================
 ``{{ value }}``  The current (invalid) value
 ===============  ==============================================================
+
+.. include:: /reference/constraints/_normalizer-option.rst.inc
 
 .. include:: /reference/constraints/_payload-option.rst.inc

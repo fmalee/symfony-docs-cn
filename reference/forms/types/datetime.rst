@@ -25,6 +25,7 @@ the data can be a ``DateTime`` object, a string, a timestamp or an array.
 |                      | - `hours`_                                                                  |
 |                      | - `html5`_                                                                  |
 |                      | - `input`_                                                                  |
+|                      | - `input_format`_                                                           |
 |                      | - `minutes`_                                                                |
 |                      | - `model_timezone`_                                                         |
 |                      | - `months`_                                                                 |
@@ -46,6 +47,7 @@ the data can be a ``DateTime`` object, a string, a timestamp or an array.
 | options              | - `disabled`_                                                               |
 |                      | - `help`_                                                                   |
 |                      | - `help_attr`_                                                              |
+|                      | - `help_html`_                                                              |
 |                      | - `inherit_data`_                                                           |
 |                      | - `invalid_message`_                                                        |
 |                      | - `invalid_message_parameters`_                                             |
@@ -72,8 +74,10 @@ Defines the ``format`` option that will be passed down to the date field.
 See the :ref:`DateType's format option <reference-forms-type-date-format>`
 for more details.
 
-The ``date_format`` option does not have any effect when the form is rendered
-as an HTML5 datetime input.
+.. deprecated:: 4.3
+
+    Using the ``date_format`` option when the form is rendered as an HTML 5
+    datetime input is deprecated since Symfony 4.3.
 
 date_label
 ~~~~~~~~~~
@@ -94,7 +98,10 @@ date_widget
 
 .. include:: /reference/forms/types/options/date_widget_description.rst.inc
 
-The ``date_widget`` option is ignored when the ``widget`` option is set to ``single_text``.
+.. deprecated:: 4.3
+
+    Using the ``date_widget`` option when the ``widget`` option is set to
+    ``single_text`` is deprecated since Symfony 4.3.
 
 .. include:: /reference/forms/types/options/days.rst.inc
 
@@ -137,6 +144,11 @@ used by the HTML5 ``datetime-local`` field. Keeping the default value will
 cause the field to be rendered as an ``input`` field with ``type="datetime-local"``.
 For more information on valid formats, see `Date/Time Format Syntax`_.
 
+.. deprecated:: 4.3
+
+    Using the ``format`` option when the ``html5`` option is enabled is deprecated
+    since Symfony 4.3.
+
 .. include:: /reference/forms/types/options/hours.rst.inc
 
 .. include:: /reference/forms/types/options/html5.rst.inc
@@ -159,6 +171,13 @@ The value that comes back from the form will also be normalized back into
 this format.
 
 .. include:: /reference/forms/types/options/_date_limitation.rst.inc
+
+input_format
+~~~~~~~~~~~~
+
+**type**: ``string`` **default**: ``Y-m-d H:i:s``
+
+.. include:: /reference/forms/types/options/date_input_format_description.rst.inc
 
 .. include:: /reference/forms/types/options/minutes.rst.inc
 
@@ -189,7 +208,10 @@ time_widget
 
 Defines the ``widget`` option for the :doc:`TimeType </reference/forms/types/time>`.
 
-The ``time_widget`` option is ignored when the ``widget`` option is set to ``single_text``.
+.. deprecated:: 4.3
+
+    Using the ``time_widget`` option when the ``widget`` option is set to
+    ``single_text`` is deprecated since Symfony 4.3.
 
 .. include:: /reference/forms/types/options/view_timezone.rst.inc
 
@@ -239,6 +261,8 @@ These options inherit from the :doc:`FormType </reference/forms/types/form>`:
 .. include:: /reference/forms/types/options/help.rst.inc
 
 .. include:: /reference/forms/types/options/help_attr.rst.inc
+
+.. include:: /reference/forms/types/options/help_html.rst.inc
 
 .. include:: /reference/forms/types/options/inherit_data.rst.inc
 

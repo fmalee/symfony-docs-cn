@@ -73,6 +73,7 @@ Configuration
   * :ref:`enabled <reference-csrf_protection-enabled>`
 
 * `default_locale`_
+* `disallow_search_engine_index`_
 * `esi`_
 
   * :ref:`enabled <reference-esi-enabled>`
@@ -84,7 +85,56 @@ Configuration
 * `fragments`_
 
   * :ref:`enabled <reference-fragments-enabled>`
+  * `hinclude_default_template`_
   * :ref:`path <reference-fragments-path>`
+
+* `http_client`_
+
+  * :ref:`default_options <reference-http-client-default-options>`
+
+    * `bindto`_
+    * `cafile`_
+    * `capath`_
+    * `ciphers`_
+    * `headers`_
+    * `http_version`_
+    * `local_cert`_
+    * `local_pk`_
+    * `max_redirects`_
+    * `no_proxy`_
+    * `passphrase`_
+    * `peer_fingerprint`_
+    * `proxy`_
+    * `resolve`_
+    * `timeout`_
+    * `verify_host`_
+    * `verify_peer`_
+
+  * `max_host_connections`_
+  * :ref:`scoped_clients <reference-http-client-scoped-clients>`
+
+    * `scope`_
+    * `auth_basic`_
+    * `auth_bearer`_
+    * `base_uri`_
+    * `bindto`_
+    * `cafile`_
+    * `capath`_
+    * `ciphers`_
+    * `headers`_
+    * `http_version`_
+    * `local_cert`_
+    * `local_pk`_
+    * `max_redirects`_
+    * `no_proxy`_
+    * `passphrase`_
+    * `peer_fingerprint`_
+    * `proxy`_
+    * `query`_
+    * `resolve`_
+    * `timeout`_
+    * `verify_host`_
+    * `verify_peer`_
 
 * `http_method_override`_
 * `ide`_
@@ -106,6 +156,7 @@ Configuration
 
   * `magic_call`_
   * `throw_exception_on_invalid_index`_
+  * `throw_exception_on_invalid_property_path`_
 
 * `property_info`_
 
@@ -152,6 +203,8 @@ Configuration
   * `metadata_update_threshold`_
   * `name`_
   * `save_path`_
+  * `sid_length`_
+  * `sid_bits_per_character`_
   * `storage_id`_
   * `use_cookies`_
 
@@ -163,7 +216,6 @@ Configuration
 
     * `resources`_
 
-  * `hinclude_default_template`_
   * `loaders`_
 
 * `test`_
@@ -186,6 +238,11 @@ Configuration
   * :ref:`mapping <reference-validation-mapping>`
 
     * :ref:`paths <reference-validation-mapping-paths>`
+
+  * :ref:`not_compromised_password <reference-validation-not-compromised-password>`
+
+    * :ref:`enabled <reference-validation-not-compromised-password-enabled>`
+    * `endpoint`_
 
   * `static_method`_
   * `strict_email`_
@@ -385,6 +442,21 @@ method.
     You can read more information about the default locale in
     :ref:`translation-default-locale`.
 
+disallow_search_engine_index
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+**type**: ``boolean`` **default**: ``true`` when the debug mode is enabled, ``false`` otherwise.
+
+.. versionadded:: 4.3
+
+    The ``disallow_search_engine_index`` option was introduced in Symfony 4.3.
+
+If ``true``, Symfony adds a ``X-Robots-Tag: noindex`` HTTP tag to all responses
+(unless your own app adds that header, in which case it's not modified). This
+`X-Robots-Tag HTTP header`_ tells search engines to not index your web site.
+This option is a protection measure in case you accidentally publish your site
+in debug mode.
+
 trusted_hosts
 ~~~~~~~~~~~~~
 
@@ -578,6 +650,24 @@ used to render ESI fragments independently of the rest of the page.
 This setting is automatically set to ``true`` when one of the child settings
 is configured.
 
+hinclude_default_template
+.........................
+
+**type**: ``string`` **default**: ``null``
+
+.. versionadded:: 4.3
+
+    The ``framework.fragments.hinclude_default_template`` option was introduced
+    in Symfony 4.3. In previous Symfony versions it was defined under
+    ``framework.templating.hinclude_default_template``.
+
+Sets the content shown during the loading of the fragment or when JavaScript
+is disabled. This can be either a template name or the content itself.
+
+.. seealso::
+
+    See :doc:`/templating/hinclude` for more information about hinclude.
+
 .. _reference-fragments-path:
 
 path
@@ -587,6 +677,277 @@ path
 
 The path prefix for fragments. The fragment listener will only be executed
 when the request starts with this path.
+
+.. _reference-http-client:
+
+http_client
+~~~~~~~~~~~
+
+When the HttpClient component is installed, an HTTP client is available
+as a service named ``http_client`` or using the autowiring alias
+:class:`Symfony\\Contracts\\HttpClient\\HttpClientInterface`.
+
+.. _reference-http-client-default-options:
+
+This service can be configured using ``framework.http_client.default_options``:
+
+.. code-block:: yaml
+
+    # config/packages/framework.yaml
+    framework:
+        # ...
+        http_client:
+            max_host_connections: 10
+            default_options:
+                headers: { 'X-Powered-By': 'ACME App' }
+                max_redirects: 7
+
+.. _reference-http-client-scoped-clients:
+
+Multiple pre-configured HTTP client services can be defined, each with its
+service name defined as a key under ``scoped_clients``. Scoped clients inherit
+the default options defined for the ``http_client`` service. You can override
+these options and can define a few others:
+
+.. code-block:: yaml
+
+    # config/packages/framework.yaml
+    framework:
+        # ...
+        http_client:
+            scoped_clients:
+                my_api.client:
+                    auth_bearer: secret_bearer_token
+                    # ...
+
+Options defined for scoped clients apply only to URLs that match either their
+`base_uri`_ or the `scope`_ option when it is defined. Non-matching URLs always
+use default options.
+
+Each scoped client also defines a corresponding named autowiring alias.
+If you use for example
+``Symfony\Contracts\HttpClient\HttpClientInterface $myApiClient``
+as the type and name of an argument, autowiring will inject the ``my_api.client``
+service into your autowired classes.
+
+auth_basic
+..........
+
+**type**: ``string``
+
+The username and password used to create the ``Authorization`` HTTP header
+used in HTTP Basic authentication. The value of this option must follow the
+format ``username:password``.
+
+auth_bearer
+...........
+
+**type**: ``string``
+
+The token used to create the ``Authorization`` HTTP header used in HTTP Bearer
+authentication (also called token authentication).
+
+base_uri
+........
+
+**type**: ``string``
+
+URI that is merged into relative URIs, following the rules explained in the
+`RFC 3986`_ standard. This is useful when all the requests you make share a
+common prefix (e.g. ``https://api.github.com/``) so you can avoid adding it to
+every request.
+
+Here are some common examples of how ``base_uri`` merging works in practice:
+
+===================  ==============  ======================
+``base_uri``         Relative URI    Actual Requested URI
+===================  ==============  ======================
+http://foo.com       /bar            http://foo.com/bar
+http://foo.com/foo   /bar            http://foo.com/bar
+http://foo.com/foo   bar             http://foo.com/bar
+http://foo.com/foo/  bar             http://foo.com/foo/bar
+http://foo.com       http://baz.com  http://baz.com
+http://foo.com/?bar  bar             http://foo.com/bar
+===================  ==============  ======================
+
+bindto
+......
+
+**type**: ``string``
+
+A network interface name, IP address, a host name or a UNIX socket to use as the
+outgoing network interface.
+
+cafile
+......
+
+**type**: ``string``
+
+The path of the certificate authority file that contains one or more
+certificates used to verify the other servers' certificates.
+
+capath
+......
+
+**type**: ``string``
+
+The path to a directory that contains one or more certificate authority files.
+
+ciphers
+.......
+
+**type**: ``string``
+
+A list of the names of the ciphers allowed for the SSL/TLS connections. They
+can be separated by colons, commas or spaces (e.g. ``'RC4-SHA:TLS13-AES-128-GCM-SHA256'``).
+
+headers
+.......
+
+**type**: ``array``
+
+An associative array of the HTTP headers added before making the request. This
+value must use the format ``['header-name' => header-value, ...]``.
+
+http_version
+............
+
+**type**: ``string`` | ``null`` **default**: ``null``
+
+The HTTP version to use, typically ``'1.1'``  or ``'2.0'``. Leave it to ``null``
+to let Symfony select the best version automatically.
+
+local_cert
+..........
+
+**type**: ``string``
+
+The path to a file that contains the `PEM formatted`_ certificate used by the
+HTTP client. This is often combined with the ``local_pk`` and ``passphrase``
+options.
+
+local_pk
+........
+
+**type**: ``string``
+
+The path of a file that contains the `PEM formatted`_ private key of the
+certificate defined in the ``local_cert`` option.
+
+max_host_connections
+....................
+
+**type**: ``integer`` **default**: ``6``
+
+Defines the maximum amount of simultaneously open connections to a single host
+(considering a "host" the same as a "host name + port number" pair). This limit
+also applies for proxy connections, where the proxy is considered to be the host
+for which this limit is applied.
+
+max_redirects
+.............
+
+**type**: ``integer`` **default**: ``20``
+
+The maximum number of redirects to follow. Use ``0`` to not follow any
+redirection.
+
+no_proxy
+........
+
+**type**: ``string`` | ``null`` **default**: ``null``
+
+A comma separated list of hosts that do not require a proxy to be reached, even
+if one is configured. Use the ``'*'`` wildcard to match all hosts and an empty
+string to match none (disables the proxy).
+
+passphrase
+..........
+
+**type**: ``string``
+
+The passphrase used to encrypt the certificate stored in the file defined in the
+``local_cert`` option.
+
+peer_fingerprint
+................
+
+**type**: ``array``
+
+When negotiating a TLS or SSL connection, the server sends a certificate
+indicating its identity. A public key is extracted from this certificate and if
+it does not exactly match any of the public keys provided in this option, the
+connection is aborted before sending or receiving any data.
+
+The value of this option is an associative array of ``algorithm => hash``
+(e.g ``['pin-sha256' => '...']``).
+
+proxy
+.....
+
+**type**: ``string`` | ``null``
+
+The HTTP proxy to use to make the requests. Leave it to ``null`` to detect the
+proxy automatically based on your system configuration.
+
+query
+.....
+
+**type**: ``array``
+
+An associative array of the query string values added to the URL before making
+the request. This value must use the format ``['parameter-name' => parameter-value, ...]``.
+
+resolve
+.......
+
+**type**: ``array``
+
+A list of hostnames and their IP addresses to pre-populate the DNS cache used by
+the HTTP client in order to avoid a DNS lookup for those hosts. This option is
+useful to improve security when IPs are checked before the URL is passed to the
+client and to make your tests easier.
+
+The value of this option is an associative array of ``domain => IP address``
+(e.g ``['symfony.com' => '46.137.106.254', ...]``).
+
+scope
+.....
+
+**type**: ``string``
+
+For scoped clients only: the regular expression that the URL must match before
+applying all other non-default options. By default, the scope is derived from
+`base_uri`_.
+
+timeout
+.......
+
+**type**: ``float`` **default**: depends on your PHP config
+
+Time, in seconds, to wait for a response. If the response stales for longer, a
+:class:`Symfony\\Component\\HttpClient\\Exception\\TransportException` is thrown.
+Its default value is the same as the value of PHP's `default_socket_timeout`_
+config option.
+
+verify_host
+...........
+
+**type**: ``boolean``
+
+If ``true``, the certificate sent by other servers is verified to ensure that
+their common name matches the host included in the URL. This is usually
+combined with ``verify_peer`` to also verify the certificate authenticity.
+
+verify_peer
+...........
+
+**type**: ``boolean``
+
+If ``true``, the certificate sent by other servers when negotiating a TLS or SSL
+connection is verified for authenticity. Authenticating the certificate is not
+enough to be sure about the server, so you should combine this with the
+``verify_host`` option.
 
 profiler
 ~~~~~~~~
@@ -916,6 +1277,29 @@ gc_maxlifetime
 This determines the number of seconds after which data will be seen as "garbage"
 and potentially cleaned up. Garbage collection may occur during session
 start and depends on `gc_divisor`_ and `gc_probability`_.
+
+sid_length
+..........
+
+**type**: ``integer`` **default**: ``32``
+
+This determines the length of session ID string, which can be an integer between
+``22`` and ``256`` (both inclusive), being ``32`` the recommended value. Longer
+session IDs are harder to guess.
+
+This option is related to the `session.sid_length PHP option`_.
+
+sid_bits_per_character
+......................
+
+**type**: ``integer`` **default**: ``4``
+
+This determines the number of bits in encoded session ID character. The possible
+values are ``4`` (0-9, a-f), ``5`` (0-9, a-v), and ``6`` (0-9, a-z, A-Z, "-", ",").
+The more bits results in stronger session ID. ``5`` is recommended value for
+most environments.
+
+This option is related to the `session.sid_bits_per_character PHP option`_.
 
 save_path
 .........
@@ -1494,17 +1878,11 @@ package:
 templating
 ~~~~~~~~~~
 
-hinclude_default_template
-.........................
+.. deprecated:: 4.3
 
-**type**: ``string`` **default**: ``null``
-
-Sets the content shown during the loading of the fragment or when JavaScript
-is disabled. This can be either a template name or the content itself.
-
-.. seealso::
-
-    See :doc:`/templating/hinclude` for more information about hinclude.
+    The integration of the Templating component in FrameworkBundle has been
+    deprecated since version 4.3 and will be removed in 5.0. That's why all the
+    configuration options defined under ``framework.templating`` are deprecated too.
 
 .. _reference-templating-form:
 
@@ -1515,6 +1893,12 @@ resources
 """""""""
 
 **type**: ``string[]`` **default**: ``['FrameworkBundle:Form']``
+
+.. deprecated:: 4.3
+
+    The integration of the Templating component in FrameworkBundle has been
+    deprecated since version 4.3 and will be removed in 5.0. Form theming with
+    PHP templates will no longer be supported and you'll need to use Twig instead.
 
 A list of all resources for form theming in PHP. This setting is not required
 if you're :ref:`using the Twig format for your themes <forms-theming-twig>`.
@@ -1688,6 +2072,18 @@ throw_exception_on_invalid_index
 When enabled, the ``property_accessor`` service throws an exception when you
 try to access an invalid index of an array.
 
+throw_exception_on_invalid_property_path
+........................................
+
+**type**: ``boolean`` **default**: ``true``
+
+.. versionadded:: 4.3
+
+    The ``throw_exception_on_invalid_property_path`` option was introduced in Symfony 4.3.
+
+When enabled, the ``property_accessor`` service throws an exception when you
+try to access an invalid property path of an object.
+
 property_info
 ~~~~~~~~~~~~~
 
@@ -1742,6 +2138,46 @@ translation_domain
 
 The translation domain that is used when translating validation constraint
 error messages.
+
+.. _reference-validation-not-compromised-password:
+
+not_compromised_password
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+The :doc:`NotCompromisedPassword </reference/constraints/NotCompromisedPassword>`
+constraint makes HTTP requests to a public API to check if the given password
+has been compromised in a data breach.
+
+.. _reference-validation-not-compromised-password-enabled:
+
+enabled
+.......
+
+**type**: ``boolean`` **default**: ``true``
+
+.. versionadded:: 4.3
+
+    The ``enabled`` option was introduced in Symfony 4.3.
+
+If you set this option to ``false``, no HTTP requests will be made and the given
+password will be considered valid. This is useful when you don't want or can't
+make HTTP requests, such as in ``dev`` and ``test`` environments or in
+continuous integration servers.
+
+endpoint
+........
+
+**type**: ``string`` **default**: ``null``
+
+.. versionadded:: 4.3
+
+    The ``endpoint`` option was introduced in Symfony 4.3.
+
+By default, the :doc:`NotCompromisedPassword </reference/constraints/NotCompromisedPassword>`
+constraint uses the public API provided by `haveibeenpwned.com`_. This option
+allows to define a different, but compatible, API endpoint to make the password
+checks. It's useful for example when the Symfony application is run in an
+intranet without public access to Internet.
 
 static_method
 .............
@@ -2333,3 +2769,10 @@ to know their differences.
 .. _`webpack-manifest-plugin`: https://www.npmjs.com/package/webpack-manifest-plugin
 .. _`error_reporting PHP option`: https://secure.php.net/manual/en/errorfunc.configuration.php#ini.error-reporting
 .. _`CSRF security attacks`: https://en.wikipedia.org/wiki/Cross-site_request_forgery
+.. _`session.sid_length PHP option`: https://php.net/manual/session.configuration.php#ini.session.sid-length
+.. _`session.sid_bits_per_character PHP option`: https://php.net/manual/session.configuration.php#ini.session.sid-bits-per-character
+.. _`X-Robots-Tag HTTP header`: https://developers.google.com/search/reference/robots_meta_tag
+.. _`RFC 3986`: https://www.ietf.org/rfc/rfc3986.txt
+.. _`default_socket_timeout`: https://php.net/manual/en/filesystem.configuration.php#ini.default-socket-timeout
+.. _`PEM formatted`: https://en.wikipedia.org/wiki/Privacy-Enhanced_Mail
+.. _`haveibeenpwned.com`: https://haveibeenpwned.com/

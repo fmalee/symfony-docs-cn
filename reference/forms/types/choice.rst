@@ -37,6 +37,7 @@ To use this field, you must specify *either* ``choices`` or ``choice_loader`` op
 |             | - `error_mapping`_                                                           |
 |             | - `help`_                                                                    |
 |             | - `help_attr`_                                                               |
+|             | - `help_html`_                                                               |
 |             | - `inherit_data`_                                                            |
 |             | - `label`_                                                                   |
 |             | - `label_attr`_                                                              |
@@ -44,6 +45,9 @@ To use this field, you must specify *either* ``choices`` or ``choice_loader`` op
 |             | - `mapped`_                                                                  |
 |             | - `required`_                                                                |
 |             | - `translation_domain`_                                                      |
+|             | - `label_translation_parameters`_                                            |
+|             | - `attr_translation_parameters`_                                             |
+|             | - `help_translation_parameters`_                                             |
 +-------------+------------------------------------------------------------------------------+
 | Parent type | :doc:`FormType </reference/forms/types/form>`                                |
 +-------------+------------------------------------------------------------------------------+
@@ -279,6 +283,8 @@ These options inherit from the :doc:`FormType </reference/forms/types/form>`:
 
 .. include:: /reference/forms/types/options/help_attr.rst.inc
 
+.. include:: /reference/forms/types/options/help_html.rst.inc
+
 .. include:: /reference/forms/types/options/inherit_data.rst.inc
 
 .. include:: /reference/forms/types/options/label.rst.inc
@@ -292,6 +298,12 @@ These options inherit from the :doc:`FormType </reference/forms/types/form>`:
 .. include:: /reference/forms/types/options/required.rst.inc
 
 .. include:: /reference/forms/types/options/choice_type_translation_domain.rst.inc
+
+.. include:: /reference/forms/types/options/label_translation_parameters.rst.inc
+
+.. include:: /reference/forms/types/options/attr_translation_parameters.rst.inc
+
+.. include:: /reference/forms/types/options/help_translation_parameters.rst.inc
 
 Field Variables
 ---------------

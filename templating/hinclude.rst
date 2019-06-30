@@ -64,7 +64,7 @@ Symfony使用标准的 ``render()`` 函数的一个版本来配置 ``hinclude`` 
         # config/packages/framework.yaml
         framework:
             # ...
-            templating:
+            fragments:
                 hinclude_default_template: hinclude.html.twig
 
     .. code-block:: xml
@@ -80,7 +80,7 @@ Symfony使用标准的 ``render()`` 函数的一个版本来配置 ``hinclude`` 
 
             <!-- ... -->
             <framework:config>
-                <framework:templating hinclude-default-template="hinclude.html.twig"/>
+                <framework:fragments hinclude-default-template="hinclude.html.twig"/>
             </framework:config>
         </container>
 
@@ -89,10 +89,15 @@ Symfony使用标准的 ``render()`` 函数的一个版本来配置 ``hinclude`` 
         // config/packages/framework.php
         $container->loadFromExtension('framework', [
             // ...
-            'templating' => [
+            'fragments' => [
                 'hinclude_default_template' => 'hinclude.html.twig',
             ],
         ]);
+
+.. versionadded:: 4.3
+
+    Symfony 4.3中引入了 ``framework.fragments.hinclude_default_template``
+    选项。在之前的Symfony版本中，它被称为 ``framework.templating.hinclude_default_template``。
 
 你可以为每个 ``render()`` 函数定义默认模板（它将覆盖定义的任何全局默认模板）：
 

@@ -16,7 +16,7 @@
 
     与从控制台直接调用相比，由于请求堆栈开销，从控制器调用命令会对性能产生轻微影响。
 
-想象一下，你想通过 :doc:`使用 swiftmailer:spool:send 命令 </email/spool>` 发送假脱机(spooled)的Swift Mailer消息。
+想象一下，你想通过 :doc:`使用 swiftmailer:spool:send 命令 </email>` 发送假脱机(spooled)的Swift Mailer消息。
 通过以下方式从控制器内部运行此命令::
 
     // src/Controller/SpoolController.php

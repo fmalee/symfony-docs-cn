@@ -150,7 +150,7 @@ Symfony服务器会为每个项目都启动一次，因此最终可能会有多�
 
 * 这样当你在同一个项目上连续工作时会更方便，因为端口号可以改变，但域不会改变;
 * 某些应用的行为取决于其域名/子域;
-* 拥有稳定的端点，例如Oauth2的本地重定向URL。
+* 拥有稳定的端点，例如OAuth2的本地重定向URL。
 
 设置本地代理
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -306,13 +306,13 @@ Symfony本地服务器提供与 `SymfonyCloud`_
 
 .. code-block:: terminal
 
-    # 基于symfony/skeleton创建新项目
+    # 基于 symfony/skeleton 创建新项目
     $ symfony new my_project_name
 
-    # 基于symfony/website-skeleton创建新项目
+    # 基于 symfony/website-skeleton 创建新项目
     $ symfony new --full my_project_name
 
-    # 基于Symfony演示应用创建新项目
+    # 基于 symfony/demo 创建新项目
     $ symfony new --demo my_project_name
 
 你也可以基于 **开发版本** 来创建项目（请注意，Composer还会将所有根依赖的稳定性设置为 ``dev``）：

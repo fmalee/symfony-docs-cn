@@ -606,6 +606,16 @@ Symfony支持缓存契约、PSR-6/16和Doctrine缓存接口。你可以在
 全局清除器清除每个池中的所有缓存。系统缓存清除器在 ``bin/console cache:clear``
 命令中使用。应用清除器则是默认的清除器。
 
+要查看所有可用的缓存池：
+
+.. code-block:: terminal
+
+    $ php bin/console cache:pool:list
+
+.. versionadded:: 4.3
+
+    Symfony 4.3引入了 ``cache:pool:list`` 命令。
+
 清除一个池：
 
 .. code-block:: terminal

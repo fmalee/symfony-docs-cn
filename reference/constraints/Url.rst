@@ -9,6 +9,7 @@ Options     - `checkDNS`_
             - `dnsMessage`_
             - `groups`_
             - `message`_
+            - `normalizer`_
             - `payload`_
             - `protocols`_
             - `relativeProtocol`_
@@ -318,6 +319,8 @@ Parameter        Description
                 ]));
             }
         }
+
+.. include:: /reference/constraints/_normalizer-option.rst.inc
 
 .. include:: /reference/constraints/_payload-option.rst.inc
 

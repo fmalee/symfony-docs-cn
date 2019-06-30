@@ -19,7 +19,7 @@
 
 * 当前令牌
     例如，令牌的
-    :method:`Symfony\\Component\\Security\\Core\\Authentication\\Token\\TokenInterface::getRoles`
+    :method:`Symfony\\Component\\Security\\Core\\Authentication\\Token\\TokenInterface::getRoleNames`
     方法可用于检索当前用户的角色（例如 ``ROLE_SUPER_ADMIN``），或者基于令牌的类做出一个决策。
 * 一组属性
     每个属性代表该用户应具有的特定权限，例如 ``ROLE_ADMIN``，以确保该用户是管理员。
@@ -115,7 +115,7 @@ RoleVoter
 
 :class:`Symfony\\Component\\Security\\Core\\Authorization\\Voter\\RoleVoter`
 支持以 ``ROLE_`` 开头的属性，如果所需的 ``ROLE_*`` 属性可以在令牌的
-:method:`Symfony\\Component\\Security\\Core\\Authentication\\Token\\TokenInterface::getRoles`
+:method:`Symfony\\Component\\Security\\Core\\Authentication\\Token\\TokenInterface::getRoleNames`
 方法中找到，则授予该用户访问权限::
 
     use Symfony\Component\Security\Core\Authorization\Voter\RoleVoter;
@@ -186,23 +186,9 @@ ExpressionVoter
 角色
 -----
 
-角色是表达用户具有的某种权利的对象。
-唯一的要求是他们必须定义一个返回代表角色本身的字符串的 ``getRole()`` 方法。
-为此，你可以选择继承默认 :class:`Symfony\\Component\\Security\\Core\\Role\\Role`
-，该类的 ``getRole()`` 方法中会返回其构造函数的第一个参数::
-
-    use Symfony\Component\Security\Core\Role\Role;
-
-    $role = new Role('ROLE_ADMIN');
-
-    // 显示 'ROLE_ADMIN'
-    var_dump($role->getRole());
-
-.. note::
-
-    大多数认证令牌都是继承自
-    :class:`Symfony\\Component\\Security\\Core\\Authentication\\Token\\AbstractToken`
-    ，这意味着赋值到它的构造函数的角色将自动从字符串转换为这些简单的 ``Role`` 对象。
+角色是表达用户具有某种权限的字符串（例如 *"edit a blog post"*、*"create an invoice"*）。
+你可以自由选择这些字符串。唯一的要求是它们必须以
+``ROLE_`` 前缀开头（例如 ``ROLE_POST_EDIT``、``ROLE_INVOICE_CREATE``）。
 
 使用决策管理器
 --------------------------

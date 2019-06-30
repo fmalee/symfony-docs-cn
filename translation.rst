@@ -212,19 +212,23 @@ Symfony包含一个名为 ``translation:update`` 的命令，可以帮助你完�
 
 .. code-block:: terminal
 
-    # 使用在 templates/ 中找到的缺失字符串来更新法语翻译文件
+    # 用该语言环境缺少的字符串来更新法语翻译文件
     $ php bin/console translation:update --dump-messages --force fr
 
-    # 使用AppBundle中找到的缺失字符串更新英文翻译文件
-    $ php bin/console translation:update --dump-messages --force en AppBundle
+``translation:update`` 命令在以下位置查找缺少的翻译：
+
+* 存储在 ``templates/`` 目录（或在 :ref:`twig.default_path <config-twig-default-path>`
+  和 :ref:`twig.paths <config-twig-paths>` 配置选项中定义的任何其他目录）中的模板；
+* 注入或 :doc:`自动装配 </service_container/autowiring>`
+  ``translator`` 服务并调用 ``trans()`` 函数的任何PHP文件/类。
+
+.. versionadded:: 4.3
+
+    Symfony 4.3中引入了从PHP文件中提取缺少的翻译字符串的功能。
 
 .. note::
 
     如果要查看缺少的翻译字符串而不实际更新翻译文件，请从上面的命令中删除 ``--force`` 选项。
-
-.. tip::
-
-    如果你需要从其他来源（例如控制器，表单和闪存消息）中提取翻译字符串，请考虑使用更高级的第三方 `TranslationBundle`_。
 
 .. _translation-resource-locations:
 
@@ -389,4 +393,3 @@ Symfony在以下默认位置查找消息文件（即翻译）：
 .. _`ISO 639-1`: https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
 .. _`Translatable Extension`: http://atlantic18.github.io/DoctrineExtensions/doc/translatable.html
 .. _`Translatable Behavior`: https://github.com/KnpLabs/DoctrineBehaviors
-.. _`TranslationBundle`: https://github.com/php-translation/symfony-bundle

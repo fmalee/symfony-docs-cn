@@ -29,7 +29,7 @@
 
 .. note::
 
-    :ref:`Argon2i <reference-security-argon2i>` 是行业标准推荐的散列算法，
+    :ref:`Sodium <reference-security-sodium>` 是行业标准推荐的散列算法，
     但除非你使用的是PHP 7.2+或安装了 `libsodium`_ 扩展，否则将无法使用此算法。
     ``bcrypt`` 足以满足大多数应用的需求。
 

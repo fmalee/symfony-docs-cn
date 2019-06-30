@@ -60,4 +60,9 @@
     | Defaults     | _controller: App\Controller\BlogController:show         |
     | Options      | compiler_class: Symfony\Component\Routing\RouteCompiler |
     |              | utf8: true                                              |
+    | Condition    | context.getMethod() in ['GET', 'HEAD', 'POST']          |
     +--------------+---------------------------------------------------------+
+
+.. versionadded:: 4.3
+
+    在Symfony 4.3中的路由器调试输出中添加了 ``Condition``。

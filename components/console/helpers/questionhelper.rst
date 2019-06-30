@@ -179,6 +179,43 @@ will be autocompleted as the user types::
         $bundleName = $helper->ask($input, $output, $question);
     }
 
+In more complex use cases, it may be necessary to generate suggestions on the
+fly, for instance if you wish to autocomplete a file path. In that case, you can
+provide a callback function to dynamically generate suggestions::
+
+    use Symfony\Component\Console\Question\Question;
+
+    // ...
+    public function execute(InputInterface $input, OutputInterface $output)
+    {
+        // This function is called whenever the input changes and new
+        // suggestions are needed.
+        $callback = function (string $userInput): array {
+            // Strip any characters from the last slash to the end of the string
+            // to keep only the last directory and generate suggestions for it
+            $inputPath = preg_replace('%(/|^)[^/]*$%', '$1', $userInput);
+            $inputPath = '' === $inputPath ? '.' : $inputPath;
+
+            // CAUTION - this example code allows unrestricted access to the
+            // entire filesystem. In real applications, restrict the directories
+            // where files and dirs can be found
+            $foundFilesAndDirs = @scandir($inputPath) ?: [];
+
+            return array_map(function ($dirOrFile) use ($inputPath) {
+                return $inputPath.$dirOrFile;
+            }, $foundFilesAndDirs);
+        };
+
+        $question = new Question('Please provide the full path of a file to parse');
+        $question->setAutocompleterCallback($callback);
+
+        $filePath = $helper->ask($input, $output, $question);
+    }
+
+.. versionadded:: 4.3
+
+    The ``setAutocompleterCallback()`` method was introduced in Symfony 4.3.
+
 Hiding the User's Response
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 

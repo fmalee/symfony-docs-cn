@@ -82,7 +82,7 @@ PHPUnit中的弃用
 .. sidebar:: 使用弱弃用模式
 
     有时，你无法修复所有弃用（例如，某些功能已在3.4中弃用，但你仍然需要支持3.3）。
-    在这些情况下，你仍然可以使用该桥接器来可能多的修复尽弃用，然后切换到弱测试模式以使测试再次通过。
+    在这些情况下，你仍然可以使用该桥接器来尽可能多的修复尽弃用，然后允许更多的弃用以使测试再次通过。
     你可以通过使用 ``SYMFONY_DEPRECATIONS_HELPER`` 环境变量来完成此操作：
 
     .. code-block:: xml
@@ -92,11 +92,15 @@ PHPUnit中的弃用
             <!-- ... -->
 
             <php>
-                <env name="SYMFONY_DEPRECATIONS_HELPER" value="weak"/>
+                <env name="SYMFONY_DEPRECATIONS_HELPER" value="max[total]=999999"/>
             </php>
         </phpunit>
 
-    （你也可以直接执行 ``SYMFONY_DEPRECATIONS_HELPER=weak phpunit`` 命令）。
+    你也可以像这样执行命令:
+
+    .. code-block:: terminal
+
+        $ SYMFONY_DEPRECATIONS_HELPER=max[total]=999999 php ./bin/phpunit
 
 .. _upgrade-major-symfony-composer:
 

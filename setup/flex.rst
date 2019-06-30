@@ -39,6 +39,8 @@ Symfony的Flex是一个Composer插件，修改 ``require``、``update`` 以及 `
 
 Flex会将其安装的指令记录保存在 ``symfony.lock`` 文件中，该文件必须提交到你的代码仓库。
 
+.. _flex-recipe:
+
 Flex指令
 ~~~~~~~~~~~~~~~~~~~~
 

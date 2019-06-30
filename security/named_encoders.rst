@@ -106,7 +106,7 @@
 .. note::
 
     如果你运行的是PHP 7.2+或安装了 `libsodium`_ 扩展，那么推荐使用的散列算法是
-    :ref:`Argon2i <reference-security-argon2i>`。
+    :ref:`Sodium <reference-security-sodium>`。
 
 这将创建一个名为 ``harsh`` 的编码器。
 为了让一个 ``User`` 实例使用它，该类必须实现

@@ -398,7 +398,8 @@ Remote Stores
 ~~~~~~~~~~~~~
 
 Remote stores (:ref:`MemcachedStore <lock-store-memcached>`,
-:ref:`PdoStore <lock-store-pdo>`, :ref:`RedisStore <lock-store-redis>`, and
+:ref:`PdoStore <lock-store-pdo>`,
+:ref:`RedisStore <lock-store-redis>` and
 :ref:`ZookeeperStore <lock-store-zookeeper>`) use a unique token to recognize
 the true owner of the lock. This token is stored in the
 :class:`Symfony\\Component\\Lock\\Key` object and is used internally by
@@ -422,7 +423,8 @@ Expiring Stores
 ~~~~~~~~~~~~~~~
 
 Expiring stores (:ref:`MemcachedStore <lock-store-memcached>`,
-:ref:`PdoStore <lock-store-pdo>` and :ref:`RedisStore <lock-store-redis>`)
+:ref:`PdoStore <lock-store-pdo>` and
+:ref:`RedisStore <lock-store-redis>`)
 guarantee that the lock is acquired only for the defined duration of time. If
 the task takes longer to be accomplished, then the lock can be released by the
 store and acquired by someone else.

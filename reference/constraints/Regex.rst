@@ -10,6 +10,7 @@ Options     - `groups`_
             - `match`_
             - `message`_
             - `pattern`_
+            - `normalizer`_
             - `payload`_
 Class       :class:`Symfony\\Component\\Validator\\Constraints\\Regex`
 Validator   :class:`Symfony\\Component\\Validator\\Constraints\\RegexValidator`
@@ -286,5 +287,7 @@ be matched against. By default, this validator will fail if the input string
 does *not* match this regular expression (via the :phpfunction:`preg_match`
 PHP function). However, if `match`_ is set to false, then validation will
 fail if the input string *does* match this pattern.
+
+.. include:: /reference/constraints/_normalizer-option.rst.inc
 
 .. include:: /reference/constraints/_payload-option.rst.inc

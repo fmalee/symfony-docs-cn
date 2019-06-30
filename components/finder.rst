@@ -132,6 +132,17 @@ Finder组件
 
     $finder->ignoreVCS(false);
 
+如果搜索目录包含一个 ``.gitignore`` 件，你可以重用这些规则，使用
+:method:`Symfony\\Component\\Finder\\Finder::ignoreVCSIgnored` 
+方法从结果中排除文件和目录::
+
+    // 排除与 .gitignore 模式匹配的文件/目录
+    $finder->ignoreVCSIgnored(true);
+
+.. versionadded:: 4.3
+
+    Symfony 4.3中引入了 ``ignoreVCSIgnored()`` 方法。
+
 文件名称
 ~~~~~~~~~
 

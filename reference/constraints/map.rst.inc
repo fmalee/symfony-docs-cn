@@ -1,7 +1,8 @@
-基本约束
+Basic Constraints
 ~~~~~~~~~~~~~~~~~
 
-这些是基本约束：使用它们来断言关于属性值或对象上方法的返回值的非常基本的东西。
+These are the basic constraints: use them to assert very basic things about
+the value of properties or the return value of methods on your object.
 
 * :doc:`NotBlank </reference/constraints/NotBlank>`
 * :doc:`Blank </reference/constraints/Blank>`
@@ -11,7 +12,7 @@
 * :doc:`IsFalse </reference/constraints/IsFalse>`
 * :doc:`Type </reference/constraints/Type>`
 
-字符串约束
+String Constraints
 ~~~~~~~~~~~~~~~~~~
 
 * :doc:`Email </reference/constraints/Email>`
@@ -19,10 +20,12 @@
 * :doc:`Url </reference/constraints/Url>`
 * :doc:`Regex </reference/constraints/Regex>`
 * :doc:`Ip </reference/constraints/Ip>`
+* :doc:`Json</reference/constraints/Json>`
 * :doc:`Uuid</reference/constraints/Uuid>`
 * :doc:`UserPassword </reference/constraints/UserPassword>`
+* :doc:`NotCompromisedPassword </reference/constraints/NotCompromisedPassword>`
 
-比较约束
+Comparison Constraints
 ~~~~~~~~~~~~~~~~~~~~~~
 
 * :doc:`EqualTo </reference/constraints/EqualTo>`
@@ -35,29 +38,38 @@
 * :doc:`GreaterThanOrEqual </reference/constraints/GreaterThanOrEqual>`
 * :doc:`Range </reference/constraints/Range>`
 * :doc:`DivisibleBy </reference/constraints/DivisibleBy>`
+* :doc:`Unique </reference/constraints/Unique>`
 
-日期约束
+Number Constraints
+~~~~~~~~~~~~~~~~~~
+* :doc:`Positive </reference/constraints/Positive>`
+* :doc:`PositiveOrZero </reference/constraints/PositiveOrZero>`
+* :doc:`Negative </reference/constraints/Negative>`
+* :doc:`NegativeOrZero </reference/constraints/NegativeOrZero>`
+
+Date Constraints
 ~~~~~~~~~~~~~~~~
 
 * :doc:`Date </reference/constraints/Date>`
 * :doc:`DateTime </reference/constraints/DateTime>`
 * :doc:`Time </reference/constraints/Time>`
+* :doc:`Timezone </reference/constraints/Timezone>`
 
-选择约束
-~~~~~~~~~~~~~~~~~~~~~~
+Choice Constraints
+~~~~~~~~~~~~~~~~~~
 
 * :doc:`Choice </reference/constraints/Choice>`
 * :doc:`Language </reference/constraints/Language>`
 * :doc:`Locale </reference/constraints/Locale>`
 * :doc:`Country </reference/constraints/Country>`
 
-文件约束
+File Constraints
 ~~~~~~~~~~~~~~~~
 
 * :doc:`File </reference/constraints/File>`
 * :doc:`Image </reference/constraints/Image>`
 
-财务和其他数字约束
+Financial and other Number Constraints
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 * :doc:`Bic </reference/constraints/Bic>`
@@ -68,14 +80,14 @@
 * :doc:`Isbn </reference/constraints/Isbn>`
 * :doc:`Issn </reference/constraints/Issn>`
 
-其他约束
+Other Constraints
 ~~~~~~~~~~~~~~~~~
 
 * :doc:`Callback </reference/constraints/Callback>`
 * :doc:`Expression </reference/constraints/Expression>`
 * :doc:`All </reference/constraints/All>`
 * :doc:`Valid </reference/constraints/Valid>`
+* :doc:`Traverse </reference/constraints/Traverse>`
 * :doc:`Collection </reference/constraints/Collection>`
 * :doc:`Count </reference/constraints/Count>`
 * :doc:`UniqueEntity </reference/constraints/UniqueEntity>`
-* :doc:`Traverse </reference/constraints/Traverse>`

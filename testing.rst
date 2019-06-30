@@ -178,12 +178,27 @@ Crawler与 ``symfony/css-selector`` 组件集成，为你提供CSS选择器的�
 
     $ composer require --dev symfony/css-selector
 
-现在，你可以将CSS选择器与Crawler一起使用。要断言短语“Hello World”至少在页面显示上一次，你可以使用此断言::
+现在，你可以将CSS选择器与Crawler一起使用。要断言页面的主标题中存在短语“Hello World”，你可以使用此断言::
 
-    $this->assertGreaterThan(
-        0,
-        $crawler->filter('html:contains("Hello World")')->count()
-    );
+    $this->assertSelectorTextContains('html h1.title', 'Hello World');
+
+这个断言将在内部调用 ``$crawler->filter('html h1.title')``，
+它允许你使用CSS选择器来过滤页面中的任何HTML元素并检查它的存在性、属性、文本等。
+
+``assertSelectorTextContains`` 方法不是原生的PHPUnit断言，它依赖于 ``WebTestCase`` 类而存在。
+
+.. versionadded:: 4.3
+
+    在Symfony 4.3中引入了 ``WebTestCase`` 断言
+
+.. seealso::
+
+    使用原生的PHPUnit方法，相同的断言将如下所示::
+
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html h1.title:contains("Hello World")')->count()
+        );
 
 Crawler也可用于与页面交互。首先使用Crawler配合XPath表达式或CSS选择器选择链接，然后使用客户端点击它::
 

@@ -9,6 +9,8 @@
 - `master`
   - `1310e0dc917f676f75662d6fe1053b3adaa695b6`（2018-12-04）
     - `components/dom_crawler.rst`
+- `4.3`
+  - `85347ad57f682223a9a60ce050f2766659d07ecc`（2019-06-30）
 - `4.2`
   - `54a5808672d7461e7ea3fefeeb33282dfa40c308`（2019-06-29）
   - `4fe8ad04430f2e47dd69a031faa22a0fe01b5e76`（2019-06-21）
@@ -29,6 +31,16 @@
 
 ### 未汉化
 
+- `compoments`
+  - `http_client.rst`
+  - `inflector.rst`
+  - `mailer.rst`
+  - `mime.rst`
+- `messenger/custom-transport.rst`
+- `messenger/message-recorder.rst`
+- `testing/functional_tests_assertions.rst`
+- `mailer.rst`
+- `messenger.rst`
 - [常用Bundle](https://symfony.com/doc/bundles/)
 - `introduction`
 - `compoments` (大部分)

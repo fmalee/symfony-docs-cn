@@ -421,6 +421,9 @@
 /configuration/configuration_organization /configuration
 /configuration/environments /configuration
 /configuration/configuration_organization /configuration
+/email/dev_environment /mailer
+/email/spool /mailer
+/email/testing /mailer
 /contributing/community/other /contributing/community
 /profiler/storage /profiler
 /setup/composer /setup

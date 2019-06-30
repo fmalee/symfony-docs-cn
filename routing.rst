@@ -7,7 +7,6 @@
 对于任何严谨的web应用而言，美观的URL是绝对必须的。
 这意味着日渐淘汰的 ``index.php?article_id=57`` 这类丑陋的URL要被 ``/read/intro-to-symfony`` 取代。
 
-
 拥有灵活性是更加重要的。你把页面的URL从 ``/blog`` 改为 ``/news`` 时需要做些什么？
 你需要追踪并更新多少链接，才能做出这种改变？如果你使用Symfony的路由，那么改变应该是微不足道的。
 
@@ -505,6 +504,13 @@ URL                       路由            参数
 
 现在，当用户访问 ``/blog`` 时， ``blog_list`` 路由将会匹配，``$page`` 的值将会默认为 ``1``。
 
+如果要始终在生成的URL中包含一些默认值（例如在上一个示例中，强制生成 ``/blog/1``
+而不是 ``/blog``），请在占位符名称前添加 ``!`` 字符：``/blog/{!page}``。
+
+.. versionadded:: 4.3
+
+    Symfony 4.3中引入了强制在生成的URL中包含默认值的功能。
+
 与匹配条件一样，使用语法 ``{placeholder_name?default_value}`` 也可以在每个占位符中内联默认值。
 此功能与内联条件兼容，因此你可以在同一个占位符中内联：
 
@@ -605,7 +611,10 @@ URL                       路由            参数
             /**
              * @Route(
              *     "/articles/{_locale}/{year}/{slug}.{_format}",
-             *     defaults={"_format": "html"},
+             *     defaults={
+             *         "_locale": "en",
+             *         "_format": "html"
+             *     },
              *     requirements={
              *         "_locale": "en|fr",
              *         "_format": "html|rss",
@@ -625,6 +634,7 @@ URL                       路由            参数
             path:     /articles/{_locale}/{year}/{slug}.{_format}
             controller: App\Controller\ArticleController::show
             defaults:
+                _locale: en
                 _format: html
             requirements:
                 _locale:  en|fr
@@ -644,6 +654,7 @@ URL                       路由            参数
                 path="/articles/{_locale}/{year}/{slug}.{_format}"
                 controller="App\Controller\ArticleController::show">
 
+                <default key="_locale">en</default>
                 <default key="_format">html</default>
                 <requirement key="_locale">en|fr</requirement>
                 <requirement key="_format">html|rss</requirement>
@@ -662,6 +673,7 @@ URL                       路由            参数
             $routes->add('article_show', '/articles/{_locale}/{year}/{slug}.{_format}')
                 ->controller([ArticleController::class, 'show'])
                 ->defaults([
+                    '_locale' => 'en',
                     '_format' => 'html',
                 ])
                 ->requirements([
@@ -712,6 +724,91 @@ URL                       路由            参数
 
 ``_locale``
     用于在请求上设置语言环境（:ref:`详细信息 <translation-locale-url>`）。
+
+你也可以使用特殊属性来配置它们（除 ``_fragment`` 之外）：
+
+.. configuration-block::
+
+    .. code-block:: php-annotations
+
+        // src/Controller/ArticleController.php
+
+        // ...
+        class ArticleController extends AbstractController
+        {
+            /**
+             * @Route(
+             *     "/articles/{_locale}/search.{_format}",
+             *     locale="en",
+             *     format="html",
+             *     requirements={
+             *         "_locale": "en|fr",
+             *         "_format": "html|xml",
+             *     }
+             * )
+             */
+            public function search()
+            {
+            }
+        }
+
+    .. code-block:: yaml
+
+        # config/routes.yaml
+        article_search:
+          path:        /articles/{_locale}/search.{_format}
+          controller:  App\Controller\ArticleController::search
+          locale:      en
+          format:      html
+          requirements:
+              _locale: en|fr
+              _format: html|xml
+
+    .. code-block:: xml
+
+        <!-- config/routes.xml -->
+        <?xml version="1.0" encoding="UTF-8" ?>
+        <routes xmlns="http://symfony.com/schema/routing"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://symfony.com/schema/routing
+                https://symfony.com/schema/routing/routing-1.0.xsd">
+
+            <route id="article_search"
+                path="/articles/{_locale}/search.{_format}"
+                controller="App\Controller\ArticleController::search"
+                locale="en"
+                format="html">
+
+                <requirement key="_locale">en|fr</requirement>
+                <requirement key="_format">html|rss</requirement>
+
+            </route>
+        </routes>
+
+    .. code-block:: php
+
+        // config/routes.php
+        namespace Symfony\Component\Routing\Loader\Configurator;
+
+        use App\Controller\ArticleController;
+
+        return function (RoutingConfigurator $routes) {
+            $routes->add('article_show', '/articles/{_locale}/search.{_format}')
+                ->controller([ArticleController::class, 'search'])
+                ->locale('en')
+                ->format('html')
+                ->requirements([
+                    '_locale' => 'en|fr',
+                    '_format' => 'html|rss',
+                ])
+            ;
+        };
+
+这些属性也可用于路由导入。
+
+.. versionadded:: 4.3
+
+    Symfony 4.3中引入了特殊属性。
 
 .. _routing-trailing-slash-redirection:
 

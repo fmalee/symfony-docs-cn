@@ -137,6 +137,66 @@
             # ...
             app.mailer: '@App\Mail\PhpMailer'
 
+弃用服务别名
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+如果你决定弃用服务别名（因为它已过时或你决定不再维护它），你可以弃用其定义：
+
+.. configuration-block::
+
+    .. code-block:: yaml
+
+        app.mailer:
+            alias: '@AppBundle\Mail\PhpMailer'
+
+            # 这将显示一条通用的弃用消息...
+            deprecated: true
+
+            # ...但是你也可以定义一个自定义的弃用消息
+            deprecated: 'The "%alias_id%" alias is deprecated. Don\'t use it anymore.'
+
+    .. code-block:: xml
+
+        <?xml version="1.0" encoding="UTF-8" ?>
+        <container xmlns="http://symfony.com/schema/dic/services"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-Instance"
+            xsi:schemaLocation="http://symfony.com/schema/dic/services https://symfony.com/schema/dic/services/services-1.0.xsd">
+
+            <services>
+                <service id="app.mailer" alias="App\Mail\PhpMailer">
+                    <!-- this will display a generic deprecation message... -->
+                    <deprecated/>
+
+                    <!-- ...but you can also define a custom deprecation message -->
+                    <deprecated>The "%alias_id%" service alias is deprecated. Don't use it anymore.</deprecated>
+                </service>
+            </services>
+        </container>
+
+    .. code-block:: php
+
+        $container
+            ->setAlias('app.mailer', 'App\Mail\PhpMailer')
+
+            // this will display a generic deprecation message...
+            ->setDeprecated(true)
+
+            // ...but you can also define a custom deprecation message
+            ->setDeprecated(
+                true,
+                'The "%alias_id%" service alias is deprecated. Don\'t use it anymore.'
+            )
+        ;
+
+现在，每次使用此服务别名时都会触发一个弃用警告，建议你停止或更改对该别名的使用。
+
+该消息实际上是一个消息模板，它用服务别名id替换出现的 ``%alias_id%``
+占位符。你的模板中 **必须** 至少出现一次 ``%alias_id%`` 占位符。
+
+.. versionadded:: 4.3
+
+    Symfony 4.3中引入了服务别名的 ``deprecated`` 选项。
+
 匿名服务
 ------------------
 

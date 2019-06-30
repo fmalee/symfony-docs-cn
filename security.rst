@@ -118,8 +118,8 @@ Symfony的安全系统是非常强大的，但在设置它时也可能令人迷�
             encoders:
                 # 在这里用你的用户类名称
                 App\Entity\User:
-                    # 推荐使用 bcrypt 和 argon2i
-                    # argon2i 更加可靠，但是需要PHP 7.2 或 Sodium 扩展
+                    # 推荐使用 bcrypt 和 sodium
+                    # sodium 更加可靠，但是需要PHP 7.2 或 Sodium 扩展
                     algorithm: bcrypt
                     cost: 12
 

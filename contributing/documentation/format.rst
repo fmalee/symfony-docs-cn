@@ -120,7 +120,7 @@ PHP是应用于所有代码块的默认语法高亮器。你可以使用 ``code-
 
 .. code-block:: rst
 
-    :doc:`Spooling Email </email/spool>`
+    :doc:`Doctrine Associations </doctrine/associations>`
 
 .. note::
 

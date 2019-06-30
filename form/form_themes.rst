@@ -250,6 +250,31 @@ Symfony使用一个名为 ``integer_widget`` 的Twig区块来渲染该字段。�
 在此示例中，片段名称将是 ``_product_custom_name_widget``，取代了默认的
 ``_product_name_widget``。
 
+.. _form-fragment-custom-naming:
+
+单个字段的自定义片段命名
+............................................
+
+``block_prefix`` 选项允许表单字段定义自己的自定义片段名。
+这对于自定义同一字段的某些实例非常有用，而无需
+:doc:`创建自定义表单类型 </form/create_custom_field_type>`::
+
+    use Symfony\Component\Form\Extension\Core\Type\TextType;
+    use Symfony\Component\Form\FormBuilderInterface;
+
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder->add('name', TextType::class, [
+            'block_prefix' => 'wrapped_text',
+        ]);
+    }
+
+.. versionadded:: 4.3
+
+    Symfony 4.3中引入了 ``block_prefix`` 选项。
+
+现在，你可以使用 ``wrapped_text_row``、``wrapped_text_widget`` 等作为区块名称。
+
 .. _form-custom-prototype:
 
 集合的片段命名

@@ -315,11 +315,16 @@ too many options per the `max`_ option.
 
 You can use the following parameters in this message:
 
-===============  ============================================================
-Parameter        Description
-===============  ============================================================
-``{{ value }}``  The current (invalid) value
-===============  ============================================================
+=================  ============================================================
+Parameter          Description
+=================  ============================================================
+``{{ choices }}``  A comma-separated list of available choices
+``{{ value }}``    The current (invalid) value
+=================  ============================================================
+
+.. versionadded:: 4.3
+
+    The ``{{ choices }}`` parameter was introduced in Symfony 4.3.
 
 message
 ~~~~~~~
@@ -358,11 +363,16 @@ too few choices per the `min`_ option.
 
 You can use the following parameters in this message:
 
-===============  ============================================================
-Parameter        Description
-===============  ============================================================
-``{{ value }}``  The current (invalid) value
-===============  ============================================================
+=================  ============================================================
+Parameter          Description
+=================  ============================================================
+``{{ choices }}``  A comma-separated list of available choices
+``{{ value }}``    The current (invalid) value
+=================  ============================================================
+
+.. versionadded:: 4.3
+
+    The ``{{ choices }}`` parameter was introduced in Symfony 4.3.
 
 multiple
 ~~~~~~~~

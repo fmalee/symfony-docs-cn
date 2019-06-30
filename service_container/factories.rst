@@ -135,6 +135,71 @@ Symfony的服务容器提供了一种控制对象创建的强大方法，它允�
                 'createNewsletterManager',
             ]);
 
+.. _factories-invokable:
+
+假设你现在将工厂方法更改为 ``__invoke()``，这样就可以将工厂服务用作一个回调::
+
+    class InvokableNewsletterManagerFactory
+    {
+        public function __invoke()
+        {
+            $newsletterManager = new NewsletterManager();
+
+            // ...
+
+            return $newsletterManager;
+        }
+    }
+
+.. versionadded:: 4.3
+
+    Symfony 4.3中引入了可调用的服务工厂。
+
+通过省略方法名称，可以使用可调用工厂来创建和配置服务，就像路由可以引用
+:ref:`可调用控制器 <controller-service-invoke>`一样。
+
+.. configuration-block::
+
+    .. code-block:: yaml
+
+        # config/services.yaml
+        services:
+            # ...
+
+            App\Email\NewsletterManager:
+                class:   App\Email\NewsletterManager
+                factory: '@App\Email\NewsletterManagerFactory'
+
+    .. code-block:: xml
+
+        <!-- config/services.xml -->
+        <?xml version="1.0" encoding="UTF-8" ?>
+        <container xmlns="http://symfony.com/schema/dic/services"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://symfony.com/schema/dic/services
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
+
+            <services>
+                <!-- ... -->
+
+                <service id="App\Email\NewsletterManager"
+                         class="App\Email\NewsletterManager">
+                    <factory service="App\Email\NewsletterManagerFactory"/>
+                </service>
+            </services>
+        </container>
+
+    .. code-block:: php
+
+        // config/services.php
+        use App\Email\NewsletterManager;
+        use App\Email\NewsletterManagerFactory;
+        use Symfony\Component\DependencyInjection\Reference;
+
+        // ...
+        $container->register(NewsletterManager::class, NewsletterManager::class)
+            ->setFactory(new Reference(NewsletterManagerFactory::class));
+
 .. _factories-passing-arguments-factory-method:
 
 将参数传递给工厂方法

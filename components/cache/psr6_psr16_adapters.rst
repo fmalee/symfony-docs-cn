@@ -31,19 +31,21 @@
 
 但是，你已经拥有一个PSR-16缓存对象，而你希望将其传递给 ``GitHubApiClient``
 类。没问题！缓存组件为此用例提供了
-:class:`Symfony\\Component\\Cache\\Adapter\\SimpleCacheAdapter` 类::
+:class:`Symfony\\Component\\Cache\\Adapter\\Psr16Adapter` 类::
 
-    use Symfony\Component\Cache\Adapter\SimpleCacheAdapter;
-    use Symfony\Component\Cache\Simple\FilesystemCache;
+    use Symfony\Component\Cache\Adapter\Psr16Adapter;
 
-    // 要使用的PSR-16缓存对象
-    $psr16Cache = new FilesystemCache();
+    // $psr16Cache是要用作PSR-6对象的PSR-16对象
 
     // 在内部使用你的缓存的一个PSR-6缓存！
-    $psr6Cache = new SimpleCacheAdapter($psr16Cache);
+    $psr6Cache = new Psr16Adapter($psr16Cache);
 
     // 现在你在哪使用都行
     $githubApiClient = new GitHubApiClient($psr6Cache);
+
+.. versionadded:: 4.3
+
+    Symfony 4.3中引入了 ``Psr16Adapter`` 类。
 
 将PSR-6缓存对象作为一个PSR-16缓存
 --------------------------------------------
@@ -66,10 +68,10 @@
 
 但是，你已经拥有一个PSR-6缓存对象，而你希望将其传递给 ``GitHubApiClient``
 类。没问题！缓存组件为此用例提供了
-:class:`Symfony\\Component\\Cache\\Simple\\Psr6Cache` 类::
+:class:`Symfony\\Component\\Cache\\Psr16Cache` 类::
 
     use Symfony\Component\Cache\Adapter\FilesystemAdapter;
-    use Symfony\Component\Cache\Simple\Psr16Cache;
+    use Symfony\Component\Cache\Psr16Cache;
 
     // 要使用的PSR-6缓存对象
     $psr6Cache = new FilesystemAdapter();
@@ -79,5 +81,9 @@
 
     // 现在你在哪使用都行
     $githubApiClient = new GitHubApiClient($psr16Cache);
+
+.. versionadded:: 4.3
+
+    Symfony 4.3中引入了 ``Psr16Cache`` 类。
 
 .. _`PSR-16`: http://www.php-fig.org/psr/psr-16/

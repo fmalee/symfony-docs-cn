@@ -71,6 +71,10 @@
             ;
         };
 
+.. versionadded:: 4.3
+
+    Symfony 4.3中引入了对路由中布尔容器参数的支持。
+
 你现在可以在容器中的某个位置控制和设置 ``app.locales`` 参数：
 
 .. configuration-block::

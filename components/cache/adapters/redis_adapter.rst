@@ -88,9 +88,20 @@ DSN可以指定IP/主机（和可选端口）或一个套接字路径、密码�
         'redis:?host[localhost]&host[localhost:6379]&host[/var/run/redis.sock:]&auth=my-password&redis_cluster=1'
     );
 
+使用Predis库时，还支持为Redis提供高可用性的 `Redis Sentinel`_。使用
+``redis_sentinel`` 参数设置你的服务组的名称::
+
+    RedisAdapter::createConnection(
+        'redis:?host[redis1:26379]&host[redis2:26379]&host[redis3:26379]&redis_sentinel=mymaster'
+    );
+
 .. versionadded:: 4.2
 
     在Symfony 4.2中引入了在单个DSN中定义多个服务器的选项。
+
+.. versionadded:: 4.4
+
+    Symfony 4.4引入了Redis Sentinel支持。
 
 .. note::
 
@@ -167,3 +178,4 @@ DSN可以指定IP/主机（和可选端口）或一个套接字路径、密码�
 .. _`Predis`: https://packagist.org/packages/predis/predis
 .. _`Predis连接参数`: https://github.com/nrk/predis/wiki/Connection-Parameters#list-of-connection-parameters
 .. _`TCP-keepalive`: https://redis.io/topics/clients#tcp-keepalive
+.. _`Redis Sentinel`: https://redis.io/topics/sentinel

@@ -97,6 +97,14 @@ Symfony表单中的CSRF保护
         // ...
     }
 
+你还可以自定义CSRF表单字段的渲染，创建一个自定义
+:doc:`表单主题 </form/form_themes>`，并使用 ``csrf_token`` 作为字段的前缀（例如，定义
+``{% block csrf_token_widget %} ... {% endblock %}`` 以自定义整个表单字段的内容）。
+
+.. versionadded:: 4.3
+
+    Symfony 4.3中引入了 ``csrf_token`` 表单字段前缀。
+
 登录表单中的CSRF保护
 ------------------------------
 

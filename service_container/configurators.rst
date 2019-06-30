@@ -174,5 +174,77 @@ depending on some dynamic application settings.）
         $container->getDefinition(GreetingCardManager::class)
             ->setConfigurator([new Reference(EmailConfigurator::class), 'configure']);
 
+.. _configurators-invokable:
+
+.. versionadded:: 4.3
+
+    Symfony 4.3中引入了用于服务的Invokable配置器。
+
+可以通过省略方法名称，使用可调用的配置器来配置服务（将 ``configure()`` 方法替换为
+``__invoke()``），就像路由可以引用 :ref:`可调用控制器 <controller-service-invoke>` 一样。
+
+.. configuration-block::
+
+    .. code-block:: yaml
+
+        # config/services.yaml
+        services:
+            # ...
+
+            # 将所有类注册为服务，包括 App\Mail\EmailConfigurator
+            App\:
+                resource: '../src/*'
+                # ...
+
+            # 重写服务以设置配置器
+            App\Mail\NewsletterManager:
+                configurator: '@App\Mail\EmailConfigurator'
+
+            App\Mail\GreetingCardManager:
+                configurator: '@App\Mail\EmailConfigurator'
+
+    .. code-block:: xml
+
+        <!-- config/services.xml -->
+        <?xml version="1.0" encoding="UTF-8" ?>
+        <container xmlns="http://symfony.com/schema/dic/services"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://symfony.com/schema/dic/services
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
+
+            <services>
+                <prototype namespace="App\" resource="../src/*"/>
+
+                <service id="App\Mail\NewsletterManager">
+                    <configurator service="App\Mail\EmailConfigurator"/>
+                </service>
+
+                <service id="App\Mail\GreetingCardManager">
+                    <configurator service="App\Mail\EmailConfigurator"/>
+                </service>
+            </services>
+        </container>
+
+    .. code-block:: php
+
+        // config/services.php
+        use App\Mail\GreetingCardManager;
+        use App\Mail\NewsletterManager;
+        use Symfony\Component\DependencyInjection\Definition;
+        use Symfony\Component\DependencyInjection\Reference;
+
+        // Same as before
+        $definition = new Definition();
+
+        $definition->setAutowired(true);
+
+        $this->registerClasses($definition, 'App\\', '../src/*');
+
+        $container->getDefinition(NewsletterManager::class)
+            ->setConfigurator(new Reference(EmailConfigurator::class));
+
+        $container->getDefinition(GreetingCardManager::class)
+            ->setConfigurator(new Reference(EmailConfigurator::class));
+
 仅此而已！在请求 ``App\Mail\NewsletterManager`` 或 ``App\Mail\GreetingCardManager``
 服务时，已创建的实例将首先传递给 ``EmailConfigurator::configure()`` 方法。

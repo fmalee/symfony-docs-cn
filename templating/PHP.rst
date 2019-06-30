@@ -4,6 +4,12 @@
 如何使用PHP代替Twig模板
 ============================================
 
+.. deprecated:: 4.3
+
+    The integration of the Templating component in FrameworkBundle has been
+    deprecated since version 4.3 and will be removed in 5.0. PHP templates will
+    no longer be supported and you'll need to use Twig instead.
+
 Symfony defaults to Twig for its template engine, but you can still use
 plain PHP code if you want. Both templating engines are supported equally in
 Symfony. Symfony adds some nice features on top of PHP to make writing
@@ -16,6 +22,12 @@ templates with PHP more powerful.
 
 Rendering PHP Templates
 -----------------------
+
+.. deprecated:: 4.3
+
+    The integration of the Templating component in FrameworkBundle has been
+    deprecated since version 4.3 and will be removed in 5.0. PHP templates will
+    no longer be supported and you'll need to use Twig instead.
 
 If you want to use the PHP templating engine, first install the templating component:
 
@@ -532,7 +544,7 @@ original template:
     <?php if ($required) { $label_attr['class'] = trim((isset($label_attr['class']) ? $label_attr['class'] : '').' required'); } ?>
     <?php if (!$compound) { $label_attr['for'] = $id; } ?>
     <?php if (!$label) { $label = $view['form']->humanize($name); } ?>
-    <label <?php foreach ($label_attr as $k => $v) { printf('%s="%s" ', $view->escape($k), $view->escape($v)); } ?>><?= $view->escape($view['translator']->trans($label, [], $translation_domain)) ?></label>
+    <label <?php foreach ($label_attr as $k => $v) { printf('%s="%s" ', $view->escape($k), $view->escape($v)); } ?>><?= $view->escape($view['translator']->trans($label, $label_translation_parameters, $translation_domain)) ?></label>
 
     <!-- customization -->
     <?php if ($required) : ?>

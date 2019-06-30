@@ -240,6 +240,35 @@
         public function someMethod($subject)
         {
             $stateMachine = $this->workflows->get($subject, 'pull_request');
+            $stateMachine->apply($subject, 'wait_for_review');
+            // ...
+        }
+
+        // ...
+    }
+
+Symfony自动为你在配置中定义的每个工作流（:class:`Symfony\\Component\\Workflow\\Workflow`）或
+状态机（:class:`Symfony\\Component\\Workflow\\StateMachine`）创建一个服务。
+这意味着你可以在服务定义中分别使用 ``workflow.pull_request`` 或
+``state_machine.pull_request`` 来访问对应的服务::
+
+    // ...
+    use Symfony\Component\Workflow\StateMachine;
+
+    class SomeService
+    {
+        private $stateMachine;
+
+        public function __construct(StateMachine $stateMachine)
+        {
+            $this->stateMachine = $stateMachine;
+        }
+
+        public function someMethod($subject)
+        {
+            $this->stateMachine->apply($subject, 'wait_for_review', [
+                'log_comment' => 'My logging comment for the wait for review transition.',
+            ]);
             // ...
         }
 

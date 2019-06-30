@@ -330,12 +330,12 @@ Doctrine 支持各种字段类型，每种类型都有自己的选项。
     class ProductController extends AbstractController
     {
         /**
-         * @Route("/product", name="product")
+         * @Route("/product", name="create_product")
          */
-        public function index()
+        public function createProduct(): Response
         {
             // 可以使用 $this->getDoctrine() 方法获取 EntityManager
-            // 或者添加一个参数到你的动作上：index(EntityManagerInterface $entityManager)
+            // 或者添加一个参数到动作上：createProduct(EntityManagerInterface $entityManager)
             $entityManager = $this->getDoctrine()->getManager();
 
             $product = new Product();
@@ -390,6 +390,69 @@ Doctrine 支持各种字段类型，每种类型都有自己的选项。
 
 无论你是创建还是更新对象，工作流始终都是相同的：
 Doctrine足够聪明，可以知道它应该是 *插入* 还是 *更新* 你的实体。
+
+验证对象
+------------------
+
+:doc:`Symfony验证器 </validation>` 重用 Doctrine 元数据来执行一些基本的验证任务：
+
+    // src/Controller/ProductController.php
+    namespace App\Controller;
+
+    use App\Entity\Product;
+    use Symfony\Component\HttpFoundation\Response;
+    use Symfony\Component\Validator\Validator\ValidatorInterface;
+    // ...
+
+    class ProductController extends AbstractController
+    {
+        /**
+         * @Route("/product", name="create_product")
+         */
+        public function createProduct(ValidatorInterface $validator): Response
+        {
+            $product = new Product();
+            // 这将触发一个错误：the column isn't nullable in the database
+            $product->setName(null);
+            // 这将触发类型不匹配错误：an integer is expected
+            $product->setPrice('1999');
+
+            // ...
+
+            $errors = $validator->validate($product);
+            if (count($errors) > 0) {
+                return new Response((string) $errors, 400);
+            }
+
+            // ...
+        }
+    }
+
+虽然 ``Product`` 实体没有显式定义任何
+:doc:`验证配置 </validation>`，但Symfony会对Doctrine映射配置进行内省，以推断出一些验证规则。
+例如，假设 ``name`` 属性在数据库中不能为 ``null``，则会自动向属性添加
+:doc:`NotNull约束 </reference/constraints/NotNull>`（如果它还未包含该约束）。
+
+下表总结了Doctrine元数据与Symfony自动添加的相应验证约束之间的映射：
+
+==================  =========================================================  =====
+Doctrine attribute  Validation constraint                                      Notes
+==================  =========================================================  =====
+``nullable=false``  :doc:`NotNull </reference/constraints/NotNull>`            Requires installing the :doc:`PropertyInfo component </components/property_info>`
+``type``            :doc:`Type </reference/constraints/Type>`                  Requires installing the :doc:`PropertyInfo component </components/property_info>`
+``unique=true``     :doc:`UniqueEntity </reference/constraints/UniqueEntity>`
+``length``          :doc:`Length </reference/constraints/Length>`
+==================  =========================================================  =====
+
+由于 :doc:`Form组件 </forms>` 以及 `API Platform`_
+内部使用Validator组件，因此所有表单和Web API也将自动受益于这些自动验证约束。
+
+此自动验证是提高工作效率的一个很好的功能，但它并不能完全取代验证配置。你仍需要添加一些
+:doc:`验证约束 </reference/constraints>` 以确保用户提供的数据正确无误。
+
+.. versionadded:: 4.3
+
+    Symfony 4.3中添加了自动验证。
 
 从数据库中获取对象
 ----------------------------------
@@ -776,3 +839,4 @@ Doctrine提供了一个库，允许你以编程方式将测试数据加载到项
 .. _`ParamConverter`: http://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/annotations/converters.html
 .. _`索引键前缀的限制为767字节`: https://dev.mysql.com/doc/refman/5.6/en/innodb-restrictions.html
 .. _`Doctrine screencast series`: https://symfonycasts.com/screencast/symfony-doctrine
+.. _`API Platform`: https://api-platform.com/docs/core/validation/

@@ -128,7 +128,20 @@ Symfony带有一个用PHP编写的反向代理（即网关缓存）。
 有关选项及其含义的完整列表，请参阅 :method:`HttpCache::__construct() 文档 <Symfony\\Component\\HttpKernel\\HttpCache\\HttpCache::__construct>`。
 
 当你处于调试模式（``Kernel`` 前端控制器中构造函数的第二个参数是 ``true``）时，
-Symfony会自动为响应添加 ``X-Symfony-Cache`` 标头。使用此选项可获取有关缓存命中和未命中的信息。
+Symfony会自动为响应添加 ``X-Symfony-Cache`` 标头。你还可以使用 ``trace_level``
+配置选项，并将其设置为 ``none``、``short`` 或 ``full`` 来添加此信息。
+
+``short`` 将只为主请求添加信息。它是以一种简洁的方式编写的，这样可以很容易地将信息记录到服务器日志文件中。
+例如，可以在Apache的 ``LogFormat`` 格式语句中使用
+``%{X-Symfony-Cache}o``。此信息可用于提取有关路由缓存效率的常规信息。
+
+.. tip::
+
+    你可以使用 ``trace_header`` 配置选项来更改用于跟踪信息的标头的名称。
+
+.. versionadded:: 4.3
+
+    Symfony 4.3中引入了 ``trace_level`` 和 ``trace_header`` 配置选项。
 
 .. _http-cache-symfony-versus-varnish:
 

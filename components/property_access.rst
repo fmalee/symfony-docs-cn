@@ -166,6 +166,36 @@ getters, this means that you can do something like this::
 
 This will produce: ``He is an author``
 
+Accessing a non Existing Property Path
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. versionadded:: 4.3
+
+    The ``disableExceptionOnInvalidPropertyPath()`` method was introduced in
+    Symfony 4.3.
+
+By default a :class:`Symfony\\Component\\PropertyAccess\\Exception\\NoSuchPropertyException`
+is thrown if the property path passed to :method:`PropertyAccessor::getValue<Symfony\\Component\\PropertyAccess\\PropertyAccessor::getValue>`
+does not exist. You can change this behavior using the
+:method:`Symfony\\Component\\PropertyAccess\\PropertyAccessorBuilder::disableExceptionOnInvalidPropertyPath`
+method::
+
+    // ...
+    class Person
+    {
+        public $name;
+    }
+
+    $person = new Person();
+
+    $propertyAccessor = PropertyAccess::createPropertyAccessorBuilder()
+        ->disableExceptionOnInvalidPropertyPath()
+        ->getPropertyAccessor();
+
+    // instead of throwing an exception the following code returns null
+    $value = $propertyAccessor->getValue($person, 'birthday');
+
+
 Magic ``__get()`` Method
 ~~~~~~~~~~~~~~~~~~~~~~~~
 

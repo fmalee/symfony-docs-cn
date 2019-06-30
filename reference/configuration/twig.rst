@@ -112,7 +112,7 @@ called to determine the default escaping applied to the template.
 base_template_class
 ~~~~~~~~~~~~~~~~~~~
 
-**type**: ``string`` **default**: ``'Twig\\Template'``
+**type**: ``string`` **default**: ``'Twig\Template'``
 
 Twig templates are compiled into PHP classes before using them to render
 contents. This option defines the base class from which all the template classes
@@ -300,6 +300,8 @@ By default, this option is ``-1``, which means that all optimizations are turned
 on. Set it to ``0`` to disable all the optimizations. You can even enable or
 disable these optimizations selectively, as explained in the Twig documentation
 about `the optimizer extension`_.
+
+.. _config-twig-default-path:
 
 default_path
 ~~~~~~~~~~~~

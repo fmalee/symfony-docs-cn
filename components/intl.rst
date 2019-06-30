@@ -52,282 +52,287 @@ replace the intl classes:
 
 Composer automatically exposes these classes in the global namespace.
 
-Writing and Reading Resource Bundles
-------------------------------------
-
-The :phpclass:`ResourceBundle` class is not currently supported by this component.
-Instead, it includes a set of readers and writers for reading and writing
-arrays (or array-like objects) from/to resource bundle files. The following
-classes are supported:
-
-* `TextBundleWriter`_
-* `PhpBundleWriter`_
-* `BinaryBundleReader`_
-* `PhpBundleReader`_
-* `BufferedBundleReader`_
-* `StructuredBundleReader`_
-
-Continue reading if you are interested in how to use these classes. Otherwise
-skip this section and jump to `Accessing ICU Data`_.
-
-TextBundleWriter
-~~~~~~~~~~~~~~~~
-
-The :class:`Symfony\\Component\\Intl\\ResourceBundle\\Writer\\TextBundleWriter`
-writes an array or an array-like object to a plain-text resource bundle. The
-resulting .txt file can be converted to a binary .res file with the
-:class:`Symfony\\Component\\Intl\\ResourceBundle\\Compiler\\BundleCompiler`
-class::
-
-    use Symfony\Component\Intl\ResourceBundle\Compiler\BundleCompiler;
-    use Symfony\Component\Intl\ResourceBundle\Writer\TextBundleWriter;
-
-    $writer = new TextBundleWriter();
-    $writer->write('/path/to/bundle', 'en', [
-        'Data' => [
-            'entry1',
-            'entry2',
-            // ...
-        ],
-    ]);
-
-    $compiler = new BundleCompiler();
-    $compiler->compile('/path/to/bundle', '/path/to/binary/bundle');
-
-The command "genrb" must be available for the
-:class:`Symfony\\Component\\Intl\\ResourceBundle\\Compiler\\BundleCompiler` to
-work. If the command is located in a non-standard location, you can pass its
-path to the
-:class:`Symfony\\Component\\Intl\\ResourceBundle\\Compiler\\BundleCompiler`
-constructor.
-
-PhpBundleWriter
-~~~~~~~~~~~~~~~
-
-The :class:`Symfony\\Component\\Intl\\ResourceBundle\\Writer\\PhpBundleWriter`
-writes an array or an array-like object to a .php resource bundle::
-
-    use Symfony\Component\Intl\ResourceBundle\Writer\PhpBundleWriter;
-
-    $writer = new PhpBundleWriter();
-    $writer->write('/path/to/bundle', 'en', [
-        'Data' => [
-            'entry1',
-            'entry2',
-            // ...
-        ],
-    ]);
-
-BinaryBundleReader
-~~~~~~~~~~~~~~~~~~
-
-The :class:`Symfony\\Component\\Intl\\ResourceBundle\\Reader\\BinaryBundleReader`
-reads binary resource bundle files and returns an array or an array-like object.
-This class currently only works with the `intl extension`_ installed::
-
-    use Symfony\Component\Intl\ResourceBundle\Reader\BinaryBundleReader;
-
-    $reader = new BinaryBundleReader();
-    $data = $reader->read('/path/to/bundle', 'en');
-
-    var_dump($data['Data']['entry1']);
-
-PhpBundleReader
-~~~~~~~~~~~~~~~
-
-The :class:`Symfony\\Component\\Intl\\ResourceBundle\\Reader\\PhpBundleReader`
-reads resource bundles from .php files and returns an array or an array-like
-object::
-
-    use Symfony\Component\Intl\ResourceBundle\Reader\PhpBundleReader;
-
-    $reader = new PhpBundleReader();
-    $data = $reader->read('/path/to/bundle', 'en');
-
-    var_dump($data['Data']['entry1']);
-
-BufferedBundleReader
-~~~~~~~~~~~~~~~~~~~~
-
-The :class:`Symfony\\Component\\Intl\\ResourceBundle\\Reader\\BufferedBundleReader`
-wraps another reader, but keeps the last N reads in a buffer, where N is a
-buffer size passed to the constructor::
-
-    use Symfony\Component\Intl\ResourceBundle\Reader\BinaryBundleReader;
-    use Symfony\Component\Intl\ResourceBundle\Reader\BufferedBundleReader;
-
-    $reader = new BufferedBundleReader(new BinaryBundleReader(), 10);
-
-    // actually reads the file
-    $data = $reader->read('/path/to/bundle', 'en');
-
-    // returns data from the buffer
-    $data = $reader->read('/path/to/bundle', 'en');
-
-    // actually reads the file
-    $data = $reader->read('/path/to/bundle', 'fr');
-
-StructuredBundleReader
-~~~~~~~~~~~~~~~~~~~~~~
-
-The :class:`Symfony\\Component\\Intl\\ResourceBundle\\Reader\\StructuredBundleReader`
-wraps another reader and offers a
-:method:`Symfony\\Component\\Intl\\ResourceBundle\\Reader\\StructuredBundleReaderInterface::readEntry`
-method for reading an entry of the resource bundle without having to worry
-whether array keys are set or not. If a path cannot be resolved, ``null`` is
-returned::
-
-    use Symfony\Component\Intl\ResourceBundle\Reader\BinaryBundleReader;
-    use Symfony\Component\Intl\ResourceBundle\Reader\StructuredBundleReader;
-
-    $reader = new StructuredBundleReader(new BinaryBundleReader());
-
-    $data = $reader->read('/path/to/bundle', 'en');
-
-    // produces an error if the key "Data" does not exist
-    var_dump($data['Data']['entry1']);
-
-    // returns null if the key "Data" does not exist
-    var_dump($reader->readEntry('/path/to/bundle', 'en', ['Data', 'entry1']));
-
-Additionally, the
-:method:`Symfony\\Component\\Intl\\ResourceBundle\\Reader\\StructuredBundleReaderInterface::readEntry`
-method resolves fallback locales. For example, the fallback locale of "en_GB" is
-"en". For single-valued entries (strings, numbers etc.), the entry will be read
-from the fallback locale if it cannot be found in the more specific locale. For
-multi-valued entries (arrays), the values of the more specific and the fallback
-locale will be merged. In order to suppress this behavior, the last parameter
-``$fallback`` can be set to ``false``::
-
-    var_dump($reader->readEntry(
-        '/path/to/bundle',
-        'en',
-        ['Data', 'entry1'],
-        false
-    ));
-
 Accessing ICU Data
 ------------------
 
-The ICU data is located in several "resource bundles". You can access a PHP
-wrapper of these bundles through the static
-:class:`Symfony\\Component\\Intl\\Intl` class. At the moment, the following
-data is supported:
+This component provides the following ICU data:
 
 * `Language and Script Names`_
 * `Country Names`_
 * `Locales`_
 * `Currencies`_
+* `Timezones`_
 
 Language and Script Names
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The translations of language and script names can be found in the language
-bundle::
+The ``Languages`` class provides access to the name of all languages::
 
-    use Symfony\Component\Intl\Intl;
+    use Symfony\Component\Intl\Languages;
 
     \Locale::setDefault('en');
 
-    $languages = Intl::getLanguageBundle()->getLanguageNames();
-    // => ['ab' => 'Abkhazian', ...]
+    $languages = Languages::getNames();
+    // ('languageCode' => 'languageName')
+    // => ['ab' => 'Abkhazian', 'ace' => 'Achinese', ...]
 
-    $language = Intl::getLanguageBundle()->getLanguageName('de');
-    // => 'German'
+    $language = Languages::getName('fr');
+    // => 'French'
 
-    $language = Intl::getLanguageBundle()->getLanguageName('de', 'AT');
-    // => 'Austrian German'
+All methods accept the translation locale as the last, optional parameter,
+which defaults to the current default locale::
 
-    $scripts = Intl::getLanguageBundle()->getScriptNames();
-    // => ['Arab' => 'Arabic', ...]
+    $languages = Languages::getNames('de');
+    // => ['ab' => 'Abchasisch', 'ace' => 'Aceh', ...]
 
-    $script = Intl::getLanguageBundle()->getScriptName('Hans');
+    $language = Languages::getName('fr', 'de');
+    // => 'Französisch'
+
+If the given locale doesn't exist, the methods trigger a
+:class:`Symfony\\Component\\Intl\\Exception\\MissingResourceException`. In addition
+to catching the exception, you can also check if a given language code is valid::
+
+    $isValidLanguage = Languages::exists($languageCode);
+
+.. versionadded:: 4.3
+
+    The ``Languages`` class was introduced in Symfony 4.3.
+
+The ``Scripts`` class provides access to the optional four-letter script code
+that can follow the language code according to the `Unicode ISO 15924 Registry`_
+(e.g. ``HANS`` in ``zh_HANS`` for simplified Chinese and ``HANT`` in ``zh_HANT``
+for traditional Chinese)::
+
+    use Symfony\Component\Intl\Scripts;
+
+    \Locale::setDefault('en');
+
+    $scripts = Scripts::getNames();
+    // ('scriptCode' => 'scriptName')
+    // => ['Adlm' => 'Adlam', 'Afak' => 'Afaka', ...]
+
+    $script = Scripts::getName('Hans');
     // => 'Simplified'
 
 All methods accept the translation locale as the last, optional parameter,
 which defaults to the current default locale::
 
-    $languages = Intl::getLanguageBundle()->getLanguageNames('de');
-    // => ['ab' => 'Abchasisch', ...]
+    $languages = Scripts::getNames('de');
+    // => ['Adlm' => 'Adlam', 'Afak' => 'Afaka', ...]
+
+    $language = Scripts::getName('Hans', 'de');
+    // => 'Vereinfacht'
+
+If the given script code doesn't exist, the methods trigger a
+:class:`Symfony\\Component\\Intl\\Exception\\MissingResourceException`. In addition
+to catching the exception, you can also check if a given script code is valid::
+
+    $isValidScript = Scripts::exists($scriptCode);
+
+.. versionadded:: 4.3
+
+    The ``Scripts`` class was introduced in Symfony 4.3.
 
 Country Names
 ~~~~~~~~~~~~~
 
-The translations of country names can be found in the region bundle::
+The ``Countries`` class provides access to the name of all countries according
+to the `ISO 3166-1 alpha-2`_ list of officially recognized countries and
+territories::
 
-    use Symfony\Component\Intl\Intl;
+    use Symfony\Component\Intl\Countries;
 
     \Locale::setDefault('en');
 
-    $countries = Intl::getRegionBundle()->getCountryNames();
-    // => ['AF' => 'Afghanistan', ...]
+    $countries = Countries::getNames();
+    // ('countryCode' => 'countryName')
+    // => ['AF' => 'Afghanistan', 'AX' => 'Åland Islands', ...]
 
-    $country = Intl::getRegionBundle()->getCountryName('GB');
+    $country = Countries::getName('GB');
     // => 'United Kingdom'
 
 All methods accept the translation locale as the last, optional parameter,
 which defaults to the current default locale::
 
-    $countries = Intl::getRegionBundle()->getCountryNames('de');
-    // => ['AF' => 'Afghanistan', ...]
+    $countries = Countries::getNames('de');
+    // => ['AF' => 'Afghanistan', 'EG' => 'Ägypten', ...]
+
+    $country = Countries::getName('GB', 'de');
+    // => 'Vereinigtes Königreich'
+
+If the given country code doesn't exist, the methods trigger a
+:class:`Symfony\\Component\\Intl\\Exception\\MissingResourceException`. In addition
+to catching the exception, you can also check if a given country code is valid::
+
+    $isValidCountry = Countries::exists($countryCode);
+
+.. versionadded:: 4.3
+
+    The ``Countries`` class was introduced in Symfony 4.3.
 
 Locales
 ~~~~~~~
 
-The translations of locale names can be found in the locale bundle::
+A locale is the combination of a language and a region. For example, "Chinese"
+is the language and ``zh_Hans_MO`` is the locale for "Chinese" (language) +
+"Simplified" (script) + "Macau SAR China" (region). The ``Locales`` class
+provides access to the name of all locales::
 
-    use Symfony\Component\Intl\Intl;
+    use Symfony\Component\Intl\Locales;
 
     \Locale::setDefault('en');
 
-    $locales = Intl::getLocaleBundle()->getLocaleNames();
-    // => ['af' => 'Afrikaans', ...]
+    $locales = Locales::getNames();
+    // ('localeCode' => 'localeName')
+    // => ['af' => 'Afrikaans', 'af_NA' => 'Afrikaans (Namibia)', ...]
 
-    $locale = Intl::getLocaleBundle()->getLocaleName('zh_Hans_MO');
+    $locale = Locales::getName('zh_Hans_MO');
     // => 'Chinese (Simplified, Macau SAR China)'
 
 All methods accept the translation locale as the last, optional parameter,
 which defaults to the current default locale::
 
-    $locales = Intl::getLocaleBundle()->getLocaleNames('de');
-    // => ['af' => 'Afrikaans', ...]
+    $locales = Locales::getNames('de');
+    // => ['af' => 'Afrikaans', 'af_NA' => 'Afrikaans (Namibia)', ...]
+
+    $locale = Locales::getName('zh_Hans_MO', 'de');
+    // => 'Chinesisch (Vereinfacht, Sonderverwaltungsregion Macau)'
+
+If the given locale code doesn't exist, the methods trigger a
+:class:`Symfony\\Component\\Intl\\Exception\\MissingResourceException`. In addition
+to catching the exception, you can also check if a given locale code is valid::
+
+    $isValidLocale = Locales::exists($localeCode);
+
+.. versionadded:: 4.3
+
+    The ``Locales`` class was introduced in Symfony 4.3.
 
 Currencies
 ~~~~~~~~~~
 
-The translations of currency names and other currency-related information can
-be found in the currency bundle::
+The ``Currencies`` class provides access to the name of all currencies as well
+as some of their information (symbol, fraction digits, etc.)::
 
-    use Symfony\Component\Intl\Intl;
+    use Symfony\Component\Intl\Currencies;
 
     \Locale::setDefault('en');
 
-    $currencies = Intl::getCurrencyBundle()->getCurrencyNames();
-    // => ['AFN' => 'Afghan Afghani', ...]
+    $currencies = Currencies::getNames();
+    // ('currencyCode' => 'currencyName')
+    // => ['AFN' => 'Afghan Afghani', 'ALL' => 'Albanian Lek', ...]
 
-    $currency = Intl::getCurrencyBundle()->getCurrencyName('INR');
+    $currency = Currencies::getName('INR');
     // => 'Indian Rupee'
 
-    $symbol = Intl::getCurrencyBundle()->getCurrencySymbol('INR');
+    $symbol = Currencies::getSymbol('INR');
     // => '₹'
 
-    $fractionDigits = Intl::getCurrencyBundle()->getFractionDigits('INR');
+    $fractionDigits = Currencies::getFractionDigits('INR');
     // => 2
 
-    $roundingIncrement = Intl::getCurrencyBundle()->getRoundingIncrement('INR');
+    $roundingIncrement = Currencies::getRoundingIncrement('INR');
     // => 0
 
-All methods (except for
-:method:`Symfony\\Component\\Intl\\ResourceBundle\\CurrencyBundleInterface::getFractionDigits`
-and
-:method:`Symfony\\Component\\Intl\\ResourceBundle\\CurrencyBundleInterface::getRoundingIncrement`)
-accept the translation locale as the last, optional parameter, which defaults
-to the current default locale::
+All methods (except for ``getFractionDigits()`` and ``getRoundingIncrement()``)
+accept the translation locale as the last, optional parameter, which defaults to
+the current default locale::
 
-    $currencies = Intl::getCurrencyBundle()->getCurrencyNames('de');
-    // => ['AFN' => 'Afghanische Afghani', ...]
+    $currencies = Currencies::getNames('de');
+    // => ['AFN' => 'Afghanischer Afghani', 'EGP' => 'Ägyptisches Pfund', ...]
 
-That's all you need to know for now. Have fun coding!
+    $currency = Currencies::getName('INR', 'de');
+    // => 'Indische Rupie'
+
+If the given currency code doesn't exist, the methods trigger a
+:class:`Symfony\\Component\\Intl\\Exception\\MissingResourceException`. In addition
+to catching the exception, you can also check if a given currency code is valid::
+
+    $isValidCurrency = Currencies::exists($currencyCode);
+
+.. versionadded:: 4.3
+
+    The ``Currencies`` class was introduced in Symfony 4.3.
+
+Timezones
+~~~~~~~~~
+
+The ``Timezones`` class provides several utilities related to timezones. First,
+you can get the name and values of all timezones in all languages::
+
+    use Symfony\Component\Intl\Timezones;
+
+    \Locale::setDefault('en');
+
+    $timezones = Timezones::getNames();
+    // ('timezoneID' => 'timezoneValue')
+    // => ['America/Eirunepe' => 'Acre Time (Eirunepe)', 'America/Rio_Branco' => 'Acre Time (Rio Branco)', ...]
+
+    $timezone = Timezones::getName('Africa/Nairobi');
+    // => 'East Africa Time (Nairobi)'
+
+All methods accept the translation locale as the last, optional parameter,
+which defaults to the current default locale::
+
+    $timezones = Timezones::getNames('de');
+    // => ['America/Eirunepe' => 'Acre-Zeit (Eirunepe)', 'America/Rio_Branco' => 'Acre-Zeit (Rio Branco)', ...]
+
+    $timezone = Timezones::getName('Africa/Nairobi', 'de');
+    // => 'Ostafrikanische Zeit (Nairobi)'
+
+You can also get all the timezones that exist in a given country. The
+``forCountryCode()`` method returns one or more timezone IDs, which you can
+translate into any locale with the ``getName()`` method shown earlier::
+
+    // unlike language codes, country codes are always uppercase (CL = Chile)
+    $timezones = Timezones::forCountryCode('CL');
+    // => ['America/Punta_Arenas', 'America/Santiago', 'Pacific/Easter']
+
+The reverse lookup is also possible thanks to the ``getCountryCode()`` method,
+which returns the code of the country where the given timezone ID belongs to::
+
+    $countryCode = Timezones::getCountryCode('America/Vancouver')
+    // => $countryCode = 'CA' (CA = Canada)
+
+The `UTC/GMT time offsets`_ of all timezones are provided by ``getRawOffset()``
+(which returns an integer representing the offset in seconds) and
+``getGmtOffset()`` (which returns a string representation of the offset to
+display it to users)::
+
+    $offset = Timezones::getRawOffset('Etc/UTC');              // $offset = 0
+    $offset = Timezones::getRawOffset('America/Buenos_Aires'); // $offset = -10800
+    $offset = Timezones::getRawOffset('Asia/Katmandu');        // $offset = 20700
+
+    $offset = Timezones::getGmtOffset('Etc/UTC');              // $offset = 'GMT+00:00'
+    $offset = Timezones::getGmtOffset('America/Buenos_Aires'); // $offset = 'GMT-03:00'
+    $offset = Timezones::getGmtOffset('Asia/Katmandu');        // $offset = 'GMT+05:45'
+
+The timezone offset can vary in time because of the `daylight saving time (DST)`_
+practice. By default these methods use the ``time()`` PHP function to get the
+current timezone offset value, but you can pass a timestamp as their second
+arguments to get the offset at any given point in time::
+
+    // In 2019, the DST period in Madrid (Spain) went from March 31 to October 27
+    $offset = Timezones::getRawOffset('Europe/Madrid', strtotime('March 31, 2019'));   // $offset = 3600
+    $offset = Timezones::getRawOffset('Europe/Madrid', strtotime('April 1, 2019'));    // $offset = 7200
+    $offset = Timezones::getGmtOffset('Europe/Madrid', strtotime('October 27, 2019')); // $offset = 'GMT+02:00'
+    $offset = Timezones::getGmtOffset('Europe/Madrid', strtotime('October 28, 2019')); // $offset = 'GMT+01:00'
+
+The string representation of the GMT offset can vary depending on the locale, so
+you can pass the locale as the third optional argument::
+
+    $offset = Timezones::getGmtOffset('Europe/Madrid', strtotime('October 28, 2019'), 'ar')); // $offset = 'غرينتش+01:00'
+    $offset = Timezones::getGmtOffset('Europe/Madrid', strtotime('October 28, 2019'), 'dz')); // $offset = 'ཇི་ཨེམ་ཏི་+01:00'
+
+If the given timezone ID doesn't exist, the methods trigger a
+:class:`Symfony\\Component\\Intl\\Exception\\MissingResourceException`. In addition
+to catching the exception, you can also check if a given timezone ID is valid::
+
+    $isValidTimezone = Timezones::exists($timezoneId);
+
+.. versionadded:: 4.3
+
+    The ``Timezones`` class was introduced in Symfony 4.3.
 
 Learn more
 ----------
@@ -340,9 +345,14 @@ Learn more
     /reference/forms/types/currency
     /reference/forms/types/language
     /reference/forms/types/locale
+    /reference/forms/types/timezone
 
 .. _Packagist: https://packagist.org/packages/symfony/intl
 .. _Icu component: https://packagist.org/packages/symfony/icu
 .. _intl extension: https://php.net/manual/en/book.intl.php
 .. _install the intl extension: https://php.net/manual/en/intl.setup.php
 .. _ICU library: http://site.icu-project.org/
+.. _`Unicode ISO 15924 Registry`: https://www.unicode.org/iso15924/iso15924-codes.html
+.. _`ISO 3166-1 alpha-2`: https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
+.. _`UTC/GMT time offsets`: https://en.wikipedia.org/wiki/List_of_UTC_time_offsets
+.. _`daylight saving time (DST)`: https://en.wikipedia.org/wiki/Daylight_saving_time

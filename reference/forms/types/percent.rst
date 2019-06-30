@@ -9,12 +9,14 @@ percentage data. If your percentage data is stored as a decimal (e.g. ``0.95``),
 you can use this field out-of-the-box. If you store your data as a number
 (e.g. ``95``), you should set the ``type`` option to ``integer``.
 
-This field adds a percentage sign "``%``" after the input box.
+When ``symbol`` is not ``false``, the field will render the given string after
+the input.
 
 +-------------+-----------------------------------------------------------------------+
 | Rendered as | ``input`` ``text`` field                                              |
 +-------------+-----------------------------------------------------------------------+
 | Options     | - `scale`_                                                            |
+|             | - `symbol`_                                                           |
 |             | - `type`_                                                             |
 +-------------+-----------------------------------------------------------------------+
 | Overridden  | - `compound`_                                                         |
@@ -27,6 +29,7 @@ This field adds a percentage sign "``%``" after the input box.
 |             | - `error_mapping`_                                                    |
 |             | - `help`_                                                             |
 |             | - `help_attr`_                                                        |
+|             | - `help_html`_                                                        |
 |             | - `invalid_message`_                                                  |
 |             | - `invalid_message_parameters`_                                       |
 |             | - `label`_                                                            |
@@ -52,6 +55,20 @@ scale
 
 By default, the input numbers are rounded. To allow for more decimal places,
 use this option.
+
+symbol
+~~~~~~
+
+**type**: ``boolean`` or ``string`` **default**: ``%``
+
+.. versionadded:: 4.3
+
+    The ``symbol`` option was introduced in Symfony 4.3.
+
+By default, fields are rendered with a percentage sign ``%`` after the input.
+Setting the value to ``false`` will not display the percentage sign. Setting the
+value to a ``string`` (e.g. ``‱``), will show that string instead of the default
+``%`` sign.
 
 type
 ~~~~
@@ -102,6 +119,8 @@ The default value is ``''`` (the empty string).
 .. include:: /reference/forms/types/options/help.rst.inc
 
 .. include:: /reference/forms/types/options/help_attr.rst.inc
+
+.. include:: /reference/forms/types/options/help_html.rst.inc
 
 .. include:: /reference/forms/types/options/invalid_message.rst.inc
 

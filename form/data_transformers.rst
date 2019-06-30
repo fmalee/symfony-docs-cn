@@ -273,6 +273,44 @@
         // ...
     }
 
+每当转换器抛出异常，就会向用户显示 ``invalid_message``。
+你可以使用 ``setInvalidMessage()``
+方法在数据转换器中设置最终用户的错误消息，而不是每次都显示相同的消息。它还允许你包含用户值::
+
+    // src/Form/DataTransformer/IssueToNumberTransformer.php
+    namespace App\Form\DataTransformer;
+
+    use Symfony\Component\Form\DataTransformerInterface;
+    use Symfony\Component\Form\Exception\TransformationFailedException;
+
+    class IssueToNumberTransformer implements DataTransformerInterface
+    {
+        // ...
+
+        public function reverseTransform($issueNumber)
+        {
+            // ...
+
+            if (null === $issue) {
+                $privateErrorMessage = sprintf('An issue with number "%s" does not exist!', $issueNumber);
+                $publicErrorMessage = 'The given "{{ value }}" value is not a valid issue number.';
+
+                $failure = new TransformationFailedException($privateErrorMessage);
+                $failure->setInvalidMessage($publicErrorMessage, [
+                    '{{ value }}' => $issueNumber,
+                ]);
+
+                throw $failure;
+            }
+
+            return $issue;
+        }
+    }
+
+.. versionadded:: 4.3
+
+    Symfony 4.3中引入了 ``setInvalidMessage()`` 方法。
+
 仅此而已！如果你正在使用
 :ref:`默认的services.yaml配置 <service-container-services-load-example>`，Symfony将通过
 :ref:`自动装配 <services-autowire>` 和 :ref:`自动配置 <services-autoconfigure>`

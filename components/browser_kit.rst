@@ -9,8 +9,9 @@ BrowserKit组件
 
 .. note::
 
-    BrowserKit组件只能向你的应用创建内部请求。
-    如果你需要向外部站点和应用发出请求，请考虑使用 `Goutte`_，它是一个基于Symfony组件的简单网络爬虫。
+    在4.3之前的Symfony版本中，BrowserKit组件只能向应用发起内部请求。从Symfony 4.3开始，当与
+    :doc:`HttpClient组件 </components/http_client>` 结合使用时，该组件还可以
+    :ref:`向任何公共站点发起HTTP请求 <component-browserkit-external-requests>`。
 
 安装
 ------------
@@ -262,6 +263,38 @@ Cookies
 
     // 重置客户端 (历史和cookie也被清除)
     $client->restart();
+
+.. _component-browserkit-external-requests:
+
+发起外部HTTP请求
+-----------------------------
+
+到目前为止，本文中的所有示例都假定你正在对自己的应用发起内部请求。
+但是，在向外部网站和应用发起HTTP请求时，可以运行完全相同的示例。
+
+首先，安装并配置 :doc:`HttpClient组件 </components/http_client>`。然后，使用
+:class:`Symfony\\Component\\BrowserKit\\HttpBrowser` 创建将发起外部HTTP请求的客户端::
+
+    use Symfony\Component\BrowserKit\HttpBrowser;
+    use Symfony\Component\HttpClient\HttpClient;
+
+    $browser = new HttpBrowser(HttpClient::create());
+
+你现在可以使用本文中展示的任何方法来提取信息、单击链接、提交表单等。
+这意味着你不再需要使用专用的web crawler 或 scraper，如 `Goutte`_::
+
+    $browser = new HttpBrowser(HttpClient::create());
+
+    $browser->request('GET', 'https://github.com');
+    $browser->clickLink('Sign in');
+    $browser->submitForm('Sign in', ['login' => '...', 'password' => '...']);
+    $openPullRequests = trim($browser->clickLink('Pull requests')->filter(
+        '.table-list-header-toggle a:nth-child(1)'
+    )->text());
+
+.. versionadded:: 4.3
+
+    Symfony 4.3中引入了发起外部HTTP请求的功能。
 
 扩展阅读
 ----------

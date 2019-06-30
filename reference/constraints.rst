@@ -19,6 +19,7 @@
    constraints/Regex
    constraints/Ip
    constraints/Uuid
+   constraints/Json
 
    constraints/EqualTo
    constraints/NotEqualTo
@@ -30,10 +31,17 @@
    constraints/GreaterThanOrEqual
    constraints/Range
    constraints/DivisibleBy
+   constraints/Unique
+
+   constraints/Positive
+   constraints/PositiveOrZero
+   constraints/Negative
+   constraints/NegativeOrZero
 
    constraints/Date
    constraints/DateTime
    constraints/Time
+   constraints/Timezone
 
    constraints/Choice
    constraints/Collection
@@ -58,6 +66,7 @@
    constraints/Expression
    constraints/All
    constraints/UserPassword
+   constraints/NotCompromisedPassword
    constraints/Valid
    constraints/Traverse
 

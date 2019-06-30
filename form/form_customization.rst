@@ -287,6 +287,16 @@ form_rest(form_view, variables)
 
     {{ form_rest(form) }}
 
+form_parent(form_view)
+......................
+
+.. versionadded:: 4.3
+
+    Symfony 4.3中引入了 ``form_parent()`` 函数。
+
+返回父表单视图，如果该表单视图已经是根表单，则返回 ``null``。与使用 ``form.parent``
+访问父表单相比，应首选使用此函数。当一个子表单被命名为 ``parent`` 时，后一种方法将产生不同的结果。
+
 测试
 ~~~~~
 

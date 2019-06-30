@@ -29,6 +29,7 @@ photos).
 |             | - `error_mapping`_                                                          |
 |             | - `help`_                                                                   |
 |             | - `help_attr`_                                                              |
+|             | - `help_html`_                                                              |
 |             | - `label`_                                                                  |
 |             | - `label_attr`_                                                             |
 |             | - `label_format`_                                                           |
@@ -323,7 +324,7 @@ type::
 entry_type
 ~~~~~~~~~~
 
-**type**: ``string`` **default**: ``Symfony\\Component\\Form\\Extension\\Core\\Type\\TextType``
+**type**: ``string`` **default**: ``'Symfony\Component\Form\Extension\Core\Type\TextType'``
 
 This is the field type for each item in this collection (e.g. ``TextType``,
 ``ChoiceType``, etc). For example, if you have an array of email addresses,
@@ -423,6 +424,8 @@ error_bubbling
 .. include:: /reference/forms/types/options/help.rst.inc
 
 .. include:: /reference/forms/types/options/help_attr.rst.inc
+
+.. include:: /reference/forms/types/options/help_html.rst.inc
 
 .. include:: /reference/forms/types/options/label.rst.inc
 

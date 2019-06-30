@@ -44,6 +44,7 @@ Symfony中文文档
     frontend
     http_cache
     logging
+    mailer
     mercure
     messenger
     migration

@@ -89,10 +89,15 @@
 查找原始用户
 -------------------------
 
-在某些情况下，你可能需要获取代表该模仿用户的对象，而不是该模拟用户。
-使用以下代码段迭代用户的角色，直到找到一个 ``SwitchUserRole`` 对象为止::
+.. versionadded:: 4.3
 
-    use Symfony\Component\Security\Core\Role\SwitchUserRole;
+    Symfony 4.3中引入了 ``SwitchUserToken`` 类。
+
+在某些情况下，你可能需要获取代表该模拟用户的对象，而不是该模拟用户。
+当模拟用户时，保存在令牌存储中的令牌将是一个 ``SwitchUserToken`` 实例。
+使用以下代码片段获取允许你访问模拟用户的原始令牌::
+
+    use Symfony\Component\Security\Core\Authentication\Token\SwitchUserToken;
     use Symfony\Component\Security\Core\Security;
     // ...
 
@@ -109,14 +114,13 @@
         {
             // ...
 
-            if ($this->security->isGranted('ROLE_PREVIOUS_ADMIN')) {
-                foreach ($this->security->getToken()->getRoles() as $role) {
-                    if ($role instanceof SwitchUserRole) {
-                        $impersonatorUser = $role->getSource()->getUser();
-                        break;
-                    }
-                }
+            $token = $this->security->getToken();
+
+            if ($token instanceof SwitchUserToken) {
+                $impersonatorUser = $token->getOriginalToken()->getUser();
             }
+
+            // ...
         }
     }
 

@@ -20,6 +20,8 @@ FormType字段
 |           | - `extra_fields_message`_                                          |
 |           | - `help`_                                                          |
 |           | - `help_attr`_                                                     |
+|           | - `help_html`_                                                     |
+|           | - `help_translation_parameters`_                                   |
 |           | - `inherit_data`_                                                  |
 |           | - `invalid_message`_                                               |
 |           | - `invalid_message_parameters`_                                    |
@@ -36,9 +38,12 @@ FormType字段
 | Inherited | - `attr`_                                                          |
 | options   | - `auto_initialize`_                                               |
 |           | - `block_name`_                                                    |
+|           | - `block_prefix`_                                                  |
 |           | - `disabled`_                                                      |
 |           | - `label`_                                                         |
 |           | - `translation_domain`_                                            |
+|           | - `label_translation_parameters`_                                  |
+|           | - `attr_translation_parameters`_                                   |
 +-----------+--------------------------------------------------------------------+
 | Parent    | none                                                               |
 +-----------+--------------------------------------------------------------------+
@@ -107,6 +112,10 @@ allow_extra_fields
 
 .. include:: /reference/forms/types/options/help_attr.rst.inc
 
+.. include:: /reference/forms/types/options/help_html.rst.inc
+
+.. include:: /reference/forms/types/options/help_translation_parameters.rst.inc
+
 .. include:: /reference/forms/types/options/inherit_data.rst.inc
 
 .. include:: /reference/forms/types/options/invalid_message.rst.inc
@@ -154,8 +163,14 @@ allow_extra_fields
 
 .. include:: /reference/forms/types/options/block_name.rst.inc
 
+.. include:: /reference/forms/types/options/block_prefix.rst.inc
+
 .. include:: /reference/forms/types/options/disabled.rst.inc
 
 .. include:: /reference/forms/types/options/label.rst.inc
 
 .. include:: /reference/forms/types/options/translation_domain.rst.inc
+
+.. include:: /reference/forms/types/options/label_translation_parameters.rst.inc
+
+.. include:: /reference/forms/types/options/attr_translation_parameters.rst.inc
