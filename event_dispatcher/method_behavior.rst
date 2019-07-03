@@ -17,7 +17,7 @@
         {
             // 在方法之前调度事件
             $event = new BeforeSendMailEvent($subject, $message);
-            $this->dispatcher->dispatch('mailer.pre_send', $event);
+            $this->dispatcher->dispatch($event, 'mailer.pre_send');
 
             // 从事件中获取$foo和$bar，因为它们可能已被修改
             $subject = $event->getSubject();
@@ -28,7 +28,7 @@
 
             // 在方法之后做一些事情
             $event = new AfterSendMailEvent($returnValue);
-            $this->dispatcher->dispatch('mailer.post_send', $event);
+            $this->dispatcher->dispatch($event, 'mailer.post_send');
 
             return $event->getReturnValue();
         }

@@ -35,7 +35,7 @@
 
     // 调度一个事件
     $event = ...;
-    $traceableEventDispatcher->dispatch('event.the_name', $event);
+    $traceableEventDispatcher->dispatch($event, 'event.the_name');
 
 处理完你的应用之后，可以使用
 :method:`Symfony\\Component\\EventDispatcher\\Debug\\TraceableEventDispatcherInterface::getCalledListeners`

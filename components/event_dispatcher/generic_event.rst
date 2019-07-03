@@ -45,7 +45,7 @@ EventDispatcher组件提供了一个刻意保持简洁的 :class:`Symfony\\Contr
     use Symfony\Component\EventDispatcher\GenericEvent;
 
     $event = new GenericEvent($subject);
-    $dispatcher->dispatch('foo', $event);
+    $dispatcher->dispatch($event, 'foo');
 
     class FooListener
     {
@@ -65,7 +65,7 @@ EventDispatcher组件提供了一个刻意保持简洁的 :class:`Symfony\\Contr
         $subject,
         ['type' => 'foo', 'counter' => 0]
     );
-    $dispatcher->dispatch('foo', $event);
+    $dispatcher->dispatch($event, 'foo');
 
     class FooListener
     {
@@ -84,7 +84,7 @@ EventDispatcher组件提供了一个刻意保持简洁的 :class:`Symfony\\Contr
     use Symfony\Component\EventDispatcher\GenericEvent;
 
     $event = new GenericEvent($subject, ['data' => 'Foo']);
-    $dispatcher->dispatch('foo', $event);
+    $dispatcher->dispatch($event, 'foo');
 
     class FooListener
     {

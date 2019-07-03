@@ -247,7 +247,7 @@ Symfony的EventDispatcher组件实现了 `中介者`_ 和 `观察者`_
 
 :method:`Symfony\\Component\\EventDispatcher\\EventDispatcher::dispatch`
 方法会通知给定事件的所有监听器。
-它需要两个参数：要调度的事件的名称以及要传递给该事件的每个监听器的 ``Event`` 实例::
+它需要两个参数：传递给该事件的每个监听器的 ``Event`` 实例以及要调度的事件的名称，以及::
 
     use Acme\Store\Event\OrderPlacedEvent;
     use Acme\Store\Order;
@@ -258,7 +258,7 @@ Symfony的EventDispatcher组件实现了 `中介者`_ 和 `观察者`_
 
     // 创建 OrderPlacedEvent 并调度它
     $event = new OrderPlacedEvent($order);
-    $dispatcher->dispatch(OrderPlacedEvent::NAME, $event);
+    $dispatcher->dispatch($event, OrderPlacedEvent::NAME);
 
 请注意，特定的 ``OrderPlacedEvent`` 对象已创建并传递给 ``dispatch()`` 方法。
 现在，任何监听 ``order.placed`` 事件的监听器都会接收到 ``OrderPlacedEvent``。
@@ -363,7 +363,7 @@ Symfony的EventDispatcher组件实现了 `中介者`_ 和 `观察者`_
 方法来检测一个事件是否已停止::
 
     // ...
-    $dispatcher->dispatch('foo.event', $event);
+    $dispatcher->dispatch($event, 'foo.event');
     if ($event->isPropagationStopped()) {
         // ...
     }
@@ -379,34 +379,6 @@ EventDispatcher感知事件和监听器
 ``EventDispatcher`` 始终传递被调度的事件、该事件的名称以及一个本身的引用到监听器。
 这可能引出一些 ``EventDispatcher``
 的高级应用，包括在监听器内部调度其他事件、事件链，甚至延迟加载监听器到调度器对象中。
-
-.. index::
-   single: EventDispatcher; Dispatcher shortcuts
-
-.. _event_dispatcher-shortcuts:
-
-调度器快捷方式
-~~~~~~~~~~~~~~~~~~~~
-
-如果你不需要一个自定义事件对象，则可以依赖一个原生的
-:class:`Symfony\\Contracts\\EventDispatcher\\Event` 对象。
-你甚至不需要将该对象传递给调度器，因为它将默认创建一个，除非你特别传递一个::
-
-    $dispatcher->dispatch('order.placed');
-
-此外，事件调度器始终返回调度的任何事件对象，即传递的事件或调度器内部创建的事件。
-这就产生了一个友好的快捷方式::
-
-    if (!$dispatcher->dispatch('foo.event')->isPropagationStopped()) {
-        // ...
-    }
-
-或者::
-
-    $event = new OrderPlacedEvent($order);
-    $order = $dispatcher->dispatch('bar.event', $event)->getOrder();
-
-等等。
 
 .. index::
    single: EventDispatcher; Event name introspection
