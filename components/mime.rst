@@ -3,18 +3,17 @@
    single: MIME Messages
    single: Components; MIME
 
-The Mime Component
+Mime组件
 ==================
 
-    The Mime component allows manipulating the MIME messages used to send emails
-    and provides utilities related to MIME types.
+    Mime组件允许操作用于发送电子邮件的MIME消息，并提供与MIME类型相关的实用工具。
 
 .. versionadded:: 4.3
 
-    The Mime component was introduced in Symfony 4.3 and it's still
-    considered an :doc:`experimental feature </contributing/code/experimental>`.
+    Mime组件是在Symfony 4.3中引入的，它仍然被认为是一个
+    :doc:`实验性功能 </contributing/code/experimental>`。
 
-Installation
+安装
 ------------
 
 .. code-block:: terminal
@@ -23,29 +22,27 @@ Installation
 
 .. include:: /components/require_autoload.rst.inc
 
-Introduction
+介绍
 ------------
 
-`MIME`_ (Multipurpose Internet Mail Extensions) is an Internet standard that
-extends the original basic format of emails to support features like:
+`MIME`_（Multipurpose Internet Mail Extensions）是一种Internet标准，
+它扩展了电子邮件的原始基本格式，以支持以下功能::
 
-* Headers and text contents using non-ASCII characters;
-* Message bodies with multiple parts (e.g. HTML and plain text contents);
-* Non-text attachments: audio, video, images, PDF, etc.
+* 使用非ASCII字符的标头和文本内容;
+* 具有多个部分的消息体（例如HTML和纯文本内容）;
+* 非文本附件：音频、视频、图像、PDF等
 
-The entire MIME standard is complex and huge, but Symfony abstracts all that
-complexity to provide two ways of creating MIME messages:
+整个MIME标准既复杂又庞大，但Symfony将所有这些复杂性都抽象化，以提供两种创建MIME消息的方法::
 
-* A high-level API based on the :class:`Symfony\\Component\\Mime\\Email` class
-  to quickly create email messages with all the common features;
-* A low-level API based on the :class:`Symfony\\Component\\Mime\\Message` class
-  to have an absolute control over every single part of the email message.
+* 基于 :class:`Symfony\\Component\\Mime\\Email`
+  类的高级API，可快速创建具有所有常用功能的电子邮件消息;
+* 基于 :class:`Symfony\\Component\\Mime\\Message`
+  类的低级API ，可以绝对控制电子邮件消息的每个部分。
 
-Usage
+用法
 -----
 
-Use the :class:`Symfony\\Component\\Mime\\Email` class and their *chainable*
-methods to compose the entire email message::
+使用 :class:`Symfony\\Component\\Mime\\Email` 类及其 *方法链* 来撰写整个电子邮件::
 
     use Symfony\Component\Mime\Email;
 
@@ -61,56 +58,50 @@ methods to compose the entire email message::
         ->html('<h1>Lorem ipsum</h1> <p>...</p>')
     ;
 
-This only purpose of this component is to create the email messages. Use the
-:doc:`Mailer component </components/mailer>` to actually send them. In Symfony
-applications, it's easier to use the :doc:`Mailer integration </mailer>`.
+此组件的唯一目的是创建电子邮件消息。可使用 :doc:`Mailer组件 </components/mailer>`
+实际发送它们。在Symfony应用中，使用:doc:`Mailer集成 </mailer>` 会更容易。
 
-Most of the details about how to create Email objects, including Twig integration,
-can be found in the :doc:`Mailer documentation </mailer>`.
+有关如何创建电子邮件对象的大部分详细信息（包括Twig集成）都可以在
+:doc:`Mailer文档 </mailer>` 中找到。
 
-Twig Integration
+Twig集成
 ----------------
 
-The Mime component comes with excellent integration with Twig, allowing you to
-create messages from Twig templates, embed images, inline CSS and more. Details
-on how to use those features can be found in the Mailer documentation:
-:ref:`Twig: HTML & CSS <mailer-twig>`.
+Mime组件与Twig完美集成，允许你从Twig模板、嵌入图像、内联CSS等方面创建消息。
+有关如何使用这些功能的详细信息，请参阅Mailer文档：:ref:`Twig: HTML & CSS <mailer-twig>`。
 
-But if you're using the Mime component without the Symfony framework, you'll need
-to handle a few setup details.
+但是如果你在没有Symfony框架的情况下使用Mime组件，则需要处理一些设置细节。
 
-Twig Setup
+Twig设置
 ~~~~~~~~~~
 
-To integrate with Twig, use the :class:`Symfony\\Bridge\\Twig\\Mime\\BodyRenderer`
-class to render the template and update the email message contents with the results::
+要与Twig集成，请使用 :class:`Symfony\\Bridge\\Twig\\Mime\\BodyRenderer`
+类来渲染模板，并使用渲染结果更新电子邮件消息的内容::
 
     // ...
     use Symfony\Bridge\Twig\Mime\BodyRenderer;
     use Twig\Environment;
     use Twig\Loader\FilesystemLoader;
 
-    // when using the Mime component inside a full-stack Symfony application, you
-    // don't need to do this Twig setup. You only have to inject the 'twig' service
+    // 当在一个全栈Symfony应用中使用Mime组件时，你不需要执行这个Twig设置。
+    // 你只需要注入 'twig' 服务
     $loader = new FilesystemLoader(__DIR__.'/templates');
     $twig = new Environment($loader);
 
     $renderer = new BodyRenderer($twig);
-    // this updates the $email object contents with the result of rendering
-    // the template defined earlier with the given context
+    // 这将使用前面给定上下文中定义的模板的渲染结果来更新 $email 对象的内容。
     $renderer->render($email);
 
-Inlining CSS Styles (and other Extensions)
+内联CSS样式（和其他扩展）
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-To use the :ref:`inline_css <mailer-inline-css>` filter, first install the Twig
-extension:
+要使用 :ref:`inline_css <mailer-inline-css>` 过滤器，请先安装Twig扩展：
 
 .. code-block:: terminal
 
     $ composer require twig/cssinliner-extension
 
-Now, enable the extension::
+现在，启用该扩展::
 
     // ...
     use Twig\CssInliner\CssInlinerExtension;
@@ -119,21 +110,18 @@ Now, enable the extension::
     $twig = new Environment($loader);
     $twig->addExtension(new CssInlinerExtension());
 
-The same process should be used for enabling other extensions, like the
-:ref:`MarkdownExtension <mailer-markdown>` and :ref:`InkyExtension <mailer-inky>`.
+可以使用相同的过程来启用其他扩展，例如
+:ref:`MarkdownExtension <mailer-markdown>` 和 :ref:`InkyExtension <mailer-inky>`。
 
-Creating Raw Email Messages
+创建原始电子邮件
 ---------------------------
 
-This is useful for advanced applications that need absolute control over every
-email part. It's not recommended for applications with regular email
-requirements because it adds complexity for no real gain.
+这对需要对每个电子邮件的每部分进行绝对控制的高级应用很有用。
+不推荐将它用于只有常规电子邮件要求的应用，因为它增加了复杂性又不增加实际收益。
 
-Before continuing, it's important to have a look at the low level structure of
-an email message. Consider a message which includes some content as both text
-and HTML, a single PNG image embedded in those contents and a PDF file attached
-to it. The MIME standard allows structuring this message in different ways, but
-the following tree is the one that works on most email clients:
+在继续之前，重要的是要看一下电子邮件的低级结构。
+考虑一条包含一些内容消息，其中包括文本、HTML、嵌入在这些内容中的单个PNG图像以及附加到其上的PDF文件。
+MIME标准允许以不同的方式来构造此消息，但以下是适用于大多数电子邮件客户端的树结构：
 
 .. code-block:: text
 
@@ -145,19 +133,16 @@ the following tree is the one that works on most email clients:
     │   └── image/png
     └── application/pdf
 
-This is the purpose of each MIME message part:
+这是MIME消息的每个部分的作用：
 
-* ``multipart/alternative``: used when two or more parts are alternatives of the
-  same (or very similar) content. The preferred format must be added last.
-* ``multipart/mixed``: used to send different content types in the same message,
-  such as when attaching files.
-* ``multipart/related``: used to indicate that each message part is a component
-  of an aggregate whole. The most common usage is to display images embedded
-  in the message contents.
+* ``multipart/alternative``：当两个或更多的部分是相同（或非常相似）内容的替代品时，使用它。
+  首选格式必须最后添加。
+* ``multipart/mixed``：用于在同一消息中发送不同的内容类型，例如附加文件时。
+* ``multipart/related``：用于指示每个消息的部分是聚合整体的一个组件。
+  最常见的用法是显示嵌入在消息内容中的图像。
 
-When using the low-level :class:`Symfony\\Component\\Mime\\Message` class to
-create the email message, you must keep all the above in mind to define the
-different parts of the email by hand::
+使用低级的 :class:`Symfony\\Component\\Mime\\Message`
+类创建电子邮件时，必须牢记以上所有内容，以便手动定义电子邮件的不同部分::
 
     use Symfony\Component\Mime\Header\Headers;
     use Symfony\Component\Mime\Message;
@@ -176,8 +161,7 @@ different parts of the email by hand::
 
     $email = new Message($headers, $body);
 
-Embedding images and attaching files is possible by creating the appropriate
-email multiparts::
+通过创建适当的电子邮件的Multipart，可以嵌入图像和附加文件::
 
     // ...
     use Symfony\Component\Mime\Part\DataPart;
@@ -201,11 +185,10 @@ email multiparts::
 
     $email = new Message($headers, $messageParts);
 
-Serializing Email Messages
+序列化邮件消息
 --------------------------
 
-Email messages created with either the ``Email`` or ``Message`` classes can be
-serialized because they are simple data objects::
+使用 ``Email`` 或 ``Message`` 类创建的电子邮件消息可以序列化，因为它们是简单的数据对象::
 
     $email = (new Email())
         ->from('fabien@symfony.com')
@@ -214,30 +197,26 @@ serialized because they are simple data objects::
 
     $serializedEmail = serialize($email);
 
-A common use case is to store serialized email messages, include them in a
-message sent with the :doc:`Messenger component </components/messenger>` and
-recreate them later when sending them. Use the
-:class:`Symfony\\Component\\Mime\\RawMessage` class to recreate email messages
-from their serialized contents::
+常见的用例是存储序列化的电子邮件消息，将其包含在与 :doc:`Messenger组件 </components/messenger>`
+一起发送的消息中，并在以后发送时重新创建它们。使用
+:class:`Symfony\\Component\\Mime\\RawMessage` 类从其序列化内容中重新创建电子邮件::
 
     use Symfony\Component\Mime\RawMessage;
 
     // ...
     $serializedEmail = serialize($email);
 
-    // later, recreate the original message to actually send it
+    // 稍后，重新创建原始邮件以实际发送它
     $message = new RawMessage(unserialize($serializedEmail));
 
-MIME Types Utilities
+MIME类型工具
 --------------------
 
-Although MIME was designed mainly for creating emails, the content types (also
-known as `MIME types`_ and "media types") defined by MIME standards are also of
-importance in communication protocols outside of email, such as HTTP. That's
-why this component also provides utilities to work with MIME types.
+虽然MIME主要是为创建电子邮件而设计的，但MIME标准定义的内容类型（也称为 `MIME类型`_
+和“媒体类型”）在电子邮件之外的通信协议（如HTTP）中也很重要。
+这就是为什么这个组件还提供了使用MIME类型的实用工具。
 
-The :class:`Symfony\\Component\\Mime\\MimeTypes` class transforms between
-MIME types and file name extensions::
+:class:`Symfony\\Component\\Mime\\MimeTypes` 类用于转换MIME的类型和文件的扩展名::
 
     use Symfony\Component\Mime\MimeTypes;
 
@@ -252,31 +231,29 @@ MIME types and file name extensions::
     $mimeTypes = $mimeTypes->getMimeTypes('apk');
     // $mimeTypes = ['application/vnd.android.package-archive']
 
-These methods return arrays with one or more elements. The element position
-indicates its priority, so the first returned extension is the preferred one.
+这些方法返回带有一个或多个元素的数组。元素的位置表示其优先级，因此第一个返回的扩展名是首选扩展名。
 
-Guessing the MIME Type
+猜测MIME类型
 ~~~~~~~~~~~~~~~~~~~~~~
 
-Another useful utility allows to guess the MIME type of any given file::
+另一个有用的实用工具允许猜测任何给定文件的MIME类型::
 
     use Symfony\Component\Mime\MimeTypes;
 
     $mimeTypes = new MimeTypes();
     $mimeType = $mimeTypes->guessMimeType('/some/path/to/image.gif');
-    // Guessing is not based on the file name, so $mimeType will be 'image/gif'
-    // only if the given file is truly a GIF image
+    // 猜测不是基于文件名，因此只有给定的文件是
+    // 真正的GIF图像时，$mimeType 才会是 'image/gif'。
 
-Guessing the MIME type is a time-consuming process that requires inspecting
-part of the file contents. Symfony applies multiple guessing mechanisms, one
-of them based on the PHP `fileinfo extension`_. It's recommended to install
-that extension to improve the guessing performance.
+猜测MIME类型是一个耗时的过程，因为需要检查文件的部分内容。
+Symfony应用了多种猜测机制，其中一种基于PHP 
+`fileinfo扩展`_。建议安装该扩展以提高猜测的性能。
 
-Adding a MIME Type Guesser
+添加MIME类型猜测器
 ..........................
 
-You can register your own MIME type guesser by creating a class that implements
-:class:`Symfony\\Component\\Mime\\MimeTypeGuesserInterface`::
+你可以通过创建一个实现了 :class:`Symfony\\Component\\Mime\\MimeTypeGuesserInterface`
+的类来注册自己的MIME类型猜测器::
 
     namespace App;
 
@@ -286,19 +263,19 @@ You can register your own MIME type guesser by creating a class that implements
     {
         public function isGuesserSupported(): bool
         {
-            // return true when the guesser is supported (might depend on the OS for instance)
+            // 当此猜测器受支持时返回 true（例如支不支持可能取决于操作系统）
             return true;
         }
 
         public function guessMimeType(string $path): ?string
         {
-            // inspect the contents of the file stored in $path to guess its
-            // type and return a valid MIME type ... or null if unknown
+            // 检查存储在 $path 中的文件的内容以猜测其类型，并返回有效的MIME类型……
+            // 如果结果未知，则为空
 
             return '...';
         }
     }
 
 .. _`MIME`: https://en.wikipedia.org/wiki/MIME
-.. _`MIME types`: https://en.wikipedia.org/wiki/Media_type
-.. _`fileinfo extension`: https://php.net/fileinfo
+.. _`MIME类型`: https://en.wikipedia.org/wiki/Media_type
+.. _`fileinfo扩展`: https://php.net/fileinfo

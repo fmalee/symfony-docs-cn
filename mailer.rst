@@ -1,43 +1,40 @@
-Sending Emails with Mailer
+使用Mailer发送电子邮件
 ==========================
 
 .. versionadded:: 4.3
 
-    The Mailer component was added in Symfony 4.3 and is currently experimental.
-    The previous solution - Swift Mailer - is still valid: :doc:`Swift Mailer</email>`.
+    Symfony 4.3中添加了Mailer组件，它目前是实验性质的。之前的解决方案 -
+    :doc:`Swift Mailer</email>` - 仍然有效。
 
-Installation
+安装
 ------------
 
 .. caution::
 
-    The Mailer component is experimental in Symfony 4.3: some backwards compatibility
-    breaks could occur before 4.4.
+    Mailer组件在Symfony 4.3中是实验性的：在4.4之前可能会出现一些向后兼容性中断。
 
-Symfony's Mailer & :doc:`Mime </components/mime>` components form a *powerful* system
-for creating and sending emails - complete with support for multipart messages, Twig
-integration, CSS inlining, file attachments and a lot more. Get them installed with:
+Symfony的Mailer和 :doc:`Mime </components/mime>` 组件构成了一个用于创建和发送电子邮件的
+*强大* 系统 - 完全支持多部分（multipart）消息、Twig集成、CSS内联、文件附件等等。安装它们::
 
 .. code-block:: terminal
 
     $ composer require symfony/mailer
 
-Transport Setup
+传输设置
 ---------------
 
-Emails are delivered via a "transport". And without installing anything else, you
-can deliver emails over ``smtp`` by configuring your ``.env`` file:
+电子邮件通过一个“传输”来投递。无需安装任何其他内容，你可以通过配置 ``.env``
+文件来使用 ``smtp`` 发送电子邮件：
 
 .. code-block:: bash
 
     # .env
     MAILER_DSN=smtp://user:pass@smtp.example.com
 
-Using a 3rd Party Transport
+使用第三方传输
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-But an easier option is to send emails via a 3rd party provider. Mailer supports
-several - install whichever you want:
+但更简单的选择是通过第三方提供器来发送电子邮件。Mailer支持众多提供器 - 安装你想要的任何一个：
 
 ==================  =============================================
 Service             Install with
@@ -50,15 +47,14 @@ Postmark            ``composer require symfony/postmark-mailer``
 SendGrid            ``composer require symfony/sendgrid-mailer``
 ==================  =============================================
 
-Each library includes a :ref:`Flex recipe <flex-recipe>` that will add example configuration
-to your ``.env`` file. For example, suppose you want to use SendGrid. First,
-install it:
+每个库都包含一个 :ref:`Flex指令 <flex-recipe>`，可以为你的 ``.env``
+文件添加示例配置。例如，假设你要使用SendGrid。首先，安装它：
 
 .. code-block:: terminal
 
     $ composer require symfony/sendgrid-mailer
 
-You'll now have a new line in your ``.env`` file that you can uncomment:
+你现在在你的 ``.env`` 文件中有了一个新行，你可以取消它的注释：
 
 .. code-block:: bash
 
@@ -66,26 +62,20 @@ You'll now have a new line in your ``.env`` file that you can uncomment:
     SENDGRID_KEY=
     MAILER_DSN=smtp://$SENDGRID_KEY@sendgrid
 
-The ``MAILER_DSN`` isn't a *real* SMTP address: it's a simple format that offloads
-most of the configuration work to mailer. The ``@sendgrid`` part of the address
-activates the SendGrid mailer library that you just installed, which knows all
-about how to deliver messages to SendGrid.
+``MAILER_DSN`` 不是一个 *真正* 的SMTP地址：它是一种简单的格式，可以将大部分配置工作卸载到mailer。
+地址中的的 ``@sendgrid`` 部分用于激活刚刚安装的SendGrid mailer库，它知道如何将消息传递给SendGrid。
 
-The *only* part you need to change is to set ``SENDGRID_KEY`` to your key (in
-``.env`` or ``.env.local``).
+你 *唯一* 需要更改的部分是将 ``SENDGRID_KEY`` 设置为你的密钥（在 ``.env`` 或 ``.env.local`` 中）。
 
-Each transport will have different environment variables that the library will use
-to configure the *actual* address and authentication for delivery. Some also have
-options that can be configured with query parameters on end of the ``MAILER_DSN`` -
-like ``?region=`` for Amazon SES. Some transports support sending via ``http``
-or ``smtp`` - both work the same, but ``http`` is recommended when available.
+每个传输都将具有不同的环境变量，该库将用于配置 *实际* 地址和用于投递的认证。有些选项还可以在
+``MAILER_DSN``的末尾用查询参数进行配置，例如用于Amazon SES的 ``?region=``。一些传输支持通过
+``http`` 或 ``smtp`` 发送 - 两者工作原理相同，但在可用时建议使用 ``http``。
 
-Creating & Sending Messages
+创建和发送消息
 ---------------------------
 
-To send an email, autowire the mailer using
-:class:`Symfony\\Component\\Mailer\\MailerInterface` (service id ``mailer``)
-and create an :class:`Symfony\\Component\\Mime\\Email` object::
+要发送电子邮件，请使用 :class:`Symfony\\Component\\Mailer\\MailerInterface`（服务ID为
+``mailer``）来自动装配mailer，并创建一个 :class:`Symfony\\Component\\Mime\\Email` 对象::
 
     // src/Controller/MailerController.php
     namespace App\Controller;
@@ -118,33 +108,31 @@ and create an :class:`Symfony\\Component\\Mime\\Email` object::
         }
     }
 
-That's it! The message will be sent via whatever transport you configured.
+仅此而已！该消息将通过你配置的任何传输来发送。
 
-Email Addresses
+电子邮件地址
 ~~~~~~~~~~~~~~~
 
-All the methods that require email addresses (``from()``, ``to()``, etc.) accept
-both strings or address objects::
+所有需要电子邮件地址的方法（``from()``、``to()`` 等等）都接受字符串或地址对象::
 
     // ...
     use Symfony\Component\Mime\Address;
     use Symfony\Component\Mime\NamedAddress;
 
     $email = (new Email())
-        // email address as a simple string
+        // 作为简单字符串的电子邮件地址
         ->from('fabien@example.com')
 
-        // email address as an object
+        // 作为对象的电子邮件地址
         ->from(new Address('fabien@example.com'))
 
-        // email address as an object (email clients will display the name
-        // instead of the email address)
+        // 作为对象的电子邮件地址（电子邮件客户端将显示名称而不是电子邮件地址）
         ->from(new NamedAddress('fabien@example.com', 'Fabien'))
 
         // ...
     ;
 
-Multiple addresses are defined with the ``addXXX()`` methods::
+使用 ``addXXX()`` 方法定义多个地址::
 
     $email = (new Email())
         ->to('foo@example.com')
@@ -154,7 +142,7 @@ Multiple addresses are defined with the ``addXXX()`` methods::
         // ...
     ;
 
-Alternatively, you can pass multiple addresses to each method::
+或者，你可以将多个地址传递给每个方法::
 
     $toAddresses = ['foo@example.com', new Address('bar@example.com')];
 
@@ -165,86 +153,81 @@ Alternatively, you can pass multiple addresses to each method::
         // ...
     ;
 
-Message Contents
+消息内容
 ~~~~~~~~~~~~~~~~
 
-The text and HTML contents of the email messages can be strings (usually the
-result of rendering some template) or PHP resources::
+电子邮件消息的文本和HTML内容可以是字符串（通常是渲染某些模板的结果）或PHP资源::
 
     $email = (new Email())
         // ...
-        // simple contents defined as a string
+        // 定义为字符串的简单内容
         ->text('Lorem ipsum...')
         ->html('<p>Lorem ipsum...</p>')
 
-        // attach a file stream
+        // 附加一个文件流
         ->text(fopen('/path/to/emails/user_signup.txt', 'r'))
         ->html(fopen('/path/to/emails/user_signup.html', 'r'))
     ;
 
 .. tip::
 
-    You can also use Twig templates to render the HTML and text contents. Read
-    the `Twig: HTML & CSS`_ section later in this article to
-    learn more.
+    你还可以使用Twig模板来渲染HTML和文本内容。阅读本文后面的 `Twig: HTML & CSS`_
+    部分以了解更多信息。
 
-File Attachments
+文件附件
 ~~~~~~~~~~~~~~~~
 
-Use the ``attachFromPath()`` method to attach files that exist on your file system::
+使用 ``attachFromPath()`` 方法附加存在于文件系统上的文件::
 
     $email = (new Email())
         // ...
         ->attachFromPath('/path/to/documents/terms-of-use.pdf')
-        // optionally you can tell email clients to display a custom name for the file
+        // 或者，你可以告诉电子邮件客户端显示文件的自定义名称
         ->attachFromPath('/path/to/documents/privacy.pdf', 'Privacy Policy')
-        // optionally you can provide an explicit MIME type (otherwise it's guessed)
+        // 或者，你可以提供一个显式的MIME类型（否则是猜测到的）
         ->attachFromPath('/path/to/documents/contract.doc', 'Contract', 'application/msword')
     ;
 
-Alternatively you can use the ``attach()`` method to attach contents from a stream::
+或者，你可以使用 ``attach()`` 方法从一个流中附加内容::
 
     $email = (new Email())
         // ...
         ->attach(fopen('/path/to/documents/contract.doc', 'r'))
     ;
 
-Embedding Images
+嵌入图像
 ~~~~~~~~~~~~~~~~
 
-If you want to display images inside your email, you must embed them
-instead of adding them as attachments. When using Twig to render the email
-contents, as explained `later in this article <Embedding Images>`_,
-the images are embedded automatically. Otherwise, you need to embed them manually.
+如果要在电子邮件中显示图像，则必须嵌入它们，而不是将它们添加为附件。
+使用Twig渲染电子邮件内容时，图像会如 `本文后面所述 <Embedding Images>`_
+的自动嵌入。否则，你需要手动嵌入它们。
 
-First, use the ``embed()`` or ``embedFromPath()`` method to add an image from a
-file or stream::
+首先，使用 ``embed()`` 或 ``embedFromPath()`` 方法从文件或流中添加图像::
 
     $email = (new Email())
         // ...
-        // get the image contents from a PHP resource
+        // 从PHP资源中获取图像内容
         ->embed(fopen('/path/to/images/logo.png', 'r'), 'logo')
-        // get the image contents from an existing file
+        // 从现有文件中获取图像内容
         ->embedFromPath('/path/to/images/signature.gif', 'footer-signature')
     ;
 
-The second optional argument of both methods is the image name ("Content-ID" in
-the MIME standard). Its value is an arbitrary string used later to reference the
-images inside the HTML contents::
+两种方法的第二个可选参数是图像名称（MIME标准中的"Content-ID"）。
+它的值是一个任意字符串，稍后用于引用HTML内容中的图像::
 
     $email = (new Email())
         // ...
         ->embed(fopen('/path/to/images/logo.png', 'r'), 'logo')
         ->embedFromPath('/path/to/images/signature.gif', 'footer-signature')
-        // reference images using the syntax 'cid:' + "image embed name"
+        // 使用 'cid:' + "image embed name" 语法引用图像
         ->html('<img src="cid:logo"> ... <img src="cid:footer-signature"> ...')
     ;
 
+来自地址的全局
 Global from Address
 -------------------
 
-Instead of calling ``->from()`` *every* time you create a new email, you can
-create an event subscriber to set it automatically::
+你可以创建一个事件订阅器来自动设置地址，而不是 *每次* 创建新电子邮件时调用 ``->from()``::
 
     // src/EventListener/MailerFromListener.php
     namespace App\EventListener;
@@ -259,12 +242,12 @@ create an event subscriber to set it automatically::
         {
             $message = $event->getMessage();
 
-            // make sure it's an Email object
+            // 确保它是Email对象
             if (!$message instanceof Email) {
                 return;
             }
 
-            // always set the from address
+            // 始终设置发件人地址
             $message->from('fabien@example.com');
         }
 
@@ -279,21 +262,18 @@ create an event subscriber to set it automatically::
 Twig: HTML & CSS
 ----------------
 
-The Mime component integrates with the :doc:`Twig template engine </templating>`
-to provide advanced features such as CSS style inlining and support for HTML/CSS
-frameworks to create complex HTML email messages. First, make sure Twig is installed:
+Mime组件与 :doc:`Twig模板引擎 </templating>`集成，以提供CSS样式内联等高级功能，
+并支持HTML/CSS框架以创建复杂的HTML电子邮件。首先，确保安装了Twig：
 
 .. code-block:: terminal
 
     $ composer require symfony/twig-bundle
 
-HTML Content
+HTML内容
 ~~~~~~~~~~~~
 
-To define the contents of your email with Twig, use the
-:class:`Symfony\\Bridge\\Twig\\Mime\\TemplatedEmail` class. This class extends
-the normal :class:`Symfony\\Component\\Mime\\Email` class but adds some new methods
-for Twig templates::
+要使用Twig定义电子邮件的内容，请使用 :class:`Symfony\\Bridge\\Twig\\Mime\\TemplatedEmail`
+类。此类扩展了普通的 :class:`Symfony\\Component\\Mime\\Email` 类，但为Twig模板添加了一些新方法::
 
     use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 
@@ -302,17 +282,17 @@ for Twig templates::
         ->to(new NamedAddress('ryan@example.com', 'Ryan'))
         ->subject('Thanks for signing up!')
 
-        // path of the Twig template to render
+        // 要渲染的Twig模板的路径
         ->htmlTemplate('emails/signup.html.twig')
 
-        // pass variables (name => value) to the template
+        // 将变量（名称 => 值）传递到模板
         ->context([
             'expiration_date' => new \DateTime('+7 days'),
             'username' => 'foo',
         ])
     ;
 
-Then, create the template:
+然后，创建模板：
 
 .. code-block:: html+twig
 
@@ -329,24 +309,20 @@ Then, create the template:
         (this link is valid until {{ expiration_date|date('F jS') }})
     </p>
 
-The Twig template has access to any of the parameters passed in the ``context()``
-method of the ``TemplatedEmail`` class and also to a special variable called
-``email``, which is an instance of
-:class:`Symfony\\Bridge\\Twig\\Mime\\WrappedTemplatedEmail`.
+Twig模板可以访问 ``TemplatedEmail`` 类的 ``context()``
+方法中传递的任何参数，也可以访问一个名为 ``email`` 的特殊变量，它是一个
+:class:`Symfony\\Bridge\\Twig\\Mime\\WrappedTemplatedEmail` 实例。
 
-Text Content
+文本内容
 ~~~~~~~~~~~~
 
-When the text content of a ``TemplatedEmail`` is not explicitly defined, mailer
-will generate it automatically by converting the HTML contents into text. If you
-have `league/html-to-markdown`_ installed in your application,
-it uses that to turn HTML into Markdown (so the text email has some visual appeal).
-Otherwise, it applies the :phpfunction:`strip_tags` PHP function to the original
-HTML contents.
+当未明确定义 ``TemplatedEmail`` 的文本内容时，mailer将通过将HTML内容转换为文本来自动生成它。
+如果你在应用中安装了 `league/html-to-markdown`_
+，则会使用它将HTML转换为Markdown（因此文本电子邮件具有一些视觉吸引力）。
+否则，它会将 :phpfunction:`strip_tags` PHP函数应用于原始的HTML内容。
 
-If you want to define the text content yourself, use the ``text()`` method
-explained in the previous sections or the ``textTemplate()`` method provided by
-the ``TemplatedEmail`` class:
+如果你想自己定义文本内容，请使用前面部分介绍的 ``text()`` 方法或 ``TemplatedEmail``
+类提供的 ``textTemplate()`` 方法：
 
 .. code-block:: diff
 
@@ -360,13 +336,12 @@ the ``TemplatedEmail`` class:
         // ...
     ;
 
-Embedding Images
+嵌入图像
 ~~~~~~~~~~~~~~~~
 
-Instead of dealing with the ``<img src="cid: ...">`` syntax explained in the
-previous sections, when using Twig to render email contents you can refer to
-image files as usual. First, to simplify things, define a Twig namespace called
-``images`` that points to whatever directory your images are stored in:
+使用Twig渲染电子邮件内容时，你可以像往常一样引用图像文件，而不是使用前面部分解释的
+``<img src="cid: ...">`` 语法来处理。首先，为了简化操作，定义一个名为``images``
+的Twig命名空间，该命名空间指向存储图像的任何目录：
 
 .. code-block:: yaml
 
@@ -375,15 +350,14 @@ image files as usual. First, to simplify things, define a Twig namespace called
         # ...
 
         paths:
-            # point this wherever your images live
+            # 把这个指向你的图像所在的地方
             '%kernel.project_dir%/assets/images': images
 
-Now, use the special ``email.image()`` Twig helper to embed the images inside
-the email contents:
+现在，使用特殊的 ``email.image()`` Twig辅助函数将图像嵌入到电子邮件内容中：
 
 .. code-block:: html+twig
 
-    {# '@images/' refers to the Twig namespace defined earlier #}
+    {# '@images/' 引用前面定义的Twig命名空间 #}
     <img src="{{ email.image('@images/logo.png') }}" alt="Logo">
 
     <h1>Welcome {{ email.toName }}!</h1>
@@ -391,32 +365,28 @@ the email contents:
 
 .. _mailer-inline-css:
 
-Inlining CSS Styles
+内联CSS样式
 ~~~~~~~~~~~~~~~~~~~
 
-Designing the HTML contents of an email is very different from designing a
-normal HTML page. For starters, most email clients only support a subset of all
-CSS features. In addition, popular email clients like Gmail don't support
-defining styles inside ``<style> ... </style>`` sections and you must **inline
-all the CSS styles**.
+设计电子邮件的HTML内容与设计普通HTML页面有很大不同。
+首先，大多数电子邮件客户端仅支持所有CSS功能的子集。此外，Gmail等流行的电子邮件客户端不支持在
+``<style> ... </style>`` 节点内部定义样式，所以你必须内联所有CSS样式。
 
-CSS inlining means that every HTML tag must define a ``style`` attribute with
-all its CSS styles. This can make organizing your CSS a mess. That's why Twig
-provides a ``CssInlinerExtension`` that automates everything for you. Install
-it with:
+CSS内联意味着每个HTML标签都必须用其所有的CSS样式定义一个 ``style``
+属性。这会使你的CSS管理变得一团糟。这就是为什么Twig提供了一个
+``CssInlinerExtension``，它可以自动为你完成所有事情。安装它：
 
 .. code-block:: terminal
 
     $ composer require twig/cssinliner-extension
 
-The extension is enabled automatically. To use this, wrap the entire template
-with the ``inline_css`` filter:
+扩展会自动启用。要使用它，请使用 ``inline_css`` 过滤器封装整个模板：
 
 .. code-block:: html+twig
 
     {% apply inline_css %}
         <style>
-            {# here, define your CSS styles as usual #}
+            {# 这里，像往常一样定义你的CSS样式 #}
             h1 {
                 color: #333;
             }
@@ -426,11 +396,10 @@ with the ``inline_css`` filter:
         {# ... #}
     {% endapply %}
 
-Using External CSS Files
+使用外部CSS文件
 ........................
 
-You can also define CSS styles in external files and pass them as
-arguments to the filter:
+你还可以在外部文件中定义CSS样式，并将它们作为参数传递给过滤器：
 
 .. code-block:: html+twig
 
@@ -439,9 +408,9 @@ arguments to the filter:
         {# ... #}
     {% endapply %}
 
-You can pass unlimited number of arguments to ``inline_css()`` to load multiple
-CSS files. For this example to work, you also need to define a new Twig namespace
-called ``css`` that points to the directory where ``email.css`` lives:
+你可以给 ``inline_css()``
+传递无限数量的参数来加载多个CSS文件。要使此示例起作用，你还需要定义一个名为 ``css``
+的新Twig命名空间，该命名空间指向 ``email.css`` 所在的目录：
 
 .. _mailer-css-namespace:
 
@@ -457,21 +426,18 @@ called ``css`` that points to the directory where ``email.css`` lives:
 
 .. _mailer-markdown:
 
-Rendering Markdown Content
+渲染Markdown内容
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Twig provides another extension called ``MarkdownExtension`` that lets you
-define the email contents using `Markdown syntax`_. To use this, install the
-extension and a Markdown conversion library (the extension is compatible with
-several popular libraries):
+Twig提供了另一个名为 ``MarkdownExtension`` 的扩展，它允许你使用 `Markdown语法`_
+来定义电子邮件内容。要使用此功能，请安装该扩展和一个Markdown转换库（该扩展与多个常用库兼容）：
 
 .. code-block:: terminal
 
-    # instead of league/commonmark, you can also use erusev/parsedown or michelf/php-markdown
+    # 除了 league/commonmark，你还可以使用 erusev/parsedown 或 michelf/php-markdown
     $ composer require twig/markdown-extension league/commonmark
 
-The extension adds a ``markdown`` filter, which you can use to convert parts or
-the entire email contents from Markdown to HTML:
+该扩展添加了一个 ``markdown`` 过滤器，你可以使用该过滤器将部分或整个电子邮件内容从Markdown转换为HTML：
 
 .. code-block:: twig
 
@@ -487,32 +453,28 @@ the entire email contents from Markdown to HTML:
 
 .. _mailer-inky:
 
-Inky Email Templating Language
+Inky电子邮件模板语言
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Creating beautifully designed emails that work on every email client is so
-complex that there are HTML/CSS frameworks dedicated to that. One of the most
-popular frameworks is called `Inky`_. It defines a syntax based on some simple
-tags which are later transformed into the real HTML code sent to users:
+在每个电子邮件客户端上创建设计精美的电子邮件非常复杂，因此有专门的HTML/CSS框架。
+最受欢迎的框架之一叫做 `Inky`_。它基于一些简单标签定义了一种语法，这些标签稍后会转换为发送给用户的真实HTML代码：
 
 .. code-block:: html
 
-    <!-- a simplified example of the Inky syntax -->
+    <!-- Inky语法的简单示例 -->
     <container>
         <row>
             <columns>This is a column.</columns>
         </row>
     </container>
 
-Twig provides integration with Inky via the ``InkyExtension``. First, install
-the extension in your application:
+Twig通过 ``InkyExtension`` 扩展提供与Inky的集成。首先，在你的应用中安装该扩展：
 
 .. code-block:: terminal
 
     $ composer require twig/inky-extension
 
-The extension adds an ``inky`` filter, which can be used to convert parts or the
-entire email contents from Inky to HTML:
+该扩展添加了一个 ``inky`` 过滤器，可用于将部分或整个电子邮件内容从Inky转换为HTML：
 
 .. code-block:: html+twig
 
@@ -529,7 +491,7 @@ entire email contents from Inky to HTML:
         </container>
     {% endapply %}
 
-You can combine all filters to create complex email messages:
+你可以组合使用所有过滤器以创建复杂的电子邮件：
 
 .. code-block:: twig
 
@@ -537,22 +499,19 @@ You can combine all filters to create complex email messages:
         {# ... #}
     {% endapply %}
 
-This makes use of the :ref:`css Twig namespace <mailer-css-namespace>` we created
-earlier. You could, for example, `download the foundation-emails.css file`_
-directly from GitHub and save it in ``assets/css``.
+这里使用了我们之前创建的 :ref:`css Twig命名空间 <mailer-css-namespace>`。
+例如，你可以直接从GitHub `下载foundation-emails.css文件`_ 并将其保存在 ``assets/css``。
 
-Sending Messages Async
+异步发送消息
 ----------------------
 
-When you call ``$mailer->send($email)``, the email is sent to the transport immediately.
-To improve performance, you can leverage :doc:`Messenger </messenger>` to send
-the messages later via a Messenger transport.
+当你调用 ``$mailer->send($email)`` 时，电子邮件会立即发送到传输。要提高性能，你可以利用
+:doc:`Messenger </messenger>` 以稍后通过Messenger传输来发送消息。
 
-Start by following the :doc:`Messenger </messenger>` documentation and configuring
-a transport. Once everything is set up, when you call ``$mailer->send()``, a
-:class:`Symfony\\Component\\Mailer\\Messenger\\SendEmailMessage` message will
-be dispatched through the default message bus (``messenger.default_bus``). Assuming
-you have a transport called ``async``, you can route the message there:
+首先，遵循 :doc:`Messenger </messenger>` 文档并配置传输。设置完所有内容后，当你调用时
+``$mailer->send()`` 时，:class:`Symfony\\Component\\Mailer\\Messenger\\SendEmailMessage`
+消息将通过默认消息总线（``messenger.default_bus``）调度。假设你有一个称为
+``async`` 的传输，那么你可以在那里路由消息：
 
 .. configuration-block::
 
@@ -599,18 +558,16 @@ you have a transport called ``async``, you can route the message there:
             ],
         ]);
 
-Thanks to this, instead of being delivered immediately, messages will be sent to
-the transport to be handled later (see :ref:`messenger-worker`).
+得益于这一点，消息将被发送到传输以便稍后处理，而不是立即投递（请参阅 :ref:`messenger-worker`）。
 
-Development & Debugging
+开发和调试
 -----------------------
 
-Disabling Delivery
+禁用投递
 ~~~~~~~~~~~~~~~~~~
 
-While developing (or testing), you may want to disable delivery of messages entirely.
-You can do this by forcing Mailer to use the ``NullTransport`` in only the ``dev``
-environment:
+在开发（或测试）时，你可能希望完全禁用消息投递。你可以通过强制Mailer仅在 ``dev``
+环境中使用 ``NullTransport`` 来实现此目的：
 
 .. code-block:: yaml
 
@@ -621,16 +578,13 @@ environment:
 
 .. note::
 
-    If you're using Messenger and routing to a transport, the message will *still*
-    be sent to that transport.
+    如果你使用Messenger并路由到了一个传输，则该消息 *仍会* 发送到该传输。
 
-Always Send to the Same Address
+始终发送到同一地址
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Instead of disabling delivery entirely, you might want to *always* send emails to
-a specific address, instead of the *real* address. To do that, you can take
-advantage of the ``EnvelopeListener`` and register it *only* for the ``dev``
-environment:
+除了完全禁用投递，你可能希望始终将电子邮件发送到特定地址而不是 *真实*
+地址。要做到这一点，你可以利用 ``EnvelopeListener`` 的优势，并只针对 ``dev`` 环境注册它：
 
 .. code-block:: yaml
 
@@ -643,7 +597,7 @@ environment:
                 $sender: null
                 $recipients: ['youremail@example.com']
 
-.. _`download the foundation-emails.css file`: https://github.com/zurb/foundation-emails/blob/develop/dist/foundation-emails.css
+.. _`下载foundation-emails.css文件`: https://github.com/zurb/foundation-emails/blob/develop/dist/foundation-emails.css
 .. _`league/html-to-markdown`: https://github.com/thephpleague/html-to-markdown
-.. _`Markdown syntax`: https://commonmark.org/
+.. _`Markdown语法`: https://commonmark.org/
 .. _`Inky`: https://foundation.zurb.com/emails.html

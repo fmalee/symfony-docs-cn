@@ -1,38 +1,35 @@
 .. index::
    single: Tests; Assertions
 
-Functional Test specific Assertions
+功能测试的特定断言
 ===================================
 
 .. versionadded:: 4.3
 
-    The shortcut methods for assertions using ``WebTestCase`` were introduced
-    in Symfony 4.3.
+    Symfony 4.3中引入了使用 ``WebTestCase`` 进行断言的快捷方法。
 
-When doing functional tests, sometimes you need to make complex assertions in
-order to check whether the ``Request``, the ``Response`` or the ``Crawler``
-contain the expected information to make your test succeed.
+在进行功能测试时，有时你需要进行复杂的断言，以检查 ``Request``、``Response`` 或
+``Crawler`` 是否包含使测试成功的预期信息。
 
-Here is an example with plain PHPUnit::
+这是一个简单的PHPUnit示例::
 
     $this->assertGreaterThan(
         0,
         $crawler->filter('html:contains("Hello World")')->count()
     );
 
-Now here is the example with the assertions specific to Symfony::
+现在这里是Symfony特有的断言示例::
 
     $this->assertSelectorTextContains('html', 'Hello World');
 
 .. note::
 
-    These assertions only work if a request has been made with the ``Client``
-    in a test case extending the ``WebTestCase`` class.
+    这些断言仅在扩展 ``WebTestCase`` 类的测试用例中使用 ``Client`` 发起请求时才起作用。
 
-Assertions Reference
+断言参考
 ---------------------
 
-Response
+响应
 ~~~~~~~~
 
 - ``assertResponseIsSuccessful()``
@@ -46,20 +43,20 @@ Response
 - ``assertResponseNotHasCookie()``
 - ``assertResponseCookieValueSame()``
 
-Request
+请求
 ~~~~~~~
 
 - ``assertRequestAttributeValueSame()``
 - ``assertRouteSame()``
 
-Browser
+浏览器
 ~~~~~~~
 
 - ``assertBrowserHasCookie()``
 - ``assertBrowserNotHasCookie()``
 - ``assertBrowserCookieValueSame()``
 
-Crawler
+抓取器
 ~~~~~~~
 
 - ``assertSelectorExists()``
@@ -72,12 +69,11 @@ Crawler
 - ``assertInputValueSame()``
 - ``assertInputValueNotSame()``
 
-Troubleshooting
+故障排除
 ---------------
 
-These assertions will not work with `symfony/panther`_ as they use the
-``Request`` and ``Response`` objects from the ``HttpFoundation``
-component, and the ``KernelBrowser`` from the ``FrameworkBundle``.
-Panther only uses the ``BrowserKit`` component.
+这些断言不适用于 `symfony/panther`_，因为它们使用了 ``HttpFoundation`` 组件的
+``Request`` 和 ``Response`` 对象，以及 ``FrameworkBundle`` 的
+``KernelBrowser``。而Panther仅使用了 ``BrowserKit`` 组件。
 
 .. _`symfony/panther`: https://github.com/symfony/panther

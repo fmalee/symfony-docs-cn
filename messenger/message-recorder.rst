@@ -1,49 +1,38 @@
 .. index::
     single: Messenger; Record messages; Transaction messages
 
-Transactional Messages: Handle New Messages After Handling is Done
+事务性消息：处理完成后才处理新消息
 ==================================================================
 
-A message handler can ``dispatch`` new messages during execution, to either the
-same or a different bus (if the application has
-`multiple buses </messenger/multiple_buses>`_). Any errors or exceptions that
-occur during this process can have unintended consequences, such as:
+消息处理器可以在执行期间将新消息 ``dispatch`` 到相同或不同的总线（如果应用具有
+`多个总线 </messenger/multiple_buses>`_）。
+在此过程中发生的任何错误或异常都可能产生意想不到的后果，例如：
 
-- If using the ``DoctrineTransactionMiddleware`` and a dispatched message throws
-  an exception, then any database transactions in the original handler will be
-  rolled back.
-- If the message is dispatched to a different bus, then the dispatched message
-  will be handled even if some code later in the current handler throws an
-  exception.
+- 如果使用 ``DoctrineTransactionMiddleware``，然后调度的消息抛出异常，
+  则将回滚原始处理器中的所有数据库事务。
+- 如果将消息调度到不同的总线，则即使稍后当前处理器中的某些代码抛出异常，也将继续处理已调度的消息。
 
-An Example ``RegisterUser`` Process
+``RegisterUser`` 进程示例
 -----------------------------------
 
-Let's take the example of an application with both a *command* and an *event*
-bus. The application dispatches a command named ``RegisterUser`` to the command
-bus. The command is handled by the ``RegisterUserHandler`` which creates a
-``User`` object, stores that object to a database and dispatches a
-``UserRegistered`` message to the event bus.
+让我们以一个同时带有 *命令* 和 *事件* 总线的应用为例。应用调度一个名为 ``RegisterUser``
+的命令到命令总线。这个由 ``RegisterUserHandler`` 处理的命令会创建一个 ``User``
+对象并将该对象存储到数据库，然后调度一个 ``UserRegistered`` 消息给事件总线。
 
-There are many handlers to the ``UserRegistered`` message, one handler may send
-a welcome email to the new user. We are using the ``DoctrineTransactionMiddleware``
-to wrap all database queries in one database transaction.
+``UserRegistered`` 消息会有许多处理器，其中一个处理器可以向新用户发送欢迎电子邮件。
+ 我们使用 ``DoctrineTransactionMiddleware`` 来在一个数据库事务中封装所有数据库查询。
 
-**Problem 1:** If an exception is thrown when sending the welcome email, then
-the user will not be created because the ``DoctrineTransactionMiddleware`` will
-rollback the Doctrine transaction, in which the user has been created.
+**问题1：** 如果在发送欢迎电子邮件时抛出异常，则该用户不会被创建，因为
+``DoctrineTransactionMiddleware`` 将回滚已创建用户的Doctrine事务。
 
-**Problem 2:** If an exception is thrown when saving the user to the database,
-the welcome email is still sent because it is handled asynchronously.
+**问题2：** 如果在将用户保存到数据库时抛出异常，仍会发送欢迎电子邮件，因为它是异步处理的。
 
-DispatchAfterCurrentBusMiddleware Middleware
+DispatchAfterCurrentBusMiddleware中间件
 --------------------------------------------
 
-For many applications, the desired behavior is to *only* handle messages that
-are dispatched by a handler once that handler has fully finished. This can be by
-using the ``DispatchAfterCurrentBusMiddleware`` and adding a
-``DispatchAfterCurrentBusStamp`` stamp to
-`the message Envelope </components/messenger#adding-metadata-to-messages-envelopes>`_::
+对于许多应用，所需的行为是 *仅* 处理由一个处理器完全处理完后再调度的消息。
+这可以通过使用 ``DispatchAfterCurrentBusMiddleware`` 和添加一个 ``DispatchAfterCurrentBusStamp``
+邮票到 `消息信封 </components/messenger#adding-metadata-to-messages-envelopes>`_ 来完成::
 
     namespace App\Messenger\CommandHandler;
 
@@ -71,8 +60,7 @@ using the ``DispatchAfterCurrentBusMiddleware`` and adding a
             $user = new User($command->getUuid(), $command->getName(), $command->getEmail());
             $this->em->persist($user);
 
-            // The DispatchAfterCurrentBusStamp marks the event message to be handled
-            // only if this handler does not throw an exception.
+            // DispatchAfterCurrentBusStamp 仅在该处理器不引发异常时标记要处理的事件消息。
 
             $event = new UserRegistered($command->getUuid());
             $this->eventBus->dispatch(
@@ -113,23 +101,17 @@ using the ``DispatchAfterCurrentBusMiddleware`` and adding a
         }
     }
 
-This means that the ``UserRegistered`` message would not be handled until
-*after* the ``RegisterUserHandler`` had completed and the new ``User`` was
-persisted to the database. If the ``RegisterUserHandler`` encounters an
-exception, the ``UserRegistered`` event will never be handled. And if an
-exception is thrown while sending the welcome email, the Doctrine transaction
-will not be rolled back.
+这意味着只有在 ``RegisterUserHandler`` 完成并且新的 ``User`` 持久存储到数据库 *之后* 才会处理
+``UserRegistered`` 消息。如果 ``RegisterUserHandler`` 遇到异常，则永远不会处理
+``UserRegistered`` 事件。如果在发送欢迎电子邮件时抛出异常，则不会回滚Doctrine事务。
 
 .. note::
 
-    If ``WhenUserRegisteredThenSendWelcomeEmail`` throws an exception, that
-    exception will be wrapped into a ``DelayedMessageHandlingException``. Using
-    ``DelayedMessageHandlingException::getExceptions`` will give you all
-    exceptions that are thrown while handing a message with the
-    ``DispatchAfterCurrentBusStamp``.
+    如果 ``WhenUserRegisteredThenSendWelcomeEmail`` 抛出异常，该异常将被封装为
+    ``DelayedMessageHandlingException``。使用
+    ``DelayedMessageHandlingException::getExceptions`` 将为你提供在使用
+    ``DispatchAfterCurrentBusStamp`` 处理消息时抛出的所有异常。
 
-The ``dispatch_after_current_bus`` middleware is enabled by default. If you're
-configuring your middleware manually, be sure to register
-``dispatch_after_current_bus`` before ``doctrine_transaction`` in the middleware
-chain. Also, the ``dispatch_after_current_bus`` middleware must be loaded for
-*all* of the buses being used.
+``dispatch_after_current_bus`` 中间件是默认启用的。如果你手动配置中间件，请务必在中间件链的
+``doctrine_transaction`` 之前注册 ``dispatch_after_current_bus``。此外，必须为 *所有*
+正在使用的总线加载 ``dispatch_after_current_bus`` 中间件。

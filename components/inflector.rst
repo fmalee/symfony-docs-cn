@@ -2,13 +2,12 @@
    single: Inflector
    single: Components; Inflector
 
-The Inflector Component
+Inflector组件
 =======================
 
-    The Inflector component converts English words between their singular and
-    plural forms.
+    Inflector组件在单数和复数形式之间转换英语单词。
 
-Installation
+安装
 ------------
 
 .. code-block:: terminal
@@ -17,29 +16,25 @@ Installation
 
 .. include:: /components/require_autoload.rst.inc
 
-When you May Need an Inflector
+当你需要一个转换器时
 ------------------------------
 
-In some scenarios such as code generation and code introspection, it's usually
-required to convert words from/to singular/plural. For example, if you need to
-know which property is associated with an *adder* method, you must convert from
-plural to singular (``addStories()`` method -> ``$story`` property).
+在某些场景中，例如代码生成和代码内省，通常需要将单词在单复数之间转换。
+例如，如果你需要知道哪个属性与一个 *adder*
+方法相关联，则必须从复数转换为单数（``addStories()`` 方法 -> ``$story`` 属性）。
 
-Although most human languages define simple pluralization rules, they also
-define lots of exceptions. For example, the general rule in English is to add an
-``s`` at the end of the word (``book`` -> ``books``) but there are lots of
-exceptions even for common words (``woman`` -> ``women``, ``life`` -> ``lives``,
-``news`` -> ``news``, ``radius`` -> ``radii``, etc.)
+虽然大多数人类语言都定义了简单的复数规则，但它们也定义了许多例外。
+例如，英语的一般规则是在单词的末尾添加一个``s``（``book`` ->
+``books``），但即使是常用单词也有很多例外（``woman`` -> ``women``、``life`` ->
+``lives``、``news`` -> ``news``、``radius`` -> ``radii`` 等等）。
 
-This component abstracts all those pluralization rules so you can convert
-from/to singular/plural with confidence. However, due to the complexity of the
-human languages, this component only provides support for the English language.
+此组件抽象所有这些复数规则，以便你可以放心地在单复数之间转换。
+但是，由于人类语言的复杂性，该组件仅提供对英语的支持。
 
-Usage
+用法
 -----
 
-The Inflector component provides two static methods to convert from/to
-singular/plural::
+Inflector组件提供两种静态方法，用于在单复数之间进行转换::
 
     use Symfony\Component\Inflector\Inflector;
 
@@ -51,9 +46,7 @@ singular/plural::
     Inflector::pluralize('news');       // 'news'
     Inflector::pluralize('bacterium');  // 'bacteria'
 
-Sometimes it's not possible to determine a unique singular/plural form for the
-given word. In those cases, the methods return an array with all the possible
-forms::
+有时，无法确定给定单词的唯一单数/复数形式。在这种情况下，方法会返回一个包含所有可能形式的数组::
 
     use Symfony\Component\Inflector\Inflector;
 

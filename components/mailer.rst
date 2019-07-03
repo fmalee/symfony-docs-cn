@@ -2,17 +2,17 @@
    single: Mailer
    single: Components; Mailer
 
-The Mailer Component
+Mailer组件
 ====================
 
-    The Mailer component helps sending emails.
+    Mailer组件用于发送电子邮件。
 
 .. versionadded:: 4.3
 
-    The Mailer component was introduced in Symfony 4.3 and it's still
-    considered an :doc:`experimental feature </contributing/code/experimental>`.
+    Mailer组件是在Symfony 4.3中引入的，它仍然被认为是一个
+    :doc:`实验性功能 </contributing/code/experimental>`。
 
-Installation
+安装
 ------------
 
 .. code-block:: terminal
@@ -21,8 +21,7 @@ Installation
 
 .. include:: /components/require_autoload.rst.inc
 
-Usage
+用法
 -----
 
-We're currently working on the documentation of this component that was just
-added to Symfony. We'll publish it in a few days.
+我们目前正在处理这个刚刚添加到Symfony的组件的文档。我们将在几天内发布它。

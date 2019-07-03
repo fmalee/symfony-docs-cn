@@ -31,16 +31,6 @@
 
 ### 未汉化
 
-- `compoments`
-  - `http_client.rst`
-  - `inflector.rst`
-  - `mailer.rst`
-  - `mime.rst`
-- `messenger/custom-transport.rst`
-- `messenger/message-recorder.rst`
-- `testing/functional_tests_assertions.rst`
-- `mailer.rst`
-- `messenger.rst`
 - [常用Bundle](https://symfony.com/doc/bundles/)
 - `introduction`
 - `compoments` (大部分)
@@ -135,8 +125,6 @@
 - `Constraint`：约束
 - `Assert`：断言
 - `Validator`：验证器
-- `Messenger`：信使
-- `Middleware`：中间件
 - `Broker`：代理
 - `Header`：标头
 - `UpperCamelCase`：大驼峰拼写法
@@ -170,7 +158,19 @@
 - `Contract` 契约
 - `Dump` 转储、备份
 - `Recomputation Callbacks` 
-- `tampede` 踩踏
+- `Stampede` 踩踏
+- `Multiplexing Responses` 多路复用响应
+- `Scope` 作用域
+- `Messenger`：信使
+- `Middleware`：中间件
+- `Transport` 传输
+- `Deliver` 投递
+- `Sender` 发送方
+- `Receiver` 接受方
+- `Stamp` 邮票
+- `Envelope` 信封
+- `Consume` 消费
+
 
 ### 导航调整
 

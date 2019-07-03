@@ -4,15 +4,13 @@
 信使
 =========================================
 
-Messenger provides a message bus with the ability to send messages and then
-handle them immediately in your application or send them through transports
-(e.g. queues) to be handled later. To learn more deeply about it, read the
-:doc:`Messenger component docs </components/messenger>` docs.
+Messenger提供了一种消息总线，能够发送消息，然后在应用中立即处理它们，或者通过传输（例如队列）发送消息，以便稍后处理。
+要更深入地了解它，请阅读 :doc:`Messenger组件文档 </components/messenger>`。
 
 安装
 ------------
 
-在使用 :doc:`Symfony Flex </setup/flex>` 的应用中，运行此命令安装信使：
+在使用 :doc:`Symfony Flex </setup/flex>` 的应用中，运行此命令安装信使::
 
 .. code-block:: terminal
 
@@ -21,13 +19,10 @@ handle them immediately in your application or send them through transports
 创建消息 & 处理器
 ----------------------------
 
-Messenger centers around two different classes that you'll create: (1) a message
-class that holds data and (2) a handler(s) class that will be called when that
-message is dispatched. The handler class will read the message class and perform
-some task.
+Messenger集中在你将创建的两个不同的类上：（1）保存数据的消息类和（2）在调度该消息时将调用的处理器类。
+处理器类将读取消息类并执行某些任务。
 
-There are no specific requirements for a message class, except that it can be
-serialized::
+除了可以被序列化之外，对消息类没有特定要求::
 
     // src/Message/SmsNotification.php
     namespace App\Message;
@@ -49,9 +44,8 @@ serialized::
 
 .. _messenger-handler:
 
-A message handler is a PHP callable, the easiest way to create it is to create a class that implements
-``MessageHandlerInterface`` and has an ``__invoke()`` method that's
-type-hinted with the message class (or a message interface)::
+消息处理器是一个PHP可调用，创建它的最简单方法是创建一个实现了 ``MessageHandlerInterface``
+的类，并且该类具有一个用消息类（或消息接口）类型提示的 ``__invoke()`` 方法::
 
     // src/MessageHandler/SmsNotificationHandler.php
     namespace App\MessageHandler;
@@ -63,25 +57,24 @@ type-hinted with the message class (or a message interface)::
     {
         public function __invoke(SmsNotification $message)
         {
-            // ... do some work - like sending an SMS message!
+            // ... 做一些工作 - 比如发送短信！
         }
     }
 
-Thanks to :ref:`autoconfiguration <services-autoconfigure>` and the ``SmsNotification``
-type-hint, Symfony knows that this handler should be called when an ``SmsNotification``
-message is dispatched. Most of the time, this is all you need to do. But you can
-also :ref:`manually configure message handlers <messenger-handler-config>`. To
-see all the configured handlers, run:
+由于 :ref:`自动配置 <services-autoconfigure>` 和 ``SmsNotification``
+类型约束，Symfony知道在调度 ``SmsNotification``
+消息时应该调用此处理器。大多数情况下，这就是你需要做的。但你也可以
+:ref:`手动配置消息处理器 <messenger-handler-config>`。要查看所有已配置的处理器，请运行：
 
 .. code-block:: terminal
 
     $ php bin/console debug:messenger
 
-Dispatching the Message
+调度消息
 -----------------------
 
-You're ready! To dispatch the message (and call the handler), inject the
-``message_bus`` service (via the ``MessageBusInterface``), like in a controller::
+你已经准备好了！要调度该消息（并调用对应处理器），请注入 ``message_bus``
+服务（通过 ``MessageBusInterface``），比如在控制器中::
 
     // src/Controller/DefaultController.php
     namespace App\Controller;
@@ -94,33 +87,30 @@ You're ready! To dispatch the message (and call the handler), inject the
     {
         public function index(MessageBusInterface $bus)
         {
-            // will cause the SmsNotificationHandler to be called
+            // 将会调用 SmsNotificationHandler
             $bus->dispatch(new SmsNotification('Look! I created a message!'));
 
-            // or use the shortcut
+            // 或者使用快捷方式
             $this->dispatchMessage(new SmsNotification('Look! I created a message!'));
 
             // ...
         }
     }
 
-Transports: Async/Queued Messages
+传输：异步/队列消息
 ---------------------------------
 
-By default, messages are handled as soon as they are dispatched. If you want
-to handle a message asynchronously, you can configure a transport. A transport
-is capable of sending messages (e.g. to a queueing system) and then
-:ref:`receiving them via a worker<messenger-worker>`. Messenger supports
-:ref:`multiple transports <messenger-transports-config>`.
+默认情况下，消息在调度后会立即处理。如果要异步处理消息，可以配置传输。
+传输能够发送消息（例如，到队列系统），然后
+:ref:`通过一个Worker接收它们<messenger-worker>`。Messenger支持
+:ref:`多种传输 <messenger-transports-config>`。
 
 .. note::
 
-    If you want to use a transport that's not supported, check out the
-    `Enqueue's transport`_, which supports things like Kafka, Amazon SQS and
-    Google Pub/Sub.
+    如果你想使用不受支持的传输，请查看
+    `Enqueue的传输`_，它支持Kafka、Amazon SQS和Google Pub/Sub等传输。
 
-A transport is registered using a "DSN". Thanks to Messenger's Flex recipe, your
-``.env`` file already has a few examples.
+可以使用"DSN"注册传输。得益于Messenger的Flex指令，你的 ``.env`` 文件中已经有一些例子。
 
 .. code-block:: bash
 
@@ -128,11 +118,10 @@ A transport is registered using a "DSN". Thanks to Messenger's Flex recipe, your
     # MESSENGER_TRANSPORT_DSN=doctrine://default
     # MESSENGER_TRANSPORT_DSN=redis://localhost:6379/messages
 
-Uncomment whichever transport you want (or set it in ``.env.local``). See
-:ref:`messenger-transports-config` for more details.
+取消你想要的任何传输的注释（或在 ``.env.local`` 中设置它）。有关详细信息，请参阅
+:ref:`messenger-transports-config`。
 
-Next, in ``config/packages/messenger.yaml``, let's define a transport called ``async``
-that uses this configuration:
+接下来，让我们在 ``config/packages/messenger.yaml`` 中定义一个使用此配置的名为 ``async`` 的传输：
 
 .. configuration-block::
 
@@ -144,7 +133,7 @@ that uses this configuration:
                 transports:
                     async: "%env(MESSENGER_TRANSPORT_DSN)%"
 
-                    # or expanded to configure more options
+                    # 或展开以配置更多选项
                     #async:
                     #    dsn: "%env(MESSENGER_TRANSPORT_DSN)%"
                     #    options: []
@@ -194,11 +183,10 @@ that uses this configuration:
 
 .. _messenger-routing:
 
-Routing Messages to a Transport
+将消息路由到传输
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Now that you have a transport configured, instead of handling a message immediately,
-you can configure them to be sent to a transport:
+现在你已配置好传输，如果不想立即处理消息，你可以将它们配置为发送到一个传输：
 
 .. configuration-block::
 
@@ -211,7 +199,7 @@ you can configure them to be sent to a transport:
                     async: "%env(MESSENGER_TRANSPORT_DSN)%"
 
                 routing:
-                    # async is whatever name you gave your transport above
+                    # "async" 是你在上面为传输指定的任何名称
                     'App\Message\SmsNotification':  async
 
     .. code-block:: xml
@@ -248,12 +236,10 @@ you can configure them to be sent to a transport:
             ],
         ]);
 
-Thanks to this, the ``App\Message\SmsNotification`` will be sent to the ``async``
-transport and its handler(s) will *not* be called immediately. Any messages not
-matched under ``routing`` will still be handled immediately.
+现在 ``App\Message\SmsNotification`` 将被发送到 ``async``
+传输，并且 *不会* 立即调用其处理器。任何不匹配 ``routing`` 的消息仍会立即处理。
 
-You can also route classes by their parent class or interface. Or send messages
-to multiple transport:
+你还可以使用其父类或接口来路由多个类。或者将消息发送到多个传输：
 
 .. configuration-block::
 
@@ -263,7 +249,7 @@ to multiple transport:
         framework:
             messenger:
                 routing:
-                    # route all messages that extend this example base class or interface
+                    // 路由所有扩展此示例基类或接口的消息
                     'App\Message\AbstractAsyncMessage': async
                     'App\Message\AsyncMessageInterface': async
 
@@ -312,12 +298,11 @@ to multiple transport:
             ],
         ]);
 
-Doctrine Entities in Messages
+消息中的Doctrine实体
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you need to pass a Doctrine entity in a message, it's better to pass the entity's
-primary key (or whatever relevant information the handler actually needs, like ``email``,
-etc) instead of the object::
+如果需要在消息中传递Doctrine实体，最好传递实体的主键（或处理器实际需要的任何相关信息，如
+``email``等）而不是对象::
 
     class NewUserWelcomeEmail
     {
@@ -334,7 +319,7 @@ etc) instead of the object::
         }
     }
 
-Then, in your handler, you can query for a fresh object::
+然后，你可以在你的处理器中查询一个“新鲜”的对象::
 
     // src/MessageHandler/NewUserWelcomeEmailHandler.php
     namespace App\MessageHandler;
@@ -356,20 +341,18 @@ Then, in your handler, you can query for a fresh object::
         {
             $user = $this->userRepository->find($welcomeEmail->getUserId());
 
-            // ... send an email!
+            // ... 发送电子邮件！
         }
     }
 
-This guarantees the entity contains fresh data.
+这样可以保证实体总是包含新数据。
 
-Handling Messages Synchronously
+同步处理消息
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If a message doesn't :ref:`match any routing rules <messenger-routing>`, it won't
-be sent to any transport and will be handled immediately. In some cases (like
-when `binding handlers to different transports`_),
-it's easier or more flexible to handle this explicitly: by creating a ``sync``
-transport and "sending" messages there to be handled immediately:
+如果一个消息不 :ref:`匹配任何路由规则 <messenger-routing>`，则不会将其发送到任何传输，而是立即处理。
+在某些情况下（比如 `将处理器绑定到不同的传输`_ 时），显式处理这些会更容易或更灵活 -
+通过创建一个 ``sync`` 传输并“发送”消息来立即处理它：
 
 .. configuration-block::
 
@@ -379,7 +362,7 @@ transport and "sending" messages there to be handled immediately:
         framework:
             messenger:
                 transports:
-                    # ... other transports
+                    # ... 其他传输
 
                     sync: 'sync://'
 
@@ -427,66 +410,62 @@ transport and "sending" messages there to be handled immediately:
             ],
         ]);
 
-Creating your Own Transport
+创建自己的传输
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You can also create your own transport if you need to send or receive messages
-from something that is not supported. See :doc:`/messenger/custom-transport`.
+如果你需要从不受支持的地方发送或接收消息，你还可以创建自己的传输。请参见
+:doc:`/messenger/custom-transport`。
 
 .. _messenger-worker:
 
-Consuming Messages (Running the Worker)
+消费消息（运行Worker）
 ---------------------------------------
 
-Once your messages have been routed, in most cases, you'll need to "consume" them.
-You can do this with the ``messenger:consume`` command:
+一旦你的消息被路由，在大多数情况下你将需要“消费”它们。你可以使用 ``messenger:consume``
+命令来执行此操作：
 
 .. code-block:: terminal
 
     $ php bin/console messenger:consume async
 
-    # use -vv to see details about what's happening
+    # 使用 -vv 查看正在发生的事情的详细信息
     $ php bin/console messenger:consume async -vv
 
 .. versionadded:: 4.3
 
-    The ``messenger:consume`` command was renamed in Symfony 4.3 (previously it
-    was called ``messenger:consume-messages``).
+    在Symfony 4.3中重命名了 ``messenger:consume`` 命令（之前名为
+    ``messenger:consume-messages``）。
 
-The first argument is the receiver's name (or service id if you routed to a
-custom service). By default, the command will run forever: looking for new messages
-on your transport and handling them. This command is called your "worker".
+第一个参数是接收方的名称（如果你路由到一个自定义服务，则为服务ID）。
+默认情况下，该命令将永久运行：在你的传输上查找新消息并处理它们。此命令称为“worker”。
 
-Deploying to Production
+部署到生产
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-On production, there are a few important things to think about:
+在生产中，需要考虑一些重要的事情：
 
-**Use Supervisor to keep your worker(s) running**
-    You'll want one or more "workers" running at all times. To do that, use a
-    process control system like :ref:`Supervisor <messenger-supervisor>`.
+**使用 Supervisor 让你的 Worker 持续运行**
+    你会希望一个或多个“worker”一直在运行。为此，请使用
+    :ref:`Supervisor <messenger-supervisor>` 等进程控制系统。
 
-**Don't Let Workers Run Forever**
-    Some services (like Doctrine's EntityManager) will consume more memory
-    over time. So, instead of allowing your worker to run forever, use a flag
-    like ``messenger:consume --limit=10`` to tell your worker to only handle 10
-    messages before exiting (then Supervisor will create a new process). There
-    are also other options like ``--memory-limit=128M`` and ``--time-limit=3600``.
+**不要让 Worker 永久运行**
+    一些服务（如Doctrine的EntityManager）将随着时间的推移消耗更多的内存。
+    因此，不要让你的Worker永远运行，而是使用类似 ``messenger:consume --limit=10``
+    的标志，告诉你的Worker在退出前只处理10条消息（然后Supervisor将创建一个新进程）。
+    还有其他选项，如 ``--memory-limit=128M`` 和 ``--time-limit=3600``。
 
-**Restart Workers on Deploy**
-    Each time you deploy, you'll need to restart all your worker processes so
-    that they see the newly deployed code. To do this, run ``messenger:stop-workers``
-    on deploy. This will signal to each worker that it should finish the message
-    it's currently handling and shut down gracefully. Then, Supervisor will create
-    new worker processes. The command uses the :ref:`app <cache-configuration-with-frameworkbundle>`
-    cache internally - so make sure this is configured to use an adapter you like.
+**部署时重新启动 Worker**
+    每次部署时，都需要重新启动所有Worker进程，以便新部署的代码能生效。为此，请在部署上运行
+    ``messenger:stop-workers``。这将向每个Worker发出信号，指示它应该在完成当前正在处理的消息后正常关闭。
+    然后，Supervisor将创建新的Worker进程。该命令在内部使用
+    :ref:`app <cache-configuration-with-frameworkbundle>` 缓存 -
+    因此请确保将其配置为你喜欢的适配器。
 
-Prioritized Transports
+优先传输
 ~~~~~~~~~~~~~~~~~~~~~~
 
-Sometimes certain types of messages should have a higher priority and be handled
-before others. To make this possible, you can create multiple transports and route
-different messages to them. For example:
+有时，某些类型的消息应该具有更高的优先级，并先于其他类型的消息进行处理。
+为了实现这一点，你可以创建多个传输并将不同的消息路由到它们。例如：
 
 .. configuration-block::
 
@@ -499,8 +478,8 @@ different messages to them. For example:
                     async_priority_high:
                         dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
                         options:
-                            # queue_name is specific to the doctrine transport
-                            # try "exchange" for amqp or "group1" for redis
+                            # “queue_name” 特定于doctrine传输
+                            # 尝试使用amqp的“exchange”或redis的“group1”
                             queue_name: high
                     async_priority_low:
                         dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
@@ -568,34 +547,31 @@ different messages to them. For example:
             ],
         ]);
 
-You can then run individual workers for each transport or instruct one worker
-to handle messages in a priority order:
+然后，你可以为每个传输运行单个Worker，或者指示一个Worker按优先级顺序处理消息：
 
 .. code-block:: terminal
 
     $ php bin/console messenger:consume async_priority_high async_priority_low
 
-The worker will always first look for messages waiting on ``async_priority_high``. If
-there are none, *then* it will consume messages from ``async_priority_low``.
+该Worker总是首先等待查找来自 ``async_priority_high`` 的消息。如果没有，它 *才会* 消费来自
+``async_priority_low`` 的消息。
 
 .. _messenger-supervisor:
 
-Supervisor Configuration
+Supervisor配置
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Supervisor is a great tool to guarantee that your worker process(es) is
-*always* running (even if it closes due to failure, hitting a message limit
-or thanks to ``messenger:stop-workers``). You can install it on Ubuntu, for
-example, via:
+Supervisor是一个很好的工具，可以保证你的Worker进程 *始终*
+在运行（即使它因故障而关闭、达到消息限制或接收到 ``messenger:stop-workers``）。
+你可以在Ubuntu上安装它，例如通过：
 
 .. code-block:: terminal
 
     $ sudo apt-get install supervisor
 
-Supervisor configuration files typically live in a ``/etc/supervisor/conf.d``
-directory. For example, you can create a new ``messenger-worker.conf`` file
-there to make sure that 2 instances of ``messenger:consume`` are running at all
-times:
+Supervisor的配置文件通常位于 ``/etc/supervisor/conf.d``
+目录中。例如，你可以在那里创建一个新的 ``messenger-worker.conf``
+文件，以确保始终运行2个 ``messenger:consume`` 实例：
 
 .. code-block:: ini
 
@@ -608,9 +584,8 @@ times:
     autorestart=true
     process_name=%(program_name)s_%(process_num)02d
 
-Change the ``async`` argument to use the name of your transport (or transports)
-and ``user`` to the Unix user on your server. Next, tell Supervisor to read your
-config and start your workers:
+更改 ``async`` 参数为需要的（多个）传输的名称以及 ``user``
+为你的服务器上的Unix用户。接下来，告诉Supervisor读取你的配置并启动你的Worker：
 
 .. code-block:: terminal
 
@@ -620,19 +595,16 @@ config and start your workers:
 
     $ sudo supervisorctl start messenger-consume
 
-See the `Supervisor docs`_ for more details.
+有关更多详细信息，请参阅 `Supervisor文档`_。
 
 .. _messenger-retries-failures:
 
-Retries & Failures
+重试和失败
 ------------------
 
-If an exception is thrown while consuming a message from a transport it will
-automatically be re-sent to the transport to be tried again. By default, a message
-will be retried 3 times before being discarded or
-:ref:`sent to the failure transport <messenger-failure-transport>`. Each retry
-will also be delayed, in case the failure was due to a temporary issue. All of
-this is configurable for each transport:
+如果在消费来自一个传输的消息时抛出异常，则会自动将该消息重新发送到该传输以便重试。
+默认情况下，消息在被丢弃或 :ref:`发送到失败传输 <messenger-failure-transport>` 之前将重试3次。
+如果失败是由临时问题引起的，则每次重试的时间也将延迟。所有这些对于每个传输都是可配置的：
 
 .. configuration-block::
 
@@ -645,34 +617,34 @@ this is configurable for each transport:
                     async_priority_high:
                         dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
 
-                        # default configuration
+                        # 默认配置
                         retry_strategy:
                             max_retries: 3
-                            # milliseconds delay
+                            # 毫秒级别的延迟
                             delay: 1000
-                            # causes the delay to be higher before each retry
-                            # e.g. 1 second delay, 2 seconds, 4 seconds
+                            # 在每次重试之前将延迟调至更高
+                            # 例如延迟1秒、2秒、4秒
                             multiplier: 2
                             max_delay: 0
-                            # override all of this with a service that
-                            # implements Symfony\Component\Messenger\Retry\RetryStrategyInterface
+                            # 使用实现了 Symfony\Component\Messenger\Retry\RetryStrategyInterface
+                            # 的服务重写所有这些
                             # service: null
 
-Avoiding Retrying
+避免重试
 ~~~~~~~~~~~~~~~~~
 
-Sometimes handling a message might fail in a way that you *know* is permanent
-and should not be retried. If you throw
-:class:`Symfony\\Component\\Messenger\\Exception\\UnrecoverableMessageHandlingException`,
-the message will not be retried.
+有时处理的消息可能会以你 *明确* 是永久性的方式失败，那么不应该重试该消息。
+如果你抛出
+:class:`Symfony\\Component\\Messenger\\Exception\\UnrecoverableMessageHandlingException`，
+将不会重试该消息。
 
 .. _messenger-failure-transport:
 
-Saving & Retrying Failed Messages
+保存并重试失败的消息
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If a message fails it is retried multiple times (``max_retries``) and then will
-be discarded. To avoid this happening, you can instead configure a ``failure_transport``:
+如果消息失败，则会多次重试（``max_retries``），然后将被丢弃。
+为避免这种情况发生，你可以改为配置一个 ``failure_transport``：
 
 .. configuration-block::
 
@@ -681,74 +653,68 @@ be discarded. To avoid this happening, you can instead configure a ``failure_tra
         # config/packages/messenger.yaml
         framework:
             messenger:
-                # after retrying, messages will be sent to the "failed" transport
+                # 重试后，消息将发送到 "failed" 传输
                 failure_transport: failed
 
                 transports:
-                    # ... other transports
+                    # ... 其他传输
 
                     failed: 'doctrine://default?queue_name=failed'
 
-In this example, if handling a message fails 3 times (default ``max_retries``),
-it will then be sent to the ``failed`` transport. While you *can* use
-``messenger:consume failed`` to consume this like a normal transport, you'll
-usually want to manually view the messages in the failure transport and choose
-to retry them:
+在本例中，如果处理一个消息失败了3次（默认的 ``max_retries``），那么它将被发送到 ``failed``
+传输。当你 *可以* 像消费普通传输一样使用 ``messenger:consume failed``
+时，你通常希望手动查看失败传输中的消息并选择一些重试：
 
 .. code-block:: terminal
 
-    # see all messages in the failure transport
+    # 查看失败传输中的所有消息
     $ php bin/console messenger:failed:show
 
-    # see details about a specific failure
+    # 查看有关特定失败的详细信息
     $ php bin/console messenger:failed:show 20 -vv
 
-    # view and retry messages one-by-one
+    # 逐个查看和重试消息
     $ php bin/console messenger:failed:retry -vv
 
-    # retry specific messages
+    # 重试特定消息
     $ php bin/console messenger:failed:retry 20 30 --force
 
-    # remove a message without retrying it
+    # 删除不需要重试的消息
     $ php bin/console messenger:failed:remove 20
 
-If the message fails again, it will be re-sent back to the failure transport
-due to the normal :ref:`retry rules <messenger-retries-failures>`. Once the max
-retry has been hit, the message will be discarded permanently.
+如果消息再次失败，则由于正常的
+:ref:`重试规则 <messenger-retries-failures>`，它将被重新发送回失败传输。
+一旦达到最大重试次数，该消息将被永久丢弃。
 
 .. _messenger-transports-config:
 
-Transport Configuration
+传输配置
 -----------------------
 
-Messenger supports a number of different transport types, each with their own
-options.
+Messenger支持许多不同的传输类型，每种类型都有自己的选项。
 
-AMQP Transport
+AMQP传输
 ~~~~~~~~~~~~~~
 
-The ``amqp`` transport configuration looks like this:
+``amqp`` 传输配置如下：
 
 .. code-block:: bash
 
     # .env
     MESSENGER_TRANSPORT_DSN=amqp://guest:guest@localhost:5672/%2f/messages
 
-To use Symfony's built-in AMQP transport, you need the AMQP PHP extension.
+要使用Symfony的内置AMQP传输，你需要AMQP PHP扩展。
 
 .. note::
 
-    By default, the transport will automatically create any exchanges, queues and
-    binding keys that are needed. That can be disabled, but some functionality
-    may not work correctly (like delayed queues).
+    默认情况下，该传输将自动创建所需的任何交换机(exchange)、队列和键绑定。
+    你可以禁用它，但某些功能可能无法正常工作（如延迟队列）。
 
-The transport has a number of other options, including ways to configure
-the exchange, queues binding keys and more. See the documentation on
-:class:`Symfony\\Component\\Messenger\\Transport\\AmqpExt\\Connection`.
+该传输还有许多其他选项，包括配置交换机的方法、队列的绑定键等。具体请参阅
+:class:`Symfony\\Component\\Messenger\\Transport\\AmqpExt\\Connection` 文档。
 
-You can also configure AMQP-specific settings on your message by adding
-:class:`Symfony\\Component\\Messenger\\Transport\\AmqpExt\\AmqpStamp` to
-your Envelope::
+你还可以通过添加 :class:`Symfony\\Component\\Messenger\\Transport\\AmqpExt\\AmqpStamp`
+到你的信封来为消息配置特定于AMQP的设置::
 
     use Symfony\Component\Messenger\Transport\AmqpExt\AmqpStamp;
     // ...
@@ -758,30 +724,29 @@ your Envelope::
         new AmqpStamp('custom-routing-key', AMQP_NOPARAM, $attributes)
     ]);
 
-Doctrine Transport
+Doctrine传输
 ~~~~~~~~~~~~~~~~~~
 
 .. versionadded:: 4.3
 
-    The Doctrine transport was introduced in Symfony 4.3.
+    在Symfony 4.3中引入了Doctrine传输。
 
-The Doctrine transport can be used to store messages in a database table.
+Doctrine传输可用于在一个数据库表中存储消息。
 
 .. code-block:: bash
 
     # .env
     MESSENGER_TRANSPORT_DSN=doctrine://default
 
-The format is ``doctrine://<connection_name>``, in case you have multiple connections
-and want to use one other than the "default". The transport will automatically create
-a table named ``messenger_messages`` (this is configurable) when the transport is
-first used. You can disable that with the ``auto_setup`` option and set the table
-up manually by calling the ``messenger:setup-transports`` command.
+如果你有多个连接，并且希望使用除“默认”以外的一个连接，则其格式为
+``doctrine://<connection_name>``。首次使用该传输时，该传输将自动创建一个名为
+``messenger_messages``（这是可配置的）的表。你可以使用 ``auto_setup`` 选项来禁用该行为，并通过调用
+``messenger:setup-transports`` 命令来手动设置该表。
 
 .. tip::
 
-    To avoid tools like Doctrine Migrations from trying to remove this table because
-    it's not part of your normal schema, you can set the ``schema_filter`` option:
+    为避免Doctrine Migrations等工具因为因为该表不是正常模式的一部分而尝试删除它，你可以设置
+    ``schema_filter`` 选项：
 
     .. code-block:: yaml
 
@@ -790,7 +755,7 @@ up manually by calling the ``messenger:setup-transports`` command.
             dbal:
                 schema_filter: '~^(?!messenger_messages)~'
 
-The transport has a number of options:
+该传输有很多选项：
 
 .. configuration-block::
 
@@ -845,7 +810,7 @@ The transport has a number of options:
             ],
         ]);
 
-Options defined under ``options`` take precedence over ones defined in the DSN.
+``options`` 中定义的选项优先于DSN中定义的选项。
 
 ==================  ===================================  ======================
      Option         Description                          Default
@@ -864,29 +829,27 @@ auto_setup          Whether the table should be created
                     automatically during send / get.     true
 ==================  ===================================  ======================
 
-Redis Transport
+Redis传输
 ~~~~~~~~~~~~~~~
 
 .. versionadded:: 4.3
 
-    The Redis transport was introduced in Symfony 4.3.
+    在Symfony 4.3中引入了Redis传输。
 
-The Redis transport uses `streams`_ to queue messages.
+Redis传输使用 `流`_ 来队列消息。
 
 .. code-block:: bash
 
     # .env
     MESSENGER_TRANSPORT_DSN=redis://localhost:6379/messages
 
-To use the Redis transport, you will need the Redis PHP extension (^4.3) and
-a running Redis server (^5.0).
+要使用Redis传输，你需要Redis PHP扩展（^ 4.3）和正在运行的Redis服务器（^ 5.0）。
 
 .. caution::
 
-    The Redis transport does not support "delayed" messages.
+    Redis传输不支持“延迟”消息。
 
-A number of options can be configured via the DSN or via the ``options`` key
-under the transport in ``messenger.yaml``:
+可以通过DSN或在 ``messenger.yaml`` 中该传输下的 ``options`` 键来配置许多选项：
 
 ==================  =================================== =======
      Option               Description                   Default
@@ -899,17 +862,15 @@ serializer          How to serialize the final payload  ``Redis::SERIALIZER_PHP`
                     ``Redis::OPT_SERIALIZER`` option)
 ==================  =================================== =======
 
-In Memory Transport
+内存传输
 ~~~~~~~~~~~~~~~~~~~
 
 .. versionadded:: 4.3
 
-    The ``in-memory`` transport was introduced in Symfony 4.3.
+    在Symfony 4.3中引入了 ``in-memory`` 传输。
 
-The ``in-memory`` transport does not actually delivery messages. Instead, it
-holds them in memory during the request, which can be useful for testing.
-For example, if you have an ``async_priority_normal`` transport, you could
-override it in the ``test`` environment to use this transport:
+``in-memory`` 传输并不实际的投递消息。相反，它在请求期间将消息保存在内存中，这对测试很有用。
+例如，如果你有一个 ``async_priority_normal`` 传输，则可以在 ``test`` 环境中重写它以使用此传输：
 
 .. code-block:: yaml
 
@@ -919,9 +880,8 @@ override it in the ``test`` environment to use this transport:
             transports:
                 async_priority_normal: 'in-memory:///'
 
-Then, while testing, messages will *not* be delivered to the real transport.
-Even better, in a test, you can check that exactly one message was sent
-during a request::
+然后，在测试期间消息将 *不会* 投递到实际传输。
+更棒的是，在测试中，你可以检查在请求期间是否发送了一条消息::
 
     // tests/DefaultControllerTest.php
     namespace App\Tests;
@@ -944,20 +904,18 @@ during a request::
         }
     }
 
-Serializing Messages
+序列化消息
 ~~~~~~~~~~~~~~~~~~~~
 
 .. versionadded:: 4.3
 
-    The default serializer changed in 4.3 from the Symfony serializer to the
-    native PHP serializer. Existing applications should configure their transports
-    to use the Symfony serializer to avoid losing already-queued messages after
-    upgrading.
+    在4.3中，默认的序列化器从Symfony序列化器更改为原生的PHP序列化器。
+    现有的应用应该重新配置传输以使用Symfony序列化器，以避免在升级后丢失已队列化的消息。
 
-When messages are sent to (and received from) a transport, they're serialized
-using PHP's native ``serialize()`` & ``unserialize()`` functions. You can change
-this globally (or for each transport) to a service that implements
-:class:`Symfony\\Component\\Messenger\\Transport\\Serialization\\SerializerInterface`:
+当消息发送到传输（并从传输接收）时，它们使用PHP的原生 ``serialize()`` & ``unserialize()``
+函数进行序列化。你可以将此行为全局的（或每个传输）更改为实现了
+:class:`Symfony\\Component\\Messenger\\Transport\\Serialization\\SerializerInterface`
+的一个服务：
 
 .. configuration-block::
 
@@ -977,23 +935,21 @@ this globally (or for each transport) to a service that implements
                         dsn: # ...
                         serializer: messenger.transport.symfony_serializer
 
-The ``messenger.transport.symfony_serializer`` is a built-in service that uses
-the :doc:`Serializer component </serializer>` and can be configured in a few ways.
-If you *do* choose to use the Symfony serializer, you can control the context
-on a case-by-case basis via the :class:`Symfony\\Component\\Messenger\\Stamp\\SerializerStamp`
-(see `Envelopes & Stamps`_).
+``messenger.transport.symfony_serializer`` 是一个使用 :doc:`Serializer组件 </serializer>`
+的内置服务，它可以通过几种方式进行配置。如果你 *确实* 选择使用Symfony序列化器，则可以通过
+:class:`Symfony\\Component\\Messenger\\Stamp\\SerializerStamp`
+（请参阅 `Envelopes & Stamps`_）逐个控制上下文。
 
-Customizing Handlers
+自定义处理器
 --------------------
 
 .. _messenger-handler-config:
 
-Manually Configuring Handlers
+手动配置处理器
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Symfony will normally :ref:`find and register your handler automatically <messenger-handler>`.
-But, you can also configure a handler manually - and pass it some extra config -
-by tagging the handler service with ``messenger.message_handler``
+Symfony通常会 :ref:`自动查找并注册你的处理器 <messenger-handler>`。但是，你也可以手动配置处理器
+- 使用 ``messenger.message_handler`` 标签来标记处理器服务，同时还可以传递一些额外的配置。
 
 .. configuration-block::
 
@@ -1004,14 +960,14 @@ by tagging the handler service with ``messenger.message_handler``
             App\MessageHandler\SmsNotificationHandler:
                 tags: [messenger.message_handler]
 
-                # or configure with options
+                # 或使用选项进行配置
                 tags:
                     -
                         name: messenger.message_handler
-                        # only needed if can't be guessed by type-hint
+                        # 只有在不能通过类型约束猜到时才需要
                         handles: App\Message\SmsNotification
 
-                        # options returned by getHandledMessages() are supported here
+                        # 这里支持 getHandledMessages() 返回的选项
 
     .. code-block:: xml
 
@@ -1037,11 +993,12 @@ by tagging the handler service with ``messenger.message_handler``
         $container->register(SmsNotificationHandler::class)
             ->addTag('messenger.message_handler');
 
-Handler Subscriber & Options
+处理器订阅器和选项
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-A handler class can handle multiple messages or configure itself by implementing
-:class:`Symfony\\Component\\Messenger\\Handler\\MessageSubscriberInterface`::
+一个处理器类可以通过实现
+:class:`Symfony\\Component\\Messenger\\Handler\\MessageSubscriberInterface`
+来处理多个消息或配置自身::
 
     // src/MessageHandler/SmsNotificationHandler.php
     namespace App\MessageHandler;
@@ -1064,10 +1021,10 @@ A handler class can handle multiple messages or configure itself by implementing
 
         public static function getHandledMessages(): iterable
         {
-            // handle this message on __invoke
+            // 在 __invoke 中处理此消息
             yield SmsNotification::class;
 
-            // also handle this message on handleOtherSmsNotification
+            // 也可以在 handleOtherSmsNotification 中处理此消息
             yield OtherSmsNotification::class => [
                 'method' => 'handleOtherSmsNotification',
                 //'priority' => 0,
@@ -1076,24 +1033,22 @@ A handler class can handle multiple messages or configure itself by implementing
         }
     }
 
-Binding Handlers to Different Transports
+将处理器绑定到不同的传输
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Each message can have multiple handlers, and when a message is consumed
-*all* of its handlers are called. But you can also configure a handler to only
-be called when it's received from a *specific* transport. This allows you to
-have a single message where each handler is called by a different "worker"
-that's consuming a different transport.
+每个消息都可以有多个处理器，当消费一个消息时，将调用其 *所有* 处理器。
+但是，你也可以将一个处理器配置为仅在从 *特定* 传输接收时才被调用。
+这允许你拥有一个其中每个处理器都由消费不同传输的不同“worker”调用的消息。
 
-Suppose you have an ``UploadedImage`` message with two handlers:
+假设你有一个带有两个处理器的 ``UploadedImage`` 消息：
 
-* ``ThumbnailUploadedImageHandler``: you want this to be handled by
-  a transport called ``image_transport``
+* ``ThumbnailUploadedImageHandler``：你希望通过名为 ``image_transport``
+  的传输来处理它；
 
-* ``NotifyAboutNewUploadedImageHandler``: you want this to be handled
-  by a transport called ``async_priority_normal``
+* ``NotifyAboutNewUploadedImageHandler``：你希望通过名为
+  ``async_priority_normal`` 的传输来处理它。
 
-To do this, add the ``from_transport`` option to each handler. For example::
+为此，请将 ``from_transport`` 选项添加到每个处理器。例如::
 
     // src/MessageHandler/ThumbnailUploadedImageHandler.php
     namespace App\MessageHandler;
@@ -1105,7 +1060,7 @@ To do this, add the ``from_transport`` option to each handler. For example::
     {
         public function __invoke(UploadedImage $uploadedImage)
         {
-            // do some thumbnailing
+            // 做一些缩略图工作
         }
 
         public static function getHandledMessages(): iterable
@@ -1116,7 +1071,7 @@ To do this, add the ``from_transport`` option to each handler. For example::
         }
     }
 
-And similarly::
+同样地::
 
     // src/MessageHandler/NotifyAboutNewUploadedImageHandler.php
     // ...
@@ -1133,7 +1088,7 @@ And similarly::
         }
     }
 
-Then, make sure to "route" your message to *both* transports:
+然后，确保将你的消息“路由”到这 *两个* 传输：
 
 .. configuration-block::
 
@@ -1190,30 +1145,28 @@ Then, make sure to "route" your message to *both* transports:
             ],
         ]);
 
-That's it! You can now consume each transport:
+仅此而已！你现在可以单独消费每个传输：
 
 .. code-block:: terminal
 
-    # will only call ThumbnailUploadedImageHandler when handling the message
+    # 处理该消息时只会调用 ThumbnailUploadedImageHandler
     $ php bin/console messenger:consume image_transport -vv
 
     $ php bin/console messenger:consume async_priority_normal -vv
 
 .. caution::
 
-    If a handler does *not* have ``from_transport`` config, it will be executed
-    on *every* transport that the message is received from.
+    如果一个处理器 *不* 具有 ``from_transport`` 它将在接收对应消息的 *每个* 传输上执行。
 
-Extending Messenger
+扩展信使
 -------------------
 
 Envelopes & Stamps
 ~~~~~~~~~~~~~~~~~~
 
-A message can be any PHP object. Sometimes, you may need to configure something
-extra about the message - like the way it should be handled inside Amqp or adding
-a delay before the message should be handled. You can do that by adding a "stamp"
-to your message::
+一个消息可以是任何PHP对象。有时，你可能需要对消息进行一些额外的配置 -
+比如在AMQP中处理消息的方式，或者在处理消息之前添加一个延迟。
+你可以通过在消息中添加“邮票”来完成此操作::
 
     use Symfony\Component\Messenger\Envelope;
     use Symfony\Component\Messenger\MessageBusInterface;
@@ -1222,11 +1175,11 @@ to your message::
     public function index(MessageBusInterface $bus)
     {
         $bus->dispatch(new SmsNotification('...'), [
-            // wait 5 seconds before processing
+            // 处理前等待5秒
             new DelayStamp(5000)
         ]);
 
-        // or explicitly create an Envelope
+        // 或者显式的创建信封
         $bus->dispatch(new Envelope(new SmsNotification('...'), [
             new DelayStamp(5000)
         ]));
@@ -1234,42 +1187,35 @@ to your message::
         // ...
     }
 
-Internally, each message is wrapped in an ``Envelope``, which holds the message
-and stamps. You can create this manually or allow the message bus to do it. There
-are a variety of different stamps for different purposes and they're used internally
-to track information about a message - like the message bus that's handling it
-or if it's being retried after failure.
+在内部，每条消息都被封装在一个保存着消息和邮票的 ``Envelope`` 中。
+你可以手动创建它，或者允许消息总线执行它。有各种不同用途的邮票，它们在内部用于跟踪有关消息的信息 -
+例如处理消息的消息总线，或者在失败后重试。
 
-Middleware
+中间件
 ~~~~~~~~~~
 
-What happens when you dispatch a message to a message bus depends on its
-collection of middleware (and their order). By default, the middleware configured
-for each bus looks like this:
+将消息调度到消息总线时会发生什么取决于它的中间件集合（及其顺序）。
+默认情况下，为每个总线配置的中间件如下所示：
 
-#. ``add_bus_name_stamp_middleware`` - adds a stamp to record which bus this
-   message was dispatched into;
+#. ``add_bus_name_stamp_middleware`` - 添加一个邮票以记录此消息被调度到哪个总线；
 
-#. ``dispatch_after_current_bus``- see :doc:`/messenger/message-recorder`;
+#. ``dispatch_after_current_bus``- 请参阅 :doc:`/messenger/message-recorder`；
 
-#. ``failed_message_processing_middleware`` - processes messages that are being
-   retried via the :ref:`failure transport <messenger-failure-transport>` to make
-   them properly function as if they were being received from their original transport;
+#. ``failed_message_processing_middleware`` - 处理正在通过
+   :ref:`失败传输 <messenger-failure-transport>`
+   重试的消息，使它们就像是从原始传输中接收一样的正常运行；
 
-#. Your own collection of middleware_;
+#. 你自己的 中间件_ 集合；
 
-#. ``send_message`` - if routing is configured for the transport, this sends
-   messages to that transport and stops the middleware chain;
+#. ``send_message`` - 如果为传输配置了路由，则会向该传输发送消息并停止中间件链；
 
-#. ``handle_message`` - calls the message handler(s) for the given message.
+#. ``handle_message`` - 为给定消息调用消息处理器。
 
 .. note::
 
-    These middleware names are actually shortcuts names. The real service ids
-    are prefixed with ``messenger.middleware.``.
+    这些中间件名称实际上是快捷方式名称。真实的服务ID都有 ``messenger.middleware.`` 前缀。
 
-You can add your own middleware to this list, or completely disable the default
-middleware and *only* include your own:
+你可以将自己的中间件添加到此列表中，或者完全禁用默认中间件并 *仅* 包含你自己的中间件：
 
 .. configuration-block::
 
@@ -1281,7 +1227,7 @@ middleware and *only* include your own:
                 buses:
                     messenger.bus.default:
                         middleware:
-                            # service ids that implement Symfony\Component\Messenger\Middleware
+                            # 实现了 Symfony\Component\Messenger\Middleware 的服务的ID
                             - 'App\Middleware\MyMiddleware'
                             - 'App\Middleware\AnotherMiddleware'
 
@@ -1328,14 +1274,12 @@ middleware and *only* include your own:
 
 .. note::
 
-    If a middleware service is abstract, a different instance of the service will
-    be created per bus.
+    如果中间件服务是抽象的，则每个总线将创建不同的服务实例。
 
-Middleware for Doctrine
+Doctrine中间件
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-If you use Doctrine in your app, a number of optional middleware exist that you
-may want to use:
+如果你在应用中使用Doctrine，则可能需要使用许多可选的中间件：
 
 .. configuration-block::
 
@@ -1347,23 +1291,21 @@ may want to use:
                 buses:
                     command_bus:
                         middleware:
-                            # wraps all handlers in a single Doctrine transaction
-                            # handlers do not need to call flush() and an error
-                            # in any handler will cause a rollback
+                            # 在单个Doctrine事务中封装所有处理器
+                            # 处理器不需要调用 flush()，
+                            # 并且任何处理器中的错误都将导致回滚
                             - doctrine_transaction
 
-                            # each time a message is handled, the Doctrine connection
-                            # is "pinged" and reconnected if it's closed. Useful
-                            # if your workers run for a long time and the database
-                            # connection is sometimes lost
+                            # 每次处理一个消息时，Doctrine连接都会是“pinged”并在关闭时重新连接。
+                            # 如果你的worker运行很长时间，并且有时数据库连接丢失，
+                            # 那么这个中间件能派上用场。
                             - doctrine_ping_connection
 
-                            # After handling, the Doctrine connection is closed,
-                            # which can free up database connections in a worker,
-                            # instead of keeping them open forever
+                            # 处理完成后，Doctrine连接将关闭，这可以释放worker中的数据库连接，
+                            # 而不是永久保持打开状态
                             - doctrine_close_connection
 
-                            # or pass a different entity manager to any
+                            # 或者将不同的实体管理器传递给任何处理器
                             #- doctrine_transaction: ['custom']
 
     .. code-block:: xml
@@ -1418,9 +1360,8 @@ may want to use:
 信使事件
 ~~~~~~~~~~~~~~~~
 
-In addition to middleware, Messenger also dispatches several events. You can
-:doc:`create an event listener </event_dispatcher>` to hook into various parts
-of the process. For each, the event class is the event name:
+除了中间件，Messenger还会调度几个事件。你可以 :doc:`创建一个事件监听器 </event_dispatcher>`
+来挂钩到进程的各个部分。对于事件，每个事件类即是事件名称：
 
 * :class:`Symfony\\Component\\Messenger\\Event\\SendMessageToTransportsEvent`
 * :class:`Symfony\\Component\\Messenger\\Event\\WorkerMessageFailedEvent`
@@ -1428,12 +1369,12 @@ of the process. For each, the event class is the event name:
 * :class:`Symfony\\Component\\Messenger\\Event\\WorkerMessageReceivedEvent`
 * :class:`Symfony\\Component\\Messenger\\Event\\WorkerStoppedEvent`
 
-Multiple Buses, Command & Event Buses
+多个总线、命令和事件总线
 -------------------------------------
 
-Messenger gives you a single message bus service by default. But, you can configure
-as many as you want, creating "command", "query" or "event" buses and controlling
-their middleware. See :doc:`/messenger/multiple_buses`.
+默认情况下，Messenger为你提供单个消息总线服务。
+但是，你可以根据需要配置任意多个消息总线，创建"command"、"query" 或 "event" 总线并控制它们的中间件。
+详情请参阅 :doc:`/messenger/multiple_buses`。
 
 扩展阅读
 ----------
@@ -1444,6 +1385,6 @@ their middleware. See :doc:`/messenger/multiple_buses`.
 
     /messenger/*
 
-.. _`enqueue's transport`: https://github.com/php-enqueue/messenger-adapter
+.. _`Enqueue的传输`: https://github.com/php-enqueue/messenger-adapter
 .. _`streams`: https://redis.io/topics/streams-intro
-.. _`Supervisor docs`: http://supervisord.org/
+.. _`Supervisor文档`: http://supervisord.org/

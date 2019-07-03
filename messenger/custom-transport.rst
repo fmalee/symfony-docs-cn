@@ -1,14 +1,12 @@
-How to Create Your own Messenger Transport
+如何创建自己的信使传输
 ==========================================
 
-Once you have written your transport's sender and receiver, you can register your
-transport factory to be able to use it via a DSN in the Symfony application.
+一旦你编写了传输的发送方和接收方，就可以注册你的传输工厂，以便能够通过Symfony应用中的DSN使用它。
 
-Create your Transport Factory
+创建运输工厂
 -----------------------------
 
-You need to give FrameworkBundle the opportunity to create your transport from a
-DSN. You will need a transport factory::
+你需要为FrameworkBundle提供从DSN创建传输的机会。你需要一个运输工厂::
 
     use Symfony\Component\Messenger\Transport\Receiver\ReceiverInterface;
     use Symfony\Component\Messenger\Transport\Sender\SenderInterface;
@@ -28,8 +26,8 @@ DSN. You will need a transport factory::
         }
     }
 
-The transport object needs to implement the ``TransportInterface`` (which simply combines
-the ``SenderInterface`` and ``ReceiverInterface``). It will look like this::
+传输对象需要实现 ``TransportInterface``（简单地组合 ``SenderInterface`` 和
+``ReceiverInterface``）。它看起来像这样::
 
     class YourTransport implements TransportInterface
     {
@@ -49,7 +47,7 @@ the ``SenderInterface`` and ``ReceiverInterface``). It will look like this::
         }
     }
 
-Register your Factory
+注册你的工厂
 ---------------------
 
 .. configuration-block::
@@ -85,11 +83,10 @@ Register your Factory
         $container->register(YourTransportFactory::class)
             ->setTags(['messenger.transport_factory']);
 
-Use your Transport
+使用你的传输
 ------------------
 
-Within the ``framework.messenger.transports.*`` configuration, create your
-named transport using your own DSN:
+在 ``framework.messenger.transports.*`` 配置中，使用你自己的DSN来创建自己命名的传输：
 
 .. configuration-block::
 
@@ -131,8 +128,7 @@ named transport using your own DSN:
             ],
         ]);
 
-In addition of being able to route your messages to the ``yours`` sender, this
-will give you access to the following services:
+除了能够将你的消息路由到 ``yours`` 发送方之外，还可以访问以下服务：
 
-#. ``messenger.sender.yours``: the sender;
-#. ``messenger.receiver.yours``: the receiver.
+#. ``messenger.sender.yours``: 发送方；
+#. ``messenger.receiver.yours``: 接受方。
