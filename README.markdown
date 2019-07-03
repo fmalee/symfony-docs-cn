@@ -9,7 +9,11 @@
 - `master`
   - `1310e0dc917f676f75662d6fe1053b3adaa695b6`（2018-12-04）
     - `components/dom_crawler.rst`
+- `4.3`
+  - `9a873fbc4c5fc497d1add66d9cb97251d2d55eeb`（2019-07-03）
+  - `85347ad57f682223a9a60ce050f2766659d07ecc`（2019-06-30）
 - `4.2`
+  - `1ec78cf5f6fd5d7768c9cbbd8a891b24cea4d3aa`（2019-07-03）
   - `54a5808672d7461e7ea3fefeeb33282dfa40c308`（2019-06-29）
   - `4fe8ad04430f2e47dd69a031faa22a0fe01b5e76`（2019-06-21）
   - `cfa34fc00e897c691ca59d2ff493d83dd5ee3253`（2019-06-21）
@@ -123,8 +127,6 @@
 - `Constraint`：约束
 - `Assert`：断言
 - `Validator`：验证器
-- `Messenger`：信使
-- `Middleware`：中间件
 - `Broker`：代理
 - `Header`：标头
 - `UpperCamelCase`：大驼峰拼写法
@@ -158,7 +160,19 @@
 - `Contract` 契约
 - `Dump` 转储、备份
 - `Recomputation Callbacks` 
-- `tampede` 踩踏
+- `Stampede` 踩踏
+- `Multiplexing Responses` 多路复用响应
+- `Scope` 作用域
+- `Messenger`：信使
+- `Middleware`：中间件
+- `Transport` 传输
+- `Deliver` 投递
+- `Sender` 发送方
+- `Receiver` 接受方
+- `Stamp` 邮票
+- `Envelope` 信封
+- `Consume` 消费
+
 
 ### 导航调整
 

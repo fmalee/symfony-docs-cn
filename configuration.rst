@@ -272,11 +272,12 @@ Symfony使用在 ``config/packages/`` 存储的文件来配置 :doc:`应用服�
 Symfony应用附带一个位于项目根目录的名为 ``.env``
 的文件。此文件用于定义环境变量的值，本文 :ref:`稍后 <config-dot-env>` 将对其进行详细说明。
 
-打开 ``.env`` 文件并编辑 ``APP_ENV`` 变量的值以更改运行应用的环境。例如，要在生产中运行应用：
+打开 ``.env`` 文件（如果你创建了 ``.env.local`` 文件，那它是更好的选择）并编辑
+``APP_ENV`` 变量的值以更改运行应用的环境。例如，要在生产中运行应用：
 
 .. code-block:: bash
 
-    # .env
+    # .env (或 .env.local)
     APP_ENV=prod
 
 此值同时应用于Web和控制台命令。但是，你可以在运行命名之前通过设置 ``APP_ENV`` 值来重写它们：

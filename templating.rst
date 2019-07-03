@@ -657,7 +657,7 @@ Symfony内置了几个特殊的Twig标签和函数，来帮助模板设计者简
 
 你也可以引用位于你bundle的 ``Resources/public/`` 文件夹下的资源。
 你需要运行 ``php bin/console assets:install target [--symlink]`` 命令，
-它会把文件复制（或符号链接）到正确的位置（默认目标位置是应用的 "public/" 目录）。
+它会把文件复制（或符号链接）到正确的位置（默认情况下，目标是应用的 "public/" 目录）。
 
 .. code-block:: html+twig
 

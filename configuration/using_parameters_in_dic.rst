@@ -136,4 +136,4 @@
 .. tip::
 
     在 ``Configurator`` 类中有一些 ``%kernel.debug%`` 使用实例，比如在TwigBundle中。
-    但是这是因为默认参数值是由Extension类设置的。
+    但是，这是因为默认参数值是由Extension类设置的。
