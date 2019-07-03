@@ -81,7 +81,7 @@
 
 为了帮助开发，symfony提供了一个可选的控制器基类，名为
 :class:`Symfony\\Bundle\\FrameworkBundle\\Controller\\AbstractController`。
-你可以继承通过它以访问一些 `辅助方法`_。
+你可以继承通过它以访问辅助方法。
 
 在控制器类的顶部添加 ``use`` 语句，然后修改 ``LuckyController`` 以继承它：
 
@@ -580,6 +580,5 @@ Symfony会将 ``Request`` 对象传递给任何使用 ``Request`` 类进行类�
 
     controller/*
 
-.. _`辅助方法`: https://github.com/symfony/symfony/blob/master/src/Symfony/Bundle/FrameworkBundle/Controller/ControllerTrait.php
 .. _`Symfony Maker`: https://symfony.com/doc/current/bundles/SymfonyMakerBundle/index.html
 .. _`未经验证的重定向安全漏洞`: https://www.owasp.org/index.php/Open_redirect

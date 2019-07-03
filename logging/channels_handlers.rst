@@ -92,7 +92,7 @@ Symfony框架将日志消息组织到通道中。
 
 .. caution::
 
-    ``channels`` 配置仅适用于顶层处理器。
+    ``channels`` 配置仅适用于顶级处理器。
     嵌套在 ``group``、``buffer``、``filter``、``fingers crossed``
     或其他此类处理器中的处理器将忽略此配置，然后所有消息都会被传递给它们。
 
