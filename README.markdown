@@ -155,7 +155,7 @@
 - `Transport` 传输
 - `Deliver` 投递
 - `Sender` 发送方
-- `Receiver` 接受方
+- `Receiver` 接收方
 - `Stamp` 邮票
 - `Envelope` 信封
 - `Consume` 消费

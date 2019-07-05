@@ -41,7 +41,7 @@ Messenger组件
    这些处理器将被 ``HandleMessageMiddleware`` 中间件调用。
 
 **Middleware**:
-  中间件可以在通过总线派遣时访问消息及其封装器器（信封）。
+  中间件可以在通过总线派遣时访问消息及其封装器（信封）。
   字面意思是“中间的软件”，它们与应用的核心问题（业务逻辑）无关。
   相反，它们是贯穿整个应用并影响整个消息总线的交叉(cross)关注点。
   例如：记录日志，验证一个消息，启动事务，...
@@ -58,7 +58,7 @@ Messenger组件
 总线
 -----
 
-总线用于派遣消息。总线的行为在其有序的中间件堆栈中。该组件附带了一组可以使用的中间件。
+总线用于调度消息。总线的行为存在于其有序的中间件堆栈中。该组件附带了一组可以使用的中间件。
 
 在Symfony的FrameworkBundle中使用消息总线时，会为你配置以下中间件：
 
@@ -106,9 +106,9 @@ Messenger组件
 向消息添加元数据（信封）
 ---------------------------------------
 
-如果需要向消息添加元数据或某些配置，请将其与 :class:`Symfony\\Component\\Messenger\\Envelope` 类包装在一起。
-请使用 :class:`Symfony\\Component\\Messenger\\Envelope` 类将其封装并添加邮票(stamp)。
-例如，要设置消息通过传输层时使用的序列化组，请使用 ``SerializerStamp`` 邮票::
+如果需要向消息添加元数据或某些配置，请使用 :class:`Symfony\\Component\\Messenger\\Envelope`
+类将其封装并添加邮票(stamp)。例如，要设置消息通过传输层时使用的序列化组，请使用
+``SerializerStamp`` 邮票::
 
     use Symfony\Component\Messenger\Envelope;
     use Symfony\Component\Messenger\Stamp\SerializerStamp;
@@ -128,15 +128,15 @@ Messenger组件
 #. :class:`Symfony\\Component\\Messenger\\Stamp\\ReceivedStamp`，
    一个内部邮票，用于标记(mark)从传输接收的消息。
 #. :class:`Symfony\\Component\\Messenger\\Stamp\\SentStamp`，
-   一个由特定发件人发送的用于标记消息的邮票，允许从
+   一个用于标记由特定发送方发送的消息的邮票，允许从
    :class:`Symfony\\Component\\Messenger\\Transport\\Sender\\SendersLocator`
-   访问发件人的FQCN和别名（如果可用）。
+   访问该发送方的FQCN和别名（如果可用的话）。
 #. :class:`Symfony\\Component\\Messenger\\Stamp\\HandledStamp`，
-   一个由特定处理器处理的用于标记消息的邮票。允许访问处理器的返回值，该处理器可从
+   一个用于标记由特定处理器处理的记消息的邮票。允许从
    :class:`Symfony\\Component\\Messenger\\Handler\\HandlersLocator`
-   调用其名称及别名（如果可用）。
+   访问该处理器的返回值、可调用名称及别名（如果可用的话）。
 
-你将收到该信封，而不是直接处理中间件中的消息。因此，你可以检查信封内容及其邮票，或添加任何信封::
+在你接收信封的中间件中，不直接处理消息。相反，你可以检查该信封内容及其邮票，或添加任何邮票::
 
     use App\Message\Stamp\AnotherStamp;
     use Symfony\Component\Messenger\Middleware\MiddlewareInterface;
@@ -164,7 +164,7 @@ Messenger组件
 
 如果要检查一个信封上的所有邮票，请使用 ``$envelope->all()``
 方法，该方法返回按类型（FQCN）分组的所有邮票。
-或者，你可以使用FQCN作为此方法的第一个参数来迭代所有特定类型的邮票（例如
+或者，你可以使用FQCN作为该方法的第一个参数来迭代所有特定类型的邮票（例如
 ``$envelope->all(ReceivedStamp::class)``）。
 
 .. note::
@@ -178,7 +178,7 @@ Messenger组件
 
 要发送和接收消息，你必须配置一个传输系统。该系统将负责与你的消息代理(broker)或第三方进行通信。
 
-自定义发件人
+自定义发送方
 ~~~~~~~~~~~~~~~
 
 想象一下，你已经有一个 ``ImportantAction`` 消息通过消息总线并由处理器处理。
@@ -225,10 +225,10 @@ Messenger组件
         }
     }
 
-自定义收件人
+自定义接收方
 ~~~~~~~~~~~~~~~~~
 
-收件人负责从一个源获取消息并将它们调度给应用。
+接收方负责从一个源获取消息并将它们调度给应用。
 
 想象一下，你已经使用 ``NewOrder`` 消息在应用中处理了一些“订单” 。
 现在，你希望与第三方或旧版应用集成，但不能使用API​​，而是需要使用带有新订单的共享CSV文件。
