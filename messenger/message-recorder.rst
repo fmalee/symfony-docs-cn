@@ -20,7 +20,7 @@
 对象并将该对象存储到数据库，然后调度一个 ``UserRegistered`` 消息给事件总线。
 
 ``UserRegistered`` 消息会有许多处理器，其中一个处理器可以向新用户发送欢迎电子邮件。
- 我们使用 ``DoctrineTransactionMiddleware`` 来在一个数据库事务中封装所有数据库查询。
+我们使用 ``DoctrineTransactionMiddleware`` 来在一个数据库事务中封装所有数据库查询。
 
 **问题1：** 如果在发送欢迎电子邮件时抛出异常，则该用户不会被创建，因为
 ``DoctrineTransactionMiddleware`` 将回滚已创建用户的Doctrine事务。

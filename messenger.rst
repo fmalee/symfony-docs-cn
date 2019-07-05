@@ -10,7 +10,7 @@ Messenger提供了一种消息总线，能够发送消息，然后在应用中�
 安装
 ------------
 
-在使用 :doc:`Symfony Flex </setup/flex>` 的应用中，运行此命令安装信使::
+在使用 :doc:`Symfony Flex </setup/flex>` 的应用中，运行此命令安装信使：
 
 .. code-block:: terminal
 
@@ -44,8 +44,8 @@ Messenger集中在你将创建的两个不同的类上：（1）保存数据的�
 
 .. _messenger-handler:
 
-消息处理器是一个PHP可调用，创建它的最简单方法是创建一个实现了 ``MessageHandlerInterface``
-的类，并且该类具有一个用消息类（或消息接口）类型提示的 ``__invoke()`` 方法::
+消息处理器是一个PHP可调用，创建它的最简单方法是创建一个实现 ``MessageHandlerInterface``
+的类，并且该类具有一个用消息类（或消息接口）类型约束的 ``__invoke()`` 方法::
 
     // src/MessageHandler/SmsNotificationHandler.php
     namespace App\MessageHandler;
@@ -249,7 +249,7 @@ Messenger集中在你将创建的两个不同的类上：（1）保存数据的�
         framework:
             messenger:
                 routing:
-                    // 路由所有扩展此示例基类或接口的消息
+                    # 路由所有扩展此示例基类或接口的消息
                     'App\Message\AbstractAsyncMessage': async
                     'App\Message\AsyncMessageInterface': async
 
@@ -602,7 +602,7 @@ Supervisor的配置文件通常位于 ``/etc/supervisor/conf.d``
 重试和失败
 ------------------
 
-如果在消费来自一个传输的消息时抛出异常，则会自动将该消息重新发送到该传输以便重试。
+如果在消费来自一个传输的消息时抛出异常，则会自动将该消息重新发送回该传输以便重试。
 默认情况下，消息在被丢弃或 :ref:`发送到失败传输 <messenger-failure-transport>` 之前将重试3次。
 如果失败是由临时问题引起的，则每次重试的时间也将延迟。所有这些对于每个传输都是可配置的：
 
@@ -738,10 +738,10 @@ Doctrine传输可用于在一个数据库表中存储消息。
     # .env
     MESSENGER_TRANSPORT_DSN=doctrine://default
 
-如果你有多个连接，并且希望使用除“默认”以外的一个连接，则其格式为
+如果你有多个连接，并且希望使用除“default”以外的一个连接，则其格式为
 ``doctrine://<connection_name>``。首次使用该传输时，该传输将自动创建一个名为
-``messenger_messages``（这是可配置的）的表。你可以使用 ``auto_setup`` 选项来禁用该行为，并通过调用
-``messenger:setup-transports`` 命令来手动设置该表。
+``messenger_messages`` （这是可配置的）的表。你可以使用 ``auto_setup``
+选项来禁用该行为，并通过调用 ``messenger:setup-transports`` 命令来手动设置该表。
 
 .. tip::
 
@@ -813,20 +813,16 @@ Doctrine传输可用于在一个数据库表中存储消息。
 ``options`` 中定义的选项优先于DSN中定义的选项。
 
 ==================  ===================================  ======================
-     Option         Description                          Default
+     选项           描述                                 默认值
 ==================  ===================================  ======================
-table_name          Name of the table                    messenger_messages
-queue_name          Name of the queue (a column in the   default
-                    table, to use one table for
-                    multiple transports)
-redeliver_timeout   Timeout before retrying a message    3600
-                    that's in the queue but in the
-                    "handling" state (if a worker died
-                    for some reason, this will occur,
-                    eventually you should retry the
-                    message) - in seconds.
-auto_setup          Whether the table should be created
-                    automatically during send / get.     true
+table_name          数据表的名称                          messenger_messages
+queue_name          队列的名称（表中的一个列，             default
+                    以便于多个传输使用一个表）
+redeliver_timeout   在重试位于队列中但处于“处理”状态的      3600
+                    消息之前的超时时间（如果某个worker
+                    由于某种 原因 死亡，就会发生这种情
+                    况，而该消息应该要重试）- 秒级。
+auto_setup          是否应在发送/接收期间自动创建表。       true
 ==================  ===================================  ======================
 
 Redis传输
@@ -854,16 +850,15 @@ Redis传输使用 `流`_ 来队列消息。
 可以通过DSN或在 ``messenger.yaml`` 中该传输下的 ``options`` 键来配置许多选项：
 
 ==================  =====================================  =======
-     Option               Description                      Default
+     选项                 描述                             默认值
 ==================  =====================================  =======
-stream              The Redis stream name                  messages
-group               The Redis consumer group name          symfony
-consumer            Consumer name used in Redis            consumer
-auto_setup          Create the Redis group automatically?  true
-auth                The Redis password
-serializer          How to serialize the final payload     ``Redis::SERIALIZER_PHP``
-                    in Redis (the
-                    ``Redis::OPT_SERIALIZER`` option)
+stream              Redis流的名称                          messages
+group               Redis消费组的名称                      symfony
+consumer            Redis中使用的消费器名称                 consumer
+auto_setup          是否自动创建Redis组？                   true
+auth                Redis的密码
+serializer          如何序列化Redis中的最终负载             ``Redis::SERIALIZER_PHP``
+                    （``Redis::OPT_SERIALIZER`` 选项）
 ==================  =====================================  =======
 
 内存传输

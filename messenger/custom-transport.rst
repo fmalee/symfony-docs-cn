@@ -26,7 +26,7 @@
         }
     }
 
-传输对象需要实现 ``TransportInterface``（简单地组合 ``SenderInterface`` 和
+传输对象需要实现 ``TransportInterface`` （简单地组合 ``SenderInterface`` 和
 ``ReceiverInterface``）。它看起来像这样::
 
     class YourTransport implements TransportInterface
