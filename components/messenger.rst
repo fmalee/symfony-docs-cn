@@ -137,7 +137,7 @@ Messenger组件
    :class:`Symfony\\Component\\Messenger\\Transport\\Sender\\SendersLocator`
    访问该发送方的FQCN和别名（如果可用的话）。
 #. :class:`Symfony\\Component\\Messenger\\Stamp\\HandledStamp`，
-   一个用于标记由特定处理器处理的记消息的邮票。允许从
+   一个用于标记由特定处理器处理的消息的邮票。允许从
    :class:`Symfony\\Component\\Messenger\\Handler\\HandlersLocator`
    访问该处理器的返回值、可调用名称及别名（如果可用的话）。
 
