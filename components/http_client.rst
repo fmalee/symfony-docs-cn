@@ -187,7 +187,7 @@ HTTP客户端支持不同的认证机制。
         'body' => fopen('/path/to/file', 'r'),
     ]);
 
-使用 ``POST`` 方法上传数据时，如果未明确定义``Content-Type``
+使用 ``POST`` 方法上传数据时，如果未明确定义 ``Content-Type``
 标头，Symfony会假定你正在上传表单数据，并为你添加所需的
 ``'Content-Type: application/x-www-form-urlencoded'`` 标头。
 
@@ -576,9 +576,9 @@ HTTP代理
 Symfony契约
 ~~~~~~~~~~~~~~~~~
 
-``symfony/http-client-contracts`` 包中的接口定义了组件实现的主要抽象。
- 它的切入点是 :class:`Symfony\\Contracts\\HttpClient\\HttpClientInterface`。
- 这是需要客户端时要进行编码的接口::
+``symfony/http-client-contracts`` 包中的接口定义了组件实现的主要抽象。它的切入点是
+:class:`Symfony\\Contracts\\HttpClient\\HttpClientInterface`。
+这是需要客户端时要进行编码的接口::
 
     use Symfony\Contracts\HttpClient\HttpClientInterface;
 
@@ -603,10 +603,10 @@ PSR-18
 ~~~~~~
 
 该组件通过 :class:`Symfony\\Component\\HttpClient\\Psr18Client` 类实现了
-`PSR-18`_（HTTP客户端）规范，该类是将Symfony的 ``HttpClientInterface``
+`PSR-18`_ （HTTP客户端）规范，该类是将Symfony的 ``HttpClientInterface``
 转换为PSR-18的 ``ClientInterface`` 的一个适配器。
 
-要使用它，你需要 ``psr/http-client`` 包和一个 `PSR-17`_ 实现::
+要使用它，你需要 ``psr/http-client`` 包和一个 `PSR-17`_ 实现：
 
 .. code-block:: terminal
 
