@@ -11,21 +11,8 @@
     - `components/dom_crawler.rst`
 - `4.3`
   - `9a873fbc4c5fc497d1add66d9cb97251d2d55eeb`（2019-07-03）
-  - `85347ad57f682223a9a60ce050f2766659d07ecc`（2019-06-30）
 - `4.2`
   - `1ec78cf5f6fd5d7768c9cbbd8a891b24cea4d3aa`（2019-07-03）
-  - `54a5808672d7461e7ea3fefeeb33282dfa40c308`（2019-06-29）
-  - `4fe8ad04430f2e47dd69a031faa22a0fe01b5e76`（2019-06-21）
-  - `cfa34fc00e897c691ca59d2ff493d83dd5ee3253`（2019-06-21）
-  - `d87b7191d2faef1815e4ca5a3a8b459c66d9f5b3`（2019-06-12）
-  - `78123c8c25a67e8aa8e53ff5bb33252c79bdabae`（2018-12-23）
-  - `2086b162ba7b8e310a38fb108468cab6dd0d18fa`（2018-12-04）
-  - `2ebb3d5057c8024355ce173f6d0e0ea215053c71`（2018-11-17）
-  - `3edbcad1e97744bc86cdcb58df63916985775bc8`（2018-11-01）
-  - `28bd6e337977ff0e6908316f0749429a9dbaf392`（2018-10-31）
-  - `e350b3efcfadbb26ab51768e5f6a2bcb07d9dc14`（2018-10-26）
-  - `df318b284e22352b7678daeaa32ab06eb0fbcc0c`（2018-10-25）
-  - `b43a26fc1c8408de31e79f1abf91e0201e92e487`（2018-10-19）
 - [SensioFrameworkExtraBundle](https://github.com/sensiolabs/SensioFrameworkExtraBundle/tree/master/Resources/doc)
   - `1032c7077fd1a6f24f98b5a8377938000859f35d`（2018-12-03）
 
@@ -272,10 +259,12 @@
 
 1. 按照[pip安装](https://pip.pypa.io/en/stable/installing/)文档中的说明安装 [pip](https://pip.pypa.io/en/stable/)；
 
+   > 如果安装了Python 3.X，则自带了 `pip3`。
+
 2. 安装 [Sphinx](http://sphinx-doc.org/) 和 [PHP和Symfony的Sphinx扩展](https://github.com/fabpot/sphinx-php) （根据你的系统，你可能需要以root用户身份执行此命令）：
 
 ```bash
-$ pip install sphinx~=1.3.0 git+https://github.com/fabpot/sphinx-php.git
+$ pip3 install sphinx~=1.3.0 git+https://github.com/fabpot/sphinx-php.git
 ```
 
 3. 运行以下命令以HTML格式构建文档：
