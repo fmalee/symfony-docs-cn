@@ -84,6 +84,7 @@
         // Which is always considered as true.
         // The Configurator does not know anything about
         // "%kernel.debug%" being a parameter.
+
 为了支持这个用例，``Configuration`` 类必须通过扩展注入此参数，如下所示::
 
     namespace App\DependencyInjection;

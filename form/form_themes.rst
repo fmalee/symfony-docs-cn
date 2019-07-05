@@ -195,9 +195,9 @@ Symfony使用一个名为 ``integer_widget`` 的Twig区块来渲染该字段。�
 
 表单片段的命名取决于你的需求：
 
-* 如果要自定义 **相同类型的所有字段**（例如所有的 ``<textarea>``），请使用
+* 如果要自定义 **相同类型的所有字段** （例如所有的 ``<textarea>``），请使用
   ``field-type_field-part`` 模式（例如 ``textarea_widget``）。
-* 如果你想 **只自定义一个特定字段**（例如，用于编辑产品的表单字段 ``description``
+* 如果你想 **只自定义一个特定字段** （例如，用于编辑产品的表单字段 ``description``
   的 ``<textarea>``），请使用 ``_field-id_field-part``
   模式（例如 ``_product_description_widget``）。
 
@@ -210,9 +210,9 @@ Symfony使用一个名为 ``integer_widget`` 的Twig区块来渲染该字段。�
 相同类型的所有字段的片段命名
 ...............................................
 
-这些片段名称遵循 ``type_part`` 模式，其中 ``type`` 对应于被渲染的字段 *类型*（例如
+这些片段名称遵循 ``type_part`` 模式，其中 ``type`` 对应于被渲染的字段 *类型* （例如
 ``textarea``、``checkbox``、``date`` 等等），而 ``part``
-则对应于要渲染 *什么*（例如 ``textarea``、``checkbox`` 等等）
+则对应于要渲染 *什么* （例如 ``textarea``、``checkbox`` 等等）
 
 一些片段名称的示例有：
 
@@ -227,7 +227,7 @@ Symfony使用一个名为 ``integer_widget`` 的Twig区块来渲染该字段。�
 
 这些片段名称遵循 ``_id_part`` 模式，其中 ``id`` 对应于字段的 ``id`` 属性（例如
 ``product_description``、``user_age`` 等等），而 ``part``
-则对应于要渲染 *什么*（例如 ``label``、``widget`` 等等）
+则对应于要渲染 *什么* （例如 ``label``、``widget`` 等等）
 
 ``id`` 属性同时包含表单名称和字段名称（例如
 ``product_price``）。表单名称可以手动设置，也可以根据表单类型的名称来自动生成（例如

@@ -120,7 +120,7 @@
     某些文档将使用特定于Symfony或Symfony的 `WebpackEncoreBundle`_ 的功能。
     这些是可选的，是指向由Encore生成的资产路径的特殊方式，例如可以启用
     :doc:`版本控制 </frontend/encore/versioning>` 和
-    :doc:`拆分区块 </frontend/encore/split-chunks>`等功能。
+    :doc:`拆分区块 </frontend/encore/split-chunks>` 等功能。
 
 .. _`安装Node.js`: https://nodejs.org/en/download/
 .. _`Yarn包管理器`: https://yarnpkg.com/lang/en/docs/install/

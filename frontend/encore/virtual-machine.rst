@@ -107,5 +107,5 @@ Encore兼容虚拟机（如 `VirtualBox`_ 和 `VMWare`_），但你可能需要�
 .. _`VirtualBox`: https://www.virtualbox.org/
 .. _`VMWare`: https://www.vmware.com
 .. _`NFS`: https://en.wikipedia.org/wiki/Network_File_System
-.. _`polling`: https://webpack.js.org/configuration/watch/#watchoptionspoll
+.. _`轮询`: https://webpack.js.org/configuration/watch/#watchoptionspoll
 .. _`不建议禁用主机检查`: https://webpack.js.org/configuration/dev-server/#devserverdisablehostcheck

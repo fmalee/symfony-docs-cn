@@ -188,7 +188,7 @@ Symfony提供了一个序列化器，用于序列化/反序列化对象和不同
 扩展阅读
 ---------------------------------
 
-`ApiPlatform`_ 提供支持以下格式的API系统：
+`Api Platform`_ 提供支持以下格式的API系统：
 
 * `JSON-LD`_ along with the `Hydra Core Vocabulary`_
 * `OpenAPI`_ v2 (formerly Swagger) and v3

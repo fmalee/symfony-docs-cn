@@ -486,7 +486,7 @@ Symfony会将 ``Request`` 对象传递给任何使用 ``Request`` 类进行类�
 与 ``Request`` 类似，``Response`` 对象有一个公共 ``headers`` 属性。此对象属于
 :class:`Symfony\\Component\\HttpFoundation\\ResponseHeaderBag`
 类型，并提供获取和设置响应标头的方法。该标头的名称已经被规范化。因此，``Content-Type``
-的名称等同于 ``content-type`` 或 ``content_type``的名称。
+的名称等同于 ``content-type`` 或 ``content_type`` 的名称。
 
 在Symfony中，控制器需要返回一个 ``Response`` 对象::
 

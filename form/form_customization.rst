@@ -183,8 +183,8 @@ form_end(form_view, variables)
 
     {{ form_end(form) }}
 
-除非你设置 ``render_rest`` 为 ``false``，否则此助手也将输出
-``form_rest()``（这将在本文后面解释）：
+除非你设置 ``render_rest`` 为 ``false``，否则此助手也将输出 ``form_rest()``
+（这将在本文后面解释）：
 
 .. code-block:: twig
 

@@ -191,7 +191,7 @@ Finder组件
 路径
 ~~~~
 
-使用 :method:`Symfony\\Component\\Finder\\Finder::path
+使用 :method:`Symfony\\Component\\Finder\\Finder::path`
 方法来按路径查找文件和目录::
 
     // 匹配其路径（文件或目录）中的任何位置包含“data”的文件

@@ -222,7 +222,7 @@ Symfony发布了一个新的“骨架”项目，这是一个推荐用于创建�
 #. 移除 ``src/AppBundle/``.
 
 #. 将原始源代码从 ``src/{App,...}Bundle/`` 移动到 ``src/``，并更新每个PHP文件的名称空间为
-   ``App\...``（高级IDE可以自动执行此操作）。
+   ``App\...`` （高级IDE可以自动执行此操作）。
 
 #. 删除 ``bin/symfony_requirements`` 脚本，如果需要替代功能，请使用新的 `Symfony Requirements Checker`_。
 

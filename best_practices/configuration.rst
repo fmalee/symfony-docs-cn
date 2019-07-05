@@ -11,7 +11,7 @@
 
 .. best-practice::
 
-    将基础结构相关的配置选项定义为 :ref:`环境变量 </configuration/environment_variables>`。
+    将基础结构相关的配置选项定义为 :ref:`环境变量 <config-env-vars>`。
     在开发过程中，使用项目根目录下的 ``.env`` 和 ``.env.local`` 文件来设置它们。
 
 默认情况下，在应用中安装新的依赖项时，Symfony会将这些类型的选项添加到 ``.env`` 文件中：
@@ -65,7 +65,7 @@ Symfony在项目根目录中包含一个名为 ``.env`` 的配置文件，它存
 ``services.yaml`` 文件包含应用用于修改其行为的选项，例如电子邮件通知的发件人或启用 `功能切换`_。
 将这些配置值定义在 ``.env`` 是不必要的，因为这将增加一个额外的配置层，而你不需要或不希望在每个服务器上更改这些配置值。
 
-``services.yaml`` 中定义的配置选项可能因 :ref:`环境 </configuration/environments>` 而异。
+``services.yaml`` 中定义的配置选项可能因 :ref:`环境 <configuration-environments>` 而异。
 这也能解释为什么Symfony还自带了 ``config/services_dev.yaml`` 和 ``config/services_prod.yaml`` 文件，它们能让你覆写针对不同环境的特定的选项值。
 
 常量 v.s. 配置选项

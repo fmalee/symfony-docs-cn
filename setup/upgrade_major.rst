@@ -29,7 +29,7 @@
 （例如 ``3.4.*``），你应该能够毫无问题地进行升级。
 
 为了帮助你解决此问题，每当你使用已弃用的功能时，都会触发弃用通知。
-使用浏览器在 :ref:`开发环境 </configuration/environments>` 中访问应用时，这些通知会显示在Web开发工具栏中：
+使用浏览器在 :ref:`开发环境 <configuration-environments>` 中访问应用时，这些通知会显示在Web开发工具栏中：
 
 .. image:: /_images/install/deprecations-in-profiler.png
    :align: center

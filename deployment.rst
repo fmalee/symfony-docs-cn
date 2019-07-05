@@ -189,7 +189,7 @@ E) 其他任务！
 不使用 ``composer.json`` 文件部署
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-:ref:`项目根目录 <configuration-kernel-project-directory>`（其值通过
+:ref:`项目根目录 <configuration-kernel-project-directory>` （其值通过
 ``kernel.project_dir`` 参数和 :method:`Symfony\\Component\\HttpKernel\\Kernel::getProjectDir`
 方法来使用）由Symfony自动计算，并作为存储 ``composer.json`` 文件的目录。
 

@@ -76,7 +76,7 @@ Invokable控制器
 ---------------------
 
 控制器还可以使用 ``__invoke()`` 方法来定义单个动作，这是遵循
-`ADR模式`_（Action-Domain-Responder）时的常见做法：
+`ADR模式`_ （Action-Domain-Responder）时的常见做法：
 
 .. configuration-block::
 
