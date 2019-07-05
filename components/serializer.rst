@@ -613,7 +613,7 @@ Symfony提供了一个内置的名称转换器，用于在序列化和反序列�
     $encoder = new JsonEncoder();
 
     // all callback parameters are optional (you can omit the ones you don't use)
-    $dateCallback = function ($innerObject, $outerObject, string $attributeName, string $format = null, array $context = []) {
+    $callback = function ($innerObject, $outerObject, string $attributeName, string $format = null, array $context = []) {
         return $innerObject instanceof \DateTime ? $innerObject->format(\DateTime::ISO8601) : '';
     };
 
