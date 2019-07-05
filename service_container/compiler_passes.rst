@@ -66,7 +66,7 @@
 在Bundles中使用编译器传递
 ---------------------------------------
 
-`Bundle </bundles>`_ 可以在主bundle类的 ``build()``
+:doc:`Bundles </bundles>` 可以在主bundle类的 ``build()``
 方法中定义编译器传递（在扩展中实现 ``process()`` 方法时不需要这样做）::
 
     // src/MyBundle/MyBundle.php
