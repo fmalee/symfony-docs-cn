@@ -394,7 +394,7 @@ Doctrine足够聪明，可以知道它应该是 *插入* 还是 *更新* 你的�
 验证对象
 ------------------
 
-:doc:`Symfony验证器 </validation>` 重用 Doctrine 元数据来执行一些基本的验证任务：
+:doc:`Symfony验证器 </validation>` 重用 Doctrine 元数据来执行一些基本的验证任务::
 
     // src/Controller/ProductController.php
     namespace App\Controller;
@@ -431,7 +431,7 @@ Doctrine足够聪明，可以知道它应该是 *插入* 还是 *更新* 你的�
 虽然 ``Product`` 实体没有显式定义任何
 :doc:`验证配置 </validation>`，但Symfony会对Doctrine映射配置进行内省，以推断出一些验证规则。
 例如，假设 ``name`` 属性在数据库中不能为 ``null``，则会自动向属性添加
-:doc:`NotNull约束 </reference/constraints/NotNull>`（如果它还未包含该约束）。
+:doc:`NotNull约束 </reference/constraints/NotNull>` （如果它还未包含该约束）。
 
 下表总结了Doctrine元数据与Symfony自动添加的相应验证约束之间的映射：
 

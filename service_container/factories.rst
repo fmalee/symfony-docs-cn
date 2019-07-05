@@ -156,7 +156,7 @@ Symfony的服务容器提供了一种控制对象创建的强大方法，它允�
     Symfony 4.3中引入了可调用的服务工厂。
 
 通过省略方法名称，可以使用可调用工厂来创建和配置服务，就像路由可以引用
-:ref:`可调用控制器 <controller-service-invoke>`一样。
+:ref:`可调用控制器 <controller-service-invoke>` 一样。
 
 .. configuration-block::
 

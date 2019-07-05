@@ -262,7 +262,7 @@ Global from Address
 Twig: HTML & CSS
 ----------------
 
-Mime组件与 :doc:`Twig模板引擎 </templating>`集成，以提供CSS样式内联等高级功能，
+Mime组件与 :doc:`Twig模板引擎 </templating>` 集成，以提供CSS样式内联等高级功能，
 并支持HTML/CSS框架以创建复杂的HTML电子邮件。首先，确保安装了Twig：
 
 .. code-block:: terminal

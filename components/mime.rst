@@ -25,17 +25,17 @@ Mime组件
 介绍
 ------------
 
-`MIME`_（Multipurpose Internet Mail Extensions）是一种Internet标准，
+`MIME`_ （Multipurpose Internet Mail Extensions）是一种Internet标准，
 它扩展了电子邮件的原始基本格式，以支持以下功能::
 
 * 使用非ASCII字符的标头和文本内容;
 * 具有多个部分的消息体（例如HTML和纯文本内容）;
 * 非文本附件：音频、视频、图像、PDF等
 
-整个MIME标准既复杂又庞大，但Symfony将所有这些复杂性都抽象化，以提供两种创建MIME消息的方法::
+整个MIME标准既复杂又庞大，但Symfony将所有这些复杂性都抽象化，以提供两种创建MIME消息的方法：
 
 * 基于 :class:`Symfony\\Component\\Mime\\Email`
-  类的高级API，可快速创建具有所有常用功能的电子邮件消息;
+  类的高级API，可快速创建具有所有常用功能的电子邮件消息；
 * 基于 :class:`Symfony\\Component\\Mime\\Message`
   类的低级API ，可以绝对控制电子邮件消息的每个部分。
 

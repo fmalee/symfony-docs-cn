@@ -473,9 +473,9 @@ HTTP代理
 
 首先，你不是 *必须* 处理它们：让错误冒泡到你的通用异常处理堆栈中，可能在在大多数用例中真的没事。
 
-如果你想处理它们，你需要了解以下内容::
+如果你想处理它们，你需要了解以下内容：
 
-要捕获错误，你需要封装对 ``$client->request()`` 的调用，还要调用返回响应的任何方法。 
+要捕获错误，你需要封装对 ``$client->request()`` 的调用，还要调用返回响应的任何方法。
 这是因为响应是惰性的，因此在调用（如 ``getStatusCode()``）时可能会发生网络错误::
 
     try {
@@ -639,7 +639,7 @@ Symfony框架集成
 ~~~~~~~~~~~~~
 
 使用 ``framework.http_client`` 键配置应用中使用的默认HTTP客户端。
-查看完整的 :ref:`http_client配置参考 <reference-http-client>` 以了解所有可用的配置选项::
+查看完整的 :ref:`http_client配置参考 <reference-http-client>` 以了解所有可用的配置选项：
 
 .. code-block:: yaml
 

@@ -302,7 +302,7 @@ Messenger集中在你将创建的两个不同的类上：（1）保存数据的�
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 如果需要在消息中传递Doctrine实体，最好传递实体的主键（或处理器实际需要的任何相关信息，如
-``email``等）而不是对象::
+``email`` 等）而不是对象::
 
     class NewUserWelcomeEmail
     {
@@ -1386,5 +1386,5 @@ Doctrine中间件
     /messenger/*
 
 .. _`Enqueue的传输`: https://github.com/php-enqueue/messenger-adapter
-.. _`streams`: https://redis.io/topics/streams-intro
+.. _`流`: https://redis.io/topics/streams-intro
 .. _`Supervisor文档`: http://supervisord.org/
