@@ -260,22 +260,36 @@ Messenger组件
             $this->filePath = $filePath;
         }
 
-        public function receive(callable $handler): void
+        public function get(): void
         {
             $ordersFromCsv = $this->serializer->deserialize(file_get_contents($this->filePath), 'csv');
 
             foreach ($ordersFromCsv as $orderFromCsv) {
                 $order = new NewOrder($orderFromCsv['id'], $orderFromCsv['account_id'], $orderFromCsv['amount']);
 
-                $handler(new Envelope($order));
+                $envelope = new Envelope($order);
+
+                $handler($envelope);
             }
+
+            return [$envelope];
         }
 
-        public function stop(): void
+        public function ack(Envelope $envelope): void
         {
-            // noop
+            // 添加有关已处理消息的信息
+        }
+
+        public function reject(Envelope $envelope): void
+        {
+            // 如果需要，可以拒绝该消息
         }
     }
+
+.. versionadded:: 4.3
+
+    如上例所示，在Symfony 4.3中，``ReceiverInterface``
+    的方法已经改变了。如果你在之前的Symfony版本中使用了此接口，则可能需要更新代码。
 
 同一总线上的收件人和发件人
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -842,6 +842,8 @@ Redis传输使用 `流`_ 来队列消息。
 
     # .env
     MESSENGER_TRANSPORT_DSN=redis://localhost:6379/messages
+    # 完整的DSN示例
+    MESSENGER_TRANSPORT_DSN=redis://password@localhost:6379/messages/symfony/consumer?auto_setup=true&serializer=1
 
 要使用Redis传输，你需要Redis PHP扩展（^ 4.3）和正在运行的Redis服务器（^ 5.0）。
 
@@ -851,16 +853,18 @@ Redis传输使用 `流`_ 来队列消息。
 
 可以通过DSN或在 ``messenger.yaml`` 中该传输下的 ``options`` 键来配置许多选项：
 
-==================  =================================== =======
-     Option               Description                   Default
-==================  =================================== =======
-stream              The Redis stream name               messages
-group               The Redis consumer group name       symfony
-consumer            Consumer name used in Redis         consumer
-serializer          How to serialize the final payload  ``Redis::SERIALIZER_PHP``
+==================  =====================================  =======
+     Option               Description                      Default
+==================  =====================================  =======
+stream              The Redis stream name                  messages
+group               The Redis consumer group name          symfony
+consumer            Consumer name used in Redis            consumer
+auto_setup          Create the Redis group automatically?  true
+auth                The Redis password
+serializer          How to serialize the final payload     ``Redis::SERIALIZER_PHP``
                     in Redis (the
                     ``Redis::OPT_SERIALIZER`` option)
-==================  =================================== =======
+==================  =====================================  =======
 
 内存传输
 ~~~~~~~~~~~~~~~~~~~
