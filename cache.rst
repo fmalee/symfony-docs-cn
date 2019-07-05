@@ -462,8 +462,8 @@ Symfony支持缓存契约、PSR-6/16和Doctrine缓存接口。你可以在
 .. note::
 
     在此配置中，``my_cache_pool`` 池使用 ``cache.adapter.psr6`` 适配器和
-    ``app.my_cache_chain_adapter``服务作为提供器。这是因为 ``ChainAdapter``
-    不支持 ``cache.pool`` 标签。因此，它用 ``ProxyAdapter``装饰。
+    ``app.my_cache_chain_adapter`` 服务作为提供器。这是因为 ``ChainAdapter``
+    不支持 ``cache.pool`` 标签。因此，它用 ``ProxyAdapter`` 装饰。
 
 使用缓存标签
 ----------------

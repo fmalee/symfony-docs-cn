@@ -347,7 +347,7 @@ Symfony的自动装配被设计为可预测的：如果不清楚应该传递哪�
 ``Rot13Transformer`` 实现，但在某些特定情况下使用 ``UppercaseTransformer`` 实现。
 为此，你可以从 ``TransformerInterface`` 接口创建一个普通别名到
 ``Rot13Transformer``，然后从包含该接口的特殊字符串创建一个
-*命名化的自动装配别名*，后跟一个与你在执行注入时使用的变量名称相匹配的变量名称：
+*命名化的自动装配别名*，后跟一个与你在执行注入时使用的变量名称相匹配的变量名称::
 
     namespace App\Service;
 

@@ -6,7 +6,7 @@
 
 PHP CLI SAPI附带一个 `内置的Web服务器`_`。
 它可以本地化的运行PHP应用，用于开发、测试或应用演示。这样，你就不必费心配置
-:doc:`Apache 或 Nginx </setup/web_server_configuration>`等功能齐全的Web服务器。
+:doc:`Apache 或 Nginx </setup/web_server_configuration>` 等功能齐全的Web服务器。
 
 .. tip::
 

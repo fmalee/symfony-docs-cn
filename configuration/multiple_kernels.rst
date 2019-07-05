@@ -13,7 +13,7 @@
 类以创建加载bundle的应用内核，并处理请求以生成响应。
 
 这种单内核方法是一种方便的默认方法，但Symfony应用可以定义任意数量的内核。
-:ref:`环境 </configuration/environments>`
+:ref:`环境 <configuration-environments>`
 使用不同的配置来执行同一个应用，而内核可以执行同一应用的不同部分。
 
 以下是创建多个内核的一些常见用例：

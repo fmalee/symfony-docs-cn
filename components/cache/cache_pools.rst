@@ -86,7 +86,7 @@
 如果没有为给定键定义任何项，该方法不会返回一个 ``null`` 值，而是返回一个实现
 :class:`Symfony\\Component\\Cache\\CacheItem` 类的空对象。
 
-如果需要同时获取多个缓存项，请使用 ``getItems([$key1, $key2, ...])` 方法::
+如果需要同时获取多个缓存项，请使用 ``getItems([$key1, $key2, ...])`` 方法::
 
     // ...
     $stocks = $cache->getItems(['AAPL', 'FB', 'GOOGL', 'MSFT']);

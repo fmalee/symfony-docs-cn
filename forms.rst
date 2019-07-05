@@ -161,7 +161,7 @@ Symfony提供了几种方法：
 * 如果你只想自定义应用的几个字段或几种表单，请阅读
   :doc:`如何自定义表单渲染 </form/form_customization>` 一文;
 * 如果要以相同的方式自定义所有表单，请创建
-  :doc:`Symfony表单主题 </form/form_themes>`（基于任何内置主题或从头开始）。
+  :doc:`Symfony表单主题 </form/form_themes>` （基于任何内置主题或从头开始）。
 
 在继续下去之前，请注意，为什么渲染出来的 ``task`` 输入框中有一个来自 ``$task`` 对象的 ``task`` 属性值（即“Write a blog post”）。
 这是表单的第一个任务：从一个对象中获取数据并把它转换成一种适当的格式，以便在HTML表单中被渲染。

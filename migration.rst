@@ -125,7 +125,9 @@
 在任何情况下，你都必须创建一个 ``public/index.php`` 来启动symfony应用，方法是从
 ``FrameworkBundle`` 指令复制该文件，或者使用Flex并请求（requiring）FrameworkBundle。
 你可能还必须更新Web服务器（例如Apache或nginx）以始终使用此前端控制器。
-你可以查看 :doc:`Web服务器的配置  </setup/web_server_configuration>`以获取其大概配置的示例。例如，使用Apache时，你可以使用重写规则来确保忽略PHP文件，而只调用index.php：
+你可以查看 :doc:`Web服务器的配置 </setup/web_server_configuration>`
+以获取其大概配置的示例。例如，使用Apache时，你可以使用重写规则来确保忽略PHP文件，而只调用
+``index.php``：
 
 .. code-block:: apache
 
@@ -306,7 +308,7 @@ Line 38 - 47
         }
     }
 
-你还必须按照 :doc:`自定义路由加载器 </routing/custom_route_loader>`中的说明在应用的
+你还必须按照 :doc:`自定义路由加载器 </routing/custom_route_loader>` 中的说明在应用的
 ``routing.yaml`` 中注册加载器。根据你的配置，你可能还必须使用标签服务。
 之后，你应该能够查看路由配置中的所有旧路由，例如，当你调用 ``debug:router`` 命令时：
 

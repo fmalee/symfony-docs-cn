@@ -15,7 +15,7 @@ bundle类似于其他软件中的插件，但却更好。
 Symfony框架的核心功能是使用bundle（FrameworkBundle，SecurityBundle，DebugBundle等）实现的。
 它们还用于通过 `第三方bundle`_ 在应用中添加新功能。
 
-在应用中使用bundel，必须在 ``config/bundles.php`` 文件中的每个 :ref:`环境 </configuration/environments>`
+在应用中使用bundel，必须在 ``config/bundles.php`` 文件中的每个 :ref:`环境 <configuration-environments>`
 中启用它::
 
     // config/bundles.php

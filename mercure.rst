@@ -75,7 +75,7 @@ Symfony应用将更新发布到该Hub，并将其广播给客户端。
 ``http://localhost:3000/hub``）。
 
 此外，Symfony应用必须携带一个
-`JSON Web Token`_（JWT）到Mercure Hub才有权发布更新。
+`JSON Web Token`_ （JWT）到Mercure Hub才有权发布更新。
 
 此JWT应存储在 ``MERCURE_JWT_SECRET`` 环境变量中。
 
@@ -204,7 +204,7 @@ Mercure还允许订阅多个主题，并使用URI模板作为模式：
 首先，确保 :doc:`安装了Messenger组件 </messenger>`
 并正确配置传输（如果不这样，将同步调用该处理器）。
 
-然后，将Mercure的 ``Update`` 调度到Messenger的消息总线，它将自动处理：
+然后，将Mercure的 ``Update`` 调度到Messenger的消息总线，它将自动处理::
 
     // src/Controller/PublishController.php
     namespace App\Controller;

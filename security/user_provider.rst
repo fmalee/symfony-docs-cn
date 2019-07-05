@@ -430,13 +430,13 @@ Symfony定义了几个与用户提供器相关的服务：
       [3] security.user.provider.chain
       ...
 
-      这些服务大多数是抽象的，不能注入到你的服务中。
+这些服务大多数是抽象的，不能注入到你的服务中。
 相反，你必须注入Symfony为每个用户提供器所创建的普通服务。
 这些服务的名称遵循以下模式：``security.user.provider.concrete.<your-provider-name>``。
 
 例如，如果要 :doc:`构建表单登录 </security/form_login_setup>` 并希望在你的
 ``LoginFormAuthenticator`` 中注入名为 ``backend_users`` 的 ``memory``
-类型的用户提供器，请执行以下操作：
+类型的用户提供器，请执行以下操作::
 
     // src/Security/LoginFormAuthenticator.php
     namespace App\Security;
