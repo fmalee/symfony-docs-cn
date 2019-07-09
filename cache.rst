@@ -489,7 +489,7 @@ Symfony支持缓存契约、PSR-6/16和Doctrine缓存接口。你可以在
     // 删除所有标签为“bar”的缓存键
     $pool->invalidateTags(['bar']);
 
-缓存适配器需要实现 :class:`Symfony\\Contracts\\Cache\\TagAwareCacheInterface``
+缓存适配器需要实现 :class:`Symfony\\Contracts\\Cache\\TagAwareCacheInterface`
 才能启用此功能。可以使用以下配置来添加此功能。
 
 .. configuration-block::
@@ -589,7 +589,7 @@ Symfony支持缓存契约、PSR-6/16和Doctrine缓存接口。你可以在
 
 .. note::
 
-    :class:`Symfony\\Contracts\\Cache\\TagAwareCacheInterface``
+    :class:`Symfony\\Contracts\\Cache\\TagAwareCacheInterface`
     接口已自动装配到 ``cache.app`` 服务。
 
 清除缓存
