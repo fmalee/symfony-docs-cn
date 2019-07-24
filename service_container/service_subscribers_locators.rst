@@ -10,13 +10,8 @@
 （参见 :doc:`/service_container/lazy_services`）。
 
 在控制器中通常也可能是这种情况，你可以在构造函数中注入多个服务，但执行的动作仅使用了其中一些服务。
-另一个示例是使用一个CommandBus通过Command类名来映射命令处理程序来实现 `命令模式`_ 的应用，
-并在询问它们时使用它们来处理它们各自的命令：
-This can typically be the case in your controllers, where you may inject several
-services in the constructor, but the action executed only uses some of them.
-Another example are applications that implement the `命令模式`_
-using a CommandBus to map command handlers by Command class names and use them
-to handle their respective command when it is asked for::
+另一个示例是使用一个CommandBus来实现 `命令模式`_
+的应用，它通过Command类名来映射命令处理器，并在询问它们时使用它们来处理各自的命令::
 
     // src/CommandBus.php
     namespace App;
